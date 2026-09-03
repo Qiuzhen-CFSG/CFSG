@@ -41,7 +41,7 @@ namespace BenderGlauberman
 open GorensteinWalter
 open Theory.Character
 
--- Local instances matching `Theory.Character`'s subgroup-sum convention.
+-- Local instances matching `Character`'s subgroup-sum convention.
 attribute [local instance] Fintype.ofFinite
 attribute [local instance] Classical.propDecidable
 
@@ -287,7 +287,7 @@ private lemma orbit_eq_pair (h12 : Hyp12 c) (hS4 : Section4Hyp c)
 private lemma tildeNu_disjoint_lambdaTwo (h12 : Hyp12 c) (hSC : Section3Hyp c)
     (hS4 : Section4Hyp c) {ν : Irr (↥c.H0)}
     (hνs : conjChar c.H0 (s_normalizes_H0 c h12) ν.1 = ν.1) :
-    Disjoint (tildeNu c h12 (lambdaTwoMul c h12 ν)) (tildeNu c h12 ν) := by
+    ClassFunction.Disjoint (tildeNu c h12 (lambdaTwoMul c h12 ν)) (tildeNu c h12 ν) := by
   have hμν : (lambdaTwoMul c h12 ν).1 ∈ orbit c.H0 c.U ν.1 := by
     refine Finset.mem_image.mpr ⟨lambdaTwo c h12, Finset.mem_univ _, ?_⟩
     ext x
@@ -334,10 +334,10 @@ private lemma scalarProduct_irr_decomp {ι : Type u} [Fintype ι]
               exact (hnot (Finset.mem_univ i)).elim
     _ = (ms i : ℂ) := by simp [irreducible_scalarProduct_self (hirr i)]
 
-/-- Disjoint generalized characters have zero scalar product. -/
+/-- ClassFunction.Disjoint generalized characters have zero scalar product. -/
 private lemma scalarProduct_eq_zero_of_disjoint {φ ψ : ClassFunction G}
     (hφ : IsGeneralizedCharacter φ)
-    (hψ : IsGeneralizedCharacter ψ) (h : Disjoint φ ψ) :
+    (hψ : IsGeneralizedCharacter ψ) (h : ClassFunction.Disjoint φ ψ) :
     scalarProduct G φ ψ = 0 := by
   classical
   rcases char_decomp_generalized hφ with ⟨ι₁, _, χs, ms, hirr, hdist, hφsum⟩
@@ -360,10 +360,10 @@ private lemma scalarProduct_eq_zero_of_disjoint {φ ψ : ClassFunction G}
     rw [hψsum] at hzero
     simp [hzero]
 
-/-- `Disjoint` is symmetric. -/
+/-- `ClassFunction.Disjoint` is symmetric. -/
 private lemma disjoint_symm {φ ψ : ClassFunction G}
-    (h : Theory.Character.Disjoint φ ψ) : Theory.Character.Disjoint ψ φ := by
-  unfold Theory.Character.Disjoint at h ⊢
+    (h : ClassFunction.Disjoint φ ψ) : ClassFunction.Disjoint ψ φ := by
+  unfold ClassFunction.Disjoint at h ⊢
   intro χ hχ hχψ
   by_contra hχφ
   exact hχψ (h χ hχ hχφ)
@@ -6115,8 +6115,8 @@ private lemma centralizer_rep (hS4 : Section4Hyp c) {y : G}
 
 private lemma odd_class_common_reduction (hS4 : Section4Hyp c)
     {x : G} (hodd : Odd (Nat.card (ConjClasses.mk x).carrier)) :
-    ∃ b : ↥c.B, ∀ (φ : Theory.Character.ClassFunction G),
-      Theory.Character.IsGeneralizedCharacter φ →
+    ∃ b : ↥c.B, ∀ (φ : ClassFunction G),
+      IsGeneralizedCharacter φ →
       CongruentModTwo (φ x) (φ (b : G)) := by
   classical
   rcases odd_class_has_centralizing_rep c x hodd with ⟨y, hyclass, hyC⟩
@@ -6193,7 +6193,7 @@ private lemma classRepChoice_spec (s : ConjClasses G) :
 
 private noncomputable def classSumCoefficient
     (i j s : ConjClasses G) : ℕ :=
-  Theory.Character.classSumPairCountMul i j (classRepChoice s)
+  classSumPairCountMul i j (classRepChoice s)
 
 private lemma classSumCoefficient_data :
     ∀ i j s : ConjClasses G, ∀ x : G, x ∈ s.carrier →
@@ -6208,12 +6208,12 @@ private lemma classSumCoefficient_data :
       ((classRepChoice_spec s).trans hxmk.symm)
   rcases isConj_iff.mp hconj with ⟨g, hg⟩
   have hcf :=
-    Theory.Character.classSumPairCountMul_isClassFunction (G := G) i j
+    classSumPairCountMul_isClassFunction (G := G) i j
       (classRepChoice s) g
   rw [hg] at hcf
   have hnat :
-      Theory.Character.classSumPairCountMul i j (classRepChoice s) =
-        Theory.Character.classSumPairCountMul i j x := by
+      classSumPairCountMul i j (classRepChoice s) =
+        classSumPairCountMul i j x := by
     exact Nat.cast_injective hcf.symm
   rw [classSumCoefficient, hnat]
   rfl
@@ -6230,20 +6230,20 @@ private lemma classSum_products_congr
     (ρ₃ : Representation ℂ G V₃) [Representation.IsIrreducible ρ₃]
     (hscalar : ∀ s : ConjClasses G,
       CongruentModTwo
-        (Theory.Character.classSumScalar (ρ := ρ₀) s)
-        (Theory.Character.classSumScalar (ρ := ρ₁) s +
-          Theory.Character.classSumScalar (ρ := ρ₂) s +
-          Theory.Character.classSumScalar (ρ := ρ₃) s))
+        (classSumScalar (ρ := ρ₀) s)
+        (classSumScalar (ρ := ρ₁) s +
+          classSumScalar (ρ := ρ₂) s +
+          classSumScalar (ρ := ρ₃) s))
     (i j : ConjClasses G) :
     CongruentModTwo
-      (Theory.Character.classSumScalar (ρ := ρ₁) i *
-          Theory.Character.classSumScalar (ρ := ρ₁) j +
-        Theory.Character.classSumScalar (ρ := ρ₂) i *
-          Theory.Character.classSumScalar (ρ := ρ₂) j +
-        Theory.Character.classSumScalar (ρ := ρ₃) i *
-          Theory.Character.classSumScalar (ρ := ρ₃) j)
-      (Theory.Character.classSumScalar (ρ := ρ₀) i *
-        Theory.Character.classSumScalar (ρ := ρ₀) j) := by
+      (classSumScalar (ρ := ρ₁) i *
+          classSumScalar (ρ := ρ₁) j +
+        classSumScalar (ρ := ρ₂) i *
+          classSumScalar (ρ := ρ₂) j +
+        classSumScalar (ρ := ρ₃) i *
+          classSumScalar (ρ := ρ₃) j)
+      (classSumScalar (ρ := ρ₀) i *
+        classSumScalar (ρ := ρ₀) j) := by
   classical
   let : Fintype (ConjClasses G) := Fintype.ofFinite (ConjClasses G)
   let A : ConjClasses G → ConjClasses G → ConjClasses G → ℕ :=
@@ -6253,28 +6253,28 @@ private lemma classSum_products_congr
         p.1.1 * p.2.1 = x} := by
     exact classSumCoefficient_data
   have hprod₀ :=
-    Theory.Character.classSumScalar_mul_eq_sum_of_coefficients
+    classSumScalar_mul_eq_sum_of_coefficients
       ρ₀ A hdata i j
   have hprod₁ :=
-    Theory.Character.classSumScalar_mul_eq_sum_of_coefficients
+    classSumScalar_mul_eq_sum_of_coefficients
       ρ₁ A hdata i j
   have hprod₂ :=
-    Theory.Character.classSumScalar_mul_eq_sum_of_coefficients
+    classSumScalar_mul_eq_sum_of_coefficients
       ρ₂ A hdata i j
   have hprod₃ :=
-    Theory.Character.classSumScalar_mul_eq_sum_of_coefficients
+    classSumScalar_mul_eq_sum_of_coefficients
       ρ₃ A hdata i j
   have hleft :
-      Theory.Character.classSumScalar (ρ := ρ₁) i *
-          Theory.Character.classSumScalar (ρ := ρ₁) j +
-        Theory.Character.classSumScalar (ρ := ρ₂) i *
-          Theory.Character.classSumScalar (ρ := ρ₂) j +
-        Theory.Character.classSumScalar (ρ := ρ₃) i *
-          Theory.Character.classSumScalar (ρ := ρ₃) j =
+      classSumScalar (ρ := ρ₁) i *
+          classSumScalar (ρ := ρ₁) j +
+        classSumScalar (ρ := ρ₂) i *
+          classSumScalar (ρ := ρ₂) j +
+        classSumScalar (ρ := ρ₃) i *
+          classSumScalar (ρ := ρ₃) j =
       ∑ s : ConjClasses G, (A i j s : ℂ) *
-        (Theory.Character.classSumScalar (ρ := ρ₁) s +
-          Theory.Character.classSumScalar (ρ := ρ₂) s +
-          Theory.Character.classSumScalar (ρ := ρ₃) s) := by
+        (classSumScalar (ρ := ρ₁) s +
+          classSumScalar (ρ := ρ₂) s +
+          classSumScalar (ρ := ρ₃) s) := by
     rw [hprod₁, hprod₂, hprod₃]
     rw [← Finset.sum_add_distrib, ← Finset.sum_add_distrib]
     apply Finset.sum_congr rfl
@@ -6282,11 +6282,11 @@ private lemma classSum_products_congr
     ring
   have hsum : CongruentModTwo
       (∑ s : ConjClasses G, (A i j s : ℂ) *
-        (Theory.Character.classSumScalar (ρ := ρ₁) s +
-          Theory.Character.classSumScalar (ρ := ρ₂) s +
-          Theory.Character.classSumScalar (ρ := ρ₃) s))
+        (classSumScalar (ρ := ρ₁) s +
+          classSumScalar (ρ := ρ₂) s +
+          classSumScalar (ρ := ρ₃) s))
       (∑ s : ConjClasses G, (A i j s : ℂ) *
-        Theory.Character.classSumScalar (ρ := ρ₀) s) := by
+        classSumScalar (ρ := ρ₀) s) := by
     apply CongruentModTwo.sum
     intro s
     exact CongruentModTwo.mul_right (CongruentModTwo.symm (hscalar s))
@@ -6305,13 +6305,13 @@ private lemma classSum_scalar_congr
     (ρ₁ : Representation ℂ G V₁) [Representation.IsIrreducible ρ₁]
     (ρ₂ : Representation ℂ G V₂) [Representation.IsIrreducible ρ₂]
     (ρ₃ : Representation ℂ G V₃) [Representation.IsIrreducible ρ₃]
-    {χ₀ χ₁ χ₂ χ₃ : Theory.Character.ClassFunction G}
+    {χ₀ χ₁ χ₂ χ₃ : ClassFunction G}
     (hχ₀ : χ₀ = ρ₀.character) (hχ₁ : χ₁ = ρ₁.character)
     (hχ₂ : χ₂ = ρ₂.character) (hχ₃ : χ₃ = ρ₃.character)
-    (hgen₀ : Theory.Character.IsGeneralizedCharacter χ₀)
-    (hgen₁ : Theory.Character.IsGeneralizedCharacter χ₁)
-    (hgen₂ : Theory.Character.IsGeneralizedCharacter χ₂)
-    (hgen₃ : Theory.Character.IsGeneralizedCharacter χ₃)
+    (hgen₀ : IsGeneralizedCharacter χ₀)
+    (hgen₁ : IsGeneralizedCharacter χ₁)
+    (hgen₂ : IsGeneralizedCharacter χ₂)
+    (hgen₃ : IsGeneralizedCharacter χ₃)
     (hdeg₀ : Odd (Module.finrank ℂ V₀))
     (hdeg₁ : Odd (Module.finrank ℂ V₁))
     (hdeg₂ : Odd (Module.finrank ℂ V₂))
@@ -6321,10 +6321,10 @@ private lemma classSum_scalar_congr
         (χ₁ (b : G) + χ₂ (b : G) + χ₃ (b : G))) :
     ∀ s : ConjClasses G,
       CongruentModTwo
-        (Theory.Character.classSumScalar (ρ := ρ₀) s)
-        (Theory.Character.classSumScalar (ρ := ρ₁) s +
-          Theory.Character.classSumScalar (ρ := ρ₂) s +
-          Theory.Character.classSumScalar (ρ := ρ₃) s) := by
+        (classSumScalar (ρ := ρ₀) s)
+        (classSumScalar (ρ := ρ₁) s +
+          classSumScalar (ρ := ρ₂) s +
+          classSumScalar (ρ := ρ₃) s) := by
   classical
   intro s
   rcases ConjClasses.exists_rep s with ⟨x, hxs⟩
@@ -6336,22 +6336,22 @@ private lemma classSum_scalar_congr
     have hbH0 : (b : G) ∈ c.H0 :=
       U_le_H0 c (mem_U_of_mem_B_s4 c b.2)
     have hsc₀ : CongruentModTwo
-        (Theory.Character.classSumScalar (ρ := ρ₀) s) (χ₀ x) := by
+        (classSumScalar (ρ := ρ₀) s) (χ₀ x) := by
       simpa [hxs] using ((classSumScalar_congruent_character_of_odd_degree_and_class
         ρ₀ x hdeg₀ hoddx).trans
           (CongruentModTwo.of_eq (congrFun hχ₀.symm x)))
     have hsc₁ : CongruentModTwo
-        (Theory.Character.classSumScalar (ρ := ρ₁) s) (χ₁ x) := by
+        (classSumScalar (ρ := ρ₁) s) (χ₁ x) := by
       simpa [hxs] using ((classSumScalar_congruent_character_of_odd_degree_and_class
         ρ₁ x hdeg₁ hoddx).trans
           (CongruentModTwo.of_eq (congrFun hχ₁.symm x)))
     have hsc₂ : CongruentModTwo
-        (Theory.Character.classSumScalar (ρ := ρ₂) s) (χ₂ x) := by
+        (classSumScalar (ρ := ρ₂) s) (χ₂ x) := by
       simpa [hxs] using ((classSumScalar_congruent_character_of_odd_degree_and_class
         ρ₂ x hdeg₂ hoddx).trans
           (CongruentModTwo.of_eq (congrFun hχ₂.symm x)))
     have hsc₃ : CongruentModTwo
-        (Theory.Character.classSumScalar (ρ := ρ₃) s) (χ₃ x) := by
+        (classSumScalar (ρ := ρ₃) s) (χ₃ x) := by
       simpa [hxs] using ((classSumScalar_congruent_character_of_odd_degree_and_class
         ρ₃ x hdeg₃ hoddx).trans
           (CongruentModTwo.of_eq (congrFun hχ₃.symm x)))
@@ -6366,9 +6366,9 @@ private lemma classSum_scalar_congr
         (χ₁ (b : G) + χ₂ (b : G) + χ₃ (b : G)) := by
       exact (hred₁.add hred₂).add hred₃
     have hsumsc : CongruentModTwo
-        (Theory.Character.classSumScalar (ρ := ρ₁) s +
-          Theory.Character.classSumScalar (ρ := ρ₂) s +
-          Theory.Character.classSumScalar (ρ := ρ₃) s)
+        (classSumScalar (ρ := ρ₁) s +
+          classSumScalar (ρ := ρ₂) s +
+          classSumScalar (ρ := ρ₃) s)
         (χ₁ x + χ₂ x + χ₃ x) := by
       exact (hsc₁.add hsc₂).add hsc₃
     exact h0.trans (h123.symm.trans hsumsc.symm)
@@ -6385,9 +6385,9 @@ private lemma classSum_scalar_congr
     have h3 := classSumScalar_congruent_zero_of_odd_degree_and_even_class
       ρ₃ x hdeg₃ hevenx
     have h123 : CongruentModTwo
-        (Theory.Character.classSumScalar (ρ := ρ₁) s +
-          Theory.Character.classSumScalar (ρ := ρ₂) s +
-          Theory.Character.classSumScalar (ρ := ρ₃) s) 0 := by
+        (classSumScalar (ρ := ρ₁) s +
+          classSumScalar (ρ := ρ₂) s +
+          classSumScalar (ρ := ρ₃) s) 0 := by
       simpa [hxs] using (h1.add h2).add h3
     simpa [hxs] using h0.trans h123.symm
 
@@ -6454,7 +6454,7 @@ private lemma deltaNu_normSq_eq_zero_or_two_of_not_fixed
     have hνμ : ν.1 ≠ (lambdaTwoMul c h12 ν).1 := by
       intro hEq
       exact lambdaTwoMul_ne_self c h12 hSC hS4 ν (Subtype.ext hEq.symm)
-    have hdis : Disjoint (tildeNu c h12 (lambdaTwoMul c h12 ν))
+    have hdis : ClassFunction.Disjoint (tildeNu c h12 (lambdaTwoMul c h12 ν))
         (tildeNu c h12 ν) :=
       tildeNu_disjoint c h12 hμν hνμ hconj
     have h1 : normSq G (tildeNu c h12 ν) = 1 := by

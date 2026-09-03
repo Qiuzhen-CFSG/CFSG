@@ -6,7 +6,6 @@ import Mathlib.GroupTheory.SpecificGroups.Cyclic
 import Mathlib.GroupTheory.Frattini
 import Theory.ElementaryAbelian.VectorSpace
 
-open Theory.ElementaryAbelian
 
 open scoped IsMulCommutative Subgroup
 

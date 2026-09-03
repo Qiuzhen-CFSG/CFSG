@@ -7,7 +7,6 @@ public import BenderSuzuki.SE.PermutationRegular
 import BenderSuzuki.PFchapter1section1.lemma_a
 import BenderSuzuki.SE.Proposition84Base
 import FeitThompson.FinalTheorem
-open Theory.ElementaryAbelian
 
 
 /-!

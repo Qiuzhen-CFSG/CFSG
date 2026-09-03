@@ -1,6 +1,19 @@
 module
 
-public import Theory.Character
+public import Theory.Character.ClassFunction
+public import Theory.Character.Orthogonality
+public import Theory.Character.Integrality
+public import Theory.Character.Induction
+public import Theory.Character.BrauerSuzuki
+public import Theory.Character.ConjClassFunction
+public import Theory.Character.SimpleCriteria
+public import Theory.Character.Completeness
+public import Theory.Character.Divisibility
+public import Theory.Character.BrauerPermutation
+public import Theory.Character.CharacterValues
+public import Theory.Character.DegreeBounds
+public import Theory.Character.Cyclotomic
+public import Theory.Character.CrossCharBrauer
 
 /-!
 # The class-sum-character formula (Gorenstein 4.2.12)
@@ -14,14 +27,15 @@ for the classes `t_i^H × t_j^H` of a subgroup.  This is Gorenstein,
 *Finite Groups*, Theorem 4.2.12, extracted for the `lemma_2_2` proof.
 
 The group-algebra machinery (`classSumComplex`, the class-sum scalar, the
-trace extraction) is re-derived locally since `Theory.Character.Divisibility`
+trace extraction) is re-derived locally since `Divisibility`
 keeps its own copies private.
 -/
+
 
 namespace Theory.Character
 
 open _root_.Representation
-open Theory.Representation
+open Representation
 
 noncomputable section
 

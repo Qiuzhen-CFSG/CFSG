@@ -22,7 +22,8 @@ namespace External
 namespace Isaacs
 namespace VII
 
-open Section1 Section5
+open Section5
+open Section1 hiding ClassFunction
 
 universe u
 
@@ -45,19 +46,19 @@ private theorem isaacs_7_14_positive_degree_nat
 private theorem isaacs_7_14_isVirtualCharacter_zsmul
     {G : Type u} [Group G] [Finite G]
     (n : Int) {phi : ClassFunction G}
-    (hphi : Theory.Character.IsVirtualCharacter phi) :
-    Theory.Character.IsVirtualCharacter ((n : Complex) • phi) := by
+    (hphi : IsVirtualCharacter phi) :
+    IsVirtualCharacter ((n : Complex) • phi) := by
   classical
   rcases hphi with ⟨r, m, k, rho, rfl⟩
   refine ⟨r, fun i => n * m i, k, rho, ?_⟩
   ext g
-  simp [Theory.Character.virtualCharacterOfRepresentations, Finset.mul_sum, mul_assoc]
+  simp [virtualCharacterOfRepresentations, Finset.mul_sum, mul_assoc]
 
 private theorem isaacs_7_14_isVirtualCharacter_finset_sum
     {G : Type u} [Group G] [Finite G]
     {I : Type*} (s : Finset I) (Phi : I -> ClassFunction G)
-    (hPhi : forall i, i ∈ s -> Theory.Character.IsVirtualCharacter (Phi i)) :
-    Theory.Character.IsVirtualCharacter (∑ i ∈ s, Phi i) := by
+    (hPhi : forall i, i ∈ s -> IsVirtualCharacter (Phi i)) :
+    IsVirtualCharacter (∑ i ∈ s, Phi i) := by
   classical
   induction s using Finset.induction_on with
   | empty =>
@@ -76,8 +77,8 @@ private theorem isaacs_7_14_isVirtualCharacter_finset_sum
 private theorem isaacs_7_14_degree_ne_zero_of_virtual_norm_one
     {G : Type u} [Group G] [Finite G]
     {phi : ClassFunction G}
-    (hvirt : Theory.Character.IsVirtualCharacter phi)
-    (hself : scalarProduct G phi phi = 1) :
+    (hvirt : IsVirtualCharacter phi)
+    (hself : Section1.scalarProduct G phi phi = 1) :
     degree phi ≠ 0 := by
   rcases Section5.signed_irreducible_of_virtual_norm_one_pf59 hvirt hself with
     ⟨eps, heps, mu, hmu, rfl⟩
@@ -96,7 +97,7 @@ private theorem isaacs_7_14_distinguished_coefficient_eq_zero
     (hd : 0 < d) (hw : forall i, 0 < w i)
     (hrel : forall i, (w p : Int) * b i = (w i : Int) * b p)
     (hnorm :
-      scalarProduct G A A + ((∑ i : I, (b i) ^ 2 : Int) : Complex) =
+      Section1.scalarProduct G A A + ((∑ i : I, (b i) ^ 2 : Int) : Complex) =
         ((1 + 2 * (d : Int) * b p : Int) : Complex))
     (hdegree :
       degree A + ((∑ i : I, b i * (w i : Int) : Int) : Complex) * a =
@@ -112,10 +113,10 @@ private theorem isaacs_7_14_distinguished_coefficient_eq_zero
   have hnormRe :
       cfNormSq A + (S : Real) =
         ((1 + 2 * (d : Int) * b p : Int) : Real) := by
-    change scalarProduct G A A + (S : Complex) =
+    change Section1.scalarProduct G A A + (S : Complex) =
       ((1 + 2 * (d : Int) * b p : Int) : Complex) at hnorm
     have h := congrArg Complex.re hnorm
-    change (scalarProduct G A A).re + (S : Real) =
+    change (Section1.scalarProduct G A A).re + (S : Real) =
       ((1 + 2 * (d : Int) * b p : Int) : Real) at h
     simpa [cfNormSq] using h
   by_contra hbp
@@ -255,8 +256,8 @@ private theorem isaacs_7_14_extension_fields
     (hdegreeZero :
       forall phi : ClassFunction N,
         integerSpanOn (insert chi Y0) puncturedSet phi ->
-          And (Theory.Character.IsVirtualCharacter (tau phi))
-            (supportedOn (tau phi) puncturedSet))
+          And (IsVirtualCharacter (tau phi))
+            (Section1.supportedOn (tau phi) puncturedSet))
     (hcoherent : IsCoherentTriple puncturedSet Y0 tau)
     (hdiv :
       exists d : Nat,
@@ -313,13 +314,13 @@ private theorem isaacs_7_14_extension_fields
     simpa [hdchi_eq, Nat.mul_assoc, pow_two] using h'
 
   have hsourceSelf : forall xi : Y0,
-      scalarProduct N (xi : ClassFunction N) (xi : ClassFunction N) = 1 := by
+      Section1.scalarProduct N (xi : ClassFunction N) (xi : ClassFunction N) = 1 := by
     intro xi
     exact (isBookIrreducibleCharacter_of_isIrreducibleCharacterOnGroup
       (hirreducible0 xi)).2
   have hsourceCross : forall xi eta : Y0,
       xi ≠ eta ->
-        scalarProduct N (xi : ClassFunction N) (eta : ClassFunction N) = 0 := by
+        Section1.scalarProduct N (xi : ClassFunction N) (eta : ClassFunction N) = 0 := by
     intro xi eta hne
     exact scalarProduct_isBookIrreducible_ne
       (xi : ClassFunction N) (eta : ClassFunction N)
@@ -329,7 +330,7 @@ private theorem isaacs_7_14_extension_fields
         (hirreducible0 eta))
       (fun h => hne (Subtype.ext h))
   have hToldGram : forall xi eta : Y0,
-      scalarProduct G (Told (xi : ClassFunction N))
+      Section1.scalarProduct G (Told (xi : ClassFunction N))
         (Told (eta : ClassFunction N)) = if xi = eta then 1 else 0 := by
     intro xi eta
     rw [hToldIso (xi : ClassFunction N) (eta : ClassFunction N)
@@ -339,7 +340,7 @@ private theorem isaacs_7_14_extension_fields
       simp [hsourceSelf]
     · simp [hxi, hsourceCross xi eta hxi]
   have hToldVirt : forall xi : Y0,
-      Theory.Character.IsVirtualCharacter (Told (xi : ClassFunction N)) := by
+      IsVirtualCharacter (Told (xi : ClassFunction N)) := by
     intro xi
     exact hToldVirt (xi : ClassFunction N) (integerSpan_of_mem Y0 xi.2)
 
@@ -358,17 +359,17 @@ private theorem isaacs_7_14_extension_fields
   have halphaOn : integerSpanOn S puncturedSet alpha := by
     exact ⟨halphaSpan,
       (supportedOn_puncturedSet_iff_degree_eq_zero alpha).2 halphaDegree⟩
-  have hTauAlphaVirt : Theory.Character.IsVirtualCharacter (tau alpha) :=
+  have hTauAlphaVirt : IsVirtualCharacter (tau alpha) :=
     (hdegreeZero alpha (by simpa [S] using halphaOn)).1
   have hTauAlphaDegree : degree (tau alpha) = 0 :=
     (supportedOn_puncturedSet_iff_degree_eq_zero _).1
       (hdegreeZero alpha (by simpa [S] using halphaOn)).2
   have hAlphaSelf :
-      scalarProduct N alpha alpha = 1 + (d : Complex) ^ 2 := by
-    have hchiSelf : scalarProduct N chi chi = 1 :=
+      Section1.scalarProduct N alpha alpha = 1 + (d : Complex) ^ 2 := by
+    have hchiSelf : Section1.scalarProduct N chi chi = 1 :=
       (isBookIrreducibleCharacter_of_isIrreducibleCharacterOnGroup
         hchi_irreducible).2
-    have hchiPsi : scalarProduct N chi (psi : ClassFunction N) = 0 :=
+    have hchiPsi : Section1.scalarProduct N chi (psi : ClassFunction N) = 0 :=
       scalarProduct_isBookIrreducible_ne chi
         (psi : ClassFunction N)
         (isBookIrreducibleCharacter_of_isIrreducibleCharacterOnGroup
@@ -376,7 +377,7 @@ private theorem isaacs_7_14_extension_fields
         (isBookIrreducibleCharacter_of_isIrreducibleCharacterOnGroup
           (hirreducible0 psi))
         (fun h => hchi_not_mem (by simp [h, psi.2]))
-    have hpsiChi : scalarProduct N (psi : ClassFunction N) chi = 0 := by
+    have hpsiChi : Section1.scalarProduct N (psi : ClassFunction N) chi = 0 := by
       have hstar := congrArg star hchiPsi
       simpa [Section1.scalarProduct_star_swap] using hstar
     simp [alpha, Section5.scalarProduct_sub_left,
@@ -385,36 +386,36 @@ private theorem isaacs_7_14_extension_fields
       hchiPsi, hpsiChi]
     ring
   have hTauAlphaSelf :
-      scalarProduct G (tau alpha) (tau alpha) = 1 + (d : Complex) ^ 2 := by
+      Section1.scalarProduct G (tau alpha) (tau alpha) = 1 + (d : Complex) ^ 2 := by
     rw [hisometry alpha alpha (by simpa [S] using halphaOn)
       (by simpa [S] using halphaOn), hAlphaSelf]
 
   let z : ClassFunction G :=
     tau alpha + ((d : Int) : Complex) • Told (psi : ClassFunction N)
-  have hzVirt : Theory.Character.IsVirtualCharacter z := by
+  have hzVirt : IsVirtualCharacter z := by
     exact Section3.isVirtualCharacter_add hTauAlphaVirt
       (by
         simpa [z] using isaacs_7_14_isVirtualCharacter_zsmul (d : Int)
           (hToldVirt psi))
   have hzCoeff : forall xi : Y0, exists n : Int,
-      scalarProduct G z (Told (xi : ClassFunction N)) = (n : Complex) := by
+      Section1.scalarProduct G z (Told (xi : ClassFunction N)) = (n : Complex) := by
     intro xi
     exact Section3.scalarProduct_isVirtualCharacter_eq_int hzVirt (hToldVirt xi)
   let b : Y0 -> Int := fun xi => Classical.choose (hzCoeff xi)
   have hb : forall xi : Y0,
-      scalarProduct G z (Told (xi : ClassFunction N)) = (b xi : Complex) := by
+      Section1.scalarProduct G z (Told (xi : ClassFunction N)) = (b xi : Complex) := by
     intro xi
     exact Classical.choose_spec (hzCoeff xi)
   let P : ClassFunction G :=
     ∑ xi : Y0, (b xi : Complex) • Told (xi : ClassFunction N)
-  have hPVirt : Theory.Character.IsVirtualCharacter P := by
+  have hPVirt : IsVirtualCharacter P := by
     apply isaacs_7_14_isVirtualCharacter_finset_sum
       (Finset.univ : Finset Y0)
       (fun xi => (b xi : Complex) • Told (xi : ClassFunction N))
     intro xi _hxi
     simpa using isaacs_7_14_isVirtualCharacter_zsmul (b xi) (hToldVirt xi)
   let A : ClassFunction G := z - P
-  have hAVirt : Theory.Character.IsVirtualCharacter A :=
+  have hAVirt : IsVirtualCharacter A :=
     Section3.isVirtualCharacter_sub hzVirt hPVirt
 
   have hrel : forall xi : Y0,
@@ -446,18 +447,18 @@ private theorem isaacs_7_14_extension_fields
         hXiOn0.2⟩
     have hOldAgree : Told Xi = tau Xi := hToldAgree Xi hXiOn0
     have hIso :
-        scalarProduct G (Told Xi) (tau alpha) =
-          scalarProduct N Xi alpha := by
+        Section1.scalarProduct G (Told Xi) (tau alpha) =
+          Section1.scalarProduct N Xi alpha := by
       rw [hOldAgree]
       exact hisometry Xi alpha (by simpa [S] using hXiOnS)
         (by simpa [S] using halphaOn)
     have hbRev : forall eta : Y0,
-        scalarProduct G (Told (eta : ClassFunction N)) z = (b eta : Complex) := by
+        Section1.scalarProduct G (Told (eta : ClassFunction N)) z = (b eta : Complex) := by
       intro eta
       have hstar := congrArg star (hb eta)
       simpa [Section1.scalarProduct_star_swap] using hstar
     have hxiChi :
-        scalarProduct N (xi : ClassFunction N) chi = 0 := by
+        Section1.scalarProduct N (xi : ClassFunction N) chi = 0 := by
       exact scalarProduct_isBookIrreducible_ne
         (xi : ClassFunction N) chi
         (isBookIrreducibleCharacter_of_isIrreducibleCharacterOnGroup
@@ -466,7 +467,7 @@ private theorem isaacs_7_14_extension_fields
           hchi_irreducible)
         (fun h => hchi_not_mem (by simpa [h] using xi.2))
     have hpsiChi :
-        scalarProduct N (psi : ClassFunction N) chi = 0 := by
+        Section1.scalarProduct N (psi : ClassFunction N) chi = 0 := by
       exact scalarProduct_isBookIrreducible_ne
         (psi : ClassFunction N) chi
         (isBookIrreducibleCharacter_of_isIrreducibleCharacterOnGroup
@@ -475,10 +476,10 @@ private theorem isaacs_7_14_extension_fields
           hchi_irreducible)
         (fun h => hchi_not_mem (by simpa [h] using psi.2))
     have hxiPsi := hsourceCross xi psi hxi
-    have hOldCross : scalarProduct G
+    have hOldCross : Section1.scalarProduct G
         (Told (xi : ClassFunction N)) (Told (psi : ClassFunction N)) = 0 := by
       simpa [hxi] using hToldGram xi psi
-    have hOldPsiSelf : scalarProduct G
+    have hOldPsiSelf : Section1.scalarProduct G
         (Told (psi : ClassFunction N)) (Told (psi : ClassFunction N)) = 1 := by
       simpa using hToldGram psi psi
     rw [show Told Xi =
@@ -497,18 +498,18 @@ private theorem isaacs_7_14_extension_fields
       hsourceSelf psi] at hIso
     exact_mod_cast (sub_eq_zero.mp hIso)
   have hnorm :
-      scalarProduct G A A + ((∑ xi : Y0, (b xi) ^ 2 : Int) : Complex) =
+      Section1.scalarProduct G A A + ((∑ xi : Y0, (b xi) ^ 2 : Int) : Complex) =
         ((1 + 2 * (d : Int) * b psi : Int) : Complex) := by
     have hbRev : forall eta : Y0,
-        scalarProduct G (Told (eta : ClassFunction N)) z = (b eta : Complex) := by
+        Section1.scalarProduct G (Told (eta : ClassFunction N)) z = (b eta : Complex) := by
       intro eta
       have hstar := congrArg star (hb eta)
       simpa [Section1.scalarProduct_star_swap] using hstar
-    have hOldPsiSelf : scalarProduct G
+    have hOldPsiSelf : Section1.scalarProduct G
         (Told (psi : ClassFunction N)) (Told (psi : ClassFunction N)) = 1 := by
       simpa using hToldGram psi psi
     have hOldPsiTau :
-        scalarProduct G (Told (psi : ClassFunction N)) (tau alpha) =
+        Section1.scalarProduct G (Told (psi : ClassFunction N)) (tau alpha) =
           (b psi : Complex) - d := by
       have h := hbRev psi
       rw [show z =
@@ -518,12 +519,12 @@ private theorem isaacs_7_14_extension_fields
       push_cast at h
       simpa using (eq_sub_of_add_eq h)
     have hTauOldPsi :
-        scalarProduct G (tau alpha) (Told (psi : ClassFunction N)) =
+        Section1.scalarProduct G (tau alpha) (Told (psi : ClassFunction N)) =
           (b psi : Complex) - d := by
       have hstar := congrArg star hOldPsiTau
       simpa [Section1.scalarProduct_star_swap] using hstar
     have hzSelf :
-        scalarProduct G z z =
+        Section1.scalarProduct G z z =
           ((1 + 2 * (d : Int) * b psi : Int) : Complex) := by
       rw [show z =
         tau alpha + ((d : Int) : Complex) • Told (psi : ClassFunction N) by rfl]
@@ -538,21 +539,21 @@ private theorem isaacs_7_14_extension_fields
       ext g
       simp [P]
     have hzP :
-        scalarProduct G z P =
+        Section1.scalarProduct G z P =
           ((∑ xi : Y0, (b xi) ^ 2 : Int) : Complex) := by
       rw [hPfun, Section1.scalarProduct_fintype_sum_right]
       simp_rw [Section1.scalarProduct_smul_right, hb]
       push_cast
       simp [pow_two]
     have hPz :
-        scalarProduct G P z =
+        Section1.scalarProduct G P z =
           ((∑ xi : Y0, (b xi) ^ 2 : Int) : Complex) := by
       rw [hPfun, Section1.scalarProduct_fintype_sum_left]
       simp_rw [Section1.scalarProduct_smul_left, hbRev]
       push_cast
       simp [pow_two]
     have hPP :
-        scalarProduct G P P =
+        Section1.scalarProduct G P P =
           ((∑ xi : Y0, (b xi) ^ 2 : Int) : Complex) := by
       rw [hPfun, Section1.scalarProduct_fintype_sum_left]
       simp_rw [Section1.scalarProduct_smul_left,
@@ -560,9 +561,9 @@ private theorem isaacs_7_14_extension_fields
         Section1.scalarProduct_smul_right, hToldGram]
       push_cast
       simp [pow_two]
-    rw [show scalarProduct G A A =
-      scalarProduct G z z - scalarProduct G z P -
-        scalarProduct G P z + scalarProduct G P P by
+    rw [show Section1.scalarProduct G A A =
+      Section1.scalarProduct G z z - Section1.scalarProduct G z P -
+        Section1.scalarProduct G P z + Section1.scalarProduct G P P by
           simp [A, Section5.scalarProduct_sub_left,
             Section5.scalarProduct_sub_right]
           ring,
@@ -572,7 +573,7 @@ private theorem isaacs_7_14_extension_fields
   let a : Complex :=
     (w psi : Complex)⁻¹ * degree (Told (psi : ClassFunction N))
   have ha : a ≠ 0 := by
-    have hOldPsiSelf : scalarProduct G
+    have hOldPsiSelf : Section1.scalarProduct G
         (Told (psi : ClassFunction N)) (Told (psi : ClassFunction N)) = 1 := by
       simpa using hToldGram psi psi
     have hOldPsiDegree :
@@ -673,17 +674,17 @@ private theorem isaacs_7_14_extension_fields
     simp [P, hbzero]
   have hAz : A = z := by
     simp [A, hPzero]
-  have hzSelf : scalarProduct G z z = 1 := by
+  have hzSelf : Section1.scalarProduct G z z = 1 := by
     have h := hnorm
     simp [hbzero] at h
     simpa [hAz] using h
   have hzOld : forall xi : Y0,
-      scalarProduct G z (Told (xi : ClassFunction N)) = 0 := by
+      Section1.scalarProduct G z (Told (xi : ClassFunction N)) = 0 := by
     intro xi
     rw [hb xi, hbzero xi]
     norm_num
   have hOldz : forall xi : Y0,
-      scalarProduct G (Told (xi : ClassFunction N)) z = 0 := by
+      Section1.scalarProduct G (Told (xi : ClassFunction N)) z = 0 := by
     intro xi
     have hstar := congrArg star (hzOld xi)
     simpa [Section1.scalarProduct_star_swap] using hstar
@@ -724,13 +725,13 @@ private theorem isaacs_7_14_extension_fields
       (isBookIrreducibleCharacter_of_isIrreducibleCharacterOnGroup
         (hsourceIrr ⟨Y, hY⟩)) hXY
   have hsourceSelfNe : forall X : S,
-      scalarProduct N (X : ClassFunction N) (X : ClassFunction N) ≠ 0 := by
+      Section1.scalarProduct N (X : ClassFunction N) (X : ClassFunction N) ≠ 0 := by
     intro X
     rw [(isBookIrreducibleCharacter_of_isIrreducibleCharacterOnGroup
       (hsourceIrr X)).2]
     norm_num
   have himgVirt : forall X : S,
-      Theory.Character.IsVirtualCharacter (img X) := by
+      IsVirtualCharacter (img X) := by
     intro X
     by_cases hX : (X : ClassFunction N) = chi
     · simpa [img, hX] using hzVirt
@@ -740,8 +741,8 @@ private theorem isaacs_7_14_extension_fields
         exact (Finset.mem_insert.mp hXS).resolve_left hX⟩
       simpa [img, hX, X0] using hToldVirt X0
   have hgram : forall X Y : S,
-      scalarProduct G (img X) (img Y) =
-        scalarProduct N (X : ClassFunction N) (Y : ClassFunction N) := by
+      Section1.scalarProduct G (img X) (img Y) =
+        Section1.scalarProduct N (X : ClassFunction N) (Y : ClassFunction N) := by
     intro X Y
     by_cases hX : (X : ClassFunction N) = chi
     · by_cases hY : (Y : ClassFunction N) = chi
@@ -884,8 +885,8 @@ public theorem isaacs_theorem_7_14
     (hdegreeZero :
       forall phi : ClassFunction N,
         integerSpanOn (insert chi Y0) puncturedSet phi ->
-          Theory.Character.IsVirtualCharacter (tau phi) /\
-            supportedOn (tau phi) puncturedSet)
+          IsVirtualCharacter (tau phi) /\
+            Section1.supportedOn (tau phi) puncturedSet)
     (hcoherent : IsCoherentTriple puncturedSet Y0 tau)
     (hdiv :
       exists d : Nat,

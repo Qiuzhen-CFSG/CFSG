@@ -2,8 +2,6 @@ module
 
 public import Stellmacher.SectionOne.Defs
 import Theory.PGroup
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 open scoped BigOperators Pointwise
@@ -233,7 +231,7 @@ private theorem lemma_one_one_part_c
         by_cases hYtop : Y = ⊤
         · obtain ⟨M, hM⟩ := IsCoatomic.exists_coatom (Subgroup S)
           have hMquot : Nat.card (S ⧸ M) = 2 :=
-            Theory.PGroup.card_quotient_coatom_eq_prime (p := 2) hM
+            card_quotient_coatom_eq_prime (p := 2) hM
           have hMcard : Nat.card S = 2 * Nat.card M := by
             simpa [hMquot] using
               (Subgroup.card_eq_card_quotient_mul_card_subgroup M)

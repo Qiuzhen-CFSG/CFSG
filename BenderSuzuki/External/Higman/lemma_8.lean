@@ -6,7 +6,6 @@ import Theory.GroupAction.Defs
 import Theory.GroupAction.Quotient
 import FeitThompson.Frattini.Core
 import Mathlib.LinearAlgebra.FixedSubmodule
-open Theory.GroupAction
 
 
 /-!

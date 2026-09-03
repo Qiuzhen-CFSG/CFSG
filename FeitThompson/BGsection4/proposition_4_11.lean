@@ -5,7 +5,6 @@ public import FeitThompson.BGsection4.lemma_4_9
 public import FeitThompson.BGsection4.lemma_4_5_a
 public import FeitThompson.BGsection4.lemma_4_5_b
 public import FeitThompson.BGsection4.proposition_4_8_b
-open Theory.ElementaryAbelian
 
 
 open scoped FixedPoints IsMulCommutative commutatorElement

@@ -4,7 +4,6 @@ public import Mathlib.GroupTheory.SpecificGroups.Dihedral
 public import Mathlib.GroupTheory.Sylow
 public import Theory.Comparator.Defs
 
-open Theory.Comparator
 open scoped MatrixGroups
 
 universe u

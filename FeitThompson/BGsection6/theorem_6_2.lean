@@ -3,8 +3,6 @@ module
 public import FeitThompson.BGsection6.theorem_6_1
 import Theory.Representation.ElementaryAbelianAction
 import FeitThompson.SubgroupConj
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 open scoped MatrixGroups Pointwise TensorProduct commutatorElement
@@ -185,10 +183,10 @@ private theorem odd_order_pstable_le_centralizerOfChiefFactor
     rw [← Nat.card_congr (QuotientGroup.quotientKerEquivRange φ).toEquiv]
     exact hker_odd
   let ρ : Representation (ZMod p) φ.range (Additive Uq) :=
-    Theory.Representation.ofElementaryAbelianAction (A := φ.range) (G := Uq) (p := p)
+    Representation.ofElementaryAbelianAction (A := φ.range) (G := Uq) (p := p)
   have hρ_faithful : Function.Injective ρ := by
     have hρker_bot : ρ.ker = ⊥ := by
-      rw [Theory.Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup]
+      rw [Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup]
       rw [fixingSubgroup_univ_eq_ker_toMulAut]
       exact (MonoidHom.ker_eq_bot_iff (φ.range.subtype)).2 φ.range.subtype_injective
     exact (MonoidHom.ker_eq_bot_iff ρ).1 hρker_bot
@@ -218,7 +216,7 @@ private theorem odd_order_pstable_le_centralizerOfChiefFactor
     exact ⟨m, hm⟩
   have hdev (u : Uq) :
       (ρ z - 1) (Additive.ofMul u) = Additive.ofMul ((z • u) / u) := by
-    rw [LinearMap.sub_apply, Theory.Representation.ofElementaryAbelianAction_apply_ofMul]
+    rw [LinearMap.sub_apply, Representation.ofElementaryAbelianAction_apply_ofMul]
     change Additive.ofMul (z • u) - Additive.ofMul u = Additive.ofMul ((z • u) / u)
     rw [sub_eq_add_neg]
     simp [div_eq_mul_inv]

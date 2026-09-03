@@ -3,7 +3,6 @@ module
 public import FeitThompson.BGsection10.Defs
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
-open Theory.GroupAction
 
 
 open scoped Pointwise

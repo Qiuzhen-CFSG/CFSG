@@ -461,7 +461,7 @@ public theorem representation_character_apply_galois_eq_argumentPow
     _ =
         τ (∑ μ : f.Eigenvalues,
           ((μ : ℂ) ^ 1 * Module.finrank ℂ (f.eigenspace (μ : ℂ)))) := by
-        rw [Theory.Representation.trace_pow_eq_sum_eigenvalues (f := f) (n := n) (k := 1) hn hpow]
+        rw [Representation.trace_pow_eq_sum_eigenvalues (f := f) (n := n) (k := 1) hn hpow]
     _ =
         ∑ μ : f.Eigenvalues,
           τ (((μ : ℂ) ^ 1) * Module.finrank ℂ (f.eigenspace (μ : ℂ))) := by
@@ -472,14 +472,14 @@ public theorem representation_character_apply_galois_eq_argumentPow
         refine Finset.sum_congr rfl ?_
         intro μ _hμ
         have hμn : (μ : ℂ) ^ n = 1 :=
-          Theory.Representation.eigenvalue_pow_eq_one_of_pow_eq_one hpow μ.property
+          Representation.eigenvalue_pow_eq_one_of_pow_eq_one hpow μ.property
         have hμN : (μ : ℂ) ^ N = 1 := by
           rcases hdiv with ⟨m, rfl⟩
           rw [pow_mul, hμn, one_pow]
         simp [map_mul, hτroot (μ : ℂ) hμN]
     _ = LinearMap.trace ℂ V (f ^ e) := by
         symm
-        rw [Theory.Representation.trace_pow_eq_sum_eigenvalues (f := f) (n := n) (k := e) hn hpow]
+        rw [Representation.trace_pow_eq_sum_eigenvalues (f := f) (n := n) (k := e) hn hpow]
     _ = ρ.character (g ^ e) := by
       simp [Representation.character, f]
 
@@ -491,13 +491,13 @@ public theorem virtualCharacter_apply_galois_eq_argumentPow
     {G : Type*} [Group G] [Finite G]
     {χ : G → ℂ} {N e : ℕ} {τ : Gal(ℂ/ℚ)}
     (hτroot : ∀ z : ℂ, z ^ N = 1 → τ z = z ^ e)
-    (hχ : Theory.Character.IsVirtualCharacter χ)
+    (hχ : IsVirtualCharacter χ)
     (hdivGN : Nat.card G ∣ N) :
     ∀ g : G, τ (χ g) = χ (g ^ e) := by
   classical
   rcases hχ with ⟨r, m, n, ρ, hχeq⟩
   intro g
-  rw [hχeq, Theory.Character.virtualCharacterOfRepresentations]
+  rw [hχeq, virtualCharacterOfRepresentations]
   rw [map_sum]
   refine Finset.sum_congr rfl ?_
   intro i _hi

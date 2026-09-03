@@ -35,7 +35,6 @@ open scoped TensorProduct
 namespace BenderGlauberman
 
 open GorensteinWalter
-open Theory.Character
 
 attribute [local instance] Fintype.ofFinite
 attribute [local instance] Classical.propDecidable
@@ -234,7 +233,7 @@ public theorem fintype_card_irr_eq_conjClassesBG19 (G : Type u) [Group G] [Finty
     Fintype.card (IrrBG19 G) = Nat.card (ConjClasses G) := by
   classical
   let : Finite G := Finite.of_fintype G
-  rcases Theory.Character.card_irreducible_characters_eq_card_conjClasses (G := G) with
+  rcases card_irreducible_characters_eq_card_conjClasses (G := G) with
     ⟨ι, hι, χ, hχ, hcard⟩
   let : Fintype ι := hι
   let f : ι → IrrBG19 G := fun i =>
@@ -2467,7 +2466,7 @@ public theorem isCharacter_induced (H : Subgroup G) {φ : ClassFunction (↥H)}
     (hφ : IsCharacter φ) : IsCharacter (inducedClassFunction H φ) := by
   rcases hφ with ⟨n, ρ, rfl⟩
   have : FiniteDimensional ℂ (Representation.IndV H.subtype ρ) :=
-    Theory.Representation.finiteDimensional_ind H ρ
+    Representation.finiteDimensional_ind H ρ
   let σ : Representation ℂ G (Representation.IndV H.subtype ρ) :=
     Representation.ind H.subtype ρ
   refine ⟨Module.finrank ℂ (Representation.IndV H.subtype ρ), standardizeRepresentation σ, ?_⟩
@@ -2497,7 +2496,7 @@ public theorem isCharacter_induced (H : Subgroup G) {φ : ClassFunction (↥H)}
             · have hxH' : (x⁻¹) * g * (x⁻¹)⁻¹ ∈ H := by simpa using hxH
               simp [hxH]
             · simp [hxH]
-    _ = σ.character g := (Theory.Representation.induced_character_formula H ρ g).symm
+    _ = σ.character g := (Representation.induced_character_formula H ρ g).symm
     _ = (standardizeRepresentation σ).character g :=
           (standardizeRepresentation_character σ g).symm
 

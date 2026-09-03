@@ -28,7 +28,7 @@ attribute [local instance] Fintype.ofFinite
 namespace Section4Scratch
 universe u
 universe v
-open Section1 Section2 Section3 Section4
+open Section2 Section3 Section4
 
 /-! ## (4.9) -/
 
@@ -108,7 +108,7 @@ open Section1 Section2 Section3 Section4
     (deltaSign : J → ℂ) : Prop :=
   k ≠ j0 →
     ∀ v : Section1.CoeffVector (equalDegreeColumnIndex piChar j0 k),
-      Theory.Character.IsVirtualCharacter
+      IsVirtualCharacter
         (Section1.evalCoeff
           (fun t : equalDegreeColumnIndex piChar j0 k =>
             deltaSign k • omegaColumnSigma σ ω t.1) v)
@@ -164,9 +164,9 @@ open Section1 Section2 Section3 Section4
     (W2 W : Subgroup L) (A : Set L)
     (τ : ClassFunction L →ₗ[ℂ] ClassFunction G) : Prop :=
   ∀ α : ClassFunction L,
-    Theory.Character.IsVirtualCharacter α →
+    IsVirtualCharacter α →
       Section1.supportedOn α (a0Set W2 W A) →
-        Theory.Character.IsVirtualCharacter (τ α)
+        IsVirtualCharacter (τ α)
 
 /-- Isometry on the exact prime-Dade carrier `A ∪ Vᴸ`. -/
 @[expose] public def tau_isometry_on_primeDadeA0_statement
@@ -201,9 +201,9 @@ open Section1 Section2 Section3 Section4
     (W1 W2 W : Subgroup L) (A : Set L)
     (τ : ClassFunction L →ₗ[ℂ] ClassFunction G) : Prop :=
   ∀ α : ClassFunction L,
-    Theory.Character.IsVirtualCharacter α →
+    IsVirtualCharacter α →
       Section1.supportedOn α (primeDadeA0Set W1 W2 W A) →
-        Theory.Character.IsVirtualCharacter (τ α)
+        IsVirtualCharacter (τ α)
 
 /-- The ambient-relative PF `(3.9)(a,c)` base-column endpoints supplied by the
 full Section `(4.6)` construction.  The cardinal parameter is the local

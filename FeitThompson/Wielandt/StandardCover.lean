@@ -1,7 +1,6 @@
 module
 
 public import FeitThompson.Wielandt.HomocyclicLift
-open Theory.ElementaryAbelian
 
 
 /-!

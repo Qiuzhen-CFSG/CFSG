@@ -2,8 +2,6 @@ module
 
 public import FeitThompson.BGsection5.theorem_5_3_c
 public import FeitThompson.BGsection4.lemma_4_5_a
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 /-! # Theorem 5.3(d) from BG Section 5 -/

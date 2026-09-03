@@ -10,7 +10,6 @@ import BenderSuzuki.SE.Section9Focal
 public import BenderSuzuki.External.Huppert.IV.Residual
 import BenderSuzuki.External.Huppert.IV.theorem_3_3
 import FeitThompson.PFsection3.PFsection3_5
-open Theory.GroupAction
 
 
 /-!

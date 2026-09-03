@@ -5,8 +5,6 @@ public import BenderSuzuki.SE.Compat
 import FeitThompson.GroupAction.CoprimeHall
 import FeitThompson.SubgroupConj
 import FeitThompson.Wielandt.FixedPointProduct
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 /-!

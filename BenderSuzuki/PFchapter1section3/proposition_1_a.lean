@@ -4,7 +4,6 @@ public import BenderSuzuki.PFchapter1section3.Basic
 public import BenderSuzuki.PFchapter1section1.proposition_5
 public import BenderSuzuki.PFchapter1section1.proposition_6_a
 public import BenderSuzuki.PFchapter1section1.proposition_6_b
-open Theory.GroupAction
 
 
 namespace BenderSuzuki

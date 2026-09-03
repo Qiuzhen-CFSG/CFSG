@@ -143,7 +143,7 @@ public theorem exists_nonkernelInducedFamily
     ∃ S : Finset (Section1.ClassFunction M),
       nonkernelInducedFamily M H K S := by
   classical
-  rcases Theory.Character.irreducible_characters_form_basis (G := H.subgroupOf M) with
+  rcases irreducible_characters_form_basis (G := H.subgroupOf M) with
     ⟨ι, hι, χ, hχ, _b, _hb⟩
   letI : Fintype ι := hι
   let ψ : ι → Section1.ClassFunction (H.subgroupOf M) :=
@@ -168,7 +168,7 @@ public theorem exists_nonkernelInducedFamily
     have hθclass : Section1.IsClassFunction θ :=
       Section1.isCharacter_isClassFunction θ
         (Section1.isCharacter_of_isIrreducibleCharacterOnGroup hθirr)
-    have hθrepirr : Theory.Character.IsIrreducibleConjCharacter
+    have hθrepirr : IsIrreducibleConjCharacter
         (Section1.toConjClassFunction θ hθclass) := by
       rcases hθirr with ⟨n, ρ, hρ, rfl⟩
       refine ⟨?_, ?_⟩
@@ -684,7 +684,7 @@ minimal-counterexample context carried into Section 13 by PF `(12.17)`. -/
     {G : Type u} [Group G] [Finite G]
     (H P : Subgroup G)
     (α : Section1.ClassFunction H) : Prop :=
-  Theory.Character.IsVirtualCharacter α ∧
+  IsVirtualCharacter α ∧
     ∀ θ : Section1.ClassFunction H,
       Section1.IsIrreducibleCharacterOnGroup θ →
         Section1.scalarProduct H α θ ≠ 0 →
@@ -754,7 +754,7 @@ condition, and the definition of `a`. -/
   H = P ⊔ C ∧
     nonkernelInducedFamily Smax H P S1 ∧
     ζ0 ∈ S1 ∧ ζ1 ∈ S1 ∧ ζ0 ≠ ζ1 ∧
-    Theory.Character.IsVirtualCharacter χ ∧
+    IsVirtualCharacter χ ∧
     a = Section1.scalarProduct G (τS (ζ1 - ζ0)) χ ∧
     ∀ ζ : Section1.ClassFunction Smax, ζ ∈ S1 → ζ ≠ ζ0 → ζ ≠ ζ1 →
       Section1.scalarProduct G (τS (ζ - ζ0)) χ = 0

@@ -111,14 +111,14 @@ private theorem standardizeRepresentation_irreducible_pf59
     Representation.IsIrreducible (standardizeRepresentation_pf59 ρ) := by
   let b : Module.Basis (Fin (Module.finrank ℂ V)) ℂ V := Module.finBasis ℂ V
   let e : V ≃ₗ[ℂ] (Fin (Module.finrank ℂ V) → ℂ) := b.equivFun
-  let eRep : Theory.Representation.RepEquiv ρ (standardizeRepresentation_pf59 ρ) := by
+  let eRep : Representation.RepEquiv ρ (standardizeRepresentation_pf59 ρ) := by
     refine
       { toLinearEquiv := e
         isIntertwining' := ?_ }
     intro g
     ext v i
     simp [standardizeRepresentation_pf59, e, b, b.equivFun_apply]
-  exact (Theory.Representation.RepEquiv.irreducible_euqiv eRep).1 hρ
+  exact (Representation.RepEquiv.irreducible_euqiv eRep).1 hρ
 
 private def dualCoannihilatorSubrepresentation_pf59
     {G V : Type*} [Group G] [AddCommGroup V] [Module ℂ V]
@@ -236,28 +236,28 @@ private theorem isIrreducibleCharacterOnGroup_conjugateCharacter_pf59
 private theorem isVirtualCharacter_zsmul_pf59
     {G : Type u} [Group G] [Finite G]
     (n : ℤ) {χ : Section1.ClassFunction G}
-    (hχ : Theory.Character.IsVirtualCharacter χ) :
-    Theory.Character.IsVirtualCharacter (n • χ) := by
+    (hχ : IsVirtualCharacter χ) :
+    IsVirtualCharacter (n • χ) := by
   classical
   rcases hχ with ⟨r, m, k, ρ, rfl⟩
   refine ⟨r, fun i => n * m i, k, ρ, ?_⟩
   ext g
-  simp [Theory.Character.virtualCharacterOfRepresentations, Finset.mul_sum, mul_assoc]
+  simp [virtualCharacterOfRepresentations, Finset.mul_sum, mul_assoc]
 
 private theorem isVirtualCharacter_finset_sum_pf59
     {G : Type u} [Group G] [Finite G]
     {ι : Type*} (s : Finset ι) (Φ : ι → Section1.ClassFunction G)
-    (hΦ : ∀ i ∈ s, Theory.Character.IsVirtualCharacter (Φ i)) :
-    Theory.Character.IsVirtualCharacter (Finset.sum s Φ) := by
+    (hΦ : ∀ i ∈ s, IsVirtualCharacter (Φ i)) :
+    IsVirtualCharacter (Finset.sum s Φ) := by
   classical
   induction s using Finset.induction_on with
   | empty =>
       refine ⟨0, (fun i => nomatch i), (fun i => nomatch i), (fun i => nomatch i), ?_⟩
       ext g
-      simp [Theory.Character.virtualCharacterOfRepresentations]
+      simp [virtualCharacterOfRepresentations]
   | @insert a s ha ih =>
-      have ha' : Theory.Character.IsVirtualCharacter (Φ a) := hΦ a (Finset.mem_insert_self a s)
-      have hs' : Theory.Character.IsVirtualCharacter (Finset.sum s Φ) := by
+      have ha' : IsVirtualCharacter (Φ a) := hΦ a (Finset.mem_insert_self a s)
+      have hs' : IsVirtualCharacter (Finset.sum s Φ) := by
         refine ih ?_
         intro i hi
         exact hΦ i (Finset.mem_insert_of_mem hi)
@@ -267,9 +267,9 @@ public theorem isVirtualCharacter_evalCoeff_pf59
     {G : Type u} [Group G] [Finite G]
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (μ : ι → Section1.ClassFunction G)
-    (hμ : ∀ i, Theory.Character.IsVirtualCharacter (μ i))
+    (hμ : ∀ i, IsVirtualCharacter (μ i))
     (v : Section1.CoeffVector ι) :
-    Theory.Character.IsVirtualCharacter (Section1.evalCoeff μ v) := by
+    IsVirtualCharacter (Section1.evalCoeff μ v) := by
   classical
   rw [Section1.evalCoeff]
   refine isVirtualCharacter_finset_sum_pf59 (Finset.univ : Finset ι)
@@ -623,13 +623,13 @@ private theorem exists_sign_of_int_sq_sum_eq_one_pf59
 public theorem signed_irreducible_of_virtual_norm_one_pf59
     {G : Type u} [Group G] [Finite G]
     {φ : Section1.ClassFunction G}
-    (hvirt : Theory.Character.IsVirtualCharacter φ)
+    (hvirt : IsVirtualCharacter φ)
     (hself : Section1.scalarProduct G φ φ = 1) :
     Section3.IsSignedIrreducibleCharacter φ := by
   classical
   have hφclass : Section1.IsClassFunction φ :=
     Section3.isVirtualCharacter_isClassFunction hvirt
-  rcases Theory.Character.irreducible_characters_form_basis (G := G) with
+  rcases irreducible_characters_form_basis (G := G) with
     ⟨ι, hι, χ, hχ, _b, _hb⟩
   letI : Fintype ι := hι
   letI : Finite ι := Finite.of_fintype ι
@@ -675,7 +675,7 @@ public theorem signed_irreducible_of_virtual_norm_one_pf59
     intro ξ hξ
     rcases hall ξ hξ with ⟨i, rfl⟩
     calc
-      Theory.Character.classFunctionInner
+      classFunctionInner
           (Section1.toConjClassFunction φsum hφsumclass) (χ i) =
         Section1.scalarProduct G φsum (ψ i) := by
           rw [← Section1.toConjClassFunction_ofConjClassFunction (χ i)]
@@ -685,7 +685,7 @@ public theorem signed_irreducible_of_virtual_norm_one_pf59
           exact Section1.scalarProduct_weightedFamilySum_left_orthonormal
             (w := fun i => (a i : ℂ)) (chi := ψ) horthψ i
       _ = Section1.scalarProduct G φ (ψ i) := (ha i).symm
-      _ = Theory.Character.classFunctionInner
+      _ = classFunctionInner
           (Section1.toConjClassFunction φ hφclass) (χ i) := by
           rw [← Section1.toConjClassFunction_ofConjClassFunction (χ i)]
           exact (Section1.classFunctionInner_toConjClassFunction
@@ -962,12 +962,12 @@ private theorem irreducibleCharacterOnGroup_argumentPow_of_ringEquiv_pf59
     intro x g
     simpa [mul_assoc] using Representation.char_conj (ρ := ρτ) g x
   have hinnerτ :
-      Theory.Character.classFunctionInner (Theory.Character.characterClassFunction ρτ) (Theory.Character.characterClassFunction ρτ) =
+      classFunctionInner (characterClassFunction ρτ) (characterClassFunction ρτ) =
         Section1.scalarProduct G (fun g : G => χ (g ^ e)) (fun g : G => χ (g ^ e)) := by
     calc
-      Theory.Character.classFunctionInner (Theory.Character.characterClassFunction ρτ) (Theory.Character.characterClassFunction ρτ) =
+      classFunctionInner (characterClassFunction ρτ) (characterClassFunction ρτ) =
           Section1.scalarProduct G ρτ.character ρτ.character := by
-            change Theory.Character.classFunctionInner
+            change classFunctionInner
                 (Section1.toConjClassFunction ρτ.character hcfτ)
                 (Section1.toConjClassFunction ρτ.character hcfτ) =
               Section1.scalarProduct G ρτ.character ρτ.character
@@ -976,7 +976,7 @@ private theorem irreducibleCharacterOnGroup_argumentPow_of_ringEquiv_pf59
       _ = Section1.scalarProduct G (fun g : G => χ (g ^ e)) (fun g : G => χ (g ^ e)) := by
             congr 1 <;> ext g <;> exact hcharτ g
   have hirrτ : Representation.IsIrreducible ρτ := by
-    apply (Theory.Character.irreducible_iff_character_norm_one (ρ := ρτ)).2
+    apply (irreducible_iff_character_norm_one (ρ := ρτ)).2
     rw [hinnerτ]
     exact hnorm
   exact ⟨n, ρτ, hirrτ, (funext hcharτ).symm⟩
@@ -1167,7 +1167,7 @@ private theorem representation_character_apply_galois_eq_argumentPow_aux_pf59
     _ =
         τ (∑ μ : f.Eigenvalues,
           ((μ : ℂ) ^ 1 * Module.finrank ℂ (f.eigenspace (μ : ℂ)))) := by
-        rw [Theory.Representation.trace_pow_eq_sum_eigenvalues (f := f) (n := n) (k := 1) hn hpow]
+        rw [Representation.trace_pow_eq_sum_eigenvalues (f := f) (n := n) (k := 1) hn hpow]
     _ =
         ∑ μ : f.Eigenvalues,
           τ (((μ : ℂ) ^ 1) * Module.finrank ℂ (f.eigenspace (μ : ℂ))) := by
@@ -1185,7 +1185,7 @@ private theorem representation_character_apply_galois_eq_argumentPow_aux_pf59
         simp [map_mul, hτroot (μ : ℂ) hμN]
     _ = LinearMap.trace ℂ V (f ^ e) := by
         symm
-        rw [Theory.Representation.trace_pow_eq_sum_eigenvalues (f := f) (n := n) (k := e) hn hpow]
+        rw [Representation.trace_pow_eq_sum_eigenvalues (f := f) (n := n) (k := e) hn hpow]
     _ = ρ.character (g ^ e) := by
       simp [Representation.character, f]
 
@@ -1194,13 +1194,13 @@ public theorem virtualCharacter_apply_galois_eq_argumentPow_aux_pf59
     {χ : Section1.ClassFunction G}
     {N e : ℕ} {τ : Gal(ℂ/ℚ)}
     (hτroot : ∀ z : ℂ, z ^ N = 1 → τ z = z ^ e)
-    (hχ : Theory.Character.IsVirtualCharacter χ)
+    (hχ : IsVirtualCharacter χ)
     (hdivGN : Nat.card G ∣ N) :
     ∀ g : G, τ (χ g) = χ (g ^ e) := by
   classical
   rcases hχ with ⟨r, m, n, ρ, hχeq⟩
   intro g
-  rw [hχeq, Theory.Character.virtualCharacterOfRepresentations]
+  rw [hχeq, virtualCharacterOfRepresentations]
   rw [map_sum]
   refine Finset.sum_congr rfl ?_
   intro i _hi
@@ -1321,8 +1321,8 @@ public theorem theorem_5_9_a
   classical
   have hXspan : integerSpan S X := integerSpan_of_mem_pf59 S hXS
   have hXuspan : integerSpan S Xu := integerSpan_of_mem_pf59 S hXuS
-  have hTXvirt : Theory.Character.IsVirtualCharacter (T1 X) := hVirt X hXspan
-  have hTXuvirt : Theory.Character.IsVirtualCharacter (T1 Xu) := hVirt Xu hXuspan
+  have hTXvirt : IsVirtualCharacter (T1 X) := hVirt X hXspan
+  have hTXuvirt : IsVirtualCharacter (T1 Xu) := hVirt Xu hXuspan
   have hTXself : Section1.scalarProduct G (T1 X) (T1 X) = 1 := by
     calc
       Section1.scalarProduct G (T1 X) (T1 X)
@@ -1351,7 +1351,7 @@ public theorem theorem_5_9_a
   obtain ⟨ψu, hψuS, hψArg⟩ := hClosed ψ hψS
   have hψspan : integerSpan S ψ := integerSpan_of_mem_pf59 S hψS
   have hψuspan : integerSpan S ψu := integerSpan_of_mem_pf59 S hψuS
-  have hTψvirt : Theory.Character.IsVirtualCharacter (T1 ψ) := hVirt ψ hψspan
+  have hTψvirt : IsVirtualCharacter (T1 ψ) := hVirt ψ hψspan
   have hTψself : Section1.scalarProduct G (T1 ψ) (T1 ψ) = 1 := by
     calc
       Section1.scalarProduct G (T1 ψ) (T1 ψ)
@@ -1395,13 +1395,13 @@ public theorem theorem_5_9_a
       (classFunctionArgumentPow_smul_pf59 (nX : ℂ) hψArg)
   have hTχ : T1 χ = Section2.dadeTransform H hAL χ := hAgree χ hχA
   have hTχu : T1 χu = Section2.dadeTransform H hAL χu := hAgree χu hχuA
-  have hχvirtSource : Theory.Character.IsVirtualCharacter χ := by
+  have hχvirtSource : IsVirtualCharacter χ := by
     rcases hχA.1 with ⟨v, hv⟩
     rw [hv]
     refine isVirtualCharacter_evalCoeff_pf59 _ ?_ v
     intro Y
     exact Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup (hIrrS Y Y.2)
-  have hTχvirt : Theory.Character.IsVirtualCharacter (T1 χ) := hVirt χ hχA.1
+  have hTχvirt : IsVirtualCharacter (T1 χ) := hVirt χ hχA.1
   have hTχ1 : (T1 χ) 1 = 0 := by
     rw [hTχ]
     exact Section2.dadeTransform_eq_zero_of_not_mem_support
@@ -1475,7 +1475,7 @@ public theorem theorem_5_9_a
     · subst hφX
       exact ⟨μX, hμX, hTXeq⟩
     · have hφspan : integerSpan S φ := integerSpan_of_mem_pf59 S hφ
-      have hTφvirt : Theory.Character.IsVirtualCharacter (T1 φ) := hVirt φ hφspan
+      have hTφvirt : IsVirtualCharacter (T1 φ) := hVirt φ hφspan
       have hTφself : Section1.scalarProduct G (T1 φ) (T1 φ) = 1 := by
         calc
           Section1.scalarProduct G (T1 φ) (T1 φ)

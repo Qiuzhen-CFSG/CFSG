@@ -1,7 +1,6 @@
 module
 
 public import FeitThompson.ChiefFactors.Core
-open Theory.ElementaryAbelian
 
 
 /-!

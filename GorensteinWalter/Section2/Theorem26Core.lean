@@ -32,9 +32,8 @@ import GorensteinWalter.LinearThreeEquiv
 import GorensteinWalter.LinearRingEquiv
 import FeitThompson.FinalTheorem
 import Mathlib.LinearAlgebra.Projectivization.PSL.PSL2
-open Theory.Representation
+open Representation
 
-open Theory.GroupAction
 
 
 /-!

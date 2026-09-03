@@ -120,7 +120,7 @@ public theorem suzuki_ch6_proposition_2_9
     (H : Subgroup G) [Finite H] (K : Set G)
     (hTI : IsTISubsetRelative H K)
     (theta : Section1.ClassFunction H)
-    (hthetaVirtual : Theory.Character.IsVirtualCharacter theta)
+    (hthetaVirtual : IsVirtualCharacter theta)
     (hthetaSupport : ∀ h : H, (h : G) ∉ K → theta h = 0) :
     (∀ (x : G) (hx : x ∈ K), x ≠ 1 →
       Section1.inducedCF H theta x = theta ⟨x, hTI.1 hx⟩) ∧
@@ -129,7 +129,7 @@ public theorem suzuki_ch6_proposition_2_9
       Section1.scalarProduct H theta (Section1.principalCharacter H) ∧
     (theta 1 = 0 →
       ∀ phi : Section1.ClassFunction H,
-        Theory.Character.IsVirtualCharacter phi →
+        IsVirtualCharacter phi →
         (∀ h : H, (h : G) ∉ K → phi h = 0) →
         Section1.scalarProduct G (Section1.inducedCF H theta)
             (Section1.inducedCF H phi) =

@@ -118,7 +118,7 @@ public theorem isBookIrreducibleCharacter_representation_witness_irreducible
   rcases hchar with ⟨V, _hadd, _hmod, _hfd, rho, hχ⟩
   refine ⟨V, inferInstance, inferInstance, inferInstance, rho, hχ, ?_⟩
   classical
-  apply (Theory.Character.irreducible_iff_end_dimension_one (ρ := rho)).2
+  apply (irreducible_iff_end_dimension_one (ρ := rho)).2
   have hcard_ne : (Nat.card G : ℂ) ≠ 0 := by
     exact_mod_cast (Nat.card_pos (α := G)).ne'
   letI : Invertible (Nat.card G : ℂ) := invertibleOfNonzero hcard_ne
@@ -159,7 +159,7 @@ public theorem degree_nat_dvd_card_of_isBookIrreducibleCharacter
   refine ⟨Module.finrank ℂ V, ?_, ?_⟩
   · rw [hχ, degree_representation_character rho]
   · letI : Representation.IsIrreducible rho := hirr
-    exact Theory.Character.irreducible_dimension_dvd_group_order rho
+    exact irreducible_dimension_dvd_group_order rho
 
 public theorem isCharacter_inducedCF_of_isCharacter
     {G : Type u} [Group G] [Finite G]
@@ -168,7 +168,7 @@ public theorem isCharacter_inducedCF_of_isCharacter
   IsCharacter (inducedCF S psi) := by
   rcases hpsi with ⟨V, _hadd, _hmod, _hfd, rho, hpsi⟩
   haveI : FiniteDimensional ℂ (Representation.IndV S.subtype rho) :=
-    Theory.Representation.finiteDimensional_ind S rho
+    Representation.finiteDimensional_ind S rho
   refine ⟨Representation.IndV S.subtype rho, inferInstance, inferInstance,
     inferInstance, Representation.ind S.subtype rho, ?_⟩
   rw [hpsi]
@@ -265,7 +265,7 @@ public theorem scalarProduct_inducedCF_representation_char_eq_nat
     (hpsi : psi = psiRep.character) :
     ∃ n : ℕ, scalarProduct G (inducedCF S phi) psi = (n : ℂ) := by
   haveI : FiniteDimensional ℂ (Representation.IndV S.subtype phiRep) :=
-    Theory.Representation.finiteDimensional_ind S phiRep
+    Representation.finiteDimensional_ind S phiRep
   refine ⟨Module.finrank ℂ
       (Representation.IntertwiningMap psiRep (Representation.ind S.subtype phiRep)), ?_⟩
   rw [hphi, hpsi]
@@ -296,8 +296,8 @@ public theorem nat_weighted_complex_sum_eq_zero_component
 
 @[expose] public noncomputable def toConjClassFunction
     {G : Type*} [Group G] (phi : ClassFunction G)
-    (hphi : IsClassFunction phi) : Theory.Character.ConjClassFunction G :=
-  Theory.Character.conjClassFunctionOfInvariant phi (by
+    (hphi : IsClassFunction phi) : ConjClassFunction G :=
+  conjClassFunctionOfInvariant phi (by
     intro g x
     exact hphi x g)
 
@@ -308,7 +308,7 @@ public theorem toConjClassFunction_apply
 
 public theorem toConjClassFunction_eq_of_apply
     {G : Type*} [Group G] (phi : ClassFunction G)
-    (hphi : IsClassFunction phi) (Phi : Theory.Character.ConjClassFunction G)
+    (hphi : IsClassFunction phi) (Phi : ConjClassFunction G)
     (hPhi : ∀ g : G, Phi (ConjClasses.mk g) = phi g) :
     toConjClassFunction phi hphi = Phi := by
   ext c
@@ -319,7 +319,7 @@ public theorem classFunctionInner_toConjClassFunction
     {G : Type*} [Group G] [Finite G]
     (phi psi : ClassFunction G)
     (hphi : IsClassFunction phi) (hpsi : IsClassFunction psi) :
-    Theory.Character.classFunctionInner
+    classFunctionInner
         (toConjClassFunction phi hphi) (toConjClassFunction psi hpsi) =
       scalarProduct G phi psi := by
   classical
@@ -330,58 +330,58 @@ public theorem representation_classFunctionInner_characterClassFunction
     [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
     [AddCommGroup W] [Module ℂ W] [FiniteDimensional ℂ W]
     (rho : Representation ℂ G V) (sigma : Representation ℂ G W) :
-    Theory.Character.classFunctionInner
-        (Theory.Character.characterClassFunction rho)
-        (Theory.Character.characterClassFunction sigma) =
+    classFunctionInner
+        (characterClassFunction rho)
+        (characterClassFunction sigma) =
       (Nat.card G : ℂ)⁻¹ * ∑ g : G, rho.character g * sigma.character g⁻¹ := by
   classical
-  unfold Theory.Character.classFunctionInner
+  unfold classFunctionInner
   congr 1
   refine Finset.sum_congr rfl ?_
   intro g _hg
-  rw [show Theory.Character.characterClassFunction rho (ConjClasses.mk g) =
+  rw [show characterClassFunction rho (ConjClasses.mk g) =
       rho.character g from rfl]
-  rw [show Theory.Character.characterClassFunction sigma (ConjClasses.mk g) =
+  rw [show characterClassFunction sigma (ConjClasses.mk g) =
       sigma.character g from rfl]
   rw [(representation_character_inv_eq_star_character sigma g).symm]
 
 public theorem representation_irreducibleCharacter_witness_irreducible
-    {G : Type*} [Group G] [Finite G] (chi : Theory.Character.ConjClassFunction G)
-    (hchi : Theory.Character.IsIrreducibleConjCharacter chi) :
+    {G : Type*} [Group G] [Finite G] (chi : ConjClassFunction G)
+    (hchi : IsIrreducibleConjCharacter chi) :
     ∃ n : ℕ, ∃ rho : Representation ℂ G (Fin n → ℂ),
-      chi = Theory.Character.characterClassFunction rho ∧
+      chi = characterClassFunction rho ∧
         Representation.IsIrreducible rho := by
   rcases hchi with ⟨hchar, hirr⟩
   rcases hchar with ⟨n, rho, hchi_eq⟩
   refine ⟨n, rho, hchi_eq, ?_⟩
-  apply (Theory.Character.irreducible_iff_character_norm_one (ρ := rho)).2
+  apply (irreducible_iff_character_norm_one (ρ := rho)).2
   simpa [hchi_eq]
     using hirr
 
 public theorem representation_completeFamily_orthonormal
     {G ι : Type*} [Group G] [Finite G] [Fintype ι] [DecidableEq ι]
-    {chi : ι → Theory.Character.ConjClassFunction G}
-    (hchi : Theory.Character.IsCompleteIrreducibleCharacterFamily chi)
+    {chi : ι → ConjClassFunction G}
+    (hchi : IsCompleteIrreducibleCharacterFamily chi)
     (i j : ι) :
-    Theory.Character.classFunctionInner (chi i) (chi j) =
+    classFunctionInner (chi i) (chi j) =
       if i = j then 1 else 0 := by
   classical
   rcases hchi with ⟨hirr, _hcomplete, hinj⟩
   rcases (hirr i).1 with ⟨ni, rhoi, hchari⟩
   rcases (hirr j).1 with ⟨nj, rhoj, hcharj⟩
   have hirri : Representation.IsIrreducible rhoi := by
-    apply (Theory.Character.irreducible_iff_character_norm_one (ρ := rhoi)).2
+    apply (irreducible_iff_character_norm_one (ρ := rhoi)).2
     simpa [hchari] using (hirr i).2
   have hirrj : Representation.IsIrreducible rhoj := by
-    apply (Theory.Character.irreducible_iff_character_norm_one (ρ := rhoj)).2
+    apply (irreducible_iff_character_norm_one (ρ := rhoj)).2
     simpa [hcharj] using (hirr j).2
   by_cases hij : i = j
   · subst j
     simpa using (hirr i).2
   · have horth :
-        Theory.Character.classFunctionInner
-            (Theory.Character.characterClassFunction rhoi)
-            (Theory.Character.characterClassFunction rhoj) =
+        classFunctionInner
+            (characterClassFunction rhoi)
+            (characterClassFunction rhoj) =
           if Nonempty (Representation.Equiv rhoj rhoi) then 1 else 0 := by
       have hcard_ne : (Nat.card G : ℂ) ≠ 0 := by
         exact_mod_cast (Nat.card_pos (α := G)).ne'
@@ -406,39 +406,39 @@ public theorem representation_completeFamily_orthonormal
 
 public theorem representation_classFunctionInner_sum_left
     {G ι : Type*} [Group G] [Finite G] [Fintype ι]
-    (a : ι → ℂ) (phi : ι → Theory.Character.ConjClassFunction G)
-    (psi : Theory.Character.ConjClassFunction G) :
-    Theory.Character.classFunctionInner (∑ i : ι, a i • phi i) psi =
-      ∑ i : ι, a i * Theory.Character.classFunctionInner (phi i) psi := by
+    (a : ι → ℂ) (phi : ι → ConjClassFunction G)
+    (psi : ConjClassFunction G) :
+    classFunctionInner (∑ i : ι, a i • phi i) psi =
+      ∑ i : ι, a i * classFunctionInner (phi i) psi := by
   classical
-  let L : Theory.Character.ConjClassFunction G →ₗ[ℂ] ℂ :=
-    { toFun := fun φ => Theory.Character.classFunctionInner φ psi
+  let L : ConjClassFunction G →ₗ[ℂ] ℂ :=
+    { toFun := fun φ => classFunctionInner φ psi
       map_add' := by
         intro φ₁ φ₂
-        simp [Theory.Character.classFunctionInner, add_mul,
+        simp [classFunctionInner, add_mul,
           Finset.sum_add_distrib, mul_add]
       map_smul' := by
         intro c φ
-        simp [Theory.Character.classFunctionInner, Finset.mul_sum,
+        simp [classFunctionInner, Finset.mul_sum,
           mul_assoc, mul_left_comm] }
   calc
-    Theory.Character.classFunctionInner (∑ i : ι, a i • phi i) psi = L (∑ i : ι, a i • phi i) := rfl
+    classFunctionInner (∑ i : ι, a i • phi i) psi = L (∑ i : ι, a i • phi i) := rfl
     _ = ∑ i : ι, a i • L (phi i) := by
       rw [map_sum]
       refine Finset.sum_congr rfl ?_
       intro i _hi
       simp [L]
-    _ = ∑ i : ι, a i * Theory.Character.classFunctionInner (phi i) psi := by
+    _ = ∑ i : ι, a i * classFunctionInner (phi i) psi := by
       rfl
 
 public theorem representation_basis_repr_eq_inner
     {G ι : Type*} [Group G] [Finite G] [Fintype ι] [DecidableEq ι]
-    {chi : ι → Theory.Character.ConjClassFunction G}
-    (hchi : Theory.Character.IsCompleteIrreducibleCharacterFamily chi)
-    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
+    {chi : ι → ConjClassFunction G}
+    (hchi : IsCompleteIrreducibleCharacterFamily chi)
+    (b : Module.Basis ι ℂ (ConjClassFunction G))
     (hb : ∀ i, b i = chi i)
-    (phi : Theory.Character.ConjClassFunction G) (i : ι) :
-    b.repr phi i = Theory.Character.classFunctionInner phi (chi i) := by
+    (phi : ConjClassFunction G) (i : ι) :
+    b.repr phi i = classFunctionInner phi (chi i) := by
   classical
   have hsum_phi : (∑ j : ι, b.repr phi j • chi j) = phi := by
     calc
@@ -449,27 +449,27 @@ public theorem representation_basis_repr_eq_inner
             rw [hb j]
       _ = phi := Module.Basis.sum_repr b phi
   have hinner :
-      Theory.Character.classFunctionInner phi (chi i) =
-        Theory.Character.classFunctionInner (∑ j : ι, b.repr phi j • chi j) (chi i) := by
+      classFunctionInner phi (chi i) =
+        classFunctionInner (∑ j : ι, b.repr phi j • chi j) (chi i) := by
     rw [hsum_phi]
-  have h := congrArg (fun f => Theory.Character.classFunctionInner f (chi i)) hsum_phi
-  change Theory.Character.classFunctionInner (∑ j : ι, b.repr phi j • chi j) (chi i) =
-    Theory.Character.classFunctionInner phi (chi i) at h
+  have h := congrArg (fun f => classFunctionInner f (chi i)) hsum_phi
+  change classFunctionInner (∑ j : ι, b.repr phi j • chi j) (chi i) =
+    classFunctionInner phi (chi i) at h
   rw [representation_classFunctionInner_sum_left] at h
   simp [representation_completeFamily_orthonormal hchi] at h
   exact h
 
 public theorem representation_classFunction_eq_of_inner_irreducible
     {G : Type*} [Group G] [Finite G]
-    (phi psi : Theory.Character.ConjClassFunction G)
+    (phi psi : ConjClassFunction G)
     (hinner :
-      ∀ chi : Theory.Character.ConjClassFunction G,
-        Theory.Character.IsIrreducibleConjCharacter chi →
-          Theory.Character.classFunctionInner phi chi =
-            Theory.Character.classFunctionInner psi chi) :
+      ∀ chi : ConjClassFunction G,
+        IsIrreducibleConjCharacter chi →
+          classFunctionInner phi chi =
+            classFunctionInner psi chi) :
     phi = psi := by
   classical
-  rcases Theory.Character.irreducible_characters_form_basis (G := G) with
+  rcases irreducible_characters_form_basis (G := G) with
     ⟨ι, hι, chi, hchi, b, hb⟩
   letI : Fintype ι := hι
   apply b.repr.injective
@@ -483,10 +483,10 @@ public theorem classFunction_eq_of_inner_irreducible
     (phi psi : ClassFunction G)
     (hphi : IsClassFunction phi) (hpsi : IsClassFunction psi)
     (hinner :
-      ∀ chi : Theory.Character.ConjClassFunction G,
-        Theory.Character.IsIrreducibleConjCharacter chi →
-          Theory.Character.classFunctionInner (toConjClassFunction phi hphi) chi =
-            Theory.Character.classFunctionInner (toConjClassFunction psi hpsi) chi) :
+      ∀ chi : ConjClassFunction G,
+        IsIrreducibleConjCharacter chi →
+          classFunctionInner (toConjClassFunction phi hphi) chi =
+            classFunctionInner (toConjClassFunction psi hpsi) chi) :
     phi = psi := by
   have hbar :
       toConjClassFunction phi hphi = toConjClassFunction psi hpsi :=
@@ -497,24 +497,24 @@ public theorem classFunction_eq_of_inner_irreducible
   simpa [toConjClassFunction_apply] using hg
 
 @[expose] public noncomputable def ofConjClassFunction
-    {G : Type*} [Group G] (chi : Theory.Character.ConjClassFunction G) :
+    {G : Type*} [Group G] (chi : ConjClassFunction G) :
     ClassFunction G :=
   fun g => chi (ConjClasses.mk g)
 
 public theorem ofConjClassFunction_apply
-    {G : Type*} [Group G] (chi : Theory.Character.ConjClassFunction G) (g : G) :
+    {G : Type*} [Group G] (chi : ConjClassFunction G) (g : G) :
     ofConjClassFunction chi g = chi (ConjClasses.mk g) := rfl
 
 public theorem ofConjClassFunction_characterClassFunction
     {G V : Type*} [Group G]
     [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
     (rho : Representation ℂ G V) :
-    ofConjClassFunction (Theory.Character.characterClassFunction rho) =
+    ofConjClassFunction (characterClassFunction rho) =
       rho.character := by
   rfl
 
 public theorem ofConjClassFunction_isClassFunction
-    {G : Type*} [Group G] (chi : Theory.Character.ConjClassFunction G) :
+    {G : Type*} [Group G] (chi : ConjClassFunction G) :
     IsClassFunction (ofConjClassFunction chi) := by
   intro x g
   unfold ofConjClassFunction
@@ -523,7 +523,7 @@ public theorem ofConjClassFunction_isClassFunction
     ((isConj_iff).2 ⟨x⁻¹, by simp [mul_assoc]⟩)
 
 public theorem toConjClassFunction_ofConjClassFunction
-    {G : Type*} [Group G] (chi : Theory.Character.ConjClassFunction G) :
+    {G : Type*} [Group G] (chi : ConjClassFunction G) :
     toConjClassFunction (ofConjClassFunction chi)
         (ofConjClassFunction_isClassFunction chi) = chi := by
   ext c
@@ -532,9 +532,9 @@ public theorem toConjClassFunction_ofConjClassFunction
 
 public theorem scalarProduct_ofConjClassFunction
     {G : Type*} [Group G] [Finite G]
-    (phi psi : Theory.Character.ConjClassFunction G) :
+    (phi psi : ConjClassFunction G) :
     scalarProduct G (ofConjClassFunction phi) (ofConjClassFunction psi) =
-      Theory.Character.classFunctionInner phi psi := by
+      classFunctionInner phi psi := by
   symm
   simpa only [toConjClassFunction_ofConjClassFunction] using
     (classFunctionInner_toConjClassFunction
@@ -545,8 +545,8 @@ public theorem scalarProduct_ofConjClassFunction
 public theorem representation_inner_toConjClassFunction_right
     {G : Type*} [Group G] [Finite G]
     (phi : ClassFunction G) (hphi : IsClassFunction phi)
-    (chi : Theory.Character.ConjClassFunction G) :
-    Theory.Character.classFunctionInner (toConjClassFunction phi hphi) chi =
+    (chi : ConjClassFunction G) :
+    classFunctionInner (toConjClassFunction phi hphi) chi =
       scalarProduct G phi (ofConjClassFunction chi) := by
   rw [← toConjClassFunction_ofConjClassFunction chi]
   exact classFunctionInner_toConjClassFunction phi (ofConjClassFunction chi)
@@ -578,8 +578,8 @@ public theorem uliftRepresentation_character
     (N := ULift.{u} V) (rho g) (ULift.moduleEquiv.symm)
 
 public theorem isBookIrreducibleCharacter_of_representation_irreducible
-    {G : Type u} [Group G] [Finite G] (chi : Theory.Character.ConjClassFunction G)
-    (hchi : Theory.Character.IsIrreducibleConjCharacter chi) :
+    {G : Type u} [Group G] [Finite G] (chi : ConjClassFunction G)
+    (hchi : IsIrreducibleConjCharacter chi) :
     IsBookIrreducibleCharacter (ofConjClassFunction chi) := by
   rcases hchi with ⟨hchar, hirr⟩
   constructor
@@ -616,7 +616,7 @@ public theorem isBookIrreducibleCharacter_of_isIrreducibleCharacterOnGroup
   · rw [IsIrreducibleCharacter]
     rw [hchar, ← ofConjClassFunction_characterClassFunction rho,
       scalarProduct_ofConjClassFunction]
-    exact (Theory.Character.irreducible_iff_character_norm_one (ρ := rho)).1 hirr
+    exact (irreducible_iff_character_norm_one (ρ := rho)).1 hirr
 
 public theorem isIrreducibleCharacterOnGroup_of_isBookIrreducibleCharacter
     {G : Type u} [Group G] [Finite G]
@@ -641,7 +641,7 @@ public theorem character_irreducible_decomposition_all
   classical
   have hphi_class : IsClassFunction phi :=
     isCharacter_isClassFunction phi hphi_char
-  rcases Theory.Character.irreducible_characters_form_basis (G := G) with
+  rcases irreducible_characters_form_basis (G := G) with
     ⟨ι, hι, chi, hchi, b, hb⟩
   letI : Fintype ι := hι
   letI : DecidableEq ι := Classical.decEq ι
@@ -789,21 +789,21 @@ public theorem exists_positive_irreducible_decomposition_of_character
 
 public theorem exists_principal_index_of_completeFamily
     {G : Type u} [Group G] [Finite G] {ι : Type} [Fintype ι]
-    {chi : ι → Theory.Character.ConjClassFunction G}
-    (hchi : Theory.Character.IsCompleteIrreducibleCharacterFamily chi) :
+    {chi : ι → ConjClassFunction G}
+    (hchi : IsCompleteIrreducibleCharacterFamily chi) :
     ∃ k : ι, ofConjClassFunction (chi k) = principalCharacter G := by
   classical
   have hprincipal : IsClassFunction (principalCharacter G) := by
     intro x g
     simp [principalCharacter]
-  let chi0 : Theory.Character.ConjClassFunction G :=
+  let chi0 : ConjClassFunction G :=
     toConjClassFunction (principalCharacter G) hprincipal
-  have hchi0_irred : Theory.Character.IsIrreducibleConjCharacter chi0 := by
+  have hchi0_irred : IsIrreducibleConjCharacter chi0 := by
     let rho : Representation ℂ G (Fin 1 → ℂ) :=
       Representation.trivial ℂ G (Fin 1 → ℂ)
-    have hchi0_eq : chi0 = Theory.Character.characterClassFunction rho := by
+    have hchi0_eq : chi0 = characterClassFunction rho := by
       refine toConjClassFunction_eq_of_apply
-        (principalCharacter G) _ (Theory.Character.characterClassFunction rho) ?_
+        (principalCharacter G) _ (characterClassFunction rho) ?_
       intro g
       change rho.character g = principalCharacter G g
       simp [rho, principalCharacter, Representation.character]
@@ -867,12 +867,12 @@ public theorem scalarProduct_weightedFamilySum_left
 public theorem isVirtualCharacter_isClassFunction
     {G : Type u} [Group G] [Finite G]
     {χ : ClassFunction G}
-    (hχ : Theory.Character.IsVirtualCharacter χ) :
+    (hχ : IsVirtualCharacter χ) :
     IsClassFunction χ := by
   classical
   rcases hχ with ⟨r, m, n, ρ, rfl⟩
   intro x g
-  unfold Theory.Character.virtualCharacterOfRepresentations
+  unfold virtualCharacterOfRepresentations
   refine Finset.sum_congr rfl ?_
   intro i _hi
   have hchar :
@@ -884,8 +884,8 @@ public theorem isVirtualCharacter_isClassFunction
 public theorem scalarProduct_isVirtualCharacter_eq_int
     {G : Type u} [Group G] [Finite G]
     {χ ψ : ClassFunction G}
-    (hχ : Theory.Character.IsVirtualCharacter χ)
-    (hψ : Theory.Character.IsVirtualCharacter ψ) :
+    (hχ : IsVirtualCharacter χ)
+    (hψ : IsVirtualCharacter ψ) :
     ∃ z : ℤ, scalarProduct G χ ψ = (z : ℂ) := by
   classical
   rcases hχ with ⟨r, m, n, ρ, rfl⟩
@@ -921,8 +921,8 @@ public theorem scalarProduct_isVirtualCharacter_eq_int
     ring
   calc
     scalarProduct G
-        (Theory.Character.virtualCharacterOfRepresentations r m n ρ)
-        (Theory.Character.virtualCharacterOfRepresentations s m' n' σ)
+        (virtualCharacterOfRepresentations r m n ρ)
+        (virtualCharacterOfRepresentations s m' n' σ)
         =
           scalarProduct G
             (fun g => ∑ i : Fin r, (m i : ℂ) * (ρ i).character g)
@@ -937,18 +937,18 @@ public theorem toConjClassFunction_isIrreducibleCharacter_of_isIrreducibleCharac
     {G : Type u} [Group G] [Finite G]
     {χ : ClassFunction G} (hχclass : IsClassFunction χ)
     (hχ : IsIrreducibleCharacterOnGroup χ) :
-    Theory.Character.IsIrreducibleConjCharacter (toConjClassFunction χ hχclass) := by
+    IsIrreducibleConjCharacter (toConjClassFunction χ hχclass) := by
   classical
   rcases hχ with ⟨n, ρ, hρirr, hχchar⟩
-  have hcf : toConjClassFunction χ hχclass = Theory.Character.characterClassFunction ρ := by
-    refine toConjClassFunction_eq_of_apply χ hχclass (Theory.Character.characterClassFunction ρ) ?_
+  have hcf : toConjClassFunction χ hχclass = characterClassFunction ρ := by
+    refine toConjClassFunction_eq_of_apply χ hχclass (characterClassFunction ρ) ?_
     intro g
     change ρ.character g = χ g
     exact (congrFun hχchar g).symm
   refine ⟨?_, ?_⟩
   · exact ⟨n, ρ, hcf⟩
   · rw [hcf]
-    exact (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
+    exact (irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
 
 
 /-! ## Book-facing subgroup notation for Proposition (1.7) -/

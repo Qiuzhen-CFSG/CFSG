@@ -1,7 +1,6 @@
 module
 
 public import BenderSuzuki.SE.Section7
-open Theory.GroupAction
 
 
 /-!

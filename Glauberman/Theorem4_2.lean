@@ -2,7 +2,6 @@ module
 
 public import Glauberman.Theorem3_2
 public import Glauberman.Theorem4_1
-open Theory.GroupAction
 
 
 /-!

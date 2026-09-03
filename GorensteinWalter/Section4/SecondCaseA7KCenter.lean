@@ -6,7 +6,6 @@ import GorensteinWalter.CentralizerSetupOddCoreNormal
 import GorensteinWalter.Section1
 import FeitThompson.ChiefFactors.Core
 import Mathlib.Tactic
-open Theory.GroupAction
 
 
 /-! # The center of the A7 odd core -/

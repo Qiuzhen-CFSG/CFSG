@@ -2,7 +2,6 @@ module
 
 public import FeitThompson.PGroup.HomocyclicFrattini
 public import FeitThompson.Wielandt.MatrixTrace
-open Theory.ElementaryAbelian
 
 
 /-!

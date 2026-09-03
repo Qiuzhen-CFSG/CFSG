@@ -71,19 +71,15 @@ Then
 -/
 
 section Proposition2_2
+abbrev proposition_2_2_sigma {F G W : Type*} [Field F] [Group G]
+    (H : Subgroup G) [H.Normal] [AddCommGroup W] [Module F W]
+    (iota : Representation F G W) : Representation F H W := iota.comp H.subtype
 
-variable {F : Type*} [Field F] [IsAlgClosed F]
-variable {G : Type*} [Group G]
-variable (H : Subgroup G) [hN : H.Normal] (hcyc : IsCyclic (G ⧸ H))
-variable {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
-variable {W : Type*} [AddCommGroup W] [Module F W] [FiniteDimensional F W]
-variable (rho : Representation F H V) (E : ∀ x : G, rho ≃ₗ conjugateRep rho x)
-variable [IsIrreducible rho]
-variable (iota : Representation F G W) [IsIrreducible iota]
-
-abbrev proposition_2_2_sigma : Representation F H W := iota.comp H.subtype
-
-def proposition_2_2_conjugateMap (x : G) (u : rho →ₗ proposition_2_2_sigma H iota)
+def proposition_2_2_conjugateMap
+    {F G V W : Type*} [Field F] [Group G] [AddCommGroup V] [Module F V]
+    [AddCommGroup W] [Module F W] (H : Subgroup G) [hN : H.Normal]
+    (rho : Representation F H V) (iota : Representation F G W)
+    (x : G) (u : rho →ₗ proposition_2_2_sigma H iota)
     : conjugateRep rho x →ₗ conjugateRep (proposition_2_2_sigma H iota) x := by
   refine RepMap.mk u.toLinearMap ?_
   intro h
@@ -96,16 +92,18 @@ def proposition_2_2_conjugateMap (x : G) (u : rho →ₗ proposition_2_2_sigma H
       (⟨x * h.val * x⁻¹, Subgroup.Normal.conj_mem hN h h.prop x⟩ : H) v
   convert hu using 1 <;> rfl
 
-omit
-  [IsAlgClosed F] [FiniteDimensional F V] [FiniteDimensional F W] [rho.IsIrreducible]
-    [iota.IsIrreducible] in
 @[simp]
-theorem proposition_2_2_conjugateMap_apply (x : G)
+theorem proposition_2_2_conjugateMap_apply
+    {F G V W : Type*} [Field F] [Group G] [AddCommGroup V] [Module F V]
+    [AddCommGroup W] [Module F W] (H : Subgroup G) [H.Normal]
+    (rho : Representation F H V) (iota : Representation F G W) (x : G)
     (u : rho →ₗ proposition_2_2_sigma H iota) (v : V)
     : proposition_2_2_conjugateMap H rho iota x u v = u v :=
   rfl
 
-noncomputable def proposition_2_2_restrictionConjEquiv (x : G)
+noncomputable def proposition_2_2_restrictionConjEquiv
+    {F G W : Type*} [Field F] [Group G] [AddCommGroup W] [Module F W]
+    (H : Subgroup G) [H.Normal] (iota : Representation F G W) (x : G)
     : conjugateRep (proposition_2_2_sigma H iota) x ≃ₗ proposition_2_2_sigma H iota := by
   refine RepEquiv.mk (LinearEquiv.ofBijective (iota x⁻¹) (Representation.apply_bijective iota x⁻¹)) ?_
   intro h
@@ -113,20 +111,27 @@ noncomputable def proposition_2_2_restrictionConjEquiv (x : G)
   simp [conjugateRep_apply, mul_assoc]
 
 /-- The restriction of a `G`-representation to a normal subgroup is equivalent to each conjugate. -/
-noncomputable def cyclicQuotientRestrictionConjEquiv (x : G)
+noncomputable def cyclicQuotientRestrictionConjEquiv
+    {F G W : Type*} [Field F] [Group G] [AddCommGroup W] [Module F W]
+    (H : Subgroup G) [H.Normal] (iota : Representation F G W) (x : G)
     : conjugateRep (iota.comp H.subtype) x ≃ₗ iota.comp H.subtype := by
   refine RepEquiv.mk (LinearEquiv.ofBijective (iota x⁻¹) (Representation.apply_bijective iota x⁻¹)) ?_
   intro h
   ext v
   simp [conjugateRep_apply, mul_assoc]
 
-omit [IsAlgClosed F] [FiniteDimensional F W] [iota.IsIrreducible] in
 @[simp]
-theorem proposition_2_2_restrictionConjEquiv_apply (x : G) (w : W)
+theorem proposition_2_2_restrictionConjEquiv_apply
+    {F G W : Type*} [Field F] [Group G] [AddCommGroup W] [Module F W]
+    (H : Subgroup G) [H.Normal] (iota : Representation F G W) (x : G) (w : W)
     : proposition_2_2_restrictionConjEquiv H iota x w = iota x⁻¹ w :=
   rfl
 
-noncomputable def proposition_2_2_twistMap (x : G)
+noncomputable def proposition_2_2_twistMap
+    {F G V W : Type*} [Field F] [Group G] [AddCommGroup V] [Module F V]
+    [AddCommGroup W] [Module F W] (H : Subgroup G) [hN : H.Normal]
+    (rho : Representation F H V) (E : ∀ x : G, rho ≃ₗ conjugateRep rho x)
+    (iota : Representation F G W) (x : G)
     : Module.End F (Representation.RepMap rho (proposition_2_2_sigma H iota)) := by
   refine {
     toFun := ?_
@@ -144,6 +149,8 @@ noncomputable def proposition_2_2_twistMap (x : G)
     simp [RepMap.comp_apply]
 
 def proposition_2_2_subrepInclusion
+    {F G W : Type*} [Field F] [Group G] [AddCommGroup W] [Module F W]
+    (H : Subgroup G) [H.Normal] (iota : Representation F G W)
     (phi : Subrepresentation (proposition_2_2_sigma H iota))
     : phi.toRepresentation →ₗ proposition_2_2_sigma H iota := by
   refine RepMap.mk phi.toSubmodule.subtype ?_
@@ -154,6 +161,12 @@ def proposition_2_2_subrepInclusion
 set_option backward.isDefEq.respectTransparency false in
 /-- The explicit equivalence constructed in Proposition 2.2(a). -/
 noncomputable def proposition_2_2_a_apply
+    {F G V W : Type*} [Field F] [IsAlgClosed F] [Group G]
+    (H : Subgroup G) [hN : H.Normal] (hcyc : IsCyclic (G ⧸ H))
+    [AddCommGroup V] [Module F V] [FiniteDimensional F V]
+    [AddCommGroup W] [Module F W] [FiniteDimensional F W]
+    (rho : Representation F H V) (E : ∀ x : G, rho ≃ₗ conjugateRep rho x)
+    [IsIrreducible rho] (iota : Representation F G W) [IsIrreducible iota]
     (phi : Subrepresentation (iota.comp H.subtype)) (f : rho ≃ₗ phi.toRepresentation)
     : iota.comp H.subtype ≃ₗ rho := by
   classical
@@ -223,7 +236,7 @@ noncomputable def proposition_2_2_a_apply
     calc
       u (mu • (E x).symm v) = mu • u ((E x).symm v) := RepMap.map_smul u _ _
       _ = (mu • u) ((E x).symm v) :=
-        (RepMap.smul_apply rho (proposition_2_2_sigma H iota) mu u _).symm
+        (RepMap.smul_apply mu u _).symm
       _ = proposition_2_2_twistMap H rho E iota x u ((E x).symm v) := by rw [hu]
       _ = iota x⁻¹ (u v) := by
         simp [proposition_2_2_twistMap, proposition_2_2_conjugateMap_apply]
@@ -330,20 +343,18 @@ noncomputable def proposition_2_2_a
 
 section Proposition22bFunctionSpace
 
-variable {F : Type*} [Field F]
-variable {G : Type*} [Group G]
-variable {H : Subgroup G} [H.Normal]
-variable {V : Type*} [AddCommGroup V] [Module F V]
 
-def p22b_subrepInclusion {ρ : Representation F H V} (S : Subrepresentation ρ)
+def p22b_subrepInclusion
+    {F G V : Type*} [Field F] [Group G] {H : Subgroup G}
+    [AddCommGroup V] [Module F V] {ρ : Representation F H V} (S : Subrepresentation ρ)
     : S.toRepresentation →ₗ ρ := by
   refine RepMap.mk S.toSubmodule.subtype ?_
   intro h
   ext v
   rfl
 
-omit [H.Normal] in
 theorem p22b_repMapRangeNeBotOfNeZero
+    {F G : Type*} [Field F] [Group G] {H : Subgroup G}
     {V₁ : Type*} [AddCommGroup V₁] [Module F V₁]
     {V₂ : Type*} [AddCommGroup V₂] [Module F V₂]
     {ρ₁ : Representation F H V₁} {ρ₂ : Representation F H V₂}
@@ -359,8 +370,8 @@ theorem p22b_repMapRangeNeBotOfNeZero
       congrArg Subrepresentation.toSubmodule hbot
     _ = (⊥ : Submodule F V₂) := rfl
 
-omit [H.Normal] in
 theorem p22b_repMapRangeEqTopOfNeZero
+    {F G : Type*} [Field F] [Group G] {H : Subgroup G}
     {V₁ : Type*} [AddCommGroup V₁] [Module F V₁]
     {V₂ : Type*} [AddCommGroup V₂] [Module F V₂]
     {ρ₁ : Representation F H V₁} {ρ₂ : Representation F H V₂}
@@ -373,6 +384,7 @@ theorem p22b_repMapRangeEqTopOfNeZero
 
 set_option backward.isDefEq.respectTransparency false in
 noncomputable def p22b_repEquivOfNeZero
+    {F G : Type*} [Field F] [Group G] {H : Subgroup G}
     {V₁ : Type*} [AddCommGroup V₁] [Module F V₁]
     {V₂ : Type*} [AddCommGroup V₂] [Module F V₂]
     {ρ₁ : Representation F H V₁} {ρ₂ : Representation F H V₂}
@@ -397,7 +409,9 @@ noncomputable def p22b_repEquivOfNeZero
   ext v
   simpa using (Representation.IntertwiningMap.isIntertwining (ρ := ρ₁) (σ := ρ₂) f h v)
 
-def p22b_funSubmodule (ρ : Representation F H V) : Submodule F (G → V) where
+def p22b_funSubmodule
+    {F G V : Type*} [Field F] [Group G] {H : Subgroup G}
+    [AddCommGroup V] [Module F V] (ρ : Representation F H V) : Submodule F (G → V) where
   carrier := {f | ∀ h : H, ∀ x : G, f ((h : G) * x) = ρ h (f x)}
   zero_mem' := by simp
   add_mem' := by
@@ -407,14 +421,20 @@ def p22b_funSubmodule (ρ : Representation F H V) : Submodule F (G → V) where
     intro a f hf h x
     simp [hf h x]
 
-abbrev p22b_funSpace (ρ : Representation F H V) :=
+abbrev p22b_funSpace
+    {F G V : Type*} [Field F] [Group G] {H : Subgroup G}
+    [AddCommGroup V] [Module F V] (ρ : Representation F H V) :=
   ↥(p22b_funSubmodule (G := G) (H := H) ρ)
 
-instance (ρ : Representation F H V)
+instance p22b_funSpace_coeFun
+    {F G V : Type*} [Field F] [Group G] {H : Subgroup G}
+    [AddCommGroup V] [Module F V] (ρ : Representation F H V)
     : CoeFun (p22b_funSpace (G := G) (H := H) ρ) (fun _ => G → V) :=
   ⟨fun f => f.1⟩
 
-def p22b_funRep (ρ : Representation F H V)
+def p22b_funRep
+    {F G V : Type*} [Field F] [Group G] {H : Subgroup G}
+    [AddCommGroup V] [Module F V] (ρ : Representation F H V)
     : Representation F G (p22b_funSpace (G := G) (H := H) ρ) where
   toFun g :=
     {
@@ -442,14 +462,17 @@ def p22b_funRep (ρ : Representation F H V)
     ext f x
     simp [mul_assoc]
 
-omit [H.Normal] in
 @[simp]
-theorem p22b_funRep_apply (ρ : Representation F H V) (g : G)
+theorem p22b_funRep_apply
+    {F G V : Type*} [Field F] [Group G] {H : Subgroup G}
+    [AddCommGroup V] [Module F V] (ρ : Representation F H V) (g : G)
     (f : p22b_funSpace (G := G) (H := H) ρ) (x : G)
     : p22b_funRep (G := G) (H := H) ρ g f x = f (x * g) :=
   rfl
 
-def p22b_funCosetSubrep (ρ : Representation F H V) (q : G ⧸ H)
+def p22b_funCosetSubrep
+    {F G V : Type*} [Field F] [Group G] {H : Subgroup G}
+    [H.Normal] [AddCommGroup V] [Module F V] (ρ : Representation F H V) (q : G ⧸ H)
     : Subrepresentation ((p22b_funRep (G := G) (H := H) ρ).comp H.subtype) where
   toSubmodule :=
     {
@@ -473,7 +496,9 @@ def p22b_funCosetSubrep (ρ : Representation F H V) (q : G ⧸ H)
     rw [hh, mul_one] at hq
     exact hq
 
-def p22b_funEval (ρ : Representation F H V) (g : G)
+def p22b_funEval
+    {F G V : Type*} [Field F] [Group G] {H : Subgroup G} [H.Normal]
+    [AddCommGroup V] [Module F V] (ρ : Representation F H V) (g : G)
     : ((p22b_funRep (G := G) (H := H) ρ).comp H.subtype) →ₗ conjugateRep ρ g := by
   refine RepMap.mk ?_ ?_
   · refine {
@@ -494,7 +519,9 @@ def p22b_funEval (ρ : Representation F H V) (g : G)
         ⟩
         (g : G)
 
-noncomputable def p22b_funBaseFunctionAt (ρ : Representation F H V) (g : G) (v : V)
+noncomputable def p22b_funBaseFunctionAt
+    {F G V : Type*} [Field F] [Group G] {H : Subgroup G}
+    [AddCommGroup V] [Module F V] (ρ : Representation F H V) (g : G) (v : V)
     : p22b_funSpace (G := G) (H := H) ρ := by
   classical
   refine ⟨fun x => if hx : x * g⁻¹ ∈ H then ρ ⟨x * g⁻¹, hx⟩ v else 0, ?_⟩
@@ -518,7 +545,9 @@ noncomputable def p22b_funBaseFunctionAt (ρ : Representation F H V) (g : G) (v 
     simp [hx, hhx]
 
 @[simp]
-theorem p22b_funEval_base (ρ : Representation F H V) (g : G) (v : V)
+theorem p22b_funEval_base
+    {F G V : Type*} [Field F] [Group G] {H : Subgroup G} [H.Normal]
+    [AddCommGroup V] [Module F V] (ρ : Representation F H V) (g : G) (v : V)
     : p22b_funEval (G := G) (H := H) ρ g (p22b_funBaseFunctionAt (G := G) (H := H) ρ g v)
       = v := by
   classical
@@ -535,7 +564,9 @@ theorem p22b_funEval_base (ρ : Representation F H V) (g : G) (v : V)
       _ = v := by simp [h1]
   · simp
 
-theorem p22b_funBaseFunctionAt_mem_coset (ρ : Representation F H V) (g : G) (v : V)
+theorem p22b_funBaseFunctionAt_mem_coset
+    {F G V : Type*} [Field F] [Group G] {H : Subgroup G}
+    [H.Normal] [AddCommGroup V] [Module F V] (ρ : Representation F H V) (g : G) (v : V)
     : p22b_funBaseFunctionAt (G := G) (H := H) ρ g v
       ∈ (p22b_funCosetSubrep (G := G) (H := H) ρ (g : G ⧸ H)).toSubmodule := by
   classical
@@ -548,7 +579,9 @@ theorem p22b_funBaseFunctionAt_mem_coset (ρ : Representation F H V) (g : G) (v 
 
 @[simp]
 theorem p22b_funEval_of_ne_coset
-    (ρ : Representation F H V) {g x : G} (hx : (x : G ⧸ H) ≠ (g : G ⧸ H)) (v : V)
+    {F G V : Type*} [Field F] [Group G] {H : Subgroup G}
+    [H.Normal] [AddCommGroup V] [Module F V] (ρ : Representation F H V)
+    {g x : G} (hx : (x : G ⧸ H) ≠ (g : G ⧸ H)) (v : V)
     : p22b_funEval (G := G) (H := H) ρ x (p22b_funBaseFunctionAt (G := G) (H := H) ρ g v)
       = 0 := by
   classical
@@ -559,7 +592,9 @@ theorem p22b_funEval_of_ne_coset
   exact (QuotientGroup.eq_iff_div_mem).2 (by simpa [div_eq_mul_inv] using hmem)
 
 set_option backward.isDefEq.respectTransparency false in
-noncomputable def p22b_funCosetEquiv (ρ : Representation F H V) (g : G)
+noncomputable def p22b_funCosetEquiv
+    {F G V : Type*} [Field F] [Group G] {H : Subgroup G} [H.Normal]
+    [AddCommGroup V] [Module F V] (ρ : Representation F H V) (g : G)
     : (p22b_funCosetSubrep (G := G) (H := H) ρ (g : G ⧸ H)).toRepresentation
       ≃ₗ conjugateRep ρ g := by
   let S := p22b_funCosetSubrep (G := G) (H := H) ρ (g : G ⧸ H)
@@ -613,15 +648,18 @@ noncomputable def p22b_funCosetEquiv (ρ : Representation F H V) (g : G)
       (Representation.IntertwiningMap.isIntertwining
         (ρ := S.toRepresentation) (σ := conjugateRep ρ g) ev h f)
 
-noncomputable def p22b_funQuotientSection [Fintype (G ⧸ H)] (q : G ⧸ H) : G :=
+noncomputable def p22b_funQuotientSection {G : Type*} [Group G] {H : Subgroup G}
+    [Fintype (G ⧸ H)] (q : G ⧸ H) : G :=
   Classical.choose (QuotientGroup.mk_surjective q)
 
-omit [H.Normal] in
-theorem p22b_funQuotientSection_spec [Fintype (G ⧸ H)] (q : G ⧸ H)
+theorem p22b_funQuotientSection_spec {G : Type*} [Group G] {H : Subgroup G}
+    [Fintype (G ⧸ H)] (q : G ⧸ H)
     : ((p22b_funQuotientSection (G := G) (H := H) q : G) : G ⧸ H) = q :=
   Classical.choose_spec (QuotientGroup.mk_surjective q)
 
-theorem p22b_funSumSections [Fintype (G ⧸ H)] (ρ : Representation F H V)
+theorem p22b_funSumSections
+    {F G V : Type*} [Field F] [Group G] {H : Subgroup G}
+    [H.Normal] [AddCommGroup V] [Module F V] [Fintype (G ⧸ H)] (ρ : Representation F H V)
     (f : p22b_funSpace (G := G) (H := H) ρ)
     : (∑ q : G ⧸ H,
         p22b_funBaseFunctionAt (G := G) (H := H) ρ
@@ -693,7 +731,9 @@ theorem p22b_funSumSections [Fintype (G ⧸ H)] (ρ : Representation F H V)
       · intro hq
         exact False.elim (hq (Finset.mem_univ qx))
 
-noncomputable def p22b_funPiEquiv [Fintype (G ⧸ H)] (ρ : Representation F H V)
+noncomputable def p22b_funPiEquiv
+    {F G V : Type*} [Field F] [Group G] {H : Subgroup G}
+    [H.Normal] [AddCommGroup V] [Module F V] [Fintype (G ⧸ H)] (ρ : Representation F H V)
     : p22b_funSpace (G := G) (H := H) ρ ≃ₗ[F] (G ⧸ H → V) where
   toFun f q :=
     p22b_funEval (G := G) (H := H) ρ (p22b_funQuotientSection (G := G) (H := H) q) f
@@ -751,7 +791,9 @@ noncomputable def p22b_funPiEquiv [Fintype (G ⧸ H)] (ρ : Representation F H V
     simp
 
 set_option backward.isDefEq.respectTransparency false in
-noncomputable def p22b_funProj (ρ : Representation F H V) (q : G ⧸ H)
+noncomputable def p22b_funProj
+    {F G V : Type*} [Field F] [Group G] {H : Subgroup G}
+    [H.Normal] [AddCommGroup V] [Module F V] (ρ : Representation F H V) (q : G ⧸ H)
     : ((p22b_funRep (G := G) (H := H) ρ).comp H.subtype)
       →ₗ ((p22b_funRep (G := G) (H := H) ρ).comp H.subtype) := by
   classical
@@ -805,13 +847,18 @@ noncomputable def p22b_funProj (ρ : Representation F H V) (q : G ⧸ H)
 
 set_option backward.isDefEq.respectTransparency false in
 @[simp]
-theorem p22b_funProj_apply (ρ : Representation F H V) [DecidableEq (G ⧸ H)] (q : G ⧸ H)
+theorem p22b_funProj_apply
+    {F G V : Type*} [Field F] [Group G] {H : Subgroup G}
+    [H.Normal] [AddCommGroup V] [Module F V] (ρ : Representation F H V)
+    [DecidableEq (G ⧸ H)] (q : G ⧸ H)
     (f : p22b_funSpace (G := G) (H := H) ρ) (x : G)
     : (p22b_funProj (G := G) (H := H) ρ q f) x = if (x : G ⧸ H) = q then f x else 0 := by
   classical
   simp [p22b_funProj, LinearMap.restrict_apply]
 
-theorem p22b_funProj_mem_coset (ρ : Representation F H V) (q : G ⧸ H)
+theorem p22b_funProj_mem_coset
+    {F G V : Type*} [Field F] [Group G] {H : Subgroup G}
+    [H.Normal] [AddCommGroup V] [Module F V] (ρ : Representation F H V) (q : G ⧸ H)
     (f : p22b_funSpace (G := G) (H := H) ρ)
     : p22b_funProj (G := G) (H := H) ρ q f
       ∈ (p22b_funCosetSubrep (G := G) (H := H) ρ q).toSubmodule := by
@@ -820,7 +867,9 @@ theorem p22b_funProj_mem_coset (ρ : Representation F H V) (q : G ⧸ H)
   rw [p22b_funProj_apply]
   simp [hx]
 
-noncomputable def p22b_funProjToCoset (ρ : Representation F H V) (q : G ⧸ H)
+noncomputable def p22b_funProjToCoset
+    {F G V : Type*} [Field F] [Group G] {H : Subgroup G}
+    [H.Normal] [AddCommGroup V] [Module F V] (ρ : Representation F H V) (q : G ⧸ H)
     : ((p22b_funRep (G := G) (H := H) ρ).comp H.subtype)
       →ₗ (p22b_funCosetSubrep (G := G) (H := H) ρ q).toRepresentation := by
   classical
@@ -855,6 +904,8 @@ noncomputable def p22b_funProjToCoset (ρ : Representation F H V) (q : G ⧸ H)
     simp
 
 theorem p22b_conjugateRep_irreducible
+    {F G V : Type*} [Field F] [Group G] {H : Subgroup G} [H.Normal]
+    [AddCommGroup V] [Module F V]
     (ρ : Representation F H V) (g : G) [Representation.IsIrreducible ρ]
     : Representation.IsIrreducible (conjugateRep ρ g) := by
   let e : H ≃* H := {
@@ -882,6 +933,8 @@ theorem p22b_conjugateRep_irreducible
     inferInstance
 
 theorem p22b_funCosetSubrep_irreducible
+    {F G V : Type*} [Field F] [Group G] {H : Subgroup G} [H.Normal]
+    [AddCommGroup V] [Module F V]
     (ρ : Representation F H V) [Representation.IsIrreducible ρ] (q : G ⧸ H)
     : @Representation.IsIrreducible H F
         ((p22b_funCosetSubrep (G := G) (H := H) ρ q).toSubmodule)

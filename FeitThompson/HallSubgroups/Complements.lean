@@ -21,7 +21,6 @@ public import Theory.GroupAction.Invariant
 public import Theory.GroupAction.Quotient
 public import FeitThompson.HallSubgroups.Core
 
-open Theory.GroupAction
 
 section SemidirectInfrastructure
 
@@ -298,7 +297,7 @@ lemma smul_smul_quotientDiff' (a : A) (g : G) (q : H.QuotientDiff) :
   exact smul_smul_quotientDiff (G := G) (A := A) (H := H) a g q
 
 lemma isCocycle₁_of_smul_basepoint
-    [Finite H]
+    [Finite A] [Finite H]
     (hHc : Nat.Coprime (Nat.card H) H.index)
     (α : H.QuotientDiff) (c : A → H) (hc_spec : ∀ a : A, c a • (a • α) = α) :
     IsCocycle₁ (A := A) (N := H) c := by

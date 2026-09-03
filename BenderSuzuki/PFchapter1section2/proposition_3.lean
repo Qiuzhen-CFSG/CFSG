@@ -4,7 +4,6 @@ public import BenderSuzuki.PFAppendixI.proposition_2
 public import Mathlib.GroupTheory.SemidirectProduct
 import BenderSuzuki.PFchapter1section2.AppendixIInput
 public import BenderSuzuki.PFchapter1section2.proposition_2
-open Theory.ElementaryAbelian
 
 
 namespace BenderSuzuki
@@ -12,7 +11,7 @@ namespace PFchapter1section2
 
 open PFchapter1section1 PFAppendixI PFAppendixIII
 open Representation
-open Theory.Representation
+open Representation
 open scoped IsMulCommutative
 
 /-!
@@ -133,13 +132,13 @@ private theorem proposition_3_appendixIRepresentation_irreducible_of_transitive
           calc
             ρ τ x = Additive.ofMul ((τ : U) • Additive.toMul x) := by
               dsimp [ρ, AppendixIRepresentationOfT]
-              have h_rep : (Theory.Representation.ofElementaryAbelianAction (A := T) (G := E) (p := p)) τ x = Additive.ofMul (τ • Additive.toMul x) := by
+              have h_rep : (Representation.ofElementaryAbelianAction (A := T) (G := E) (p := p)) τ x = Additive.ofMul (τ • Additive.toMul x) := by
                 calc
-                  (Theory.Representation.ofElementaryAbelianAction (A := T) (G := E) (p := p)) τ x
-                      = (Theory.Representation.ofElementaryAbelianAction (A := T) (G := E) (p := p)) τ (Additive.ofMul (Additive.toMul x)) := by
+                  (Representation.ofElementaryAbelianAction (A := T) (G := E) (p := p)) τ x
+                      = (Representation.ofElementaryAbelianAction (A := T) (G := E) (p := p)) τ (Additive.ofMul (Additive.toMul x)) := by
                         cases x; rfl
                   _ = Additive.ofMul (τ • Additive.toMul x) :=
-                    Theory.Representation.ofElementaryAbelianAction_apply_ofMul (A := T) (G := E) (p := p) τ (Additive.toMul x)
+                    Representation.ofElementaryAbelianAction_apply_ofMul (A := T) (G := E) (p := p) τ (Additive.toMul x)
               have h_smul : τ • Additive.toMul x = (τ : U) • Additive.toMul x := rfl
               rw [h_rep, h_smul]
             _ = Additive.ofMul (Additive.toMul y) := congrArg Additive.ofMul hτ

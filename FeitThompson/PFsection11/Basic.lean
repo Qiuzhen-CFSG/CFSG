@@ -1,7 +1,6 @@
 module
 
 public import FeitThompson.PFsection10.Basic
-open Theory.ElementaryAbelian
 
 
 /-!
@@ -142,7 +141,7 @@ gives `|S(HC)| = (u - 1) / q`.
       X - (n : ℂ) • τ₁ ζ +
         (a : ℂ) • (Finset.sum S1τ (fun psi => psi)) ∧
     Section5.orthogonalToFinset S1τ X ∧
-    Theory.Character.IsVirtualCharacter X ∧
+    IsVirtualCharacter X ∧
     (a = 0 ∨ a = 1 ∨ a = 2) ∧
     ((a = 0 ∨ a = 2) → X = ωij - ωi0)
 
@@ -164,7 +163,7 @@ virtuality, then uses the `(11.8.1)` arithmetic to obtain `a ≤ 2`.
       X - (n : ℂ) • τ₁ ζ +
         (a : ℂ) • (Finset.sum S1τ (fun psi => psi)) ∧
     Section5.orthogonalToFinset S1τ X ∧
-    Theory.Character.IsVirtualCharacter X ∧
+    IsVirtualCharacter X ∧
     a ≤ 2 ∧
     ((a = 0 ∨ a = 2) → X = ωij - ωi0)
 

@@ -17,7 +17,8 @@ attribute [local instance] Fintype.ofFinite
 namespace BenderSuzuki
 namespace PFAppendixIV
 
-open Section1 Section5
+open Section1 hiding ClassFunction
+open Section5
 open BenderSuzuki.External.Isaacs.VII
 
 universe u
@@ -40,8 +41,8 @@ public theorem lemma_1_a
     (htarget :
       ∀ phi : ClassFunction H,
         integerSpanOn (S₀.cons psi hpsi_not_mem) puncturedSet phi →
-          Theory.Character.IsVirtualCharacter (tau phi) ∧
-            supportedOn (tau phi) puncturedSet)
+          IsVirtualCharacter (tau phi) ∧
+            Section1.supportedOn (tau phi) puncturedSet)
     (hcoherent : IsCoherentTriple puncturedSet S₀ tau)
     (hdiv :
       ∃ d : ℕ, degree psi = (d : ℂ) * degree chi₀)
@@ -70,8 +71,8 @@ public theorem lemma_1_b
     (hisometry : isCFLinearIsometryOnSpanOn S puncturedSet tau)
     (htarget :
       ∀ phi : ClassFunction H, integerSpanOn S puncturedSet phi →
-        Theory.Character.IsVirtualCharacter (tau phi) ∧
-          supportedOn (tau phi) puncturedSet)
+        IsVirtualCharacter (tau phi) ∧
+          Section1.supportedOn (tau phi) puncturedSet)
     (hequal :
       ∀ chi psi : S,
         degree (chi : ClassFunction H) = degree (psi : ClassFunction H)) :
@@ -89,8 +90,8 @@ public theorem lemma_1
     (hisometry : isCFLinearIsometryOnSpanOn S puncturedSet tau)
     (htarget :
       ∀ phi : ClassFunction H, integerSpanOn S puncturedSet phi →
-        Theory.Character.IsVirtualCharacter (tau phi) ∧
-          supportedOn (tau phi) puncturedSet)
+        IsVirtualCharacter (tau phi) ∧
+          Section1.supportedOn (tau phi) puncturedSet)
     (hcase :
       (∃ (S₀ : Finset (ClassFunction H)) (psi chi₀ : ClassFunction H),
         ∃ hpsi : psi ∉ S₀,
@@ -123,6 +124,4 @@ public theorem lemma_1
 
 end PFAppendixIV
 end BenderSuzuki
-
-
 

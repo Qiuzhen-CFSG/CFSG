@@ -69,7 +69,7 @@ public theorem ker_ofQuotient_ker_eq_bot {G : Type*} [Group G] {F : Type*} [Fiel
 public theorem fixedSubspace_map_mk'_of_kerRepresentation_eq {G : Type*} [Group G]
     {F : Type*} [Field F] {V : Type*} [AddCommGroup V] [Module F V]
     (ρ : Representation F G V) (R : Subgroup G) :
-    (Theory.Representation.kerRepresentation ρ).fixedSubspace (R.map (QuotientGroup.mk' ρ.ker)) =
+    (Representation.kerRepresentation ρ).fixedSubspace (R.map (QuotientGroup.mk' ρ.ker)) =
       ρ.fixedSubspace R := by
   change (Representation.ofQuotient ρ ρ.ker).fixedSubspace
     (R.map (QuotientGroup.mk' ρ.ker)) = ρ.fixedSubspace R
@@ -77,7 +77,7 @@ public theorem fixedSubspace_map_mk'_of_kerRepresentation_eq {G : Type*} [Group 
 
 public theorem ker_of_kerRepresentation_eq_bot {G : Type*} [Group G] {F : Type*} [Field F]
     {V : Type*} [AddCommGroup V] [Module F V] (ρ : Representation F G V) :
-    (Theory.Representation.kerRepresentation ρ).ker = ⊥ := by
+    (Representation.kerRepresentation ρ).ker = ⊥ := by
   change (Representation.ofQuotient ρ ρ.ker).ker = ⊥
   exact ker_ofQuotient_ker_eq_bot (ρ := ρ)
 
@@ -100,7 +100,7 @@ public theorem not_map_le_ker_of_not_le_ker_of_quotient
 public theorem not_map_le_ker_of_not_le_ker_of_kerRepresentation
     {G : Type*} [Group G] {F : Type*} [Field F] {V : Type*} [AddCommGroup V] [Module F V]
     (ρ : Representation F G V) (K : Subgroup G) (hK : ¬ K ≤ ρ.ker) :
-    ¬ K.map (QuotientGroup.mk' ρ.ker) ≤ (Theory.Representation.kerRepresentation ρ).ker := by
+    ¬ K.map (QuotientGroup.mk' ρ.ker) ≤ (Representation.kerRepresentation ρ).ker := by
   change ¬ K.map (QuotientGroup.mk' ρ.ker) ≤ (Representation.ofQuotient ρ ρ.ker).ker
   exact not_map_le_ker_of_not_le_ker_of_quotient
     (ρ := ρ) (N := ρ.ker) (K := K) hK
@@ -109,14 +109,14 @@ public theorem quotient_representation_data_of_irreducible_not_le_ker_local
     {G : Type*} [Group G] {F : Type*} [Field F] {V : Type*} [AddCommGroup V] [Module F V]
     (ρ : Representation F G V) (R K : Subgroup G) (hirr : Representation.IsIrreducible ρ)
     (hfixR : ρ.fixedSubspace R = ⊥) (hK_nontrivial : ¬ K ≤ ρ.ker) :
-    let ρq := Theory.Representation.kerRepresentation ρ
+    let ρq := Representation.kerRepresentation ρ
     Representation.IsIrreducible ρq ∧
       Function.Injective ρq ∧
       ρq.fixedSubspace (R.map (QuotientGroup.mk' ρ.ker)) = ⊥ ∧
       ¬ K.map (QuotientGroup.mk' ρ.ker) ≤ ρq.ker := by
   dsimp
-  refine ⟨(Theory.Representation.kerRepresentation_irreducible_iff ρ).2 hirr,
-    Theory.Representation.kerRepresentation_faithful ρ, ?_, ?_⟩
+  refine ⟨(Representation.kerRepresentation_irreducible_iff ρ).2 hirr,
+    Representation.kerRepresentation_faithful ρ, ?_, ?_⟩
   · rw [fixedSubspace_map_mk'_of_kerRepresentation_eq (ρ := ρ) (R := R)]
     exact hfixR
   · exact not_map_le_ker_of_not_le_ker_of_kerRepresentation (ρ := ρ) (K := K) hK_nontrivial

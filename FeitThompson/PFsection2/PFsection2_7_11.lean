@@ -81,14 +81,14 @@ public theorem dadeTransform_eq_inducedCF_of_coset_constancy_on_support
     (h : Hypothesis2 A L H) (hAL : ∀ a : G, a ∈ A → a ∈ L)
     (α : Section1.ClassFunction L)
     (hα : CFOn L B α)
-    (hconst : ∀ χ : Theory.Character.ConjClassFunction G,
-      Theory.Character.IsIrreducibleConjCharacter χ →
+    (hconst : ∀ χ : ConjClassFunction G,
+      IsIrreducibleConjCharacter χ →
         ∀ ⦃a h0 : G⦄, a ∈ B → h0 ∈ H a →
           Section1.ofConjClassFunction χ (a * h0) =
             Section1.ofConjClassFunction χ a) :
     dadeTransform H hAL α = Section1.inducedCF L α := by
   classical
-  let χfun : Theory.Character.ConjClassFunction G → Section1.ClassFunction G :=
+  let χfun : ConjClassFunction G → Section1.ClassFunction G :=
     fun χ => Section1.ofConjClassFunction χ
   have hαA : CFOn L A α := CFOn_mono hBA hα
   have hDadeclass :
@@ -143,7 +143,7 @@ public theorem dadeTransform_eq_inducedCF_of_coset_constancy_on_support
           field_simp [hcard_ne]
         simpa [Section1.subgroupRestriction] using havg)
   calc
-    Theory.Character.classFunctionInner
+    classFunctionInner
         (Section1.toConjClassFunction
           (dadeTransform H hAL α) hDadeclass) chi
         = Section1.scalarProduct G (dadeTransform H hAL α)
@@ -163,7 +163,7 @@ public theorem dadeTransform_eq_inducedCF_of_coset_constancy_on_support
           symm
           exact Section1.scalarProduct_inducedCF_left L α (χfun chi)
             (Section1.ofConjClassFunction_isClassFunction chi)
-    _ = Theory.Character.classFunctionInner
+    _ = classFunctionInner
         (Section1.toConjClassFunction
           (Section1.inducedCF L α) hIndclass) chi := by
           symm

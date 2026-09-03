@@ -6,8 +6,7 @@ public import FeitThompson.PFsection4.PFsection4_9
 public import FeitThompson.ChiefFactors.Core
 import Theory.Representation.SolvableDimension
 
-open Theory.Representation
-open Theory.GroupAction
+open Representation
 
 /-!
 # Peterfalvi, Section 6: basic notation
@@ -861,7 +860,7 @@ public theorem frobeniusQuotientWithKernel_left_lt
   refine lt_of_le_of_ne hH1K ?_
   intro hKH1
   apply hKbar_ne_bot
-  rw [eq_bot_iff]
+  rw [_root_.eq_bot_iff]
   intro x hx
   rcases hx with ⟨k, hkK, rfl⟩
   have hkH1 : k ∈ H1 := by

@@ -7,7 +7,6 @@ import FeitThompson.PFsection4.PFsection4_5_to_10
 import FeitThompson.PFsection3.PFsection3_9
 public import FeitThompson.PFsection6.PFsection6_8
 public import FeitThompson.PFsection8.PFsection8_15
-open Theory.GroupAction
 
 
 noncomputable section
@@ -2184,7 +2183,7 @@ public theorem mapsVirtualCharacters_of_subgroupImage_sigmaDef
   let E := Section1.classFunctionLinearEquivOfMulEquiv e
   intro β hβ
   rw [hSigmaDef]
-  change Theory.Character.IsVirtualCharacter (sigmaImage (E β))
+  change IsVirtualCharacter (sigmaImage (E β))
   exact hSigmaImage (E β)
     (Section1.virtualCharacter_classFunctionLinearEquivOfMulEquiv e hβ)
 
@@ -3376,7 +3375,7 @@ public theorem theorem_4_8_primeDade
     simp
   let alpha : Section1.ClassFunction M := piChar i j - piChar i k
   let phi : Section1.ClassFunction G := tau alpha
-  have hAlphaVirt : Theory.Character.IsVirtualCharacter alpha := by
+  have hAlphaVirt : IsVirtualCharacter alpha := by
     exact Section3.isVirtualCharacter_sub
       (Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup (hirr i j))
       (Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup (hirr i k))
@@ -3386,7 +3385,7 @@ public theorem theorem_4_8_primeDade
       (Section4Scratch.primeDadeA0Set W1 W2 W A) := by
     simpa [alpha] using hSupportExact
   have hAlphaCF := CFOn_of_supportedOn_subgroupImageSet hAlphaClass hAlphaSupp
-  have hPhiVirt : Theory.Character.IsVirtualCharacter phi := by
+  have hPhiVirt : IsVirtualCharacter phi := by
     dsimp [phi]
     exact hTauVirt alpha hAlphaVirt hAlphaSupp
   have hPiNe : piChar i j ≠ piChar i k := by
@@ -4272,7 +4271,7 @@ public theorem baseColumn_galoisConjugate_of_subgroupImage_section3_fields
     have hetaClass : Section1.IsClassFunction eta :=
       Section1.isVirtualCharacter_isClassFunction
         (Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup heta)
-    have hSigmaEtaVirt : Theory.Character.IsVirtualCharacter (sigma eta) :=
+    have hSigmaEtaVirt : IsVirtualCharacter (sigma eta) :=
       hSigmaVirt eta (Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup heta)
     have hSigmaEtaSelf :
         Section1.scalarProduct G (sigma eta) (sigma eta) = 1 := by

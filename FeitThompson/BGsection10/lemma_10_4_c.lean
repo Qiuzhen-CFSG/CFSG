@@ -5,7 +5,6 @@ public import FeitThompson.BGsection4.lemma_4_5_a
 public import FeitThompson.BGsection5.theorem_5_3
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
-open Theory.ElementaryAbelian
 
 
 open scoped Pointwise

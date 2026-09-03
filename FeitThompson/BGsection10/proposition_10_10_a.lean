@@ -3,7 +3,6 @@ module
 public import FeitThompson.BGsection10.corollary_10_9_b
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
-open Theory.ElementaryAbelian
 
 
 open scoped Pointwise

@@ -14,7 +14,6 @@ import Mathlib.GroupTheory.GroupAction.Quotient
 import Mathlib.GroupTheory.Index
 import Mathlib.Algebra.Group.Subgroup.Pointwise
 import Mathlib.Tactic
-open Theory.GroupAction
 
 
 open scoped Pointwise
@@ -225,8 +224,9 @@ private lemma centralizer_lift_of_odd_center
       simpa [hfix]
   let c : A → Z := fun a =>
     ⟨(x : G)⁻¹ * (a : G) * (x : G) * (a : G)⁻¹, hdefect a⟩
-  have hcocycle : @IsCocycle₁ (↥A) (↥Z) _ _
-      (Subgroup.conjMulDistribMulActionOfLeNormalizer A Z hAZ) c := by
+  letI : MulDistribMulAction (↥A) (↥Z) :=
+    Subgroup.conjMulDistribMulActionOfLeNormalizer A Z hAZ
+  have hcocycle : IsCocycle₁ (A := (↥A)) (N := (↥Z)) c := by
     intro a b
     apply Subtype.ext
     let : MulDistribMulAction (↥A) (↥Z) :=
@@ -237,8 +237,8 @@ private lemma centralizer_lift_of_odd_center
     simp only [Subgroup.coe_inv]
     group
   obtain ⟨z, hz⟩ :=
-    @exists_coboundary_of_cocycle_of_coprime_card (↥A) (↥Z) _ _ _ _
-      (Subgroup.conjMulDistribMulActionOfLeNormalizer A Z hAZ) c hcocycle hcop
+    exists_coboundary_of_cocycle_of_coprime_card
+      (A := (↥A)) (N := (↥Z)) c hcocycle hcop
   let sA : A := ⟨s, Subgroup.mem_zpowers s⟩
   let a : G := (x : G)⁻¹ * s * (x : G) * s⁻¹
   have hcs : a = ((sA • z : Z) : G)⁻¹ * (z : G) := by

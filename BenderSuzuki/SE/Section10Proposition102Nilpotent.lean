@@ -3,7 +3,6 @@ module
 public import BenderSuzuki.SE.Section10Proposition102Algebra
 public import FeitThompson.BGsection3.Remaining
 import BenderSuzuki.External.Huppert.V.theorem_8_14
-open Theory.GroupAction
 
 
 /-!

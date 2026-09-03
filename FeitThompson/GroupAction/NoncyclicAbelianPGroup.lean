@@ -5,8 +5,6 @@ import Mathlib.RepresentationTheory.Submodule
 import FeitThompson.Frattini.Core
 import FeitThompson.GroupAction.CoprimeHall
 
-open Theory.ElementaryAbelian
-open Theory.GroupAction
 
 open scoped Pointwise
 

@@ -53,56 +53,79 @@ namespace LinearMap
 
 -- At first we work with any `[CommRing k]`, and add the assumption that
 -- `IsUnit (Fintype.card G : k)` when it is required.
-variable {k : Type u} [CommRing k] {G : Type u'} [Group G]
-variable {V : Type v} [AddCommGroup V] [Module k V] [Module k[G] V]
-  [IsScalarTower k k[G] V]
-variable {W : Type w} [AddCommGroup W] [Module k W] [Module k[G] W]
-  [IsScalarTower k k[G] W]
-variable (π : W →ₗ[k] V)
 
 /-- We define the conjugate of `π` by `g`, as a `k`-linear map. -/
-def conjugate' (g : G) : W →ₗ[k] V :=
+def conjugate'
+    {k : Type u} [CommRing k] {G : Type u'} [Group G]
+    {V : Type v} [AddCommGroup V] [Module k V] [Module k[G] V]
+    [IsScalarTower k k[G] V] {W : Type w} [AddCommGroup W] [Module k W]
+    [Module k[G] W] [IsScalarTower k k[G] W] (π : W →ₗ[k] V) (g : G) : W →ₗ[k] V :=
   GroupSMul.linearMap k V g⁻¹ ∘ₗ π ∘ₗ GroupSMul.linearMap k W g
 
-theorem conjugate'_apply (g : G) (v : W)
+theorem conjugate'_apply
+    {k : Type u} [CommRing k] {G : Type u'} [Group G]
+    {V : Type v} [AddCommGroup V] [Module k V] [Module k[G] V]
+    [IsScalarTower k k[G] V] {W : Type w} [AddCommGroup W] [Module k W]
+    [Module k[G] W] [IsScalarTower k k[G] W] (π : W →ₗ[k] V) (g : G) (v : W)
     : π.conjugate' g v
       = MonoidAlgebra.single g⁻¹ (1 : k) • π (MonoidAlgebra.single g (1 : k) • v) :=
   rfl
 
-variable (i : V →ₗ[k[G]] W)
 
 section
 
-theorem conjugate'_i (h : ∀ v : V, π (i v) = v) (g : G) (v : V)
+theorem conjugate'_i
+    {k : Type u} [CommRing k] {G : Type u'} [Group G]
+    {V : Type v} [AddCommGroup V] [Module k V] [Module k[G] V]
+    [IsScalarTower k k[G] V] {W : Type w} [AddCommGroup W] [Module k W]
+    [Module k[G] W] [IsScalarTower k k[G] W] (π : W →ₗ[k] V) (i : V →ₗ[k[G]] W)
+    (h : ∀ v : V, π (i v) = v) (g : G) (v : V)
     : (conjugate' π g : W → V) (i v) = v := by
   rw [conjugate'_apply, ← i.map_smul, h, ← mul_smul, single_mul_single, mul_one, inv_mul_cancel,
     ← one_def, one_smul]
 
 end
 
-variable (G) [Fintype G]
 
 /-- The sum of the conjugates of `π` by each element `g : G`, as a `k`-linear map.
 
 (We postpone dividing by the size of the group as long as possible.)
 -/
-def sumOfConjugates' : W →ₗ[k] V :=
+def sumOfConjugates'
+    {k : Type u} [CommRing k] (G : Type u') [Group G] [Fintype G]
+    {V : Type v} [AddCommGroup V] [Module k V] [Module k[G] V]
+    [IsScalarTower k k[G] V] {W : Type w} [AddCommGroup W] [Module k W]
+    [Module k[G] W] [IsScalarTower k k[G] W] (π : W →ₗ[k] V) : W →ₗ[k] V :=
   ∑ g : G, π.conjugate' g
 
-lemma sumOfConjugates'_apply (v : W)
+lemma sumOfConjugates'_apply
+    {k : Type u} [CommRing k] (G : Type u') [Group G] [Fintype G]
+    {V : Type v} [AddCommGroup V] [Module k V] [Module k[G] V]
+    [IsScalarTower k k[G] V] {W : Type w} [AddCommGroup W] [Module k W]
+    [Module k[G] W] [IsScalarTower k k[G] W] (π : W →ₗ[k] V) (v : W)
     : π.sumOfConjugates' G v = ∑ g : G, π.conjugate' g v :=
   LinearMap.sum_apply _ _ _
 
 /-- In fact, the sum over `g : G` of the conjugate of `π` by `g` is a `k[G]`-linear map.
 -/
-def sumOfConjugates'Equivariant : W →ₗ[k[G]] V :=
+def sumOfConjugates'Equivariant
+    {k : Type u} [CommRing k] (G : Type u') [Group G] [Fintype G]
+    {V : Type v} [AddCommGroup V] [Module k V] [Module k[G] V]
+    [IsScalarTower k k[G] V] {W : Type w} [AddCommGroup W] [Module k W]
+    [Module k[G] W] [IsScalarTower k k[G] W] (π : W →ₗ[k] V) :
+    W →ₗ[k[G]] V :=
   MonoidAlgebra.equivariantOfLinearOfComm (π.sumOfConjugates' G)
     fun g v => by
       simp only [sumOfConjugates'_apply, Finset.smul_sum, conjugate'_apply]
       refine Fintype.sum_bijective (· * g) (Group.mulRight_bijective g) _ _ fun i ↦ ?_
       simp only [smul_smul, single_mul_single, mul_inv_rev, mul_inv_cancel_left, one_mul]
 
-theorem sumOfConjugates'Equivariant_apply (v : W)
+theorem sumOfConjugates'Equivariant_apply
+    {k : Type u} [CommRing k] (G : Type u') [Group G] [Fintype G]
+    {V : Type v} [AddCommGroup V] [Module k V] [Module k[G] V]
+    [IsScalarTower k k[G] V] {W : Type w} [AddCommGroup W] [Module k W]
+    [Module k[G] W] [IsScalarTower k k[G] W] (π : W →ₗ[k] V)
+    (v : W)
     : π.sumOfConjugates'Equivariant G v = ∑ g : G, π.conjugate' g v :=
   π.sumOfConjugates'_apply G v
 
@@ -111,15 +134,30 @@ section
 /-- We construct our `k[G]`-linear retraction of `i` as
 $$ \frac{1}{|G|} \sum_{g \in G} g⁻¹ • π(g • -). $$
 -/
-def equivariantProjection' : W →ₗ[k[G]] V :=
+def equivariantProjection'
+    {k : Type u} [CommRing k] (G : Type u') [Group G] [Fintype G]
+    {V : Type v} [AddCommGroup V] [Module k V] [Module k[G] V]
+    [IsScalarTower k k[G] V] {W : Type w} [AddCommGroup W] [Module k W]
+    [Module k[G] W] [IsScalarTower k k[G] W] (π : W →ₗ[k] V) :
+    W →ₗ[k[G]] V :=
   Ring.inverse (Fintype.card G : k) • π.sumOfConjugates'Equivariant G
 
-theorem equivariantProjection'_apply (v : W)
+theorem equivariantProjection'_apply
+    {k : Type u} [CommRing k] (G : Type u') [Group G] [Fintype G]
+    {V : Type v} [AddCommGroup V] [Module k V] [Module k[G] V]
+    [IsScalarTower k k[G] V] {W : Type w} [AddCommGroup W] [Module k W]
+    [Module k[G] W] [IsScalarTower k k[G] W] (π : W →ₗ[k] V)
+    (v : W)
     : π.equivariantProjection' G v
       = Ring.inverse (Fintype.card G : k) • ∑ g : G, π.conjugate' g v := by
   simp only [equivariantProjection', smul_apply, sumOfConjugates'Equivariant_apply]
 
-theorem equivariantProjection'_condition (hcard : IsUnit (Fintype.card G : k))
+theorem equivariantProjection'_condition
+    {k : Type u} [CommRing k] (G : Type u') [Group G] [Fintype G]
+    {V : Type v} [AddCommGroup V] [Module k V] [Module k[G] V]
+    [IsScalarTower k k[G] V] {W : Type w} [AddCommGroup W] [Module k W]
+    [Module k[G] W] [IsScalarTower k k[G] W] (π : W →ₗ[k] V) (i : V →ₗ[k[G]] W)
+    (hcard : IsUnit (Fintype.card G : k))
     (h : ∀ v : V, π (i v) = v) (v : V)
     : (π.equivariantProjection' G) (i v) = v := by
   rw [equivariantProjection'_apply]
@@ -136,13 +174,13 @@ end
 namespace MonoidAlgebra
 
 -- Now we work over a `[Field k]`.
-variable {k : Type u} [Field k] {G : Type u'} [Fintype G]
-variable [Group G]
-variable {V : Type v} [AddCommGroup V] [Module k[G] V]
-variable {W : Type w} [AddCommGroup W] [Module k[G] W]
 
 set_option backward.isDefEq.respectTransparency false in
-theorem exists_leftInverse_of_injective' [NeZero (Fintype.card G : k)]
+theorem exists_leftInverse_of_injective'
+    {k : Type u} [Field k] {G : Type u'} [Group G] [Fintype G]
+    {V : Type v} [AddCommGroup V] [Module k[G] V]
+    {W : Type w} [AddCommGroup W] [Module k[G] W]
+    [NeZero (Fintype.card G : k)]
     (f : V →ₗ[k[G]] W) (hf : LinearMap.ker f = ⊥)
     : ∃ g : W →ₗ[k[G]] V, g.comp f = .id := by
   let A := k[G]
@@ -159,18 +197,26 @@ theorem exists_leftInverse_of_injective' [NeZero (Fintype.card G : k)]
 
 namespace Submodule
 
-theorem exists_isCompl' [NeZero (Fintype.card G : k)] (p : Submodule k[G] V)
+theorem exists_isCompl'
+    {k : Type u} [Field k] {G : Type u'} [Group G] [Fintype G]
+    {V : Type v} [AddCommGroup V] [Module k[G] V]
+    [NeZero (Fintype.card G : k)] (p : Submodule k[G] V)
     : ∃ q : Submodule k[G] V, IsCompl p q := by
   rcases MonoidAlgebra.exists_leftInverse_of_injective' p.subtype p.ker_subtype with ⟨f, hf⟩
   exact ⟨LinearMap.ker f, LinearMap.isCompl_of_proj <| DFunLike.congr_fun hf⟩
 
 /-- This also implies instances `ComplementedLattice (Submodule k[G] V)` and
 `IsSemisimpleRing k[G]`. -/
-instance instIsSemisimpleModule' [NeZero (Fintype.card G : k)]
+instance instIsSemisimpleModule'
+    {k : Type u} [Field k] {G : Type u'} [Group G] [Fintype G]
+    {V : Type v} [AddCommGroup V] [Module k[G] V]
+    [NeZero (Fintype.card G : k)]
     : IsSemisimpleModule k[G] V where
   exists_isCompl := exists_isCompl'
 
-instance instIsSemisimpleRing' [AddGroup G] [NeZero (Fintype.card G : k)]
+instance instIsSemisimpleRing'
+    {k : Type u} [Field k] {G : Type u'} [Fintype G] [AddGroup G]
+    [NeZero (Fintype.card G : k)]
     : IsSemisimpleRing (AddMonoidAlgebra k G) :=
   haveI : NeZero (Fintype.card (Multiplicative G) : k) := by
     rwa [Fintype.card_congr Multiplicative.toAdd]

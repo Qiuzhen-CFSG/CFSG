@@ -8,7 +8,6 @@ public import BenderSuzuki.External.Higman.lemma_8
 import FeitThompson.Frattini.Core
 import Theory.GroupAction.Defs
 import Theory.GroupAction.Invariant
-open Theory.GroupAction
 
 
 /-!

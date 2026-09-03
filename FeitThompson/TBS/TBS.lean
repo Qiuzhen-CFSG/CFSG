@@ -1,7 +1,6 @@
 module
 
 public import FeitThompson.Gorenstein.Chapter8_2
-open Theory.GroupAction
 
 
 /-!

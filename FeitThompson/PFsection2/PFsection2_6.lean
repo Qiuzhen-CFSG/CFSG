@@ -94,13 +94,13 @@ private theorem uliftRepresentation_character
 private theorem isVirtualCharacter_of_isCharacter
     {G : Type u} [Group G] [Finite G]
     (χ : Section1.ClassFunction G) (hχ : Section1.IsCharacter χ) :
-    Theory.Character.IsVirtualCharacter χ := by
+    IsVirtualCharacter χ := by
   rcases hχ with ⟨V, _hadd, _hmod, _hfd, ρ, rfl⟩
   classical
   refine ⟨1, (fun _ : Fin 1 => (1 : ℤ)), fun _ : Fin 1 => Module.finrank ℂ V,
     fun _ : Fin 1 => standardizeRepresentation ρ, ?_⟩
   ext g
-  simp [Theory.Character.virtualCharacterOfRepresentations,
+  simp [virtualCharacterOfRepresentations,
     standardizeRepresentation_character]
 
 
@@ -116,9 +116,9 @@ private theorem character_cast_nat
 
 private theorem isVirtualCharacter_add
     {G : Type u} [Group G] {χ ψ : G → ℂ}
-    (hχ : Theory.Character.IsVirtualCharacter χ)
-    (hψ : Theory.Character.IsVirtualCharacter ψ) :
-    Theory.Character.IsVirtualCharacter (χ + ψ) := by
+    (hχ : IsVirtualCharacter χ)
+    (hψ : IsVirtualCharacter ψ) :
+    IsVirtualCharacter (χ + ψ) := by
   classical
   rcases hχ with ⟨r, m, n, ρ, rfl⟩
   rcases hψ with ⟨s, m', n', σ, rfl⟩
@@ -141,35 +141,35 @@ private theorem isVirtualCharacter_add
           (σ j))
   refine ⟨r + s, mrs, nrs, ρrs, ?_⟩
   ext g
-  simp only [Pi.add_apply, Theory.Character.virtualCharacterOfRepresentations,
+  simp only [Pi.add_apply, virtualCharacterOfRepresentations,
     mrs, nrs, ρrs, Fin.sum_univ_add]
   simp [Fin.addCases_left, Fin.addCases_right, character_cast_nat]
 
 private theorem isVirtualCharacter_zsmul
     {G : Type u} [Group G] (n : ℤ) {χ : G → ℂ}
-    (hχ : Theory.Character.IsVirtualCharacter χ) :
-    Theory.Character.IsVirtualCharacter (n • χ) := by
+    (hχ : IsVirtualCharacter χ) :
+    IsVirtualCharacter (n • χ) := by
   classical
   rcases hχ with ⟨r, m, k, ρ, rfl⟩
   refine ⟨r, fun i => n * m i, k, ρ, ?_⟩
   ext g
-  simp [Theory.Character.virtualCharacterOfRepresentations, Finset.mul_sum, mul_assoc]
+  simp [virtualCharacterOfRepresentations, Finset.mul_sum, mul_assoc]
 
 private theorem isVirtualCharacter_finset_sum
     {G : Type u} [Group G] {ι : Type*} [Fintype ι]
     (s : Finset ι) (χ : ι → G → ℂ)
-    (hχ : ∀ i ∈ s, Theory.Character.IsVirtualCharacter (χ i)) :
-    Theory.Character.IsVirtualCharacter (fun g => ∑ i ∈ s, χ i g) := by
+    (hχ : ∀ i ∈ s, IsVirtualCharacter (χ i)) :
+    IsVirtualCharacter (fun g => ∑ i ∈ s, χ i g) := by
   classical
   induction s using Finset.induction_on with
   | empty =>
       refine ⟨0, (fun i : Fin 0 => nomatch i), (fun i : Fin 0 => nomatch i),
         (fun i : Fin 0 => nomatch i), ?_⟩
       ext g
-      simp [Theory.Character.virtualCharacterOfRepresentations]
+      simp [virtualCharacterOfRepresentations]
   | @insert i s hi hs =>
       have htail :
-          Theory.Character.IsVirtualCharacter (fun g => ∑ j ∈ s, χ j g) := by
+          IsVirtualCharacter (fun g => ∑ j ∈ s, χ j g) := by
         exact hs (by
           intro j hj
           exact hχ j (by simp [hj]))
@@ -183,12 +183,12 @@ private theorem isVirtualCharacter_finset_sum
 private theorem isVirtualCharacter_isClassFunction
     {G : Type u} [Group G] [Finite G]
     {χ : Section1.ClassFunction G}
-    (hχ : Theory.Character.IsVirtualCharacter χ) :
+    (hχ : IsVirtualCharacter χ) :
     Section1.IsClassFunction χ := by
   classical
   rcases hχ with ⟨r, m, n, ρ, rfl⟩
   intro x g
-  unfold Theory.Character.virtualCharacterOfRepresentations
+  unfold virtualCharacterOfRepresentations
   refine Finset.sum_congr rfl ?_
   intro i _hi
   have hchar :
@@ -199,8 +199,8 @@ private theorem isVirtualCharacter_isClassFunction
 private theorem scalarProduct_isVirtualCharacter_eq_int
     {G : Type u} [Group G] [Finite G]
     {χ ψ : Section1.ClassFunction G}
-    (hχ : Theory.Character.IsVirtualCharacter χ)
-    (hψ : Theory.Character.IsVirtualCharacter ψ) :
+    (hχ : IsVirtualCharacter χ)
+    (hψ : IsVirtualCharacter ψ) :
     ∃ z : ℤ, Section1.scalarProduct G χ ψ = (z : ℂ) := by
   classical
   rcases hχ with ⟨r, m, n, ρ, rfl⟩
@@ -236,8 +236,8 @@ private theorem scalarProduct_isVirtualCharacter_eq_int
     ring
   calc
     Section1.scalarProduct G
-        (Theory.Character.virtualCharacterOfRepresentations r m n ρ)
-        (Theory.Character.virtualCharacterOfRepresentations s m' n' σ)
+        (virtualCharacterOfRepresentations r m n ρ)
+        (virtualCharacterOfRepresentations s m' n' σ)
         =
           Section1.scalarProduct G
             (fun g => ∑ i : Fin r, (m i : ℂ) * (ρ i).character g)
@@ -251,13 +251,13 @@ private theorem scalarProduct_isVirtualCharacter_eq_int
 private theorem isVirtualCharacter_comp_monoidHom
     {G K : Type u} [Group G] [Group K]
     (φ : K →* G) {χ : Section1.ClassFunction G}
-    (hχ : Theory.Character.IsVirtualCharacter χ) :
-    Theory.Character.IsVirtualCharacter (fun k : K => χ (φ k)) := by
+    (hχ : IsVirtualCharacter χ) :
+    IsVirtualCharacter (fun k : K => χ (φ k)) := by
   classical
   rcases hχ with ⟨r, m, n, ρ, rfl⟩
   refine ⟨r, m, n, fun i => (ρ i).comp φ, ?_⟩
   ext k
-  simp [Theory.Character.virtualCharacterOfRepresentations, Representation.character]
+  simp [virtualCharacterOfRepresentations, Representation.character]
 
 private theorem CFOn_of_virtualCharacterOn
     {G : Type u} [Group G] [Finite G]
@@ -284,19 +284,19 @@ private theorem dadeTransform_add
 public theorem inducedCF_isVirtualCharacter_of_virtualCharacter
     {G : Type u} [Group G] [Finite G]
     (S : Subgroup G) [Finite S] {ψ : Section1.ClassFunction S}
-    (hψ : Theory.Character.IsVirtualCharacter ψ) :
-    Theory.Character.IsVirtualCharacter (Section1.inducedCF S ψ) := by
+    (hψ : IsVirtualCharacter ψ) :
+    IsVirtualCharacter (Section1.inducedCF S ψ) := by
   classical
   rcases hψ with ⟨r, m, n, ρ, rfl⟩
   refine ⟨r, m, fun i => Module.finrank ℂ (Representation.IndV S.subtype (ρ i)),
     fun i => standardizeRepresentation (Representation.ind S.subtype (ρ i)), ?_⟩
   ext g
   change Section1.inducedCF S
-      (Theory.Character.virtualCharacterOfRepresentations r m n ρ) g =
+      (virtualCharacterOfRepresentations r m n ρ) g =
     ∑ i : Fin r, (m i : ℂ) *
       (standardizeRepresentation (Representation.ind S.subtype (ρ i))).character g
   have hvirtual :
-      Theory.Character.virtualCharacterOfRepresentations r m n ρ =
+      virtualCharacterOfRepresentations r m n ρ =
         Section1.weightedFamilySum (fun i : Fin r => (m i : ℂ))
           (fun i : Fin r => (ρ i).character) := by
     funext g
@@ -305,15 +305,15 @@ public theorem inducedCF_isVirtualCharacter_of_virtualCharacter
           (@Finset.univ (Fin r) (Fintype.ofFinite (Fin r))) := by
       ext i
       simp
-    unfold Theory.Character.virtualCharacterOfRepresentations Section1.weightedFamilySum
+    unfold virtualCharacterOfRepresentations Section1.weightedFamilySum
     simp
     rw [huniv]
   calc
-    Section1.inducedCF S (Theory.Character.virtualCharacterOfRepresentations r m n ρ) g =
+    Section1.inducedCF S (virtualCharacterOfRepresentations r m n ρ) g =
         Section1.weightedFamilySum (fun i : Fin r => (m i : ℂ))
           (fun i : Fin r => Section1.inducedCF S ((ρ i).character)) g := by
           have hlin :
-              Section1.inducedCF S (Theory.Character.virtualCharacterOfRepresentations r m n ρ) =
+              Section1.inducedCF S (virtualCharacterOfRepresentations r m n ρ) =
                 Section1.weightedFamilySum (fun i : Fin r => (m i : ℂ))
                   (fun i : Fin r => Section1.inducedCF S ((ρ i).character)) := by
             rw [hvirtual]
@@ -675,8 +675,8 @@ public theorem alphaBFromProjection_isVirtualCharacter
     (A : Set G) (L : Subgroup G) (H : G → Subgroup G)
     (h : Hypothesis2 A L H) {B : Set G} (hB : B.Nonempty) (hBA : B ⊆ A)
     (α : Section1.ClassFunction L)
-    (hα : Theory.Character.IsVirtualCharacter α) :
-    Theory.Character.IsVirtualCharacter (alphaBFromProjection A L H h hB hBA α) := by
+    (hα : IsVirtualCharacter α) :
+    IsVirtualCharacter (alphaBFromProjection A L H h hB hBA α) := by
   exact isVirtualCharacter_comp_monoidHom
     (MOfSetProjectionToL A L H h hB hBA) hα
 
@@ -736,12 +736,12 @@ private theorem dadeInclusionExclusionSum_isVirtualCharacter
     (reps : Finset (Set G))
     (αB : (B : Set G) → Section1.ClassFunction (MOfSet H L B))
     (hαB : ∀ B ∈ reps,
-      Theory.Character.IsVirtualCharacter (αB B)) :
-    Theory.Character.IsVirtualCharacter (dadeInclusionExclusionSum L H reps αB) := by
+      IsVirtualCharacter (αB B)) :
+    IsVirtualCharacter (dadeInclusionExclusionSum L H reps αB) := by
   classical
   have hterm :
       ∀ B ∈ reps,
-        Theory.Character.IsVirtualCharacter
+        IsVirtualCharacter
           (((-1 : ℤ) ^ Nat.card B) •
             Section1.inducedCF (MOfSet H L B) (αB B)) := by
     intro B hB
@@ -749,7 +749,7 @@ private theorem dadeInclusionExclusionSum_isVirtualCharacter
       (inducedCF_isVirtualCharacter_of_virtualCharacter
         (MOfSet H L B) (hαB B hB))
   have hsum :
-      Theory.Character.IsVirtualCharacter
+      IsVirtualCharacter
         (fun g : G =>
           ∑ B ∈ reps, ((-1 : ℤ) ^ Nat.card B : ℂ) *
             Section1.inducedCF (MOfSet H L B) (αB B) g) := by
@@ -1236,13 +1236,13 @@ private theorem conjugateImage_cosetProduct_eq_of_nonempty_inter
 
 private theorem isVirtualCharacter_neg
     {G : Type u} [Group G]
-    {χ : G → ℂ} (hχ : Theory.Character.IsVirtualCharacter χ) :
-    Theory.Character.IsVirtualCharacter (-χ) := by
+    {χ : G → ℂ} (hχ : IsVirtualCharacter χ) :
+    IsVirtualCharacter (-χ) := by
   classical
   rcases hχ with ⟨r, m, n, ρ, rfl⟩
   refine ⟨r, fun i => -m i, n, ρ, ?_⟩
   ext g
-  simp [Theory.Character.virtualCharacterOfRepresentations]
+  simp [virtualCharacterOfRepresentations]
 
 private theorem conjugateIn_refl {G : Type u} [Group G] (g : G) :
     conjugateIn g g := by
@@ -5542,7 +5542,7 @@ private theorem theorem_2_6_virtual_closure_core
           IsRepresentativeSystemForNonemptySubsets A L reps ∧
             (∀ B ∈ reps, alphaBSpec H α B (αB B)) ∧
             (∀ B ∈ reps,
-              Theory.Character.IsVirtualCharacter (αB B)) ∧
+              IsVirtualCharacter (αB B)) ∧
             dadeTransform H hAL α =
               dadeInclusionExclusionSum L H reps αB := by
     -- PF (2.9): choose representatives and define `α_B` by the semidirect
@@ -5561,7 +5561,7 @@ private theorem theorem_2_6_virtual_closure_core
       rw [dif_pos hBprops]
       exact alphaBFromProjection_spec A L H h hBprops.1 hBprops.2 α
     have hαBvirt :
-        ∀ B ∈ reps, Theory.Character.IsVirtualCharacter (αB B) := by
+        ∀ B ∈ reps, IsVirtualCharacter (αB B) := by
       intro B hBmem
       have hBprops : B.Nonempty ∧ B ⊆ A := hreps.1 B hBmem
       dsimp [αB]

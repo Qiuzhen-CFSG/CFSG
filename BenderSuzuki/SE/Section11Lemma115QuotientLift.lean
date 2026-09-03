@@ -2,7 +2,6 @@ module
 
 public import BenderSuzuki.SE.Section11Lemma115Kernel
 public import BenderSuzuki.SE.Section11Lemma115QuotientMembership
-open Theory.ElementaryAbelian
 
 
 /-!

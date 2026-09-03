@@ -17,7 +17,7 @@ noncomputable section
 namespace BenderSuzuki
 
 open External
-open Theory.Representation
+open Representation
 open scoped Pointwise
 
 universe u

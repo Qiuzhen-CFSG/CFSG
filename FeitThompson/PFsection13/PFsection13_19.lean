@@ -391,7 +391,7 @@ private theorem theorem_13_19_tauL1_sub_conj_virtualCharacter
       (μ 0 1) βL βS e)
     {ψ : Section1.ClassFunction L}
     (hψ : ψ ∈ Lfam) :
-    Theory.Character.IsVirtualCharacter
+    IsVirtualCharacter
       (τL1 (ψ - Section1.conjugateCharacter ψ)) := by
   have h19Full := h19
   rcases h19 with
@@ -509,7 +509,7 @@ private theorem theorem_13_19_tauL1_Lfam_signed_irreducible
   have h19Full := h19
   have hψspan : Section5.integerSpan Lfam ψ :=
     Section5.integerSpan_of_mem Lfam hψ
-  have hvirt : Theory.Character.IsVirtualCharacter (τL1 ψ) := by
+  have hvirt : IsVirtualCharacter (τL1 ψ) := by
     rcases h19 with
       ⟨_hLmax, _hMF, _hTypeI, _he, _hDadeL, _hPunctL, hcohL,
         _hφmem, _hφdeg, _hφτ, _hβL, _hβS⟩
@@ -552,9 +552,9 @@ private theorem theorem_13_19_sigma_omega_signed_irreducible
   have hω_class : Section1.IsClassFunction (ω i j) := by
     rw [hωNat i j hi hj]
     exact hωFin.is_class iFin jFin
-  have hvirtW : Theory.Character.IsVirtualCharacter (ω i j) :=
+  have hvirtW : IsVirtualCharacter (ω i j) :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup hω_irred
-  have hvirtG : Theory.Character.IsVirtualCharacter (σ (ω i j)) :=
+  have hvirtG : IsVirtualCharacter (σ (ω i j)) :=
     hσmap.2.1 (ω i j) hvirtW
   have hself : Section1.scalarProduct G (σ (ω i j)) (σ (ω i j)) = 1 := by
     calc
@@ -786,9 +786,9 @@ private theorem theorem_13_19_finite_orthonormal_virtual_coeff_support_card_le_t
     (χ : ι → Section1.ClassFunction G)
     (horth : ∀ i j : ι,
       Section1.scalarProduct G (χ i) (χ j) = if i = j then 1 else 0)
-    (hχvirt : ∀ i, Theory.Character.IsVirtualCharacter (χ i))
+    (hχvirt : ∀ i, IsVirtualCharacter (χ i))
     {Y : Section1.ClassFunction G}
-    (hYvirt : Theory.Character.IsVirtualCharacter Y)
+    (hYvirt : IsVirtualCharacter Y)
     (hYnorm : Section5.cfNormSq Y = 2) :
     Fintype.card {i : ι // Section1.scalarProduct G Y (χ i) ≠ 0} ≤ 2 := by
   classical
@@ -866,7 +866,7 @@ private theorem theorem_13_19_tauL1_sub_conj_sigma_omega_count_zero_source
       _hμsum, _hνsum, _hμ00, _hν00, _hμdeg, _hνdeg⟩
   let Ψ : Section1.ClassFunction G :=
     τL1 (ψ - Section1.conjugateCharacter ψ)
-  have hΨvirt : Theory.Character.IsVirtualCharacter Ψ := by
+  have hΨvirt : IsVirtualCharacter Ψ := by
     dsimp [Ψ]
     exact theorem_13_19_tauL1_sub_conj_virtualCharacter
       (Smax := Smax) (P := P) (W1 := W1) (L := L) (H := H)
@@ -902,7 +902,7 @@ private theorem theorem_13_19_tauL1_sub_conj_sigma_omega_count_zero_source
           (hωFin.is_class i j) (hωFin.is_class k l)
       _ = if (i, j) = (k, l) then 1 else 0 := hωFin.orthonormal (i, j) (k, l)
   have hχvirt : ∀ ij : Fin q × Fin p,
-      Theory.Character.IsVirtualCharacter (χ ij) := by
+      IsVirtualCharacter (χ ij) := by
     intro ij
     exact hσmap.2.1 (ωFin ij.1 ij.2)
       (Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup
@@ -1073,7 +1073,7 @@ private theorem theorem_13_19_tauL1_sigma_omega_table_source
       (φL := φL) (βL := βL) (βS := βS) (φ := φ) (μ := μ) (e := e)
       _h19 hψ
   have hZtau1 :
-      Theory.Character.IsVirtualCharacter
+      IsVirtualCharacter
         (τL1 (ψ - Section1.conjugateCharacter ψ)) :=
     theorem_13_19_tauL1_sub_conj_virtualCharacter
       (Smax := Smax) (P := P) (W1 := W1) (L := L) (H := H)
@@ -2159,14 +2159,14 @@ private theorem theorem_13_19_alternative_source
     ext x
     simp [ΓL, Pi.sub_apply, Pi.add_apply]
     ring
-  have hΓLvirt : Theory.Character.IsVirtualCharacter ΓL := by
-    have hβvirt : Theory.Character.IsVirtualCharacter βL := by
+  have hΓLvirt : IsVirtualCharacter ΓL := by
+    have hβvirt : IsVirtualCharacter βL := by
       rw [← hβLdef]
       exact Section7.theorem_7_8_beta_virtual h76 hAgree h78
     have hprincipalVirt :
-        Theory.Character.IsVirtualCharacter (Section1.principalCharacter G) :=
+        IsVirtualCharacter (Section1.principalCharacter G) :=
       Section3.isVirtualCharacter_principalCharacter
-    have hφvirt : Theory.Character.IsVirtualCharacter φ := by
+    have hφvirt : IsVirtualCharacter φ := by
       rw [hφdef]
       exact hcohL.2.1 φL (Section5.integerSpan_of_mem Lfam hφmem)
     exact Section3.isVirtualCharacter_sub hβvirt
@@ -2239,21 +2239,21 @@ private theorem theorem_13_19_alternative_source
       IsMinCE.odd_order hΓLvirt hΓLreal hΓLone hΓvirt hΓreal
   let bSphi : ℂ := Section1.scalarProduct G βS φ
   let bLeta : ℂ := Section1.scalarProduct G βL η01
-  have hφvirt : Theory.Character.IsVirtualCharacter φ := by
+  have hφvirt : IsVirtualCharacter φ := by
     rw [hφdef]
     exact hcohL.2.1 φL (Section5.integerSpan_of_mem Lfam hφmem)
-  have hβLvirt : Theory.Character.IsVirtualCharacter βL := by
+  have hβLvirt : IsVirtualCharacter βL := by
     rw [← hβLdef]
     exact Section7.theorem_7_8_beta_virtual h76 hAgree h78
-  have hηvirt : Theory.Character.IsVirtualCharacter η01 := by
+  have hηvirt : IsVirtualCharacter η01 := by
     rw [hη01]
     exact theorem_13_18_eta_virtual_of_notation Smax Tmax W W1 W2 p q
       ω η μ ν μsum νsum δ δ' σ hnotationOrig 0 1 hqpos hp1
   have hprincipalVirt :
-      Theory.Character.IsVirtualCharacter (Section1.principalCharacter G) :=
+      IsVirtualCharacter (Section1.principalCharacter G) :=
     Section3.isVirtualCharacter_principalCharacter
-  have hβSvirt : Theory.Character.IsVirtualCharacter βS := by
-    have hηprincipal : Theory.Character.IsVirtualCharacter η01 := hηvirt
+  have hβSvirt : IsVirtualCharacter βS := by
+    have hηprincipal : IsVirtualCharacter η01 := hηvirt
     have hEq : βS = Γ + Section1.principalCharacter G - η01 := by
       rw [hΓdef]
       ext x

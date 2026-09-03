@@ -3,7 +3,6 @@ module
 public import GorensteinWalter.Section2.CentralizerPCoreOfFstarPGroup
 public import GorensteinWalter.NormalizerEqOfNontrivialNormalInCoatom
 public import FeitThompson.BGsection8.theorem_8_1
-open Theory.GroupAction
 
 
 /-!

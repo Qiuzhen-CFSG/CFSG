@@ -30,7 +30,6 @@ public import FeitThompson.BGsection4.Defs
 import FeitThompson.PCore.PCore
 import FeitThompson.PGroup.NormalSubgroups
 import Mathlib.GroupTheory.Schreier
-open Theory.ElementaryAbelian
 
 
 /-! # Definitions for BG Section 5 -/

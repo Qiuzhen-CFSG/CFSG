@@ -24,7 +24,7 @@ namespace Stellmacher
 
 /-- The source's `(N₂)` condition: every 2-local subgroup is solvable. -/
 @[expose] public def IsNTwoGroup (H : Type u) [Group H] [Finite H] : Prop :=
-  ∀ U : Subgroup H, Theory.Quasithin.IsTwoLocal U → Group.IsSolvable U
+  ∀ U : Subgroup H, IsTwoLocal U → Group.IsSolvable U
 
 /-- Model witnesses used by the shared interface for the four local types in
 alternative (a) of Theorem 2.
@@ -83,8 +83,8 @@ public structure LocalTypeAmalgam
   Q1 : Subgroup X0
   Q2 : Subgroup X0
   Q1_ne_Q2 : Q1 ≠ Q2
-  Q1_maximal_twoLocal : Theory.Quasithin.IsMaximalTwoLocal Q1
-  Q2_maximal_twoLocal : Theory.Quasithin.IsMaximalTwoLocal Q2
+  Q1_maximal_twoLocal : IsMaximalTwoLocal Q1
+  Q2_maximal_twoLocal : IsMaximalTwoLocal Q2
   P1 : Subgroup H
   P2 : Subgroup H
   S0_le : (S0 : Subgroup H) ≤ P1 ⊓ P2
@@ -165,13 +165,13 @@ public theorem theorem_one
     {H : Type u} [Group H] [Finite H]
     (S0 : Sylow 2 H)
     (hlocal : ∀ U : Subgroup H,
-      Theory.Quasithin.IsTwoLocal U →
+      IsTwoLocal U →
       baumannSubgroup S0 ≤ U →
       Group.IsSolvable U ∧ IsCharacteristicTwoType U)
     (hmax : ∃ P1 P2 : Subgroup H,
       P1 ≠ P2 ∧
-      Theory.Quasithin.IsMaximalTwoLocal P1 ∧
-      Theory.Quasithin.IsMaximalTwoLocal P2 ∧
+      IsMaximalTwoLocal P1 ∧
+      IsMaximalTwoLocal P2 ∧
       (S0 : Subgroup H) ≤ P1 ∧
       (S0 : Subgroup H) ≤ P2) :
     IsOfMainTheoremType S0 := by
@@ -197,11 +197,11 @@ public theorem theorem_two
     (IsDihedralGroup S0 ∨ IsSemidihedralGroup S0) ∨
     (Nat.card S0 = 2 ^ 5 ∧
       ∃ U : Subgroup H,
-        Theory.Quasithin.IsMaximalTwoLocal U ∧
+        IsMaximalTwoLocal U ∧
         Nonempty (U ≃* (Multiplicative (ZMod 2) × Equiv.Perm (Fin 4)))) ∨
-    (∃ M : Subgroup H, Theory.Comparator.IsStronglyEmbedded M) ∨
+    (∃ M : Subgroup H, IsStronglyEmbedded M) ∨
     (∃ U : Subgroup H,
-      Theory.Quasithin.IsTwoLocal U ∧ pPrimeCore 2 U ≠ ⊥) := by
+      IsTwoLocal U ∧ pPrimeCore 2 U ≠ ⊥) := by
   sorry
 
 end Stellmacher

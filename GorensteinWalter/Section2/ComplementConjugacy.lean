@@ -5,7 +5,6 @@ public import FeitThompson.HallSubgroups.Conjugacy
 public import FeitThompson.SubgroupConj
 public import Mathlib.GroupTheory.SchurZassenhaus
 import Mathlib.Algebra.Group.Pointwise.Set.Basic
-open Theory.GroupAction
 
 
 /-!

@@ -3,7 +3,6 @@ module
 public import FeitThompson.BGsection4.gorenstein_5_4_15
 public import FeitThompson.BGsection4.proposition_4_8_a
 public import FeitThompson.BGsection4.proposition_4_3_a
-open Theory.GroupAction
 
 
 open scoped FixedPoints

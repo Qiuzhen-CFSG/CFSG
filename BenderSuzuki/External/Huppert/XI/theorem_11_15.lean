@@ -16,7 +16,6 @@ public import BenderSuzuki.External.Higman.theorem_1a
 public import BenderSuzuki.External.Higman.theorem_1c
 import FeitThompson.BGsection3.lemma_3_2_a
 import Theory.Character.Orthogonality
-open Theory.GroupAction
 
 
 /-!

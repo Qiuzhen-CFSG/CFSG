@@ -4,7 +4,6 @@ public import FeitThompson.Fitting.Centralizer
 public import FeitThompson.GeneratorRank
 public import FeitThompson.BGsection4.lemma_4_7
 public import FeitThompson.BGsection4.lemma_4_13
-open Theory.GroupAction
 
 /-! # Theorem 4.18(a) from BG Section 4 -/
 

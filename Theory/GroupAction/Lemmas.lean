@@ -43,19 +43,6 @@ Small semidirect-product bridges used to translate `FixedPoints.subgroup`/`commu
 statements into subgroup commutators in `G ⋊ A`.
 -/
 
-namespace Semidirect
-
-open scoped Pointwise
-
-variable {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
-
-local notation "φ₀" => (MulDistribMulAction.toMulAut A G)
-local notation "SD" => (G ⋊[φ₀] A)
-local notation "inl" => (SemidirectProduct.inl (φ := φ₀) : G →* SD)
-local notation "inr" => (SemidirectProduct.inr (φ := φ₀) : A →* SD)
-
-end Semidirect
-
 theorem commutatorAction_eq_closure {G A : Type*} [Group G] [Group A]
     [MulDistribMulAction A G]
     : commutatorAction (A := A) (G := G)
@@ -256,9 +243,8 @@ theorem commutatorAction_map_subtype_eq_commutatorAction₂
 
 section subgroupOf
 
-variable {G : Type*} [Group G]
 
-lemma subgroupOf_map_subtype_eq {K : Subgroup G} (H : Subgroup K)
+lemma subgroupOf_map_subtype_eq {G : Type*} [Group G] {K : Subgroup G} (H : Subgroup K)
     : (H.map K.subtype).subgroupOf K = H := by
   ext x; simp [Subgroup.mem_subgroupOf]
 
@@ -266,9 +252,8 @@ end subgroupOf
 
 section card
 
-variable {G : Type*} [Group G]
 
-lemma natCard_subgroupOf_eq (H K : Subgroup G) (hHK : H ≤ K)
+lemma natCard_subgroupOf_eq {G : Type*} [Group G] (H K : Subgroup G) (hHK : H ≤ K)
     : Nat.card (H.subgroupOf K) = Nat.card H :=
   Nat.card_congr (Subgroup.subgroupOfEquivOfLe (G := G) (H := H) (K := K) hHK).toEquiv
 
@@ -276,12 +261,11 @@ end card
 
 section PGroupAction
 
-variable {A G : Type*} [Group A] [Group G] [Finite G] [MulDistribMulAction A G]
 
-omit [Finite G] in
 /-- If a `p`-group `A` acts on a finite group `G` and `p` does not divide `|Aut G|`,
 then the action is trivial. -/
 theorem isTrivialAction_of_isPGroup_of_not_dvd_card_mulAut
+    {A G : Type*} [Group A] [Group G] [MulDistribMulAction A G]
     {p : ℕ} (hp : Nat.Prime p) (hA : IsPGroup p A) (hAut : ¬ p ∣ Nat.card (MulAut G))
     : IsTrivialAction (A := A) (G := G) := by
   let : Fact p.Prime := ⟨hp⟩
@@ -307,6 +291,7 @@ theorem isTrivialAction_of_isPGroup_of_not_dvd_card_mulAut
 
 /-- If a `p`-group `A` acts on a cyclic group `G` of order `p`, then the action is trivial. -/
 theorem isTrivialAction_of_isPGroup_on_cyclic_prime_order
+    {A G : Type*} [Group A] [Group G] [Finite G] [MulDistribMulAction A G]
     {p : ℕ} (hp : Nat.Prime p) (hA : IsPGroup p A) (hG_cyclic : IsCyclic G)
     (hG_card : Nat.card G = p)
     : IsTrivialAction (A := A) (G := G) := by
@@ -329,6 +314,7 @@ theorem isTrivialAction_of_isPGroup_on_cyclic_prime_order
       exact hp.not_dvd_one hdiv_one)
 
 theorem actsTrivially_of_isPGroup_on_cyclic_prime_order
+    {A G : Type*} [Group A] [Group G] [Finite G] [MulDistribMulAction A G]
     {p : ℕ} (hp : Nat.Prime p) (hA : IsPGroup p A) (hG_cyclic : IsCyclic G)
     (hG_card : Nat.card G = p)
     : ActsTrivially (A := A) (G := G) := by

@@ -22,7 +22,6 @@ normalization proof in the existence statement.
 namespace GorensteinWalter
 
 open BenderGlauberman
-open Theory.Character
 
 noncomputable section
 

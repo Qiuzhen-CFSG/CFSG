@@ -4,7 +4,6 @@ public import FeitThompson.BGsection16.theorem_16_E
 import FeitThompson.PFsection2.PFsection2_1
 import Mathlib.GroupTheory.Schreier
 import Mathlib.Order.Preorder.Finite
-open Theory.GroupAction
 
 
 open scoped Pointwise

@@ -4,7 +4,6 @@ public import BenderSuzuki.SE.Proposition84Residual
 import FeitThompson.FinalTheorem
 import FeitThompson.GroupAction.CoprimeHall
 import FeitThompson.SubgroupConj
-open Theory.GroupAction
 
 
 /-!

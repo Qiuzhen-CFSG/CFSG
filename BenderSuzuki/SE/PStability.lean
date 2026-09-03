@@ -7,10 +7,8 @@ import FeitThompson.BGsection9.corollary_9_2
 import Theory.GroupAction.NormalComplement
 import FeitThompson.Frattini.Core
 import Theory.Representation.TwoDimensionalOddOrder
-open Theory.Representation
+open Representation
 
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 /-!

@@ -20,7 +20,6 @@ open scoped Pointwise
 namespace BenderGlauberman
 
 open GorensteinWalter
-open Theory.Character
 
 attribute [local instance] Fintype.ofFinite
 attribute [local instance] Classical.propDecidable

@@ -14,8 +14,6 @@ public import Mathlib.GroupTheory.SemidirectProduct
 public import Mathlib.GroupTheory.Subgroup.Centralizer
 public import Mathlib.GroupTheory.SpecificGroups.Cyclic
 public import Mathlib.GroupTheory.Sylow
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 namespace BenderSuzuki
 namespace External

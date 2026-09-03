@@ -144,7 +144,7 @@ public theorem theorem_12_2_b
     constituentFamily_hypothesis_5_2_a_of_parts
       L H S SX Rade τ SXall hhyp hodd hsets hmem h52aS
   have hvirtAll : ∀ φ : Section1.ClassFunction L, φ ∈ SXall →
-      Theory.Character.IsVirtualCharacter φ := by
+      IsVirtualCharacter φ := by
     intro φ hφ
     exact Section5.isVirtualCharacter_of_isCharacter
       (isCharacter_of_isIrreducibleCharacterOnGroup

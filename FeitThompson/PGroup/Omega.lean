@@ -9,7 +9,6 @@ import Mathlib.GroupTheory.Sylow
 import Mathlib.Tactic.Basic
 public import Theory.ElementaryAbelian.VectorSpace
 
-open Theory.ElementaryAbelian
 
 open scoped IsMulCommutative
 

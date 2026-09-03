@@ -8,7 +8,6 @@ public import GorensteinWalter.Section3.CyclicTwoCoreSetup
 public import BenderGlauberman.Defs
 import BenderGlauberman.FinalTheorem
 import all BenderGlauberman.Lemma19
-open Theory.GroupAction
 
 
 noncomputable section

@@ -12,7 +12,6 @@ public import Mathlib.LinearAlgebra.GeneralLinearGroup.Basic
 
 public import Theory.ElementaryAbelian.VectorSpace
 
-open Theory.ElementaryAbelian
 
 open scoped IsMulCommutative
 

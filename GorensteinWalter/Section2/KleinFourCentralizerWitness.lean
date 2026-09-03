@@ -4,7 +4,6 @@ public import GorensteinWalter.Section1
 public import FeitThompson.GroupAction.NoncyclicAbelianPGroup
 public import FeitThompson.SubgroupConj
 public import Mathlib.GroupTheory.SpecificGroups.KleinFour
-open Theory.GroupAction
 
 
 /-!

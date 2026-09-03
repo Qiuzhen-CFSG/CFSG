@@ -6,8 +6,6 @@ import BenderSuzuki.PFchapter2.claim_11
 import BenderSuzuki.PFchapter2.claim_1
 import BenderSuzuki.PFchapter1section3.lemma_3
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 namespace BenderSuzuki

@@ -15,8 +15,6 @@ import FeitThompson.PFsection6.PFsection6_6
 import FeitThompson.PFsection6.PFsection6_8
 public import FeitThompson.PFsection8.PFsection8_5_b
 public import FeitThompson.PFsection8.PFsection8_15
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 open scoped Pointwise IsMulCommutative commutatorElement
@@ -2346,7 +2344,7 @@ private theorem quotientInducedRepresentation_irreducible_of_inducedCF_irreducib
         Section1.scalarProduct_irreducibleCharacter_self hIndIrr
     have hIndRepIrr :
         Representation.IsIrreducible (Representation.ind H.subtype thetaRep) := by
-      exact (Theory.Character.irreducible_iff_character_norm_one
+      exact (irreducible_iff_character_norm_one
         (ρ := Representation.ind H.subtype thetaRep)).2
         (by
           rw [← Section1.scalarProduct_ofConjClassFunction,
@@ -15125,7 +15123,7 @@ private theorem cfNormSq_lower_card_of_nonzero_virtual_coeffs_sec9
     {R : Finset (Section1.ClassFunction G)}
     {η : Section1.ClassFunction G}
     (hR : Section5.signedOrthonormalFinset R)
-    (hηvirt : Theory.Character.IsVirtualCharacter η)
+    (hηvirt : IsVirtualCharacter η)
     (hnonzero : ∀ φ ∈ R, Section1.scalarProduct G η φ ≠ 0) :
     (R.card : ℝ) ≤ Section5.cfNormSq η := by
     classical
@@ -15172,7 +15170,7 @@ private theorem orthogonalToFinset_of_nonzero_forces_large_support_sec9
     {R Q : Finset (Section1.ClassFunction G)}
     {η : Section1.ClassFunction G} {s : ℕ}
     (hQ : Section5.signedOrthonormalFinset Q)
-    (hηvirt : Theory.Character.IsVirtualCharacter η)
+    (hηvirt : IsVirtualCharacter η)
     (hs_le_Q : (s : ℝ) ≤ (Q.card : ℝ))
     (hη_norm_lt : Section5.cfNormSq η < (s : ℝ))
     (hforce : ∀ φ ∈ R, Section1.scalarProduct G η φ ≠ 0 →
@@ -15718,7 +15716,7 @@ private theorem theorem_9_11_case_a_9116_tau3OutsideFamilyWithOneSupport_source_
     (_hαCFOn : Section2.CFOn M (section16ASet M U) α)
     (_hγOrthS : ∀ lam : Section1.ClassFunction M, lam ∈ S →
       Section1.scalarProduct M γ lam = 0)
-    (_hTalphaVirt : Theory.Character.IsVirtualCharacter (T α))
+    (_hTalphaVirt : IsVirtualCharacter (T α))
     (hS3sourceData :
       theorem_9_11_case_a_9116_tau3OutsideFamilyData_sec9
         M S S2 S4source S3source q u) :
@@ -15759,7 +15757,7 @@ private theorem theorem_9_11_case_a_9116_tau3ImageDifferenceCFOn_source_sec9
     (hαCFOn : Section2.CFOn M (section16ASet M U) α)
     (hγOrthS : ∀ lam : Section1.ClassFunction M, lam ∈ S →
       Section1.scalarProduct M γ lam = 0)
-    (hTalphaVirt : Theory.Character.IsVirtualCharacter (T α))
+    (hTalphaVirt : IsVirtualCharacter (T α))
     (hS3sourceData :
       theorem_9_11_case_a_9116_tau3OutsideFamilyData_sec9
         M S S2 S4source S3source q u)
@@ -15817,7 +15815,7 @@ private theorem theorem_9_11_case_a_9116_tau3ImageDifferenceScalarProduct_sec9
         Section2.CFOn M (section16ASet M U) ψ →
           Section1.scalarProduct G (T φ) (T ψ) =
             Section1.scalarProduct M φ ψ)
-    (hTalphaVirt : Theory.Character.IsVirtualCharacter (T α))
+    (hTalphaVirt : IsVirtualCharacter (T α))
     (hS3sourceData :
       theorem_9_11_case_a_9116_tau3OutsideFamilyData_sec9
         M S S2 S4source S3source q u)
@@ -15876,7 +15874,7 @@ private theorem theorem_9_11_case_a_9116_tau3ImageCoefficientEquality_source_sec
         Section2.CFOn M (section16ASet M U) ψ →
           Section1.scalarProduct G (T φ) (T ψ) =
             Section1.scalarProduct M φ ψ)
-    (hTalphaVirt : Theory.Character.IsVirtualCharacter (T α))
+    (hTalphaVirt : IsVirtualCharacter (T α))
     (hS3sourceData :
       theorem_9_11_case_a_9116_tau3OutsideFamilyData_sec9
         M S S2 S4source S3source q u)
@@ -15949,7 +15947,7 @@ private theorem theorem_9_11_case_a_9116_tau3ImageSupportForcing_source_sec9
         Section2.CFOn M (section16ASet M U) ψ →
           Section1.scalarProduct G (T φ) (T ψ) =
             Section1.scalarProduct M φ ψ)
-    (hTalphaVirt : Theory.Character.IsVirtualCharacter (T α))
+    (hTalphaVirt : IsVirtualCharacter (T α))
     (hS3sourceData :
       theorem_9_11_case_a_9116_tau3OutsideFamilyData_sec9
         M S S2 S4source S3source q u)
@@ -16026,7 +16024,7 @@ private theorem theorem_9_11_case_a_9116_tau3OutsideSupportForcing_source_sec9
             Section1.scalarProduct M φ ψ)
     (hα_RΓ_sum :
       Section1.scalarProduct G (T α) (Finset.sum RΓ fun φ => φ) = 0)
-    (hTalphaVirt : Theory.Character.IsVirtualCharacter (T α))
+    (hTalphaVirt : IsVirtualCharacter (T α))
     (hS3sourceData :
       theorem_9_11_case_a_9116_tau3OutsideFamilyData_sec9
         M S S2 S4source S3source q u) :
@@ -16100,7 +16098,7 @@ private theorem theorem_9_11_case_a_9116_tau3OutsideFamilyForcing_source_sec9
             Section1.scalarProduct M φ ψ)
     (hα_RΓ_sum :
       Section1.scalarProduct G (T α) (Finset.sum RΓ fun φ => φ) = 0)
-    (hTalphaVirt : Theory.Character.IsVirtualCharacter (T α)) :
+    (hTalphaVirt : IsVirtualCharacter (T α)) :
     ∃ S3source : Finset (Section1.ClassFunction M),
       theorem_9_11_case_a_9116_tau3OutsideFamilyData_sec9
         M S S2 S4source S3source q u ∧
@@ -16167,7 +16165,7 @@ private theorem theorem_9_11_case_a_9116_tau3OutsideComponentForcing_source_sec9
             Section1.scalarProduct M φ ψ)
     (hα_RΓ_sum :
       Section1.scalarProduct G (T α) (Finset.sum RΓ fun φ => φ) = 0)
-    (hTalphaVirt : Theory.Character.IsVirtualCharacter (T α)) :
+    (hTalphaVirt : IsVirtualCharacter (T α)) :
     ∃ (S3source : Finset (Section1.ClassFunction M))
       (τ3 : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G),
       theorem_9_11_case_a_9116_tau3OutsideFamilyData_sec9
@@ -16238,7 +16236,7 @@ private theorem theorem_9_11_case_a_9116_tau3ComponentForcing_source_sec9
             Section1.scalarProduct M φ ψ)
     (hα_RΓ_sum :
       Section1.scalarProduct G (T α) (Finset.sum RΓ fun φ => φ) = 0)
-    (hTalphaVirt : Theory.Character.IsVirtualCharacter (T α)) :
+    (hTalphaVirt : IsVirtualCharacter (T α)) :
     ∃ τ3 : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G,
       Section6.coherentExtension S4source T τ3 ∧
       (∀ φ, φ ∈ RΓ →
@@ -16297,7 +16295,7 @@ private theorem theorem_9_11_case_a_9116_componentForcing_source_sec9
             Section1.scalarProduct M φ ψ)
     (hα_RΓ_sum :
       Section1.scalarProduct G (T α) (Finset.sum RΓ fun φ => φ) = 0)
-    (hTalphaVirt : Theory.Character.IsVirtualCharacter (T α)) :
+    (hTalphaVirt : IsVirtualCharacter (T α)) :
     ∃ Rtau3 : Finset (Section1.ClassFunction G),
       Section5.signedOrthonormalFinset Rtau3 ∧
       (S4source.card : ℝ) ≤ (Rtau3.card : ℝ) ∧
@@ -16430,7 +16428,7 @@ private theorem orthogonal_projection_decomposition_sec9
   {R : Finset (Section1.ClassFunction G)}
   (hR : Section5.signedOrthonormalFinset R)
   {η : Section1.ClassFunction G}
-  (hηvirt : Theory.Character.IsVirtualCharacter η) :
+  (hηvirt : IsVirtualCharacter η) :
   ∃ Xbig Y : Section1.ClassFunction G,
     Section5.integerSpan R Xbig ∧
     Section5.orthogonalToFinset R Y ∧
@@ -18973,7 +18971,7 @@ private theorem theorem_9_11_case_a_step_9_11_8_sourceData_of_noPairStep_sec9
                         (lam1_9116 - (u / a : ℂ) • ψ1) ∧
                       Section5.signedOrthonormalFinset Rβ ∧
                       Rβ = R52_9117 Xlam_9117 ∧
-                      Theory.Character.IsVirtualCharacter
+                      IsVirtualCharacter
                           (T (lam1_9116 - (u / a : ℂ) • ψ1)) := by
                 have hquot_cast :
                     ((((u / a : ℕ) : ℤ) : ℂ)) = (u / a : ℂ) := by
@@ -19026,7 +19024,7 @@ private theorem theorem_9_11_case_a_step_9_11_8_sourceData_of_noPairStep_sec9
                             rw [hdiv_mul]
                             ring
                 have hβvirt :
-                    Theory.Character.IsVirtualCharacter
+                    IsVirtualCharacter
                       (T (lam1_9116 - (u / a : ℂ) • ψ)) := by
                   exact (h52b52_9117.2
                     (lam1_9116 - (u / a : ℂ) • ψ) hβOn).1
@@ -19048,7 +19046,7 @@ private theorem theorem_9_11_case_a_step_9_11_8_sourceData_of_noPairStep_sec9
                         (lam1_9116 - (u / a : ℂ) • ψ1) ∧
                       Section5.signedOrthonormalFinset Rβ ∧
                       Rβ = R52_9117 Xlam_9117 ∧
-                      Theory.Character.IsVirtualCharacter
+                      IsVirtualCharacter
                         (T (lam1_9116 - (u / a : ℂ) • ψ1)) ∧
                       (1 : ℝ) ≤ Section5.cfNormSq Γ ∧
                       Section5.integerSpan Rβ Γ ∧
@@ -19382,24 +19380,24 @@ private theorem theorem_9_11_case_a_step_9_11_8_sourceData_of_noPairStep_sec9
                           ih hEsub
                         simp [hφ0, hE0]
               have hsource_9117_Yproj_virtual :
-                  Theory.Character.IsVirtualCharacter Yproj_9117 := by
+                  IsVirtualCharacter Yproj_9117 := by
                   have hΓvirt :
-                      Theory.Character.IsVirtualCharacter Γproj_9117 := by
+                      IsVirtualCharacter Γproj_9117 := by
                     rcases hΓprojSpan9117 with ⟨v, rfl⟩
                     have hzsmul :
                         ∀ (z : ℤ) (χ : Section1.ClassFunction G),
-                          Theory.Character.IsVirtualCharacter χ →
-                            Theory.Character.IsVirtualCharacter ((z : ℂ) • χ) := by
+                          IsVirtualCharacter χ →
+                            IsVirtualCharacter ((z : ℂ) • χ) := by
                       intro z χ hχ
                       classical
                       rcases hχ with ⟨r, m, n, ρ, rfl⟩
                       refine ⟨r, fun i => z * m i, n, ρ, ?_⟩
                       ext g
-                      simp [Theory.Character.virtualCharacterOfRepresentations,
+                      simp [virtualCharacterOfRepresentations,
                         Finset.mul_sum, mul_assoc]
                     have hsum :
                         ∀ s : Finset Rβ_9117,
-                          Theory.Character.IsVirtualCharacter
+                          IsVirtualCharacter
                             (Finset.sum s fun X : Rβ_9117 =>
                               ((v X : ℂ) • (X : Section1.ClassFunction G))) := by
                       intro s
@@ -19409,10 +19407,10 @@ private theorem theorem_9_11_case_a_step_9_11_8_sourceData_of_noPairStep_sec9
                           refine ⟨0, (fun i => nomatch i), (fun i => nomatch i),
                             (fun i => nomatch i), ?_⟩
                           ext g
-                          simp [Theory.Character.virtualCharacterOfRepresentations]
+                          simp [virtualCharacterOfRepresentations]
                       | @insert X s hX ih =>
                           have hXvirt :
-                              Theory.Character.IsVirtualCharacter
+                              IsVirtualCharacter
                                 ((v X : ℂ) • (X : Section1.ClassFunction G)) := by
                             exact hzsmul (v X) (X : Section1.ClassFunction G)
                               (Section3.isVirtualCharacter_of_signedIrreducible_pf35
@@ -20532,7 +20530,7 @@ private theorem theorem_9_11_case_a_step_9_11_8_sourceData_of_noPairStep_sec9
           -- `(α^τ, β^τ) = u/a`, then split `α^τ` along `S₂^τ`.
           have hsource_9118_alphaInputs :
               ∃ α : Section1.ClassFunction M,
-                Theory.Character.IsVirtualCharacter (T α) ∧
+                IsVirtualCharacter (T α) ∧
                   Section1.scalarProduct G (T α)
                       (T (lam1_9116 - (u / a : ℂ) • ψ1_9117)) =
                     (u / a : ℂ) ∧
@@ -20549,7 +20547,7 @@ private theorem theorem_9_11_case_a_step_9_11_8_sourceData_of_noPairStep_sec9
                 ∃ (γ α : Section1.ClassFunction M),
                   α = γ - ψ1_9117 ∧
                     Section2.CFOn M (section16ASet M U) α ∧
-                    Theory.Character.IsVirtualCharacter α ∧
+                    IsVirtualCharacter α ∧
                     Section2.CFOn M (section16ASet M U)
                       (lam1_9116 - (u / a : ℂ) • ψ1_9117) ∧
                     (∀ χ : Section1.ClassFunction M, χ ∈ S2 →
@@ -20571,16 +20569,16 @@ private theorem theorem_9_11_case_a_step_9_11_8_sourceData_of_noPairStep_sec9
               have hα_def9118src : α_9118src = γ_9118src - ψ1_9117 := by
                 rfl
               have hαVirt9118src :
-                  Theory.Character.IsVirtualCharacter α_9118src := by
+                  IsVirtualCharacter α_9118src := by
                 have hγVirt :
-                    Theory.Character.IsVirtualCharacter γ_9118src := by
+                    IsVirtualCharacter γ_9118src := by
                   dsimp [γ_9118src, Section7.principalInducedCharacter]
                   exact
                     Section2.inducedCF_isVirtualCharacter_of_virtualCharacter
                       ((MF ⊔ U1).subgroupOf M)
                       Section3.isVirtualCharacter_principalCharacter
                 have hψVirt :
-                    Theory.Character.IsVirtualCharacter ψ1_9117 :=
+                    IsVirtualCharacter ψ1_9117 :=
                   Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup
                     (hS2_irreducible_degree_initial ψ1_9117
                       hψ1_9117S2).1
@@ -21589,7 +21587,7 @@ private theorem theorem_9_11_case_a_step_9_11_8_sourceData_of_noPairStep_sec9
                         Section5.orthogonalToFinset RΓ_9117
                           (T α_9118src) := by
                       have hTalphaVirt9118src :
-                          Theory.Character.IsVirtualCharacter
+                          IsVirtualCharacter
                             (T α_9118src) := by
                         rcases hsource_9118_dadeDomain with
                           ⟨hαCFOn9118src_forVirt,
@@ -22052,7 +22050,7 @@ private theorem theorem_9_11_case_a_step_9_11_8_sourceData_of_noPairStep_sec9
                           Hdade9118 hAMG9118 hAMG9118.subset_L).1
                           φ ψ hφ hψ
             have hTalphaVirt9118 :
-                Theory.Character.IsVirtualCharacter (T α_9118) := by
+                IsVirtualCharacter (T α_9118) := by
               have hαVirtOn9118 :
                   Section2.virtualCharacterOn M (section16ASet M U)
                     α_9118 :=
@@ -22251,7 +22249,7 @@ private theorem theorem_9_11_case_a_step_9_11_8_sourceData_of_noPairStep_sec9
               hτ1_9117 hψ1_9117S2
               (hS2_irreducible_degree_initial ψ1_9117 hψ1_9117S2).1
           have hτψ1_virt :
-              Theory.Character.IsVirtualCharacter (τ1_9117 ψ1_9117) :=
+              IsVirtualCharacter (τ1_9117 ψ1_9117) :=
             Section3.isVirtualCharacter_of_signedIrreducible_pf35 hτψ1_signed
           rcases Section3.scalarProduct_isVirtualCharacter_eq_int
               hTalphaVirt9118 hτψ1_virt with

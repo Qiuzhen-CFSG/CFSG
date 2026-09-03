@@ -28,9 +28,8 @@ open scoped Pointwise
 namespace BenderGlauberman
 
 open GorensteinWalter
-open Theory.Character
 
--- Local instances matching `Theory.Character`'s subgroup-sum convention; see
+-- Local instances matching `Character`'s subgroup-sum convention; see
 -- `BenderGlauberman/ClassFunction.lean`.
 attribute [local instance] Fintype.ofFinite
 attribute [local instance] Classical.propDecidable
@@ -388,10 +387,10 @@ private lemma scalarProduct_irr_decomp {ι : Type u} [Fintype ι]
               exact (hnot (Finset.mem_univ i)).elim
     _ = (ms i : ℂ) := by simp [irreducible_scalarProduct_self (hirr i)]
 
-/-- Disjoint generalized characters have zero scalar product. -/
+/-- ClassFunction.Disjoint generalized characters have zero scalar product. -/
 private lemma scalarProduct_eq_zero_of_disjoint {φ ψ : ClassFunction G}
     (hφ : IsGeneralizedCharacter φ)
-    (hψ : IsGeneralizedCharacter ψ) (h : Disjoint φ ψ) :
+    (hψ : IsGeneralizedCharacter ψ) (h : ClassFunction.Disjoint φ ψ) :
     scalarProduct G φ ψ = 0 := by
   classical
   rcases char_decomp_generalized hφ with ⟨ι₁, _, χs, ms, hirr, hdist, hφsum⟩
@@ -415,9 +414,9 @@ private lemma scalarProduct_eq_zero_of_disjoint {φ ψ : ClassFunction G}
     simp [hzero]
 
 /-- Disjointness is symmetric. -/
-private lemma disjoint_symm {φ ψ : ClassFunction G} (h : Theory.Character.Disjoint φ ψ) :
-    Theory.Character.Disjoint ψ φ := by
-  unfold Theory.Character.Disjoint at h ⊢
+private lemma disjoint_symm {φ ψ : ClassFunction G} (h : ClassFunction.Disjoint φ ψ) :
+    ClassFunction.Disjoint ψ φ := by
+  unfold ClassFunction.Disjoint at h ⊢
   intro χ hχ hχψ
   by_contra hχφ
   have hzero := h χ hχ hχφ
@@ -427,7 +426,7 @@ private lemma disjoint_symm {φ ψ : ClassFunction G} (h : Theory.Character.Disj
 private lemma tildeNu_disjoint_lambdaTwo (h12 : Hyp12 c) (hSC : Section3Hyp c)
     (hS4 : Section4Hyp c) {ν : Irr (↥c.H0)}
     (hνs : conjChar c.H0 (s_normalizes_H0 c h12) ν.1 = ν.1) :
-    Theory.Character.Disjoint (tildeNu c h12 (lambdaTwoMul c h12 ν)) (tildeNu c h12 ν) := by
+    ClassFunction.Disjoint (tildeNu c h12 (lambdaTwoMul c h12 ν)) (tildeNu c h12 ν) := by
   have hμν : (lambdaTwoMul c h12 ν).1 ∈ orbit c.H0 c.U ν.1 := by
     exact Finset.mem_image.mpr ⟨lambdaTwo c h12, Finset.mem_univ _, rfl⟩
   have hνμ : ν.1 ≠ (lambdaTwoMul c h12 ν).1 := by

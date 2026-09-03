@@ -7,13 +7,12 @@ public import Mathlib.Data.Nat.Prime.Basic
 
 @[expose] public section
 
-variable {G : Type*} [Group G]
 
 /-! A small generic criterion used by the odd-order representation results. -/
 
 /-! If every prime-order element of a finite subgroup has order `p`, then it is a `p`-group. -/
 
-theorem isPGroup_of_prime_order_eq_p [Finite G]
+theorem isPGroup_of_prime_order_eq_p {G : Type*} [Group G] [Finite G]
     (p : ℕ) [Fact p.Prime] (H : Subgroup G)
     (hprime : ∀ x : H, Nat.Prime (orderOf x) → orderOf x = p)
     : IsPGroup p H := by

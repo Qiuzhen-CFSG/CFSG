@@ -19,7 +19,6 @@ noncomputable section
 
 universe u
 
-open Theory.Character
 open BenderGlauberman
 
 attribute [local instance] Fintype.ofFinite

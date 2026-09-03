@@ -4,7 +4,6 @@ public import GorensteinWalter.Section4.SecondCaseLinearPConjCentralizer
 public import GorensteinWalter.Section4.SecondCaseLinearEquationElevenData
 public import GorensteinWalter.Section4.SecondCaseLinearOmegaFixedPart
 import Mathlib.Tactic
-open Theory.ElementaryAbelian
 
 
 /-!

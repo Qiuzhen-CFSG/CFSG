@@ -21,9 +21,8 @@ open scoped Pointwise
 namespace BenderGlauberman
 
 open GorensteinWalter
-open Theory.Character
 
--- Local instances matching `Theory.Character`'s subgroup-sum convention; see
+-- Local instances matching `Character`'s subgroup-sum convention; see
 -- `BenderGlauberman/ClassFunction.lean`.
 attribute [local instance] Fintype.ofFinite
 attribute [local instance] Classical.propDecidable
@@ -84,7 +83,7 @@ structure CoherenceData (c : Hyp11 G) (h12 : Hyp12 c) where
   disjoint : ∀ μ ν : Irr (↥c.H0), μ.1 ∈ orbit c.H0 c.U ν.1 →
     ν.1 ≠ μ.1 →
     conjChar c.H0 (s_normalizes_H0 c h12) ν.1 ≠ μ.1 →
-    Theory.Character.Disjoint (tildeNu μ) (tildeNu ν)
+    ClassFunction.Disjoint (tildeNu μ) (tildeNu ν)
   /-- (iv) for `Λ`-orbits `L1` and `L2` not conjugate under `⟨s⟩` (distinct,
   and `L1^s ≠ L2`), the generalized characters `μ̃1−ν̃1` and `μ̃2−ν̃2` are
   orthogonal whenever `μj, νj ∈ Lj`. -/
@@ -3756,7 +3755,7 @@ private lemma isCharacter_induced (c : Hyp11 G) (h12 : Hyp12 c)
           if hx : x * g * x⁻¹ ∈ c.H0 then ρ.character ⟨x * g * x⁻¹, hx⟩ else 0 := by
             -- the formula's sum uses the `Fintype.ofFinite` instance; bridge to
             -- the section's `[Fintype G]` binder
-            have hf := Theory.Representation.induced_character_formula c.H0 ρ g
+            have hf := Representation.induced_character_formula c.H0 ρ g
             rw [hf]
             have hbridge : (∑ x ∈ @Finset.univ G (Fintype.ofFinite G),
                   if hx : x * g * x⁻¹ ∈ c.H0 then ρ.character ⟨x * g * x⁻¹, hx⟩ else 0) =
@@ -3817,11 +3816,11 @@ private lemma disjoint_of_orthogonal_norm_one {G : Type u} [Group G] [Fintype G]
     (hψ : IsGeneralizedCharacter ψ)
     (hφ1 : scalarProduct G φ φ = 1) (hψ1 : scalarProduct G ψ ψ = 1)
     (horth : scalarProduct G φ ψ = 0) :
-    Theory.Character.Disjoint φ ψ := by
+    ClassFunction.Disjoint φ ψ := by
   classical
   rcases norm_one_signed_irreducible hφ hφ1 with ⟨χ, hχ, hφeq⟩
   rcases norm_one_signed_irreducible hψ hψ1 with ⟨χ', hχ', hψeq⟩
-  unfold Theory.Character.Disjoint
+  unfold ClassFunction.Disjoint
   intro α hα hαφ
   by_contra hαψ
   have hαχ : α = χ := by
@@ -3871,11 +3870,11 @@ private lemma disjoint_of_orthogonal_norm_one {G : Type u} [Group G] [Fintype G]
       norm_num at this
   exact hχχ' (hαχ.symm.trans hαχ')
 
-/-- `Disjoint` is symmetric. -/
+/-- `ClassFunction.Disjoint` is symmetric. -/
 private lemma disjoint_comm {G : Type u} [Group G] [Fintype G]
-    {φ ψ : ClassFunction G} (h : Theory.Character.Disjoint φ ψ) :
-    Theory.Character.Disjoint ψ φ := by
-  unfold Theory.Character.Disjoint
+    {φ ψ : ClassFunction G} (h : ClassFunction.Disjoint φ ψ) :
+    ClassFunction.Disjoint ψ φ := by
+  unfold ClassFunction.Disjoint
   intro χ hχ hχψ
   by_contra hχφ
   exact hχψ (h χ hχ hχφ)
@@ -3888,10 +3887,10 @@ private lemma disjoint_of_orthogonal_norm_one_two {G : Type u} [Group G] [Fintyp
     (hψ : IsGeneralizedCharacter ψ)
     (hφ1 : scalarProduct G φ φ = 1) (hψ2 : scalarProduct G ψ ψ = 2)
     (horth : scalarProduct G φ ψ = 0) :
-    Theory.Character.Disjoint φ ψ := by
+    ClassFunction.Disjoint φ ψ := by
   classical
   rcases norm_one_signed_irreducible hφ hφ1 with ⟨χ, hχ, hφeq⟩
-  unfold Theory.Character.Disjoint
+  unfold ClassFunction.Disjoint
   intro α hα hαφ
   have hαχ : α = χ := by
     have hαχ0 : scalarProduct G α χ ≠ 0 := by
@@ -5950,7 +5949,7 @@ structure ThetaLift (c : Hyp11 G) (h12 : Hyp12 c)
     ν ∈ L → ν ≠ μ → conjChar c.H0 (s_normalizes_H0 c h12) ν ≠ μ →
     inducedFromSub (h12.H0_normal_in_H).1 ν ∈ Θ →
     inducedFromSub (h12.H0_normal_in_H).1 μ ∈ Θ →
-    Theory.Character.Disjoint (lift (inducedFromSub (h12.H0_normal_in_H).1 μ))
+    ClassFunction.Disjoint (lift (inducedFromSub (h12.H0_normal_in_H).1 μ))
       (lift (inducedFromSub (h12.H0_normal_in_H).1 ν))
 
 /-- Existence of the per-orbit lift (the `θ̃ⱼ` construction): the `n = 2`
@@ -11080,7 +11079,7 @@ public theorem tildeNu_disjoint (c : Hyp11 G) (h12 : Hyp12 c)
     {μ ν : Irr (↥c.H0)} (hμν : μ.1 ∈ orbit c.H0 c.U ν.1)
     (hνμ : ν.1 ≠ μ.1)
     (hνs : conjChar c.H0 (s_normalizes_H0 c h12) ν.1 ≠ μ.1) :
-    Theory.Character.Disjoint (tildeNu c h12 μ) (tildeNu c h12 ν) := by
+    ClassFunction.Disjoint (tildeNu c h12 μ) (tildeNu c h12 ν) := by
   classical
   let D : CoherenceData c h12 := Classical.choice (exists_coherence_data c h12)
   simpa [tildeNu, D] using D.disjoint μ ν hμν hνμ hνs
@@ -11195,7 +11194,7 @@ public theorem BOf_orbit_card_le_two (c : Hyp11 G) (h12 : Hyp12 c) (χ : ClassFu
     have hab' : a.1 ≠ b.1 := by
       intro h
       exact hab (Subtype.ext h)
-    have hdisj : Theory.Character.Disjoint (tildeNu c h12 b) (tildeNu c h12 a) := by
+    have hdisj : ClassFunction.Disjoint (tildeNu c h12 b) (tildeNu c h12 a) := by
       simpa [tildeNu, D] using D.disjoint b a hbaL hab' habs
     have haPair : scalarProduct G χ (tildeNu c h12 a) ≠ 0 := by
       simpa [BOf] using haB

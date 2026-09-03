@@ -1,8 +1,6 @@
 module
 
 public import FeitThompson.BGsection12.lemma_12_11_c
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 open scoped Pointwise
@@ -45,7 +43,7 @@ public theorem section12_exists_isCompl_isInvariant_of_elementaryAbelian_coprime
   classical
   letI : CommGroup V := IsMulCommutative.instCommGroup
   let ρ : Representation (ZMod p) A (Additive V) :=
-    Theory.Representation.ofElementaryAbelianAction (A := A) (G := V) (p := p)
+    Representation.ofElementaryAbelianAction (A := A) (G := V) (p := p)
   let instAdd : AddCommGroup ρ.asModule := Representation.instAddCommGroupAsModule ρ
   letI : AddCommGroup ρ.asModule := instAdd
   let instMod : Module (MonoidAlgebra (ZMod p) A) ρ.asModule :=

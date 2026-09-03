@@ -9,8 +9,6 @@ import FeitThompson.PFsection6.PFsection6_8
 import Theory.Character.BrauerPermutation
 import Mathlib.NumberTheory.Multiplicity
 import Theory.GroupAction.Quotient
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 /-!
@@ -27,7 +25,11 @@ noncomputable section
 
 open scoped BigOperators commutatorElement
 
-open Section1
+open Section1 hiding ClassFunction
+
+export Section1 (scalarProduct)
+export Section1 (IsCharacter IsClassFunction IsIrreducibleCharacter
+  ofConjClassFunction toConjClassFunction_apply toConjClassFunction_ofConjClassFunction)
 
 universe u v
 
@@ -3531,15 +3533,15 @@ private theorem xi91_complement_fixes_only_principal_irreducible
     (F D : Subgroup H) [F.Normal]
     (hFrob : IsFrobeniusGroupWithKernelComplement F D)
     (d : D) (hd : d ≠ 1)
-    (chi : Theory.Character.ConjClassFunction F)
-    (hchiIrr : Theory.Character.IsIrreducibleConjCharacter chi)
+    (chi : ConjClassFunction F)
+    (hchiIrr : IsIrreducibleConjCharacter chi)
     (hchiFix :
-      Theory.Character.classFunctionConjLinearEquiv F (d : H) chi = chi) :
+      classFunctionConjLinearEquiv F (d : H) chi = chi) :
     chi =
-      Theory.Character.characterClassFunction
+      characterClassFunction
         (Representation.trivial ℂ F ℂ) := by
-  let psi : Theory.Character.ConjClassFunction F :=
-    Theory.Character.characterClassFunction
+  let psi : ConjClassFunction F :=
+    characterClassFunction
       (Representation.trivial ℂ F ℂ)
   have htrivIrr :
       Representation.IsIrreducible
@@ -3550,19 +3552,19 @@ private theorem xi91_complement_fixes_only_principal_irreducible
       (K := ℂ) (A := MonoidAlgebra ℂ F)
       (V := (Representation.trivial ℂ F ℂ).asModule)
       (CommSemiring.finrank_self ℂ)
-  have hpsiIrr : Theory.Character.IsIrreducibleConjCharacter psi :=
-    Theory.Character.isIrreducibleCharacter_characterClassFunction
+  have hpsiIrr : IsIrreducibleConjCharacter psi :=
+    isIrreducibleCharacter_characterClassFunction
       (Representation.trivial ℂ F ℂ) htrivIrr
   have hpsiFix :
-      Theory.Character.classFunctionConjLinearEquiv F (d : H) psi = psi := by
-    rw [Theory.Character.classFunctionConjLinearEquiv_characterClassFunction]
+      classFunctionConjLinearEquiv F (d : H) psi = psi := by
+    rw [classFunctionConjLinearEquiv_characterClassFunction]
     ext c
     rcases ConjClasses.exists_rep c with ⟨x, rfl⟩
     rfl
   change chi = psi
   by_contra hne
   obtain ⟨x, hxne, hxconj⟩ :=
-    Theory.Character.exists_nontrivial_fixed_conjClass_of_two_fixed_irreducible
+    exists_nontrivial_fixed_conjClass_of_two_fixed_irreducible
       F (d : H) hchiIrr hpsiIrr hchiFix hpsiFix hne
   rcases isConj_iff.mp hxconj with ⟨y, hy⟩
   let h : H := (y : H) * (d : H)
@@ -3587,7 +3589,7 @@ private theorem xi91_complement_fixes_only_principal_irreducible
     Section6.theorem_6_8_frobenius_complement_centralizerIn_eq_bot
       (K := F) (R := D) hFrob.isComplement' hcentD hhnotF
   have hhconj : h * (x : H) * h⁻¹ = (x : H) := by
-    simpa [h, Theory.Character.normalSubgroupConjMulEquiv, mul_assoc] using
+    simpa [h, normalSubgroupConjMulEquiv, mul_assoc] using
       congrArg (fun z : F => (z : H)) hy
   have hhcomm : h * (x : H) = (x : H) * h := by
     have := congrArg (fun z : H => z * h) hhconj
@@ -3738,31 +3740,31 @@ private theorem xi91_complement_fixes_only_principal_section1
     (hirr : Representation.IsIrreducible rho)
     (hfix : conjugateOnNormal F rho.character (d : H) = rho.character) :
     rho.character = principalCharacter F := by
-  let chi : Theory.Character.ConjClassFunction F :=
-    Theory.Character.characterClassFunction rho
-  have hchiIrr : Theory.Character.IsIrreducibleConjCharacter chi :=
-    Theory.Character.isIrreducibleCharacter_characterClassFunction rho hirr
+  let chi : ConjClassFunction F :=
+    characterClassFunction rho
+  have hchiIrr : IsIrreducibleConjCharacter chi :=
+    isIrreducibleCharacter_characterClassFunction rho hirr
   have hmem : (d : H) ∈ inertiaSubgroup F rho.character := by
     exact hfix
   have hfixInv :
       conjugateOnNormal F rho.character (d : H)⁻¹ = rho.character :=
     (inertiaSubgroup F rho.character).inv_mem hmem
   have hchiFix :
-      Theory.Character.classFunctionConjLinearEquiv F (d : H) chi = chi := by
+      classFunctionConjLinearEquiv F (d : H) chi = chi := by
     ext c
     rcases ConjClasses.exists_rep c with ⟨x, rfl⟩
     have hx := congrFun hfixInv x
     have hchi_apply (y : F) : chi (ConjClasses.mk y) = rho.character y := by
       rfl
     calc
-      (Theory.Character.classFunctionConjLinearEquiv F (d : H) chi) (ConjClasses.mk x)
-          = chi ((Theory.Character.conjClassesConjPerm F (d : H)).symm (ConjClasses.mk x)) := rfl
-      _ = chi (ConjClasses.mk ((Theory.Character.normalSubgroupConjMulEquiv F (d : H)).symm x)) := by
-        simp [Theory.Character.conjClassesConjPerm_symm_mk]
-      _ = rho.character ((Theory.Character.normalSubgroupConjMulEquiv F (d : H)).symm x) :=
-        hchi_apply ((Theory.Character.normalSubgroupConjMulEquiv F (d : H)).symm x)
+      (classFunctionConjLinearEquiv F (d : H) chi) (ConjClasses.mk x)
+          = chi ((conjClassesConjPerm F (d : H)).symm (ConjClasses.mk x)) := rfl
+      _ = chi (ConjClasses.mk ((normalSubgroupConjMulEquiv F (d : H)).symm x)) := by
+        simp [conjClassesConjPerm_symm_mk]
+      _ = rho.character ((normalSubgroupConjMulEquiv F (d : H)).symm x) :=
+        hchi_apply ((normalSubgroupConjMulEquiv F (d : H)).symm x)
       _ = rho.character x := by
-        simpa [conjugateOnNormal, Theory.Character.normalSubgroupConjMulEquiv, mul_assoc] using hx
+        simpa [conjugateOnNormal, normalSubgroupConjMulEquiv, mul_assoc] using hx
       _ = chi (ConjClasses.mk x) := (hchi_apply x).symm
   have htriv := xi91_complement_fixes_only_principal_irreducible
     F D hFrob d hd chi hchiIrr hchiFix
@@ -3844,7 +3846,7 @@ private theorem xi91_relativeTI_induced_scalarProduct_self
     (H : Subgroup G) [Finite H] (K : Set G)
     (hTI : Suzuki.VI.IsTISubsetRelative H K)
     (theta : ClassFunction H)
-    (hthetaVirtual : Theory.Character.IsVirtualCharacter theta)
+    (hthetaVirtual : IsVirtualCharacter theta)
     (hthetaSupport : ∀ h : H, (h : G) ∉ K → theta h = 0) :
     scalarProduct G (inducedCF H theta) (inducedCF H theta) =
       scalarProduct H theta theta +
@@ -3996,7 +3998,7 @@ private theorem xi91_linearCharacter_ambient_induced_norm
   let : F.Normal := hFrob.normal
   have hlambdaIrr : IsIrreducibleCharacterOnGroup lambda := by
     exact xi91_linearCharacter_induced_irreducible F D hFrob chi hchi
-  have hlambdaVirtual : Theory.Character.IsVirtualCharacter lambda :=
+  have hlambdaVirtual : IsVirtualCharacter lambda :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup hlambdaIrr
   have hTI : Suzuki.VI.IsTISubsetRelative H K := by
     simpa [H, K] using xi91_kernelCarrier_relativeTI
@@ -4516,7 +4518,7 @@ private theorem xi91_exists_involution_classSumTest
   classical
   let : Fintype G := Fintype.ofFinite G
   let : Fintype (ConjClasses G) := Fintype.ofFinite (ConjClasses G)
-  rcases Theory.Character.irreducible_characters_form_basis (G := G) with
+  rcases irreducible_characters_form_basis (G := G) with
     ⟨ι, hι, xi, hxi, _basis, _hbasis⟩
   let : Fintype ι := hι
   let : DecidableEq ι := Classical.decEq ι
@@ -4604,7 +4606,7 @@ private theorem xi91_exists_involution_classSumTest
     intro i j
     calc
       scalarProduct G (chi i) (chi j) =
-          Theory.Character.classFunctionInner (xi i) (xi j) := by
+          classFunctionInner (xi i) (xi j) := by
         symm
         simpa [chi, toConjClassFunction_ofConjClassFunction] using
           (classFunctionInner_toConjClassFunction
@@ -5128,7 +5130,7 @@ private theorem xi91_frobenius_irreducible_eq_induced_of_not_kernel
       Subgroup.centralizer ({(z : H)} : Set H) ≤ F :=
     fun z hz => xi91_frobenius_kernel_centralizer_le F D hFrob z hz
   obtain ⟨V, instAddV, instModuleV, instFiniteV, phi, hphi, e⟩ :=
-    (Theory.Representation.isaacs_theorem_6_34.{u, 0, 0, 0}
+    (Representation.isaacs_theorem_6_34.{u, 0, 0, 0}
       F hcentralizer).2 rho hrho hnotkerRho
   rcases e with ⟨e⟩
   refine ⟨phi.character,
@@ -5228,8 +5230,8 @@ private theorem xi91_involution_value_divisibility_core
     simp [value0, Nat.cast_natAbs]
   let : Representation.IsIrreducible rho := hrhoIrr
   have hclassIntegral :=
-    Theory.Character.classSumScalar_isIntegral rho (ConjClasses.mk s)
-  rw [Theory.Character.classSumScalar_eq_card_mul_character_div rho
+    classSumScalar_isIntegral rho (ConjClasses.mk s)
+  rw [classSumScalar_eq_card_mul_character_div rho
       (ConjClasses.mk s) (ConjClasses.mem_carrier_iff_mk_eq.mpr rfl),
     hclassCard, ← hchiRho, hvalueComplex,
     show chi 1 = (degree0 : ℂ) by simpa [degree] using hdegree0,
@@ -5243,7 +5245,7 @@ private theorem xi91_involution_value_divisibility_core
     push_cast
     field_simp [hdNe, hxNe]
   have hxdvdInt : (x : ℤ) ∣ (n : ℤ) * z :=
-    Theory.Character.integer_division_of_integral_quotient
+    integer_division_of_integral_quotient
       (by exact_mod_cast hxPos.ne') hquotientIntegral
   have hxdvdNat : x ∣ n * value0 := by
     have habs := (Int.natAbs_dvd_natAbs).2 hxdvdInt
@@ -5437,13 +5439,13 @@ private theorem xi91_other_source_conjugate_pairing
   have hlambdaConjIrr :
       IsIrreducibleCharacterOnGroup (conjugateCharacter lambda) :=
     isIrreducibleCharacterOnGroup_conjugateCharacter hlambdaIrr
-  have hlambdaVirtual : Theory.Character.IsVirtualCharacter lambda :=
+  have hlambdaVirtual : IsVirtualCharacter lambda :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup hlambdaIrr
   have hlambdaConjVirtual :
-      Theory.Character.IsVirtualCharacter (conjugateCharacter lambda) :=
+      IsVirtualCharacter (conjugateCharacter lambda) :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup
       hlambdaConjIrr
-  have hetaVirtual : Theory.Character.IsVirtualCharacter eta :=
+  have hetaVirtual : IsVirtualCharacter eta :=
     Section3.isVirtualCharacter_sub hlambdaVirtual hlambdaConjVirtual
   have hetaOne : eta 1 = 0 := by
     have hlambdaOne : lambda 1 = (d : ℂ) := by
@@ -5454,7 +5456,7 @@ private theorem xi91_other_source_conjugate_pairing
     rw [show eta h = lambda h - star (lambda h) by rfl,
       hlambdaSupport h hhK]
     simp
-  have hlambda'Virtual : Theory.Character.IsVirtualCharacter lambda' :=
+  have hlambda'Virtual : IsVirtualCharacter lambda' :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup hlambda'Irr
   have hpairTI :=
     (Suzuki.VI.suzuki_ch6_proposition_2_9
@@ -5555,13 +5557,13 @@ private theorem xi91_other_linear_source_pairing_zero
   have hlambdaConjIrr :
       IsIrreducibleCharacterOnGroup (conjugateCharacter lambda) :=
     isIrreducibleCharacterOnGroup_conjugateCharacter hlambdaIrr
-  have hlambdaVirtual : Theory.Character.IsVirtualCharacter lambda :=
+  have hlambdaVirtual : IsVirtualCharacter lambda :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup hlambdaIrr
   have hlambdaConjVirtual :
-      Theory.Character.IsVirtualCharacter (conjugateCharacter lambda) :=
+      IsVirtualCharacter (conjugateCharacter lambda) :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup
       hlambdaConjIrr
-  have hetaVirtual : Theory.Character.IsVirtualCharacter eta :=
+  have hetaVirtual : IsVirtualCharacter eta :=
     Section3.isVirtualCharacter_sub hlambdaVirtual hlambdaConjVirtual
   have hetaOne : eta 1 = 0 := by
     have hlambdaOne : lambda 1 = (d : ℂ) := by
@@ -5572,7 +5574,7 @@ private theorem xi91_other_linear_source_pairing_zero
     rw [show eta h = lambda h - star (lambda h) by rfl,
       hlambdaSupport h hhK]
     simp
-  have hlambda'Virtual : Theory.Character.IsVirtualCharacter lambda' :=
+  have hlambda'Virtual : IsVirtualCharacter lambda' :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup hlambda'Irr
   have hpairTI :=
     (Suzuki.VI.suzuki_ch6_proposition_2_9

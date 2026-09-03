@@ -5,7 +5,6 @@ import FeitThompson.PFsection8.PFsection8_2_b
 public import FeitThompson.PFsection9.PFsection9_7
 public import FeitThompson.PFsection9.PFsection9_8
 public import FeitThompson.PFsection9.PFsection9_9
-open Theory.GroupAction
 
 
 noncomputable section

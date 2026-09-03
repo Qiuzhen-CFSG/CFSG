@@ -4,7 +4,6 @@ public import Glauberman.DicksonClassification
 public import GorensteinWalter.KleinFourExceptionTransport
 public import GorensteinWalter.KleinFourCentralizerTransport
 import Mathlib.Tactic
-open Theory.ElementaryAbelian
 
 
 noncomputable section

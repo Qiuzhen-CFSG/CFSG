@@ -4,7 +4,6 @@ public import Glauberman.Lemma6_3Steps1To5
 public import Glauberman.Lemma63Step6Aligned
 public import Glauberman.Lemma6_3Step7
 public import Glauberman.Lemma63Step8
-open Theory.ElementaryAbelian
 
 
 noncomputable section

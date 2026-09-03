@@ -1,7 +1,6 @@
 module
 
 public import FeitThompson.BGsection12.lemma_12_1_c
-open Theory.GroupAction
 
 
 open scoped Pointwise

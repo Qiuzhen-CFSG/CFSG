@@ -21,8 +21,6 @@ public import Theory.GroupAction.Defs
 public import FeitThompson.Fitting.Core
 import FeitThompson.PGroup.Omega
 
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 open scoped IsMulCommutative commutatorElement
 

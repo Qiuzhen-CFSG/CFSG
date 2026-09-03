@@ -2,7 +2,6 @@ module
 
 public import FeitThompson.BGsection1.Defs
 
-open Theory.GroupAction
 
 lemma not_dvd_card_of_isPiGroup_of_prime_notMem (π : Set Nat.Primes) (G : Type*) [Group G] [Finite G]
     (hpi : IsPiGroup π G) (p : Nat.Primes) (hp : p ∉ π) : ¬ p.val ∣ Nat.card G := by

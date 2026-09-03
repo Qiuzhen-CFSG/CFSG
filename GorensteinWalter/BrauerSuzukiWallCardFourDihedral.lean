@@ -4,7 +4,6 @@ public import GorensteinWalter.BrauerSuzukiWallCardH
 import GorensteinWalter.BrauerSuzukiWallHall
 import GorensteinWalter.DihedralGenerators
 import Mathlib.Tactic
-open Theory.GroupAction
 
 
 /-!

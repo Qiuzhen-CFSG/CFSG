@@ -28,10 +28,9 @@ open scoped Pointwise
 namespace BenderGlauberman
 
 open GorensteinWalter
-open Theory.Character
 open Sylow
 
--- Local instances matching `Theory.Character`'s subgroup-sum convention; see
+-- Local instances matching `Character`'s subgroup-sum convention; see
 -- `BenderGlauberman/ClassFunction.lean`.
 attribute [local instance] Fintype.ofFinite
 attribute [local instance] Classical.propDecidable
@@ -1098,7 +1097,7 @@ would quantify over unrelated class functions outside the graph. -/
 @[expose] public def deltaAdjacent (c : Hyp11 G) (h12 : Hyp12 c)
     (δ1 δ2 : ClassFunction G) : Prop :=
   δ1 ∈ Delta c h12 ∧ δ2 ∈ Delta c h12 ∧
-    δ1 ≠ δ2 ∧ ¬ Theory.Character.Disjoint δ1 δ2
+    δ1 ≠ δ2 ∧ ¬ ClassFunction.Disjoint δ1 δ2
 
 /-- `Δ0` is a connected component of the graph `Δ` (minimal modeling of the
 paper's notion): a nonempty subset of `Δ` in which any two vertices are

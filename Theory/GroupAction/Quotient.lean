@@ -104,12 +104,11 @@ section CoprimeCocycle
 
 open scoped Pointwise
 
-variable {A N : Type*} [Group A] [Finite A] [CommGroup N] [Finite N]
-variable [MulDistribMulAction A N]
 
 /-- A (multiplicative) 1-cocycle for an action. -/
 
-def IsCocycle₁ (c : A → N) : Prop :=
+def IsCocycle₁ {A N : Type*} [Group A] [Finite A] [CommGroup N] [Finite N]
+    [MulDistribMulAction A N] (c : A → N) : Prop :=
   ∀ a b : A, c (a * b) = c a * (a • c b)
 
 /-- If `c : A → N` is a 1-cocycle and `|A|` is coprime to `|N|`, then `c` is a 1-coboundary.
@@ -117,6 +116,8 @@ def IsCocycle₁ (c : A → N) : Prop :=
 This is the elementary “`H¹(A, N) = 0` for coprime finite actions” statement, specialized to
 `Nat.card` and proved by an explicit averaging/product argument. -/
 lemma exists_coboundary_of_cocycle_of_coprime_card
+    {A N : Type*} [Group A] [Finite A] [CommGroup N] [Finite N]
+    [MulDistribMulAction A N]
     (c : A → N) (hc : IsCocycle₁ (A := A) (N := N) c)
     (hcop : Nat.Coprime (Nat.card A) (Nat.card N))
     : ∃ n : N, ∀ a : A, c a = (a • n)⁻¹ * n := by
@@ -219,11 +220,11 @@ section QuotientActionInfrastructure
 
 open MulAction
 
-variable {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
 
 /-- If a subgroup `H` is `A`-invariant (in the sense of `IsInvariant`), then the action descends to
 `G ⧸ H`. -/
-lemma quotientAction_of_isInvariant (H : Subgroup G) (hH : IsInvariant A G H)
+lemma quotientAction_of_isInvariant {G A : Type*} [Group G] [Group A]
+    [MulDistribMulAction A G] (H : Subgroup G) (hH : IsInvariant A G H)
     : MulAction.QuotientAction A H where
   inv_mul_mem a {g g'} hg := by
     -- Use invariance of `H` and the fact `a` acts by an automorphism.
@@ -234,7 +235,9 @@ lemma quotientAction_of_isInvariant (H : Subgroup G) (hH : IsInvariant A G H)
 
 /-- A `MulDistribMulAction` on `G ⧸ H` induced by an `A`-action on `G` that preserves `H`. -/
 @[reducible]
-noncomputable def quotientMulDistribMulAction (H : Subgroup G) (hH : IsInvariant A G H)
+noncomputable def quotientMulDistribMulAction
+    {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
+    (H : Subgroup G) (hH : IsInvariant A G H)
     [H.Normal]
     : MulDistribMulAction A (G ⧸ H) := by
   classical
@@ -269,6 +272,7 @@ noncomputable def quotientMulDistribMulAction (H : Subgroup G) (hH : IsInvariant
 /-- For the induced action on `G ⧸ H`, the image of fixed points in `G` lies in fixed points of
 the quotient. -/
 theorem fixedPoints_subgroup_map_mk'_le_fixedPoints_subgroup_quotient
+    {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
     (H : Subgroup G) [H.Normal] (hH : IsInvariant A G H)
     : letI : MulDistribMulAction A (G ⧸ H) :=
         quotientMulDistribMulAction (A := A) (G := G) H hH

@@ -7,8 +7,6 @@ import FeitThompson.PFsection5.PFsection5_7
 import FeitThompson.PFsection5.PFsection5_8
 import Theory.Character.DegreeBounds
 public import FeitThompson.PFsection9.Basic
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 /-!
@@ -1085,7 +1083,7 @@ public theorem toConjClassFunction_isIrreducibleCharacter_of_onGroup_sec10
     {G : Type u} [Group G] [Finite G]
     {χ : Section1.ClassFunction G}
     (hχ : Section1.IsIrreducibleCharacterOnGroup χ) :
-    Theory.Character.IsIrreducibleConjCharacter
+    IsIrreducibleConjCharacter
       (Section1.toConjClassFunction χ
         (isClassFunction_of_irreducibleCharacterOnGroup_sec10 hχ)) := by
   classical
@@ -1102,14 +1100,14 @@ public theorem toConjClassFunction_isIrreducibleCharacter_of_onGroup_sec10
 standardized Section 10 package. -/
 public theorem ofConjClassFunction_isIrreducibleCharacterOnGroup_sec10
     {G : Type u} [Group G] [Finite G]
-    {χ : Theory.Character.ConjClassFunction G}
-    (hχ : Theory.Character.IsIrreducibleConjCharacter χ) :
+    {χ : ConjClassFunction G}
+    (hχ : IsIrreducibleConjCharacter χ) :
     Section1.IsIrreducibleCharacterOnGroup
       (Section1.ofConjClassFunction χ) := by
   classical
   rcases hχ with ⟨⟨n, ρ, hχeq⟩, hnorm⟩
   refine ⟨n, ρ, ?_, ?_⟩
-  · exact (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).2
+  · exact (irreducible_iff_character_norm_one (ρ := ρ)).2
       (by simpa [hχeq] using hnorm)
   · simpa [hχeq] using
       (Section1.ofConjClassFunction_characterClassFunction ρ)
@@ -1122,7 +1120,7 @@ public theorem exists_irreducibleCharacterOnGroup_separates_ne_one_sec10
     ∃ χ : Section1.ClassFunction Q,
       Section1.IsIrreducibleCharacterOnGroup χ ∧ χ q ≠ χ 1 := by
   classical
-  rcases Theory.Character.second_orthogonality (G := Q) with
+  rcases second_orthogonality (G := Q) with
     ⟨ι, hι, χ, hχ, horth⟩
   letI : Fintype ι := hι
   by_contra hnone
@@ -1472,7 +1470,7 @@ public theorem exists_pos_nat_degree_of_irreducible_character
   rcases hχ with ⟨n, ρ, hρ, rfl⟩
   refine ⟨n, ?_, ?_⟩
   · have _ : Representation.IsIrreducible ρ := hρ
-    have _ : Nontrivial (Fin n → ℂ) := Theory.Character.irreducible_nontrivial (ρ := ρ)
+    have _ : Nontrivial (Fin n → ℂ) := irreducible_nontrivial (ρ := ρ)
     have hdim_pos : 0 < Module.finrank ℂ (Fin n → ℂ) :=
       (Module.finrank_pos_iff (R := ℂ) (M := Fin n → ℂ)).2 inferInstance
     simpa using hdim_pos
@@ -4286,7 +4284,7 @@ public theorem tauOne_xi_orthogonal_muColumn_of_hypothesis_10_4_data
     (μ0 ξ : Section1.ClassFunction M)
     (χ : Section1.ClassFunction G) : Prop :=
   τ (μ0 - ξ) = (∑ i : I, σ (ω i j0)) - χ ∧
-    Theory.Character.IsVirtualCharacter χ ∧
+    IsVirtualCharacter χ ∧
     orthogonalToSigmaIrreducibles W σ χ ∧
     Section5.cfNormSq χ = 1
 
@@ -4832,7 +4830,7 @@ public theorem typeVReduction_source_degree_eq_prime_of_ne_one
         exact Subgroup.mem_bot.mp d.2
       rw [hd]
       simpa using map_one ρ
-    have h := Theory.Character.irreducible_finrank_sq_le_index_of_scalar_on_subgroup
+    have h := irreducible_finrank_sq_le_index_of_scalar_on_subgroup
       (ρ := ρ) (⊥ : Subgroup (derivedSubgroup M)) hscalar
     rw [Subgroup.index_bot] at h
     simpa using h
@@ -5186,7 +5184,7 @@ public theorem typeVReduction_exists_source_degree_prime_family_count
           (Finset.univ.filter fun i =>
             Section1.degree (χ i) = (p : ℂ)).card = p - 1 := by
   classical
-  rcases Theory.Character.exists_completeIrreducibleCharacterFamily_sum_degree_normSq
+  rcases exists_completeIrreducibleCharacterFamily_sum_degree_normSq
       (G := derivedSubgroup M) with
     ⟨ι, hι, χrep, hχrep, hsum⟩
   letI : Fintype ι := hι
@@ -5203,10 +5201,10 @@ public theorem typeVReduction_exists_source_degree_prime_family_count
   have hχcomplete : ∀ θ : Section1.ClassFunction (derivedSubgroup M),
       Section1.IsIrreducibleCharacterOnGroup θ → ∃ i, χ i = θ := by
     intro θ hθirr
-    let θrep : Theory.Character.ConjClassFunction (derivedSubgroup M) :=
+    let θrep : ConjClassFunction (derivedSubgroup M) :=
       Section1.toConjClassFunction θ
         (isClassFunction_of_irreducibleCharacterOnGroup_sec10 hθirr)
-    have hθrepirr : Theory.Character.IsIrreducibleConjCharacter θrep :=
+    have hθrepirr : IsIrreducibleConjCharacter θrep :=
       toConjClassFunction_isIrreducibleCharacter_of_onGroup_sec10 hθirr
     rcases hχrep.2.1 θrep hθrepirr with ⟨i, hi⟩
     refine ⟨i, ?_⟩

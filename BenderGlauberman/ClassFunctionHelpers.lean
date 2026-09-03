@@ -22,9 +22,8 @@ open scoped Pointwise
 namespace BenderGlauberman
 
 open GorensteinWalter
-open Theory.Character
 
--- Local instances matching `Theory.Character`'s subgroup-sum convention; see
+-- Local instances matching `Character`'s subgroup-sum convention; see
 -- `BenderGlauberman/ClassFunction.lean`.
 attribute [local instance] Fintype.ofFinite
 attribute [local instance] Classical.propDecidable
@@ -1236,9 +1235,9 @@ public theorem remark_1_5 {G : Type u} [Group G] [Fintype G] {δ ε : ClassFunct
     (hδ : IsGeneralizedCharacter δ) (hε : IsGeneralizedCharacter ε)
     (hδ2 : normSq G δ = 2) (hε2 : normSq G ε = 2)
     (hdeg : δ 1 = ε 1) (horth : scalarProduct G δ ε = 0) :
-    Theory.Character.Disjoint δ ε := by
+    ClassFunction.Disjoint δ ε := by
   classical
-  unfold Theory.Character.Disjoint
+  unfold ClassFunction.Disjoint
   intro χ hχ hχδ
   by_contra hχε
   rcases char_decomp_generalized hδ with ⟨ι₁, _, χs₁, ms₁, hirr₁, hdist₁, hδsum⟩

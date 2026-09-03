@@ -14,7 +14,6 @@ import FeitThompson.PFsection6.PFsection6_5_a
 import FeitThompson.PFsection6.PFsection6_5_b
 import FeitThompson.PFsection6.PFsection6_5_c
 import FeitThompson.PFsection6.PFsection6_6
-open Theory.GroupAction
 
 
 noncomputable section
@@ -566,28 +565,28 @@ theorem theorem_6_8_hypothesis_5_2_setup_of_hypothesis
 theorem theorem_6_8_isVirtualCharacter_zsmul
     {X : Type u} [Group X]
     (z : ℤ) {χ : Section1.ClassFunction X}
-    (hχ : Theory.Character.IsVirtualCharacter χ) :
-    Theory.Character.IsVirtualCharacter ((z : ℂ) • χ) := by
+    (hχ : IsVirtualCharacter χ) :
+    IsVirtualCharacter ((z : ℂ) • χ) := by
   classical
   rcases hχ with ⟨r, m, k, ρ, rfl⟩
   refine ⟨r, fun i => z * m i, k, ρ, ?_⟩
   ext x
-  simp [Theory.Character.virtualCharacterOfRepresentations, Finset.mul_sum, mul_assoc]
+  simp [virtualCharacterOfRepresentations, Finset.mul_sum, mul_assoc]
 
 theorem theorem_6_8_isVirtualCharacter_finset_sum
     {X : Type u} [Group X]
     {ι : Type*} (s : Finset ι) (Φ : ι → Section1.ClassFunction X)
-    (hΦ : ∀ i ∈ s, Theory.Character.IsVirtualCharacter (Φ i)) :
-    Theory.Character.IsVirtualCharacter (Finset.sum s Φ) := by
+    (hΦ : ∀ i ∈ s, IsVirtualCharacter (Φ i)) :
+    IsVirtualCharacter (Finset.sum s Φ) := by
   classical
   induction s using Finset.induction_on with
   | empty =>
       refine ⟨0, (fun i => nomatch i), (fun i => nomatch i), (fun i => nomatch i), ?_⟩
       ext x
-      simp [Theory.Character.virtualCharacterOfRepresentations]
+      simp [virtualCharacterOfRepresentations]
   | @insert a s ha ih =>
-      have ha' : Theory.Character.IsVirtualCharacter (Φ a) := hΦ a (Finset.mem_insert_self a s)
-      have hs' : Theory.Character.IsVirtualCharacter (Finset.sum s Φ) := by
+      have ha' : IsVirtualCharacter (Φ a) := hΦ a (Finset.mem_insert_self a s)
+      have hs' : IsVirtualCharacter (Finset.sum s Φ) := by
         refine ih ?_
         intro i hi
         exact hΦ i (Finset.mem_insert_of_mem hi)
@@ -597,9 +596,9 @@ theorem theorem_6_8_isVirtualCharacter_evalCoeff
     {X : Type u} [Group X]
     {ι : Type*} [Fintype ι]
     (μ : ι → Section1.ClassFunction X)
-    (hμ : ∀ i, Theory.Character.IsVirtualCharacter (μ i))
+    (hμ : ∀ i, IsVirtualCharacter (μ i))
     (v : Section1.CoeffVector ι) :
-    Theory.Character.IsVirtualCharacter (Section1.evalCoeff μ v) := by
+    IsVirtualCharacter (Section1.evalCoeff μ v) := by
   classical
   rw [Section1.evalCoeff]
   refine theorem_6_8_isVirtualCharacter_finset_sum (Finset.univ : Finset ι)
@@ -644,7 +643,7 @@ theorem theorem_6_8_virtualCharacter_of_integerSpan
     (hsrc : Section5.sourceVirtualCharacters S)
     {χ : Section1.ClassFunction L}
     (hχ : Section5.integerSpan S χ) :
-    Theory.Character.IsVirtualCharacter χ := by
+    IsVirtualCharacter χ := by
   rcases hχ with ⟨v, rfl⟩
   exact theorem_6_8_isVirtualCharacter_evalCoeff
     (fun X : S => (X : Section1.ClassFunction L))
@@ -801,7 +800,7 @@ theorem theorem_6_8_hypothesis_5_2_b_of_hypothesis
       simpa [A] using
         theorem_6_8_CFOn_subgroupImagePuncturedSet_of_integerSpanOn
           (L := L) (H := H) hSbot hχ
-    have hχVirt : Theory.Character.IsVirtualCharacter χ :=
+    have hχVirt : IsVirtualCharacter χ :=
       theorem_6_8_virtualCharacter_of_integerSpan
         (theorem_6_8_sourceVirtualCharacters_of_hypothesis h68') hχ.1
     have hχVirtOn : Section2.virtualCharacterOn L A χ := ⟨hχVirt, hχCF.2⟩
@@ -3748,7 +3747,7 @@ theorem theorem_6_8_center_restriction_smul_of_irreducible
   have hZH : Z ≤ H := fun z hz => (hZcent hz).1
   rcases hθ with ⟨n, ρ, hρirr, hθeq⟩
   have : Representation.IsIrreducible ρ := hρirr
-  have : Nontrivial (Fin n → ℂ) := Theory.Character.irreducible_nontrivial (ρ := ρ)
+  have : Nontrivial (Fin n → ℂ) := irreducible_nontrivial (ρ := ρ)
   have hdim_ne : ((Module.finrank ℂ (Fin n → ℂ) : ℂ) ≠ 0) := by
     have hdim_pos : 0 < Module.finrank ℂ (Fin n → ℂ) :=
       (Module.finrank_pos_iff (R := ℂ) (M := Fin n → ℂ)).2 inferInstance
@@ -3949,7 +3948,7 @@ theorem theorem_6_8_scalarProduct_induced_subgroup_eq_degree_of_restriction
   have hφself : Section1.scalarProduct Z φ φ = 1 := by
     rcases hφ with ⟨_n, ρ, hρirr, hφeq⟩
     rw [hφeq]
-    exact (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
+    exact (irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
   have hstar : star (Section1.degree θ) = Section1.degree θ := by
     rcases hθ with ⟨_n, ρ, _hρirr, hθeq⟩
     rw [hθeq, Section1.degree_representation_character]
@@ -4060,7 +4059,7 @@ theorem theorem_6_8_degree_eq_coeff_of_nonzero_central_decomposition
   have hφself : Section1.scalarProduct Z φ φ = 1 := by
     rcases hφ with ⟨_n, ρ, hρirr, hφeq⟩
     rw [hφeq]
-    exact (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
+    exact (irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
   have hstar : star (Section1.degree (ψ i)) = Section1.degree (ψ i) := by
     rcases hψirr i with ⟨_n, ρ, _hρirr, hψeq⟩
     rw [hψeq, Section1.degree_representation_character]
@@ -6368,14 +6367,14 @@ theorem theorem_6_8_subgroupRestriction_isVirtualCharacter
     {G : Type u} [Group G] [Finite G]
     (H : Subgroup G)
     {φ : Section1.ClassFunction G}
-    (hφ : Theory.Character.IsVirtualCharacter φ) :
-    Theory.Character.IsVirtualCharacter (Section1.subgroupRestriction H φ) := by
+    (hφ : IsVirtualCharacter φ) :
+    IsVirtualCharacter (Section1.subgroupRestriction H φ) := by
   classical
   rcases hφ with ⟨r, m, n, ρ, hφeq⟩
   refine ⟨r, m, n, fun i => (ρ i).comp H.subtype, ?_⟩
   ext h
   rw [hφeq]
-  simp [Theory.Character.virtualCharacterOfRepresentations,
+  simp [virtualCharacterOfRepresentations,
     Section1.subgroupRestriction, Representation.character]
 
 theorem theorem_6_8_source_scalarProduct_star_eq_self_of_virtual
@@ -6384,13 +6383,13 @@ theorem theorem_6_8_source_scalarProduct_star_eq_self_of_virtual
     {χ : Section1.ClassFunction L}
     (hχirr : Section1.IsIrreducibleCharacterOnGroup χ)
     {ψ : Section1.ClassFunction G}
-    (hψvirt : Theory.Character.IsVirtualCharacter ψ) :
+    (hψvirt : IsVirtualCharacter ψ) :
     star (Section1.scalarProduct L χ (Section1.subgroupRestriction L ψ)) =
       Section1.scalarProduct L χ (Section1.subgroupRestriction L ψ) := by
-  have hχvirt : Theory.Character.IsVirtualCharacter χ :=
+  have hχvirt : IsVirtualCharacter χ :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup hχirr
   have hresvirt :
-      Theory.Character.IsVirtualCharacter (Section1.subgroupRestriction L ψ) :=
+      IsVirtualCharacter (Section1.subgroupRestriction L ψ) :=
     theorem_6_8_subgroupRestriction_isVirtualCharacter L hψvirt
   rcases Section3.scalarProduct_isVirtualCharacter_eq_int hχvirt hresvirt with
     ⟨n, hn⟩
@@ -7297,7 +7296,7 @@ theorem theorem_6_8_regular_add_coefficient_mem_int_of_virtual
     (hφ : Section1.IsIrreducibleCharacterOnGroup φ)
     (hφne : φ ≠ Section1.principalCharacter Z)
     {ψ : Section1.ClassFunction G}
-    (hψvirt : Theory.Character.IsVirtualCharacter ψ)
+    (hψvirt : IsVirtualCharacter ψ)
     {a b : ℂ}
     (hres : Section1.subgroupRestriction (Z.map L.subtype) ψ =
       a • regularCharacter (Z.map L.subtype) +
@@ -7305,11 +7304,11 @@ theorem theorem_6_8_regular_add_coefficient_mem_int_of_virtual
     a ∈ Set.range (fun n : ℤ => (n : ℂ)) := by
   let e := theorem_6_8_subtypeMapEquiv L Z
   have hφvirt :
-      Theory.Character.IsVirtualCharacter (theorem_6_8_transportClassFunction e φ) :=
+      IsVirtualCharacter (theorem_6_8_transportClassFunction e φ) :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup
       (theorem_6_8_transportClassFunction_irreducible e hφ)
   have hresvirt :
-      Theory.Character.IsVirtualCharacter
+      IsVirtualCharacter
         (Section1.subgroupRestriction (Z.map L.subtype) ψ) :=
     theorem_6_8_subgroupRestriction_isVirtualCharacter (Z.map L.subtype) hψvirt
   rcases Section3.scalarProduct_isVirtualCharacter_eq_int hφvirt hresvirt with
@@ -7337,7 +7336,7 @@ theorem theorem_6_8_regular_add_coefficient_star_eq_self_of_virtual
     (hφ : Section1.IsIrreducibleCharacterOnGroup φ)
     (hφne : φ ≠ Section1.principalCharacter Z)
     {ψ : Section1.ClassFunction G}
-    (hψvirt : Theory.Character.IsVirtualCharacter ψ)
+    (hψvirt : IsVirtualCharacter ψ)
     {a b : ℂ}
     (hres : Section1.subgroupRestriction (Z.map L.subtype) ψ =
       a • regularCharacter (Z.map L.subtype) +
@@ -7372,13 +7371,13 @@ theorem theorem_6_8_subgroupRestriction_isClassFunction
 theorem theorem_6_8_isClassFunction_of_isVirtualCharacter
     {G : Type u} [Group G] [Finite G]
     {χ : Section1.ClassFunction G}
-    (hχ : Theory.Character.IsVirtualCharacter χ) :
+    (hχ : IsVirtualCharacter χ) :
     Section1.IsClassFunction χ := by
   classical
   rcases hχ with ⟨r, m, n, ρ, hχeq⟩
   rw [hχeq]
   intro x g
-  simp [Theory.Character.virtualCharacterOfRepresentations]
+  simp [virtualCharacterOfRepresentations]
 
 theorem theorem_6_8_coherentExtension_mem_isClassFunction
     {G : Type u} [Group G] [Finite G]
@@ -7414,12 +7413,12 @@ public theorem theorem_6_8_coherentExtension_mem_signedIrreducible
     (hηY : η ∈ Y)
     (hηirr : Section1.IsIrreducibleCharacterOnGroup η) :
     Section3.IsSignedIrreducibleCharacter (τ₁ η) := by
-  have hvirt : Theory.Character.IsVirtualCharacter (τ₁ η) :=
+  have hvirt : IsVirtualCharacter (τ₁ η) :=
     hτ₁.2.1 η (Section5.integerSpan_of_mem Y hηY)
   have hself_src : Section1.scalarProduct L η η = 1 := by
     rcases hηirr with ⟨_n, ρ, hρirr, hηeq⟩
     rw [hηeq]
-    exact (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
+    exact (irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
   have hself : Section1.scalarProduct G (τ₁ η) (τ₁ η) = 1 := by
     rw [theorem_6_8_coherentExtension_scalarProduct_of_mem hτ₁ hηY hηY,
       hself_src]
@@ -8664,7 +8663,7 @@ theorem theorem_6_8_central_subgroup_induction_decomposition
   let indZH : Section1.ClassFunction H :=
     Section1.inducedCF (Z.subgroupOf H)
       (Section1.subgroupOfClassFunction (T := H) φ)
-  rcases Theory.Character.irreducible_characters_form_basis (G := H) with
+  rcases irreducible_characters_form_basis (G := H) with
     ⟨ι, hι, χ, hχ, _b, _hb⟩
   let : Fintype ι := hι
   let : Finite ι := Finite.of_fintype ι
@@ -8672,7 +8671,7 @@ theorem theorem_6_8_central_subgroup_induction_decomposition
   rcases hχ with ⟨hirr, hall, hinj⟩
   let ψ : ι → Section1.ClassFunction H := fun i => Section1.ofConjClassFunction (χ i)
   have hχcomplete :
-      Theory.Character.IsCompleteIrreducibleCharacterFamily χ :=
+      IsCompleteIrreducibleCharacterFamily χ :=
     ⟨hirr, hall, hinj⟩
   have hψclass : ∀ i, Section1.IsClassFunction (ψ i) := by
     intro i
@@ -8728,7 +8727,7 @@ theorem theorem_6_8_central_subgroup_induction_decomposition
     intro ξ hξ
     rcases hall ξ hξ with ⟨i, rfl⟩
     calc
-      Theory.Character.classFunctionInner
+      classFunctionInner
           (Section1.toConjClassFunction indZH hIndClass) (χ i) =
         Section1.scalarProduct H indZH (ψ i) := by
           rw [← Section1.toConjClassFunction_ofConjClassFunction (χ i)]
@@ -8738,7 +8737,7 @@ theorem theorem_6_8_central_subgroup_induction_decomposition
       _ = Section1.scalarProduct H φsum (ψ i) := by
           exact (Section1.scalarProduct_weightedFamilySum_left_orthonormal
             (w := fun i => (e i : ℂ)) (chi := ψ) horthψ i).symm
-      _ = Theory.Character.classFunctionInner
+      _ = classFunctionInner
           (Section1.toConjClassFunction φsum hφsumclass) (χ i) := by
           rw [← Section1.toConjClassFunction_ofConjClassFunction (χ i)]
           exact (Section1.classFunctionInner_toConjClassFunction
@@ -8748,20 +8747,20 @@ theorem theorem_6_8_central_subgroup_induction_decomposition
     intro x g
     rw [hθeq]
     simpa [mul_assoc] using Representation.char_conj (ρ := ρ) g x
-  have hθconj : Theory.Character.IsIrreducibleConjCharacter
+  have hθconj : IsIrreducibleConjCharacter
       (Section1.toConjClassFunction θ hθclass) := by
     rcases hθ with ⟨n, ρ, hρirr, hθeq⟩
     have hchar :
         Section1.toConjClassFunction θ hθclass =
-          (Theory.Character.characterClassFunction ρ) :=
+          (characterClassFunction ρ) :=
       Section1.toConjClassFunction_eq_of_apply θ hθclass
-        ((Theory.Character.characterClassFunction ρ)) (by
+        ((characterClassFunction ρ)) (by
           intro g
           rw [hθeq]
           rfl)
     refine ⟨⟨n, ρ, hchar⟩, ?_⟩
     rw [hchar]
-    exact (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
+    exact (irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
   rcases hall (Section1.toConjClassFunction θ hθclass) hθconj with
     ⟨i0, hi0χ⟩
   have hi0 : ψ i0 = θ := by
@@ -8840,7 +8839,7 @@ theorem theorem_6_8_induced_span_of_principal_scalar_zero
   let indZH : Section1.ClassFunction H :=
     Section1.inducedCF (Z.subgroupOf H)
       (Section1.subgroupOfClassFunction (T := H) φ)
-  rcases Theory.Character.irreducible_characters_form_basis (G := H) with
+  rcases irreducible_characters_form_basis (G := H) with
     ⟨ι, hι, χ, hχ, _b, _hb⟩
   let : Fintype ι := hι
   let : Finite ι := Finite.of_fintype ι
@@ -8848,7 +8847,7 @@ theorem theorem_6_8_induced_span_of_principal_scalar_zero
   rcases hχ with ⟨hirr, hall, hinj⟩
   let ψ : ι → Section1.ClassFunction H := fun i => Section1.ofConjClassFunction (χ i)
   have hχcomplete :
-      Theory.Character.IsCompleteIrreducibleCharacterFamily χ :=
+      IsCompleteIrreducibleCharacterFamily χ :=
     ⟨hirr, hall, hinj⟩
   have hψclass : ∀ i, Section1.IsClassFunction (ψ i) := by
     intro i
@@ -8902,7 +8901,7 @@ theorem theorem_6_8_induced_span_of_principal_scalar_zero
     intro ξ hξ
     rcases hall ξ hξ with ⟨i, rfl⟩
     calc
-      Theory.Character.classFunctionInner
+      classFunctionInner
           (Section1.toConjClassFunction indZH hIndClass) (χ i) =
         Section1.scalarProduct H indZH (ψ i) := by
           rw [← Section1.toConjClassFunction_ofConjClassFunction (χ i)]
@@ -8912,7 +8911,7 @@ theorem theorem_6_8_induced_span_of_principal_scalar_zero
       _ = Section1.scalarProduct H φsum (ψ i) := by
           exact (Section1.scalarProduct_weightedFamilySum_left_orthonormal
             (w := fun i => (e i : ℂ)) (chi := ψ) horthψ i).symm
-      _ = Theory.Character.classFunctionInner
+      _ = classFunctionInner
           (Section1.toConjClassFunction φsum hφsumclass) (χ i) := by
           rw [← Section1.toConjClassFunction_ofConjClassFunction (χ i)]
           exact (Section1.classFunctionInner_toConjClassFunction
@@ -9125,7 +9124,7 @@ theorem theorem_6_8_exists_scalarProduct_transform_sub_tau1_eq_of_nonprincipal_r
   rcases theorem_6_8_exists_scalarProduct_transform_sub_tau1_eq_of_nonprincipal
       h68 hpQ hcase hB hfamily hτ₁ hφ hφne hη₁Y hηY with
     ⟨a, b, hres, hscalar⟩
-  have hvirt : Theory.Character.IsVirtualCharacter (τ₁ η) :=
+  have hvirt : IsVirtualCharacter (τ₁ η) :=
     hτ₁.2.1 η (Section5.integerSpan_of_mem Y hηY)
   have ha : star a = a :=
     theorem_6_8_regular_add_coefficient_star_eq_self_of_virtual
@@ -9189,13 +9188,13 @@ theorem theorem_6_8_scalarProduct_transform_sub_tau1_int_relIndex_multiple_of_ca
   rcases theorem_6_8_scalarProduct_transform_sub_tau1_relIndex_multiple_of_caseB_familyData
       h68 hpQ hcase hB hfamily hτ₁ hφ hφne hη₁Y hηY with
     ⟨k, hk⟩
-  have hη₁virt : Theory.Character.IsVirtualCharacter η₁ :=
+  have hη₁virt : IsVirtualCharacter η₁ :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup
       (theorem_6_8_Y_irreducible_of_familyData h68 hfamily η₁ hη₁Y)
-  have hτηvirt : Theory.Character.IsVirtualCharacter (τ₁ η) :=
+  have hτηvirt : IsVirtualCharacter (τ₁ η) :=
     hτ₁.2.1 η (Section5.integerSpan_of_mem Y hηY)
   have hresvirt :
-      Theory.Character.IsVirtualCharacter
+      IsVirtualCharacter
         (Section1.subgroupRestriction L (τ₁ η)) :=
     theorem_6_8_subgroupRestriction_isVirtualCharacter L hτηvirt
   rcases Section3.scalarProduct_isVirtualCharacter_eq_int
@@ -9231,7 +9230,7 @@ theorem theorem_6_8_scalarProduct_transform_sub_tau1_independent_of_nonprincipal
   rcases theorem_6_8_2_2_restriction_regular_add_of_familyData
       h68 hpQ hcase hB hfamily hτ₁ hηY with
     ⟨a, b, hres⟩
-  have hvirt : Theory.Character.IsVirtualCharacter (τ₁ η) :=
+  have hvirt : IsVirtualCharacter (τ₁ η) :=
     hτ₁.2.1 η (Section5.integerSpan_of_mem Y hηY)
   have ha : star a = a :=
     theorem_6_8_regular_add_coefficient_star_eq_self_of_virtual
@@ -9332,7 +9331,7 @@ theorem theorem_6_8_scalarProduct_source_alpha_Y_diff_eq_relIndex_of_caseB_famil
     by
       rcases hη₁irr with ⟨_n, ρ, hρirr, hη₁eq⟩
       rw [hη₁eq]
-      exact (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
+      exact (irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
   rw [Section5.scalarProduct_sub_left, Section5.scalarProduct_sub_right,
     Section5.scalarProduct_sub_right]
   simp [Section1.scalarProduct_smul_left, hIndη, hIndη₁, hη₁η, hη₁self]
@@ -9505,7 +9504,7 @@ theorem theorem_6_8_cfNormSq_source_alpha_eq_induced_add_relIndex_sq_caseB_famil
     rcases theorem_6_8_Y_irreducible_of_familyData h68 hfamily η₁ hη₁Y with
       ⟨_n, ρ, hρirr, hη₁eq⟩
     rw [hη₁eq]
-    exact (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
+    exact (irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
   have hη₁norm : Section5.cfNormSq η₁ = 1 := by
     unfold Section5.cfNormSq
     rw [hη₁self]
@@ -9766,7 +9765,7 @@ theorem theorem_6_8_left_candidate_scalarProduct_Y_diff_eq_zero_of_caseB_familyD
     by
       rcases hη₁irr with ⟨_n, ρ, hρirr, hη₁eq⟩
       rw [hη₁eq]
-      exact (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
+      exact (irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
   have hτ₁η₁η : Section1.scalarProduct G (τ₁ η₁) (τ₁ η) = 0 := by
     rw [theorem_6_8_coherentExtension_scalarProduct_of_mem hτ₁ hη₁Y hηY,
       hη₁η]
@@ -9886,7 +9885,7 @@ theorem theorem_6_8_right_candidate_scalarProduct_Y_eq_anchor_of_caseB_familyDat
     by
       rcases hη₂irr with ⟨_n, ρ, hρirr, hη₂eq⟩
       rw [hη₂eq]
-      exact (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
+      exact (irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
   have hτ₂η₁ : Section1.scalarProduct G (τ₁ η₂) (τ₁ η₁) = 0 := by
     rw [theorem_6_8_coherentExtension_scalarProduct_of_mem hτ₁ hη₂Y hη₁Y,
       hη₂η₁]
@@ -10094,7 +10093,7 @@ theorem theorem_6_8_tau1_Y_orthonormal_of_familyData
         h68 hfamily (η : Section1.ClassFunction L) η.2 with
       ⟨_n, ρ, hρirr, hξeq⟩
     rw [hξeq]
-    exact (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
+    exact (irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
   · rw [if_neg hηξ]
     have hval_ne :
         (η : Section1.ClassFunction L) ≠ (ξ : Section1.ClassFunction L) := by
@@ -10712,7 +10711,7 @@ theorem theorem_6_8_2_2_commonY_of_anchor_quadratic_bound_caseB_familyData
       rcases theorem_6_8_Y_irreducible_of_familyData h68 hfamily η₁ hη₁Y with
         ⟨_n, ρ, hρirr, hη₁eq⟩
       rw [hη₁eq]
-      exact (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
+      exact (irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
     have hτη₁self : Section1.scalarProduct G (τ₁ η₁) (τ₁ η₁) = 1 := by
       rw [theorem_6_8_coherentExtension_scalarProduct_of_mem
         hτ₁ hη₁Y hη₁Y, hη₁self_src]
@@ -10911,7 +10910,7 @@ theorem theorem_6_8_mem_Y_cfNormSq_eq_one
   have hηself : Section1.scalarProduct L η η = 1 := by
     rcases hηirr with ⟨_n, ρ, hρirr, hηeq⟩
     rw [hηeq]
-    exact (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
+    exact (irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
   unfold Section5.cfNormSq
   rw [hηself]
   simp
@@ -10951,7 +10950,7 @@ theorem theorem_6_8_isVirtualCharacter_of_integerSpan_signedOrthonormalFinset
     (hR : Section5.signedOrthonormalFinset R)
     {A : Section1.ClassFunction G}
     (hA : Section5.integerSpan R A) :
-    Theory.Character.IsVirtualCharacter A := by
+    IsVirtualCharacter A := by
   classical
   rcases hA with ⟨v, rfl⟩
   exact theorem_6_8_isVirtualCharacter_evalCoeff
@@ -10973,10 +10972,10 @@ theorem theorem_6_8_pf54_remainder_virtual
     {Xbig Yrem : Section1.ClassFunction G}
     (hXbig_span : Section5.integerSpan R Xbig)
     (hT : T α = Xbig - Yrem) :
-    Theory.Character.IsVirtualCharacter Yrem := by
-  have hTvirt : Theory.Character.IsVirtualCharacter (T α) :=
+    IsVirtualCharacter Yrem := by
+  have hTvirt : IsVirtualCharacter (T α) :=
     (h52b.2 α hαspan).1
-  have hXvirt : Theory.Character.IsVirtualCharacter Xbig :=
+  have hXvirt : IsVirtualCharacter Xbig :=
     theorem_6_8_isVirtualCharacter_of_integerSpan_signedOrthonormalFinset
       hR hXbig_span
   have hYeq : Yrem = Xbig - T α := by
@@ -10988,8 +10987,8 @@ theorem theorem_6_8_pf54_remainder_virtual
 theorem theorem_6_8_projection_integer_coeff_sq_le_norm
     {G : Type u} [Group G] [Finite G]
     {A Ycf : Section1.ClassFunction G}
-    (hAvirt : Theory.Character.IsVirtualCharacter A)
-    (hYcfvirt : Theory.Character.IsVirtualCharacter Ycf)
+    (hAvirt : IsVirtualCharacter A)
+    (hYcfvirt : IsVirtualCharacter Ycf)
     (hYself : Section1.scalarProduct G Ycf Ycf = 1) :
     ∃ b : ℤ,
       Section1.scalarProduct G A Ycf = (b : ℂ) ∧
@@ -11047,8 +11046,8 @@ theorem theorem_6_8_projection_int_coeff_le_of_pf54_norm
     {η₁ : Section1.ClassFunction L} (hη₁Y : η₁ ∈ Y)
     {Yrem Ycf : Section1.ClassFunction G} {e : ℕ}
     {P Q : Prop}
-    (hYremvirt : Theory.Character.IsVirtualCharacter Yrem)
-    (hYcfvirt : Theory.Character.IsVirtualCharacter Ycf)
+    (hYremvirt : IsVirtualCharacter Yrem)
+    (hYcfvirt : IsVirtualCharacter Ycf)
     (hYself : Section1.scalarProduct G Ycf Ycf = 1)
     (hpf54 :
       Section5.cfNormSq Yrem ≥ Section5.cfNormSq ((e : ℂ) • η₁) →
@@ -11657,7 +11656,7 @@ theorem theorem_6_8_caseA_source_X_shift_Y_diff_scalar
     rcases theorem_6_8_Y_irreducible_of_familyData h68 hfamily η₁ hη₁Y with
       ⟨_n, ρ, hρirr, hη₁eq⟩
     rw [hη₁eq]
-    exact (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
+    exact (irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
   have hχratio' :
       Section1.degree χ / (Fintype.card W1 : ℂ) = (a : ℂ) := by
     simpa [Nat.card_eq_fintype_card] using hχratio
@@ -11765,7 +11764,7 @@ theorem theorem_6_8_caseA_source_X_shift_cfNormSq_eq_one_add_nat_sq
     have hχself : Section1.scalarProduct L χ χ = 1 := by
       rcases hχirr with ⟨_n, ρ, hρirr, hχeq⟩
       rw [hχeq]
-      exact (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
+      exact (irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
     unfold Section5.cfNormSq
     rw [hχself]
     simp
@@ -11948,7 +11947,7 @@ theorem theorem_6_8_caseA_anchor_dichotomy_of_nat_multiple
     rcases theorem_6_8_Y_irreducible_of_familyData h68 hfamily η₁ hη₁Y with
       ⟨_n, ρ, hρirr, hη₁eq⟩
     rw [hη₁eq]
-    exact (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
+    exact (irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
   have hτη₁self : Section1.scalarProduct G (τ₁ η₁) (τ₁ η₁) = 1 := by
     rw [theorem_6_8_coherentExtension_scalarProduct_of_mem
       hτ₁ hη₁Y hη₁Y, hη₁self_src]
@@ -12035,7 +12034,7 @@ theorem theorem_6_8_caseA_left_candidate_scalarProduct_Y_eq_anchor
     have hη₁self : Section1.scalarProduct L η₁ η₁ = 1 := by
       rcases hη₁irr with ⟨_n, ρ, hρirr, hη₁eq⟩
       rw [hη₁eq]
-      exact (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
+      exact (irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
     have hτ₁η₁η : Section1.scalarProduct G (τ₁ η₁) (τ₁ η) = 0 := by
       rw [theorem_6_8_coherentExtension_scalarProduct_of_mem
         hτ₁ hη₁Y hηY, hη₁η]
@@ -12127,7 +12126,7 @@ theorem theorem_6_8_caseA_right_candidate_scalarProduct_Y_eq_anchor
   have hη₂self : Section1.scalarProduct L η₂ η₂ = 1 := by
     rcases hη₂irr with ⟨_n, ρ, hρirr, hη₂eq⟩
     rw [hη₂eq]
-    exact (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
+    exact (irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
   have hτ₂η₁ : Section1.scalarProduct G (τ₁ η₂) (τ₁ η₁) = 0 := by
     rw [theorem_6_8_coherentExtension_scalarProduct_of_mem
       hτ₁ hη₂Y hη₁Y, hη₂η₁]
@@ -12297,13 +12296,13 @@ theorem theorem_6_8_caseA_anchor_multiple_of_source_coeff_multiple
         (Section1.subgroupRestriction L (τ₁ η₁)) :=
     theorem_6_8_scalarProduct_transform_eq_restriction_of_induction
       hTα hτη₁class
-  have hη₁virt : Theory.Character.IsVirtualCharacter η₁ :=
+  have hη₁virt : IsVirtualCharacter η₁ :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup
       (theorem_6_8_Y_irreducible_of_familyData h68' hfamily η₁ hη₁Y)
-  have hτη₁virt : Theory.Character.IsVirtualCharacter (τ₁ η₁) :=
+  have hτη₁virt : IsVirtualCharacter (τ₁ η₁) :=
     hτ₁.2.1 η₁ (Section5.integerSpan_of_mem Y hη₁Y)
   have hresvirt :
-      Theory.Character.IsVirtualCharacter
+      IsVirtualCharacter
         (Section1.subgroupRestriction L (τ₁ η₁)) :=
     theorem_6_8_subgroupRestriction_isVirtualCharacter L hτη₁virt
   rcases Section3.scalarProduct_isVirtualCharacter_eq_int hη₁virt hresvirt with
@@ -12803,7 +12802,7 @@ theorem theorem_6_8_caseB_commonY_self_eq_one
   have hη₁self : Section1.scalarProduct L η₁ η₁ = 1 := by
     rcases hη₁irr with ⟨_n, ρ, hρirr, hη₁eq⟩
     rw [hη₁eq]
-    exact (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
+    exact (irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
   rw [hself, hη₁self]
 
 theorem theorem_6_8_caseB_unionImage_Y_Y_gram
@@ -12965,15 +12964,15 @@ theorem theorem_6_8_caseB_commonY_virtual
     {Ycf : Section1.ClassFunction G}
     (hτ₁ : coherentExtension Y T τ₁)
     (hcommon : theorem_6_8_2_2_commonY L H Z Y T τ₁ η₁ Ycf) :
-    Theory.Character.IsVirtualCharacter Ycf := by
+    IsVirtualCharacter Ycf := by
   rcases hcommon with ⟨hη₁Y, hYcf, _hphi⟩
   rcases hτ₁ with ⟨_hIso, hvirt, _hagree⟩
   rcases hYcf with hYcf | hYcf
-  · have hη₁virt : Theory.Character.IsVirtualCharacter (τ₁ η₁) :=
+  · have hη₁virt : IsVirtualCharacter (τ₁ η₁) :=
       hvirt η₁ (Section5.integerSpan_of_mem Y hη₁Y)
     simpa [hYcf] using hη₁virt
   · rcases hYcf with ⟨η₂, _hcard, hη₂Y, _hη₂ne, hYcf⟩
-    have hη₂virt : Theory.Character.IsVirtualCharacter (τ₁ η₂) :=
+    have hη₂virt : IsVirtualCharacter (τ₁ η₂) :=
       hvirt η₂ (Section5.integerSpan_of_mem Y hη₂Y)
     simpa [hYcf] using Section3.isVirtualCharacter_neg hη₂virt
 
@@ -13037,7 +13036,7 @@ theorem theorem_6_8_selected_shift_scalar_eq_of_projection_int_coefficients
       hfamily.1 e ψ hdecomp hsq
   have hYself : Section1.scalarProduct G Ycf Ycf = 1 :=
     theorem_6_8_caseB_commonY_self_eq_one h68' hfamily h52a hτ₁ hcommon
-  have hYcfvirt : Theory.Character.IsVirtualCharacter Ycf :=
+  have hYcfvirt : IsVirtualCharacter Ycf :=
     theorem_6_8_caseB_commonY_virtual
       (T := T) (τ₁ := τ₁) hτ₁ hcommon
   have hproj :
@@ -13066,7 +13065,7 @@ theorem theorem_6_8_selected_shift_scalar_eq_of_projection_int_coefficients
           (Section1.inducedCF H (ψ i) - (e i : ℂ) • η₁) :=
       (theorem_6_8_induced_constituent_shift_integerSpanOn
         hsemi hfamily e ψ i (hdegree i hei) hIndX hη₁Y).2
-    have hYremvirt : Theory.Character.IsVirtualCharacter Yrem :=
+    have hYremvirt : IsVirtualCharacter Yrem :=
       theorem_6_8_pf54_remainder_virtual
         (U := X ∪ Y) (T := T) (R := R χU) h52b (h52d χU).1
         hshift_span hXbig_span hTproj
@@ -13385,21 +13384,21 @@ theorem theorem_6_8_caseB_unionImage_Y_virtual
     (hcommon : theorem_6_8_2_2_commonY L H Z Y T τ₁ η₁ Ycf)
     (η : {η : Section1.ClassFunction L // η ∈ X ∪ Y})
     (hηY : (η : Section1.ClassFunction L) ∈ Y) :
-    Theory.Character.IsVirtualCharacter
+    IsVirtualCharacter
       (theorem_6_8_caseB_unionImage
         (W1 := W1) (X := X) (Y := Y) (T := T) (τ₁ := τ₁)
         η₁ Ycf hshift η) := by
-  have hYcfvirt : Theory.Character.IsVirtualCharacter Ycf :=
+  have hYcfvirt : IsVirtualCharacter Ycf :=
     theorem_6_8_caseB_commonY_virtual
       (T := T) (τ₁ := τ₁) hτ₁ hcommon
   rcases hcommon with ⟨hη₁Y, hcommonY, hphi⟩
   rcases hτ₁ with ⟨_hIso, hvirt, _hagree⟩
   have hηvirt :
-      Theory.Character.IsVirtualCharacter
+      IsVirtualCharacter
         (τ₁ (η : Section1.ClassFunction L)) :=
     hvirt (η : Section1.ClassFunction L)
       (Section5.integerSpan_of_mem Y hηY)
-  have hη₁virt : Theory.Character.IsVirtualCharacter (τ₁ η₁) :=
+  have hη₁virt : IsVirtualCharacter (τ₁ η₁) :=
     hvirt η₁ (Section5.integerSpan_of_mem Y hη₁Y)
   have himg :
       theorem_6_8_caseB_unionImage
@@ -13435,7 +13434,7 @@ theorem theorem_6_8_caseB_unionImage_X_virtual
     (η : {η : Section1.ClassFunction L // η ∈ X ∪ Y})
     (hηX : (η : Section1.ClassFunction L) ∈ X)
     (hηnotY : (η : Section1.ClassFunction L) ∉ Y) :
-    Theory.Character.IsVirtualCharacter
+    IsVirtualCharacter
       (theorem_6_8_caseB_unionImage
         (W1 := W1) (X := X) (Y := Y) (T := T) (τ₁ := τ₁)
         η₁ Ycf hshift η) := by
@@ -13471,18 +13470,18 @@ theorem theorem_6_8_caseB_unionImage_X_virtual
       simpa [Nat.card_eq_fintype_card] using hηdiv
     simpa [hηdiv'] using hspec
   have hTvirt :
-      Theory.Character.IsVirtualCharacter
+      IsVirtualCharacter
         (T ((η : Section1.ClassFunction L) - (a : ℂ) • η₁)) :=
     (h52b.2 ((η : Section1.ClassFunction L) - (a : ℂ) • η₁) hspan).1
-  have hdiffvirt : Theory.Character.IsVirtualCharacter (img - (a : ℂ) • Ycf) := by
+  have hdiffvirt : IsVirtualCharacter (img - (a : ℂ) • Ycf) := by
     simpa [hshift_a] using hTvirt
-  have hYcfvirt : Theory.Character.IsVirtualCharacter Ycf :=
+  have hYcfvirt : IsVirtualCharacter Ycf :=
     theorem_6_8_caseB_commonY_virtual
       (T := T) (τ₁ := τ₁) hτ₁ hcommon'
-  have hYcfScaled : Theory.Character.IsVirtualCharacter ((a : ℂ) • Ycf) := by
+  have hYcfScaled : IsVirtualCharacter ((a : ℂ) • Ycf) := by
     simpa using theorem_6_8_isVirtualCharacter_zsmul (a : ℤ) hYcfvirt
   have hsum :
-      Theory.Character.IsVirtualCharacter
+      IsVirtualCharacter
         ((img - (a : ℂ) • Ycf) + (a : ℂ) • Ycf) :=
     Section3.isVirtualCharacter_add hdiffvirt hYcfScaled
   have hcancel : (img - (a : ℂ) • Ycf) + (a : ℂ) • Ycf = img := by
@@ -13510,7 +13509,7 @@ theorem theorem_6_8_caseB_unionImage_virtual
     (hτ₁ : coherentExtension Y T τ₁)
     (hcommon : theorem_6_8_2_2_commonY L H Z Y T τ₁ η₁ Ycf) :
     ∀ η : {η : Section1.ClassFunction L // η ∈ X ∪ Y},
-      Theory.Character.IsVirtualCharacter
+      IsVirtualCharacter
         (theorem_6_8_caseB_unionImage
           (W1 := W1) (X := X) (Y := Y) (T := T) (τ₁ := τ₁)
           η₁ Ycf hshift η) := by
@@ -14057,7 +14056,7 @@ theorem theorem_6_8_exists_coherentExtension_of_image_family
       ∀ η : U,
         Section1.scalarProduct L (η : Section1.ClassFunction L)
           (η : Section1.ClassFunction L) ≠ 0)
-    (himg_virt : ∀ η : U, Theory.Character.IsVirtualCharacter (img η))
+    (himg_virt : ∀ η : U, IsVirtualCharacter (img η))
     (hgram :
       ∀ η ξ : U,
         Section1.scalarProduct G (img η) (img ξ) =
@@ -14081,7 +14080,7 @@ theorem theorem_6_8_coherentFamily_of_hypothesis_5_2_and_image_family
     {T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
     {img : U → Section1.ClassFunction G}
     (h52 : Section5.hypothesis_5_2_statement U T)
-    (himg_virt : ∀ η, Theory.Character.IsVirtualCharacter (img η))
+    (himg_virt : ∀ η, IsVirtualCharacter (img η))
     (hgram : ∀ η ξ,
       Section1.scalarProduct G (img η) (img ξ) =
         Section1.scalarProduct L (η : Section1.ClassFunction L)
@@ -14358,15 +14357,15 @@ theorem theorem_6_8_caseA_signedYShape_virtual
     {Ycf : Section1.ClassFunction G}
     (hτ₁ : coherentExtension Y T τ₁)
     (hshape : theorem_6_8_caseA_signedYShape (Y := Y) (τ₁ := τ₁) η₁ Ycf) :
-    Theory.Character.IsVirtualCharacter Ycf := by
+    IsVirtualCharacter Ycf := by
   rcases hshape with ⟨hη₁Y, hYcf⟩
   rcases hτ₁ with ⟨_hIso, hvirt, _hagree⟩
   rcases hYcf with hYcf | hYcf
-  · have hη₁virt : Theory.Character.IsVirtualCharacter (τ₁ η₁) :=
+  · have hη₁virt : IsVirtualCharacter (τ₁ η₁) :=
       hvirt η₁ (Section5.integerSpan_of_mem Y hη₁Y)
     simpa [hYcf] using hη₁virt
   · rcases hYcf with ⟨η₂, _hcard, hη₂Y, _hη₂ne, hYcf⟩
-    have hη₂virt : Theory.Character.IsVirtualCharacter (τ₁ η₂) :=
+    have hη₂virt : IsVirtualCharacter (τ₁ η₂) :=
       hvirt η₂ (Section5.integerSpan_of_mem Y hη₂Y)
     simpa [hYcf] using Section3.isVirtualCharacter_neg hη₂virt
 
@@ -14460,20 +14459,20 @@ theorem theorem_6_8_caseA_signed_unionImage_Y_virtual
     (hshape : theorem_6_8_caseA_signedYShape (Y := Y) (τ₁ := τ₁) η₁ Ycf)
     (η : {η : Section1.ClassFunction L // η ∈ X ∪ Y})
     (hηY : (η : Section1.ClassFunction L) ∈ Y) :
-    Theory.Character.IsVirtualCharacter
+    IsVirtualCharacter
       (theorem_6_8_caseB_unionImage
         (W1 := W1) (X := X) (Y := Y) (T := T) (τ₁ := τ₁)
         η₁ Ycf hshift η) := by
-  have hYcfvirt : Theory.Character.IsVirtualCharacter Ycf :=
+  have hYcfvirt : IsVirtualCharacter Ycf :=
     theorem_6_8_caseA_signedYShape_virtual hτ₁ hshape
   rcases hshape with ⟨hη₁Y, _hYcf⟩
   rcases hτ₁ with ⟨_hIso, hvirt, _hagree⟩
   have hηvirt :
-      Theory.Character.IsVirtualCharacter
+      IsVirtualCharacter
         (τ₁ (η : Section1.ClassFunction L)) :=
     hvirt (η : Section1.ClassFunction L)
       (Section5.integerSpan_of_mem Y hηY)
-  have hη₁virt : Theory.Character.IsVirtualCharacter (τ₁ η₁) :=
+  have hη₁virt : IsVirtualCharacter (τ₁ η₁) :=
     hvirt η₁ (Section5.integerSpan_of_mem Y hη₁Y)
   have himg :
       theorem_6_8_caseB_unionImage
@@ -14509,7 +14508,7 @@ theorem theorem_6_8_caseA_signed_unionImage_X_virtual
     (η : {η : Section1.ClassFunction L // η ∈ X ∪ Y})
     (hηX : (η : Section1.ClassFunction L) ∈ X)
     (hηnotY : (η : Section1.ClassFunction L) ∉ Y) :
-    Theory.Character.IsVirtualCharacter
+    IsVirtualCharacter
       (theorem_6_8_caseB_unionImage
         (W1 := W1) (X := X) (Y := Y) (T := T) (τ₁ := τ₁)
         η₁ Ycf hshift η) := by
@@ -14544,17 +14543,17 @@ theorem theorem_6_8_caseA_signed_unionImage_X_virtual
       simpa [Nat.card_eq_fintype_card] using hηdiv
     simpa [hηdiv'] using hspec
   have hTvirt :
-      Theory.Character.IsVirtualCharacter
+      IsVirtualCharacter
         (T ((η : Section1.ClassFunction L) - (a : ℂ) • η₁)) :=
     (h52b.2 ((η : Section1.ClassFunction L) - (a : ℂ) • η₁) hspan).1
-  have hdiffvirt : Theory.Character.IsVirtualCharacter (img - (a : ℂ) • Ycf) := by
+  have hdiffvirt : IsVirtualCharacter (img - (a : ℂ) • Ycf) := by
     simpa [hshift_a] using hTvirt
-  have hYcfvirt : Theory.Character.IsVirtualCharacter Ycf :=
+  have hYcfvirt : IsVirtualCharacter Ycf :=
     theorem_6_8_caseA_signedYShape_virtual hτ₁ hshape'
-  have hYcfScaled : Theory.Character.IsVirtualCharacter ((a : ℂ) • Ycf) := by
+  have hYcfScaled : IsVirtualCharacter ((a : ℂ) • Ycf) := by
     simpa using theorem_6_8_isVirtualCharacter_zsmul (a : ℤ) hYcfvirt
   have hsum :
-      Theory.Character.IsVirtualCharacter
+      IsVirtualCharacter
         ((img - (a : ℂ) • Ycf) + (a : ℂ) • Ycf) :=
     Section3.isVirtualCharacter_add hdiffvirt hYcfScaled
   have hcancel : (img - (a : ℂ) • Ycf) + (a : ℂ) • Ycf = img := by
@@ -14582,7 +14581,7 @@ theorem theorem_6_8_caseA_signed_unionImage_virtual
     (hτ₁ : coherentExtension Y T τ₁)
     (hshape : theorem_6_8_caseA_signedYShape (Y := Y) (τ₁ := τ₁) η₁ Ycf) :
     ∀ η : {η : Section1.ClassFunction L // η ∈ X ∪ Y},
-      Theory.Character.IsVirtualCharacter
+      IsVirtualCharacter
         (theorem_6_8_caseB_unionImage
           (W1 := W1) (X := X) (Y := Y) (T := T) (τ₁ := τ₁)
           η₁ Ycf hshift η) := by
@@ -15700,7 +15699,7 @@ theorem theorem_6_8_irreducible_degree_sq_le_relIndex_of_kernel
     have hle :
         Module.finrank ℂ (Fin d → ℂ) ^ (2 : ℕ) ≤
           (⊥ : Subgroup (H ⧸ Z.subgroupOf H)).index :=
-      Theory.Character.irreducible_finrank_sq_le_index_of_scalar_on_subgroup
+      irreducible_finrank_sq_le_index_of_scalar_on_subgroup
         (ρ := ρq) (⊥ : Subgroup (H ⧸ Z.subgroupOf H)) hscalar
     have hleQbot :
         d ^ (2 : ℕ) ≤
@@ -15895,7 +15894,7 @@ theorem theorem_6_8_scalarProduct_self_irreducible
     Section1.scalarProduct L χ χ = 1 := by
   rcases hχ with ⟨_n, ρ, hρirr, hχchar⟩
   rw [hχchar]
-  exact (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
+  exact (irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
 
 
 theorem theorem_6_8_X_degree_sq_sum_add_quotient_card
@@ -16582,7 +16581,7 @@ theorem theorem_6_8_caseA_base_shift_data_of_residual_kernel_selected
   have hdeg0_ne : (dX χ₀x : ℂ) ≠ 0 := by
     rw [hdeg0_eq]
     exact_mod_cast hd₀pos.ne'
-  have hτη₁virt : Theory.Character.IsVirtualCharacter (τ₁ η₁) :=
+  have hτη₁virt : IsVirtualCharacter (τ₁ η₁) :=
     hτ₁.2.1 η₁ (Section5.integerSpan_of_mem Y hη₁Y)
   have hcstar : star c = c := by
     dsimp [c]
@@ -17260,7 +17259,7 @@ theorem theorem_6_8_complete_nonkernel_degree_data
             (∑ θ : X, dX θ ^ (2 : ℕ)) +
                 Nat.card (K ⧸ A) = Nat.card K := by
   classical
-  rcases Theory.Character.exists_completeIrreducibleCharacterFamily_sum_degree_normSq
+  rcases exists_completeIrreducibleCharacterFamily_sum_degree_normSq
       (G := K) with
     ⟨ι, hι, χ, hχ, _hsumχ⟩
   let : Fintype ι := hι
@@ -17295,7 +17294,7 @@ theorem theorem_6_8_complete_nonkernel_degree_data
         rw [hθ0eq]
         simpa [mul_assoc] using Representation.char_conj (ρ := ρ) g x
       have hθ0rep :
-          Theory.Character.IsIrreducibleConjCharacter
+          IsIrreducibleConjCharacter
             (Section1.toConjClassFunction θ0 hθ0class) := by
         rcases hθ0.1 with ⟨n, ρ, hρirr, hθ0eq⟩
         constructor
@@ -17305,12 +17304,12 @@ theorem theorem_6_8_complete_nonkernel_degree_data
           change θ0 g = ρ.character g
           rw [hθ0eq]
         · have hnorm :=
-            (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
+            (irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
           have hto :
               Section1.toConjClassFunction θ0 hθ0class =
-                (Theory.Character.characterClassFunction ρ) := by
+                (characterClassFunction ρ) := by
             refine Section1.toConjClassFunction_eq_of_apply θ0 hθ0class
-              (Theory.Character.characterClassFunction ρ) ?_
+              (characterClassFunction ρ) ?_
             intro g
             rw [hθ0eq]
             rfl

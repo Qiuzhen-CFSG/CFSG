@@ -9,9 +9,7 @@ import Mathlib.FieldTheory.Finite.GaloisField
 import Mathlib.GroupTheory.SpecificGroups.Cyclic
 import Mathlib.RingTheory.SimpleModule.Isotypic
 import Mathlib.RingTheory.ZMod.UnitsCyclic
-open Theory.GroupAction
-open Theory.ElementaryAbelian
-open Theory.Representation
+open Representation
 
 
 noncomputable section
@@ -108,27 +106,27 @@ private theorem theorem_9_7_finrank_eq_one_of_abs_irred_commuting_image_sec9
     [AddCommGroup V] [Module F V] [FiniteDimensional F V]
     (ρ : Representation F G V)
     [Representation.IsIrreducible ρ]
-    [Theory.Representation.IsAbsolutelyIrreducible ρ]
+    [Representation.IsAbsolutelyIrreducible ρ]
     (hcomm : ∀ g h : G, (ρ g).comp (ρ h) = (ρ h).comp (ρ g)) :
     Module.finrank F V = 1 := by
   classical
-  have hsurj : Function.Surjective (algebraMap F (Theory.Representation.End ρ)) :=
-    (Theory.Representation.isAbsolutelyIrreducible_iff_surjective ρ).1 inferInstance
+  have hsurj : Function.Surjective (algebraMap F (Representation.End ρ)) :=
+    (Representation.isAbsolutelyIrreducible_iff_surjective ρ).1 inferInstance
   haveI : Nontrivial V := Subrepresentation.irreducible_module_nontrivial ρ
   obtain ⟨v, hv⟩ := exists_ne (0 : V)
   have hscalar (g : G) : ∃ c : F, ρ g v = c • v := by
-    let f : Theory.Representation.End ρ :=
+    let f : Representation.End ρ :=
       (ρ g).intertwiningMap_of_isIntertwiningMap ρ ρ (by
         intro h x
         exact LinearMap.congr_fun (hcomm g h) x)
     rcases hsurj f with ⟨c, hc⟩
     refine ⟨c, ?_⟩
-    have happ := congrArg (fun T : Theory.Representation.End ρ => T v) hc
+    have happ := congrArg (fun T : Representation.End ρ => T v) hc
     calc
       ρ g v = f v := rfl
-      _ = (algebraMap F (Theory.Representation.End ρ) c) v := happ.symm
+      _ = (algebraMap F (Representation.End ρ) c) v := happ.symm
       _ = c • v := by
-        simp [Theory.Representation.End.algebraMap_apply]
+        simp [Representation.End.algebraMap_apply]
   let S : Subrepresentation ρ :=
     { toSubmodule := Submodule.span F ({v} : Set V)
       apply_mem_toSubmodule := by
@@ -174,7 +172,7 @@ private theorem theorem_9_7_finrank_eq_one_of_abs_irred_quotient_kernel_commutat
     [AddCommGroup V] [Module F V] [FiniteDimensional F V]
     (ρ : Representation F G V)
     [Representation.IsIrreducible ρ]
-    [Theory.Representation.IsAbsolutelyIrreducible ρ]
+    [Representation.IsAbsolutelyIrreducible ρ]
     (hquotComm :
       letI : ρ.ker.Normal := MonoidHom.normal_ker ρ
       IsMulCommutative (G ⧸ ρ.ker)) :
@@ -1625,7 +1623,7 @@ private theorem theorem_9_7_irreducible_representation_of_quotientIrreducible_se
         quotientMulDistribMulAction (A := U) (G := MF)
           (H0.subgroupOf MF) hH0invU
       Representation.IsIrreducible
-        (Theory.Representation.ofElementaryAbelianAction (A := U)
+        (Representation.ofElementaryAbelianAction (A := U)
           (G := MF ⧸ H0.subgroupOf MF) (p := p)) := by
   classical
   intro hirred
@@ -1640,7 +1638,7 @@ private theorem theorem_9_7_irreducible_representation_of_quotientIrreducible_se
     simpa [H0MF] using hbarElem
   rcases hirred with ⟨_hnormalIrred, hminv⟩
   let ρ :=
-    Theory.Representation.ofElementaryAbelianAction (A := U)
+    Representation.ofElementaryAbelianAction (A := U)
       (G := MF ⧸ H0MF) (p := p)
   refine
     { toNontrivial := inferInstance
@@ -1654,7 +1652,7 @@ private theorem theorem_9_7_irreducible_representation_of_quotientIrreducible_se
         change Additive.ofMul x ∈ S.toSubmodule at hx
         exact hx
       have hx'' := S.apply_mem_toSubmodule a hx'
-      simpa [ρ, Theory.Representation.ofElementaryAbelianAction_apply_ofMul] using hx''
+      simpa [ρ, Representation.ofElementaryAbelianAction_apply_ofMul] using hx''
     refine { invariant := ?_ }
     intro a x
     constructor
@@ -3704,7 +3702,7 @@ private theorem
         (H0.subgroupOf MF) hH0invU
     letI : IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF) := hbarElem
     let ρ : Representation (ZMod p) U (Additive (MF ⧸ H0.subgroupOf MF)) :=
-      Theory.Representation.ofElementaryAbelianAction
+      Representation.ofElementaryAbelianAction
         (A := U) (G := MF ⧸ H0.subgroupOf MF) (p := p)
     let η : Subgroup (MF ⧸ H0.subgroupOf MF) ≃o
         Submodule (ZMod p) (Additive (MF ⧸ H0.subgroupOf MF)) :=
@@ -3720,7 +3718,7 @@ private theorem
       (H0.subgroupOf MF) hH0invU
   letI : IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF) := hbarElem
   let ρ : Representation (ZMod p) U (Additive (MF ⧸ H0.subgroupOf MF)) :=
-    Theory.Representation.ofElementaryAbelianAction
+    Representation.ofElementaryAbelianAction
       (A := U) (G := MF ⧸ H0.subgroupOf MF) (p := p)
   let η : Subgroup (MF ⧸ H0.subgroupOf MF) ≃o
       Submodule (ZMod p) (Additive (MF ⧸ H0.subgroupOf MF)) :=
@@ -3760,7 +3758,7 @@ private theorem
         (H0.subgroupOf MF) hH0invU
     letI : IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF) := hbarElem
     let ρ : Representation (ZMod p) U (Additive (MF ⧸ H0.subgroupOf MF)) :=
-      Theory.Representation.ofElementaryAbelianAction
+      Representation.ofElementaryAbelianAction
         (A := U) (G := MF ⧸ H0.subgroupOf MF) (p := p)
     let η : Subgroup (MF ⧸ H0.subgroupOf MF) ≃o
         Submodule (ZMod p) (Additive (MF ⧸ H0.subgroupOf MF)) :=
@@ -3776,7 +3774,7 @@ private theorem
       (H0.subgroupOf MF) hH0invU
   letI : IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF) := hbarElem
   let ρ : Representation (ZMod p) U (Additive (MF ⧸ H0.subgroupOf MF)) :=
-    Theory.Representation.ofElementaryAbelianAction
+    Representation.ofElementaryAbelianAction
       (A := U) (G := MF ⧸ H0.subgroupOf MF) (p := p)
   let η : Subgroup (MF ⧸ H0.subgroupOf MF) ≃o
       Submodule (ZMod p) (Additive (MF ⧸ H0.subgroupOf MF)) :=
@@ -3802,7 +3800,7 @@ private theorem
     (hQminimal :
       ∀ R : Subgroup V, IsInvariant A V R → R ≠ ⊥ → R ≤ Q → Q ≤ R)
     (S : Subrepresentation
-      (Theory.Representation.ofElementaryAbelianAction (A := A) (G := V) (p := p)))
+      (Representation.ofElementaryAbelianAction (A := A) (G := V) (p := p)))
     (hS :
       let η : Subgroup V ≃o Submodule (ZMod p) (Additive V) :=
         Subgroup.toAddSubgroup.trans (AddSubgroup.toZModSubmodule (n := p))
@@ -3810,7 +3808,7 @@ private theorem
     Representation.IsIrreducible S.toRepresentation := by
   classical
   let ρ : Representation (ZMod p) A (Additive V) :=
-    Theory.Representation.ofElementaryAbelianAction (A := A) (G := V) (p := p)
+    Representation.ofElementaryAbelianAction (A := A) (G := V) (p := p)
   let η : Subgroup V ≃o Submodule (ZMod p) (Additive V) :=
     Subgroup.toAddSubgroup.trans (AddSubgroup.toZModSubmodule (n := p))
   have hS' : S.toSubmodule = η Q := by
@@ -3842,7 +3840,7 @@ private theorem
           have hx' : Additive.ofMul x ∈ T.toSubmodule := by
             simpa [R, Submodule.mem_toAddSubgroup] using hx
           have hx'' := T.apply_mem_toSubmodule a hx'
-          simpa [ρ, Theory.Representation.ofElementaryAbelianAction_apply_ofMul] using hx''
+          simpa [ρ, Representation.ofElementaryAbelianAction_apply_ofMul] using hx''
         refine { invariant := ?_ }
         intro a x
         constructor
@@ -4868,7 +4866,7 @@ private theorem
       (H0.subgroupOf MF) hH0invU
   letI : IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF) := hbarElem
   let ρ : Representation (ZMod p) U (Additive (MF ⧸ H0.subgroupOf MF)) :=
-    Theory.Representation.ofElementaryAbelianAction
+    Representation.ofElementaryAbelianAction
       (A := U) (G := MF ⧸ H0.subgroupOf MF) (p := p)
   let η : Subgroup (MF ⧸ H0.subgroupOf MF) ≃o
       Submodule (ZMod p) (Additive (MF ⧸ H0.subgroupOf MF)) :=
@@ -5494,7 +5492,7 @@ private theorem
           (H0.subgroupOf MF) hH0invU
       letI : IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF) := hbarElem
       let ρ : Representation (ZMod p) U (Additive (MF ⧸ H0.subgroupOf MF)) :=
-        Theory.Representation.ofElementaryAbelianAction
+        Representation.ofElementaryAbelianAction
           (A := U) (G := MF ⧸ H0.subgroupOf MF) (p := p)
       let η : Subgroup (MF ⧸ H0.subgroupOf MF) ≃o
           Submodule (ZMod p) (Additive (MF ⧸ H0.subgroupOf MF)) :=
@@ -5513,7 +5511,7 @@ private theorem
         (H0.subgroupOf MF) hH0invU
     letI : IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF) := hbarElem
     let ρ : Representation (ZMod p) U (Additive (MF ⧸ H0.subgroupOf MF)) :=
-      Theory.Representation.ofElementaryAbelianAction
+      Representation.ofElementaryAbelianAction
         (A := U) (G := MF ⧸ H0.subgroupOf MF) (p := p)
     let η : Subgroup (MF ⧸ H0.subgroupOf MF) ≃o
         Submodule (ZMod p) (Additive (MF ⧸ H0.subgroupOf MF)) :=
@@ -5604,7 +5602,7 @@ private theorem
       (H0.subgroupOf MF) hH0invU
   letI : IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF) := hbarElem
   let ρ : Representation (ZMod p) U (Additive (MF ⧸ H0.subgroupOf MF)) :=
-    Theory.Representation.ofElementaryAbelianAction
+    Representation.ofElementaryAbelianAction
       (A := U) (G := MF ⧸ H0.subgroupOf MF) (p := p)
   rcases
       theorem_9_7_orderedCliffordSubrepresentationIndep_of_minimal_generator_orbit_source_bridge_sec9
@@ -8435,7 +8433,7 @@ private def theorem_9_7_schurEndFieldData_sec9
   letI : IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF) := hbarElem
   letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
     quotientMulDistribMulAction (A := U) (G := MF) (H0.subgroupOf MF) hH0inv
-  let ρ := Theory.Representation.ofElementaryAbelianAction (A := U)
+  let ρ := Representation.ofElementaryAbelianAction (A := U)
     (G := MF ⧸ H0.subgroupOf MF) (p := p)
   let E := Module.End (MonoidAlgebra (ZMod p) U) ρ.asModule
   ∃ fieldInst : Field E, ∃ fintypeInst : Fintype E,
@@ -8465,7 +8463,7 @@ private def theorem_9_7_schurEndFieldFullData_sec9
   letI : IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF) := hbarElem
   letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
     quotientMulDistribMulAction (A := U) (G := MF) (H0.subgroupOf MF) hH0inv
-  let ρ := Theory.Representation.ofElementaryAbelianAction (A := U)
+  let ρ := Representation.ofElementaryAbelianAction (A := U)
     (G := MF ⧸ H0.subgroupOf MF) (p := p)
   let E := Module.End (MonoidAlgebra (ZMod p) U) ρ.asModule
   Nat.card E = p ^ q ∧ Module.finrank E ρ.asModule = 1
@@ -8489,7 +8487,7 @@ private theorem theorem_9_7_schurEndFieldData_of_irreducible_sec9
         quotientMulDistribMulAction (A := U) (G := MF)
           (H0.subgroupOf MF) hH0inv
       Representation.IsIrreducible
-        (Theory.Representation.ofElementaryAbelianAction (A := U)
+        (Representation.ofElementaryAbelianAction (A := U)
           (G := MF ⧸ H0.subgroupOf MF) (p := p))) :
     theorem_9_7_schurEndFieldData_sec9 MF H0 U p Fact.out
       hnormalH0 hUnormMF hH0inv hbarElem := by
@@ -8501,13 +8499,13 @@ private theorem theorem_9_7_schurEndFieldData_of_irreducible_sec9
   letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
     quotientMulDistribMulAction (A := U) (G := MF)
       (H0.subgroupOf MF) hH0inv
-  let ρ := Theory.Representation.ofElementaryAbelianAction (A := U)
+  let ρ := Representation.ofElementaryAbelianAction (A := U)
     (G := MF ⧸ H0.subgroupOf MF) (p := p)
   have hρirr : Representation.IsIrreducible ρ := by
     simpa [ρ] using hirredRep
   letI : Representation.IsIrreducible ρ := hρirr
   haveI : FiniteDimensional (ZMod p) (Additive (MF ⧸ H0.subgroupOf MF)) :=
-    finiteDimensional_of_irreducible_finite_group ρ hρirr
+    _root_.finiteDimensional_of_irreducible_finite_group ρ hρirr
   let E := Module.End (MonoidAlgebra (ZMod p) U) ρ.asModule
   let fieldInst : Field E := endField_field ρ
   let fintypeInst : Fintype E := Fintype.ofFinite E
@@ -8587,7 +8585,7 @@ private theorem theorem_9_7_schurEndField_card_eq_prime_or_full_sec9
     letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
       quotientMulDistribMulAction (A := U) (G := MF)
         (H0.subgroupOf MF) hH0inv
-    let ρ := Theory.Representation.ofElementaryAbelianAction (A := U)
+    let ρ := Representation.ofElementaryAbelianAction (A := U)
       (G := MF ⧸ H0.subgroupOf MF) (p := p)
     let E := Module.End (MonoidAlgebra (ZMod p) U) ρ.asModule
     Nat.card E = p ∨ Nat.card E = p ^ q := by
@@ -8600,7 +8598,7 @@ private theorem theorem_9_7_schurEndField_card_eq_prime_or_full_sec9
   letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
     quotientMulDistribMulAction (A := U) (G := MF)
       (H0.subgroupOf MF) hH0inv
-  let ρ := Theory.Representation.ofElementaryAbelianAction (A := U)
+  let ρ := Representation.ofElementaryAbelianAction (A := U)
     (G := MF ⧸ H0.subgroupOf MF) (p := p)
   let E := Module.End (MonoidAlgebra (ZMod p) U) ρ.asModule
   change Nat.card E = p ∨ Nat.card E = p ^ q
@@ -8659,7 +8657,7 @@ private theorem theorem_9_7_schurEndField_card_finrank_alternative_sec9
       letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
         quotientMulDistribMulAction (A := U) (G := MF)
           (H0.subgroupOf MF) hH0inv
-      let ρ := Theory.Representation.ofElementaryAbelianAction (A := U)
+      let ρ := Representation.ofElementaryAbelianAction (A := U)
         (G := MF ⧸ H0.subgroupOf MF) (p := p)
       let E := Module.End (MonoidAlgebra (ZMod p) U) ρ.asModule
       Nat.card E = p ∨ Nat.card E = p ^ q) :
@@ -8670,7 +8668,7 @@ private theorem theorem_9_7_schurEndField_card_finrank_alternative_sec9
     letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
       quotientMulDistribMulAction (A := U) (G := MF)
         (H0.subgroupOf MF) hH0inv
-    let ρ := Theory.Representation.ofElementaryAbelianAction (A := U)
+    let ρ := Representation.ofElementaryAbelianAction (A := U)
       (G := MF ⧸ H0.subgroupOf MF) (p := p)
     let E := Module.End (MonoidAlgebra (ZMod p) U) ρ.asModule
     (Nat.card E = p ∧ Module.finrank E ρ.asModule = q) ∨
@@ -8684,7 +8682,7 @@ private theorem theorem_9_7_schurEndField_card_finrank_alternative_sec9
   letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
     quotientMulDistribMulAction (A := U) (G := MF)
       (H0.subgroupOf MF) hH0inv
-  let ρ := Theory.Representation.ofElementaryAbelianAction (A := U)
+  let ρ := Representation.ofElementaryAbelianAction (A := U)
     (G := MF ⧸ H0.subgroupOf MF) (p := p)
   let E := Module.End (MonoidAlgebra (ZMod p) U) ρ.asModule
   change (Nat.card E = p ∧ Module.finrank E ρ.asModule = q) ∨
@@ -8737,7 +8735,7 @@ private theorem theorem_9_7_quotientCentralizerIn_subgroupOf_le_elementary_actio
       quotientMulDistribMulAction (A := U) (G := MF)
         (H0.subgroupOf MF) hH0invU
     C.subgroupOf U ≤
-      (Theory.Representation.ofElementaryAbelianAction (A := U)
+      (Representation.ofElementaryAbelianAction (A := U)
         (G := MF ⧸ H0.subgroupOf MF) (p := p)).ker := by
   classical
   let H0MF : Subgroup MF := H0.subgroupOf MF
@@ -8750,7 +8748,7 @@ private theorem theorem_9_7_quotientCentralizerIn_subgroupOf_le_elementary_actio
   haveI : IsElementaryAbelian p (MF ⧸ H0MF) := by
     simpa [H0MF] using hbarElem
   intro c hc
-  rw [Theory.Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup]
+  rw [Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup]
   refine
     (mem_fixingSubgroup_iff
       (M := U) (s := (Set.univ : Set (MF ⧸ H0MF)))).2 ?_
@@ -8797,7 +8795,7 @@ private theorem theorem_9_7_elementary_action_ker_le_quotientCentralizerIn_subgr
     letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
       quotientMulDistribMulAction (A := U) (G := MF)
         (H0.subgroupOf MF) hH0invU
-    (Theory.Representation.ofElementaryAbelianAction (A := U)
+    (Representation.ofElementaryAbelianAction (A := U)
       (G := MF ⧸ H0.subgroupOf MF) (p := p)).ker ≤ C.subgroupOf U := by
   classical
   let H0MF : Subgroup MF := H0.subgroupOf MF
@@ -8810,7 +8808,7 @@ private theorem theorem_9_7_elementary_action_ker_le_quotientCentralizerIn_subgr
   haveI : IsElementaryAbelian p (MF ⧸ H0MF) := by
     simpa [H0MF] using hbarElem
   intro c hcKer
-  rw [Theory.Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup] at hcKer
+  rw [Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup] at hcKer
   have hfix_univ :
       ∀ y : MF ⧸ H0MF, y ∈ Set.univ → c • y = y :=
     (mem_fixingSubgroup_iff
@@ -8897,7 +8895,7 @@ private theorem theorem_9_7_quotientCentralizerIn_subgroupOf_eq_endFieldRep_ker_
     letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
       quotientMulDistribMulAction (A := U) (G := MF)
         (H0.subgroupOf MF) hH0invU
-    let ρ := Theory.Representation.ofElementaryAbelianAction (A := U)
+    let ρ := Representation.ofElementaryAbelianAction (A := U)
       (G := MF ⧸ H0.subgroupOf MF) (p := p)
     C.subgroupOf U = (endFieldRep ρ).ker := by
   classical
@@ -8907,7 +8905,7 @@ private theorem theorem_9_7_quotientCentralizerIn_subgroupOf_eq_endFieldRep_ker_
   letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
     quotientMulDistribMulAction (A := U) (G := MF)
       (H0.subgroupOf MF) hH0invU
-  let ρ := Theory.Representation.ofElementaryAbelianAction (A := U)
+  let ρ := Representation.ofElementaryAbelianAction (A := U)
     (G := MF ⧸ H0.subgroupOf MF) (p := p)
   apply le_antisymm
   · exact
@@ -8948,7 +8946,7 @@ private theorem theorem_9_7_schurEndFieldFullData_of_commutative_barU_sec9
         quotientMulDistribMulAction (A := U) (G := MF)
           (H0.subgroupOf MF) hH0inv
       Representation.IsIrreducible
-        (Theory.Representation.ofElementaryAbelianAction (A := U)
+        (Representation.ofElementaryAbelianAction (A := U)
           (G := MF ⧸ H0.subgroupOf MF) (p := p)))
     (hEndFieldCardAlt :
       letI : Fact p.Prime := ⟨hpprime⟩
@@ -8958,7 +8956,7 @@ private theorem theorem_9_7_schurEndFieldFullData_of_commutative_barU_sec9
       letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
         quotientMulDistribMulAction (A := U) (G := MF)
           (H0.subgroupOf MF) hH0inv
-      let ρ := Theory.Representation.ofElementaryAbelianAction (A := U)
+      let ρ := Representation.ofElementaryAbelianAction (A := U)
         (G := MF ⧸ H0.subgroupOf MF) (p := p)
       let E := Module.End (MonoidAlgebra (ZMod p) U) ρ.asModule
       (Nat.card E = p ∧ Module.finrank E ρ.asModule = q) ∨
@@ -8979,7 +8977,7 @@ private theorem theorem_9_7_schurEndFieldFullData_of_commutative_barU_sec9
   letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
     quotientMulDistribMulAction (A := U) (G := MF)
       (H0.subgroupOf MF) hH0inv
-  let ρ := Theory.Representation.ofElementaryAbelianAction (A := U)
+  let ρ := Representation.ofElementaryAbelianAction (A := U)
     (G := MF ⧸ H0.subgroupOf MF) (p := p)
   let E := Module.End (MonoidAlgebra (ZMod p) U) ρ.asModule
   change Nat.card E = p ^ q ∧ Module.finrank E ρ.asModule = 1
@@ -8987,7 +8985,7 @@ private theorem theorem_9_7_schurEndFieldFullData_of_commutative_barU_sec9
     simpa [ρ] using hirredRep
   letI : Representation.IsIrreducible ρ := hρirr
   haveI : FiniteDimensional (ZMod p) (Additive (MF ⧸ H0.subgroupOf MF)) :=
-    finiteDimensional_of_irreducible_finite_group ρ hρirr
+    _root_.finiteDimensional_of_irreducible_finite_group ρ hρirr
   have hCkerEnd :
       C.subgroupOf U = (endFieldRep ρ).ker := by
     simpa [ρ] using
@@ -9501,7 +9499,7 @@ private theorem theorem_9_7_additive_span_units_of_irreducible_scalar_action_sec
     [IsElementaryAbelian p Q] [MulDistribMulAction A Q]
     (hirred :
       Representation.IsIrreducible
-        (Theory.Representation.ofElementaryAbelianAction (A := A) (G := Q) (p := p)))
+        (Representation.ofElementaryAbelianAction (A := A) (G := Q) (p := p)))
     (Ustar : Subgroup Fˣ)
     (φ : Additive Q ≃+ F)
     (ψ : A → Ustar)
@@ -9539,7 +9537,7 @@ private theorem theorem_9_7_additive_span_units_of_irreducible_scalar_action_sec
   let Padd : AddSubgroup (Additive Q) := B.comap φ.toAddMonoidHom
   let Psub : Submodule (ZMod p) (Additive Q) :=
     AddSubgroup.toZModSubmodule (n := p) Padd
-  let ρ := Theory.Representation.ofElementaryAbelianAction (A := A) (G := Q) (p := p)
+  let ρ := Representation.ofElementaryAbelianAction (A := A) (G := Q) (p := p)
   let R : Subrepresentation ρ :=
     { toSubmodule := Psub
       apply_mem_toSubmodule := by
@@ -9807,7 +9805,7 @@ private theorem
                               quotientMulDistribMulAction (A := U) (G := MF)
                                 (H0.subgroupOf MF) hH0invU
                             Representation.IsIrreducible
-                              (Theory.Representation.ofElementaryAbelianAction (A := U)
+                              (Representation.ofElementaryAbelianAction (A := U)
                                 (G := MF ⧸ H0.subgroupOf MF) (p := p))) →
                           (hnormalC : (C.subgroupOf U).Normal) →
                             (letI : (C.subgroupOf U).Normal := hnormalC
@@ -9905,7 +9903,7 @@ private theorem
                               quotientMulDistribMulAction (A := U) (G := MF)
                                 (H0.subgroupOf MF) hH0invU
                             Representation.IsIrreducible
-                              (Theory.Representation.ofElementaryAbelianAction (A := U)
+                              (Representation.ofElementaryAbelianAction (A := U)
                                 (G := MF ⧸ H0.subgroupOf MF) (p := p))) →
                           (hnormalC : (C.subgroupOf U).Normal) →
                             (letI : (C.subgroupOf U).Normal := hnormalC
@@ -10160,7 +10158,7 @@ private theorem
                               quotientMulDistribMulAction (A := U) (G := MF)
                                 (H0.subgroupOf MF) hH0invU
                             Representation.IsIrreducible
-                              (Theory.Representation.ofElementaryAbelianAction (A := U)
+                              (Representation.ofElementaryAbelianAction (A := U)
                                 (G := MF ⧸ H0.subgroupOf MF) (p := p))) →
                           (hnormalC : (C.subgroupOf U).Normal) →
                             (letI : (C.subgroupOf U).Normal := hnormalC
@@ -10445,7 +10443,7 @@ private theorem
                               quotientMulDistribMulAction (A := U) (G := MF)
                                 (H0.subgroupOf MF) hH0invU
                             Representation.IsIrreducible
-                              (Theory.Representation.ofElementaryAbelianAction (A := U)
+                              (Representation.ofElementaryAbelianAction (A := U)
                                 (G := MF ⧸ H0.subgroupOf MF) (p := p))) →
     theorem_9_7_schurEndFieldData_sec9 MF H0 U p
       hpprime hnormalH0 hUnormMF hH0invU hbarElem →
@@ -10462,7 +10460,7 @@ private theorem
                                 (MF ⧸ H0.subgroupOf MF) :=
                               quotientMulDistribMulAction (A := U) (G := MF)
                                 (H0.subgroupOf MF) hH0invU
-                            let ρ := Theory.Representation.ofElementaryAbelianAction (A := U)
+                            let ρ := Representation.ofElementaryAbelianAction (A := U)
                               (G := MF ⧸ H0.subgroupOf MF) (p := p)
                             let E := Module.End (MonoidAlgebra (ZMod p) U) ρ.asModule
                             let A := Module.End E ρ.asModule
@@ -10491,14 +10489,14 @@ private theorem
   letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
     quotientMulDistribMulAction (A := U) (G := MF)
       (H0.subgroupOf MF) hH0invU
-  let ρ := Theory.Representation.ofElementaryAbelianAction (A := U)
+  let ρ := Representation.ofElementaryAbelianAction (A := U)
     (G := MF ⧸ H0.subgroupOf MF) (p := p)
   let E := Module.End (MonoidAlgebra (ZMod p) U) ρ.asModule
   have hρirr : Representation.IsIrreducible ρ := by
     simpa [ρ] using hirredRep
   letI : Representation.IsIrreducible ρ := hρirr
   haveI : FiniteDimensional (ZMod p) (Additive (MF ⧸ H0.subgroupOf MF)) :=
-    finiteDimensional_of_irreducible_finite_group ρ hρirr
+    _root_.finiteDimensional_of_irreducible_finite_group ρ hρirr
   letI : Field E := endField_field ρ
   letI : Fintype E := Fintype.ofFinite E
   letI : Module E ρ.asModule := endFieldModule ρ
@@ -10705,7 +10703,7 @@ private theorem
         simp [xinv, hConj,
           Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe, mul_assoc]
       dsimp [ρ]
-      rw [Theory.Representation.ofElementaryAbelianAction_apply_ofMul]
+      rw [Representation.ofElementaryAbelianAction_apply_ofMul]
       exact congrArg Additive.ofMul hact
     have hrep :
         ((T : A) m) =
@@ -10794,7 +10792,7 @@ private theorem
                               quotientMulDistribMulAction (A := U) (G := MF)
                                 (H0.subgroupOf MF) hH0invU
                             Representation.IsIrreducible
-                              (Theory.Representation.ofElementaryAbelianAction (A := U)
+                              (Representation.ofElementaryAbelianAction (A := U)
                                 (G := MF ⧸ H0.subgroupOf MF) (p := p))) →
     theorem_9_7_schurEndFieldData_sec9 MF H0 U p
       hpprime hnormalH0 hUnormMF hH0invU hbarElem →
@@ -10807,7 +10805,7 @@ private theorem
                               (MF ⧸ H0.subgroupOf MF) :=
                             quotientMulDistribMulAction (A := U) (G := MF)
                               (H0.subgroupOf MF) hH0invU
-                          let ρ := Theory.Representation.ofElementaryAbelianAction (A := U)
+                          let ρ := Representation.ofElementaryAbelianAction (A := U)
                             (G := MF ⧸ H0.subgroupOf MF) (p := p)
                           let E := Module.End (MonoidAlgebra (ZMod p) U) ρ.asModule
                           (Nat.card E = p ∧ Module.finrank E ρ.asModule = q) ∨
@@ -10824,7 +10822,7 @@ private theorem
                                 (MF ⧸ H0.subgroupOf MF) :=
                               quotientMulDistribMulAction (A := U) (G := MF)
                                 (H0.subgroupOf MF) hH0invU
-                            let ρ := Theory.Representation.ofElementaryAbelianAction (A := U)
+                            let ρ := Representation.ofElementaryAbelianAction (A := U)
                               (G := MF ⧸ H0.subgroupOf MF) (p := p)
                             let E := Module.End (MonoidAlgebra (ZMod p) U) ρ.asModule
                             let A := Module.End E ρ.asModule
@@ -10902,7 +10900,7 @@ private theorem
                               quotientMulDistribMulAction (A := U) (G := MF)
                                 (H0.subgroupOf MF) hH0invU
                             Representation.IsIrreducible
-                              (Theory.Representation.ofElementaryAbelianAction (A := U)
+                              (Representation.ofElementaryAbelianAction (A := U)
                                 (G := MF ⧸ H0.subgroupOf MF) (p := p))) →
     theorem_9_7_schurEndFieldData_sec9 MF H0 U p
       hpprime hnormalH0 hUnormMF hH0invU hbarElem →
@@ -10915,7 +10913,7 @@ private theorem
                               (MF ⧸ H0.subgroupOf MF) :=
                             quotientMulDistribMulAction (A := U) (G := MF)
                               (H0.subgroupOf MF) hH0invU
-                          let ρ := Theory.Representation.ofElementaryAbelianAction (A := U)
+                          let ρ := Representation.ofElementaryAbelianAction (A := U)
                             (G := MF ⧸ H0.subgroupOf MF) (p := p)
                           let E := Module.End (MonoidAlgebra (ZMod p) U) ρ.asModule
                           (Nat.card E = p ∧ Module.finrank E ρ.asModule = q) ∨
@@ -10941,7 +10939,7 @@ private theorem
   letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
     quotientMulDistribMulAction (A := U) (G := MF)
       (H0.subgroupOf MF) hH0invU
-  let ρ := Theory.Representation.ofElementaryAbelianAction (A := U)
+  let ρ := Representation.ofElementaryAbelianAction (A := U)
     (G := MF ⧸ H0.subgroupOf MF) (p := p)
   have hCkerEnd :
       C.subgroupOf U = ((endFieldRep ρ).toHomUnits).ker := by
@@ -10959,7 +10957,7 @@ private theorem
       letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
         quotientMulDistribMulAction (A := U) (G := MF)
           (H0.subgroupOf MF) hH0invU
-      let ρ := Theory.Representation.ofElementaryAbelianAction (A := U)
+      let ρ := Representation.ofElementaryAbelianAction (A := U)
         (G := MF ⧸ H0.subgroupOf MF) (p := p)
       let E := Module.End (MonoidAlgebra (ZMod p) U) ρ.asModule
       let A := Module.End E ρ.asModule
@@ -11034,7 +11032,7 @@ private theorem
                               quotientMulDistribMulAction (A := U) (G := MF)
                                 (H0.subgroupOf MF) hH0invU
                             Representation.IsIrreducible
-                              (Theory.Representation.ofElementaryAbelianAction (A := U)
+                              (Representation.ofElementaryAbelianAction (A := U)
                                 (G := MF ⧸ H0.subgroupOf MF) (p := p))) →
     theorem_9_7_schurEndFieldData_sec9 MF H0 U p
       hpprime hnormalH0 hUnormMF hH0invU hbarElem →
@@ -11047,7 +11045,7 @@ private theorem
                               (MF ⧸ H0.subgroupOf MF) :=
                             quotientMulDistribMulAction (A := U) (G := MF)
                               (H0.subgroupOf MF) hH0invU
-                          let ρ := Theory.Representation.ofElementaryAbelianAction (A := U)
+                          let ρ := Representation.ofElementaryAbelianAction (A := U)
                             (G := MF ⧸ H0.subgroupOf MF) (p := p)
                           let E := Module.End (MonoidAlgebra (ZMod p) U) ρ.asModule
                           (Nat.card E = p ∧ Module.finrank E ρ.asModule = q) ∨
@@ -11126,7 +11124,7 @@ private theorem
                               quotientMulDistribMulAction (A := U) (G := MF)
                                 (H0.subgroupOf MF) hH0invU
                             Representation.IsIrreducible
-                              (Theory.Representation.ofElementaryAbelianAction (A := U)
+                              (Representation.ofElementaryAbelianAction (A := U)
                                 (G := MF ⧸ H0.subgroupOf MF) (p := p))) →
     theorem_9_7_schurEndFieldData_sec9 MF H0 U p
       hpprime hnormalH0 hUnormMF hH0invU hbarElem →
@@ -11139,7 +11137,7 @@ private theorem
                               (MF ⧸ H0.subgroupOf MF) :=
                             quotientMulDistribMulAction (A := U) (G := MF)
                               (H0.subgroupOf MF) hH0invU
-                          let ρ := Theory.Representation.ofElementaryAbelianAction (A := U)
+                          let ρ := Representation.ofElementaryAbelianAction (A := U)
                             (G := MF ⧸ H0.subgroupOf MF) (p := p)
                           let E := Module.End (MonoidAlgebra (ZMod p) U) ρ.asModule
                           (Nat.card E = p ∧ Module.finrank E ρ.asModule = q) ∨
@@ -11364,7 +11362,7 @@ private theorem
                               quotientMulDistribMulAction (A := U) (G := MF)
                                 (H0.subgroupOf MF) hH0invU
                             Representation.IsIrreducible
-                              (Theory.Representation.ofElementaryAbelianAction (A := U)
+                              (Representation.ofElementaryAbelianAction (A := U)
                                 (G := MF ⧸ H0.subgroupOf MF) (p := p))) →
                           theorem_9_7_schurEndFieldData_sec9 MF H0 U p
                             hpprime hnormalH0 hUnormMF hH0invU hbarElem →
@@ -11377,7 +11375,7 @@ private theorem
                               (MF ⧸ H0.subgroupOf MF) :=
                             quotientMulDistribMulAction (A := U) (G := MF)
                               (H0.subgroupOf MF) hH0invU
-                          let ρ := Theory.Representation.ofElementaryAbelianAction (A := U)
+                          let ρ := Representation.ofElementaryAbelianAction (A := U)
                             (G := MF ⧸ H0.subgroupOf MF) (p := p)
                           let E := Module.End (MonoidAlgebra (ZMod p) U) ρ.asModule
                           (Nat.card E = p ∧ Module.finrank E ρ.asModule = q) ∨
@@ -11461,7 +11459,7 @@ private theorem
                               quotientMulDistribMulAction (A := U) (G := MF)
                                 (H0.subgroupOf MF) hH0invU
                             Representation.IsIrreducible
-                              (Theory.Representation.ofElementaryAbelianAction (A := U)
+                              (Representation.ofElementaryAbelianAction (A := U)
                                 (G := MF ⧸ H0.subgroupOf MF) (p := p))) →
                           theorem_9_7_schurEndFieldData_sec9 MF H0 U p
                             hpprime hnormalH0 hUnormMF hH0invU hbarElem →
@@ -11474,7 +11472,7 @@ private theorem
                               (MF ⧸ H0.subgroupOf MF) :=
                             quotientMulDistribMulAction (A := U) (G := MF)
                               (H0.subgroupOf MF) hH0invU
-                          let ρ := Theory.Representation.ofElementaryAbelianAction (A := U)
+                          let ρ := Representation.ofElementaryAbelianAction (A := U)
                             (G := MF ⧸ H0.subgroupOf MF) (p := p)
                           let E := Module.End (MonoidAlgebra (ZMod p) U) ρ.asModule
                           (Nat.card E = p ∧ Module.finrank E ρ.asModule = q) ∨
@@ -11574,7 +11572,7 @@ private theorem
                               quotientMulDistribMulAction (A := U) (G := MF)
                                 (H0.subgroupOf MF) hH0invU
                             Representation.IsIrreducible
-                              (Theory.Representation.ofElementaryAbelianAction (A := U)
+                              (Representation.ofElementaryAbelianAction (A := U)
                                 (G := MF ⧸ H0.subgroupOf MF) (p := p))) →
                           theorem_9_7_schurEndFieldData_sec9 MF H0 U p
                             hpprime hnormalH0 hUnormMF hH0invU hbarElem →
@@ -11587,7 +11585,7 @@ private theorem
                               (MF ⧸ H0.subgroupOf MF) :=
                             quotientMulDistribMulAction (A := U) (G := MF)
                               (H0.subgroupOf MF) hH0invU
-                          let ρ := Theory.Representation.ofElementaryAbelianAction (A := U)
+                          let ρ := Representation.ofElementaryAbelianAction (A := U)
                             (G := MF ⧸ H0.subgroupOf MF) (p := p)
                           let E := Module.End (MonoidAlgebra (ZMod p) U) ρ.asModule
                           (Nat.card E = p ∧ Module.finrank E ρ.asModule = q) ∨
@@ -11693,7 +11691,7 @@ private theorem
                               quotientMulDistribMulAction (A := U) (G := MF)
                                 (H0.subgroupOf MF) hH0invU
                             Representation.IsIrreducible
-                              (Theory.Representation.ofElementaryAbelianAction (A := U)
+                              (Representation.ofElementaryAbelianAction (A := U)
                                 (G := MF ⧸ H0.subgroupOf MF) (p := p))) →
                           theorem_9_7_schurEndFieldData_sec9 MF H0 U p
                             hpprime hnormalH0 hUnormMF hH0invU hbarElem →
@@ -11706,7 +11704,7 @@ private theorem
                               (MF ⧸ H0.subgroupOf MF) :=
                             quotientMulDistribMulAction (A := U) (G := MF)
                               (H0.subgroupOf MF) hH0invU
-                          let ρ := Theory.Representation.ofElementaryAbelianAction (A := U)
+                          let ρ := Representation.ofElementaryAbelianAction (A := U)
                             (G := MF ⧸ H0.subgroupOf MF) (p := p)
                           let E := Module.End (MonoidAlgebra (ZMod p) U) ρ.asModule
                           (Nat.card E = p ∧ Module.finrank E ρ.asModule = q) ∨
@@ -11867,7 +11865,7 @@ private theorem theorem_9_7_schur_field_model_raw_from_elementary_irreducible_ho
                               quotientMulDistribMulAction (A := U) (G := MF)
                                 (H0.subgroupOf MF) hH0invU
                             Representation.IsIrreducible
-                              (Theory.Representation.ofElementaryAbelianAction (A := U)
+                              (Representation.ofElementaryAbelianAction (A := U)
                                 (G := MF ⧸ H0.subgroupOf MF) (p := p))) →
                           theorem_9_7_schurEndFieldData_sec9 MF H0 U p
                             hpprime hnormalH0 hUnormMF hH0invU hbarElem →
@@ -11880,7 +11878,7 @@ private theorem theorem_9_7_schur_field_model_raw_from_elementary_irreducible_ho
                               (MF ⧸ H0.subgroupOf MF) :=
                             quotientMulDistribMulAction (A := U) (G := MF)
                               (H0.subgroupOf MF) hH0invU
-                          let ρ := Theory.Representation.ofElementaryAbelianAction (A := U)
+                          let ρ := Representation.ofElementaryAbelianAction (A := U)
                             (G := MF ⧸ H0.subgroupOf MF) (p := p)
                           let E := Module.End (MonoidAlgebra (ZMod p) U) ρ.asModule
                           (Nat.card E = p ∧ Module.finrank E ρ.asModule = q) ∨
@@ -11964,7 +11962,7 @@ private theorem theorem_9_7_schur_field_model_from_elementary_irreducible_hom_so
                               quotientMulDistribMulAction (A := U) (G := MF)
                                 (H0.subgroupOf MF) hH0invU
                             Representation.IsIrreducible
-                              (Theory.Representation.ofElementaryAbelianAction (A := U)
+                              (Representation.ofElementaryAbelianAction (A := U)
                                 (G := MF ⧸ H0.subgroupOf MF) (p := p))) →
                           theorem_9_7_schurEndFieldData_sec9 MF H0 U p
                             hpprime hnormalH0 hUnormMF hH0invU hbarElem →
@@ -11977,7 +11975,7 @@ private theorem theorem_9_7_schur_field_model_from_elementary_irreducible_hom_so
                               (MF ⧸ H0.subgroupOf MF) :=
                             quotientMulDistribMulAction (A := U) (G := MF)
                               (H0.subgroupOf MF) hH0invU
-                          let ρ := Theory.Representation.ofElementaryAbelianAction (A := U)
+                          let ρ := Representation.ofElementaryAbelianAction (A := U)
                             (G := MF ⧸ H0.subgroupOf MF) (p := p)
                           let E := Module.End (MonoidAlgebra (ZMod p) U) ρ.asModule
                           (Nat.card E = p ∧ Module.finrank E ρ.asModule = q) ∨
@@ -12116,7 +12114,7 @@ private theorem theorem_9_7_schur_field_model_from_elementary_irreducible_source
                               quotientMulDistribMulAction (A := U) (G := MF)
                                 (H0.subgroupOf MF) hH0invU
                             Representation.IsIrreducible
-                              (Theory.Representation.ofElementaryAbelianAction (A := U)
+                              (Representation.ofElementaryAbelianAction (A := U)
                                 (G := MF ⧸ H0.subgroupOf MF) (p := p))) →
                           theorem_9_7_schurEndFieldData_sec9 MF H0 U p
                             hpprime hnormalH0 hUnormMF hH0invU hbarElem →
@@ -12129,7 +12127,7 @@ private theorem theorem_9_7_schur_field_model_from_elementary_irreducible_source
                               (MF ⧸ H0.subgroupOf MF) :=
                             quotientMulDistribMulAction (A := U) (G := MF)
                               (H0.subgroupOf MF) hH0invU
-                          let ρ := Theory.Representation.ofElementaryAbelianAction (A := U)
+                          let ρ := Representation.ofElementaryAbelianAction (A := U)
                             (G := MF ⧸ H0.subgroupOf MF) (p := p)
                           let E := Module.End (MonoidAlgebra (ZMod p) U) ρ.asModule
                           (Nat.card E = p ∧ Module.finrank E ρ.asModule = q) ∨
@@ -12304,7 +12302,7 @@ private theorem theorem_9_7_irreducible_field_model_data_source_bridge_sec9
     Finite.one_lt_card_iff_nontrivial.mp hbarCardOneLt
   have hirredRep :
       Representation.IsIrreducible
-        (Theory.Representation.ofElementaryAbelianAction (A := U)
+        (Representation.ofElementaryAbelianAction (A := U)
           (G := MF ⧸ H0.subgroupOf MF) (p := p)) := by
     exact
       theorem_9_7_irreducible_representation_of_quotientIrreducible_sec9
@@ -12322,7 +12320,7 @@ private theorem theorem_9_7_irreducible_field_model_data_source_bridge_sec9
       letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
         quotientMulDistribMulAction (A := U) (G := MF)
           (H0.subgroupOf MF) hH0invU
-      let ρ := Theory.Representation.ofElementaryAbelianAction (A := U)
+      let ρ := Representation.ofElementaryAbelianAction (A := U)
         (G := MF ⧸ H0.subgroupOf MF) (p := p)
       let E := Module.End (MonoidAlgebra (ZMod p) U) ρ.asModule
       Nat.card E = p ∨ Nat.card E = p ^ q) :=
@@ -12336,7 +12334,7 @@ private theorem theorem_9_7_irreducible_field_model_data_source_bridge_sec9
       letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
         quotientMulDistribMulAction (A := U) (G := MF)
           (H0.subgroupOf MF) hH0invU
-      let ρ := Theory.Representation.ofElementaryAbelianAction (A := U)
+      let ρ := Representation.ofElementaryAbelianAction (A := U)
         (G := MF ⧸ H0.subgroupOf MF) (p := p)
       let E := Module.End (MonoidAlgebra (ZMod p) U) ρ.asModule
       (Nat.card E = p ∧ Module.finrank E ρ.asModule = q) ∨

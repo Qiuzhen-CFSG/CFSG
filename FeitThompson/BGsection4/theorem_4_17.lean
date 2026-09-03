@@ -3,10 +3,8 @@ public import FeitThompson.BGsection3.Defs
 import Theory.Representation.ElementaryAbelianAction
 public import FeitThompson.GeneratorRank
 public import FeitThompson.BGsection4.gorenstein_5_4_15
-open Theory.Representation
+open Representation
 
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 /-! # Theorem 4.17 from BG Section 4 -/
@@ -38,7 +36,7 @@ private theorem derivedSubgroup_isPGroup_of_faithful_elementaryAbelian_card_le_p
       ⟨fun _ _ => FaithfulSMul.eq_of_smul_eq_smul (α := V) fun _ => Subsingleton.elim _ _⟩
     let : Subsingleton B := hBsub
     have hD_bot : derivedSubgroup B = ⊥ := by
-      apply eq_bot_iff.2
+      apply _root_.eq_bot_iff.2
       intro x _hx
       exact Subsingleton.elim x 1
     rw [hD_bot]
@@ -76,7 +74,7 @@ private theorem derivedSubgroup_isPGroup_of_faithful_elementaryAbelian_card_le_p
   · have hVcardp2 : Nat.card V = p ^ 2 := by simpa using hn
     let : CommGroup V := IsMulCommutative.instCommGroup
     let ρ : Representation (ZMod p) B (Additive V) :=
-      Theory.Representation.ofElementaryAbelianAction (A := B) (G := V) (p := p)
+      Representation.ofElementaryAbelianAction (A := B) (G := V) (p := p)
     have hρinj : Function.Injective ρ := by
       intro a b hab
       apply FaithfulSMul.eq_of_smul_eq_smul (α := V)
@@ -124,7 +122,7 @@ public theorem theorem_4_17 {R A : Type*} [Group R] [Finite R] [Group A] [Finite
       ⟨fun _ _ => FaithfulSMul.eq_of_smul_eq_smul (α := R) fun _ => Subsingleton.elim _ _⟩
     let : Subsingleton A := hAsub
     have hD_bot : derivedSubgroup A = ⊥ := by
-      apply eq_bot_iff.2
+      apply _root_.eq_bot_iff.2
       intro x _hx
       exact Subsingleton.elim x 1
     rw [hD_bot]

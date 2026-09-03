@@ -3,7 +3,6 @@ module
 public import BenderSuzuki.SE.Section11Proposition111Transport
 public import BenderSuzuki.SE.Section10Proposition102Final
 public import BenderSuzuki.SE.Section10Lemma101
-open Theory.GroupAction
 
 
 /-!

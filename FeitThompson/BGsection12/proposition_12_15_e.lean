@@ -1,7 +1,6 @@
 module
 
 public import FeitThompson.BGsection12.proposition_12_15_d
-open Theory.ElementaryAbelian
 
 
 open scoped Pointwise

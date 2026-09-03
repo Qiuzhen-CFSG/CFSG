@@ -4,7 +4,6 @@ public import GorensteinWalter.BrauerSuzukiWallStructure
 
 import all GorensteinWalter.BrauerSuzukiWallStructure
 import Mathlib.Tactic
-open Theory.GroupAction
 
 
 /-!

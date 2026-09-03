@@ -7,9 +7,9 @@ public import Mathlib.RepresentationTheory.Irreducible
 open _root_.Representation
 open scoped MonoidAlgebra
 
-variable {α β : Type*} [PartialOrder α] [PartialOrder β]
 
-theorem OrderIso.isAtomistic_of_isAtomistic [OrderBot α] [OrderBot β] (f : α ≃o β)
+theorem OrderIso.isAtomistic_of_isAtomistic {α β : Type*} [PartialOrder α] [PartialOrder β]
+    [OrderBot α] [OrderBot β] (f : α ≃o β)
     : IsAtomistic α → IsAtomistic β :=
   fun hα =>
     ⟨fun b => by
@@ -31,27 +31,30 @@ namespace Subrepresentation
 
 section completeLattice
 
-variable {F G V : Type*} [CommRing F] [Monoid G] [AddCommMonoid V] [Module F V]
-  {ρ : Representation F G V}
-
-instance : InfSet (Subrepresentation ρ) :=
+instance {F G V : Type*} [CommRing F] [Monoid G] [AddCommMonoid V] [Module F V]
+    {ρ : Representation F G V} : InfSet (Subrepresentation ρ) :=
   ⟨fun S ↦
     Subrepresentation.mk (⨅ s ∈ S, s.toSubmodule)
     <| fun g v hv => by
         simp only [Submodule.mem_iInf] at ⊢ hv
         exact fun s hs => s.apply_mem_toSubmodule g (hv s hs)⟩
 
-theorem sInf_le' {S : Set (Subrepresentation ρ)} {p} : p ∈ S → sInf S ≤ p :=
+theorem sInf_le' {F G V : Type*} [CommRing F] [Monoid G] [AddCommMonoid V] [Module F V]
+    {ρ : Representation F G V} {S : Set (Subrepresentation ρ)} {p} :
+    p ∈ S → sInf S ≤ p :=
   fun hp => by
     suffices h : (⨅ s ∈ S, s.toSubmodule) ≤ p.toSubmodule by exact le_of_le_of_eq h rfl
     exact iInf₂_le p hp
 
-theorem le_sInf' {S : Set (Subrepresentation ρ)} {p} : (∀ q ∈ S, p ≤ q) → p ≤ sInf S :=
+theorem le_sInf' {F G V : Type*} [CommRing F] [Monoid G] [AddCommMonoid V] [Module F V]
+    {ρ : Representation F G V} {S : Set (Subrepresentation ρ)} {p} :
+    (∀ q ∈ S, p ≤ q) → p ≤ sInf S :=
   fun hq => by
     suffices h : p.toSubmodule ≤ (⨅ s ∈ S, s.toSubmodule) by exact le_of_le_of_eq h rfl
     exact le_iInf₂_iff.mpr hq
 
-instance completeLattice : CompleteLattice (Subrepresentation ρ) :=
+instance completeLattice {F G V : Type*} [CommRing F] [Monoid G] [AddCommMonoid V]
+    [Module F V] {ρ : Representation F G V} : CompleteLattice (Subrepresentation ρ) :=
   {
     (inferInstance : OrderTop (Subrepresentation ρ)),
     (inferInstance : OrderBot (Subrepresentation ρ)) with
@@ -72,10 +75,9 @@ end completeLattice
 
 section Nontrivial
 
-variable {F G V : Type*} [CommRing F] [Monoid G] [AddCommMonoid V] [Module F V]
-  {ρ : Representation F G V}
-
-instance module_nontrival [Nontrivial V] : Nontrivial (Subrepresentation ρ) where
+instance module_nontrival {F G V : Type*} [CommRing F] [Monoid G] [AddCommMonoid V]
+    [Module F V] {ρ : Representation F G V} [Nontrivial V] :
+    Nontrivial (Subrepresentation ρ) where
   exists_pair_ne :=
     ⟨
       ⊤,
@@ -87,10 +89,9 @@ instance module_nontrival [Nontrivial V] : Nontrivial (Subrepresentation ρ) whe
         exact fun a ↦ this (congrArg _ a)
     ⟩
 
-variable {F G V : Type*} [Field F] [Monoid G] [AddCommGroup V] [Module F V]
-  (ρ : Representation F G V)
-
-theorem irreducible_module_nontrivial [inst : IsIrreducible ρ] : Nontrivial V where
+theorem irreducible_module_nontrivial {F G V : Type*} [Field F] [Monoid G]
+    [AddCommGroup V] [Module F V] (ρ : Representation F G V)
+    [inst : IsIrreducible ρ] : Nontrivial V where
   exists_pair_ne := by
     by_contra! h
     exact inst.bot_ne_top (isMax_iff_eq_top.mp fun _ _ x _ ↦ h x 0)
@@ -99,10 +100,9 @@ end Nontrivial
 
 section IsAtomic
 
-variable {F G V : Type*} [Field F] [Monoid G] [AddCommGroup V] [Module F V]
-  {ρ : Representation F G V} (φ : Subrepresentation ρ)
-
-theorem irreducible_iff_isAtom : IsIrreducible φ.toRepresentation ↔ IsAtom φ := by
+theorem irreducible_iff_isAtom {F G V : Type*} [Field F] [Monoid G]
+    [AddCommGroup V] [Module F V] {ρ : Representation F G V} (φ : Subrepresentation ρ) :
+    IsIrreducible φ.toRepresentation ↔ IsAtom φ := by
   unfold IsIrreducible
   rw [isSimpleOrder_iff_isAtom_top]
   let f : (Set.Iic φ) ≃o (Subrepresentation φ.toRepresentation) := {
@@ -144,9 +144,10 @@ theorem irreducible_iff_isAtom : IsIrreducible φ.toRepresentation ↔ IsAtom φ
     rw [← this, OrderIso.isAtom_iff]
     exact h
 
-variable [FiniteDimensional F V]
 
-instance isAtomic_of_finite_dimensional : IsAtomic (Subrepresentation ρ) := by
+instance isAtomic_of_finite_dimensional {F G V : Type*} [Field F] [Monoid G]
+    [AddCommGroup V] [Module F V] [FiniteDimensional F V] {ρ : Representation F G V} :
+    IsAtomic (Subrepresentation ρ) := by
   refine ⟨?_⟩
   intro φ
   by_cases hφ : φ = ⊥
@@ -162,16 +163,19 @@ instance isAtomic_of_finite_dimensional : IsAtomic (Subrepresentation ρ) := by
   exact Nat.find_min hp (hψdim ▸ Submodule.finrank_lt_finrank_of_lt hχlt)
     ⟨χ, le_trans (le_of_lt hχlt) hψle, h, rfl⟩
 
-theorem irreducible_subrepresentation_of_finite_dimensional (ρ : Representation F G V)
+theorem irreducible_subrepresentation_of_finite_dimensional
+    {F G V : Type*} [Field F] [Monoid G] [AddCommGroup V] [Module F V]
+    [FiniteDimensional F V] (ρ : Representation F G V)
     [Nontrivial V]
     : ∃ (φ : Subrepresentation ρ), IsIrreducible φ.toRepresentation := by
   rcases IsAtomic.exists_atom (Subrepresentation ρ) with ⟨φ, hφ⟩
   exact ⟨φ, (irreducible_iff_isAtom φ).mpr hφ⟩
 
-variable [IsSemisimpleRing F[G]]
 
 set_option backward.isDefEq.respectTransparency false in
 instance isAtomistic_of_finite_dimensional_semisimple
+    {F G V : Type*} [Field F] [Monoid G] [AddCommGroup V] [Module F V]
+    [FiniteDimensional F V] {ρ : Representation F G V} [IsSemisimpleRing F[G]]
     : IsAtomistic (Subrepresentation ρ) :=
   OrderIso.isAtomistic_of_isAtomistic subrepresentationSubmoduleOrderIso.symm
     inferInstance

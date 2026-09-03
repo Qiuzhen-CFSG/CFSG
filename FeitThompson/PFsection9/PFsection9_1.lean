@@ -3,8 +3,6 @@ module
 import FeitThompson.BGsection3.Remaining
 import FeitThompson.Wielandt
 public import FeitThompson.PFsection9.Basic
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 noncomputable section
@@ -243,11 +241,11 @@ public theorem theorem_9_1_ofElementaryAbelianAction_irreducible_of_minimal_inva
     (hminv : ∀ N : Subgroup M, N.Normal → IsInvariant A M N → N ≠ ⊥ → N = ⊤) :
     letI : CommGroup M := IsMulCommutative.instCommGroup
     Representation.IsIrreducible
-      (Theory.Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p) :
+      (Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p) :
         Representation (ZMod p) A (Additive M)) := by
   letI : CommGroup M := IsMulCommutative.instCommGroup
   let ρ : Representation (ZMod p) A (Additive M) :=
-    Theory.Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p)
+    Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p)
   refine
     { toNontrivial := inferInstance
       eq_bot_or_eq_top := ?_ }
@@ -260,7 +258,7 @@ public theorem theorem_9_1_ofElementaryAbelianAction_irreducible_of_minimal_inva
         change Additive.ofMul x ∈ S.toSubmodule at hx
         exact hx
       have hx'' := S.apply_mem_toSubmodule a hx'
-      simpa [ρ, Theory.Representation.ofElementaryAbelianAction_apply_ofMul] using hx''
+      simpa [ρ, Representation.ofElementaryAbelianAction_apply_ofMul] using hx''
     refine { invariant := ?_ }
     intro a x
     constructor
@@ -282,13 +280,13 @@ public theorem theorem_9_1_ofElementaryAbelianAction_irreducible_of_minimal_inva
     · intro hx
       have hx' : x ∈ (⊥ : Submodule (ZMod p) (Additive M)) := by
         let Z : Subrepresentation
-            (Theory.Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p) :
+            (Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p) :
               Representation (ZMod p) A (Additive M)) :=
           { toSubmodule := ⊥
             apply_mem_toSubmodule := by simp }
         have hxZ : x ∈ Z :=
           (show (⊥ : Subrepresentation
-            (Theory.Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p) :
+            (Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p) :
               Representation (ZMod p) A (Additive M))) ≤ Z from bot_le) hx
         exact hxZ
       simpa using hx'

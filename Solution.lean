@@ -1,16 +1,14 @@
 module
 
-public import Theory.Comparator.Defs
 public import Mathlib.GroupTheory.SpecificGroups.Dihedral
 public import Mathlib.GroupTheory.Sylow
-import BenderSuzuki.FinalTheorem
+public import BenderSuzuki.FinalTheorem
 import GorensteinWalter.FinalTheorem
 
 noncomputable section
 
 open Matrix
 open GorensteinWalter
-open Theory.Comparator
 open scoped MatrixGroups
 
 universe u

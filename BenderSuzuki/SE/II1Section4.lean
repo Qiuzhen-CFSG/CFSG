@@ -8,8 +8,6 @@ public import FeitThompson.BGsection4.lemma_4_5_a
 import FeitThompson.FinalTheorem
 import FeitThompson.GroupAction.CoprimeHall
 import FeitThompson.SubgroupConj
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 /-!

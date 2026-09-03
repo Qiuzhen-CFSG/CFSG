@@ -6,8 +6,6 @@ import FeitThompson.PCore.CentralizerControl
 import FeitThompson.HallSubgroups.Conjugacy
 import Mathlib.Algebra.Group.Subgroup.Order
 import Mathlib.GroupTheory.Schreier
-open Theory.ElementaryAbelian
-open Theory.GroupAction
 
 
 open scoped Pointwise

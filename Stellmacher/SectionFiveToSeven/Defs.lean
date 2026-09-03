@@ -7,7 +7,6 @@ public import FeitThompson.BGsection1.PLengthLemmas
 public import FeitThompson.Gorenstein.Chapter8_2
 public import Mathlib.GroupTheory.IsSubnormal
 public import Mathlib.GroupTheory.Sylow
-open Theory.ElementaryAbelian
 
 open scoped Pointwise
 
@@ -71,7 +70,7 @@ variable {G : Type*} [Group G]
   {P | IsPStarMember U S P}
 
 @[expose] public def IsMaximalTwoLocalContaining (S M : Subgroup G) : Prop :=
-  Theory.Quasithin.IsMaximalTwoLocal M ∧ S ≤ M
+  IsMaximalTwoLocal M ∧ S ≤ M
 
 @[expose] public def UniqueMaximalTwoLocalContaining (S M : Subgroup G) : Prop :=
   IsMaximalTwoLocalContaining S M ∧
@@ -119,10 +118,10 @@ public structure HypothesisOne (H : Type*) [Group H] [Finite H]
   even_order : Even (Nat.card H)
   local_solvable_characteristicTwo :
     ∀ U : Subgroup H,
-      Theory.Quasithin.IsTwoLocal U → (S0 : Subgroup H) ≤ U →
+      IsTwoLocal U → (S0 : Subgroup H) ≤ U →
         Group.IsSolvable U ∧ Stellmacher.IsCharacteristicTwoType U
   twoCore_eq_bot : pCore 2 H = ⊥
-  no_strongly_embedded : ¬ ∃ M : Subgroup H, Theory.Comparator.IsStronglyEmbedded M
+  no_strongly_embedded : ¬ ∃ M : Subgroup H, IsStronglyEmbedded M
 
 public inductive FiveOneAlternative
     (H : Type*) [Group H] [Finite H] (S0 : Sylow 2 H)
@@ -173,7 +172,7 @@ public structure HypothesisTwo (H : Type*) [Group H] [Finite H]
   fiveOne : FiveOneConditions H S0 S P1 P2
   local_B :
     ∀ U : Subgroup H,
-      Theory.Quasithin.IsTwoLocal U → baumannIn S ≤ U →
+      IsTwoLocal U → baumannIn S ≤ U →
         Group.IsSolvable U ∧ Stellmacher.IsCharacteristicTwoType U
 
 /-- Standing assumptions for Section 7.  The graph results use only this

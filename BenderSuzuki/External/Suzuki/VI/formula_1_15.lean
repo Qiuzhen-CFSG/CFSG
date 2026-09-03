@@ -105,8 +105,8 @@ private theorem classCard_mul_commuterCard_eq_groupCard
 public theorem suzuki_ch6_formula_1_15
     {G : Type u} [Group G] [Finite G]
     {ι : Type v} [Fintype ι]
-    (chi : ι → Theory.Character.ConjClassFunction G)
-    (hchi : Theory.Character.IsCompleteIrreducibleCharacterFamily chi)
+    (chi : ι → ConjClassFunction G)
+    (hchi : IsCompleteIrreducibleCharacterFamily chi)
     (Ci Cj Ck : ConjClasses G) (xk : G) (hxk : xk ∈ Ck.carrier) :
     (Nat.card {p : Ci.carrier × Cj.carrier // p.1.1 * p.2.1 = xk} : ℂ) =
       ((Nat.card Ci.carrier : ℂ) * (Nat.card Cj.carrier : ℂ) /
@@ -132,17 +132,17 @@ public theorem suzuki_ch6_formula_1_15
   let rho : (mu : ι) → Representation ℂ G (Fin (n mu) → ℂ) := fun mu =>
     Classical.choose (Classical.choose_spec (hchi.1 mu).1)
   have hchar (mu : ι) :
-      chi mu = Theory.Character.characterClassFunction (rho mu) :=
+      chi mu = characterClassFunction (rho mu) :=
     Classical.choose_spec (Classical.choose_spec (hchi.1 mu).1)
   have hirr (mu : ι) : Representation.IsIrreducible (rho mu) := by
-    apply (Theory.Character.irreducible_iff_character_norm_one (ρ := rho mu)).2
+    apply (irreducible_iff_character_norm_one (ρ := rho mu)).2
     simpa [hchar mu] using (hchi.1 mu).2
   have hchar_out (mu : ι) (C : ConjClasses G) :
       chi mu C = (rho mu).character (Quotient.out C) := by
     calc
       chi mu C = chi mu (ConjClasses.mk (Quotient.out C)) :=
         congrArg (chi mu) (Quotient.out_eq C).symm
-      _ = Theory.Character.characterClassFunction (rho mu)
+      _ = characterClassFunction (rho mu)
           (ConjClasses.mk (Quotient.out C)) := congrFun (hchar mu) _
       _ = (rho mu).character (Quotient.out C) := rfl
   have hchar_one (mu : ι) :
@@ -150,11 +150,11 @@ public theorem suzuki_ch6_formula_1_15
     rw [hchar mu]
     rfl
   have homega (mu : ι) (C : ConjClasses G) :
-      Theory.Character.classSumScalar (ρ := rho mu) C =
+      classSumScalar (ρ := rho mu) C =
         (Nat.card C.carrier : ℂ) * chi mu C /
           chi mu (ConjClasses.mk (1 : G)) := by
     letI : Representation.IsIrreducible (rho mu) := hirr mu
-    have h := Theory.Character.classSumScalar_eq_card_mul_character_div
+    have h := classSumScalar_eq_card_mul_character_div
       (ρ := rho mu) C
       (ConjClasses.mem_carrier_iff_mk_eq.mpr (Quotient.out_eq C))
     rw [hchar_out mu C, hchar_one mu]
@@ -165,7 +165,7 @@ public theorem suzuki_ch6_formula_1_15
     have hpos : 0 < Module.finrank ℂ (Fin (n mu) → ℂ) := by
       letI : Representation.IsIrreducible (rho mu) := hirr mu
       exact (Module.finrank_pos_iff (R := ℂ) (M := Fin (n mu) → ℂ)).2
-        (Theory.Character.irreducible_nontrivial (ρ := rho mu))
+        (irreducible_nontrivial (ρ := rho mu))
     simpa [Representation.character] using
       (show (Module.finrank ℂ (Fin (n mu) → ℂ) : ℂ) ≠ 0 by
         exact_mod_cast hpos.ne')
@@ -177,20 +177,20 @@ public theorem suzuki_ch6_formula_1_15
           (a Ci Cj s : ℂ) * (Nat.card s.carrier : ℂ) *
             chi mu s * star (chi mu Ck) := by
     letI : Representation.IsIrreducible (rho mu) := hirr mu
-    have hs := Theory.Character.classSumScalar_mul_eq_sum_of_coefficients
+    have hs := classSumScalar_mul_eq_sum_of_coefficients
       (ρ := rho mu) a hdata Ci Cj
     have hd := hdegree_ne mu
     calc
       (Nat.card Ci.carrier : ℂ) * (Nat.card Cj.carrier : ℂ) *
           (chi mu Ci * chi mu Cj * star (chi mu Ck) /
             chi mu (ConjClasses.mk (1 : G))) =
-        (Theory.Character.classSumScalar (ρ := rho mu) Ci *
-          Theory.Character.classSumScalar (ρ := rho mu) Cj) *
+        (classSumScalar (ρ := rho mu) Ci *
+          classSumScalar (ρ := rho mu) Cj) *
             chi mu (ConjClasses.mk (1 : G)) * star (chi mu Ck) := by
               rw [homega mu Ci, homega mu Cj]
               field_simp [hd]
       _ = (∑ s : ConjClasses G,
-          (a Ci Cj s : ℂ) * Theory.Character.classSumScalar (ρ := rho mu) s) *
+          (a Ci Cj s : ℂ) * classSumScalar (ρ := rho mu) s) *
             chi mu (ConjClasses.mk (1 : G)) * star (chi mu Ck) := by
               rw [hs]
       _ = ∑ s : ConjClasses G,
@@ -207,7 +207,7 @@ public theorem suzuki_ch6_formula_1_15
       chi mu (ConjClasses.mk xk⁻¹) = star (chi mu Ck) := by
     rw [← hxk_mk, hchar mu]
     change (rho mu).character xk⁻¹ = star ((rho mu).character xk)
-    exact Theory.Representation.representation_character_inv_eq_star_character (rho mu) xk
+    exact Representation.representation_character_inv_eq_star_character (rho mu) xk
   have horth (s : ConjClasses G) :
       (∑ mu : ι, chi mu s * star (chi mu Ck)) =
         if s = Ck then (Nat.card {z : G // z * xk = xk * z} : ℂ) else 0 := by

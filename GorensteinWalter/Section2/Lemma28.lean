@@ -14,7 +14,6 @@ public import GorensteinWalter.MinimalCounterexample
 public import GorensteinWalter.Section1
 import BenderSuzuki.External.Hall.Basic
 import FeitThompson.FinalTheorem
-open Theory.GroupAction
 
 
 /-!

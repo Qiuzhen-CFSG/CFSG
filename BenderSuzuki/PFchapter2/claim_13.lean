@@ -13,7 +13,6 @@ import BenderSuzuki.PFchapter2.claim_1
 import BenderSuzuki.PFchapter2.claim_9
 import FeitThompson.GroupAction.NoncyclicAbelianPGroup
 import Mathlib.Data.Nat.Factorization.PrimePow
-open Theory.GroupAction
 
 
 namespace BenderSuzuki

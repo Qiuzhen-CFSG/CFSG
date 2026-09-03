@@ -5,8 +5,6 @@ import all FeitThompson.BGsection6.Defs
 import FeitThompson.BGsection6.theorem_6_1
 import Theory.Representation.ElementaryAbelianAction
 import FeitThompson.SubgroupConj
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 /-!
@@ -112,8 +110,8 @@ private theorem hasQuadraticMinimalPolynomial_of_square_zero_of_ne_one
 private theorem square_zero_of_kerRepresentation
     {F G V : Type*} [Field F] [Group G] [AddCommGroup V] [Module F V]
     (ρ : Representation F G V) (g : G) (hSq : (ρ g - 1) ^ 2 = 0) :
-    ((Theory.Representation.kerRepresentation ρ) (QuotientGroup.mk' ρ.ker g) - 1) ^ 2 = 0 := by
-  rw [Theory.Representation.kerRepresentation_apply]
+    ((Representation.kerRepresentation ρ) (QuotientGroup.mk' ρ.ker g) - 1) ^ 2 = 0 := by
+  rw [Representation.kerRepresentation_apply]
   exact hSq
 
 private theorem square_zero_of_extendScalars
@@ -1700,9 +1698,9 @@ private theorem gorenstein_3_8_1_false_after_composition_factor
   have : FiniteDimensional F' V' := by
     dsimp [V']
     exact Module.Finite.base_change (R := F) (A := F') (M := V)
-  let ρ' : Representation F' H V' := Theory.Representation.extendScalars F' ρ
+  let ρ' : Representation F' H V' := Representation.extendScalars F' ρ
   have hρ'_faithful : Function.Injective ρ' := by
-    exact (Theory.Representation.extendScalars_faithful_iff F' ρ).mp hρ_faithful
+    exact (Representation.extendScalars_faithful_iff F' ρ).mp hρ_faithful
 
   -- Gorenstein first passes to an algebraically closed coefficient field.
   have hx'_quad : HasQuadraticMinimalPolynomial F' V' (ρ' x) := by
@@ -1793,12 +1791,12 @@ private theorem gorenstein_3_8_1_false_after_composition_factor
   have hσ_irreducible : Representation.IsIrreducible σ := by
     simpa [σ] using hM_irreducible
   have : Representation.IsIrreducible σ := hσ_irreducible
-  let := finiteDimensional_of_irreducible_finite_group (ρ := σ) hσ_irreducible
+  let := _root_.finiteDimensional_of_irreducible_finite_group (ρ := σ) hσ_irreducible
 
   -- The composition factor is then made faithful by quotienting by its kernel.
-  let σq := Theory.Representation.kerRepresentation σ
+  let σq := Representation.kerRepresentation σ
   have hσq_faithful : Function.Injective σq :=
-    Theory.Representation.kerRepresentation_faithful σ
+    Representation.kerRepresentation_faithful σ
   have hσq_irreducible : Representation.IsIrreducible σq := by
     infer_instance
 
@@ -2267,10 +2265,10 @@ private theorem pStable_le_centralizerOfChiefFactor_of_abelianSylowTwo
     hquotSylow.mapSurjective φ.rangeRestrict
       (MonoidHom.rangeRestrict_surjective φ)
   let ρ : Representation (ZMod p) φ.range (Additive Uq) :=
-    Theory.Representation.ofElementaryAbelianAction (A := φ.range) (G := Uq) (p := p)
+    Representation.ofElementaryAbelianAction (A := φ.range) (G := Uq) (p := p)
   have hρ_faithful : Function.Injective ρ := by
     have hρker_bot : ρ.ker = ⊥ := by
-      rw [Theory.Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup]
+      rw [Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup]
       rw [fixingSubgroup_univ_eq_ker_toMulAut]
       exact (MonoidHom.ker_eq_bot_iff (φ.range.subtype)).2 φ.range.subtype_injective
     exact (MonoidHom.ker_eq_bot_iff ρ).1 hρker_bot
@@ -2294,7 +2292,7 @@ private theorem pStable_le_centralizerOfChiefFactor_of_abelianSylowTwo
     exact ⟨m, hm⟩
   have hdev (u : Uq) :
       (ρ z - 1) (Additive.ofMul u) = Additive.ofMul ((z • u) / u) := by
-    rw [LinearMap.sub_apply, Theory.Representation.ofElementaryAbelianAction_apply_ofMul]
+    rw [LinearMap.sub_apply, Representation.ofElementaryAbelianAction_apply_ofMul]
     change Additive.ofMul (z • u) - Additive.ofMul u = Additive.ofMul ((z • u) / u)
     rw [sub_eq_add_neg]
     simp [div_eq_mul_inv]

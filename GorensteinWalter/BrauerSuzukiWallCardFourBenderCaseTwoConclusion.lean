@@ -7,7 +7,6 @@ import GorensteinWalter.OrderThreeNormalizer
 
 import all GorensteinWalter.BrauerSuzukiWallStructure
 import Mathlib.Tactic
-open Theory.GroupAction
 
 
 /-!

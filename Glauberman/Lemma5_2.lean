@@ -10,7 +10,6 @@ public import Theory.GroupAction.NormalComplement
 public import FeitThompson.BGsection10.theorem_10_1_b
 import Mathlib.GroupTheory.Sylow
 import Mathlib.GroupTheory.Index
-open Theory.GroupAction
 
 
 open scoped Pointwise

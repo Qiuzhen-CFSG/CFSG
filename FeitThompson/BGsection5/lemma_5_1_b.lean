@@ -25,8 +25,6 @@ import Theory.Representation.ConjugateRep
 import Theory.Representation.EndFieldRep
 import Theory.Representation.TwoDimensionalOddOrder
 import Mathlib.GroupTheory.Schreier
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 /-! # Lemma 5.1(b) from BG Section 5 -/

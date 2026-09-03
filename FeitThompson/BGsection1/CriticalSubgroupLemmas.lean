@@ -5,7 +5,6 @@ import Mathlib.Data.Nat.Choose.Dvd
 
 public import Theory.GroupAction.Defs
 
-open Theory.GroupAction
 
 open scoped Pointwise commutatorElement
 

@@ -2,8 +2,6 @@ module
 
 public import Stellmacher.FinalTheorem
 public import Theory.ElementaryAbelian.Extraspecial
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 /-!

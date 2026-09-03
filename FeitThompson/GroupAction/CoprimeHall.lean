@@ -7,7 +7,6 @@ import Theory.GroupAction.MinimalNormal
 import Theory.GroupAction.Quotient
 import FeitThompson.HallSubgroups.Conjugacy
 
-open Theory.GroupAction
 
 open scoped Pointwise
 

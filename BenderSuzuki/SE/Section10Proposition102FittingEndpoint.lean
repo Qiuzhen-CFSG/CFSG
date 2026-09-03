@@ -3,7 +3,6 @@ module
 public import BenderSuzuki.SE.Section10Proposition102ExponentData
 import FeitThompson.PCore.CentralizerControl
 import BenderSuzuki.PFchapter1section1.lemma_a
-open Theory.GroupAction
 
 
 /-!

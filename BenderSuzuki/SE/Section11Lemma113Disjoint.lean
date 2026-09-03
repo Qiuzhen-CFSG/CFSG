@@ -4,7 +4,6 @@ public import BenderSuzuki.SE.Section11Lemma113Core
 public import BenderSuzuki.SE.Section11Lemma113Callbacks
 public import BenderSuzuki.SE.StrongEmbeddingCounting
 public import BenderSuzuki.SE.Corollary713
-open Theory.GroupAction
 
 
 /-!

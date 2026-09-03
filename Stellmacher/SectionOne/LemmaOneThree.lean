@@ -1,8 +1,6 @@
 module
 
 public import Stellmacher.SectionOne.Defs
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 namespace Stellmacher.SectionOne
@@ -56,7 +54,7 @@ public theorem lemma_one_three
     [Finite G] [Finite V] [IsElementaryAbelian 2 V]
     [MulDistribMulAction G V]
     (h : Hypotheses G V) (x : G)
-    (hx : Theory.Comparator.IsInvolution x)
+    (hx : IsInvolution x)
     (p : ℕ) [Fact p.Prime]
     (hF : IsPGroup p (involutionCommutator G x))
     (hindex : Nat.card V ≤

@@ -19,7 +19,6 @@ import FeitThompson.BGsection1.CriticalSubgroupLemmas
 import FeitThompson.BGsection4.lemma_4_5_c
 import Theory.ElementaryAbelian.VectorSpace
 import Mathlib.Tactic
-open Theory.ElementaryAbelian
 
 
 /-!

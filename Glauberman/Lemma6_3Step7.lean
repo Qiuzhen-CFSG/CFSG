@@ -69,7 +69,7 @@ private theorem sl2NegOne_toLin_apply {p : ℕ} [Fact p.Prime]
 
 /-! Front half of step 7: pull the central `-I` subgroup back from the
 natural `SL₂(p)` quotient, choose a Sylow `2`-subgroup in its preimage, and
-apply Frattini. -/
+apply  -/
 
 set_option maxHeartbeats 800000 in
 private theorem step7_exists_inverting_sylow

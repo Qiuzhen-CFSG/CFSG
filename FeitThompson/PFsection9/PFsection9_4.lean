@@ -4,8 +4,6 @@ import FeitThompson.PFsection9.PFsection9_3
 import FeitThompson.PCore.PCore
 import FeitThompson.PCore.PPrimeCore
 public import FeitThompson.PFsection9.Basic
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 noncomputable section
@@ -379,7 +377,7 @@ private theorem exists_simple_submodule_nontrivial_of_not_actsTrivially_subgroup
     (hcop : Nat.Coprime p (Nat.card A))
     (hH : ¬ ActsTrivially (A := H) (G := V)) :
     let ρ : Representation (ZMod p) A (Additive V) :=
-      Theory.Representation.ofElementaryAbelianAction (A := A) (G := V) (p := p)
+      Representation.ofElementaryAbelianAction (A := A) (G := V) (p := p)
     letI instAdd : AddCommGroup ρ.asModule := Representation.instAddCommGroupAsModule ρ
     letI instMod : Module (MonoidAlgebra (ZMod p) A) ρ.asModule :=
       Representation.instModuleMonoidAlgebraAsModule ρ
@@ -389,7 +387,7 @@ private theorem exists_simple_submodule_nontrivial_of_not_actsTrivially_subgroup
         ¬ H ≤ (Subrepresentation.ofSubmodule' m).toRepresentation.ker := by
   classical
   let ρ : Representation (ZMod p) A (Additive V) :=
-    Theory.Representation.ofElementaryAbelianAction (A := A) (G := V) (p := p)
+    Representation.ofElementaryAbelianAction (A := A) (G := V) (p := p)
   let instAdd : AddCommGroup ρ.asModule := Representation.instAddCommGroupAsModule ρ
   letI : AddCommGroup ρ.asModule := instAdd
   let instMod : Module (MonoidAlgebra (ZMod p) A) ρ.asModule :=
@@ -400,7 +398,7 @@ private theorem exists_simple_submodule_nontrivial_of_not_actsTrivially_subgroup
     apply hH
     intro h v
     have hh : (h : A) ∈ ρ.ker := hHle h.property
-    rw [Theory.Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup] at hh
+    rw [Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup] at hh
     exact (mem_fixingSubgroup_iff (M := A) (s := (Set.univ : Set V))).1 hh v
       (Set.mem_univ v)
   have hchar : ringChar (ZMod p) = 0 ∨
@@ -427,7 +425,7 @@ private theorem invariant_subgroup_of_submodule_nontrivial_sec9
     [IsElementaryAbelian p V] [MulDistribMulAction A V]
     (H : Subgroup A)
     (ρ : Representation (ZMod p) A (Additive V))
-    (hρ : ρ = Theory.Representation.ofElementaryAbelianAction (A := A) (G := V) (p := p)) :
+    (hρ : ρ = Representation.ofElementaryAbelianAction (A := A) (G := V) (p := p)) :
     letI instAdd : AddCommGroup ρ.asModule := Representation.instAddCommGroupAsModule ρ
     letI instMod : Module (MonoidAlgebra (ZMod p) A) ρ.asModule :=
       Representation.instModuleMonoidAlgebraAsModule ρ
@@ -581,7 +579,7 @@ private theorem theorem_9_4_typeIIIIV_frattini_simple_factor_sec9
           let ρ : Representation (ZMod (Nat.card W2)) (U ⊔ W1 : Subgroup G)
               (Additive
                 ((pCore (Nat.card W2) MF) ⧸ frattini (pCore (Nat.card W2) MF))) :=
-            Theory.Representation.ofElementaryAbelianAction
+            Representation.ofElementaryAbelianAction
               (A := (U ⊔ W1 : Subgroup G))
               (G := (pCore (Nat.card W2) MF) ⧸ frattini (pCore (Nat.card W2) MF))
               (p := Nat.card W2)
@@ -1324,7 +1322,7 @@ private theorem inf_simple_factor_eq_bot_or_eq_self_sec9
     (hQ_inv : IsInvariant A V Q)
     (hL_inv : IsInvariant A V L) :
     let ρ : Representation (ZMod p) A (Additive V) :=
-      Theory.Representation.ofElementaryAbelianAction (A := A) (G := V) (p := p)
+      Representation.ofElementaryAbelianAction (A := A) (G := V) (p := p)
     letI instAdd : AddCommGroup ρ.asModule :=
       Representation.instAddCommGroupAsModule ρ
     letI instMod : Module (MonoidAlgebra (ZMod p) A) ρ.asModule :=
@@ -1490,7 +1488,7 @@ private theorem theorem_9_4_typeIIIIV_liftedH0_source_sec9
         IsInvariant UW1 V Qcompl →
         IsCompl Q Qcompl →
         let ρ : Representation (ZMod (Nat.card W2)) UW1 (Additive V) :=
-          Theory.Representation.ofElementaryAbelianAction
+          Representation.ofElementaryAbelianAction
             (A := UW1) (G := V) (p := Nat.card W2)
         letI instAdd : AddCommGroup ρ.asModule :=
           Representation.instAddCommGroupAsModule ρ
@@ -1983,7 +1981,7 @@ private theorem theorem_9_4_typeIIIIV_maschke_frattini_source_sec9
       theorem_9_4_typeIIIIV_frattini_simple_factor_sec9
         M MF U W1 W2 q h92 hU hElem
   let ρ : Representation (ZMod (Nat.card W2)) UW1 (Additive V) :=
-    Theory.Representation.ofElementaryAbelianAction
+    Representation.ofElementaryAbelianAction
       (A := UW1) (G := V) (p := Nat.card W2)
   obtain ⟨Q, hQ_inv, hQ_eq, hQ_nontriv⟩ :=
     invariant_subgroup_of_submodule_nontrivial_sec9

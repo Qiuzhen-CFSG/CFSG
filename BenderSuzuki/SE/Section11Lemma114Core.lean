@@ -2,7 +2,6 @@ module
 
 public import BenderSuzuki.SE.Section10Proposition102Final
 public import BenderSuzuki.PFchapter2.Basic
-open Theory.GroupAction
 
 
 /-!

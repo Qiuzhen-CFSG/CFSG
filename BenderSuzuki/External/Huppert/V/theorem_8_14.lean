@@ -4,7 +4,6 @@ public import BenderSuzuki.External.Huppert.IV.theorem_6_2
 public import BenderSuzuki.External.Huppert.V.Semidirect
 public import BenderSuzuki.External.Huppert.V.SamePrime
 public import BenderSuzuki.External.Huppert.V.ComplementTransfer
-open Theory.GroupAction
 
 
 /-!

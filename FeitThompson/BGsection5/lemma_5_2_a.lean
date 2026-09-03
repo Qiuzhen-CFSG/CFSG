@@ -1,7 +1,6 @@
 module
 
 public import FeitThompson.BGsection5.lemma_5_1_b
-open Theory.ElementaryAbelian
 
 
 /-! # Lemma 5.2(a) from BG Section 5 -/

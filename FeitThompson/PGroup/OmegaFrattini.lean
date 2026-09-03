@@ -2,9 +2,7 @@ module
 
 public import FeitThompson.BGsection1.Defs
 
-open Theory.GroupAction
 
-namespace PGroup
 
 open scoped Pointwise
 
@@ -45,7 +43,4 @@ public theorem actsTriviallyOnSubgroup_omega₁_of_fix_order_p
 
 end Action
 
-
 end OmegaFrattini
-
-end PGroup

@@ -1,7 +1,6 @@
 module
 
 public import BenderSuzuki.SE.Section7Coprime
-open Theory.GroupAction
 
 
 /-!

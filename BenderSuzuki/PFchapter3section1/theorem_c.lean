@@ -23,7 +23,6 @@ public import BenderSuzuki.PFchapter1section3.proposition_2
 public import BenderSuzuki.PFchapter3section1.Basic
 public import FeitThompson.FinalTheorem
 public import FeitThompson.PFsection6.Basic
-open Theory.GroupAction
 
 
 namespace BenderSuzuki
@@ -1986,7 +1985,7 @@ private theorem theorem_c_of_Q1_ne_bot
           ∃ chars : Finset (Section1.ClassFunction d.H),
             IsFeitSibleyExceptionalFamily d chars := by
       intro d
-      rcases Theory.Character.irreducible_characters_form_basis (G := d.H) with
+      rcases irreducible_characters_form_basis (G := d.H) with
         ⟨ι, hι, χ, hχ, _b, _hb⟩
       letI : Fintype ι := hι
       rcases hχ with ⟨hirr, hall, _hinj⟩
@@ -2014,7 +2013,7 @@ private theorem theorem_c_of_Q1_ne_bot
           simpa [mul_assoc] using
             Representation.char_conj (ρ := rho) g x
         have hthetaRepIrr :
-            Theory.Character.IsIrreducibleConjCharacter
+            IsIrreducibleConjCharacter
               (Section1.toConjClassFunction theta hthetaClass) :=
           Section1.toConjClassFunction_isIrreducibleCharacter_of_isIrreducibleCharacterOnGroup
             hthetaClass hthetaIrr

@@ -2,7 +2,6 @@ module
 
 public import BenderSuzuki.External.Huppert.IV.theorem_3_4
 public import BenderSuzuki.External.Huppert.IV.theorem_5_2.Core
-open Theory.GroupAction
 
 
 /-!

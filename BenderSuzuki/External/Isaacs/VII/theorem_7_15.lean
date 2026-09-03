@@ -20,7 +20,8 @@ namespace External
 namespace Isaacs
 namespace VII
 
-open Section1 Section5
+open Section5
+open Section1 hiding ClassFunction
 
 universe u
 
@@ -148,8 +149,8 @@ private theorem isaacs_7_15_equal_degree_extension_fields
     (hisometry : isCFLinearIsometryOnSpanOn Y puncturedSet tau)
     (hdegreeZero :
       forall chi : ClassFunction N, integerSpanOn Y puncturedSet chi ->
-        Theory.Character.IsVirtualCharacter (tau chi) /\
-          supportedOn (tau chi) puncturedSet)
+        IsVirtualCharacter (tau chi) /\
+          Section1.supportedOn (tau chi) puncturedSet)
     (hdeg : forall X Z : Y,
       degree (X : ClassFunction N) = degree (Z : ClassFunction N))
     (hcard : 2 <= Y.card) :
@@ -179,7 +180,7 @@ private theorem isaacs_7_15_equal_degree_extension_fields
       have hself :=
         (isBookIrreducibleCharacter_of_isIrreducibleCharacterOnGroup
           (hirr (e i))).2
-      change scalarProduct N (e i : ClassFunction N) (e i : ClassFunction N) = 1 at hself
+      change Section1.scalarProduct N (e i : ClassFunction N) (e i : ClassFunction N) = 1 at hself
       simpa [chi] using hself
     · have hne : (e i : ClassFunction N) ≠ (e j : ClassFunction N) := by
         intro hEq
@@ -194,20 +195,20 @@ private theorem isaacs_7_15_equal_degree_extension_fields
     intro i
     exact hdeg (e i) (e 0)
 
-  let basisExist := Theory.Character.irreducible_characters_form_basis (G := G)
+  let basisExist := irreducible_characters_form_basis (G := G)
   let iota := Classical.choose basisExist
   let basisExist1 := Classical.choose_spec basisExist
   let instIota : Fintype iota := Classical.choose basisExist1
   let basisExist2 := Classical.choose_spec basisExist1
   let targetChi := Classical.choose basisExist2
-  have htargetChi : Theory.Character.IsCompleteIrreducibleCharacterFamily targetChi :=
+  have htargetChi : IsCompleteIrreducibleCharacterFamily targetChi :=
     (Classical.choose_spec basisExist2).1
   let basisExist3 := (Classical.choose_spec basisExist2).2
   let b := Classical.choose basisExist3
   have hb : forall i : iota, b i = targetChi i := Classical.choose_spec basisExist3
   letI : Fintype iota := instIota
   letI : DecidableEq iota := Classical.decEq iota
-  let muBasis : iota -> ClassFunction G := fun i => ofConjClassFunction (targetChi i)
+  let muBasis : iota -> ClassFunction G := fun i => Section1.ofConjClassFunction (targetChi i)
   have hmuBasis : IsIrreducibleCharacterBasis muBasis := by
     constructor
     · intro i
@@ -218,7 +219,7 @@ private theorem isaacs_7_15_equal_degree_extension_fields
       ext c
       rcases ConjClasses.exists_rep c with ⟨g, rfl⟩
       have hEqg := congrFun hEq g
-      simpa [muBasis, ofConjClassFunction] using hEqg
+      simpa [muBasis, Section1.ofConjClassFunction] using hEqg
   let d : iota -> Nat := fun i =>
     Classical.choose (isaacs_7_15_positive_degree_nat (hmuBasis.1 i))
   have hdpos : forall i, 0 < d i := by
@@ -241,7 +242,7 @@ private theorem isaacs_7_15_equal_degree_extension_fields
     rw [hchiDeg i]
     simp
   have hTauVirt : forall i : Fin n,
-      Theory.Character.IsVirtualCharacter (tau (alpha i)) := by
+      IsVirtualCharacter (tau (alpha i)) := by
     intro i
     exact (hdegreeZero (alpha i) (halphaSpan i)).1
   have hTauDeg : forall i : Fin n, degree (tau (alpha i)) = 0 := by
@@ -249,7 +250,7 @@ private theorem isaacs_7_15_equal_degree_extension_fields
     exact (supportedOn_puncturedSet_iff_degree_eq_zero _).1
       (hdegreeZero (alpha i) (halphaSpan i)).2
   have hInt : forall i : Fin n, forall j : iota,
-      exists z : Int, scalarProduct G (tau (alpha i)) (muBasis j) = (z : Complex) := by
+      exists z : Int, Section1.scalarProduct G (tau (alpha i)) (muBasis j) = (z : Complex) := by
     intro i j
     exact Section3.scalarProduct_isVirtualCharacter_eq_int (hTauVirt i)
       (Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup (hmuBasis.1 j))
@@ -264,14 +265,14 @@ private theorem isaacs_7_15_equal_degree_extension_fields
   have hcoeff0 : coeff 0 = 0 := by simp [coeff]
   have hCoeffIso : forall i j : Fin n,
       (coeffDot (coeff i) (coeff j) : Complex) =
-        scalarProduct N (alpha i) (alpha j) := by
+        Section1.scalarProduct N (alpha i) (alpha j) := by
     intro i j
     by_cases hi : i = 0
     · subst i
-      simp [coeff, alpha, scalarProduct, coeffDot]
+      simp [coeff, alpha, Section1.scalarProduct, coeffDot]
     by_cases hj : j = 0
     · subst j
-      simp [coeff, alpha, hi, scalarProduct, coeffDot]
+      simp [coeff, alpha, hi, Section1.scalarProduct, coeffDot]
     have hcoeffRaw :
         (coeffDot (coeff i) (coeff j) : Complex) =
           (coeffDot (rawCoeff i) (rawCoeff j) : Complex) := by
@@ -279,13 +280,13 @@ private theorem isaacs_7_15_equal_degree_extension_fields
     calc
       (coeffDot (coeff i) (coeff j) : Complex) =
           (coeffDot (rawCoeff i) (rawCoeff j) : Complex) := hcoeffRaw
-      _ = scalarProduct G (evalCoeff muBasis (rawCoeff i))
+      _ = Section1.scalarProduct G (evalCoeff muBasis (rawCoeff i))
             (evalCoeff muBasis (rawCoeff j)) := by
           exact (Section3.irreducibleBasis_scalarProduct_evalCoeff
             htargetChi (rawCoeff i) (rawCoeff j)).symm
-      _ = scalarProduct G (tau (alpha i)) (tau (alpha j)) := by
+      _ = Section1.scalarProduct G (tau (alpha i)) (tau (alpha j)) := by
           rw [hEvalRaw i, hEvalRaw j]
-      _ = scalarProduct N (alpha i) (alpha j) :=
+      _ = Section1.scalarProduct N (alpha i) (alpha j) :=
           hisometry (alpha i) (alpha j) (halphaSpan i) (halphaSpan j)
   have hTauCoeff : forall i : Fin n,
       tau (alpha i) = evalCoeff muBasis (coeff i) := by
@@ -305,7 +306,7 @@ private theorem isaacs_7_15_equal_degree_extension_fields
     ⟨eps, heps, mu, hmu, hsplitMu⟩
   let X : Y := e 0
   let img : Y -> ClassFunction G := fun Z => eps • mu (e.symm Z)
-  have himgVirt : forall Z : Y, Theory.Character.IsVirtualCharacter (img Z) := by
+  have himgVirt : forall Z : Y, IsVirtualCharacter (img Z) := by
     intro Z
     exact Section3.isVirtualCharacter_of_signedIrreducible_pf35
       ⟨eps, heps, mu (e.symm Z), hmu.1 (e.symm Z), rfl⟩
@@ -329,14 +330,14 @@ private theorem isaacs_7_15_equal_degree_extension_fields
   have hepsNorm : eps * star eps = 1 := by
     rcases heps with rfl | rfl <;> norm_num
   have hsourceSelf : forall Z : Y,
-      scalarProduct N (Z : ClassFunction N) (Z : ClassFunction N) = 1 := by
+      Section1.scalarProduct N (Z : ClassFunction N) (Z : ClassFunction N) = 1 := by
     intro Z
     exact (isBookIrreducibleCharacter_of_isIrreducibleCharacterOnGroup (hirr Z)).2
   have himgSelf : forall Z : Y,
-      scalarProduct G (img Z) (img Z) =
-        scalarProduct N (Z : ClassFunction N) (Z : ClassFunction N) := by
+      Section1.scalarProduct G (img Z) (img Z) =
+        Section1.scalarProduct N (Z : ClassFunction N) (Z : ClassFunction N) := by
     intro Z
-    rw [scalarProduct_smul_left, scalarProduct_smul_right,
+    rw [Section1.scalarProduct_smul_left, Section1.scalarProduct_smul_right,
       (isBookIrreducibleCharacter_of_isIrreducibleCharacterOnGroup
         (hmu.1 (e.symm Z))).2,
       hsourceSelf Z]
@@ -350,7 +351,7 @@ private theorem isaacs_7_15_equal_degree_extension_fields
         (hirr ⟨W, hW⟩)) hZW
   have himgCross : forall Z W : Y,
       (Z : ClassFunction N) ≠ (W : ClassFunction N) ->
-        scalarProduct G (img Z) (img W) = 0 := by
+        Section1.scalarProduct G (img Z) (img W) = 0 := by
     intro Z W hZW
     have hsub : e.symm Z ≠ e.symm W := by
       intro heq
@@ -362,11 +363,11 @@ private theorem isaacs_7_15_equal_degree_extension_fields
         (hmu.1 (e.symm Z)))
       (isBookIrreducibleCharacter_of_isIrreducibleCharacterOnGroup
         (hmu.1 (e.symm W))) hmune
-    rw [scalarProduct_smul_left, scalarProduct_smul_right]
+    rw [Section1.scalarProduct_smul_left, Section1.scalarProduct_smul_right]
     simp [hzero]
   have hgram : forall Z W : Y,
-      scalarProduct G (img Z) (img W) =
-        scalarProduct N (Z : ClassFunction N) (W : ClassFunction N) := by
+      Section1.scalarProduct G (img Z) (img W) =
+        Section1.scalarProduct N (Z : ClassFunction N) (W : ClassFunction N) := by
     intro Z W
     by_cases hZW : (Z : ClassFunction N) = (W : ClassFunction N)
     · have hsub : Z = W := Subtype.ext hZW
@@ -375,7 +376,7 @@ private theorem isaacs_7_15_equal_degree_extension_fields
     · rw [himgCross Z W hZW]
       exact (hsourceCross Z.2 W.2 hZW).symm
   have hselfNe : forall Z : Y,
-      scalarProduct N (Z : ClassFunction N) (Z : ClassFunction N) ≠ 0 := by
+      Section1.scalarProduct N (Z : ClassFunction N) (Z : ClassFunction N) ≠ 0 := by
     intro Z
     rw [hsourceSelf Z]
     norm_num
@@ -403,8 +404,8 @@ public theorem isaacs_theorem_7_15
     (hisometry : isCFLinearIsometryOnSpanOn Y puncturedSet tau)
     (hdegreeZero :
       forall phi : ClassFunction N, integerSpanOn Y puncturedSet phi ->
-        Theory.Character.IsVirtualCharacter (tau phi) /\
-          supportedOn (tau phi) puncturedSet)
+        IsVirtualCharacter (tau phi) /\
+          Section1.supportedOn (tau phi) puncturedSet)
     (hequalDegree :
       forall chi psi : Y,
         degree (chi : ClassFunction N) = degree (psi : ClassFunction N))

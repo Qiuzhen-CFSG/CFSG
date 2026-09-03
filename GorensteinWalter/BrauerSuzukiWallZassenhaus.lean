@@ -10,7 +10,6 @@ public import BenderSuzuki.External.Huppert.XI.theorem_11_16
 public import BenderSuzuki.External.Huppert.XI.example_1_3
 public import FeitThompson.SubgroupConjAction
 public import FeitThompson.SubgroupConj
-open Theory.GroupAction
 
 
 /-!

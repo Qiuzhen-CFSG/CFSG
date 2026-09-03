@@ -8,7 +8,6 @@ import BenderSuzuki.External.Huppert.II.theorem_6_14
 import Mathlib.Algebra.Polynomial.Degree.IsMonicOfDegree
 import Mathlib.Tactic
 public meta import Mathlib.GroupTheory.SpecificGroups.Alternating
-open Theory.ElementaryAbelian
 
 noncomputable section
 

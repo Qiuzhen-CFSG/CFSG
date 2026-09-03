@@ -76,7 +76,7 @@ public theorem lemma_11_3
       exact ⟨⟨x, hSM hx⟩, rfl⟩)).symm
   have hCnormal :
       ((involutionCoreIn M).subgroupOf M).Normal := by
-    rw [involutionCoreIn, Theory.GroupAction.subgroupOf_map_subtype_eq]
+    rw [involutionCoreIn, subgroupOf_map_subtype_eq]
     exact involutionCore_normal
   have hHnormC : H ≤ Subgroup.normalizer
       ((involutionCoreIn M : Subgroup X) : Set X) := by

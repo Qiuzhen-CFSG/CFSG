@@ -6,7 +6,6 @@ public import Theory.ElementaryAbelian.VectorSpace
 public import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
 public import Mathlib.GroupTheory.PGroup
 import FeitThompson.BGsection3.lemma_3_1
-open Theory.ElementaryAbelian
 
 
 /-!

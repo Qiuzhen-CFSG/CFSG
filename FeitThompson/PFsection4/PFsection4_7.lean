@@ -21,7 +21,7 @@ attribute [local instance] Fintype.ofFinite
 namespace Section4Scratch
 universe u
 universe v
-open Section1 Section2 Section3 Section4
+open Section2 Section3 Section4
 
 /-! ## (4.7) -/
 
@@ -29,7 +29,7 @@ open Section1 Section2 Section3 Section4
     {L : Type u} [Group L] [Finite L]
     (K H : Subgroup L)
     (A : Set L) : Prop :=
-  ∀ X : ClassFunction K,
+  ∀ X : _root_.ClassFunction K,
     Section1.IsIrreducibleCharacterOnGroup X →
       ¬ Section1.subgroupInKernel' X (H.subgroupOf K) →
         Section1.supportedOn X (withOne (subgroupPullbackSet K A)) ∧
@@ -41,8 +41,8 @@ open Section1 Section2 Section3 Section4
     (A : Set L)
     {I J : Type*} [Fintype I]
     (j0 : J)
-    (piChar : I → J → ClassFunction L)
-    (xChar : J → ClassFunction K) : Prop :=
+    (piChar : I → J → _root_.ClassFunction L)
+    (xChar : J → _root_.ClassFunction K) : Prop :=
   ∀ j, j ≠ j0 →
     ¬ Section1.subgroupInKernel' (xChar j) (H.subgroupOf K) ∧
       Section1.supportedOn (xChar j) (withOne (subgroupPullbackSet K A)) ∧
@@ -54,8 +54,8 @@ open Section1 Section2 Section3 Section4
     (A : Set L)
     {I J : Type*} [Fintype I]
     (j0 : J)
-    (piChar : I → J → ClassFunction L)
-    (xChar : J → ClassFunction K) : Prop :=
+    (piChar : I → J → _root_.ClassFunction L)
+    (xChar : J → _root_.ClassFunction K) : Prop :=
   theorem_4_7_statement K H A ∧
     theorem_4_7_nonbase_column_statement K H A j0 piChar xChar
 

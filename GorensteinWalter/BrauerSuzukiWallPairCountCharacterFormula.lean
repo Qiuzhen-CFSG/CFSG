@@ -41,7 +41,7 @@ public theorem BrauerSuzukiWallHypotheses.pairCount_character_formula
               (chi h.t ^ 2 / chi 1) := by
   classical
   let : Fintype G := Fintype.ofFinite G
-  rcases Theory.Character.irreducible_characters_form_basis (G := G) with
+  rcases irreducible_characters_form_basis (G := G) with
     ⟨ι, hι, xi, hxi, _b, _hb⟩
   let : Fintype ι := hι
   let : DecidableEq ι := Classical.decEq ι
@@ -137,7 +137,7 @@ public theorem BrauerSuzukiWallHypotheses.pairCount_character_formula
     intro i j
     calc
       Section1.scalarProduct G (mu i) (mu j) =
-          Theory.Character.classFunctionInner (xi i) (xi j) := by
+          classFunctionInner (xi i) (xi j) := by
         symm
         simpa [mu, Section1.toConjClassFunction_ofConjClassFunction] using
           (Section1.classFunctionInner_toConjClassFunction

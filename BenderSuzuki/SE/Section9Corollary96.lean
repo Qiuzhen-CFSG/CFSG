@@ -9,7 +9,6 @@ import BenderSuzuki.SE.Proposition84Sylow
 import FeitThompson.BGsection11.lemma_11_1_a
 import FeitThompson.FinalTheorem
 import FeitThompson.SubgroupConj
-open Theory.GroupAction
 
 
 /-!

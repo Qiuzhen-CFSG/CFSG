@@ -6,8 +6,6 @@ import FeitThompson.PFsection12.PFsection12_16
 import FeitThompson.BGsection13.lemma_13_13
 import FeitThompson.PFsection9.PFsection9_1
 import FeitThompson.PFsection8.SourceTypePBridge
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 /-!

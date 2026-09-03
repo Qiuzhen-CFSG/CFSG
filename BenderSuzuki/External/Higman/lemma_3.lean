@@ -3,7 +3,6 @@ module
 public import BenderSuzuki.External.Higman.lemma_2
 import FeitThompson.Frattini.Core
 import Theory.GroupAction.Quotient
-open Theory.GroupAction
 
 
 /-!

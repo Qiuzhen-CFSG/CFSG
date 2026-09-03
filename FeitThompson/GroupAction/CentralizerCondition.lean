@@ -2,7 +2,6 @@ module
 
 public import FeitThompson.BGsection1.Defs
 
-open Theory.GroupAction
 
 open scoped commutatorElement
 

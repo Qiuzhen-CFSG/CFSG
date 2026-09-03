@@ -5,7 +5,6 @@ public import GorensteinWalter.NormalizerEqOfNontrivialNormalInCoatom
 public import Glauberman.TheoremA
 public import Glauberman.Lemma6_3
 public import FeitThompson.BGsection8.theorem_8_1
-open Theory.GroupAction
 
 
 /-!

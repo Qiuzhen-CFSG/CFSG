@@ -6,8 +6,6 @@ import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Card
 public import FeitThompson.Utils
 public import FeitThompson.GeneratorRank
 public import FeitThompson.BGsection4.proposition_4_6
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 /-! # Gorenstein 5.4.15 support for BG Section 4 -/

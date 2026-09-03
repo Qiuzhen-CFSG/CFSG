@@ -371,13 +371,13 @@ private theorem theorem_7_8_b_isBook_of_isIrreducibleOnGroup
       (Section1.uliftRepresentation_character
         (G := G) (V := Fin n → ℂ) (rho := θRep) g).symm
   · rw [hθeq]
-    exact (Theory.Character.irreducible_iff_character_norm_one (ρ := θRep)).1
+    exact (irreducible_iff_character_norm_one (ρ := θRep)).1
       hθ_irreducible
 
 private theorem theorem_7_8_b_complete_family_index_of_book
     {G : Type u} {ι : Type v} [Group G] [Finite G] [Fintype ι]
-    {χ : ι → Theory.Character.ConjClassFunction G}
-    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    {χ : ι → ConjClassFunction G}
+    (hχ : IsCompleteIrreducibleCharacterFamily χ)
     {θ : Section1.ClassFunction G}
     (hθ : Section1.IsBookIrreducibleCharacter θ) :
     ∃ i : ι, Section1.ofConjClassFunction (χ i) = θ := by
@@ -385,16 +385,16 @@ private theorem theorem_7_8_b_complete_family_index_of_book
   rcases Section1.isBookIrreducibleCharacter_representation_witness_irreducible
       θ hθ with
     ⟨V, _hadd, _hmodule, _hfiniteDimensional, θRep, hθeq, hθ_irreducible⟩
-  let θConj : Theory.Character.ConjClassFunction G :=
-    Theory.Character.characterClassFunction θRep
+  let θConj : ConjClassFunction G :=
+    characterClassFunction θRep
   have hθConj_irreducible :
-      Theory.Character.IsIrreducibleConjCharacter θConj := by
+      IsIrreducibleConjCharacter θConj := by
     constructor
     · refine ⟨Module.finrank ℂ V, Section1.standardizeRepresentation θRep, ?_⟩
       ext c
       rcases ConjClasses.exists_rep c with ⟨g, rfl⟩
       exact (Section1.standardizeRepresentation_character θRep g).symm
-    · exact (Theory.Character.irreducible_iff_character_norm_one (ρ := θRep)).1
+    · exact (irreducible_iff_character_norm_one (ρ := θRep)).1
         hθ_irreducible
   rcases hχ.2.1 θConj hθConj_irreducible with ⟨i, hi⟩
   refine ⟨i, ?_⟩
@@ -478,7 +478,7 @@ private theorem theorem_7_8_b_conjugateOrbitConj_book
   · exact ⟨V, inferInstance, inferInstance, inferInstance,
       Section1.conjugateOrbitRepresentation H θRep i, hchar⟩
   · rw [hchar]
-    exact (Theory.Character.irreducible_iff_character_norm_one
+    exact (irreducible_iff_character_norm_one
       (ρ := Section1.conjugateOrbitRepresentation H θRep i)).1
         (by
           letI : Representation.IsIrreducible θRep := hθ_irreducible
@@ -506,8 +506,8 @@ private theorem theorem_7_8_b_book_induced_eq_of_conjugateOrbit
 private theorem theorem_7_8_b_orbit_normSq_sum_eq_complete_fiber
     {G : Type u} {ι : Type v} [Group G] [Finite G] [Fintype ι] [DecidableEq ι]
     (H : Subgroup G) [Finite H] [H.Normal]
-    {χ : ι → Theory.Character.ConjClassFunction H}
-    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    {χ : ι → ConjClassFunction H}
+    (hχ : IsCompleteIrreducibleCharacterFamily χ)
     {θ : Section1.ClassFunction H}
     (hθ : Section1.IsBookIrreducibleCharacter θ) :
     (∑ o : Section1.conjugateOrbitIndex H θ,
@@ -623,8 +623,8 @@ private theorem theorem_7_8_b_exists_complete_nonprincipal_family
     {ζ : Section1.ClassFunction L}
     (h78 : theorem_7_8_hypothesis L H T S τ ν ζ) :
     ∃ (ι : Type) (_ : Fintype ι) (_ : DecidableEq ι)
-      (χ : ι → Theory.Character.ConjClassFunction (H.subgroupOf L)) (i0 : ι),
-      Theory.Character.IsCompleteIrreducibleCharacterFamily χ ∧
+      (χ : ι → ConjClassFunction (H.subgroupOf L)) (i0 : ι),
+      IsCompleteIrreducibleCharacterFamily χ ∧
         Section1.ofConjClassFunction (χ i0) =
           Section1.principalCharacter (H.subgroupOf L) ∧
         Finset.sum (Finset.univ.erase i0)
@@ -635,7 +635,7 @@ private theorem theorem_7_8_b_exists_complete_nonprincipal_family
           Section1.inducedCF (H.subgroupOf L)
             (Section1.ofConjClassFunction (χ i)) ∈ S := by
   classical
-  rcases Theory.Character.exists_completeIrreducibleCharacterFamily_sum_degree_normSq
+  rcases exists_completeIrreducibleCharacterFamily_sum_degree_normSq
       (G := H.subgroupOf L) with
     ⟨ι, hι, χ, hχ, hsum⟩
   letI : Fintype ι := hι
@@ -701,8 +701,8 @@ private theorem theorem_7_8_b_member_contribution_eq_complete_fiber
     {ζ : Section1.ClassFunction L}
     (hHnorm : (H.subgroupOf L).Normal)
     (h78 : theorem_7_8_hypothesis L H T S τ ν ζ)
-    {χ : ι → Theory.Character.ConjClassFunction (H.subgroupOf L)}
-    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    {χ : ι → ConjClassFunction (H.subgroupOf L)}
+    (hχ : IsCompleteIrreducibleCharacterFamily χ)
     {i0 : ι}
     (hprincipal :
       Section1.ofConjClassFunction (χ i0) =
@@ -1869,12 +1869,12 @@ public theorem theorem_7_8_b_projectionData_source_bridge
   have hclass : Section1.IsClassFunction (ν ζ) := by
     rcases h78 with
       ⟨_hHL78, _hST, _hpunctured, _hcoherent, hν, hζS, _hζirr, _hdegζ⟩
-    have hvirt : Theory.Character.IsVirtualCharacter (ν ζ) :=
+    have hvirt : IsVirtualCharacter (ν ζ) :=
       hν.2.1 ζ (Section5.integerSpan_of_mem S hζS)
     rcases hvirt with ⟨r, m, n, ρ, hνζeq⟩
     rw [hνζeq]
     intro x g
-    unfold Theory.Character.virtualCharacterOfRepresentations
+    unfold virtualCharacterOfRepresentations
     refine Finset.sum_congr rfl ?_
     intro i _hi
     have hchar :

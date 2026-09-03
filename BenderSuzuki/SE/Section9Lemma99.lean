@@ -12,7 +12,6 @@ import FeitThompson.BGsection5.theorem_5_3
 import FeitThompson.BGsection6.lemma_6_5_a
 import FeitThompson.BGsection12.corollary_12_9_b
 import FeitThompson.FinalTheorem
-open Theory.GroupAction
 
 
 /-!

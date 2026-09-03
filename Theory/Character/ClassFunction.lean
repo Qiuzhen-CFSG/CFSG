@@ -66,9 +66,8 @@ def ClassFunction.Disjoint {G : Type u} [Group G] [Fintype G] (φ ψ : ClassFunc
 
 section ScalarProduct
 
-variable {G : Type u} [Fintype G]
 
-lemma scalarProduct_add_left (φ₁ φ₂ ψ : ClassFunction G)
+lemma scalarProduct_add_left {G : Type u} [Fintype G] (φ₁ φ₂ ψ : ClassFunction G)
     : scalarProduct G (φ₁ + φ₂) ψ = scalarProduct G φ₁ ψ + scalarProduct G φ₂ ψ := by
   calc
     scalarProduct G (φ₁ + φ₂) ψ
@@ -86,7 +85,7 @@ lemma scalarProduct_add_left (φ₁ φ₂ ψ : ClassFunction G)
       rw [mul_add]
       rfl
 
-lemma scalarProduct_smul_left (z : ℂ) (φ ψ : ClassFunction G)
+lemma scalarProduct_smul_left {G : Type u} [Fintype G] (z : ℂ) (φ ψ : ClassFunction G)
     : scalarProduct G (z • φ) ψ = z * scalarProduct G φ ψ := by
   calc
     scalarProduct G (z • φ) ψ = (Nat.card G : ℂ)⁻¹ * ∑ g : G, z * (φ g * star (ψ g)) := by
@@ -96,7 +95,7 @@ lemma scalarProduct_smul_left (z : ℂ) (φ ψ : ClassFunction G)
     _ = z * scalarProduct G φ ψ := by
       simp [scalarProduct, mul_left_comm]
 
-lemma scalarProduct_add_right (φ ψ₁ ψ₂ : ClassFunction G)
+lemma scalarProduct_add_right {G : Type u} [Fintype G] (φ ψ₁ ψ₂ : ClassFunction G)
     : scalarProduct G φ (ψ₁ + ψ₂) = scalarProduct G φ ψ₁ + scalarProduct G φ ψ₂ := by
   calc
     scalarProduct G φ (ψ₁ + ψ₂)
@@ -118,7 +117,7 @@ lemma scalarProduct_add_right (φ ψ₁ ψ₂ : ClassFunction G)
       rw [mul_add]
       rfl
 
-lemma scalarProduct_smul_right (z : ℂ) (φ ψ : ClassFunction G)
+lemma scalarProduct_smul_right {G : Type u} [Fintype G] (z : ℂ) (φ ψ : ClassFunction G)
     : scalarProduct G φ (z • ψ) = scalarProduct G φ ψ * star z := by
   calc
     scalarProduct G φ (z • ψ)
@@ -133,7 +132,7 @@ lemma scalarProduct_smul_right (z : ℂ) (φ ψ : ClassFunction G)
     _ = scalarProduct G φ ψ * star z := by
       simp [scalarProduct, mul_left_comm, mul_comm]
 
-lemma scalarProduct_sub_left (φ₁ φ₂ ψ : ClassFunction G)
+lemma scalarProduct_sub_left {G : Type u} [Fintype G] (φ₁ φ₂ ψ : ClassFunction G)
     : scalarProduct G (φ₁ - φ₂) ψ = scalarProduct G φ₁ ψ - scalarProduct G φ₂ ψ := by
   calc
     scalarProduct G (φ₁ - φ₂) ψ = scalarProduct G (φ₁ + (-1 : ℂ) • φ₂) ψ := by
@@ -143,7 +142,7 @@ lemma scalarProduct_sub_left (φ₁ φ₂ ψ : ClassFunction G)
     _ = scalarProduct G φ₁ ψ - scalarProduct G φ₂ ψ := by
       ring
 
-lemma scalarProduct_conj (φ ψ : ClassFunction G)
+lemma scalarProduct_conj {G : Type u} [Fintype G] (φ ψ : ClassFunction G)
     : star (scalarProduct G φ ψ) = scalarProduct G ψ φ := by
   unfold scalarProduct
   calc
@@ -166,17 +165,16 @@ lemma scalarProduct_conj (φ ψ : ClassFunction G)
       intro g hg
       ring
 
-lemma scalarProduct_self_real (φ : ClassFunction G)
+lemma scalarProduct_self_real {G : Type u} [Fintype G] (φ : ClassFunction G)
     : star (scalarProduct G φ φ) = scalarProduct G φ φ := by
   simp [scalarProduct_conj]
 
-variable [Group G]
 
 /-- The `g⁻¹`-form product; agrees with `scalarProduct` on characters. -/
 def characterProduct (G : Type u) [Group G] [Fintype G] (φ ψ : ClassFunction G) : ℂ :=
   (Nat.card G : ℂ)⁻¹ * ∑ g : G, φ g * ψ g⁻¹
 
-lemma characterProduct_add_left (φ₁ φ₂ ψ : ClassFunction G)
+lemma characterProduct_add_left {G : Type u} [Group G] [Fintype G] (φ₁ φ₂ ψ : ClassFunction G)
     : characterProduct G (φ₁ + φ₂) ψ
       = characterProduct G φ₁ ψ + characterProduct G φ₂ ψ := by
   calc
@@ -194,7 +192,7 @@ lemma characterProduct_add_left (φ₁ φ₂ ψ : ClassFunction G)
       rw [mul_add]
       rfl
 
-lemma characterProduct_smul_left (z : ℂ) (φ ψ : ClassFunction G)
+lemma characterProduct_smul_left {G : Type u} [Group G] [Fintype G] (z : ℂ) (φ ψ : ClassFunction G)
     : characterProduct G (z • φ) ψ = z * characterProduct G φ ψ := by
   calc
     characterProduct G (z • φ) ψ = (Nat.card G : ℂ)⁻¹ * ∑ g : G, z * (φ g * ψ g⁻¹) := by

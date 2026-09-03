@@ -6,7 +6,6 @@ public import GorensteinWalter.Section2.ThompsonPQ
 import FeitThompson.ChiefFactors.Core
 import Mathlib.SetTheory.Cardinal.NatCard
 public import Mathlib.GroupTheory.IsPerfect
-open Theory.GroupAction
 
 
 /-!

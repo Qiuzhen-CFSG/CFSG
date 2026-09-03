@@ -9,7 +9,6 @@ open scoped FixedPoints
 
 section GroupActionDefs
 
-variable {G A : Type*} [Group G] [Group A]
 
 /-- The action of `A` on `G` is trivial. -/
 class IsTrivialAction (A : Type*) (G : Type*) [SMul A G] : Prop where

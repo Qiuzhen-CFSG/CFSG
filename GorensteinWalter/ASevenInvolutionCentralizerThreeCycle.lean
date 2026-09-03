@@ -3,7 +3,6 @@ module
 public import GorensteinWalter.ASevenInvolutionCentralizerOddPart
 public import GorensteinWalter.ASevenStructureFacts
 import Mathlib.Tactic
-open Theory.GroupAction
 
 
 /-!

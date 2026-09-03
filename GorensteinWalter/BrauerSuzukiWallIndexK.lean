@@ -1,7 +1,6 @@
 module
 
 public import GorensteinWalter.BrauerSuzukiWallCardH
-open Theory.GroupAction
 
 
 /-!

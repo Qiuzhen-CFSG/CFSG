@@ -32,7 +32,6 @@ public import Theory.GroupAction.Quotient
 public import FeitThompson.HallSubgroups.Core
 public import FeitThompson.HallSubgroups.Complements
 
-open Theory.GroupAction
 
 /-
 **Kind**: Theorem

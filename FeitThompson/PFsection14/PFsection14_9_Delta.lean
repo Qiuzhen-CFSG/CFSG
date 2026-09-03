@@ -95,7 +95,7 @@ public theorem section14_theorem_14_9_source_typeII_contradiction
           Γ = βτk - Section1.principalCharacter G + η 0 k) ∧
     Section1.scalarProduct G Γ (Section1.principalCharacter G) = 0 ∧
     Γ = Section1.conjugateCharacter Γ ∧
-    Theory.Character.IsVirtualCharacter Γ ∧
+    IsVirtualCharacter Γ ∧
     Γ = X + Y ∧
     Section13.theorem_13_18_decompositionData p q η X Y
 
@@ -346,7 +346,7 @@ public theorem section14_normSq_ge_one_of_oddScalarProduct {z : ℂ}
     {G : Type u} [Group G] [Finite G]
     (Γ χ Δ : Section1.ClassFunction G) : Prop :=
   (0 : ℂ) = 1 - Section1.scalarProduct G Γ χ + Section1.scalarProduct G Γ Δ ∧
-    Theory.Character.IsVirtualCharacter Δ ∧
+    IsVirtualCharacter Δ ∧
       Δ = Section1.conjugateCharacter Δ ∧
         Section1.scalarProduct G Δ (Section1.principalCharacter G) = 0
 
@@ -372,13 +372,13 @@ public theorem section14_normSq_ge_one_of_oddScalarProduct {z : ℂ}
     (T1 : Finset (Section1.ClassFunction G)) : Prop :=
   ∀ χ ∈ T1, ∀ Δ : Section1.ClassFunction G,
     section14_theorem_14_9_late_type_T1DeltaCorrection Γ χ Δ →
-      Theory.Character.IsVirtualCharacter Δ ∧
+      IsVirtualCharacter Δ ∧
         Δ = Section1.conjugateCharacter Δ ∧
         Section1.scalarProduct G Δ (Section1.principalCharacter G) = 0
 
 public theorem section14_ofConjClassFunction_injective
     {G : Type u} [Group G]
-    {φ ψ : Theory.Character.ConjClassFunction G}
+    {φ ψ : ConjClassFunction G}
     (h : Section1.ofConjClassFunction φ = Section1.ofConjClassFunction ψ) :
     φ = ψ := by
   ext c
@@ -388,12 +388,12 @@ public theorem section14_ofConjClassFunction_injective
 public theorem section14_virtualCharacter_isClassFunction
     {G : Type u} [Group G] [Finite G]
     {φ : Section1.ClassFunction G}
-    (hφ : Theory.Character.IsVirtualCharacter φ) :
+    (hφ : IsVirtualCharacter φ) :
     Section1.IsClassFunction φ := by
   classical
   rcases hφ with ⟨r, m, n, ρ, rfl⟩
   intro x g
-  unfold Theory.Character.virtualCharacterOfRepresentations
+  unfold virtualCharacterOfRepresentations
   refine Finset.sum_congr rfl ?_
   intro i _hi
   have hchar :
@@ -408,7 +408,7 @@ public theorem section14_virtualCharacter_isClassFunction
 public theorem section14_scalarProduct_virtual_character_int
     {G : Type u} [Group G] [Finite G]
     {φ ψ : Section1.ClassFunction G}
-    (hφ : Theory.Character.IsVirtualCharacter φ)
+    (hφ : IsVirtualCharacter φ)
     (hψ : Section1.IsCharacter ψ) :
     ∃ z : ℤ, Section1.scalarProduct G φ ψ = (z : ℂ) := by
   classical
@@ -459,8 +459,8 @@ public theorem section14_scalarProduct_virtual_character_int
 
 public theorem section14_complete_family_member_character
     {G : Type u} {ι : Type v} [Group G] [Finite G] [Fintype ι]
-    {χ : ι → Theory.Character.ConjClassFunction G}
-    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    {χ : ι → ConjClassFunction G}
+    (hχ : IsCompleteIrreducibleCharacterFamily χ)
     (i : ι) :
     Section1.IsCharacter (Section1.ofConjClassFunction (χ i)) :=
   (Section1.isBookIrreducibleCharacter_of_representation_irreducible
@@ -491,8 +491,8 @@ public theorem section14_scalarProduct_real_conjugate_right_eq
 
 public theorem section14_complete_family_conjugate_pairing
     {G : Type u} {ι : Type v} [Group G] [Finite G] [Fintype ι] [DecidableEq ι]
-    {χ : ι → Theory.Character.ConjClassFunction G}
-    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    {χ : ι → ConjClassFunction G}
+    (hχ : IsCompleteIrreducibleCharacterFamily χ)
     (hodd : Odd (Nat.card G)) :
     ∃ i0 : ι, ∃ pair : ι → ι,
       Section1.ofConjClassFunction (χ i0) = Section1.principalCharacter G ∧
@@ -516,10 +516,10 @@ public theorem section14_complete_family_conjugate_pairing
     rcases Section1.isIrreducibleCharacterOnGroup_conjugateCharacter
         (hμ_irred i) with
       ⟨n, ρ, hρirr, hρchar⟩
-    let ψ : Theory.Character.ConjClassFunction G := Theory.Character.characterClassFunction ρ
-    have hψirr : Theory.Character.IsIrreducibleConjCharacter ψ := by
+    let ψ : ConjClassFunction G := characterClassFunction ρ
+    have hψirr : IsIrreducibleConjCharacter ψ := by
       refine ⟨⟨n, ρ, rfl⟩, ?_⟩
-      exact (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
+      exact (irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
     rcases hχ.2.1 ψ hψirr with ⟨j, hj⟩
     refine ⟨j, ?_⟩
     calc
@@ -683,15 +683,15 @@ public theorem section14_even_sum_of_fixedPointFree_pairing
 public theorem section14_real_virtual_principal_orthogonal_scalarProduct_even_source_bridge
     {G : Type u} [Group G] [Finite G] [IsMinCE G]
     {Γ Δ : Section1.ClassFunction G}
-    (hΓvirt : Theory.Character.IsVirtualCharacter Γ)
+    (hΓvirt : IsVirtualCharacter Γ)
     (hΓreal : Γ = Section1.conjugateCharacter Γ)
     (hΓone : Section1.scalarProduct G Γ (Section1.principalCharacter G) = 0)
-    (hΔvirt : Theory.Character.IsVirtualCharacter Δ)
+    (hΔvirt : IsVirtualCharacter Δ)
     (hΔreal : Δ = Section1.conjugateCharacter Δ) :
     ∃ m : ℤ, Section1.scalarProduct G Γ Δ = ((2 * m : ℤ) : ℂ) := by
   classical
   have hoddG : Odd (Nat.card G) := IsMinCE.odd_order
-  rcases Theory.Character.irreducible_characters_form_basis (G := G) with
+  rcases irreducible_characters_form_basis (G := G) with
     ⟨ι, hι, χ, hχ, b, hb⟩
   letI : Fintype ι := hι
   letI : DecidableEq ι := Classical.decEq ι
@@ -806,7 +806,7 @@ public theorem section14_theorem_14_9_late_type_T1DeltaEvenScalarProductSourceDa
     {G : Type u} [Group G] [Finite G] [IsMinCE G]
     {Γ : Section1.ClassFunction G}
     {T1 : Finset (Section1.ClassFunction G)}
-    (hΓvirt : Theory.Character.IsVirtualCharacter Γ)
+    (hΓvirt : IsVirtualCharacter Γ)
     (hΓreal : Γ = Section1.conjugateCharacter Γ)
     (hΓone : Section1.scalarProduct G Γ (Section1.principalCharacter G) = 0)
     (hΔfacts : section14_theorem_14_9_late_type_T1DeltaParityFactsSourceData Γ T1) :
@@ -912,7 +912,7 @@ public theorem section14_theorem_14_9_late_type_T1SourceData_of_imageDeltaSource
     {η : ℕ → ℕ → Section1.ClassFunction G}
     {Γ : Section1.ClassFunction G}
     {p q v : ℕ}
-    (hΓvirt : Theory.Character.IsVirtualCharacter Γ)
+    (hΓvirt : IsVirtualCharacter Γ)
     (hΓreal : Γ = Section1.conjugateCharacter Γ)
     (hΓone : Section1.scalarProduct G Γ (Section1.principalCharacter G) = 0)
     (hsrc : section14_theorem_14_9_late_type_T1ImageDeltaSourceData Tmax τT η Γ p q v) :

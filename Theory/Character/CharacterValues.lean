@@ -21,7 +21,6 @@ noncomputable section
 
 open scoped BigOperators
 
-open _root_.Representation
 open Representation
 
 attribute [local instance] Fintype.ofFinite

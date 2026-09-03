@@ -3,9 +3,8 @@ module
 public import FeitThompson.BGsection3.theorem_3_4
 public import FeitThompson.BGsection4.Infrastructure
 public import FeitThompson.BGsection4.lemma_4_5_a
-open Theory.Representation
+open Representation
 
-open Theory.ElementaryAbelian
 
 
 /-! # Lemma 4.15 from BG Section 4 -/

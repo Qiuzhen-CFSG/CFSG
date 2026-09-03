@@ -6,8 +6,6 @@ public import FeitThompson.PCore.PCore
 public import Mathlib.GroupTheory.Frattini
 public import Mathlib.GroupTheory.IsSubnormal
 public import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 /-!
@@ -355,14 +353,14 @@ public structure Hypotheses
     (G : Type u) [Group G] [Finite G] (S : Sylow 2 G) : Prop where
   even_order : Even (Nat.card G)
   local_solvable_characteristicTwo :
-    ∀ U : Subgroup G, Theory.Quasithin.IsTwoLocal U →
+    ∀ U : Subgroup G, IsTwoLocal U →
       (S : Subgroup G) ≤ U →
       Group.IsSolvable U ∧ IsCharacteristicTwoType U
   two_distinct_maximal_twoLocal :
     ∃ M₁ M₂ : Subgroup G,
       M₁ ≠ M₂ ∧
-      Theory.Quasithin.IsMaximalTwoLocal M₁ ∧
-      Theory.Quasithin.IsMaximalTwoLocal M₂ ∧
+      IsMaximalTwoLocal M₁ ∧
+      IsMaximalTwoLocal M₂ ∧
       (S : Subgroup G) ≤ M₁ ∧ (S : Subgroup G) ≤ M₂
 
 @[expose] public noncomputable def localD

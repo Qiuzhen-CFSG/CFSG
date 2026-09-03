@@ -4,7 +4,6 @@ public import Glauberman.Definitions
 public import Mathlib.Algebra.Group.Subgroup.Map
 public import Mathlib.Algebra.Group.Subgroup.Lattice
 import FeitThompson.BGsection6.Defs
-open Theory.GroupAction
 
 
 open scoped Pointwise

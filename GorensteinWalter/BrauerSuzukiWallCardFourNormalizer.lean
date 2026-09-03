@@ -3,7 +3,6 @@ module
 public import GorensteinWalter.BrauerSuzukiWallCardH
 import GorensteinWalter.PGroupExtension
 import Mathlib.Tactic
-open Theory.GroupAction
 
 
 /-!

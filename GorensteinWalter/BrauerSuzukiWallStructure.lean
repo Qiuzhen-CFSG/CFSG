@@ -14,7 +14,6 @@ import Mathlib.GroupTheory.GroupAction.SubMulAction
 import Mathlib.GroupTheory.Rank
 import Mathlib.GroupTheory.FixedPointFree
 import Mathlib.Tactic.Group
-open Theory.GroupAction
 
 
 /-!

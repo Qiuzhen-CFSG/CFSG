@@ -1,7 +1,6 @@
 module
 
 public import Stellmacher.SectionFiveToSeven.Defs
-open Theory.ElementaryAbelian
 
 
 open scoped Pointwise

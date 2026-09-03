@@ -4,9 +4,7 @@ public import FeitThompson.Fitting.Centralizer
 public import FeitThompson.BGsection3.Defs
 public import FeitThompson.BGsection3.theorem_3_4
 public import FeitThompson.BGsection3.theorem_3_5
-open Theory.GroupAction
-open Theory.ElementaryAbelian
-open Theory.Representation
+open Representation
 
 
 open scoped commutatorElement

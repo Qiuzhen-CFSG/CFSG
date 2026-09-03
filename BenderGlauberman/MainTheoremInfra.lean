@@ -24,7 +24,6 @@ open scoped Pointwise
 namespace BenderGlauberman
 
 open GorensteinWalter
-open Theory.Character
 
 attribute [local instance] Fintype.ofFinite
 attribute [local instance] Classical.propDecidable
@@ -405,7 +404,7 @@ private lemma main_deltaAdjacent_symm (c : Hyp11 G) (h12 : Hyp12 c)
   exact ⟨hepsilon, hdelta, hne.symm, by
     intro h'
     apply hdis
-    unfold Theory.Character.Disjoint at h' ⊢
+    unfold ClassFunction.Disjoint at h' ⊢
     intro chi hchi hchidelta
     by_contra hchiepsilon
     exact hchidelta (h' chi hchi hchiepsilon)⟩
@@ -491,7 +490,7 @@ private lemma main_not_disjoint_of_pmIrr_pairings
     {psi delta epsilon : ClassFunction G} (hpsi : IsPMIrr G psi)
     (hdelta : scalarProduct G psi delta ≠ 0)
     (hepsilon : scalarProduct G psi epsilon ≠ 0) :
-    ¬ Theory.Character.Disjoint delta epsilon := by
+    ¬ ClassFunction.Disjoint delta epsilon := by
   intro hdisjoint
   rcases hpsi with hpsi | hpsi
   · exact hepsilon (hdisjoint psi hpsi hdelta)

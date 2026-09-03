@@ -11,7 +11,6 @@ import FeitThompson.Frattini.Core
 import Mathlib.GroupTheory.GroupAction.ConjAct
 import Mathlib.LinearAlgebra.FixedSubmodule
 import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
-open Theory.GroupAction
 
 
 /-!

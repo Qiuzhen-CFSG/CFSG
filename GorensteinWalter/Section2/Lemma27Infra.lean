@@ -17,7 +17,6 @@ public import FeitThompson.GroupAction.NoncyclicAbelianPGroup
 public import GorensteinWalter.Section2.Lemma27IndexTwo
 public import GorensteinWalter.Section2.Lemma27QuotientIndex
 public import GorensteinWalter.Section2.Lemma27TwoResidualBranch
-open Theory.GroupAction
 
 
 /-!

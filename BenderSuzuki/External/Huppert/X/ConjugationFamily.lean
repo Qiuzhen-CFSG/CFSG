@@ -3,7 +3,6 @@ module
 public import BenderSuzuki.External.Huppert.IV.Basic
 import BenderSuzuki.External.Hall.Basic
 import FeitThompson.SubgroupConj
-open Theory.GroupAction
 
 
 /-!

@@ -6,12 +6,11 @@ public import Mathlib.GroupTheory.Commutator.Basic
 
 namespace Subgroup
 
-variable {G : Type*} [Group G]
 
 /-- Relative form of the three-subgroups lemma: the rotated commutators may
 land in a common normal subgroup instead of being trivial. -/
 theorem commutator_commutator_le_of_rotate
-    {H₁ H₂ H₃ K : Subgroup G} [K.Normal]
+    {G : Type*} [Group G] {H₁ H₂ H₃ K : Subgroup G} [K.Normal]
     (h₁ : ⁅⁅H₂, H₃⁆, H₁⁆ ≤ K) (h₂ : ⁅⁅H₃, H₁⁆, H₂⁆ ≤ K)
     : ⁅⁅H₁, H₂⁆, H₃⁆ ≤ K := by
   let q : G →* G ⧸ K := QuotientGroup.mk' K
@@ -32,7 +31,7 @@ theorem commutator_commutator_le_of_rotate
 /-- Relative three-subgroups lemma when the target subgroup is normalized by
 the three participating subgroups. -/
 theorem commutator_commutator_le_of_rotate_of_le_normalizer
-    {H₁ H₂ H₃ K : Subgroup G}
+    {G : Type*} [Group G] {H₁ H₂ H₃ K : Subgroup G}
     (hnorm₁ : H₁ ≤ normalizer K) (hnorm₂ : H₂ ≤ normalizer K)
     (hnorm₃ : H₃ ≤ normalizer K)
     (h₁ : ⁅⁅H₂, H₃⁆, H₁⁆ ≤ K) (h₂ : ⁅⁅H₃, H₁⁆, H₂⁆ ≤ K)

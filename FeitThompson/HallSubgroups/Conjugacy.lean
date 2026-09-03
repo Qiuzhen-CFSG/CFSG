@@ -33,7 +33,6 @@ public import FeitThompson.HallSubgroups.Core
 public import FeitThompson.HallSubgroups.Complements
 public import FeitThompson.HallSubgroups.Existence
 
-open Theory.GroupAction
 
 
 /-

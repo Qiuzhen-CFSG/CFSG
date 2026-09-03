@@ -1,7 +1,6 @@
 module
 
 public import BenderSuzuki.SE.Section11Lemma115QuotientLift
-open Theory.ElementaryAbelian
 
 
 /-!

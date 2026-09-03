@@ -13,8 +13,6 @@ import FeitThompson.PFsection9.PFsection9_7
 import FeitThompson.PFsection9.PFsection9_9
 import FeitThompson.PFsection10.PFsection10_11
 import FeitThompson.PFsection11.PFsection11_9
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 /-!
@@ -2738,11 +2736,11 @@ private theorem hypothesis_13_1_sigma_transport_eq_of_cyclicTI_agreement
         (Section6.theorem_6_8_transportClassFunction e ξ) :=
     Section6.theorem_6_8_transportClassFunction_isClass e hξClass
   have htransportVirt :
-      Theory.Character.IsVirtualCharacter
+      IsVirtualCharacter
         (Section6.theorem_6_8_transportClassFunction e ξ) :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup htransportIrr
   have hImageVirt :
-      Theory.Character.IsVirtualCharacter
+      IsVirtualCharacter
         (σsel (Section6.theorem_6_8_transportClassFunction e ξ)) :=
     hVirtSel _ htransportVirt
   have hselfW : Section1.scalarProduct W ξ ξ = 1 :=

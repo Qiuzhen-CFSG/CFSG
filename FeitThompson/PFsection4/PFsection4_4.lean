@@ -58,13 +58,13 @@ namespace Section4Scratch
 
 universe u v
 
-open Section1 Section2 Section3 Section4
+open Section2 Section3 Section4
 
 /-- Peterfalvi's column sum `μⱼ = ∑ᵢ Πᵢⱼ` from `(4.5)`. -/
 @[expose] public def piColumn
     {L : Type u} [Group L]
     {I J : Type*} [Fintype I]
-    (piChar : I → J → ClassFunction L) (j : J) : ClassFunction L :=
+    (piChar : I → J → _root_.ClassFunction L) (j : J) : _root_.ClassFunction L :=
   ∑ i : I, piChar i j
 
 /-- The larger Section 4 carrier `A ∪ (W \ W₂)ᴸ`. -/
@@ -112,21 +112,21 @@ open Section1 Section2 Section3 Section4
 @[expose] public def equalDegreeColumnSet
     {L : Type u} [Group L]
     {I J : Type*} [Fintype I]
-    (piChar : I → J → ClassFunction L) (j0 k : J) : Set J :=
+    (piChar : I → J → _root_.ClassFunction L) (j0 k : J) : Set J :=
   {j : J | j ≠ j0 ∧ Section1.degree (piColumn piChar j) = Section1.degree (piColumn piChar k)}
 
 /-- The corresponding finite subtype of equal-degree, non-base columns. -/
 @[expose] public def equalDegreeColumnIndex
     {L : Type u} [Group L]
     {I J : Type*} [Fintype I]
-    (piChar : I → J → ClassFunction L) [Fintype J]
+    (piChar : I → J → _root_.ClassFunction L) [Fintype J]
     (j0 k : J) : Type _ :=
   {j : J // j ∈ equalDegreeColumnSet piChar j0 k}
 
 public instance equalDegreeColumnIndexFintype
     {L : Type u} [Group L]
     {I J : Type*} [Fintype I]
-    (piChar : I → J → ClassFunction L) [Fintype J]
+    (piChar : I → J → _root_.ClassFunction L) [Fintype J]
     (j0 k : J) :
     Fintype (equalDegreeColumnIndex piChar j0 k) := by
   dsimp [equalDegreeColumnIndex]
@@ -136,8 +136,8 @@ public instance equalDegreeColumnIndexFintype
 @[expose] public def omegaColumnSigma
     {W : Type u} [Group W] {G : Type v} [Group G]
     {I J : Type*} [Fintype I]
-    (σ : ClassFunction W →ₗ[ℂ] ClassFunction G)
-    (ω : I → J → ClassFunction W) (j : J) : ClassFunction G :=
+    (σ : _root_.ClassFunction W →ₗ[ℂ] _root_.ClassFunction G)
+    (ω : I → J → _root_.ClassFunction W) (j : J) : _root_.ClassFunction G :=
   ∑ i : I, σ (ω i j)
 
 end Section4Scratch
@@ -611,12 +611,12 @@ private theorem subgroupRestriction_isIrreducibleCharacterOnGroup_of_kernel_cont
     simpa using hcycKer.commGroup
   letI : Std.Commutative (α := L ⧸ MonoidHom.ker ρ) (· * ·) := ⟨mul_comm⟩
   letI : IsMulCommutative (L ⧸ MonoidHom.ker ρ) := ⟨inferInstance⟩
-  letI : Representation.IsIrreducible (Theory.Representation.kerRepresentation ρ) :=
-    (Theory.Representation.kerRepresentation_irreducible_iff (ρ := ρ)).2 hρirr
+  letI : Representation.IsIrreducible (Representation.kerRepresentation ρ) :=
+    (Representation.kerRepresentation_irreducible_iff (ρ := ρ)).2 hρirr
   have hdim1 : n = 1 := by
     simpa using
       (Representation.IsIrreducible.finrank_eq_one_of_isMulCommutative
-        (ρ := Theory.Representation.kerRepresentation ρ))
+        (ρ := Representation.kerRepresentation ρ))
   subst hdim1
   let ρW : Representation ℂ W (Fin 1 → ℂ) := ρ.comp W.subtype
   have hρWirr : Representation.IsIrreducible ρW := by

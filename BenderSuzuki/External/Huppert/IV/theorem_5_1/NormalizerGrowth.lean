@@ -1,7 +1,6 @@
 module
 
 public import BenderSuzuki.External.Huppert.IV.Basic
-open Theory.GroupAction
 
 
 /-!

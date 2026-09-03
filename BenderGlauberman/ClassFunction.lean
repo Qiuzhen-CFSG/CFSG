@@ -1,13 +1,26 @@
 module
 
-public import Theory.Character
+public import Theory.Character.ClassFunction
+public import Theory.Character.Orthogonality
+public import Theory.Character.Integrality
+public import Theory.Character.Induction
+public import Theory.Character.BrauerSuzuki
+public import Theory.Character.ConjClassFunction
+public import Theory.Character.SimpleCriteria
+public import Theory.Character.Completeness
+public import Theory.Character.Divisibility
+public import Theory.Character.BrauerPermutation
+public import Theory.Character.CharacterValues
+public import Theory.Character.DegreeBounds
+public import Theory.Character.Cyclotomic
+public import Theory.Character.CrossCharBrauer
 
 /-!
 # Bender--Glauberman character machinery
 
 The base character theory (class functions `G → ℂ`, the scalar product,
 characters and irreducible characters, orthonormality, integrality, induction,
-and the Brauer--Suzuki pairing) is provided by `Theory.Character`; this file
+and the Brauer--Suzuki pairing) is provided by `Character`; this file
 contains only the Bender--Glauberman-specific additions: the `g⁻¹`-form
 `scalarProductInv`, character decomposition, linear characters, the regular
 representation, and Frobenius reciprocity.
@@ -19,7 +32,6 @@ open scoped BigOperators
 open scoped MonoidAlgebra
 open scoped TensorProduct
 
-open Theory.Character
 
 namespace BenderGlauberman
 
@@ -27,7 +39,7 @@ universe u v w
 
 -- This file's sums over subgroups need `Fintype ↥H`.  As in
 -- `Theory/Character/BrauerSuzuki.lean`, use local instances so that statement
--- and proof contexts synthesize the *same* instance that `Theory.Character`
+-- and proof contexts synthesize the *same* instance that `Character`
 -- statements embed; deliberately not exported.
 attribute [local instance] Fintype.ofFinite
 attribute [local instance] Classical.propDecidable
@@ -100,7 +112,7 @@ public theorem isIrreducibleCharacter_of_norm_one_inv {χ : ClassFunction G}
   unfold scalarProduct
   unfold scalarProductInv at hnorm
   convert hnorm using 1
-  simp only [Theory.Representation.representation_character_inv_eq_star_character]
+  simp only [Representation.representation_character_inv_eq_star_character]
   congr 1
   congr 1
   exact Finset.ext fun x => by simp
@@ -199,14 +211,14 @@ section StarBridge
 public theorem star_trace_char_inv {G : Type u} [Group G] [Fintype G] {V : Type v}
     [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V] (ρ : Representation ℂ G V) (g : G) :
     star ((LinearMap.trace ℂ V) (ρ g)) = (LinearMap.trace ℂ V) (ρ g⁻¹) :=
-  (Theory.Representation.representation_character_inv_eq_star_character ρ g).symm
+  (Representation.representation_character_inv_eq_star_character ρ g).symm
 
 /-- For a character χ: star (χ g) = χ g⁻¹. -/
 public theorem star_char_eq_char_inv {G : Type u} [Group G] [Fintype G] {χ : ClassFunction G}
     (hχ : IsCharacter χ) (g : G) : star (χ g) = χ g⁻¹ := by
   rcases hχ with ⟨n, ρ, hχeq⟩
   rw [hχeq]
-  exact (Theory.Representation.representation_character_inv_eq_star_character ρ g).symm
+  exact (Representation.representation_character_inv_eq_star_character ρ g).symm
 
 /-- For a character χ, the conjugate scalar product is the g⁻¹-form. -/
 public theorem star_scalarProduct_eq_inv_of_char {G : Type u} [Group G] [Fintype G]
@@ -654,8 +666,8 @@ variable {G : Type u} [Group G]
 public theorem isIrreducible_equiv {V : Type v} {W : Type w} [AddCommGroup V] [Module ℂ V]
     [AddCommGroup W] [Module ℂ W] {ρ : Representation ℂ G V} {σ : Representation ℂ G W}
     (φ : ρ.Equiv σ) : Representation.IsIrreducible ρ ↔ Representation.IsIrreducible σ := by
-  exact Theory.Representation.RepEquiv.irreducible_euqiv
-    (Theory.Representation.RepEquiv.ofRepresentationEquiv φ)
+  exact Representation.RepEquiv.irreducible_euqiv
+    (Representation.RepEquiv.ofRepresentationEquiv φ)
 
 /-- Given complementary subrepresentations `W`, `W'`, the representation splits
 as their direct sum. -/

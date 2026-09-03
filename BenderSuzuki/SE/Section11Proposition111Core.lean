@@ -1,7 +1,6 @@
 module
 
 public import BenderSuzuki.SE.Section10Proposition102Fitting
-open Theory.GroupAction
 
 
 /-!

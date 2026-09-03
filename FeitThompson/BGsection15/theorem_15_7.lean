@@ -5,9 +5,7 @@ import FeitThompson.PCore.CentralizerControl
 import FeitThompson.HallSubgroups.Conjugacy
 import Mathlib.Algebra.Group.Subgroup.Order
 import Mathlib.GroupTheory.Schreier
-open Theory.GroupAction
-open Theory.ElementaryAbelian
-open Theory.Representation
+open Representation
 
 
 open scoped Pointwise commutatorElement

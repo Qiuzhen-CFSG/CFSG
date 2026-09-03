@@ -20,7 +20,7 @@ attribute [local instance] Fintype.ofFinite
 namespace Section4Scratch
 universe u
 universe v
-open Section1 Section2 Section3 Section4
+open Section2 Section3 Section4
 
 /-! ## (4.10) -/
 
@@ -30,11 +30,11 @@ open Section1 Section2 Section3 Section4
     {W : Subgroup L}
     {I J : Type*} [Fintype I] [Fintype J]
     (i0 : I) (j0 : J)
-    (ω : I → J → ClassFunction W)
-    (σ : ClassFunction W →ₗ[ℂ] ClassFunction G)
-    (piChar : I → J → ClassFunction L)
+    (ω : I → J → _root_.ClassFunction W)
+    (σ : _root_.ClassFunction W →ₗ[ℂ] _root_.ClassFunction G)
+    (piChar : I → J → _root_.ClassFunction L)
     (deltaSign : J → ℂ)
-    (τ : ClassFunction L →ₗ[ℂ] ClassFunction G) : Prop :=
+    (τ : _root_.ClassFunction L →ₗ[ℂ] _root_.ClassFunction G) : Prop :=
   ∀ i j,
     τ (deltaSign j • piChar i j - deltaSign j • piChar i0 j - piChar i j0 + piChar i0 j0) =
       (σ (ω i j) - σ (ω i0 j)) - (σ (ω i j0) - σ (ω i0 j0))

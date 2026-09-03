@@ -3,7 +3,6 @@ module
 public import FeitThompson.PFsection8.Basic
 public import FeitThompson.PFsection3.PFsection3_5
 public import FeitThompson.PFsection4.PFsection4_5_to_10
-open Theory.GroupAction
 
 
 noncomputable section
@@ -78,7 +77,7 @@ private theorem isIrreducibleCharacterOnGroup_classFunctionOnSubgroupOf
   let e : (MF.subgroupOf M) ≃* MF := Subgroup.subgroupOfEquivOfLe hMFM
   let ρsub : Representation ℂ (MF.subgroupOf M) (Fin n → ℂ) := ρ.comp e.toMonoidHom
   refine ⟨n, ρsub, ?_, ?_⟩
-  · exact Theory.Representation.RepEquiv.irreducible_of_group_iso
+  · exact Representation.RepEquiv.irreducible_of_group_iso
       (ρ := ρ) (σ := ρsub) e.symm (by
         intro g v
         simp [ρsub, e]) hρirr

@@ -35,13 +35,11 @@ and the definition of irreducibility requires the field structure.
 
 section EndFieldModule
 
-variable {F : Type*} [Field F]
-variable {G : Type*} [Monoid G]
-variable {V : Type*} [AddCommGroup V] [Module F V]
-variable (ρ : Representation F G V)
 
 /-- We build the `K[G]`-module instance on `ρ.asModule`.-/
 noncomputable instance endFieldModule
+    {F G V : Type*} [Field F] [Monoid G] [AddCommGroup V] [Module F V]
+    (ρ : Representation F G V)
     : Module (_root_.Module.End F[G] ρ.asModule) ρ.asModule :=
   {
     smul := fun k m ↦ k m
@@ -54,7 +52,10 @@ noncomputable instance endFieldModule
   }
 
 @[simp]
-theorem endFieldModule_smul_apply (k : _root_.Module.End F[G] ρ.asModule) (m : ρ.asModule)
+theorem endFieldModule_smul_apply
+    {F G V : Type*} [Field F] [Monoid G] [AddCommGroup V] [Module F V]
+    (ρ : Representation F G V)
+    (k : _root_.Module.End F[G] ρ.asModule) (m : ρ.asModule)
     : (k • m) = k m :=
   rfl
 
@@ -63,13 +64,12 @@ end EndFieldModule
 section EndField
 
 -- We work on a finite field `F` and a finite dimensional vector space`V`.
-variable {F : Type*} [Field F] [Finite F]
-variable {G : Type*} [Monoid G]
-variable {V : Type*} [AddCommGroup V] [Module F V] [iFD : FiniteDimensional F V]
-variable (ρ : Representation F G V) [iIr : IsIrreducible ρ]
 
 /-- We build the finite field instance over the endomorphism field `K = End_{F[G]}(ρ.asModule)`.-/
-instance endField_finite : Finite (_root_.Module.End F[G] ρ.asModule) :=
+instance endField_finite
+    {F G V : Type*} [Field F] [Finite F] [Monoid G] [AddCommGroup V]
+    [Module F V] [iFD : FiniteDimensional F V] (ρ : Representation F G V) :
+    Finite (_root_.Module.End F[G] ρ.asModule) :=
   letI : Module F ρ.asModule := Representation.instModuleAsModule ρ
   letI : Finite V := Module.finite_iff_finite.mp iFD
   let : Finite ρ.asModule := Finite.of_injective ρ.asModuleEquiv ρ.asModuleEquiv.injective
@@ -77,7 +77,10 @@ instance endField_finite : Finite (_root_.Module.End F[G] ρ.asModule) :=
   Finite.of_injective _ fun _ _ h ↦ by ext; exact congrFun h _
 
 set_option backward.isDefEq.respectTransparency false in
-noncomputable instance endField_field : Field (_root_.Module.End F[G] ρ.asModule) := by
+noncomputable instance endField_field
+    {F G V : Type*} [Field F] [Finite F] [Monoid G] [AddCommGroup V]
+    [Module F V] [iFD : FiniteDimensional F V] (ρ : Representation F G V)
+    [iIr : IsIrreducible ρ] : Field (_root_.Module.End F[G] ρ.asModule) := by
   classical
   let : IsSimpleModule F[G] ρ.asModule := (irreducible_iff_isSimpleModule_asModule ρ).mp iIr
   exact littleWedderburn _
@@ -86,14 +89,13 @@ end EndField
 
 section EndFieldRep
 
-variable {F : Type*} [Field F]
-variable {G : Type*} [Monoid G]
-variable {V : Type*} [AddCommGroup V] [Module F V]
-variable (ρ : Representation F G V)
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The endomorphism field representation inherited from the original representation `ρ`.-/
-def endFieldRep : Representation (_root_.Module.End F[G] ρ.asModule) G ρ.asModule :=
+def endFieldRep
+    {F G V : Type*} [Field F] [Monoid G] [AddCommGroup V] [Module F V]
+    (ρ : Representation F G V) :
+    Representation (_root_.Module.End F[G] ρ.asModule) G ρ.asModule :=
   {
     toFun :=
       fun g ↦
@@ -108,11 +110,13 @@ def endFieldRep : Representation (_root_.Module.End F[G] ρ.asModule) G ρ.asMod
   }
 
 @[simp]
-theorem endFieldRep_apply (g : G) (m : ρ.asModule)
+theorem endFieldRep_apply {F G V : Type*} [Field F] [Monoid G] [AddCommGroup V]
+    [Module F V] (ρ : Representation F G V) (g : G) (m : ρ.asModule)
     : (endFieldRep ρ) g m = ρ.asModuleEquiv.symm (ρ g (ρ.asModuleEquiv m)) :=
   rfl
 
-theorem endFieldRep_apply' (g : G) (m : ρ.asModule)
+theorem endFieldRep_apply' {F G V : Type*} [Field F] [Monoid G] [AddCommGroup V]
+    [Module F V] (ρ : Representation F G V) (g : G) (m : ρ.asModule)
     : ρ.asModuleEquiv ((endFieldRep ρ) g m) = (ρ g (ρ.asModuleEquiv m)) :=
   rfl
 
@@ -121,18 +125,20 @@ end EndFieldRep
 section EndFieldRepIrr
 
 -- We need field structure.
-variable {F : Type*} [Field F] [Finite F]
-variable {G : Type*} [Monoid G]
-variable {V : Type*} [AddCommGroup V] [Module F V] [iFD : FiniteDimensional F V]
-variable (ρ : Representation F G V) [iIr : IsIrreducible ρ]
 
 set_option backward.isDefEq.respectTransparency false in
 instance endFieldRep_AddHomClass
+    {F G V : Type*} [Field F] [Finite F] [Monoid G] [AddCommGroup V]
+    [Module F V] [iFD : FiniteDimensional F V] (ρ : Representation F G V)
+    [iIr : IsIrreducible ρ]
     : AddHomClass (Representation.End (endFieldRep ρ)) ρ.asModule ρ.asModule where
   map_add f x y := RepMap.map_add f x y
 
 set_option backward.isDefEq.respectTransparency false in
 instance endFieldRep_mulActionHomClass
+    {F G V : Type*} [Field F] [Finite F] [Monoid G] [AddCommGroup V]
+    [Module F V] [FiniteDimensional F V] (ρ : Representation F G V)
+    [IsIrreducible ρ]
     : MulActionHomClass (Representation.End (endFieldRep ρ)) F[G] ρ.asModule
         ρ.asModule where
   map_smulₛₗ f x m := by
@@ -148,7 +154,10 @@ instance endFieldRep_mulActionHomClass
       simp
 
 set_option backward.isDefEq.respectTransparency false in
-theorem endFieldRep_isIrreducible : IsIrreducible (endFieldRep ρ) :=
+theorem endFieldRep_isIrreducible
+    {F G V : Type*} [Field F] [Finite F] [Monoid G] [AddCommGroup V]
+    [Module F V] [iFD : FiniteDimensional F V] (ρ : Representation F G V)
+    [iIr : IsIrreducible ρ] : IsIrreducible (endFieldRep ρ) :=
   {
     toNontrivial :=
       let : Nontrivial ρ.asModule := Subrepresentation.irreducible_module_nontrivial ρ
@@ -170,7 +179,10 @@ theorem endFieldRep_isIrreducible : IsIrreducible (endFieldRep ρ) :=
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The endomorphism field representation is absolutely irreducible.-/
-theorem endFieldRep_isAbsolutelyIrreducible : IsAbsolutelyIrreducible (endFieldRep ρ) :=
+theorem endFieldRep_isAbsolutelyIrreducible
+    {F G V : Type*} [Field F] [Finite F] [Monoid G] [AddCommGroup V]
+    [Module F V] [iFD : FiniteDimensional F V] (ρ : Representation F G V)
+    [iIr : IsIrreducible ρ] : IsAbsolutelyIrreducible (endFieldRep ρ) :=
   let : IsIrreducible (endFieldRep ρ) := endFieldRep_isIrreducible _
   let : Finite ρ.asModule := Module.finite_iff_finite.mp iFD
   (isAbsolutelyIrreducible_iff_surjective _).mpr

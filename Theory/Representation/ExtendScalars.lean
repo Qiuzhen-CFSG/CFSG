@@ -18,12 +18,10 @@ open _root_.Representation
 
 section extendScalarsRep
 
-variable {F G V W : Type*} [Monoid G] [Field F] [AddCommGroup V] [AddCommGroup W]
-  [Module F V] [Module F W] (F' : Type*) [Field F'] [Algebra F F']
-  (ρ : Representation F G V) (σ : Representation F G W)
-
 /-- The representation obtained from `ρ` by extending scalars from `F` to `F'`. -/
-def extendScalars : Representation F' G (F' ⊗[F] V) :=
+def extendScalars {F G V : Type*} [Monoid G] [Field F] [AddCommGroup V]
+    [Module F V] (F' : Type*) [Field F'] [Algebra F F']
+    (ρ : Representation F G V) : Representation F' G (F' ⊗[F] V) :=
   {
     toFun := fun g => (ρ g).baseChange F'
     map_one' := by rw [map_one, baseChange_one],
@@ -31,22 +29,30 @@ def extendScalars : Representation F' G (F' ⊗[F] V) :=
   }
 
 @[simp]
-theorem extendScalars_apply (g : G) : extendScalars F' ρ g = (ρ g).baseChange F' := by rfl
+theorem extendScalars_apply {F G V : Type*} [Monoid G] [Field F] [AddCommGroup V]
+    [Module F V] (F' : Type*) [Field F'] [Algebra F F']
+    (ρ : Representation F G V) (g : G) : extendScalars F' ρ g = (ρ g).baseChange F' := by rfl
 
 set_option backward.isDefEq.respectTransparency false in
 theorem extendScalars_nontrivial_iff
+    {F G V : Type*} [Monoid G] [Field F] [AddCommGroup V] [Module F V]
+    (F' : Type*) [Field F'] [Algebra F F'] (ρ : Representation F G V)
     : Nontrivial ρ.asModule ↔ Nontrivial (extendScalars F' ρ).asModule := by
   rw [← rank_pos_iff_nontrivial (R := F), ← rank_pos_iff_nontrivial (R := F')]
   have : Module.rank F' (extendScalars F' ρ).asModule = Module.rank F' (F' ⊗[F] V) := rfl
   rw [this, Module.rank_baseChange, Cardinal.zero_lt_lift_iff]
   rfl
 
-instance extendScalars_nontrivial [inst : Nontrivial V]
+instance extendScalars_nontrivial {F G V : Type*} [Monoid G] [Field F] [AddCommGroup V]
+    [Module F V] (F' : Type*) [Field F'] [Algebra F F'] (ρ : Representation F G V)
+    [inst : Nontrivial V]
     : Nontrivial (extendScalars F' ρ).asModule :=
   (extendScalars_nontrivial_iff _ _).mp inst
 
 set_option backward.isDefEq.respectTransparency false in
 theorem extendScalars_finite_dimensional_iff
+    {F G V : Type*} [Monoid G] [Field F] [AddCommGroup V] [Module F V]
+    (F' : Type*) [Field F'] [Algebra F F'] (ρ : Representation F G V)
     : FiniteDimensional F ρ.asModule
       ↔ FiniteDimensional F' (extendScalars F' ρ).asModule := by
   unfold FiniteDimensional
@@ -57,11 +63,15 @@ theorem extendScalars_finite_dimensional_iff
   rfl
 
 set_option backward.isDefEq.respectTransparency false in
-instance extendScalars_finite_dimensional [inst : FiniteDimensional F V]
+instance extendScalars_finite_dimensional {F G V : Type*} [Monoid G] [Field F] [AddCommGroup V]
+    [Module F V] (F' : Type*) [Field F'] [Algebra F F'] (ρ : Representation F G V)
+    [inst : FiniteDimensional F V]
     : FiniteDimensional F' (extendScalars F' ρ).asModule :=
   (extendScalars_finite_dimensional_iff _ _).mp inst
 
 theorem extendScalars_faithful_iff
+    {F G V : Type*} [Monoid G] [Field F] [AddCommGroup V] [Module F V]
+    (F' : Type*) [Field F'] [Algebra F F'] (ρ : Representation F G V)
     : Function.Injective ρ ↔ Function.Injective (extendScalars F' ρ) := by
   refine ⟨fun hi g₁ g₂ he => ?_, fun hi g₁ g₂ he => ?_⟩
   · rw [← Function.Injective.eq_iff hi]
@@ -74,12 +84,17 @@ theorem extendScalars_faithful_iff
       coe_restrictScalars, baseChange_tmul, he]
 
 theorem adjoin_eq_span
+    {F G V : Type*} [Monoid G] [Field F] [AddCommGroup V] [Module F V]
+    (ρ : Representation F G V)
     : (Algebra.adjoin F (Set.range ρ)).toSubmodule = Submodule.span F (Set.range ρ) := by
   rw [Algebra.adjoin_eq_span, MonoidHom.mclosure_range, MonoidHom.coe_mrange]
 
 set_option backward.isDefEq.respectTransparency false in
 open Module.Basis in
-lemma baseChange_surj_iff [FiniteDimensional F V] (S : Set (Module.End F V))
+lemma baseChange_surj_iff
+    {F V : Type*} [Field F] [AddCommGroup V] [Module F V]
+    (F' : Type*) [Field F'] [Algebra F F'] [FiniteDimensional F V]
+    (S : Set (Module.End F V))
     : Submodule.span F S = ⊤ ↔ Submodule.span F' {s.baseChange F' | s ∈ S} = ⊤ := by
   let b := ofVectorSpace F V
   set ι := ofVectorSpaceIndex F V
@@ -204,7 +219,10 @@ lemma baseChange_surj_iff [FiniteDimensional F V] (S : Set (Module.End F V))
       rw [this, TensorProduct.tmul_sum]
       rfl
 
-theorem extendScalars_surj_iff [FiniteDimensional F V]
+theorem extendScalars_surj_iff
+    {F G V : Type*} [Monoid G] [Field F] [AddCommGroup V] [Module F V]
+    (F' : Type*) [Field F'] [Algebra F F'] (ρ : Representation F G V)
+    [FiniteDimensional F V]
     : Algebra.adjoin F (Set.range ρ) = ⊤
       ↔ Algebra.adjoin F' (Set.range (extendScalars F' ρ)) = ⊤ := by
   have :(Set.range (extendScalars F' ρ)) = {s.baseChange F' | s ∈ (Set.range ρ)}:= by
@@ -216,6 +234,8 @@ theorem extendScalars_surj_iff [FiniteDimensional F V]
 
 /-- Base change of subrepresentations along scalar extension. -/
 def subrepresentation_extendScalars
+    {F G V : Type*} [Monoid G] [Field F] [AddCommGroup V] [Module F V]
+    (F' : Type*) [Field F'] [Algebra F F'] (ρ : Representation F G V)
     : Subrepresentation ρ → Subrepresentation (extendScalars F' ρ) :=
   fun φ ↦ by
     refine .mk (φ.toSubmodule.baseChange F') ?_
@@ -241,11 +261,16 @@ def subrepresentation_extendScalars
       exact add_mem hx hy
     exact TensorProduct.induction_on v zero tmul add
 
-theorem subrepresentation_extendScalars_apply (φ : Subrepresentation ρ)
+theorem subrepresentation_extendScalars_apply
+    {F G V : Type*} [Monoid G] [Field F] [AddCommGroup V] [Module F V]
+    (F' : Type*) [Field F'] [Algebra F F'] (ρ : Representation F G V)
+    (φ : Subrepresentation ρ)
     : ((subrepresentation_extendScalars F' ρ) φ).toSubmodule
       = φ.toSubmodule.baseChange F' := by rfl
 
 theorem subrepresentation_extendScalars_bot
+    {F G V : Type*} [Monoid G] [Field F] [AddCommGroup V] [Module F V]
+    (F' : Type*) [Field F'] [Algebra F F'] (ρ : Representation F G V)
     : subrepresentation_extendScalars F' ρ ⊥ = ⊥ := by
   apply Subrepresentation.toSubmodule_injective
   have h1 : (⊥ : Subrepresentation ρ).toSubmodule = ⊥ := by rfl
@@ -253,6 +278,8 @@ theorem subrepresentation_extendScalars_bot
   rw [subrepresentation_extendScalars_apply, h1, h2, Submodule.baseChange_bot]
 
 theorem subrepresentation_extendScalars_top
+    {F G V : Type*} [Monoid G] [Field F] [AddCommGroup V] [Module F V]
+    (F' : Type*) [Field F'] [Algebra F F'] (ρ : Representation F G V)
     : subrepresentation_extendScalars F' ρ ⊤ = ⊤ := by
   apply Subrepresentation.toSubmodule_injective
   have h1 : (⊤ : Subrepresentation ρ).toSubmodule = ⊤ := by rfl
@@ -260,7 +287,9 @@ theorem subrepresentation_extendScalars_top
   rw [subrepresentation_extendScalars_apply, h1, h2, Submodule.baseChange_top]
 
 set_option backward.isDefEq.respectTransparency false in
-lemma mem_of_tmul_mem_baseChange {m : V} {W : Submodule F V}
+lemma mem_of_tmul_mem_baseChange
+    {F V : Type*} [Field F] [AddCommGroup V] [Module F V]
+    (F' : Type*) [Field F'] [Algebra F F'] {m : V} {W : Submodule F V}
     (hm : 1 ⊗ₜ m ∈ W.baseChange F')
     : m ∈ W := by
   let f := Submodule.mkQ W
@@ -275,6 +304,8 @@ lemma mem_of_tmul_mem_baseChange {m : V} {W : Submodule F V}
   exact this
 
 theorem subrepresentation_extendScalars_inj
+    {F G V : Type*} [Monoid G] [Field F] [AddCommGroup V] [Module F V]
+    (F' : Type*) [Field F'] [Algebra F F'] (ρ : Representation F G V)
     : Function.Injective (subrepresentation_extendScalars F' ρ) :=
   fun φ₁ φ₂ he ↦ by
     suffices φ₁.toSubmodule = φ₂.toSubmodule by
@@ -293,6 +324,8 @@ theorem subrepresentation_extendScalars_inj
       exact mem_of_tmul_mem_baseChange F' this
 
 theorem _root_.Subrepresentation.nontrivial_iff
+    {F G V : Type*} [Monoid G] [Field F] [AddCommGroup V] [Module F V]
+    (ρ : Representation F G V)
     : Nontrivial (Subrepresentation ρ) ↔ Nontrivial ρ.asModule := by
   rw [← Submodule.nontrivial_iff (R := F) (M := ρ.asModule)]
   refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
@@ -307,13 +340,18 @@ theorem _root_.Subrepresentation.nontrivial_iff
     exact this
 
 theorem extendScalars_subrepresentation_nontrivial_iff
+    {F G V : Type*} [Monoid G] [Field F] [AddCommGroup V] [Module F V]
+    (F' : Type*) [Field F'] [Algebra F F'] (ρ : Representation F G V)
     : Nontrivial (Subrepresentation ρ)
       ↔ Nontrivial (Subrepresentation (extendScalars F' ρ)) := by
   rw [Subrepresentation.nontrivial_iff, Subrepresentation.nontrivial_iff]
   exact extendScalars_nontrivial_iff F' ρ
 
 set_option backward.isDefEq.respectTransparency false in
-theorem irreducible_of_extendScalars [inst : IsIrreducible (extendScalars F' ρ)]
+theorem irreducible_of_extendScalars
+    {F G V : Type*} [Monoid G] [Field F] [AddCommGroup V] [Module F V]
+    (F' : Type*) [Field F'] [Algebra F F'] (ρ : Representation F G V)
+    [inst : IsIrreducible (extendScalars F' ρ)]
     : IsIrreducible ρ := by
   have : Nontrivial (Subrepresentation ρ) := by
     rw [extendScalars_subrepresentation_nontrivial_iff (F' := F'), Subrepresentation.nontrivial_iff]
@@ -332,11 +370,14 @@ theorem irreducible_of_extendScalars [inst : IsIrreducible (extendScalars F' ρ)
   rw [subrepresentation_extendScalars_top]
   exact (inst.eq_bot_or_eq_top (subrepresentation_extendScalars F' ρ a)).resolve_left this
 
-variable {ρ} {σ}
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Extend an intertwining map along scalar extension. -/
-def extendScalars_map (e : ρ →ₗ σ) : extendScalars F' ρ →ₗ extendScalars F' σ :=
+def extendScalars_map
+    {F G V W : Type*} [Monoid G] [Field F] [AddCommGroup V] [AddCommGroup W]
+    [Module F V] [Module F W] (F' : Type*) [Field F'] [Algebra F F']
+    {ρ : Representation F G V} {σ : Representation F G W} (e : ρ →ₗ σ)
+    : extendScalars F' ρ →ₗ extendScalars F' σ :=
   RepMap.mk (baseChange F' e.toLinearMap)
     (by
       intro g
@@ -346,11 +387,17 @@ def extendScalars_map (e : ρ →ₗ σ) : extendScalars F' ρ →ₗ extendScal
         Function.comp_apply, baseChange_tmul, IntertwiningMap.coe_toLinearMap]
       rw [e.isIntertwining])
 
-theorem extendScalars_map_toLinearMap {e : ρ →ₗ σ}
+theorem extendScalars_map_toLinearMap
+    {F G V W : Type*} [Monoid G] [Field F] [AddCommGroup V] [AddCommGroup W]
+    [Module F V] [Module F W] (F' : Type*) [Field F'] [Algebra F F']
+    {ρ : Representation F G V} {σ : Representation F G W} {e : ρ →ₗ σ}
     : (extendScalars_map F' e).toLinearMap = baseChange F' e.toLinearMap := by rfl
 
 /-- Iterated scalar extension is canonically equivalent to direct scalar extension. -/
-def extendScalars_comp {F'' : Type*} [Field F''] [Algebra F' F''] [Algebra F F'']
+def extendScalars_comp
+    {F G V : Type*} [Monoid G] [Field F] [AddCommGroup V] [Module F V]
+    (F' : Type*) [Field F'] [Algebra F F'] (ρ : Representation F G V)
+    {F'' : Type*} [Field F''] [Algebra F' F''] [Algebra F F'']
     [IsScalarTower F F' F'']
     : extendScalars F'' (extendScalars F' ρ) ≃ₗ extendScalars F'' ρ :=
   RepEquiv.mk (TensorProduct.AlgebraTensorModule.cancelBaseChange F F' F'' F'' V)

@@ -13,7 +13,6 @@ import FeitThompson.Frattini.Core
 import Theory.Representation.Maschke
 import Mathlib.LinearAlgebra.FixedSubmodule
 import Mathlib.RepresentationTheory.Submodule
-open Theory.GroupAction
 
 
 /-!

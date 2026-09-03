@@ -4,7 +4,6 @@ public import BenderSuzuki.SE.Proposition84
 public import BenderSuzuki.SE.Permutation
 import BenderSuzuki.SE.Proposition84Residual
 import BenderSuzuki.PFchapter1section1.proposition_3
-open Theory.GroupAction
 
 
 namespace BenderSuzuki

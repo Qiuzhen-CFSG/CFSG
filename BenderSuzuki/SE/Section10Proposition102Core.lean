@@ -182,7 +182,7 @@ public theorem proposition102_H_core
       simpa [N, K, A, p] using d.kernel_sup_A1_eq_pPrimeCore
     have hNsub : N.subgroupOf D = pPrimeCore p D := by
       rw [hNeq]
-      exact Theory.GroupAction.subgroupOf_map_subtype_eq (pPrimeCore p D)
+      exact subgroupOf_map_subtype_eq (pPrimeCore p D)
     rw [hNsub]
     exact pPrimeCore_normal
   have hDnormN : D ≤ Subgroup.normalizer (N : Set X) :=
@@ -352,7 +352,7 @@ public theorem proposition102_derived_nilpotent
     exact Subgroup.map_subtype_le (d.choice.S : Subgroup E)
   have hHnormalE : (H.subgroupOf E).Normal := by
     change (((derivedSubgroup E).map E.subtype).subgroupOf E).Normal
-    rw [Theory.GroupAction.subgroupOf_map_subtype_eq]
+    rw [subgroupOf_map_subtype_eq]
     infer_instance
   have hPnormH : P ≤ Subgroup.normalizer (H : Set X) :=
     hPE.trans

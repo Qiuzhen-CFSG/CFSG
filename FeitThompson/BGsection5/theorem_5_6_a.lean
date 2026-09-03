@@ -25,7 +25,6 @@ import Theory.Representation.ConjugateRep
 import Theory.Representation.EndFieldRep
 import Theory.Representation.TwoDimensionalOddOrder
 import Mathlib.GroupTheory.Schreier
-open Theory.GroupAction
 
 
 /-! # Theorem 5.6(a) from BG Section 5 -/

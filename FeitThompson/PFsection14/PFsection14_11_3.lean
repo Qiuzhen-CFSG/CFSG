@@ -268,10 +268,10 @@ public theorem section14_pf39_pf35_data_of_sigma
       _ = if x = y then 1 else 0 := by
         simpa using hω.orthonormal x y
   · intro i j
-    have hvirtW : Theory.Character.IsVirtualCharacter (ωFin i j) :=
+    have hvirtW : IsVirtualCharacter (ωFin i j) :=
       Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup
         (hω.irreducible i j)
-    have hvirtG : Theory.Character.IsVirtualCharacter (σ (ωFin i j)) :=
+    have hvirtG : IsVirtualCharacter (σ (ωFin i j)) :=
       hvirt (ωFin i j) hvirtW
     have hself :
         Section1.scalarProduct G (σ (ωFin i j)) (σ (ωFin i j)) = 1 := by
@@ -401,7 +401,7 @@ public theorem section14_pf39_structured_b_from_pf35_data
 public theorem section14_pf39_cyclotomic_model_of_mem_cyclotomicOrder
     {c b : ℕ} (hn : c * b ≠ 0) {η z : ℂ}
     (hη : IsPrimitiveRoot η (c * b))
-    (hz : z ∈ Theory.Character.cyclotomicOrder η) :
+    (hz : z ∈ cyclotomicOrder η) :
     ∃ ι : Section1.CyclotomicABField c b →ₐ[ℚ] ℂ,
     ∃ P : Polynomial ℤ,
     ∃ x : Section1.CyclotomicABField c b,
@@ -424,7 +424,7 @@ public theorem section14_pf39_cyclotomic_model_of_mem_cyclotomicOrder
   have hιζ : ι ζ = η := by
     change ((hζ.embeddingsEquivPrimitiveRoots ℂ hirr) ι : ℂ) = η
     simp [ι, ηroot]
-  rcases Theory.Character.mem_cyclotomicOrder_iff_exists_intPolynomial_eval.mp hz with ⟨P, hP⟩
+  rcases mem_cyclotomicOrder_iff_exists_intPolynomial_eval.mp hz with ⟨P, hP⟩
   let x : K := Polynomial.eval₂ (Int.castRingHom K) ζ P
   refine ⟨ι, P, x, ?_, ?_, ?_⟩
   · rw [← hP]
@@ -549,7 +549,7 @@ public theorem section14_pf39_fixed_cyclotomic_model_from_structured_b
     simpa [Nat.card_eq_fintype_card, hcardF] using hη
   have hz :
       Section3.sigmaOfPF35 ωFin χ ω' g ∈
-        Theory.Character.cyclotomicOrder η := by
+        cyclotomicOrder η := by
     exact Section3.proposition_3_9_c_value_mem_cyclotomicOrder_pf35
       (W1 := W1) (W2 := W2) (W := W)
       (I := Fin q) (J := Fin p) (i0 := ⟨0, hqpos⟩) (j0 := ⟨0, hppos⟩)

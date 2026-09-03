@@ -2,7 +2,6 @@ module
 
 public import BenderSuzuki.SE.Section10Lemma105
 import FeitThompson.GroupAction.CoprimeHall
-open Theory.GroupAction
 
 
 /-!

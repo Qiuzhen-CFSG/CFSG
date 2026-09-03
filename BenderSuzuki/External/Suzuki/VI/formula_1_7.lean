@@ -24,10 +24,10 @@ universe u v
 public theorem suzuki_ch6_formula_1_7
     {G : Type u} [Group G] [Finite G]
     {ι : Type v} [Fintype ι] [DecidableEq ι]
-    (chi : ι → Theory.Character.ConjClassFunction G)
-    (hchi : Theory.Character.IsCompleteIrreducibleCharacterFamily chi) :
+    (chi : ι → ConjClassFunction G)
+    (hchi : IsCompleteIrreducibleCharacterFamily chi) :
     (∀ i j : ι,
-      Theory.Character.classFunctionInner (chi i) (chi j) =
+      classFunctionInner (chi i) (chi j) =
         if i = j then 1 else 0) ∧
       ∀ x y : G,
         (ConjClasses.mk x = ConjClasses.mk y →
@@ -38,7 +38,7 @@ public theorem suzuki_ch6_formula_1_7
   classical
   constructor
   · exact fun i j => Section1.representation_completeFamily_orthonormal hchi i j
-  · rcases Theory.Character.second_orthogonality (G := G) with
+  · rcases second_orthogonality (G := G) with
       ⟨kappa, hkappa, psi, hpsi, horth⟩
     letI : Fintype kappa := hkappa
     let f : ι → kappa := fun i =>
@@ -61,7 +61,7 @@ public theorem suzuki_ch6_formula_1_7
       rcases (hchi.1 i).1 with ⟨n, rho, hrho⟩
       rw [hrho]
       change rho.character y⁻¹ = star (rho.character y)
-      exact Theory.Representation.representation_character_inv_eq_star_character rho y
+      exact Representation.representation_character_inv_eq_star_character rho y
     intro x y
     constructor
     · intro hxy

@@ -2,7 +2,6 @@ module
 
 public import FeitThompson.BGsection1.theorem_1_8
 
-open Theory.GroupAction
 
 open scoped Pointwise
 

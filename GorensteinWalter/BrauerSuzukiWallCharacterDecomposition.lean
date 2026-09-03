@@ -24,8 +24,8 @@ signed irreducible decomposition. -/
 public theorem brauerSuzukiWall_character_decomposition
     {G : Type u} [Group G] [Finite G]
     {alpha beta : Section1.ClassFunction G}
-    (halphaVirtual : Theory.Character.IsVirtualCharacter alpha)
-    (hbetaVirtual : Theory.Character.IsVirtualCharacter beta)
+    (halphaVirtual : IsVirtualCharacter alpha)
+    (hbetaVirtual : IsVirtualCharacter beta)
     (halphaNorm : Section1.scalarProduct G alpha alpha = 3)
     (hbetaNorm : Section1.scalarProduct G beta beta = 2)
     (halphaBeta : Section1.scalarProduct G alpha beta = -1)
@@ -57,7 +57,7 @@ public theorem brauerSuzukiWall_character_decomposition
     rw [hbetaPrincipal] at hswap
     simpa using hswap.symm
   have hbetaPlusVirtual :
-      Theory.Character.IsVirtualCharacter (principal + beta) :=
+      IsVirtualCharacter (principal + beta) :=
     Section3.isVirtualCharacter_add
       Section3.isVirtualCharacter_principalCharacter hbetaVirtual
   have hbetaPlusPrincipal :

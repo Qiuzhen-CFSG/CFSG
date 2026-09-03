@@ -4,7 +4,6 @@ public import BenderSuzuki.PFchapter1section1.proposition_1_b
 public import BenderSuzuki.PFchapter1section1.proposition_1_c
 public import FeitThompson.BGsection1.Basic
 public import FeitThompson.SubgroupConjAction
-open Theory.GroupAction
 
 
 namespace BenderSuzuki

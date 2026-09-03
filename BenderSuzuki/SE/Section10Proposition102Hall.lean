@@ -4,7 +4,6 @@ public import BenderSuzuki.SE.Section10Proposition102Core
 public import BenderSuzuki.SE.Section10Proposition102PrimeSupport
 import FeitThompson.PFsection14.PFsection14_6
 import FeitThompson.BGsection12.lemma_12_3_a
-open Theory.GroupAction
 
 
 /-!

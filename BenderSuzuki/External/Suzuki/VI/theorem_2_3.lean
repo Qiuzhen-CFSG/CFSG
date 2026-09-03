@@ -22,7 +22,7 @@ namespace BenderSuzuki.External.Suzuki.VI
 
 universe u
 
-open Section1
+open Section1 hiding ClassFunction
 
 private theorem frobeniusTI_relative
     {G : Type u} [Group G] [Finite G]
@@ -46,13 +46,13 @@ private theorem frobeniusTI_relative
 private theorem isVirtualCharacter_zsmul_23
     {G : Type u} [Group G] [Finite G]
     (n : ℤ) {chi : ClassFunction G}
-    (hchi : Theory.Character.IsVirtualCharacter chi) :
-    Theory.Character.IsVirtualCharacter ((n : ℂ) • chi) := by
+    (hchi : IsVirtualCharacter chi) :
+    IsVirtualCharacter ((n : ℂ) • chi) := by
   classical
   rcases hchi with ⟨r, m, k, rho, rfl⟩
   refine ⟨r, fun i => n * m i, k, rho, ?_⟩
   ext g
-  simp [Theory.Character.virtualCharacterOfRepresentations,
+  simp [virtualCharacterOfRepresentations,
     Finset.mul_sum, mul_assoc]
 
 @[expose] public def frobeniusExceptionalCharacter
@@ -80,7 +80,7 @@ private theorem frobeniusTheta_virtual
     {G : Type u} [Group G] [Finite G]
     (R : Subgroup G) (chi : ClassFunction R)
     (hchi : IsIrreducibleCharacterOnGroup chi) :
-    Theory.Character.IsVirtualCharacter
+    IsVirtualCharacter
       (chi - degree chi • principalCharacter R) := by
   rcases hchi with ⟨n, rho, hirr, hchar⟩
   have hchi' : IsIrreducibleCharacterOnGroup chi :=
@@ -88,10 +88,10 @@ private theorem frobeniusTheta_virtual
   have hdegree : degree chi = (n : ℂ) := by
     rw [hchar, degree_representation_character]
     simp
-  have hprincipalR : Theory.Character.IsVirtualCharacter
+  have hprincipalR : IsVirtualCharacter
       (principalCharacter R) :=
     Section3.isVirtualCharacter_principalCharacter
-  have hscaledR : Theory.Character.IsVirtualCharacter
+  have hscaledR : IsVirtualCharacter
       (degree chi • principalCharacter R) := by
     rw [hdegree]
     simpa using isVirtualCharacter_zsmul_23 (n : ℤ) hprincipalR
@@ -102,16 +102,16 @@ private theorem frobeniusExceptionalCharacter_virtual
     {G : Type u} [Group G] [Finite G]
     (R : Subgroup G) (chi : ClassFunction R)
     (hchi : IsIrreducibleCharacterOnGroup chi) :
-    Theory.Character.IsVirtualCharacter
+    IsVirtualCharacter
       (frobeniusExceptionalCharacter R chi) := by
   rcases hchi with ⟨n, rho, hirr, hchar⟩
   have hdegree : degree chi = (n : ℂ) := by
     rw [hchar, degree_representation_character]
     simp
-  have hprincipalG : Theory.Character.IsVirtualCharacter
+  have hprincipalG : IsVirtualCharacter
       (principalCharacter G) :=
     Section3.isVirtualCharacter_principalCharacter
-  have hscaledG : Theory.Character.IsVirtualCharacter
+  have hscaledG : IsVirtualCharacter
       (degree chi • principalCharacter G) := by
     rw [hdegree]
     simpa using isVirtualCharacter_zsmul_23 (n : ℤ) hprincipalG
@@ -128,7 +128,7 @@ private theorem frobeniusExceptionalCharacter_apply_subgroup
     frobeniusExceptionalCharacter R chi (r : G) = chi r := by
   let theta : ClassFunction R :=
     chi - degree chi • principalCharacter R
-  have hthetaVirtual : Theory.Character.IsVirtualCharacter theta := by
+  have hthetaVirtual : IsVirtualCharacter theta := by
     exact frobeniusTheta_virtual R chi hchi
   have hvalue := (suzuki_ch6_proposition_2_9 R (R : Set G) hrel theta
     hthetaVirtual (fun r hrnot => False.elim (hrnot r.property))).1
@@ -168,63 +168,63 @@ private theorem frobeniusExceptionalCharacter_irreducible
     let theta : ClassFunction R :=
       chi - degree chi • principalCharacter R
     let indTheta : ClassFunction G := inducedCF R theta
-    have hthetaVirtual : Theory.Character.IsVirtualCharacter theta :=
+    have hthetaVirtual : IsVirtualCharacter theta :=
       frobeniusTheta_virtual R chi hchi'
     have hthetaOne : theta 1 = 0 := by
       simp [theta, degree, principalCharacter]
     have hsupport : ∀ r : R, (r : G) ∉ (R : Set G) → theta r = 0 := by
       intro r hr
       exact False.elim (hr r.property)
-    have hchiSelf : scalarProduct R chi chi = 1 :=
-      scalarProduct_irreducibleCharacter_self hchi'
-    have hprincipalSelfR : scalarProduct R (principalCharacter R)
+    have hchiSelf : Section1.scalarProduct R chi chi = 1 :=
+      Section1.scalarProduct_irreducibleCharacter_self hchi'
+    have hprincipalSelfR : Section1.scalarProduct R (principalCharacter R)
         (principalCharacter R) = 1 :=
-      scalarProduct_irreducibleCharacter_self
+      Section1.scalarProduct_irreducibleCharacter_self
         Section3.principalCharacter_isIrreducibleCharacterOnGroup
-    have hprincipalSelfG : scalarProduct G (principalCharacter G)
+    have hprincipalSelfG : Section1.scalarProduct G (principalCharacter G)
         (principalCharacter G) = 1 :=
-      scalarProduct_irreducibleCharacter_self
+      Section1.scalarProduct_irreducibleCharacter_self
         Section3.principalCharacter_isIrreducibleCharacterOnGroup
-    have hchiPrincipal : scalarProduct R chi (principalCharacter R) = 0 :=
-      scalarProduct_irreducibleCharacter_principal_eq_zero_of_ne hchi' hprincipal
-    have hprincipalChi : scalarProduct R (principalCharacter R) chi = 0 := by
-      rw [← scalarProduct_star_swap (principalCharacter R) chi, hchiPrincipal]
+    have hchiPrincipal : Section1.scalarProduct R chi (principalCharacter R) = 0 :=
+      Section1.scalarProduct_irreducibleCharacter_principal_eq_zero_of_ne hchi' hprincipal
+    have hprincipalChi : Section1.scalarProduct R (principalCharacter R) chi = 0 := by
+      rw [← Section1.scalarProduct_star_swap (principalCharacter R) chi, hchiPrincipal]
       simp
-    have hthetaPrincipal : scalarProduct R theta (principalCharacter R) =
+    have hthetaPrincipal : Section1.scalarProduct R theta (principalCharacter R) =
         -degree chi := by
       simp [theta, Section5.scalarProduct_sub_left,
-        scalarProduct_smul_left, hchiPrincipal, hprincipalSelfR]
-    have hprincipalTheta : scalarProduct R (principalCharacter R) theta =
+        Section1.scalarProduct_smul_left, hchiPrincipal, hprincipalSelfR]
+    have hprincipalTheta : Section1.scalarProduct R (principalCharacter R) theta =
         -degree chi := by
       simp [theta, Section5.scalarProduct_sub_right,
-        scalarProduct_smul_right, hprincipalChi, hprincipalSelfR, hdegree]
-    have hthetaSelf : scalarProduct R theta theta =
+        Section1.scalarProduct_smul_right, hprincipalChi, hprincipalSelfR, hdegree]
+    have hthetaSelf : Section1.scalarProduct R theta theta =
         1 + degree chi * degree chi := by
       simp [theta, Section5.scalarProduct_sub_left,
-        Section5.scalarProduct_sub_right, scalarProduct_smul_left,
-        scalarProduct_smul_right, hchiSelf, hchiPrincipal, hprincipalChi,
+        Section5.scalarProduct_sub_right, Section1.scalarProduct_smul_left,
+        Section1.scalarProduct_smul_right, hchiSelf, hchiPrincipal, hprincipalChi,
         hprincipalSelfR, hdegree]
     have h29 := suzuki_ch6_proposition_2_9 R (R : Set G) hrel theta
       hthetaVirtual hsupport
-    have hindPrincipal : scalarProduct G indTheta (principalCharacter G) =
+    have hindPrincipal : Section1.scalarProduct G indTheta (principalCharacter G) =
         -degree chi := by
       exact h29.2.1.trans hthetaPrincipal
-    have hprincipalInd : scalarProduct G (principalCharacter G) indTheta =
+    have hprincipalInd : Section1.scalarProduct G (principalCharacter G) indTheta =
         -degree chi := by
-      rw [← scalarProduct_star_swap (principalCharacter G) indTheta,
+      rw [← Section1.scalarProduct_star_swap (principalCharacter G) indTheta,
         hindPrincipal]
       simp [hdegree]
-    have hindSelf : scalarProduct G indTheta indTheta =
+    have hindSelf : Section1.scalarProduct G indTheta indTheta =
         1 + degree chi * degree chi := by
       exact (h29.2.2 hthetaOne theta hthetaVirtual hsupport).trans hthetaSelf
-    have hstarSelf : scalarProduct G
+    have hstarSelf : Section1.scalarProduct G
         (frobeniusExceptionalCharacter R chi)
         (frobeniusExceptionalCharacter R chi) = 1 := by
-      change scalarProduct G
+      change Section1.scalarProduct G
         (degree chi • principalCharacter G + indTheta)
         (degree chi • principalCharacter G + indTheta) = 1
-      simp [scalarProduct_add_left, Section5.scalarProduct_add_right,
-        scalarProduct_smul_left, scalarProduct_smul_right,
+      simp [Section1.scalarProduct_add_left, Section5.scalarProduct_add_right,
+        Section1.scalarProduct_smul_left, Section1.scalarProduct_smul_right,
         hprincipalSelfG, hindPrincipal, hprincipalInd, hindSelf, hdegree]
     have hsigned := Section5.signed_irreducible_of_virtual_norm_one_pf59
       (frobeniusExceptionalCharacter_virtual R chi hchi') hstarSelf
@@ -303,7 +303,7 @@ private theorem exists_irreducibleCharacter_separates_ne_one_23
     ∃ chi : ClassFunction Q,
       IsIrreducibleCharacterOnGroup chi ∧ chi q ≠ chi 1 := by
   classical
-  rcases Theory.Character.second_orthogonality (G := Q) with
+  rcases second_orthogonality (G := Q) with
     ⟨ι, hι, chi, hchi, horth⟩
   letI : Fintype ι := hι
   by_contra hnone
@@ -315,9 +315,9 @@ private theorem exists_irreducibleCharacter_separates_ne_one_23
       isBookIrreducibleCharacter_of_representation_irreducible
         (chi i) (hchi.1 i)
     have hirr := isIrreducibleCharacterOnGroup_of_isBookIrreducibleCharacter
-      (ofConjClassFunction (chi i)) hirrBook
-    have hi := hnone (ofConjClassFunction (chi i)) hirr
-    simpa [ofConjClassFunction] using hi
+      (Section1.ofConjClassFunction (chi i)) hirrBook
+    have hi := hnone (Section1.ofConjClassFunction (chi i)) hirr
+    simpa [Section1.ofConjClassFunction] using hi
   have hqclass : ConjClasses.mk q ≠ ConjClasses.mk (1 : Q) := by
     intro hclass
     have hconj : IsConj q (1 : Q) :=

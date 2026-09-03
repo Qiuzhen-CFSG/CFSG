@@ -4,7 +4,6 @@ public import BenderSuzuki.External.Higman.theorem_1b
 import BenderSuzuki.External.Higman.lemma_12
 import BenderSuzuki.External.Higman.InvariantComplement
 import Theory.GroupAction.Quotient
-open Theory.GroupAction
 
 
 /-!

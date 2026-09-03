@@ -5,7 +5,6 @@ import Theory.GroupAction.Lemmas
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
 
-open Theory.GroupAction
 
 open scoped Pointwise
 

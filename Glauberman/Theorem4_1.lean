@@ -2,7 +2,6 @@ module
 
 public import Glauberman.Theorem3_1
 public import Mathlib.GroupTheory.Nilpotent
-open Theory.GroupAction
 
 
 /-!

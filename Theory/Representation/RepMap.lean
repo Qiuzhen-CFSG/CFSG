@@ -25,132 +25,197 @@ notation:25 ρ " →ₗ " σ:0 => RepMap ρ σ
 
 namespace RepMap
 
-variable {F G V W : Type*} [CommRing F] [Monoid G] [AddCommMonoid V] [AddCommMonoid W]
-  [Module F V] [Module F W] (ρ : Representation F G V) (σ : Representation F G W)
+instance {F G V W : Type*} [CommRing F] [Monoid G] [AddCommMonoid V] [AddCommMonoid W]
+    [Module F V] [Module F W] (ρ : Representation F G V) (σ : Representation F G W) :
+    FunLike (RepMap ρ σ) V W := IntertwiningMap.instFunLike _ _
+instance {F G V W : Type*} [CommRing F] [Monoid G] [AddCommMonoid V] [AddCommMonoid W]
+    [Module F V] [Module F W] (ρ : Representation F G V) (σ : Representation F G W) :
+    Zero (RepMap ρ σ) := IntertwiningMap.instZero _ _
+instance {F G V W : Type*} [CommRing F] [Monoid G] [AddCommMonoid V] [AddCommMonoid W]
+    [Module F V] [Module F W] (ρ : Representation F G V) (σ : Representation F G W) :
+    Add (RepMap ρ σ) := IntertwiningMap.instAdd _ _
+instance {F G V W : Type*} [CommRing F] [Monoid G] [AddCommMonoid V] [AddCommMonoid W]
+    [Module F V] [Module F W] (ρ : Representation F G V) (σ : Representation F G W) :
+    SMul F (RepMap ρ σ) := IntertwiningMap.instSMul _ _
+instance {F G V W : Type*} [CommRing F] [Monoid G] [AddCommMonoid V] [AddCommMonoid W]
+    [Module F V] [Module F W] (ρ : Representation F G V) (σ : Representation F G W) :
+    SMul ℕ (RepMap ρ σ) := IntertwiningMap.instSMulNat _ _
 
-instance : FunLike (RepMap ρ σ) V W := IntertwiningMap.instFunLike _ _
-instance : Zero (RepMap ρ σ) := IntertwiningMap.instZero _ _
-instance : Add (RepMap ρ σ) := IntertwiningMap.instAdd _ _
-instance : SMul F (RepMap ρ σ) := IntertwiningMap.instSMul _ _
-instance : SMul ℕ (RepMap ρ σ) := IntertwiningMap.instSMulNat _ _
-
-instance instAddCommMonoid : AddCommMonoid (RepMap ρ σ) :=
+instance instAddCommMonoid {F G V W : Type*} [CommRing F] [Monoid G] [AddCommMonoid V]
+    [AddCommMonoid W] [Module F V] [Module F W]
+    (ρ : Representation F G V) (σ : Representation F G W) : AddCommMonoid (RepMap ρ σ) :=
   IntertwiningMap.instAddCommMonoid _ _
 
-instance : Module F (RepMap ρ σ) := IntertwiningMap.instModule _ _
+instance module {F G V W : Type*} [CommRing F] [Monoid G] [AddCommMonoid V]
+    [AddCommMonoid W] [Module F V] [Module F W]
+    (ρ : Representation F G V) (σ : Representation F G W) : Module F (RepMap ρ σ) :=
+  IntertwiningMap.instModule _ _
 
 @[simp]
-lemma coe_zero : ((0 : RepMap ρ σ) : V → W) = 0 := rfl
+lemma coe_zero {F G V W : Type*} [CommRing F] [Monoid G] [AddCommMonoid V] [AddCommMonoid W]
+    [Module F V] [Module F W] (ρ : Representation F G V) (σ : Representation F G W) :
+    ((0 : RepMap ρ σ) : V → W) = 0 := rfl
 
 @[simp]
-lemma coe_add (f g : RepMap ρ σ) : ((f + g : RepMap ρ σ) : V → W) = f + g := rfl
+lemma coe_add {F G V W : Type*} [CommRing F] [Monoid G] [AddCommMonoid V] [AddCommMonoid W]
+    [Module F V] [Module F W] (ρ : Representation F G V) (σ : Representation F G W)
+    (f g : RepMap ρ σ) : ((f + g : RepMap ρ σ) : V → W) = f + g := rfl
 
 @[simp]
-lemma coe_smul (a : F) (f : RepMap ρ σ) : ((a • f : RepMap ρ σ) : V → W) = a • f := rfl
+lemma coe_smul {F G V W : Type*} [CommRing F] [Monoid G] [AddCommMonoid V] [AddCommMonoid W]
+    [Module F V] [Module F W] (ρ : Representation F G V) (σ : Representation F G W)
+    (a : F) (f : RepMap ρ σ) : ((a • f : RepMap ρ σ) : V → W) = a • f := rfl
 
 @[simp]
-lemma coe_nsmul (n : ℕ) (f : RepMap ρ σ) : ((n • f : RepMap ρ σ) : V → W) = n • f := rfl
+lemma coe_nsmul {F G V W : Type*} [CommRing F] [Monoid G] [AddCommMonoid V] [AddCommMonoid W]
+    [Module F V] [Module F W] (ρ : Representation F G V) (σ : Representation F G W)
+    (n : ℕ) (f : RepMap ρ σ) : ((n • f : RepMap ρ σ) : V → W) = n • f := rfl
 
 /-- Identification of intertwining maps with linear maps on the corresponding `F[G]`-modules. -/
-def equivLinearMapAsModule : RepMap ρ σ ≃ₗ[F] ρ.asModule →ₗ[F[G]] σ.asModule :=
+def equivLinearMapAsModule {F G V W : Type*} [CommRing F] [Monoid G] [AddCommMonoid V]
+    [AddCommMonoid W] [Module F V] [Module F W]
+    (ρ : Representation F G V) (σ : Representation F G W) :
+    RepMap ρ σ ≃ₗ[F] ρ.asModule →ₗ[F[G]] σ.asModule :=
   IntertwiningMap.equivLinearMapAsModule _ _
 
-variable {ρ σ}
 
 @[simp]
-theorem coe_toLinearMap (f : ρ →ₗ σ) : ⇑f.toLinearMap = f := rfl
+theorem coe_toLinearMap {F G V W : Type*} [CommRing F] [Monoid G] [AddCommMonoid V]
+    [AddCommMonoid W] [Module F V] [Module F W]
+    {ρ : Representation F G V} {σ : Representation F G W} (f : ρ →ₗ σ) :
+    ⇑f.toLinearMap = f := rfl
 
 @[simp]
-theorem coe_toAddHom (f : ρ →ₗ σ) : ⇑f.toAddHom = f := rfl
+theorem coe_toAddHom {F G V W : Type*} [CommRing F] [Monoid G] [AddCommMonoid V]
+    [AddCommMonoid W] [Module F V] [Module F W]
+    {ρ : Representation F G V} {σ : Representation F G W} (f : ρ →ₗ σ) :
+    ⇑f.toAddHom = f := rfl
 
 @[simp]
-theorem toFun_eq_coe {f : ρ →ₗ σ} : f.toFun = (f : V → W) := rfl
+theorem toFun_eq_coe {F G V W : Type*} [CommRing F] [Monoid G] [AddCommMonoid V]
+    [AddCommMonoid W] [Module F V] [Module F W]
+    {ρ : Representation F G V} {σ : Representation F G W} {f : ρ →ₗ σ} :
+    f.toFun = (f : V → W) := rfl
 
 @[ext]
-theorem ext {f g : ρ →ₗ σ} (h : ∀ x, f x = g x) : f = g :=
+theorem ext {F G V W : Type*} [CommRing F] [Monoid G] [AddCommMonoid V]
+    [AddCommMonoid W] [Module F V] [Module F W]
+    {ρ : Representation F G V} {σ : Representation F G W} {f g : ρ →ₗ σ}
+    (h : ∀ x, f x = g x) : f = g :=
   DFunLike.ext f g h
 
 /-- A copy of an intertwining map with a prescribed function field. -/
-protected def copy (f : ρ →ₗ σ) (f' : V → W) (h : f' = ⇑f) : ρ →ₗ σ where
+protected def copy {F G V W : Type*} [CommRing F] [Monoid G] [AddCommMonoid V]
+    [AddCommMonoid W] [Module F V] [Module F W]
+    {ρ : Representation F G V} {σ : Representation F G W}
+    (f : ρ →ₗ σ) (f' : V → W) (h : f' = ⇑f) : ρ →ₗ σ where
   toFun := f'
   map_add' := h.symm ▸ f.map_add'
   map_smul' := h.symm ▸ f.map_smul'
   isIntertwining' := h.symm ▸ f.isIntertwining'
 
 @[simp]
-theorem coe_copy (f : ρ →ₗ σ) (f' : V → W) (h : f' = ⇑f) : ⇑(f.copy f' h) = f' := by rfl
+theorem coe_copy {F G V W : Type*} [CommRing F] [Monoid G] [AddCommGroup V]
+    [AddCommGroup W] [Module F V] [Module F W] {ρ : Representation F G V}
+    {σ : Representation F G W} (f : ρ →ₗ σ) (f' : V → W) (h : f' = ⇑f) :
+    ⇑(f.copy f' h) = f' := by rfl
 
 /-- Build an intertwining map from a linear map commuting with the actions. -/
-def mk (toLinearMap : V →ₗ[F] W)
+def mk {F G V W : Type*} [CommRing F] [Monoid G] [AddCommMonoid V]
+    [AddCommMonoid W] [Module F V] [Module F W]
+    {ρ : Representation F G V} {σ : Representation F G W} (toLinearMap : V →ₗ[F] W)
     (isIntertwining : ∀ (g : G), toLinearMap ∘ₗ ρ g = σ g ∘ₗ toLinearMap)
     : RepMap ρ σ :=
   IntertwiningMap.mk toLinearMap isIntertwining
 
 @[simp]
-theorem coe_mk (f : V →ₗ[F] W) (h) : ((.mk f h : ρ →ₗ σ) : V → W) = f := by rfl
+theorem coe_mk {F G V W : Type*} [CommRing F] [Monoid G] [AddCommMonoid V]
+    [AddCommMonoid W] [Module F V] [Module F W] {ρ : Representation F G V}
+    {σ : Representation F G W} (f : V →ₗ[F] W) (h) : ((.mk f h : ρ →ₗ σ) : V → W) = f := by rfl
 
 @[simp]
-theorem coe_linearMap_mk (f : V →ₗ[F] W) (h) : (.mk f h : ρ →ₗ σ).toLinearMap = f := by
+theorem coe_linearMap_mk {F G V W : Type*} [CommRing F] [Monoid G] [AddCommMonoid V]
+    [AddCommGroup W] [Module F V] [Module F W] {ρ : Representation F G V}
+    {σ : Representation F G W} (f : V →ₗ[F] W) (h) :
+    (.mk f h : ρ →ₗ σ).toLinearMap = f := by
   rfl
 
-theorem toLinearMap_injective (f g : ρ →ₗ σ) (h : f.toLinearMap = g.toLinearMap)
+theorem toLinearMap_injective {F G V W : Type*} [CommRing F] [Monoid G]
+    [AddCommMonoid V] [AddCommMonoid W] [Module F V] [Module F W]
+    {ρ : Representation F G V} {σ : Representation F G W}
+    (f g : ρ →ₗ σ) (h : f.toLinearMap = g.toLinearMap)
     : f = g := by
   apply DFunLike.ext
   exact fun m ↦  DFunLike.congr_fun h m
 
 /-- The identity intertwining map of a representation. -/
-noncomputable def id: ρ →ₗ ρ := IntertwiningMap.id _
+noncomputable def id {F G V : Type*} [CommRing F] [Monoid G] [AddCommMonoid V]
+    [Module F V] {ρ : Representation F G V} : ρ →ₗ ρ := IntertwiningMap.id _
 
 @[simp]
-lemma id_apply (v : V) : IntertwiningMap.id ρ v = v := rfl
+lemma id_apply {F G V : Type*} [CommRing F] [Monoid G] [AddCommMonoid V]
+    [Module F V] (ρ : Representation F G V) (v : V) : IntertwiningMap.id ρ v = v := rfl
 
 @[simp, norm_cast]
-theorem id_coe : (RepMap.id (ρ := ρ) : V → V) = _root_.id :=
+theorem id_coe {F G V : Type*} [CommRing F] [Monoid G] [AddCommMonoid V]
+    [Module F V] (ρ : Representation F G V) :
+    (RepMap.id (ρ := ρ) : V → V) = _root_.id :=
   rfl
 
 /-- Multiplication by a central group element as an intertwining endomorphism. -/
-def centralMul (g : G) (hg : g ∈ Submonoid.center G) : ρ →ₗ ρ :=
+def centralMul {F G V : Type*} [CommRing F] [Monoid G] [AddCommMonoid V]
+    [Module F V] (ρ : Representation F G V) (g : G) (hg : g ∈ Submonoid.center G) : ρ →ₗ ρ :=
   IntertwiningMap.centralMul ρ g hg
 
-variable {F G V W : Type*} [CommRing F] [Monoid G] [AddCommMonoid V] [AddCommMonoid W]
-  [Module F V] [Module F W]
-  {ρ : Representation F G V} {σ : Representation F G W}
-  {f : ρ →ₗ σ} {g : ρ →ₗ σ}
-
-theorem coe_injective : Function.Injective (DFunLike.coe : (ρ →ₗ σ) → _) :=
+theorem coe_injective {F G V W : Type*} [CommRing F] [Monoid G] [AddCommMonoid V]
+    [AddCommMonoid W] [Module F V] [Module F W]
+    {ρ : Representation F G V} {σ : Representation F G W} :
+    Function.Injective (DFunLike.coe : (ρ →ₗ σ) → _) :=
   DFunLike.coe_injective
 
-protected theorem congr_arg {x x' : V} : x = x' → f x = f x' :=
+protected theorem congr_arg {F G V W : Type*} [CommRing F] [Monoid G] [AddCommMonoid V]
+    [AddCommMonoid W] [Module F V] [Module F W] {ρ : Representation F G V}
+    {σ : Representation F G W} {f : ρ →ₗ σ} {x x' : V} : x = x' → f x = f x' :=
   DFunLike.congr_arg f
 
-protected theorem congr_fun (h : f = g) (x : V) : f x = g x :=
+protected theorem congr_fun {F G V W : Type*} [CommRing F] [Monoid G] [AddCommMonoid V]
+    [AddCommMonoid W] [Module F V] [Module F W] {ρ : Representation F G V}
+    {σ : Representation F G W} {f g : ρ →ₗ σ} (h : f = g) (x : V) : f x = g x :=
   DFunLike.congr_fun h x
 
-variable (f g)
 
 @[simp]
-protected theorem map_add (x y : V) : f (x + y) = f x + f y :=
+protected theorem map_add {F G V W : Type*} [CommRing F] [Monoid G] [AddCommMonoid V]
+    [AddCommMonoid W] [Module F V] [Module F W] {ρ : Representation F G V}
+    {σ : Representation F G W} (f : ρ →ₗ σ) (x y : V) : f (x + y) = f x + f y :=
   map_add f.toLinearMap x y
 
 @[simp]
-protected theorem map_zero : f 0 = 0 :=
+protected theorem map_zero {F G V W : Type*} [CommRing F] [Monoid G] [AddCommMonoid V]
+    [AddCommMonoid W] [Module F V] [Module F W] {ρ : Representation F G V}
+    {σ : Representation F G W} (f : ρ →ₗ σ) : f 0 = 0 :=
   map_zero f.toLinearMap
 
 @[simp]
-protected theorem map_smul (c : F) (x : V) : f (c • x) = c • f x :=
+protected theorem map_smul {F G V W : Type*} [CommRing F] [Monoid G] [AddCommMonoid V]
+    [AddCommMonoid W] [Module F V] [Module F W] {ρ : Representation F G V}
+    {σ : Representation F G W} (f : ρ →ₗ σ) (c : F) (x : V) :
+    f (c • x) = c • f x :=
   map_smul f.toLinearMap c x
 
 @[simp]
-protected theorem map_eq_zero_iff (h : Function.Injective f) {x : V} : f x = 0 ↔ x = 0 :=
+protected theorem map_eq_zero_iff {F G V W : Type*} [CommRing F] [Monoid G]
+    [AddCommMonoid V] [AddCommMonoid W] [Module F V] [Module F W]
+    {ρ : Representation F G V} {σ : Representation F G W} (f : ρ →ₗ σ)
+    (h : Function.Injective f) {x : V} : f x = 0 ↔ x = 0 :=
   _root_.map_eq_zero_iff f.toLinearMap h
 
-variable {F G V₁ V₂ V₃: Type*} [CommRing F] [Monoid G] [AddCommMonoid V₁]
-  [AddCommMonoid V₂] [AddCommMonoid V₃] [Module F V₁] [Module F V₂] [Module F V₃]
-  {ρ₁ : Representation F G V₁} {ρ₂ : Representation F G V₂} {ρ₃ : Representation F G V₃}
-  (f : ρ₂ →ₗ ρ₃) (f' : ρ₂ →ₗ ρ₃) (g : ρ₁ →ₗ ρ₂) (g' : ρ₁ →ₗ ρ₂)
-
 /-- Composition of intertwining maps. -/
-def comp : ρ₁ →ₗ ρ₃ :=
+def comp {F G V₁ V₂ V₃ : Type*} [CommRing F] [Monoid G]
+    [AddCommMonoid V₁] [AddCommMonoid V₂] [AddCommMonoid V₃]
+    [Module F V₁] [Module F V₂] [Module F V₃]
+    {ρ₁ : Representation F G V₁} {ρ₂ : Representation F G V₂} {ρ₃ : Representation F G V₃}
+    (f : ρ₂ →ₗ ρ₃) (g : ρ₁ →ₗ ρ₂) : ρ₁ →ₗ ρ₃ :=
   {
     toLinearMap := f.toLinearMap.comp g.toLinearMap
     isIntertwining' :=
@@ -161,49 +226,89 @@ def comp : ρ₁ →ₗ ρ₃ :=
   }
 
 @[simp, norm_cast]
-theorem coe_comp : (f.comp g : V₁ → V₃) = f ∘ g :=
+theorem coe_comp {F G V₁ V₂ V₃ : Type*} [CommRing F] [Monoid G]
+    [AddCommMonoid V₁] [AddCommMonoid V₂] [AddCommMonoid V₃]
+    [Module F V₁] [Module F V₂] [Module F V₃]
+    {ρ₁ : Representation F G V₁} {ρ₂ : Representation F G V₂} {ρ₃ : Representation F G V₃}
+    (f : ρ₂ →ₗ ρ₃) (g : ρ₁ →ₗ ρ₂) : (f.comp g : V₁ → V₃) = f ∘ g :=
   rfl
 
 @[simp]
-theorem comp_id : f.comp id = f :=
+theorem comp_id {F G V₁ V₂ : Type*} [CommRing F] [Monoid G]
+    [AddCommMonoid V₁] [AddCommMonoid V₂] [Module F V₁] [Module F V₂]
+    {ρ₁ : Representation F G V₁} {ρ₂ : Representation F G V₂}
+    (f : ρ₁ →ₗ ρ₂) : f.comp id = f :=
   rfl
 
 @[simp]
-theorem id_comp : id.comp f = f :=
+theorem id_comp {F G V₁ V₂ : Type*} [CommRing F] [Monoid G]
+    [AddCommMonoid V₁] [AddCommMonoid V₂] [Module F V₁] [Module F V₂]
+    {ρ₁ : Representation F G V₁} {ρ₂ : Representation F G V₂}
+    (f : ρ₁ →ₗ ρ₂) : id.comp f = f :=
   rfl
 
-theorem comp_apply (v : V₁) : f.comp g v = f (g v) :=
+theorem comp_apply {F G V₁ V₂ V₃ : Type*} [CommRing F] [Monoid G]
+    [AddCommMonoid V₁] [AddCommMonoid V₂] [AddCommMonoid V₃]
+    [Module F V₁] [Module F V₂] [Module F V₃]
+    {ρ₁ : Representation F G V₁} {ρ₂ : Representation F G V₂} {ρ₃ : Representation F G V₃}
+    (f : ρ₂ →ₗ ρ₃) (g : ρ₁ →ₗ ρ₂) (v : V₁) : f.comp g v = f (g v) :=
   rfl
 
 theorem comp_assoc
-    {V₀ : Type*} [AddCommMonoid V₀] [Module F V₀]
-    {ρ₀ : Representation F G V₀} (h : ρ₀ →ₗ ρ₁)
+    {F G V₀ V₁ V₂ V₃ : Type*} [CommRing F] [Monoid G]
+    [AddCommMonoid V₀] [AddCommMonoid V₁] [AddCommMonoid V₂] [AddCommMonoid V₃]
+    [Module F V₀] [Module F V₁] [Module F V₂] [Module F V₃]
+    {ρ₀ : Representation F G V₀} {ρ₁ : Representation F G V₁}
+    {ρ₂ : Representation F G V₂} {ρ₃ : Representation F G V₃}
+    (f : ρ₂ →ₗ ρ₃) (g : ρ₁ →ₗ ρ₂)
+    (h : ρ₀ →ₗ ρ₁)
     : (f.comp g).comp h = f.comp (g.comp h) :=
   rfl
 
-lemma _root_.Function.Surjective.injective_RepMapComp_right (hg : Surjective g)
+lemma _root_.Function.Surjective.injective_RepMapComp_right
+    {F G V₁ V₂ V₃ : Type*} [CommRing F] [Monoid G]
+    [AddCommMonoid V₁] [AddCommMonoid V₂] [AddCommMonoid V₃]
+    [Module F V₁] [Module F V₂] [Module F V₃]
+    {ρ₁ : Representation F G V₁} {ρ₂ : Representation F G V₂} {ρ₃ : Representation F G V₃}
+    {g : ρ₁ →ₗ ρ₂} (hg : Surjective g)
     : Injective fun f : ρ₂ →ₗ ρ₃ ↦ f.comp g :=
   fun _ _ h ↦ ext <| hg.forall.2 (RepMap.ext_iff.1 h)
 
 @[simp]
-theorem cancel_right (hg : Surjective g) : f.comp g = f'.comp g ↔ f = f' :=
+theorem cancel_right
+    {F G V₁ V₂ V₃ : Type*} [CommRing F] [Monoid G]
+    [AddCommMonoid V₁] [AddCommMonoid V₂] [AddCommMonoid V₃]
+    [Module F V₁] [Module F V₂] [Module F V₃]
+    {ρ₁ : Representation F G V₁} {ρ₂ : Representation F G V₂} {ρ₃ : Representation F G V₃}
+    {f f' : ρ₂ →ₗ ρ₃} {g : ρ₁ →ₗ ρ₂} (hg : Surjective g) :
+    f.comp g = f'.comp g ↔ f = f' :=
   hg.injective_RepMapComp_right.eq_iff
 
-lemma _root_.Function.Injective.injective_RepMapComp_left (hf : Injective f)
+lemma _root_.Function.Injective.injective_RepMapComp_left
+    {F G V₁ V₂ V₃ : Type*} [CommRing F] [Monoid G]
+    [AddCommMonoid V₁] [AddCommMonoid V₂] [AddCommMonoid V₃]
+    [Module F V₁] [Module F V₂] [Module F V₃]
+    {ρ₁ : Representation F G V₁} {ρ₂ : Representation F G V₂} {ρ₃ : Representation F G V₃}
+    {f : ρ₂ →ₗ ρ₃} (hf : Injective f)
     : Injective fun g : ρ₁ →ₗ ρ₂ ↦ f.comp g :=
   fun g₁ g₂ (h : f.comp g₁ = f.comp g₂) ↦
     ext fun x ↦ hf <| by rw [← comp_apply, h, comp_apply]
 
 @[simp]
-theorem cancel_left (hf : Injective f) : f.comp g = f.comp g' ↔ g = g' :=
+theorem cancel_left
+    {F G V₁ V₂ V₃ : Type*} [CommRing F] [Monoid G]
+    [AddCommMonoid V₁] [AddCommMonoid V₂] [AddCommMonoid V₃]
+    [Module F V₁] [Module F V₂] [Module F V₃]
+    {ρ₁ : Representation F G V₁} {ρ₂ : Representation F G V₂} {ρ₃ : Representation F G V₃}
+    {f : ρ₂ →ₗ ρ₃} {g g' : ρ₁ →ₗ ρ₂} (hf : Injective f) :
+    f.comp g = f.comp g' ↔ g = g' :=
   hf.injective_RepMapComp_left.eq_iff
-
-variable {F G V W : Type*} [CommRing F] [Monoid G] [AddCommMonoid V] [AddCommMonoid W]
-  [Module F V] [Module F W] (ρ : Representation F G V) (σ : Representation F G W)
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Construct an inverse intertwining map from two-sided inverse data. -/
-def inverse (f : ρ →ₗ σ) (g : W → V) (h₁ : LeftInverse g f) (h₂ : RightInverse g f)
+def inverse {F G V W : Type*} [CommRing F] [Monoid G] [AddCommMonoid V] [AddCommMonoid W]
+    [Module F V] [Module F W] {ρ : Representation F G V} {σ : Representation F G W}
+    (f : ρ →ₗ σ) (g : W → V) (h₁ : LeftInverse g f) (h₂ : RightInverse g f)
     : σ →ₗ ρ := by
   dsimp [LeftInverse, Function.RightInverse] at h₁ h₂
   exact {
@@ -220,50 +325,56 @@ def inverse (f : ρ →ₗ σ) (g : W → V) (h₁ : LeftInverse g f) (h₂ : Ri
         rw [← h₁ (g ((σ h) v)), ← h₁ ((ρ h) (g v)), h₂, (f.isIntertwining) h (g v), h₂]
     }
 
-section
-
-variable (f : ρ →ₗ σ) (g : σ →ₗ ρ) (h : g.comp f = .id)
-
-include h
-
-end
-
-variable {F G V W : Type*} [CommRing F] [Monoid G] [AddCommGroup V] [AddCommGroup W]
-  [Module F V] [Module F W] (ρ : Representation F G V) (σ : Representation F G W)
-variable (f : ρ →ₗ σ)
-
 @[simp]
-protected theorem map_neg (x : V) : f (-x) = -f x :=
+protected theorem map_neg {F G V W : Type*} [CommRing F] [Monoid G] [AddCommGroup V]
+    [AddCommGroup W] [Module F V] [Module F W] {ρ : Representation F G V}
+    {σ : Representation F G W} (f : ρ →ₗ σ) (x : V) : f (-x) = -f x :=
   map_neg f.toLinearMap x
 
 @[simp]
-protected theorem map_sub (x y : V) : f (x - y) = f x - f y :=
+protected theorem map_sub {F G V W : Type*} [CommRing F] [Monoid G] [AddCommGroup V]
+    [AddCommGroup W] [Module F V] [Module F W] {ρ : Representation F G V}
+    {σ : Representation F G W} (f : ρ →ₗ σ) (x y : V) : f (x - y) = f x - f y :=
   map_sub f.toLinearMap x y
 
 @[simp]
-theorem smul_apply (a : F) (f : ρ →ₗ σ) (x : V) : (a • f) x = a • f x :=
+theorem smul_apply {F G V W : Type*} [CommRing F] [Monoid G] [AddCommGroup V]
+    [AddCommGroup W] [Module F V] [Module F W] {ρ : Representation F G V}
+    {σ : Representation F G W} (a : F) (f : ρ →ₗ σ) (x : V) : (a • f) x = a • f x :=
   rfl
 
 @[simp]
-theorem zero_apply (x : V) : (0 : ρ →ₗ σ) x = 0 :=
+theorem zero_apply {F G V W : Type*} [CommRing F] [Monoid G] [AddCommGroup V]
+    [AddCommGroup W] [Module F V] [Module F W] {ρ : Representation F G V}
+    {σ : Representation F G W} (x : V) : (0 : ρ →ₗ σ) x = 0 :=
   rfl
 
 @[simp]
-theorem comp_zero : f.comp (0 : ρ →ₗ ρ) = 0 :=
+theorem comp_zero {F G V W : Type*} [CommRing F] [Monoid G] [AddCommGroup V]
+    [AddCommGroup W] [Module F V] [Module F W] {ρ : Representation F G V}
+    {σ : Representation F G W} (f : ρ →ₗ σ) : f.comp (0 : ρ →ₗ ρ) = 0 :=
   ext fun c ↦ by rw [comp_apply, zero_apply, zero_apply, RepMap.map_zero]
 
 @[simp]
-theorem zero_comp : (0 : σ →ₗ σ).comp f = 0 :=
+theorem zero_comp {F G V W : Type*} [CommRing F] [Monoid G] [AddCommGroup V]
+    [AddCommGroup W] [Module F V] [Module F W] {ρ : Representation F G V}
+    {σ : Representation F G W} (f : ρ →ₗ σ) : (0 : σ →ₗ σ).comp f = 0 :=
   rfl
 
-instance : Inhabited (ρ →ₗ σ) :=
+instance inhabited {F G V W : Type*} [CommRing F] [Monoid G] [AddCommGroup V]
+    [AddCommGroup W] [Module F V] [Module F W] {ρ : Representation F G V}
+    {σ : Representation F G W} : Inhabited (ρ →ₗ σ) :=
   ⟨0⟩
 
 @[simp]
-theorem default_def : (default : ρ →ₗ σ) = 0 :=
+theorem default_def {F G V W : Type*} [CommRing F] [Monoid G] [AddCommGroup V]
+    [AddCommGroup W] [Module F V] [Module F W] {ρ : Representation F G V}
+    {σ : Representation F G W} : (default : ρ →ₗ σ) = 0 :=
   rfl
 
-instance uniqueOfLeft [Subsingleton V] : Unique (ρ →ₗ σ) :=
+instance uniqueOfLeft {F G V W : Type*} [CommRing F] [Monoid G] [AddCommGroup V]
+    [AddCommGroup W] [Module F V] [Module F W] {ρ : Representation F G V}
+    {σ : Representation F G W} [Subsingleton V] : Unique (ρ →ₗ σ) :=
   {
     (inferInstance : (Inhabited (ρ →ₗ σ))) with
       uniq :=
@@ -273,31 +384,42 @@ instance uniqueOfLeft [Subsingleton V] : Unique (ρ →ₗ σ) :=
               rw [Subsingleton.elim x 0, RepMap.map_zero, RepMap.map_zero]
   }
 
-instance uniqueOfRight [Subsingleton W] : Unique (ρ →ₗ σ) :=
+instance uniqueOfRight {F G V W : Type*} [CommRing F] [Monoid G] [AddCommGroup V]
+    [AddCommGroup W] [Module F V] [Module F W] {ρ : Representation F G V}
+    {σ : Representation F G W} [Subsingleton W] : Unique (ρ →ₗ σ) :=
   coe_injective.unique
 
-variable {f}
 
-theorem ne_zero_of_injective [Nontrivial V] (hf : Injective f) : f ≠ 0 :=
+theorem ne_zero_of_injective {F G V W : Type*} [CommRing F] [Monoid G] [AddCommGroup V]
+    [AddCommGroup W] [Module F V] [Module F W] {ρ : Representation F G V}
+    {σ : Representation F G W} {f : ρ →ₗ σ} [Nontrivial V] (hf : Injective f) : f ≠ 0 :=
   have ⟨x, ne⟩ := exists_ne (0 : V)
   fun h ↦ hf.ne ne <| by simp [h]
 
 @[simp]
-theorem add_apply (f g : ρ →ₗ σ) (x : V) : (f + g) x = f x + g x :=
+theorem add_apply {F G V W : Type*} [CommRing F] [Monoid G] [AddCommGroup V]
+    [AddCommGroup W] [Module F V] [Module F W] {ρ : Representation F G V}
+    {σ : Representation F G W} (f g : ρ →ₗ σ) (x : V) : (f + g) x = f x + g x :=
   rfl
 
-theorem add_comp (f : ρ₁ →ₗ ρ₂) (g h : ρ₂ →ₗ ρ₃) : (h + g).comp f = h.comp f + g.comp f :=
+theorem add_comp {F G V₁ V₂ V₃ : Type*} [CommRing F] [Monoid G]
+    [AddCommGroup V₁] [AddCommGroup V₂] [AddCommGroup V₃]
+    [Module F V₁] [Module F V₂] [Module F V₃]
+    {ρ₁ : Representation F G V₁} {ρ₂ : Representation F G V₂} {ρ₃ : Representation F G V₃}
+    (f : ρ₁ →ₗ ρ₂) (g h : ρ₂ →ₗ ρ₃) : (h + g).comp f = h.comp f + g.comp f :=
   rfl
 
-theorem comp_add (f g : ρ₁ →ₗ ρ₂) (h : ρ₂ →ₗ ρ₃) : h.comp (f + g) = h.comp f + h.comp g :=
+theorem comp_add {F G V₁ V₂ V₃ : Type*} [CommRing F] [Monoid G]
+    [AddCommGroup V₁] [AddCommGroup V₂] [AddCommGroup V₃]
+    [Module F V₁] [Module F V₂] [Module F V₃]
+    {ρ₁ : Representation F G V₁} {ρ₂ : Representation F G V₂} {ρ₃ : Representation F G V₃}
+    (f g : ρ₁ →ₗ ρ₂) (h : ρ₂ →ₗ ρ₃) : h.comp (f + g) = h.comp f + h.comp g :=
   ext fun _ ↦ h.map_add _ _
 
-variable {V₁ V₂ V₃ : Type*} [AddCommGroup V₁] [AddCommGroup V₂] [AddCommGroup V₃]
-  [Module F V₁] [Module F V₂] [Module F V₃]
-  (ρ₁ : Representation F G V₁) (ρ₂ : Representation F G V₂) (ρ₃ : Representation F G V₃)
-
 set_option backward.isDefEq.respectTransparency false in
-instance : Neg (ρ →ₗ σ) :=
+instance neg {F G V W : Type*} [CommRing F] [Monoid G] [AddCommGroup V]
+    [AddCommGroup W] [Module F V] [Module F W] {ρ : Representation F G V}
+    {σ : Representation F G W} : Neg (ρ →ₗ σ) :=
   ⟨fun f ↦
     {
       toFun := -f
@@ -312,19 +434,31 @@ instance : Neg (ρ →ₗ σ) :=
     }⟩
 
 @[simp]
-theorem neg_apply (f : ρ →ₗ σ) (x : V) : (-f) x = -f x :=
+theorem neg_apply {F G V W : Type*} [CommRing F] [Monoid G] [AddCommGroup V]
+    [AddCommGroup W] [Module F V] [Module F W] {ρ : Representation F G V}
+    {σ : Representation F G W} (f : ρ →ₗ σ) (x : V) : (-f) x = -f x :=
   rfl
 
 @[simp]
-theorem neg_comp (f : ρ₁ →ₗ ρ₂) (g : ρ₂ →ₗ ρ₃) : (-g).comp f = -g.comp f :=
+theorem neg_comp {F G V₁ V₂ V₃ : Type*} [CommRing F] [Monoid G]
+    [AddCommGroup V₁] [AddCommGroup V₂] [AddCommGroup V₃]
+    [Module F V₁] [Module F V₂] [Module F V₃]
+    {ρ₁ : Representation F G V₁} {ρ₂ : Representation F G V₂} {ρ₃ : Representation F G V₃}
+    (f : ρ₁ →ₗ ρ₂) (g : ρ₂ →ₗ ρ₃) : (-g).comp f = -g.comp f :=
   rfl
 
 @[simp]
-theorem comp_neg (f : ρ₁ →ₗ ρ₂) (g : ρ₂ →ₗ ρ₃) : g.comp (-f) = -g.comp f :=
+theorem comp_neg {F G V₁ V₂ V₃ : Type*} [CommRing F] [Monoid G]
+    [AddCommGroup V₁] [AddCommGroup V₂] [AddCommGroup V₃]
+    [Module F V₁] [Module F V₂] [Module F V₃]
+    {ρ₁ : Representation F G V₁} {ρ₂ : Representation F G V₂} {ρ₃ : Representation F G V₃}
+    (f : ρ₁ →ₗ ρ₂) (g : ρ₂ →ₗ ρ₃) : g.comp (-f) = -g.comp f :=
   ext fun _ ↦ by simp only [coe_comp, Function.comp_apply, neg_apply, RepMap.map_neg]
 
 set_option backward.isDefEq.respectTransparency false in
-instance : Sub (ρ →ₗ σ) :=
+instance sub {F G V W : Type*} [CommRing F] [Monoid G] [AddCommGroup V]
+    [AddCommGroup W] [Module F V] [Module F W] {ρ : Representation F G V}
+    {σ : Representation F G W} : Sub (ρ →ₗ σ) :=
   ⟨fun f g ↦
     {
       toFun := f - g
@@ -340,30 +474,43 @@ instance : Sub (ρ →ₗ σ) :=
     }⟩
 
 @[simp]
-theorem sub_apply (f g : ρ →ₗ σ) (x : V) : (f - g) x = f x - g x :=
+theorem sub_apply {F G V W : Type*} [CommRing F] [Monoid G] [AddCommGroup V]
+    [AddCommGroup W] [Module F V] [Module F W] {ρ : Representation F G V}
+    {σ : Representation F G W} (f g : ρ →ₗ σ) (x : V) : (f - g) x = f x - g x :=
   rfl
 
-instance zsmul : SMul ℤ (ρ₁ →ₗ ρ₂) where
+instance zsmul {F G V₁ V₂ : Type*} [CommRing F] [Monoid G]
+    [AddCommGroup V₁] [AddCommGroup V₂] [Module F V₁] [Module F V₂]
+    {ρ₁ : Representation F G V₁} {ρ₂ : Representation F G V₂} :
+    SMul ℤ (ρ₁ →ₗ ρ₂) where
   smul :=
     fun n f ↦ RepMap.mk (n • f.toLinearMap) (fun h ↦ by ext v; simp [f.isIntertwining])
 
-instance addCommGroup : AddCommGroup (ρ →ₗ σ) :=
+instance addCommGroup {F G V W : Type*} [CommRing F] [Monoid G] [AddCommGroup V]
+    [AddCommGroup W] [Module F V] [Module F W] {ρ : Representation F G V}
+    {σ : Representation F G W} : AddCommGroup (ρ →ₗ σ) :=
   DFunLike.coe_injective.addCommGroup _ rfl (fun _ _ ↦ rfl) (fun _ ↦ rfl) (fun _ _ ↦ rfl)
     (fun _ _ ↦ rfl) fun _ _ ↦ by rfl
 
 /-- Evaluation at a vector as an additive monoid hom on intertwining maps. -/
 @[simps]
-def evalAddMonoidHom (a : V) : (ρ →ₗ σ) →+ W where
+def evalAddMonoidHom {F G V W : Type*} [CommRing F] [Monoid G] [AddCommGroup V]
+    [AddCommGroup W] [Module F V] [Module F W] {ρ : Representation F G V}
+    {σ : Representation F G W} (a : V) : (ρ →ₗ σ) →+ W where
   toFun f := f a
-  map_add' f h := RepMap.add_apply ρ σ f h a
+  map_add' f h := RepMap.add_apply f h a
   map_zero' := rfl
 
 @[simp]
-theorem identityMapOfZeroModuleIsZero [Subsingleton V] : id (ρ := ρ) = 0 :=
+theorem identityMapOfZeroModuleIsZero {F G V : Type*} [CommRing F] [Monoid G]
+    [AddCommGroup V] [Module F V] {ρ : Representation F G V} [Subsingleton V] :
+    id (ρ := ρ) = 0 :=
   Subsingleton.eq_zero id
 
 /-- The range of an intertwining map as a subrepresentation. -/
-def range : Subrepresentation σ :=
+def range {F G V W : Type*} [CommRing F] [Monoid G] [AddCommGroup V]
+    [AddCommGroup W] [Module F V] [Module F W] {ρ : Representation F G V}
+    {σ : Representation F G W} {f : ρ →ₗ σ} : Subrepresentation σ :=
   {
     toSubmodule := LinearMap.range f.toLinearMap
     apply_mem_toSubmodule g v h := by
@@ -373,22 +520,24 @@ def range : Subrepresentation σ :=
       rw [f.isIntertwining, hy]
   }
 
-variable {F G V W : Type*} [Field F] [Monoid G] [AddCommGroup V] [AddCommGroup W]
-  [Module F V] [Module F W] {ρ : Representation F G V} {σ : Representation F G W}
-
-theorem _root_.Representation.eq_bot_iff {p : Subrepresentation ρ}
+theorem _root_.Representation.eq_bot_iff {F G V : Type*} [Field F] [Monoid G]
+    [AddCommGroup V] [Module F V] {ρ : Representation F G V} {p : Subrepresentation ρ}
     : p = ⊥ ↔ ∀ x ∈ p, x = 0 := by
   have : p.toSubmodule = ⊥ ↔ p = ⊥ := (StrictMono.apply_eq_bot_iff fun ⦃a b⦄ a_1 ↦ a_1)
   rw [← this, Submodule.eq_bot_iff]
   rfl
 
-theorem _root_.Representation.eq_top_iff' {p : Subrepresentation ρ}
+theorem _root_.Representation.eq_top_iff' {F G V : Type*} [Field F] [Monoid G]
+    [AddCommGroup V] [Module F V] {ρ : Representation F G V} {p : Subrepresentation ρ}
     : p = ⊤ ↔ ∀ x, x ∈ p := by
   have : p.toSubmodule = ⊤ ↔ p = ⊤ := (StrictMono.apply_eq_top_iff fun ⦃a b⦄ a_1 ↦ a_1)
   rw [← this, Submodule.eq_top_iff']
   rfl
 
-theorem irreducible_of_inj {f : ρ →ₗ σ} [Nontrivial V] [inst : IsIrreducible σ]
+theorem irreducible_of_inj {F G V W : Type*} [Field F] [Monoid G]
+    [AddCommGroup V] [AddCommGroup W] [Module F V] [Module F W]
+    {ρ : Representation F G V} {σ : Representation F G W} {f : ρ →ₗ σ}
+    [Nontrivial V] [inst : IsIrreducible σ]
     (h : Function.Injective f)
     : IsIrreducible ρ := by
   unfold IsIrreducible at inst ⊢

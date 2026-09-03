@@ -2,10 +2,8 @@ module
 
 public import FeitThompson.BGsection3.Infrastructure
 public import FeitThompson.BGsection3.lemma_3_3
-open Theory.Representation
+open Representation
 
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 open scoped commutatorElement IsMulCommutative
@@ -58,7 +56,7 @@ theorem exists_simple_submodule_nontrivial_of_not_le_ker_of_fixedSubspace_eq_bot
       IsSimpleModule (MonoidAlgebra F G) m ∧
       (Subrepresentation.ofSubmodule' m).toRepresentation.fixedSubspace R = ⊥ ∧
       ¬ H ≤ (Subrepresentation.ofSubmodule' m).toRepresentation.ker := by
-  obtain ⟨m, hm, hHmk⟩ := exists_simple_submodule_nontrivial_of_not_le_ker (ρ := ρ) H hH
+  obtain ⟨m, hm, hHmk⟩ := _root_.exists_simple_submodule_nontrivial_of_not_le_ker (ρ := ρ) H hH
   exact ⟨m, hm, fixedSubspace_ofSubmodule'_eq_bot_of_fixedSubspace_eq_bot ρ R m hfix, hHmk⟩
 
 
@@ -1613,10 +1611,10 @@ theorem natCard_map_ker_eq_prime_of_central_exponent_prime_irreducible_local
     {q : ℕ} [Fact q.Prime] (hZpow : ∀ z : Z, (z : G) ^ q = 1) (hZ_nontrivial : ¬ Z ≤ ρ.ker) :
     Nat.card (Z.map (QuotientGroup.mk' ρ.ker)) = q := by
   let mkKer : G →* G ⧸ ρ.ker := QuotientGroup.mk' ρ.ker
-  let ρq : Representation F (G ⧸ ρ.ker) V := Theory.Representation.kerRepresentation ρ
+  let ρq : Representation F (G ⧸ ρ.ker) V := Representation.kerRepresentation ρ
   have : Representation.IsIrreducible ρq :=
-    (Theory.Representation.kerRepresentation_irreducible_iff ρ).2 hirr
-  have : FiniteDimensional F V := finiteDimensional_of_irreducible_finite_group ρ hirr
+    (Representation.kerRepresentation_irreducible_iff ρ).2 hirr
+  have : FiniteDimensional F V := _root_.finiteDimensional_of_irreducible_finite_group ρ hirr
   have hZmap_central : Z.map mkKer ≤ Subgroup.center (G ⧸ ρ.ker) := by
     intro z hz
     rcases hz with ⟨z0, hz0, rfl⟩
@@ -1638,7 +1636,7 @@ theorem natCard_map_ker_eq_prime_of_central_exponent_prime_irreducible_local
     exact (QuotientGroup.eq_one_iff (N := ρ.ker) z).mp hzq_eq_one
   have hcenter_cyclic : IsCyclic (Subgroup.center (G ⧸ ρ.ker)) :=
     center_cyclic_of_representation_faithful_irreducible ρq
-      (Theory.Representation.kerRepresentation_faithful ρ)
+      (Representation.kerRepresentation_faithful ρ)
   let : IsCyclic (Subgroup.center (G ⧸ ρ.ker)) := hcenter_cyclic
   have hZmap_cyclic : IsCyclic (Z.map mkKer) := Subgroup.isCyclic_of_le hZmap_central
   let : IsCyclic (Z.map mkKer) := hZmap_cyclic
@@ -1815,7 +1813,7 @@ lemma commutatorElement_mul_left_of_commutator_le_center_local
     {K : Type*} [Group K] (hcomm : commutator K ≤ Subgroup.center K) (x y z : K) :
     ⁅x * y, z⁆ = ⁅x, z⁆ * ⁅y, z⁆ := by
   have hyz_cent : ⁅y, z⁆ ∈ Subgroup.center K :=
-    commutatorElement_mem_center_of_commutator_le_center_local hcomm y z
+    _root_.commutatorElement_mem_center_of_commutator_le_center_local hcomm y z
   have hleft :
       x * ⁅y, z⁆ * x⁻¹ = ⁅y, z⁆ := by
     calc
@@ -1842,7 +1840,7 @@ lemma commutatorElement_mul_right_of_commutator_le_center_local
     {K : Type*} [Group K] (hcomm : commutator K ≤ Subgroup.center K) (x y z : K) :
     ⁅x, y * z⁆ = ⁅x, y⁆ * ⁅x, z⁆ := by
   have hxz_cent : ⁅x, z⁆ ∈ Subgroup.center K :=
-    commutatorElement_mem_center_of_commutator_le_center_local hcomm x z
+    _root_.commutatorElement_mem_center_of_commutator_le_center_local hcomm x z
   have hright :
       y * ⁅x, z⁆ * y⁻¹ = ⁅x, z⁆ := by
     calc
@@ -1905,7 +1903,7 @@ noncomputable def extraspecialCenterPairingRaw
   centerAddEquivZMod_local (q := q) (K := K)
     (Additive.ofMul
       ⟨⁅x, y⁆,
-        commutatorElement_mem_center_of_commutator_le_center_local
+        _root_.commutatorElement_mem_center_of_commutator_le_center_local
           (commutator_le_center_of_isExtraspecial_local (q := q) (K := K)) x y⟩)
 
 theorem extraspecialCenterPairingRaw_mul_center_left
@@ -2141,7 +2139,7 @@ theorem exists_natCard_eq_prime_pow_two_mul_add_one_of_isExtraspecial_local
       have hy' :
           (Additive.ofMul
             ⟨⁅x, y⁆,
-              commutatorElement_mem_center_of_commutator_le_center_local
+              _root_.commutatorElement_mem_center_of_commutator_le_center_local
                 (commutator_le_center_of_isExtraspecial_local (q := q) (K := K)) x y⟩ :
             Additive (Subgroup.center K)) = 0 := by
         apply (centerAddEquivZMod_local (q := q) (K := K)).injective
@@ -2196,9 +2194,9 @@ theorem theorem_3_4_extraspecial_faithful_center_fixedpoints_of_isExtraspecial_c
   let σ : Representation F (K ⋊[φ] R) V := ρ.comp e.toMonoidHom
   have : Representation.IsIrreducible σ := by
     exact
-      (Theory.Representation.RepEquiv.irreducible_iff_group_iso (ρ := σ) (σ := ρ) e
+      (Representation.RepEquiv.irreducible_iff_group_iso (ρ := σ) (σ := ρ) e
         (by intro g v; rfl)).2 hirr
-  have : FiniteDimensional F V := finiteDimensional_of_irreducible_finite_group ρ hirr
+  have : FiniteDimensional F V := _root_.finiteDimensional_of_irreducible_finite_group ρ hirr
   have hσfaithful : Function.Injective σ :=
     (injective_comp_mulEquiv_toMonoidHom_iff ρ e).2 hfaithful
   have hq_dvdK : q ∣ Nat.card K := by
@@ -2369,7 +2367,7 @@ theorem theorem_3_4_extraspecial_faithful_center_fixedpoints
     let Kq : Subgroup (G ⧸ ρ.ker) := K.map qG
     let Rq : Subgroup (G ⧸ ρ.ker) := R.map qG
     let Zq : Subgroup (G ⧸ ρ.ker) := ((Subgroup.center (↥K)).map K.subtype).map qG
-    let ρq : Representation F (G ⧸ ρ.ker) V := Theory.Representation.kerRepresentation ρ
+    let ρq : Representation F (G ⧸ ρ.ker) V := Representation.kerRepresentation ρ
     have hρq :
         Representation.IsIrreducible ρq ∧
           Function.Injective ρq ∧
@@ -2673,11 +2671,11 @@ theorem theorem_3_4_theorem_2_5_replacement {G : Type uG} [Group G] [Finite G]
   let : IsSemisimpleModule (MonoidAlgebra F G) ρ.asModule :=
     Representation.isCompletelyReducible_of_ringChar_eq_zero_or_prime_coprime (ρ := ρ) hchar
   obtain ⟨m, hm_simple, hm_fix, hm_C_nontrivial⟩ :=
-    exists_simple_submodule_nontrivial_of_not_le_ker_of_fixedSubspace_eq_bot
+    _root_.exists_simple_submodule_nontrivial_of_not_le_ker_of_fixedSubspace_eq_bot
       (ρ := ρ) (R := R) (H := C) hfixR hC_nontrivial
   let ρm := (Subrepresentation.ofSubmodule' m).toRepresentation
   have hirr : Representation.IsIrreducible ρm :=
-    irreducible_of_ofSubmodule'_simple (ρ := ρ) hm_simple
+    _root_.irreducible_of_ofSubmodule'_simple (ρ := ρ) hm_simple
   exact
     theorem_3_4_extraspecial_faithful_center_fixedpoints K R ρm hind hsolvG hodd hK_normal hKR
       hcopKR hR_prime hm_fix hchar hcommK hcomm hexp hcent_r hirr hm_C_nontrivial
@@ -3263,7 +3261,7 @@ public theorem exists_inner_of_fix_center_and_quotient_of_isExtraspecial_local
       have hy' :
           (Additive.ofMul
             ⟨⁅x, y⁆,
-              commutatorElement_mem_center_of_commutator_le_center_local
+              _root_.commutatorElement_mem_center_of_commutator_le_center_local
                 (commutator_le_center_of_isExtraspecial_local (q := q) (K := K)) x y⟩ :
             Additive (Subgroup.center K)) = 0 := by
         apply (centerAddEquivZMod_local (q := q) (K := K)).injective
@@ -3291,14 +3289,14 @@ public theorem exists_inner_of_fix_center_and_quotient_of_isExtraspecial_local
           Additive (Subgroup.center K)) =
         Additive.ofMul
           ⟨⁅s, x⁆,
-            commutatorElement_mem_center_of_commutator_le_center_local
+            _root_.commutatorElement_mem_center_of_commutator_le_center_local
               (commutator_le_center_of_isExtraspecial_local (q := q) (K := K)) s x⟩ := by
     apply (centerAddEquivZMod_local (q := q) (K := K)).injective
     simpa [f, c, cRaw, hsbar_eq, hB_mk, extraspecialCenterPairingRaw] using hdual.symm
   have hdelta : x⁻¹ * α x = ⁅s, x⁆ := by
     simpa using congrArg Additive.toMul hcomm_eq
   have hsx_center : ⁅s, x⁆ ∈ Subgroup.center K :=
-    commutatorElement_mem_center_of_commutator_le_center_local
+    _root_.commutatorElement_mem_center_of_commutator_le_center_local
       (commutator_le_center_of_isExtraspecial_local (q := q) (K := K)) s x
   calc
     α x = x * (x⁻¹ * α x) := by group

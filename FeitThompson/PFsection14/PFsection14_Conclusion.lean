@@ -1,7 +1,6 @@
 module
 
 public import FeitThompson.PFsection14.PFsection14_2
-open Theory.ElementaryAbelian
 
 
 /-!

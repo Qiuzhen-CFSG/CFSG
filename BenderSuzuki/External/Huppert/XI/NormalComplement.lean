@@ -7,8 +7,6 @@ public import FeitThompson.BGsection1.theorem_1_8
 public import FeitThompson.BGsection1.theorem_1_11
 public import FeitThompson.PGroup.OmegaFrattini
 public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Card
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 namespace BenderSuzuki
@@ -812,7 +810,7 @@ public theorem huppert_XI_2_5_hasNormalPComplement_three_of_top_twoResidual
   have hOmegaTrivial :
       ActsTriviallyOnSubgroup
         (A := φ.range) (G := Q) (omega₁ (G := Q) (p := 3)) :=
-    PGroup.actsTriviallyOnSubgroup_omega₁_of_fix_order_p hfixOrderThree
+    actsTriviallyOnSubgroup_omega₁_of_fix_order_p hfixOrderThree
   have hRangeTrivial : ActsTrivially (A := φ.range) (G := Q) :=
     theorem_1_11 (G := Q) (A := φ.range) (p := 3)
       (by norm_num) hRangeCoprimeQ hOmegaTrivial

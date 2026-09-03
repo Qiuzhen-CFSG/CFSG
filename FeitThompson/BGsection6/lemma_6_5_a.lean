@@ -2,7 +2,6 @@ module
 
 public import FeitThompson.BGsection6.theorem_6_4
 import FeitThompson.SubgroupConj
-open Theory.GroupAction
 
 
 open scoped MatrixGroups Pointwise TensorProduct commutatorElement

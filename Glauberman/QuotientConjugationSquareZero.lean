@@ -1,7 +1,6 @@
 module
 
 public import Glauberman.MinimalNormalPSubgroupGLAction
-open Theory.ElementaryAbelian
 
 
 /-!

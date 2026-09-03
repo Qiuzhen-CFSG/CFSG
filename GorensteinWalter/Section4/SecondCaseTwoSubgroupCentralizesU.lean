@@ -8,7 +8,6 @@ public import FeitThompson.FinalTheorem
 public import GorensteinWalter.Section2.Lemma27Infra
 public import GorensteinWalter.Section1
 import Mathlib.Tactic
-open Theory.GroupAction
 
 
 /-!

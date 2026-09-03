@@ -24,11 +24,6 @@ open _root_.Representation
 
 attribute [local instance] Fintype.ofFinite
 
-variable {G A V W : Type*}
-variable [Group G] [Finite G]
-variable [AddCommGroup A] [Module ℂ A] [FiniteDimensional ℂ A]
-variable [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
-variable [AddCommGroup W] [Module ℂ W] [FiniteDimensional ℂ W]
 
 noncomputable section
 
@@ -40,7 +35,10 @@ instance finiteDimensional_coindV
   let _ : FiniteDimensional ℂ (K → U) := inferInstance
   infer_instance
 
-instance finiteDimensional_ind (S : Subgroup G) (ρ : Representation ℂ S A)
+instance finiteDimensional_ind
+    {G A : Type*} [Group G] [Finite G] [AddCommGroup A] [Module ℂ A]
+    [FiniteDimensional ℂ A]
+    (S : Subgroup G) (ρ : Representation ℂ S A)
     : FiniteDimensional ℂ (Representation.IndV S.subtype ρ) := by
   let _ : FiniteDimensional ℂ (G →₀ ℂ) := inferInstance
   let _ : FiniteDimensional ℂ (TensorProduct ℂ (G →₀ ℂ) A) := inferInstance
@@ -48,7 +46,9 @@ instance finiteDimensional_ind (S : Subgroup G) (ρ : Representation ℂ S A)
   exact FiniteDimensional.of_surjective (Representation.Coinvariants.mk τ)
     (Representation.Coinvariants.mk_surjective τ)
 
-noncomputable def indToCoindAux (S : Subgroup G) (ρ : Representation ℂ S A) (g : G)
+noncomputable def indToCoindAux
+    {G A : Type*} [Group G] [AddCommGroup A] [Module ℂ A]
+    (S : Subgroup G) (ρ : Representation ℂ S A) (g : G)
     : A →ₗ[ℂ] (G → A) := by
   classical
   exact LinearMap.pi
@@ -64,9 +64,10 @@ noncomputable def indToCoindAux (S : Subgroup G) (ρ : Representation ℂ S A) (
       else
         0
 
-omit [Finite G] [FiniteDimensional ℂ A] in
 @[simp]
-lemma indToCoindAux_self (S : Subgroup G) (ρ : Representation ℂ S A) (g : G) (a : A)
+lemma indToCoindAux_self
+    {G A : Type*} [Group G] [AddCommGroup A] [Module ℂ A]
+    (S : Subgroup G) (ρ : Representation ℂ S A) (g : G) (a : A)
     : indToCoindAux S ρ g a g = a := by
   have hgg : (QuotientGroup.rightRel S).r g g := by
     refine ⟨1, ?_⟩
@@ -80,8 +81,8 @@ lemma indToCoindAux_self (S : Subgroup G) (ρ : Representation ℂ S A) (g : G) 
     rw [hsub]
     simp
 
-omit [Finite G] [FiniteDimensional ℂ A] in
 lemma indToCoindAux_of_not_rel
+    {G A : Type*} [Group G] [AddCommGroup A] [Module ℂ A]
     (S : Subgroup G) (ρ : Representation ℂ S A)
     (g g₁ : G) (a : A) (h : ¬ (QuotientGroup.rightRel S).r g₁ g)
     : indToCoindAux S ρ g a g₁ = 0 := by
@@ -89,9 +90,9 @@ lemma indToCoindAux_of_not_rel
   rw [indToCoindAux, LinearMap.pi_apply, dif_neg h]
   simp
 
-omit [Finite G] [FiniteDimensional ℂ A] in
 @[simp]
 lemma indToCoindAux_mul_snd
+    {G A : Type*} [Group G] [AddCommGroup A] [Module ℂ A]
     (S : Subgroup G) (ρ : Representation ℂ S A)
     (g g₁ : G) (a : A) (s : S)
     : indToCoindAux S ρ g a (s * g₁) = ρ s (indToCoindAux S ρ g a g₁) := by
@@ -112,9 +113,9 @@ lemma indToCoindAux_mul_snd
             _ = g₁ := by simp⟩)
       h
 
-omit [Finite G] [FiniteDimensional ℂ A] in
 @[simp]
 lemma indToCoindAux_mul_fst
+    {G A : Type*} [Group G] [AddCommGroup A] [Module ℂ A]
     (S : Subgroup G) (ρ : Representation ℂ S A)
     (g₁ g₂ : G) (a : A) (s : S)
     : indToCoindAux S ρ (s * g₁) (ρ s a) g₂ = indToCoindAux S ρ g₁ a g₂ := by
@@ -133,9 +134,9 @@ lemma indToCoindAux_mul_fst
           simpa [Subgroup.smul_def, mul_assoc] using hs₁⟩)
       h
 
-omit [Finite G] [FiniteDimensional ℂ A] in
 @[simp]
 lemma indToCoindAux_snd_mul_inv
+    {G A : Type*} [Group G] [AddCommGroup A] [Module ℂ A]
     (S : Subgroup G) (ρ : Representation ℂ S A)
     (g₁ g₂ g₃ : G) (a : A)
     : indToCoindAux S ρ g₁ a (g₂ * g₃⁻¹) = indToCoindAux S ρ (g₁ * g₃) a g₂ := by
@@ -151,16 +152,18 @@ lemma indToCoindAux_snd_mul_inv
             simpa [S.smul_def, eq_mul_inv_iff_mul_eq, mul_assoc] using hs)
       h
 
-omit [Finite G] [FiniteDimensional ℂ A] in
 @[simp]
 lemma indToCoindAux_fst_mul_inv
+    {G A : Type*} [Group G] [AddCommGroup A] [Module ℂ A]
     (S : Subgroup G) (ρ : Representation ℂ S A)
     (g₁ g₂ g₃ : G) (a : A)
     : indToCoindAux S ρ (g₁ * g₂⁻¹) a g₃ = indToCoindAux S ρ g₁ a (g₃ * g₂) := by
   simpa using (indToCoindAux_snd_mul_inv S ρ g₁ g₃ g₂⁻¹ a).symm
 
 set_option backward.isDefEq.respectTransparency.types false in
-noncomputable abbrev indToCoind (S : Subgroup G) (ρ : Representation ℂ S A)
+noncomputable abbrev indToCoind
+    {G A : Type*} [Group G] [AddCommGroup A] [Module ℂ A]
+    (S : Subgroup G) (ρ : Representation ℂ S A)
     : Representation.IndV S.subtype ρ →ₗ[ℂ] Representation.coindV S.subtype ρ :=
   Representation.Coinvariants.lift _ (TensorProduct.lift <|
     (linearCombination _ fun g =>
@@ -169,16 +172,19 @@ noncomputable abbrev indToCoind (S : Subgroup G) (ρ : Representation ℂ S A)
         ext x
         simp [LinearMap.codRestrict_apply]
 
-omit [Finite G] [FiniteDimensional ℂ A] in
 @[simp]
-lemma indToCoind_mk (S : Subgroup G) (ρ : Representation ℂ S A) (g h : G) (a : A)
+lemma indToCoind_mk
+    {G A : Type*} [Group G] [AddCommGroup A] [Module ℂ A]
+    (S : Subgroup G) (ρ : Representation ℂ S A) (g h : G) (a : A)
     : ((indToCoind S ρ) (Representation.IndV.mk S.subtype ρ g a)).1 h
       = indToCoindAux S ρ g a h := by
   simp [indToCoind, Representation.IndV.mk, LinearMap.comp_apply]
   rfl
 
 @[simps]
-noncomputable def coindToInd (S : Subgroup G) (ρ : Representation ℂ S A)
+noncomputable def coindToInd
+    {G A : Type*} [Group G] [Finite G] [AddCommGroup A] [Module ℂ A]
+    (S : Subgroup G) (ρ : Representation ℂ S A)
     : Representation.coindV S.subtype ρ →ₗ[ℂ] Representation.IndV S.subtype ρ where
   toFun f := by
     classical
@@ -207,8 +213,8 @@ noncomputable def coindToInd (S : Subgroup G) (ρ : Representation ℂ S A)
     simpa [Finset.smul_sum]
       using Finset.sum_congr rfl fun z _ => Quotient.inductionOn z fun _ => by simp
 
-omit [FiniteDimensional ℂ A] in
 lemma coindToInd_of_support_subset_orbit
+    {G A : Type*} [Group G] [Finite G] [AddCommGroup A] [Module ℂ A]
     (S : Subgroup G) (ρ : Representation ℂ S A)
     (g : G) (f : Representation.coindV S.subtype ρ)
     (hx : f.1.support ⊆ MulAction.orbit S g)
@@ -228,8 +234,9 @@ lemma coindToInd_of_support_subset_orbit
         simp_all
   · simp
 
-omit [FiniteDimensional ℂ A] in
-lemma coindToInd_indToCoind (S : Subgroup G) (ρ : Representation ℂ S A)
+lemma coindToInd_indToCoind
+    {G A : Type*} [Group G] [Finite G] [AddCommGroup A] [Module ℂ A]
+    (S : Subgroup G) (ρ : Representation ℂ S A)
     : indToCoind S ρ ∘ₗ coindToInd S ρ = LinearMap.id := by
   classical
   let _ : S.FiniteIndex := inferInstance
@@ -248,8 +255,9 @@ lemma coindToInd_indToCoind (S : Subgroup G) (ρ : Representation ℂ S A)
           using indToCoindAux_of_not_rel S ρ b a (g.1 b) (mt Quotient.sound hb.symm)
   · simp
 
-omit [FiniteDimensional ℂ A] in
-lemma indToCoind_coindToInd (S : Subgroup G) (ρ : Representation ℂ S A)
+lemma indToCoind_coindToInd
+    {G A : Type*} [Group G] [Finite G] [AddCommGroup A] [Module ℂ A]
+    (S : Subgroup G) (ρ : Representation ℂ S A)
     : coindToInd S ρ ∘ₗ indToCoind S ρ = LinearMap.id := by
   classical
   let _ : S.FiniteIndex := inferInstance
@@ -265,7 +273,9 @@ lemma indToCoind_coindToInd (S : Subgroup G) (ρ : Representation ℂ S A)
     simp [indToCoind, LinearMap.comp_apply]
     simpa [LinearMap.codRestrict] using indToCoindAux_of_not_rel S ρ g x a hx
 
-noncomputable def indCoindEquiv (S : Subgroup G) (ρ : Representation ℂ S A)
+noncomputable def indCoindEquiv
+    {G A : Type*} [Group G] [Finite G] [AddCommGroup A] [Module ℂ A]
+    (S : Subgroup G) (ρ : Representation ℂ S A)
     : (Representation.ind S.subtype ρ).Equiv (Representation.coind S.subtype ρ) := by
   classical
   let f :
@@ -301,38 +311,37 @@ noncomputable def indCoindEquiv (S : Subgroup G) (ρ : Representation ℂ S A)
         Representation.coindV S.subtype ρ => T y) (coindToInd_indToCoind S ρ)
     simpa [f, LinearMap.comp_apply] using hy
 
-abbrev RightCosets (S : Subgroup G) := Quotient (QuotientGroup.rightRel S)
+abbrev RightCosets {G : Type*} [Group G] (S : Subgroup G) :=
+  Quotient (QuotientGroup.rightRel S)
 
-instance rightCosetsFintype (S : Subgroup G) : Fintype (RightCosets S) := by
+instance rightCosetsFintype {G : Type*} [Group G] [Finite G] (S : Subgroup G) :
+    Fintype (RightCosets S) := by
   letI : Fintype (G ⧸ S) := Fintype.ofFinite (G ⧸ S)
   exact QuotientGroup.fintypeQuotientRightRel (s := S)
 
-def rightCosetOut (S : Subgroup G) (g : G) : G :=
+def rightCosetOut {G : Type*} [Group G] (S : Subgroup G) (g : G) : G :=
   Quotient.out (Quotient.mk (QuotientGroup.rightRel S) g)
 
-omit [Finite G] in
-theorem rightCosetOut_spec (S : Subgroup G) (g : G) : g * (rightCosetOut S g)⁻¹ ∈ S := by
+theorem rightCosetOut_spec {G : Type*} [Group G] (S : Subgroup G) (g : G) :
+    g * (rightCosetOut S g)⁻¹ ∈ S := by
   simpa [rightCosetOut, QuotientGroup.rightRel_apply]
     using (Quotient.mk_out (s := QuotientGroup.rightRel S) g)
 
-omit [Finite G] in
-theorem rightCosetOut_eq_of_mk_eq (S : Subgroup G) {g h : G}
+theorem rightCosetOut_eq_of_mk_eq {G : Type*} [Group G] (S : Subgroup G) {g h : G}
     (eq
       : Quotient.mk (QuotientGroup.rightRel S) g
         = Quotient.mk (QuotientGroup.rightRel S) h)
     : rightCosetOut S g = rightCosetOut S h := by
   exact congrArg Quotient.out eq
 
-omit [Finite G] in
-theorem rightCosetOut_out (S : Subgroup G) (q : RightCosets S)
+theorem rightCosetOut_out {G : Type*} [Group G] (S : Subgroup G) (q : RightCosets S)
     : rightCosetOut S (Quotient.out q) = Quotient.out q := by
   exact congrArg Quotient.out (Quotient.out_eq q)
 
-def rightCosetCorrection (S : Subgroup G) (g : G) : S :=
+def rightCosetCorrection {G : Type*} [Group G] (S : Subgroup G) (g : G) : S :=
   ⟨g * (rightCosetOut S g)⁻¹, rightCosetOut_spec S g⟩
 
-omit [Finite G] in
-theorem rightCoset_mk_smul (S : Subgroup G) (s : S) (g : G)
+theorem rightCoset_mk_smul {G : Type*} [Group G] (S : Subgroup G) (s : S) (g : G)
     : Quotient.mk (QuotientGroup.rightRel S) ((s : G) * g)
       = Quotient.mk (QuotientGroup.rightRel S) g := by
   apply Quotient.sound
@@ -340,8 +349,7 @@ theorem rightCoset_mk_smul (S : Subgroup G) (s : S) (g : G)
   rw [QuotientGroup.rightRel_apply]
   simp [mul_inv_rev, s.2]
 
-omit [Finite G] in
-theorem rightCosetCorrection_smul (S : Subgroup G) (s : S) (g : G)
+theorem rightCosetCorrection_smul {G : Type*} [Group G] (S : Subgroup G) (s : S) (g : G)
     : rightCosetCorrection S ((s : G) * g) = s * rightCosetCorrection S g := by
   apply Subtype.ext
   change ((s : G) * g) * (rightCosetOut S ((s : G) * g))⁻¹ =
@@ -349,20 +357,18 @@ theorem rightCosetCorrection_smul (S : Subgroup G) (s : S) (g : G)
   rw [rightCosetOut_eq_of_mk_eq S (rightCoset_mk_smul S s g)]
   simp [mul_assoc]
 
-omit [Finite G] in
-theorem subgroupSubtype_correction_mul_out (S : Subgroup G) (g : G)
+theorem subgroupSubtype_correction_mul_out {G : Type*} [Group G] (S : Subgroup G) (g : G)
     : ((rightCosetCorrection S g : S) : G) * rightCosetOut S g = g := by
   simp [rightCosetCorrection, mul_assoc]
 
-omit [Finite G] in
-theorem rightCosetCorrection_out (S : Subgroup G) (q : RightCosets S)
+theorem rightCosetCorrection_out {G : Type*} [Group G] (S : Subgroup G) (q : RightCosets S)
     : rightCosetCorrection S (Quotient.out q) = 1 := by
   apply Subtype.ext
   change Quotient.out q * (rightCosetOut S (Quotient.out q))⁻¹ = (1 : G)
   rw [rightCosetOut_out]
   simp
 
-def fixedConjugate (S : Subgroup G) (q : RightCosets S) (g : G)
+def fixedConjugate {G : Type*} [Group G] (S : Subgroup G) (q : RightCosets S) (g : G)
     (h : Quotient.mk (QuotientGroup.rightRel S) (Quotient.out q * g) = q)
     : S :=
   ⟨
@@ -375,8 +381,7 @@ def fixedConjugate (S : Subgroup G) (q : RightCosets S) (g : G)
       simpa [mul_inv_rev, mul_assoc] using (S.inv_mem hrel)
   ⟩
 
-omit [Finite G] in
-theorem rightCosetCorrection_fixed (S : Subgroup G) (q : RightCosets S) (g : G)
+theorem rightCosetCorrection_fixed {G : Type*} [Group G] (S : Subgroup G) (q : RightCosets S) (g : G)
     (h : Quotient.mk (QuotientGroup.rightRel S) (Quotient.out q * g) = q)
     : rightCosetCorrection S (Quotient.out q * g) = fixedConjugate S q g h := by
   apply Subtype.ext
@@ -386,7 +391,9 @@ theorem rightCosetCorrection_fixed (S : Subgroup G) (q : RightCosets S) (g : G)
     Quotient.out q * g * (Quotient.out q)⁻¹
   rw [hout]
 
-noncomputable def coindVEquivQuotient (S : Subgroup G) (ρ : Representation ℂ S A)
+noncomputable def coindVEquivQuotient
+    {G A : Type*} [Group G] [AddCommGroup A] [Module ℂ A]
+    (S : Subgroup G) (ρ : Representation ℂ S A)
     : Representation.coindV S.subtype ρ ≃ₗ[ℂ] (RightCosets S → A) where
   toFun f q := f.1 (Quotient.out q)
   invFun x := by
@@ -414,12 +421,15 @@ noncomputable def coindVEquivQuotient (S : Subgroup G) (ρ : Representation ℂ 
     rw [rightCosetCorrection_out S q, Quotient.out_eq q]
     simp
 
-def coindCoordinateEnd (S : Subgroup G) (ρ : Representation ℂ S A) (g : G)
+def coindCoordinateEnd
+    {G A : Type*} [Group G] [AddCommGroup A] [Module ℂ A]
+    (S : Subgroup G) (ρ : Representation ℂ S A) (g : G)
     : (RightCosets S → A) →ₗ[ℂ] (RightCosets S → A) :=
   (coindVEquivQuotient S ρ).conj ((Representation.coind S.subtype ρ) g)
 
-omit [Finite G] [FiniteDimensional ℂ A] in
-theorem coindCoordinateEnd_apply (S : Subgroup G) (ρ : Representation ℂ S A) (g : G)
+theorem coindCoordinateEnd_apply
+    {G A : Type*} [Group G] [AddCommGroup A] [Module ℂ A]
+    (S : Subgroup G) (ρ : Representation ℂ S A) (g : G)
     (x : RightCosets S → A) (q : RightCosets S)
     : coindCoordinateEnd S ρ g x q
       = ρ (rightCosetCorrection S (Quotient.out q * g))
@@ -427,6 +437,8 @@ theorem coindCoordinateEnd_apply (S : Subgroup G) (ρ : Representation ℂ S A) 
   rfl
 
 theorem coindCoordinateEnd_trace_formula
+    {G A : Type*} [Group G] [Finite G] [AddCommGroup A] [Module ℂ A]
+    [FiniteDimensional ℂ A]
     (S : Subgroup G) [DecidablePred (· ∈ S)] (ρ : Representation ℂ S A) (g : G)
     : LinearMap.trace ℂ (RightCosets S → A) (coindCoordinateEnd S ρ g)
       = ∑ q : RightCosets S,
@@ -450,6 +462,8 @@ theorem coindCoordinateEnd_trace_formula
     exact coindCoordinateEnd_apply S ρ g x q
 
 theorem coind_character_formula
+    {G A : Type*} [Group G] [Finite G] [AddCommGroup A] [Module ℂ A]
+    [FiniteDimensional ℂ A]
     (S : Subgroup G) [DecidablePred (· ∈ S)] (ρ : Representation ℂ S A) (g : G)
     : (Representation.coind S.subtype ρ).character g
       = ∑ q : RightCosets S,
@@ -461,7 +475,8 @@ theorem coind_character_formula
   exact (LinearMap.trace_conj'
     ((Representation.coind S.subtype ρ) g) (coindVEquivQuotient S ρ)).symm
 
-noncomputable def quotientMkFiberEquivSubgroup (S : Subgroup G) (q : RightCosets S)
+noncomputable def quotientMkFiberEquivSubgroup
+    {G : Type*} [Group G] (S : Subgroup G) (q : RightCosets S)
     : {x : G // Quotient.mk (QuotientGroup.rightRel S) x = q} ≃ S where
   toFun x := by
     refine ⟨x.1 * (Quotient.out q)⁻¹, ?_⟩
@@ -485,12 +500,12 @@ noncomputable def quotientMkFiberEquivSubgroup (S : Subgroup G) (q : RightCosets
     apply Subtype.ext
     simp [mul_assoc]
 
-omit [Finite G] in
-theorem quotientMk_fiber_nat_card (S : Subgroup G) (q : RightCosets S)
+theorem quotientMk_fiber_nat_card {G : Type*} [Group G] (S : Subgroup G) (q : RightCosets S)
     : Nat.card {x : G // Quotient.mk (QuotientGroup.rightRel S) x = q} = Nat.card S := by
   exact Nat.card_congr (quotientMkFiberEquivSubgroup S q)
 
-theorem quotient_sum_lift_rightRel (S : Subgroup G) (F : RightCosets S → ℂ)
+theorem quotient_sum_lift_rightRel {G : Type*} [Group G] [Finite G]
+    (S : Subgroup G) (F : RightCosets S → ℂ)
     : (∑ x : G, F (Quotient.mk (QuotientGroup.rightRel S) x))
       = (Nat.card S : ℂ) * (∑ q : RightCosets S, F q) := by
   classical
@@ -517,7 +532,7 @@ theorem quotient_sum_lift_rightRel (S : Subgroup G) (F : RightCosets S → ℂ)
     _ = (Nat.card S : ℂ) * ∑ q : RightCosets S, F q := by
       rw [Finset.mul_sum]
 
-def fiberCorrection (S : Subgroup G) (q : RightCosets S)
+def fiberCorrection {G : Type*} [Group G] (S : Subgroup G) (q : RightCosets S)
     (x : {x : G // Quotient.mk (QuotientGroup.rightRel S) x = q})
     : S := by
   refine ⟨x.1 * (Quotient.out q)⁻¹, ?_⟩
@@ -525,15 +540,13 @@ def fiberCorrection (S : Subgroup G) (q : RightCosets S)
     exact Quotient.exact ((Quotient.out_eq q).trans x.2.symm)
   simpa [QuotientGroup.rightRel_apply] using hrel
 
-omit [Finite G] in
-theorem fiberCorrection_mul_out (S : Subgroup G) (q : RightCosets S)
+theorem fiberCorrection_mul_out {G : Type*} [Group G] (S : Subgroup G) (q : RightCosets S)
     (x : {x : G // Quotient.mk (QuotientGroup.rightRel S) x = q})
     : ((fiberCorrection S q x : S) : G) * Quotient.out q = x.1 := by
   change (x.1 * (Quotient.out q)⁻¹) * Quotient.out q = x.1
   simp [mul_assoc]
 
-omit [Finite G] in
-theorem fiberConjugate_eq_raw (S : Subgroup G) (q : RightCosets S)
+theorem fiberConjugate_eq_raw {G : Type*} [Group G] (S : Subgroup G) (q : RightCosets S)
     (x : {x : G // Quotient.mk (QuotientGroup.rightRel S) x = q}) (g : G)
     : x.1 * g * x.1⁻¹
       = (fiberCorrection S q x : G)
@@ -542,8 +555,8 @@ theorem fiberConjugate_eq_raw (S : Subgroup G) (q : RightCosets S)
   rw [← fiberCorrection_mul_out S q x]
   simp [mul_assoc]
 
-omit [Finite G] in
-theorem quotient_mk_mul_out_eq_iff (S : Subgroup G) (q : RightCosets S) (g : G)
+theorem quotient_mk_mul_out_eq_iff {G : Type*} [Group G]
+    (S : Subgroup G) (q : RightCosets S) (g : G)
     : Quotient.mk (QuotientGroup.rightRel S) (Quotient.out q * g) = q
       ↔ Quotient.out q * g * (Quotient.out q)⁻¹ ∈ S := by
   constructor
@@ -560,8 +573,8 @@ theorem quotient_mk_mul_out_eq_iff (S : Subgroup G) (q : RightCosets S) (g : G)
         simpa [mul_inv_rev, mul_assoc] using hq'
       _ = q := Quotient.out_eq q
 
-omit [Finite G] in
 theorem quotient_fiber_conjugate_mem_iff
+    {G : Type*} [Group G]
     (S : Subgroup G) (q : RightCosets S) (g : G)
     (x : {x : G // Quotient.mk (QuotientGroup.rightRel S) x = q})
     : x.1 * g * x.1⁻¹ ∈ S
@@ -582,8 +595,8 @@ theorem quotient_fiber_conjugate_mem_iff
     exact S.mul_mem (S.mul_mem (fiberCorrection S q x).2 hmid)
       (S.inv_mem (fiberCorrection S q x).2)
 
-omit [Finite G] [FiniteDimensional ℂ A] in
 theorem quotient_fiber_character_term
+    {G A : Type*} [Group G] [AddCommGroup A] [Module ℂ A]
     (S : Subgroup G) [DecidablePred (· ∈ S)] (ρ : Representation ℂ S A) (g : G)
     (q : RightCosets S)
     (x : {x : G // Quotient.mk (QuotientGroup.rightRel S) x = q})
@@ -613,6 +626,8 @@ theorem quotient_fiber_character_term
 
 /-- Character formula for induced representations. -/
 theorem induced_character_formula
+    {G A : Type*} [Group G] [Finite G] [AddCommGroup A] [Module ℂ A]
+    [FiniteDimensional ℂ A]
     (S : Subgroup G) [DecidablePred (· ∈ S)] (ρ : Representation ℂ S A) (g : G)
     : (Representation.ind S.subtype ρ).character g
       = (Nat.card S : ℂ)⁻¹

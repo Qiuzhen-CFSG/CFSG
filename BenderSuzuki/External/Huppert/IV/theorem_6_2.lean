@@ -8,9 +8,7 @@ public import FeitThompson.BGsection3.theorem_3_6
 public import FeitThompson.BGsection9.corollary_9_2
 import Theory.Representation.ElementaryAbelianAction
 import Mathlib.Algebra.Field.ULift
-open Theory.GroupAction
-open Theory.ElementaryAbelian
-open Theory.Representation
+open Representation
 
 
 /-!
@@ -1940,7 +1938,7 @@ private theorem hkt_generated_coprime_action_trivial_from_complement
       exact Subgroup.commutator_le_left (H₁ := AH) (H₂ := K)
     have hright : ⁅AH, K⁆ ≤ K :=
       Subgroup.commutator_le_right (H₁ := AH) (H₂ := K)
-    apply eq_bot_iff.mpr
+    apply _root_.eq_bot_iff.mpr
     intro y hy
     have hyinf : y ∈ AH ⊓ K := ⟨hleft hy, hright hy⟩
     simpa [hinf_bot] using hyinf
@@ -6479,7 +6477,7 @@ private theorem hkt_iv62_terminal_conjugation_linear_action_exists
     coord.toLinearEquiv (fun c x => by
       simpa using (ZMod.map_smul coord.toAddMonoidHom c x))
   let rep : Representation (ZMod q) Q (Additive (L.2.1)) :=
-    Theory.Representation.ofElementaryAbelianAction (A := Q) (G := L.2.1) (p := q)
+    Representation.ofElementaryAbelianAction (A := Q) (G := L.2.1) (p := q)
   have rep_apply (g : Q) (b : L.2.1) :
       rep g (Additive.ofMul b) =
         Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b) := by
@@ -9543,7 +9541,7 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
                 hK2bar_p hK2bar_coprime
             exact hK2bar_ne_bot hK2bar_bot
           let ρ : Representation (ZMod r) Abar (Additive step_f_Kbar) :=
-            Theory.Representation.ofElementaryAbelianAction
+            Representation.ofElementaryAbelianAction
               (A := Abar) (G := step_f_Kbar) (p := r)
           have hρ_faithful : Function.Injective ρ := by
             have hAbar_Kbar_coprime :
@@ -9554,7 +9552,7 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
             have hAbar_inf_Kbar : Abar ⊓ step_f_Kbar = ⊥ :=
               (Subgroup.disjoint_of_coprime_natCard hAbar_Kbar_coprime).eq_bot
             apply (MonoidHom.ker_eq_bot_iff ρ).1
-            rw [Theory.Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup]
+            rw [Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup]
             apply le_antisymm
             · intro a haFix
               have ha_cent : (a : (Q ⧸ pCore q Q)) ∈
@@ -9674,7 +9672,7 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
                 rcases Subgroup.mem_map.mp hkNamb with ⟨n, hnN, hnk⟩
                 have hn_eq : n = k := Subtype.ext hnk
                 simpa [← hn_eq] using hnN
-            let ρ0 := Theory.Representation.ofElementaryAbelianAction
+            let ρ0 := Representation.ofElementaryAbelianAction
               (A := Abar) (G := step_f_Kbar) (p := r)
             refine
               { toNontrivial := inferInstance
@@ -9690,7 +9688,7 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
                   simpa [N, Submodule.mem_toAddSubgroup, AddSubgroup.mem_toSubgroup'] using hx
                 have hx'' := Srep.apply_mem_toSubmodule a hx'
                 simpa [ρ, ρ0,
-                  Theory.Representation.ofElementaryAbelianAction_apply_ofMul] using hx''
+                  Representation.ofElementaryAbelianAction_apply_ofMul] using hx''
               refine { invariant := ?_ }
               intro a x
               constructor

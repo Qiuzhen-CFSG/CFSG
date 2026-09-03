@@ -21,7 +21,7 @@ attribute [local instance] Fintype.ofFinite
 namespace Section4Scratch
 universe u
 universe v
-open Section1 Section2 Section3 Section4
+open Section2 Section3 Section4
 
 /-! ## (4.8) -/
 
@@ -32,11 +32,11 @@ open Section1 Section2 Section3 Section4
     (A : Set L)
     {I J : Type*} [Fintype I] [Fintype J]
     (j0 : J)
-    (ω : I → J → ClassFunction W)
-    (σ : ClassFunction W →ₗ[ℂ] ClassFunction G)
-    (piChar : I → J → ClassFunction L)
+    (ω : I → J → _root_.ClassFunction W)
+    (σ : _root_.ClassFunction W →ₗ[ℂ] _root_.ClassFunction G)
+    (piChar : I → J → _root_.ClassFunction L)
     (deltaSign : J → ℂ)
-    (τ : ClassFunction L →ₗ[ℂ] ClassFunction G) : Prop :=
+    (τ : _root_.ClassFunction L →ₗ[ℂ] _root_.ClassFunction G) : Prop :=
   ∀ i j k, j ≠ j0 → k ≠ j0 →
     Section1.degree (piChar i j) = Section1.degree (piChar i k) →
       Section1.supportedOn (piChar i j - piChar i k) (a0Set W2 W A) ∧

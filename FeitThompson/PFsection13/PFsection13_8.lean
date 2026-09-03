@@ -319,7 +319,7 @@ private theorem theorem_13_8_eta01_virtual_of_source
       Sfam Tfam τS τT p q u v c d)
     (hnotation : hypothesis_13_1_characterNotationDataFor Smax Tmax W W1 W2 p q
       ω η μ ν μsum νsum δ δ' σ) :
-    Theory.Character.IsVirtualCharacter (η 0 1) := by
+    IsVirtualCharacter (η 0 1) := by
   rcases hsource with
     ⟨hcaseB, _hptypeS, _hptypeT, hp_card, hq_card, _htail⟩
   rcases hcaseB with
@@ -341,7 +341,7 @@ private theorem theorem_13_8_eta01_virtual_of_source
   let j1 : Fin p := ⟨1, h1p⟩
   have hη01 : η 0 1 = σ (ωFin i0 j1) := by
     rw [hη 0 1 h0q h1p, hωNat 0 1 h0q h1p]
-  have hωvirt : Theory.Character.IsVirtualCharacter (ωFin i0 j1) :=
+  have hωvirt : IsVirtualCharacter (ωFin i0 j1) :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup (hωFin.irreducible i0 j1)
   rw [hη01]
   exact hσmap.2.1 (ωFin i0 j1) hωvirt
@@ -735,7 +735,7 @@ private theorem theorem_13_8_virtualCharacter_one_eq_int
     [Group G]
     [Finite G]
     {χ : Section1.ClassFunction G}
-    (hχ : Theory.Character.IsVirtualCharacter χ) :
+    (hχ : IsVirtualCharacter χ) :
     ∃ n : ℤ, χ 1 = (n : ℂ) := by
   classical
   rcases hχ with ⟨r, m, n, ρ, hχeq⟩
@@ -744,7 +744,7 @@ private theorem theorem_13_8_virtualCharacter_one_eq_int
     intro i
     simp
   rw [hχeq]
-  unfold Theory.Character.virtualCharacterOfRepresentations
+  unfold virtualCharacterOfRepresentations
   simp_rw [hdeg]
   exact_mod_cast (rfl : (∑ i : Fin r, m i * (n i : ℤ)) =
     ∑ i : Fin r, m i * (n i : ℤ))
@@ -1034,7 +1034,7 @@ private theorem theorem_13_8_theorem_13_5_exact_input_source
       ω η μ ν μsum νsum δ δ' σ p q u v c d
       hsource hnotation hH j1 a hcoh hchoice_data hS1 hζ0 hζ1 hζ_ne with
     ⟨ha, horth⟩
-  have hηvirt : Theory.Character.IsVirtualCharacter (η 0 1) :=
+  have hηvirt : IsVirtualCharacter (η 0 1) :=
     theorem_13_8_eta01_virtual_of_source
       Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT
       ω η μ ν μsum νsum δ δ' σ p q u v c d hsource hnotation

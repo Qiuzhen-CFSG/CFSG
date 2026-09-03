@@ -4,7 +4,6 @@ public import GorensteinWalter.GWLemma21
 public import GorensteinWalter.CPrime
 public import Glauberman.Definitions
 import Mathlib.Tactic
-open Theory.GroupAction
 
 
 /-!

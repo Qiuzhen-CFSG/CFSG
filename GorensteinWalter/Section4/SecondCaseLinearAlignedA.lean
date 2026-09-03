@@ -5,7 +5,6 @@ public import GorensteinWalter.Section4.SecondCaseLinearEquationElevenAlignedSta
 public import GorensteinWalter.Section4.SecondCaseLinearPostNineData
 public import GorensteinWalter.Section4.SecondCaseLinearPInterE
 import Mathlib.Tactic
-open Theory.ElementaryAbelian
 
 
 /-!

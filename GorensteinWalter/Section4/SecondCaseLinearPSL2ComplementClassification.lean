@@ -23,7 +23,6 @@ public import GorensteinWalter.ConjComplement
 public import GorensteinWalter.KleinFourInjectiveMap
 public import Mathlib.GroupTheory.SpecificGroups.Alternating.KleinFour
 import Mathlib.Tactic
-open Theory.ElementaryAbelian
 
 
 /-!

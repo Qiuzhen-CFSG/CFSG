@@ -10,12 +10,13 @@ section kerLift'
 
 namespace QuotientGroup
 
-variable {G : Type*} [Group G] {H : Type*} [Monoid H] (φ : G →* H)
 
 /-- The induced homomorphism from the quotient by the kernel of `φ`. -/
-def kerLift' : G ⧸ φ.ker →* H := lift _ φ fun _g => mem_ker.mp
+def kerLift' {G : Type*} [Group G] {H : Type*} [Monoid H] (φ : G →* H) :
+    G ⧸ φ.ker →* H := lift _ φ fun _g => mem_ker.mp
 
-theorem kerLift'_injective : Injective (kerLift' φ) :=
+theorem kerLift'_injective {G : Type*} [Group G] {H : Type*} [Monoid H]
+    (φ : G →* H) : Injective (kerLift' φ) :=
   fun a b =>
     Quotient.inductionOn₂' a b
       fun a b (h : φ a = φ b) =>
@@ -34,24 +35,23 @@ namespace Representation
 
 open _root_.Representation
 
-variable {F G V : Type*} [CommSemiring F] [Group G] [AddCommMonoid V] [Module F V]
-  (ρ : Representation F G V)
-
 /-- The faithful quotient representation obtained by modding out the kernel of `ρ`. -/
-def kerRepresentation : Representation F (G ⧸ ker ρ) V :=
+def kerRepresentation {F G V : Type*} [CommSemiring F] [Group G] [AddCommMonoid V]
+    [Module F V] (ρ : Representation F G V) : Representation F (G ⧸ ker ρ) V :=
   kerLift' ρ
 
-theorem kerRepresentation_apply (g : G)
+theorem kerRepresentation_apply {F G V : Type*} [CommSemiring F] [Group G] [AddCommMonoid V]
+    [Module F V] (ρ : Representation F G V) (g : G)
     : Representation.kerRepresentation ρ (mk' _ g) = ρ g := by rfl
 
-theorem kerRepresentation_faithful : Injective (kerRepresentation ρ) :=
+theorem kerRepresentation_faithful {F G V : Type*} [CommSemiring F] [Group G]
+    [AddCommMonoid V] [Module F V] (ρ : Representation F G V) :
+    Injective (kerRepresentation ρ) :=
   kerLift'_injective ρ
 
-variable {F G V : Type*} [CommRing F] [Group G] [AddCommMonoid V] [Module F V]
-  (ρ : Representation F G V)
-
 /-- The subrepresentation lattice is unchanged after passing to the faithful kernel quotient. -/
-def kerRepresentationOrderIso
+def kerRepresentationOrderIso {F G V : Type*} [CommRing F] [Group G] [AddCommMonoid V]
+    [Module F V] (ρ : Representation F G V)
     : Subrepresentation (kerRepresentation ρ) ≃o Subrepresentation ρ :=
   {
     toFun :=
@@ -72,14 +72,13 @@ def kerRepresentationOrderIso
     map_rel_iff' := by rfl
   }
 
-variable {F G V : Type*} [Field F] [Group G] [AddCommGroup V] [Module F V]
-  (ρ : Representation F G V)
-
-theorem kerRepresentation_irreducible_iff
+theorem kerRepresentation_irreducible_iff {F G V : Type*} [Field F] [Group G]
+    [AddCommGroup V] [Module F V] (ρ : Representation F G V)
     : IsIrreducible (kerRepresentation ρ) ↔ IsIrreducible ρ :=
   OrderIso.isSimpleOrder_iff (kerRepresentationOrderIso ρ)
 
-instance kerRepresentation_irreducible [IsIrreducible ρ]
+instance kerRepresentation_irreducible {F G V : Type*} [Field F] [Group G]
+    [AddCommGroup V] [Module F V] (ρ : Representation F G V) [IsIrreducible ρ]
     : IsIrreducible (kerRepresentation ρ) :=
   (kerRepresentation_irreducible_iff ρ).mpr inferInstance
 

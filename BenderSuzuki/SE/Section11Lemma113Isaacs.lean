@@ -22,8 +22,7 @@ namespace BenderSuzuki
 
 open PFAppendixIII
 open Representation
-open Theory.Representation
-open Theory.Character
+open Representation
 open scoped BigOperators
 
 private lemma involution_trace_data
@@ -125,7 +124,7 @@ private lemma involution_character_zero_or_scalar
     rho.character s = 0 ∨
       ∃ a : ℂ, rho s = a • (1 : Module.End ℂ V) := by
   letI : rho.IsIrreducible := hirr
-  letI : Nontrivial V := Theory.Character.irreducible_nontrivial rho
+  letI : Nontrivial V := irreducible_nontrivial rho
   let d := Module.finrank ℂ V
   have hdpos : 0 < d := by
     exact (Module.finrank_pos_iff (R := ℂ) (M := V)).2 inferInstance
@@ -135,8 +134,8 @@ private lemma involution_character_zero_or_scalar
   have hvalue : rho.character s = (k : ℂ) := by
     simpa [k, d] using htrace
   have hclassIntegral :=
-    Theory.Character.classSumScalar_isIntegral rho (ConjClasses.mk s)
-  rw [Theory.Character.classSumScalar_eq_card_mul_character_div rho
+    classSumScalar_isIntegral rho (ConjClasses.mk s)
+  rw [classSumScalar_eq_card_mul_character_div rho
       (ConjClasses.mk s) ConjClasses.mem_carrier_mk,
     hclassCard, hvalue,
     show rho.character 1 = (d : ℂ) by simp [d, Representation.character]] at hclassIntegral
@@ -145,7 +144,7 @@ private lemma involution_character_zero_or_scalar
     simpa using hclassIntegral
   have hdne : (d : ℤ) ≠ 0 := by exact_mod_cast hdpos.ne'
   have hddvdInt : (d : ℤ) ∣ (m : ℤ) * k :=
-    Theory.Character.integer_division_of_integral_quotient hdne
+    integer_division_of_integral_quotient hdne
       hquotientIntegral
   have hddvdAbs : d ∣ k.natAbs := by
     have habs : d ∣ m * k.natAbs := by
@@ -197,13 +196,13 @@ private lemma finrank_eq_one_of_irreducible_ker_eq_top
   have hrho : rho = 1 := MonoidHom.ker_eq_top_iff.mp hker
   let d := Module.finrank ℂ V
   have hcf (x : G) :
-      (Theory.Character.characterClassFunction rho) (ConjClasses.mk x) = (d : ℂ) := by
+      (characterClassFunction rho) (ConjClasses.mk x) = (d : ℂ) := by
     change rho.character x = (d : ℂ)
     rw [hrho]
     simp [Representation.character, d]
   have hnorm :=
-    (Theory.Character.irreducible_iff_character_norm_one rho).1 hirr
-  rw [Theory.Character.classFunctionInner] at hnorm
+    (irreducible_iff_character_norm_one rho).1 hirr
+  rw [classFunctionInner] at hnorm
   simp_rw [hcf] at hnorm
   have hcardpos : 0 < Nat.card G := Nat.card_pos (α := G)
   have hcardne : (Nat.card G : ℂ) ≠ 0 := by exact_mod_cast hcardpos.ne'
@@ -211,7 +210,7 @@ private lemma finrank_eq_one_of_irreducible_ker_eq_top
   norm_num [Complex.normSq_eq_conj_mul_self] at hnorm
   have hnormNat : d * d = 1 := by exact_mod_cast hnorm
   have hdpos : 0 < d := by
-    letI : Nontrivial V := Theory.Character.irreducible_nontrivial rho
+    letI : Nontrivial V := irreducible_nontrivial rho
     exact (Module.finrank_pos_iff (R := ℂ) (M := V)).2 inferInstance
   nlinarith
 
@@ -224,13 +223,13 @@ private lemma exists_nontrivial_scalar_rep_of_prime_power_class
       rho.IsIrreducible ∧ rho.ker ≠ ⊤ ∧
         (∃ a : ℂ, rho s = a • (1 : Module.End ℂ (Fin d → ℂ))) := by
   classical
-  rcases Theory.Character.second_orthogonality (G := G) with
+  rcases second_orthogonality (G := G) with
     ⟨ι, hι, chi, hchi, horth⟩
   letI : Fintype ι := hι
   choose d rho hchiRho using fun i => (hchi.1 i).1
   have hirr : ∀ i : ι, (rho i).IsIrreducible := by
     intro i
-    apply (Theory.Character.irreducible_iff_character_norm_one (ρ := rho i)).2
+    apply (irreducible_iff_character_norm_one (ρ := rho i)).2
     simpa [hchiRho i] using (hchi.1 i).2
   have hvalCF : ∀ i : ι,
       chi i (ConjClasses.mk s) = (rho i).character s := by
@@ -281,13 +280,13 @@ private lemma exists_nontrivial_scalar_rep_of_prime_power_class
     exact_mod_cast hsumComplex
   let triv : Representation ℂ G ℂ := Representation.trivial ℂ G ℂ
   have htrivIrr : triv.IsIrreducible :=
-    Theory.Character.trivial_complex_irreducible
-  have htrivChar : Theory.Character.IsIrreducibleConjCharacter
-      (Theory.Character.characterClassFunction triv) :=
-    Theory.Character.isIrreducibleCharacter_characterClassFunction triv htrivIrr
-  obtain ⟨i0, hi0⟩ := hchi.2.1 (Theory.Character.characterClassFunction triv) htrivChar
-  have hrho0cf : (Theory.Character.characterClassFunction (rho i0)) =
-      (Theory.Character.characterClassFunction triv) := (hchiRho i0).symm.trans hi0
+    trivial_complex_irreducible
+  have htrivChar : IsIrreducibleConjCharacter
+      (characterClassFunction triv) :=
+    isIrreducibleCharacter_characterClassFunction triv htrivIrr
+  obtain ⟨i0, hi0⟩ := hchi.2.1 (characterClassFunction triv) htrivChar
+  have hrho0cf : (characterClassFunction (rho i0)) =
+      (characterClassFunction triv) := (hchiRho i0).symm.trans hi0
   have hdi0 : d i0 = 1 := by
     have h := congrFun hrho0cf (ConjClasses.mk (1 : G))
     change (rho i0).character (1 : G) = triv.character (1 : G) at h
@@ -450,7 +449,7 @@ public theorem is1_38_39
       simp
     simpa only [H, hmapTop] using hmaplt
   have hHnormal : (H.subgroupOf W).Normal := by
-    simpa [H, K, Theory.GroupAction.subgroupOf_map_subtype_eq] using
+    simpa [H, K, subgroupOf_map_subtype_eq] using
       MonoidHom.normal_ker rho
   refine ⟨⟨H, hHlt, hHnormal, ?_⟩⟩
   intro z hz w hw

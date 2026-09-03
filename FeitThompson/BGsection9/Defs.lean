@@ -4,7 +4,6 @@ public import FeitThompson.BGsection8.theorem_8_1
 import Mathlib.GroupTheory.Schreier
 import Mathlib.GroupTheory.Subgroup.Centralizer
 import Mathlib.Order.Atoms
-open Theory.ElementaryAbelian
 
 
 open scoped Pointwise

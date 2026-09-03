@@ -4,7 +4,6 @@ public import BenderSuzuki.SE.Section10Lemma106
 public import BenderSuzuki.SE.II1Section4
 import BenderSuzuki.SE.IG1114
 import BenderSuzuki.SE.Section10Proposition102Support
-open Theory.GroupAction
 
 
 /-!

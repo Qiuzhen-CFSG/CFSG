@@ -190,23 +190,23 @@ private theorem isBookIrreducibleCharacter_of_group_irreducible_pf58
       simpa [mul_assoc] using Representation.char_conj (ρ := ρ) g x
     have htoeq :
         Section1.toConjClassFunction ρ.character hρclass =
-          Theory.Character.characterClassFunction ρ := by
+          characterClassFunction ρ := by
       apply Section1.toConjClassFunction_eq_of_apply
       intro g
       rfl
     calc
       Section1.scalarProduct G χ χ =
           Section1.scalarProduct G ρ.character ρ.character := by rw [hchar]
-      _ = Theory.Character.classFunctionInner
+      _ = classFunctionInner
           (Section1.toConjClassFunction ρ.character hρclass)
           (Section1.toConjClassFunction ρ.character hρclass) :=
         (Section1.classFunctionInner_toConjClassFunction
           ρ.character ρ.character hρclass hρclass).symm
-      _ = Theory.Character.classFunctionInner
-          (Theory.Character.characterClassFunction ρ)
-          (Theory.Character.characterClassFunction ρ) := by rw [htoeq]
+      _ = classFunctionInner
+          (characterClassFunction ρ)
+          (characterClassFunction ρ) := by rw [htoeq]
       _ = 1 :=
-        (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).1 hirr
+        (irreducible_iff_character_norm_one (ρ := ρ)).1 hirr
 
 private theorem scalarProduct_zero_of_distinct_irreducibles_pf58
     {G : Type u} [Group G] [Finite G]

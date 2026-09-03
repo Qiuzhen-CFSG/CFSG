@@ -25,7 +25,6 @@ import Theory.Representation.EndFieldRep
 import Theory.Representation.TwoDimensionalOddOrder
 import Mathlib.GroupTheory.Schreier
 public import FeitThompson.BGsection4.theorem_4_18_c
-open Theory.GroupAction
 
 
 /-! # Shared infrastructure for Theorem 5.6(c) and 5.6(e) -/

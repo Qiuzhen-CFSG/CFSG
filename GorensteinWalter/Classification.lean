@@ -10,7 +10,6 @@ public import FeitThompson.PCore.PPrimeCore
 import Theory.GroupAction.NormalComplement
 import FeitThompson.BGsection1.PLengthLemmas
 import FeitThompson.BGsection1.theorem_1_18
-open Theory.GroupAction
 
 
 /-!

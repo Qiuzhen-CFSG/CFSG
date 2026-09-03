@@ -17,7 +17,6 @@ import Theory.GroupAction.Quotient
 import FeitThompson.SubgroupConj
 import FeitThompson.SubgroupConjAction
 import Mathlib.GroupTheory.PGroup
-open Theory.GroupAction
 
 
 /-!
@@ -39,9 +38,8 @@ open scoped Pointwise
 namespace BenderGlauberman
 
 open GorensteinWalter
-open Theory.Character
 
--- Local instances matching `Theory.Character`'s subgroup-sum convention; see
+-- Local instances matching `Character`'s subgroup-sum convention; see
 -- `BenderGlauberman/ClassFunction.lean`.
 attribute [local instance] Fintype.ofFinite
 attribute [local instance] Classical.propDecidable

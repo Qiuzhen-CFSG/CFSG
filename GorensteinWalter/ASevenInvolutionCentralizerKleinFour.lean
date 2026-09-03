@@ -4,7 +4,6 @@ public import GorensteinWalter.ASevenStructureFacts
 public import GorensteinWalter.ASevenInvolutionCentralizerOddPart
 public import GorensteinWalter.KleinFourCentralizerTransport
 import Mathlib.Tactic
-open Theory.GroupAction
 
 
 /-!

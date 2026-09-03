@@ -17,7 +17,6 @@ import FeitThompson.PFsection8.SourceTypePBridge
 import FeitThompson.PFsection9.PFsection9_1
 import Mathlib.GroupTheory.Schreier
 import Mathlib.RingTheory.ZMod.UnitsCyclic
-open Theory.GroupAction
 
 
 /-!
@@ -238,8 +237,8 @@ public theorem theorem_12_6_transformAgreesWithInductionOn_of_TI
   have hHyp2triv : Section2.Hypothesis2 Aimg L (fun _ : G => ⊥) := by
     simpa [Aimg] using (Section2.proposition_2_3 Aimg L hTI.1).mp hTI
   have hconst :
-      ∀ ψ : Theory.Character.ConjClassFunction G,
-        Theory.Character.IsIrreducibleConjCharacter ψ →
+      ∀ ψ : ConjClassFunction G,
+        IsIrreducibleConjCharacter ψ →
           ∀ ⦃a h0 : G⦄, a ∈ Aimg → h0 ∈ R a →
             Section1.ofConjClassFunction ψ (a * h0) =
               Section1.ofConjClassFunction ψ a := by

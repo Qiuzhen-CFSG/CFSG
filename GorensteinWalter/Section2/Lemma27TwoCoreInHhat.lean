@@ -14,7 +14,6 @@ import GorensteinWalter.Section2.Lemma22
 import GorensteinWalter.Section1
 import FeitThompson.FinalTheorem
 import Mathlib.Tactic
-open Theory.GroupAction
 
 
 /-!

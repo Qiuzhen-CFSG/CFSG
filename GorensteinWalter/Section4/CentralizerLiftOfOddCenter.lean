@@ -5,7 +5,6 @@ public import FeitThompson.SubgroupConjAction
 public import Theory.GroupAction.Quotient
 import Mathlib.GroupTheory.GroupAction.Quotient
 import Mathlib.Tactic
-open Theory.GroupAction
 
 
 /-!
@@ -149,8 +148,9 @@ public theorem centralizer_lift_of_odd_center
       simp [hfix]
   let cocycle : A → Z := fun a =>
     ⟨(x : G)⁻¹ * (a : G) * (x : G) * (a : G)⁻¹, hdefect a⟩
-  have hcocycle : @IsCocycle₁ (↑A) (↑Z) _ _
-      (Subgroup.conjMulDistribMulActionOfLeNormalizer A Z hAZ) cocycle := by
+  have hcocycle : IsCocycle₁ (A := (↑A)) (N := (↑Z)) cocycle := by
+    letI : MulDistribMulAction (↑A) (↑Z) :=
+      Subgroup.conjMulDistribMulActionOfLeNormalizer A Z hAZ
     intro a b
     apply Subtype.ext
     let : MulDistribMulAction (↑A) (↑Z) :=

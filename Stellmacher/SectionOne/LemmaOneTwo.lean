@@ -1,7 +1,6 @@
 module
 
 public import Stellmacher.SectionOne.Defs
-open Theory.ElementaryAbelian
 
 
 open scoped BigOperators Pointwise

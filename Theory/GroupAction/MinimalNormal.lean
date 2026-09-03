@@ -10,11 +10,11 @@ open scoped Pointwise
 
 section MinimalSubgroup
 
-variable {G : Type*} [Group G] [Finite G]
 
 /-- Generic minimal-subgroup engine: among the subgroups of `K` satisfying a family `F`,
 there is one minimal with respect to inclusion. -/
-theorem exists_minimal_subgroup_of_mem_le (F : Subgroup G → Prop) (K : Subgroup G)
+theorem exists_minimal_subgroup_of_mem_le {G : Type*} [Group G] [Finite G]
+    (F : Subgroup G → Prop) (K : Subgroup G)
     (hFK : F K)
     : ∃ M : Subgroup G, F M ∧ M ≤ K ∧ ∀ L : Subgroup G, F L → L ≤ M → L = M := by
   classical
@@ -45,7 +45,8 @@ theorem exists_minimal_subgroup_of_mem_le (F : Subgroup G → Prop) (K : Subgrou
 
 /-- Any family `F` of subgroups of a finite group that contains `⊤` has an inclusion-minimal
 member. (If `F` excludes `⊥`, that member is automatically nontrivial.) -/
-theorem exists_minimal_subgroup_of_mem_top (F : Subgroup G → Prop) (hFtop : F ⊤)
+theorem exists_minimal_subgroup_of_mem_top {G : Type*} [Group G] [Finite G]
+    (F : Subgroup G → Prop) (hFtop : F ⊤)
     : ∃ M : Subgroup G, F M ∧ ∀ L : Subgroup G, F L → L ≤ M → L = M := by
   rcases exists_minimal_subgroup_of_mem_le (F := F) (K := ⊤) hFtop with
     ⟨M, hFM, _hMleTop, hMmin⟩
@@ -55,10 +56,10 @@ end MinimalSubgroup
 
 section MinimalNormalInvariant
 
-variable {G A : Type*} [Group G] [Finite G] [Group A] [MulDistribMulAction A G]
 
 /-- Every nontrivial normal `A`-invariant subgroup contains a minimal one. -/
-theorem exists_minimal_normal_isInvariant_le (K : Subgroup G) (hK : K.Normal)
+theorem exists_minimal_normal_isInvariant_le {G A : Type*} [Group G] [Finite G] [Group A]
+    [MulDistribMulAction A G] (K : Subgroup G) (hK : K.Normal)
     [IsInvariant A G K] (hKne : K ≠ ⊥)
     : ∃ M : Subgroup G,
         M.Normal
@@ -74,7 +75,8 @@ theorem exists_minimal_normal_isInvariant_le (K : Subgroup G) (hK : K.Normal)
   exact hMmin L ⟨hLnorm, hLinv, hLne⟩ hLleM
 
 /-- Existence of a minimal nontrivial normal `A`-invariant subgroup in a finite nontrivial group. -/
-theorem exists_minimal_normal_isInvariant [Nontrivial G]
+theorem exists_minimal_normal_isInvariant {G A : Type*} [Group G] [Finite G] [Group A]
+    [MulDistribMulAction A G] [Nontrivial G]
     : ∃ M : Subgroup G,
         M.Normal
         ∧ IsInvariant A G M

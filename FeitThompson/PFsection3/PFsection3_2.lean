@@ -83,23 +83,23 @@ private theorem isBookIrreducibleCharacter_of_group_irreducible
       simpa [mul_assoc] using Representation.char_conj (ρ := ρ) g x
     have htoeq :
         Section1.toConjClassFunction ρ.character hρclass =
-          Theory.Character.characterClassFunction ρ := by
+          characterClassFunction ρ := by
       apply Section1.toConjClassFunction_eq_of_apply
       intro g
       rfl
     calc
       Section1.scalarProduct G χ χ =
           Section1.scalarProduct G ρ.character ρ.character := by rw [hchar]
-      _ = Theory.Character.classFunctionInner
+      _ = classFunctionInner
           (Section1.toConjClassFunction ρ.character hρclass)
           (Section1.toConjClassFunction ρ.character hρclass) :=
         (Section1.classFunctionInner_toConjClassFunction
           ρ.character ρ.character hρclass hρclass).symm
-      _ = Theory.Character.classFunctionInner
-          (Theory.Character.characterClassFunction ρ)
-          (Theory.Character.characterClassFunction ρ) := by rw [htoeq]
+      _ = classFunctionInner
+          (characterClassFunction ρ)
+          (characterClassFunction ρ) := by rw [htoeq]
       _ = 1 :=
-        (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).1 hirr
+        (irreducible_iff_character_norm_one (ρ := ρ)).1 hirr
 
 private theorem isClassFunction_of_commGroup
     {A : Type*} [CommGroup A] (φ : Section1.ClassFunction A) :
@@ -148,7 +148,7 @@ private theorem isVirtualCharacter_of_signedIrreducible
     {G : Type u} [Group G] [Finite G]
     {χ : Section1.ClassFunction G}
     (hχ : IsSignedIrreducibleCharacter χ) :
-    Theory.Character.IsVirtualCharacter χ := by
+    IsVirtualCharacter χ := by
   rcases hχ with ⟨ε, hε, ψ, hψ, rfl⟩
   rcases hε with rfl | rfl
   · simpa using isVirtualCharacter_of_irreducibleCharacterOnGroup hψ
@@ -158,23 +158,23 @@ private theorem isVirtualCharacter_of_signedIrreducible
 private theorem isVirtualCharacter_zsmul
     {G : Type u} [Group G] [Finite G]
     (n : ℤ) {χ : Section1.ClassFunction G}
-    (hχ : Theory.Character.IsVirtualCharacter χ) :
-    Theory.Character.IsVirtualCharacter (n • χ) := by
+    (hχ : IsVirtualCharacter χ) :
+    IsVirtualCharacter (n • χ) := by
   classical
   rcases hχ with ⟨r, m, k, ρ, rfl⟩
   refine ⟨r, fun i => n * m i, k, ρ, ?_⟩
   ext g
-  simp [Theory.Character.virtualCharacterOfRepresentations, Finset.mul_sum, mul_assoc]
+  simp [virtualCharacterOfRepresentations, Finset.mul_sum, mul_assoc]
 
 private theorem isVirtualCharacter_finset_sum
     {G : Type u} [Group G] [Finite G]
     {ι : Type*} (s : Finset ι) (Φ : ι → Section1.ClassFunction G)
-    (hΦ : ∀ i ∈ s, Theory.Character.IsVirtualCharacter (Φ i)) :
-    Theory.Character.IsVirtualCharacter (Finset.sum s Φ) := by
+    (hΦ : ∀ i ∈ s, IsVirtualCharacter (Φ i)) :
+    IsVirtualCharacter (Finset.sum s Φ) := by
   classical
   induction s using Finset.induction_on with
   | empty =>
-      have hzero : Theory.Character.IsVirtualCharacter ((0 : Section1.ClassFunction G)) := by
+      have hzero : IsVirtualCharacter ((0 : Section1.ClassFunction G)) := by
         simpa using
           (isVirtualCharacter_sub
             (G := G)
@@ -184,8 +184,8 @@ private theorem isVirtualCharacter_finset_sum
             isVirtualCharacter_principalCharacter)
       simpa using hzero
   | @insert a s ha ih =>
-    have ha' : Theory.Character.IsVirtualCharacter (Φ a) := hΦ a (Finset.mem_insert_self a s)
-    have hs' : Theory.Character.IsVirtualCharacter (Finset.sum s Φ) := by
+    have ha' : IsVirtualCharacter (Φ a) := hΦ a (Finset.mem_insert_self a s)
+    have hs' : IsVirtualCharacter (Finset.sum s Φ) := by
       exact ih (by
         intro i hi
         exact hΦ i (Finset.mem_insert_of_mem hi))
@@ -243,7 +243,7 @@ private theorem weightedFamilySum_eq_of_inner_omega
     simpa [Section1.ofConjClassFunction_apply] using congrFun hψeq g
   rw [← hψeq']
   calc
-    Theory.Character.classFunctionInner
+    classFunctionInner
         (Section1.toConjClassFunction
           (Section1.weightedFamilySum
             (fun p : I × J => Section1.scalarProduct W α (ω p.1 p.2))
@@ -267,7 +267,7 @@ private theorem weightedFamilySum_eq_of_inner_omega
               (chi := fun p : I × J => ω p.1 p.2)
               (horth := hω.orthonormal) (j := (i, j)))
     _ =
-      Theory.Character.classFunctionInner
+      classFunctionInner
         (Section1.toConjClassFunction α hαclass)
         (Section1.toConjClassFunction (ω i j) (hω.is_class i j)) := by
           symm
@@ -753,7 +753,7 @@ public theorem theorem_3_2_statement_of_pf35
         (isVirtualCharacter_of_irreducibleCharacterOnGroup (hω.irreducible p.1 p.2))
     have hterm :
         ∀ p : I × J,
-          Theory.Character.IsVirtualCharacter
+          IsVirtualCharacter
             (Section1.scalarProduct W α (ω p.1 p.2) • χ p.1 p.2) := by
       intro p
       rcases hint p with ⟨z, hz⟩
@@ -767,7 +767,7 @@ public theorem theorem_3_2_statement_of_pf35
       exact isVirtualCharacter_zsmul z
         (isVirtualCharacter_of_signedIrreducible (hsigned p.1 p.2))
     have hsum :
-        Theory.Character.IsVirtualCharacter
+        IsVirtualCharacter
           (Section1.weightedFamilySum
             (fun p : I × J => Section1.scalarProduct W α (ω p.1 p.2))
             (fun p : I × J => χ p.1 p.2)) := by

@@ -14,7 +14,6 @@ public import Theory.GroupAction.Lemmas
 public import Theory.GroupAction.Quotient
 public import FeitThompson.HallSubgroups.Conjugacy
 
-open Theory.GroupAction
 
 open scoped IsMulCommutative
 

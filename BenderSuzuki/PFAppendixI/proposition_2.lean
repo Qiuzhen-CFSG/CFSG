@@ -4,7 +4,6 @@ public import BenderSuzuki.PFAppendixI.Basic
 public import Theory.Representation.EndFieldRep
 public import Mathlib.RingTheory.SimpleModule.Rank
 public import Mathlib.GroupTheory.SpecificGroups.Cyclic.Basic
-open Theory.ElementaryAbelian
 
 /-!
 # Peterfalvi Appendix I, Proposition 2
@@ -15,7 +14,7 @@ namespace PFAppendixI
 
 
 open Representation
-open Theory.Representation
+open Representation
 open scoped IsMulCommutative
 
 set_option backward.isDefEq.respectTransparency false in
@@ -68,7 +67,7 @@ public theorem peterfalvi_appendixI_proposition_2_a
             have haction :
                 rho tau x = AppendixITActionEnd (p := p) (E := E) T tau x := by
               rw [AppendixITActionEnd_apply]
-              exact Theory.Representation.ofElementaryAbelianAction_apply_ofMul
+              exact Representation.ofElementaryAbelianAction_apply_ofMul
                 (A := T) (G := E) (p := p) tau x
             rw [haction]
             exact W.smul_mem

@@ -2,7 +2,6 @@ module
 
 public import GorensteinWalter.DGroupQuotientNotTwoGroup
 import BenderSuzuki.External.Huppert.IV.ComplementTransfer
-open Theory.GroupAction
 
 
 /-!

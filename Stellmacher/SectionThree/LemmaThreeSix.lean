@@ -27,7 +27,7 @@ public structure LemmaThreeSixConclusion
           ¬ twoResidualAmbient L ≤ phiTwo (twoResidualAmbient P) ∧
           (∀ z₁ z₂ : G,
             z₁ ∈ conjugateOrbitSet Z L → z₂ ∈ conjugateOrbitSet Z L →
-            ∃ t : L, Theory.Comparator.IsInvolution (t : G) ∧
+            ∃ t : L, IsInvolution (t : G) ∧
               (t : G) * z₁ * (t : G)⁻¹ = z₂ ∧
               (t : G) * z₂ * (t : G)⁻¹ = z₁) ∧
           twoResidualAmbient L ≤ ⁅twoResidualAmbient L, T⁆

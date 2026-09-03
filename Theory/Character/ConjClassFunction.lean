@@ -24,13 +24,12 @@ open scoped BigOperators
 
 attribute [local instance] Fintype.ofFinite
 
-variable {G : Type*} [Group G]
 
 /-- Complex-valued class functions on `G`, implemented as functions on conjugacy classes. -/
 abbrev ConjClassFunction (G : Type*) [Group G] := ConjClasses G → ℂ
 
 /-- Turn a complex-valued function on `G` that is constant on conjugacy classes into a class function. -/
-noncomputable def conjClassFunctionOfInvariant (f : G → ℂ)
+noncomputable def conjClassFunctionOfInvariant {G : Type*} [Group G] (f : G → ℂ)
     (hf : ∀ g h : G, f (h * g * h⁻¹) = f g)
     : ConjClassFunction G := by
   refine Quotient.lift f ?_
@@ -45,7 +44,7 @@ noncomputable def conjClassFunctionOfInvariant (f : G → ℂ)
     _ = f b := by rw [hconj]
 
 /-- The class function attached to a representation character. -/
-noncomputable def characterClassFunction {V : Type*} [AddCommGroup V]
+noncomputable def characterClassFunction {G : Type*} [Group G] {V : Type*} [AddCommGroup V]
     [Module ℂ V] [FiniteDimensional ℂ V] (ρ : Representation ℂ G V)
     : ConjClassFunction G :=
   conjClassFunctionOfInvariant ρ.character
@@ -54,23 +53,25 @@ noncomputable def characterClassFunction {V : Type*} [AddCommGroup V]
       simpa [mul_assoc] using Representation.char_conj (ρ := ρ) g h)
 
 /-- Inner product of complex class functions, normalized by `|G|`. -/
-noncomputable def classFunctionInner [Finite G] (φ ψ : ConjClassFunction G) : ℂ := by
+noncomputable def classFunctionInner {G : Type*} [Group G] [Finite G]
+    (φ ψ : ConjClassFunction G) : ℂ := by
   classical
   letI := Fintype.ofFinite G
   exact (Nat.card G : ℂ)⁻¹ * ∑ g : G, φ (ConjClasses.mk g) * star (ψ (ConjClasses.mk g))
 
 /-- A complex class function on `G` is a character if it comes from a finite-dimensional
 representation, encoded on the standard space `Fin n → ℂ`. -/
-def IsConjCharacter [Finite G] (χ : ConjClassFunction G) : Prop :=
+def IsConjCharacter {G : Type*} [Group G] [Finite G] (χ : ConjClassFunction G) : Prop :=
   ∃ n : ℕ, ∃ ρ : Representation ℂ G (Fin n → ℂ), χ = characterClassFunction ρ
 
 /-- A complex class function on `G` is irreducible if it is a character of norm one. -/
-def IsIrreducibleConjCharacter [Finite G] (χ : ConjClassFunction G) : Prop :=
+def IsIrreducibleConjCharacter {G : Type*} [Group G] [Finite G]
+    (χ : ConjClassFunction G) : Prop :=
   IsConjCharacter χ ∧ classFunctionInner χ χ = 1
 
 /-- A finite family of class functions containing each irreducible complex character
 exactly once. -/
-def IsCompleteIrreducibleCharacterFamily [Finite G]
+def IsCompleteIrreducibleCharacterFamily {G : Type*} [Group G] [Finite G]
     {ι : Type*} [Fintype ι] (χ : ι → ConjClassFunction G)
     : Prop :=
   (∀ i, IsIrreducibleConjCharacter (χ i))

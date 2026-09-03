@@ -2,7 +2,6 @@ module
 
 public import FeitThompson.BGsection3.Remaining
 public import FeitThompson.LinearAlgebra.MatrixBlocks
-open Theory.ElementaryAbelian
 
 
 /-!
@@ -29,7 +28,7 @@ Wielandt's theorem. -/
   letI : MulDistribMulAction A V :=
     MulDistribMulAction.compHom V A.subtype
   Module.finrank (ZMod p)
-    ↥((Theory.Representation.ofElementaryAbelianAction
+    ↥((Representation.ofElementaryAbelianAction
         (A := A) (G := V) (p := p)).fixedSubspace
       (⊤ : Subgroup A))
 

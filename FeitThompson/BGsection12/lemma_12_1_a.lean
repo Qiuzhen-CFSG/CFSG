@@ -2,8 +2,6 @@ module
 
 public import FeitThompson.BGsection11.theorem_11_7
 import Mathlib.GroupTheory.Schreier
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 open scoped Pointwise

@@ -5,7 +5,6 @@ import GorensteinWalter.Section2.InvertingSelfCommutatorAction
 import FeitThompson.BGsection7.Defs
 import FeitThompson.SubgroupConj
 import Mathlib.GroupTheory.FixedPointFree
-open Theory.GroupAction
 
 
 /-!

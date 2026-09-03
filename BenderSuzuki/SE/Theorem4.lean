@@ -14,7 +14,6 @@ import BenderSuzuki.PFchapter1section1.proposition_4_c
 import FeitThompson.BGsection1.proposition_1_5
 import FeitThompson.BGsection7.Defs
 import FeitThompson.FinalTheorem
-open Theory.GroupAction
 
 
 /-!

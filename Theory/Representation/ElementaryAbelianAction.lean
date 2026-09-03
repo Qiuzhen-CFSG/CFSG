@@ -20,11 +20,12 @@ namespace Representation
 
 open _root_.Representation
 
-variable {A G : Type*} [Group A] [Group G] {p : ℕ} [Fact p.Prime]
 
 /-- The `ZMod p` representation associated to an action by automorphisms on an elementary abelian
 `p`-group. -/
-noncomputable def ofElementaryAbelianAction [IsElementaryAbelian p G]
+noncomputable def ofElementaryAbelianAction
+    {A G : Type*} [Group A] [Group G] {p : ℕ} [Fact p.Prime]
+    [IsElementaryAbelian p G]
     [MulDistribMulAction A G]
     : Representation (ZMod p) A (Additive G) where
   toFun a :=
@@ -46,14 +47,16 @@ noncomputable def ofElementaryAbelianAction [IsElementaryAbelian p G]
     simp [MulDistribMulAction.toMulAut, smul_smul]
 
 @[simp]
-theorem ofElementaryAbelianAction_apply [IsElementaryAbelian p G]
+theorem ofElementaryAbelianAction_apply {A G : Type*} [Group A] [Group G] {p : ℕ}
+    [Fact p.Prime] [IsElementaryAbelian p G]
     [MulDistribMulAction A G] (a : A) (x : Additive G)
     : ofElementaryAbelianAction (A := A) (G := G) (p := p) a x
       = Additive.ofMul (a • Additive.toMul x) := by
   rfl
 
 @[simp]
-theorem ofElementaryAbelianAction_apply_ofMul [IsElementaryAbelian p G]
+theorem ofElementaryAbelianAction_apply_ofMul {A G : Type*} [Group A] [Group G] {p : ℕ}
+    [Fact p.Prime] [IsElementaryAbelian p G]
     [MulDistribMulAction A G] (a : A) (x : G)
     : ofElementaryAbelianAction (A := A) (G := G) (p := p) a (Additive.ofMul x)
       = Additive.ofMul (a • x) := by
@@ -61,7 +64,8 @@ theorem ofElementaryAbelianAction_apply_ofMul [IsElementaryAbelian p G]
 
 /-- The kernel of the linear representation is the subgroup acting trivially on the elementary
 abelian group. -/
-theorem ker_ofElementaryAbelianAction_eq_fixingSubgroup [IsElementaryAbelian p G]
+theorem ker_ofElementaryAbelianAction_eq_fixingSubgroup {A G : Type*} [Group A] [Group G]
+    {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p G]
     [MulDistribMulAction A G]
     : (ofElementaryAbelianAction (A := A) (G := G) (p := p)).ker
       = fixingSubgroup (M := A) (α := G) (Set.univ : Set G) := by

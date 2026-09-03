@@ -6,7 +6,6 @@ public import FeitThompson.PCore.CentralizerControl
 public import FeitThompson.PGroup.NormalSubgroups
 public import FeitThompson.Commutator.Core
 public import Mathlib.GroupTheory.Subgroup.Centralizer
-open Theory.GroupAction
 
 
 /-!

@@ -2,7 +2,6 @@ module
 
 public import FeitThompson.PFsection14.PFsection14_9_Delta
 import FeitThompson.PFsection8.PFsection8_15
-open Theory.GroupAction
 
 
 /-!

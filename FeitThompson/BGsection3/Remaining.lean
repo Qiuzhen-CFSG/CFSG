@@ -12,9 +12,7 @@ import Theory.GroupAction.MinimalNormal
 import FeitThompson.PGroup.NormalSubgroups
 import FeitThompson.Fitting.Centralizer
 public import Theory.Representation.ElementaryAbelianAction
-open Theory.GroupAction
-open Theory.ElementaryAbelian
-open Theory.Representation
+open Representation
 
 
 open scoped Pointwise TensorProduct commutatorElement IsMulCommutative
@@ -77,7 +75,7 @@ public theorem theorem_3_7_fixedSubspace_eq_bot_of_fixedPointSubgroup_eq_bot
     [IsElementaryAbelian q V] [MulDistribMulAction A V] (R : Subgroup A) :
     letI : MulDistribMulAction (↥R) V := MulDistribMulAction.compHom V R.subtype
     fixedPointSubgroup (↥R) V = ⊥ →
-      (Theory.Representation.ofElementaryAbelianAction (A := A) (G := V) (p := q) :
+      (Representation.ofElementaryAbelianAction (A := A) (G := V) (p := q) :
         Representation (ZMod q) A (Additive V)).fixedSubspace R =
         ⊥ := by
   classical
@@ -102,7 +100,7 @@ public theorem theorem_3_7_fixedPointSubgroup_eq_top_of_le_centralizerIn
     [IsElementaryAbelian q V] [MulDistribMulAction A V] (H : Subgroup A)
     (hcent :
       H ≤
-        (Theory.Representation.ofElementaryAbelianAction (A := A) (G := V) (p := q) :
+        (Representation.ofElementaryAbelianAction (A := A) (G := V) (p := q) :
           Representation (ZMod q) A (Additive V)).centralizerIn
           H) :
     letI : MulDistribMulAction (↥H) V := MulDistribMulAction.compHom V H.subtype
@@ -115,7 +113,7 @@ public theorem theorem_3_7_fixedPointSubgroup_eq_top_of_le_centralizerIn
   intro h
   have hhker :
       (h : A) ∈
-        (Theory.Representation.ofElementaryAbelianAction (A := A) (G := V) (p := q) :
+        (Representation.ofElementaryAbelianAction (A := A) (G := V) (p := q) :
           Representation (ZMod q) A (Additive V)).ker :=
     (hcent h.property).2
   rw [MonoidHom.mem_ker] at hhker
@@ -726,7 +724,7 @@ private theorem theorem_3_7_chief_quotient_map_le_ker_of_le_centralizer
     letI : MulDistribMulAction (G ⧸ cf.V) Uq :=
       MulDistribMulAction.compHom Uq (MulAut.conjNormal (G := G ⧸ cf.V) (H := Uq))
     let ρ : Representation (ZMod q) (G ⧸ cf.V) (Additive Uq) :=
-      Theory.Representation.ofElementaryAbelianAction (A := G ⧸ cf.V) (G := Uq) (p := q)
+      Representation.ofElementaryAbelianAction (A := G ⧸ cf.V) (G := Uq) (p := q)
     L.map π ≤ ρ.ker := by
   classical
   have : cf.V.Normal := cf.isChief.normal_K
@@ -737,7 +735,7 @@ private theorem theorem_3_7_chief_quotient_map_le_ker_of_le_centralizer
   let : MulDistribMulAction (G ⧸ cf.V) Uq :=
     MulDistribMulAction.compHom Uq (MulAut.conjNormal (G := G ⧸ cf.V) (H := Uq))
   let ρ : Representation (ZMod q) (G ⧸ cf.V) (Additive Uq) :=
-    Theory.Representation.ofElementaryAbelianAction (A := G ⧸ cf.V) (G := Uq) (p := q)
+    Representation.ofElementaryAbelianAction (A := G ⧸ cf.V) (G := Uq) (p := q)
   change ∀ x ∈ L.map π, x ∈ ρ.ker
   intro x hx
   rcases Subgroup.mem_map.mp hx with ⟨l, hlL, rfl⟩
@@ -951,9 +949,9 @@ public theorem theorem_3_7_chief_factor_bridge {G : Type u37} [Group G] [Finite 
       let φ : (G' ⧸ cf.V) →* MulAut Uq := MulAut.conjNormal (H := Uq)
       let : MulDistribMulAction (G' ⧸ cf.V) Uq := MulDistribMulAction.compHom Uq φ
       let ρ : Representation (ZMod q) (G' ⧸ cf.V) (Additive Uq) :=
-        Theory.Representation.ofElementaryAbelianAction (A := G' ⧸ cf.V) (G := Uq) (p := q)
+        Representation.ofElementaryAbelianAction (A := G' ⧸ cf.V) (G := Uq) (p := q)
       have hρker_eq : ρ.ker = φ.ker := by
-        rw [Theory.Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup]
+        rw [Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup]
         rw [fixingSubgroup_univ_eq_ker_toMulAut]
         rfl
       have hLq_ker : Lq ≤ ρ.ker := by
@@ -1879,9 +1877,9 @@ public theorem theorem_3_8 {G : Type u38} [Group G] [Finite G] (K R : Subgroup G
               let φ : (G' ⧸ cf.V) →* MulAut Uq := MulAut.conjNormal (H := Uq)
               let : MulDistribMulAction (G' ⧸ cf.V) Uq := MulDistribMulAction.compHom Uq φ
               let ρ : Representation (ZMod q) (G' ⧸ cf.V) (Additive Uq) :=
-                Theory.Representation.ofElementaryAbelianAction (A := G' ⧸ cf.V) (G := Uq) (p := q)
+                Representation.ofElementaryAbelianAction (A := G' ⧸ cf.V) (G := Uq) (p := q)
               have hρker_eq : ρ.ker = φ.ker := by
-                rw [Theory.Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup]
+                rw [Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup]
                 rw [fixingSubgroup_univ_eq_ker_toMulAut]
                 rfl
               have hFcent :
@@ -2136,7 +2134,7 @@ public theorem theorem_3_8 {G : Type u38} [Group G] [Finite G] (K R : Subgroup G
                     (fun f : Module.End (ZMod q) (Additive Uq) => f (Additive.ofMul u)) hcKer
                   have hsmul : π (c : G') • u = u := by
                     dsimp [ρ] at hlin
-                    rw [Theory.Representation.ofElementaryAbelianAction_apply_ofMul] at hlin
+                    rw [Representation.ofElementaryAbelianAction_apply_ofMul] at hlin
                     exact Additive.ofMul.injective hlin
                   have hval : ((π (c : G')) • u : Uq) = u := hsmul
                   have hconj : (((π (c : G')) • u : Uq) : G' ⧸ cf.V) = u := congrArg Subtype.val hval
@@ -4188,7 +4186,7 @@ private theorem regular_pq_complement_centralizes_of_elementaryAbelian
   have hfrob : IsFrobeniusGroupWithKernelComplement Q P :=
     theorem_3_7_frobenius Q P hQ_normal hQP hQ_ne_bot hPprime_card hcent_bot
   let ρ : Representation (ZMod r) R (Additive H) :=
-    Theory.Representation.ofElementaryAbelianAction (A := R) (G := H) (p := r)
+    Representation.ofElementaryAbelianAction (A := R) (G := H) (p := r)
   have hfixP : fixedPointSubgroup (↥P) H = ⊥ := by
     let : MulDistribMulAction P H := MulDistribMulAction.compHom H P.subtype
     exact fixedPointSubgroup_subgroup_eq_bot_of_regular_of_prime_card hregular hPprime_card
@@ -4840,10 +4838,10 @@ private theorem theorem_3_10_case2_irreducible
     (hminv :
       ∀ N : Subgroup M, N.Normal → IsInvariant G M N → N ≠ ⊥ → N = ⊤) :
     Representation.IsIrreducible
-      (Theory.Representation.ofElementaryAbelianAction (A := G) (G := M) (p := p) :
+      (Representation.ofElementaryAbelianAction (A := G) (G := M) (p := p) :
         Representation (ZMod p) G (Additive M)) := by
   let ρ : Representation (ZMod p) G (Additive M) :=
-    Theory.Representation.ofElementaryAbelianAction (A := G) (G := M) (p := p)
+    Representation.ofElementaryAbelianAction (A := G) (G := M) (p := p)
   refine
     { toNontrivial := inferInstance
       eq_bot_or_eq_top := ?_ }
@@ -4856,7 +4854,7 @@ private theorem theorem_3_10_case2_irreducible
         change Additive.ofMul x ∈ S.toSubmodule at hx
         exact hx
       have hx'' := S.apply_mem_toSubmodule g hx'
-      simpa [ρ, Theory.Representation.ofElementaryAbelianAction_apply_ofMul] using hx''
+      simpa [ρ, Representation.ofElementaryAbelianAction_apply_ofMul] using hx''
     refine { invariant := ?_ }
     intro g x
     constructor
@@ -4878,13 +4876,13 @@ private theorem theorem_3_10_case2_irreducible
     · intro hx
       have hx' : x ∈ (⊥ : Submodule (ZMod p) (Additive M)) := by
         let Z : Subrepresentation
-            (Theory.Representation.ofElementaryAbelianAction (A := G) (G := M) (p := p) :
+            (Representation.ofElementaryAbelianAction (A := G) (G := M) (p := p) :
               Representation (ZMod p) G (Additive M)) :=
           { toSubmodule := ⊥
             apply_mem_toSubmodule := by simp }
         have hxZ : x ∈ Z :=
           (show (⊥ : Subrepresentation
-            (Theory.Representation.ofElementaryAbelianAction (A := G) (G := M) (p := p) :
+            (Representation.ofElementaryAbelianAction (A := G) (G := M) (p := p) :
               Representation (ZMod p) G (Additive M))) ≤ Z from bot_le) hx
         exact hxZ
       simpa using hx'
@@ -4908,7 +4906,7 @@ private theorem theorem_3_10_case2_fixedPointSubgroup_ne_bot
     (hfixK : fixedPointSubgroup (↥K) M = ⊥) :
     fixedPointSubgroup (↥R) M ≠ ⊥ := by
   let ρ : Representation (ZMod p) G (Additive M) :=
-    Theory.Representation.ofElementaryAbelianAction (A := G) (G := M) (p := p)
+    Representation.ofElementaryAbelianAction (A := G) (G := M) (p := p)
   have hp_cop_G : Nat.Coprime p (Nat.card G) := by
     obtain ⟨n, hn⟩ := (IsElementaryAbelian.isPGroup p M).exists_card_eq
     have hn_pos : 0 < n := by
@@ -4984,7 +4982,7 @@ private theorem theorem_3_10_case2_faithful_action
 private noncomputable def theorem_3_10_ofElementaryAbelianActionFixedSubspaceEquiv
     {A V : Type*} [Group A] [Group V] {p : ℕ} [Fact p.Prime]
     [IsElementaryAbelian p V] [MulDistribMulAction A V] (H : Subgroup A) :
-    ↥((Theory.Representation.ofElementaryAbelianAction (A := A) (G := V) (p := p) :
+    ↥((Representation.ofElementaryAbelianAction (A := A) (G := V) (p := p) :
       Representation (ZMod p) A (Additive V)).fixedSubspace H) ≃
       Additive ↥(fixedPointSubgroup (↥H) V) := by
   refine
@@ -4996,9 +4994,9 @@ private noncomputable def theorem_3_10_ofElementaryAbelianActionFixedSubspaceEqu
             change Additive.ofMul ((h : A) • Additive.toMul x.1) = x.1
             have hx := x.2 h
             change
-              (Theory.Representation.ofElementaryAbelianAction (A := A) (G := V) (p := p) :
+              (Representation.ofElementaryAbelianAction (A := A) (G := V) (p := p) :
                 Representation (ZMod p) A (Additive V)) (h : A) x.1 = x.1 at hx
-            rw [Theory.Representation.ofElementaryAbelianAction_apply] at hx
+            rw [Representation.ofElementaryAbelianAction_apply] at hx
             exact hx)⟩
       invFun := fun y =>
         ⟨Additive.ofMul ((Additive.toMul y : ↥(fixedPointSubgroup (↥H) V)) : V), by
@@ -5007,10 +5005,10 @@ private noncomputable def theorem_3_10_ofElementaryAbelianActionFixedSubspaceEqu
           have hy := yH.2 h
           change (h : A) • (yH : V) = (yH : V) at hy
           change
-            (Theory.Representation.ofElementaryAbelianAction (A := A) (G := V) (p := p) :
+            (Representation.ofElementaryAbelianAction (A := A) (G := V) (p := p) :
               Representation (ZMod p) A (Additive V)) (h : A) (Additive.ofMul (yH : V)) =
                 Additive.ofMul (yH : V)
-          rw [Theory.Representation.ofElementaryAbelianAction_apply_ofMul]
+          rw [Representation.ofElementaryAbelianAction_apply_ofMul]
           exact congrArg Additive.ofMul hy⟩
       left_inv := by
         intro x
@@ -5517,7 +5515,7 @@ private theorem theorem_3_10_scalarHomFinrankOne_eq_of_conj_equiv
     {F : Type*} [Field F] {G : Type*} [Group G] {H : Subgroup G} [H.Normal]
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V] [Nontrivial V]
     (ρ : Representation F H V) (hfin : Module.finrank F V = 1) {x : G}
-    (e : ρ ≃ₗ Theory.Representation.conjugateRep ρ x) (h : H) :
+    (e : ρ ≃ₗ Representation.conjugateRep ρ x) (h : H) :
     theorem_3_10_scalarHomFinrankOne ρ hfin
         ⟨x * (h : G) * x⁻¹, Subgroup.Normal.conj_mem (inferInstance : H.Normal) h h.2 x⟩ =
       theorem_3_10_scalarHomFinrankOne ρ hfin h := by
@@ -5542,11 +5540,11 @@ private theorem theorem_3_10_scalarHomFinrankOne_eq_of_conj_equiv
                 (theorem_3_10_scalarHomFinrankOne ρ hfin h) v).symm
       _ = e (ρ h v) := by
               rw [theorem_3_10_scalarHomFinrankOne_apply (ρ := ρ) hfin h v]
-      _ = (Theory.Representation.conjugateRep ρ x) h (e v) := hintertwine
+      _ = (Representation.conjugateRep ρ x) h (e v) := hintertwine
       _ =
           theorem_3_10_scalarHomFinrankOne ρ hfin
             ⟨x * (h : G) * x⁻¹, Subgroup.Normal.conj_mem (inferInstance : H.Normal) h h.2 x⟩ • e v := by
-              rw [Theory.Representation.conjugateRep_apply]
+              rw [Representation.conjugateRep_apply]
               exact theorem_3_10_scalarHomFinrankOne_apply
                 (ρ := ρ) hfin
                 ⟨x * (h : G) * x⁻¹,
@@ -5748,19 +5746,19 @@ private theorem theorem_3_10_le_ker_of_extendScalars
     {G : Type*} [Group G] {F : Type*} [Field F] {F' : Type*} [Field F']
     [Algebra F F'] {V : Type*} [AddCommGroup V] [Module F V]
     (ρ : Representation F G V) {H : Subgroup G}
-    (hH : H ≤ (Theory.Representation.extendScalars F' ρ).ker) :
+    (hH : H ≤ (Representation.extendScalars F' ρ).ker) :
     H ≤ ρ.ker := by
   intro h hh
   rw [MonoidHom.mem_ker]
   ext v
-  have hh' : h ∈ (Theory.Representation.extendScalars F' ρ).ker := hH hh
+  have hh' : h ∈ (Representation.extendScalars F' ρ).ker := hH hh
   have hfix :
-      Theory.Representation.extendScalars F' ρ h (1 ⊗ₜ[F] v) = (1 : F') ⊗ₜ[F] v := by
+      Representation.extendScalars F' ρ h (1 ⊗ₜ[F] v) = (1 : F') ⊗ₜ[F] v := by
     simpa using
-      DFunLike.congr_fun (show Theory.Representation.extendScalars F' ρ h = 1 by simpa using hh')
+      DFunLike.congr_fun (show Representation.extendScalars F' ρ h = 1 by simpa using hh')
         ((1 : F') ⊗ₜ[F] v)
   have hfix' : (1 : F') ⊗ₜ[F] (ρ h v) = (1 : F') ⊗ₜ[F] v := by
-    simpa [Theory.Representation.extendScalars_apply] using hfix
+    simpa [Representation.extendScalars_apply] using hfix
   exact (Module.FaithfullyFlat.tensorProduct_mk_injective (A := F) (B := F') V) hfix'
 
 private noncomputable def theorem_3_10_fixedSubspace_equiv_of_equiv
@@ -5801,7 +5799,7 @@ private theorem theorem_3_10_invariants_extendScalars_eq_baseChange
     {L : Type*} [Field L] [Algebra F L] {V : Type*}
     [AddCommGroup V] [Module F V] (ρ : Representation F G V)
     (hF : (Nat.card G : F) ≠ 0) (hL : (Nat.card G : L) ≠ 0) :
-    Representation.invariants (Theory.Representation.extendScalars L ρ) =
+    Representation.invariants (Representation.extendScalars L ρ) =
       (Representation.invariants ρ).baseChange L := by
   classical
   let : Fintype G := Fintype.ofFinite G
@@ -5811,19 +5809,19 @@ private theorem theorem_3_10_invariants_extendScalars_eq_baseChange
     simpa [Nat.card_eq_fintype_card] using invertibleOfNonzero hL
   let S : Submodule F V := Representation.invariants ρ
   let Sext : Submodule L (L ⊗[F] V) :=
-    Representation.invariants (Theory.Representation.extendScalars L ρ)
+    Representation.invariants (Representation.extendScalars L ρ)
   let avg : V →ₗ[F] V := Representation.averageMap ρ
   let avgS : V →ₗ[F] ↥S :=
     avg.codRestrict S (Representation.averageMap_invariant (ρ := ρ))
   let avgExt : L ⊗[F] V →ₗ[L] L ⊗[F] V :=
-    Representation.averageMap (Theory.Representation.extendScalars L ρ)
+    Representation.averageMap (Representation.extendScalars L ρ)
   let avgSext : L ⊗[F] V →ₗ[L] ↥Sext :=
     avgExt.codRestrict Sext
-      (Representation.averageMap_invariant (ρ := Theory.Representation.extendScalars L ρ))
+      (Representation.averageMap_invariant (ρ := Representation.extendScalars L ρ))
   have havg_eq : avgExt = LinearMap.baseChange L avg := by
     ext a
     simp [avgExt, avg, Representation.averageMap, GroupAlgebra.average,
-      Theory.Representation.extendScalars_apply, map_sum, TensorProduct.AlgebraTensorModule.curry_apply]
+      Representation.extendScalars_apply, map_sum, TensorProduct.AlgebraTensorModule.curry_apply]
     rw [Finset.smul_sum]
     simp_rw [TensorProduct.smul_tmul']
     rw [TensorProduct.tmul_sum]
@@ -5841,7 +5839,7 @@ private theorem theorem_3_10_invariants_extendScalars_eq_baseChange
   have havgSext_proj_apply (v : Sext) : avgSext (Sext.subtype v) = v := by
     apply Subtype.ext
     change avgExt (Sext.subtype v) = Sext.subtype v
-    exact Representation.averageMap_id (ρ := Theory.Representation.extendScalars L ρ) v v.2
+    exact Representation.averageMap_id (ρ := Representation.extendScalars L ρ) v v.2
   have hrange_avg : LinearMap.range avg = S := by
     rw [← havgS_subtype, LinearMap.range_comp]
     rw [LinearMap.range_eq_of_proj havgS_proj_apply, Submodule.map_top, Submodule.range_subtype]
@@ -5876,12 +5874,12 @@ private theorem theorem_3_10_fixedSubspace_extendScalars_eq_baseChange
     {L : Type*} [Field L] [Algebra F L] {V : Type*}
     [AddCommGroup V] [Module F V] (ρ : Representation F G V) (H : Subgroup G)
     (hF : (Nat.card H : F) ≠ 0) (hL : (Nat.card H : L) ≠ 0) :
-    (Theory.Representation.extendScalars L ρ).fixedSubspace H =
+    (Representation.extendScalars L ρ).fixedSubspace H =
       (ρ.fixedSubspace H).baseChange L := by
   dsimp [Representation.fixedSubspace]
   have hrep :
-      (Theory.Representation.extendScalars L ρ).comp H.subtype =
-        Theory.Representation.extendScalars L (ρ.comp H.subtype) := by
+      (Representation.extendScalars L ρ).comp H.subtype =
+        Representation.extendScalars L (ρ.comp H.subtype) := by
     ext h
     rfl
   rw [hrep]
@@ -5896,7 +5894,7 @@ private theorem theorem_3_10_noNontrivialConj_of_faithful
     (hfrob : IsFrobeniusGroupWithKernelComplement K R) (hK_not_le_ker : ¬ K ≤ ρ.ker)
     (W : Subrepresentation (ρ.comp K.subtype)) [Representation.IsIrreducible W.toRepresentation] :
     ∀ x : G, (x : G ⧸ K) ≠ 1 →
-      ¬ Nonempty (W.toRepresentation ≃ₗ Theory.Representation.conjugateRep W.toRepresentation x) := by
+      ¬ Nonempty (W.toRepresentation ≃ₗ Representation.conjugateRep W.toRepresentation x) := by
   classical
   let : FiniteDimensional F W.toSubmodule :=
     FiniteDimensional.of_injective W.toSubmodule.subtype Subtype.val_injective
@@ -5906,7 +5904,7 @@ private theorem theorem_3_10_noNontrivialConj_of_faithful
     Representation.IsIrreducible.finrank_eq_one_of_isMulCommutative
       (ρ := W.toRepresentation)
   intro x hxq hnon
-  let e : W.toRepresentation ≃ₗ Theory.Representation.conjugateRep W.toRepresentation x :=
+  let e : W.toRepresentation ≃ₗ Representation.conjugateRep W.toRepresentation x :=
     Classical.choice hnon
   let χ := theorem_3_10_scalarHomFinrankOne W.toRepresentation hWfin
   have hsurj := theorem_3_10_conj_commutator_surjective (G := G) (K := K) (R := R)
@@ -5960,7 +5958,7 @@ private noncomputable def theorem_3_10_coindMap
     [AddCommGroup W] [Module F W] (σ : Representation F G W)
     (ρ : Representation F H V) (π : σ.comp H.subtype →ₗ ρ) :
     σ →ₗ coindRep ρ := by
-  refine Theory.Representation.RepMap.mk ?_ ?_
+  refine Representation.RepMap.mk ?_ ?_
   · refine
       { toFun := fun w => ⟨fun g => π (σ g w), ?_⟩
         map_add' := by
@@ -6057,7 +6055,7 @@ private noncomputable def theorem_3_10_coindMapOfSubrep
       _ = (((M.toRepresentation h).comp proj v : M.toSubmodule) : V) := by rfl
   exact
     theorem_3_10_coindMap σ M.toRepresentation
-      (Theory.Representation.RepMap.mk proj hproj_intertwining)
+      (Representation.RepMap.mk proj hproj_intertwining)
 
 private theorem theorem_3_10_coindMapOfSubrep_eval_one
     {F : Type*} [Field F] {G : Type*} [Group G] [Finite G] {H : Subgroup G} [H.Normal]
@@ -6162,8 +6160,8 @@ private noncomputable def theorem_3_10_conj_diff_equiv
     {G : Type*} [Group G] {H : Subgroup G} [H.Normal]
     {V : Type*} [AddCommGroup V] [Module F V] {g x : G}
     (ρ : Representation F H V)
-    (e : Theory.Representation.conjugateRep ρ g ≃ₗ Theory.Representation.conjugateRep ρ x) :
-    ρ ≃ₗ Theory.Representation.conjugateRep ρ (x * g⁻¹) := by
+    (e : Representation.conjugateRep ρ g ≃ₗ Representation.conjugateRep ρ x) :
+    ρ ≃ₗ Representation.conjugateRep ρ (x * g⁻¹) := by
   exact conj_diff_equiv (ρ := ρ) e
 
 private theorem theorem_3_10_coindRep_irreducible_of_noNontrivialConj
@@ -6173,7 +6171,7 @@ private theorem theorem_3_10_coindRep_irreducible_of_noNontrivialConj
     (ρ : Representation F H V) [FiniteDimensional F V] [Representation.IsIrreducible ρ]
     (hnconj :
       ∀ x : G, (x : G ⧸ H) ≠ 1 →
-        ¬ Nonempty (ρ ≃ₗ Theory.Representation.conjugateRep ρ x)) :
+        ¬ Nonempty (ρ ≃ₗ Representation.conjugateRep ρ x)) :
     IsSimpleOrder (Subrepresentation (coindRep (ρ := ρ))) := by
   classical
   let : Fintype (G ⧸ H) := Fintype.ofFinite (G ⧸ H)
@@ -6285,15 +6283,15 @@ private theorem theorem_3_10_coindRep_irreducible_of_noNontrivialConj
                 hfq'_ne)
       let eCg :
           (coindCosetSubrep (ρ := ρ) q).toRepresentation ≃ₗ
-            Theory.Representation.conjugateRep ρ g := by
+            Representation.conjugateRep ρ g := by
         simpa [q] using (coindCosetEquiv (ρ := ρ) g)
       let eCx :
           (coindCosetSubrep (ρ := ρ) q').toRepresentation ≃ₗ
-            Theory.Representation.conjugateRep ρ x := by
+            Representation.conjugateRep ρ x := by
         rw [← hx]
         exact coindCosetEquiv (ρ := ρ) x
-      let eNg : N.toRepresentation ≃ₗ Theory.Representation.conjugateRep ρ g := eNq.trans eCg
-      let eNx : N.toRepresentation ≃ₗ Theory.Representation.conjugateRep ρ x := eNq'.trans eCx
+      let eNg : N.toRepresentation ≃ₗ Representation.conjugateRep ρ g := eNq.trans eCg
+      let eNx : N.toRepresentation ≃ₗ Representation.conjugateRep ρ x := eNq'.trans eCx
       have hneqone : ((x * g⁻¹ : G) : G ⧸ H) ≠ 1 := by
         intro h1
         apply hq'
@@ -6372,9 +6370,9 @@ private noncomputable def theorem_3_10_coindEquivOfNoNontrivialConj
     (M : Subrepresentation (ρ.comp H.subtype))
     [Representation.IsIrreducible M.toRepresentation]
     (hnconj : ∀ x : G, (x : G ⧸ H) ≠ 1 →
-      ¬ Nonempty (M.toRepresentation ≃ₗ Theory.Representation.conjugateRep M.toRepresentation x)) :
+      ¬ Nonempty (M.toRepresentation ≃ₗ Representation.conjugateRep M.toRepresentation x)) :
     ρ ≃ₗ coindRep M.toRepresentation := by
-  let : FiniteDimensional F V := finiteDimensional_of_irreducible_finite_group ρ inferInstance
+  let : FiniteDimensional F V := _root_.finiteDimensional_of_irreducible_finite_group ρ inferInstance
   let : FiniteDimensional F M.toSubmodule := FiniteDimensional.of_injective M.toSubmodule.subtype
     Subtype.val_injective
   let f : ρ →ₗ coindRep M.toRepresentation := theorem_3_10_coindMapOfSubrep ρ hchar M
@@ -6401,7 +6399,7 @@ private noncomputable def theorem_3_10_coindEquivOfNoNontrivialConj
   have hrange_ne : f.range ≠ ⊥ := by
     intro hbot
     apply hf_ne
-    apply Theory.Representation.RepMap.toLinearMap_injective
+    apply Representation.RepMap.toLinearMap_injective
     apply LinearMap.range_eq_bot.mp
     have hsub := congrArg Subrepresentation.toSubmodule hbot
     change f.range.toSubmodule = (⊥ : Subrepresentation (coindRep M.toRepresentation)).toSubmodule at hsub
@@ -6424,7 +6422,7 @@ private noncomputable def theorem_3_10_coindEquivOfNoNontrivialConj
         _ = ⊤ := theorem_3_10_toSubmodule_top (coindRep M.toRepresentation))
   let eLin : V ≃ₗ[F] Representation.coindV H.subtype M.toRepresentation :=
     LinearEquiv.ofBijective f.toLinearMap ⟨hfinj, hfsurj⟩
-  refine Theory.Representation.RepEquiv.mk eLin ?_
+  refine Representation.RepEquiv.mk eLin ?_
   intro g
   ext v x
   simpa [LinearMap.comp_apply, eLin] using congrArg
@@ -6587,13 +6585,13 @@ private noncomputable def theorem_3_10_case2_rho_iso_coind
     have h_one : (r : G) = 1 := by simpa using h_mem_bot
     exact hr_ne_one (Subtype.ext h_one)
   by_cases h_no_conj : ¬ Nonempty (W.toRepresentation ≃ₗ
-    Theory.Representation.conjugateRep W.toRepresentation (r : G))
+    Representation.conjugateRep W.toRepresentation (r : G))
   · -- Case B: W ≇ W^r for a generator r. Then no nontrivial conjugate is isomorphic.
     have hnconj : ∀ x : G, (x : G ⧸ K) ≠ 1 → ¬ Nonempty (W.toRepresentation ≃ₗ
-      Theory.Representation.conjugateRep W.toRepresentation x) := by
+      Representation.conjugateRep W.toRepresentation x) := by
       intro x hx_ne
       intro h_nonempty
-      let e : W.toRepresentation ≃ₗ Theory.Representation.conjugateRep W.toRepresentation x :=
+      let e : W.toRepresentation ≃ₗ Representation.conjugateRep W.toRepresentation x :=
         Classical.choice h_nonempty
       have hall := all_conjugates_of_prime_quotient (ρ := W.toRepresentation)
         hcard_quot hR_prime hx_ne e
@@ -6601,14 +6599,14 @@ private noncomputable def theorem_3_10_case2_rho_iso_coind
     exact theorem_3_10_coindEquivOfNoNontrivialConj ρ hchar W hnconj
   · -- Case A: W ≅ W^r. Then all conjugates are isomorphic.
     have h_conj : Nonempty (W.toRepresentation ≃ₗ
-      Theory.Representation.conjugateRep W.toRepresentation (r : G)) := by
+      Representation.conjugateRep W.toRepresentation (r : G)) := by
       exact not_not.mp h_no_conj
-    let e : W.toRepresentation ≃ₗ Theory.Representation.conjugateRep W.toRepresentation (r : G) :=
+    let e : W.toRepresentation ≃ₗ Representation.conjugateRep W.toRepresentation (r : G) :=
       Classical.choice h_conj
-    have hall : ∀ x : G, W.toRepresentation ≃ₗ Theory.Representation.conjugateRep W.toRepresentation x :=
+    have hall : ∀ x : G, W.toRepresentation ≃ₗ Representation.conjugateRep W.toRepresentation x :=
       all_conjugates_of_prime_quotient (ρ := W.toRepresentation) hcard_quot hR_prime hx_ne_one e
     have hall_conj : ∀ x : G, Nonempty (W.toRepresentation ≃ₗ
-      Theory.Representation.conjugateRep W.toRepresentation x) :=
+      Representation.conjugateRep W.toRepresentation x) :=
       λ x => ⟨hall x⟩
     -- Step 2: Construct φ and prove injectivity
     let φ : ρ →ₗ coindRep W.toRepresentation := theorem_3_10_coindMapOfSubrep ρ hchar W
@@ -6633,9 +6631,9 @@ private noncomputable def theorem_3_10_case2_rho_iso_coind
     let V_coind := Representation.coindV K.subtype W.toRepresentation
     have : Fintype (G ⧸ K) := Fintype.ofFinite (G ⧸ K)
     have : FiniteDimensional (ZMod q) (Additive M) :=
-      finiteDimensional_of_irreducible_finite_group ρ hirred
+      _root_.finiteDimensional_of_irreducible_finite_group ρ hirred
     have : FiniteDimensional (ZMod q) (W.toSubmodule) :=
-      finiteDimensional_of_irreducible_finite_group W.toRepresentation inferInstance
+      _root_.finiteDimensional_of_irreducible_finite_group W.toRepresentation inferInstance
     have h_card_quot_fintype : Fintype.card (G ⧸ K) = Nat.card R := by
       rw [← Nat.card_eq_fintype_card, hcard_quot]
     have h_finrank_rhoK_le : Module.finrank (ZMod q) (Additive M) ≤
@@ -6682,7 +6680,7 @@ private noncomputable def theorem_3_10_case2_rho_iso_coind
           (f := φ.toLinearMap)).mp hφ_inj
         exact h_surj
       let e := LinearEquiv.ofBijective φ.toLinearMap ⟨hφ_inj, h_φ_surj⟩
-      refine Theory.Representation.RepEquiv.mk e ?_
+      refine Representation.RepEquiv.mk e ?_
       intro g
       apply LinearMap.ext
       intro v
@@ -6726,12 +6724,12 @@ private theorem theorem_3_10_case2_card_formula_rep_theory
   classical
   let : K.Normal := hfrob.normal
   let ρ : Representation (ZMod q) G (Additive M) :=
-    Theory.Representation.ofElementaryAbelianAction (A := G) (G := M) (p := q)
+    Representation.ofElementaryAbelianAction (A := G) (G := M) (p := q)
   have hirred :=
     theorem_3_10_case2_irreducible (G := G) (M := M) (p := q) hminv
   let : Representation.IsIrreducible ρ := hirred
   let : FiniteDimensional (ZMod q) (Additive M) :=
-    finiteDimensional_of_irreducible_finite_group ρ hirred
+    _root_.finiteDimensional_of_irreducible_finite_group ρ hirred
   let instNontrivρas : Nontrivial ρ.asModule :=
     Function.Injective.nontrivial (f := ρ.asModuleEquiv.symm)
       (LinearEquiv.injective ρ.asModuleEquiv.symm)
@@ -6809,12 +6807,12 @@ private theorem theorem_3_10_case2_card_formula_rep_theory
       @Representation.IsIrreducible G E ρ.asModule inferInstance (endField_field ρ)
         ρ.instAddCommGroupAsModule instModuleE κ := hκirr
   have hκabs :
-      @Theory.Representation.IsAbsolutelyIrreducible E G ρ.asModule inferInstance (endField_field ρ)
+      @Representation.IsAbsolutelyIrreducible E G ρ.asModule inferInstance (endField_field ρ)
         ρ.instAddCommGroupAsModule instModuleE κ := by
     dsimp [κ]
     exact endFieldRep_isAbsolutelyIrreducible ρ
   have :
-      @Theory.Representation.IsAbsolutelyIrreducible E G ρ.asModule inferInstance (endField_field ρ)
+      @Representation.IsAbsolutelyIrreducible E G ρ.asModule inferInstance (endField_field ρ)
         ρ.instAddCommGroupAsModule instModuleE κ := hκabs
   let Falg := AlgebraicClosure E
   let instFieldFalg : Field Falg := inferInstance
@@ -6822,24 +6820,24 @@ private theorem theorem_3_10_case2_card_formula_rep_theory
   let : Field Falg := instFieldFalg
   let : Algebra E Falg := instAlgebraEFalg
   let κ' : Representation Falg G (Falg ⊗[E] ρ.asModule) :=
-    @Theory.Representation.extendScalars E G ρ.asModule inferInstance (endField_field ρ)
+    @Representation.extendScalars E G ρ.asModule inferInstance (endField_field ρ)
       ρ.instAddCommGroupAsModule
       instModuleE Falg instFieldFalg instAlgebraEFalg κ
   have hκ'irr : Representation.IsIrreducible κ' := by
     dsimp [κ']
     exact
-      @Theory.Representation.IsAbsolutelyIrreducible.irreducible_of_extension
+      @Representation.IsAbsolutelyIrreducible.irreducible_of_extension
         E G ρ.asModule inferInstance (endField_field ρ) ρ.instAddCommGroupAsModule
         instModuleE
         κ hfdE Falg instFieldFalg instAlgebraEFalg hκabs
   let : Representation.IsIrreducible κ' := hκ'irr
   let instFDFalg : FiniteDimensional Falg (Falg ⊗[E] ρ.asModule) := by
-    exact @Theory.Representation.extendScalars_finite_dimensional
+    exact @Representation.extendScalars_finite_dimensional
       E G ρ.asModule inferInstance (endField_field ρ) ρ.instAddCommGroupAsModule
       instModuleE Falg instFieldFalg instAlgebraEFalg κ hfdE
   have : FiniteDimensional Falg (Falg ⊗[E] ρ.asModule) := instFDFalg
   let instNontrivFalg : Nontrivial (Falg ⊗[E] ρ.asModule) := by
-    exact @Theory.Representation.extendScalars_nontrivial
+    exact @Representation.extendScalars_nontrivial
       E G ρ.asModule inferInstance (endField_field ρ) ρ.instAddCommGroupAsModule
       instModuleE Falg instFieldFalg instAlgebraEFalg κ instNontrivρas
   have : Nontrivial (Falg ⊗[E] ρ.asModule) := instNontrivFalg
@@ -6894,10 +6892,10 @@ private theorem theorem_3_10_case2_card_formula_rep_theory
       · exact Subgroup.mem_top k
       · change k ∈ fixingSubgroupOf G M Set.univ
         have hkρ : k ∈
-            (Theory.Representation.ofElementaryAbelianAction (A := G) (G := M) (p := q) :
+            (Representation.ofElementaryAbelianAction (A := G) (G := M) (p := q) :
               Representation (ZMod q) G (Additive M)).ker := by
           simpa [ρ] using hKkerρ hk
-        simpa [Theory.Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup] using hkρ
+        simpa [Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup] using hkρ
     have hKbot : K = ⊥ :=
       le_antisymm (by simpa [hfaith] using hK_le_action) bot_le
     exact hfrob.kernel_ne_bot hKbot
@@ -6914,7 +6912,7 @@ private theorem theorem_3_10_case2_card_formula_rep_theory
       Subtype.val_injective instFDFalg
   have hnconj :
       ∀ x : G, (x : G ⧸ K) ≠ 1 →
-        ¬ Nonempty (W.toRepresentation ≃ₗ Theory.Representation.conjugateRep W.toRepresentation x) :=
+        ¬ Nonempty (W.toRepresentation ≃ₗ Representation.conjugateRep W.toRepresentation x) :=
     @theorem_3_10_noNontrivialConj_of_faithful
       Falg instFieldFalg inferInstance G inferInstance inferInstance K R inferInstance
       inferInstance (Falg ⊗[E] ρ.asModule) inferInstance inferInstance instFDFalg
@@ -7697,7 +7695,7 @@ public theorem theorem_3_10
       refine ⟨hR_cyclic, hR_prime, hcardM, ?_⟩
       intro hcycFix
       let ρ : Representation (ZMod q) G' (Additive M') :=
-        Theory.Representation.ofElementaryAbelianAction (A := G') (G := M') (p := q)
+        Representation.ofElementaryAbelianAction (A := G') (G := M') (p := q)
       have hq_cop_G : Nat.Coprime q (Nat.card G') := by
         obtain ⟨nq, hM_card⟩ := (IsElementaryAbelian.isPGroup q M').exists_card_eq
         have hnq_pos : 0 < nq := by
@@ -7758,7 +7756,7 @@ public theorem theorem_3_10
       rw [actionCentralizerIn]
       constructor
       · exact (Subgroup.commutator_le_right (H₁ := K') (H₂ := K')) hg
-      · rw [Representation.centralizerIn, Theory.Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup] at hgcent
+      · rw [Representation.centralizerIn, Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup] at hgcent
         exact hgcent.2
     · push Not at hminv
       rcases hminv with ⟨N, hN_normal, hN_inv, hN_ne_bot, hN_ne_top⟩

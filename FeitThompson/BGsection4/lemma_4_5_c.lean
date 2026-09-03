@@ -5,8 +5,6 @@ import FeitThompson.Utils
 public import FeitThompson.BGsection4.lemma_4_5_a
 public import FeitThompson.BGsection4.lemma_4_5_a
 
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 open scoped commutatorElement
 

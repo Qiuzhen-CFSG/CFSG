@@ -936,10 +936,10 @@ public theorem theorem_12_17_lowerBoundData_source_leaf
     Section6.theorem_6_8_coherentExtension_mem_signedIrreducible
       (hν i) (hζ i).1 (hζ i).2.1
   have hγvirt (i : I) :
-      Theory.Character.IsVirtualCharacter (ν i (ζ i)) :=
+      IsVirtualCharacter (ν i (ζ i)) :=
     Section3.isVirtualCharacter_of_signedIrreducible_pf35 (hγsigned i)
   have hβvirt (i : I) :
-      Theory.Character.IsVirtualCharacter
+      IsVirtualCharacter
         (Section7.theorem_7_8_beta (L i) (H i) (τ i) (ζ i)) :=
     Section7.theorem_7_8_beta_virtual (h76 i) (hAgree i) (h78 i)
   have hsignedSumNorm :
@@ -1193,7 +1193,7 @@ public theorem theorem_12_17_lowerBoundData_source_leaf
     have hdiffi : rFamilyDiffData (SX i ⟨χi, hχi⟩) (τ i)
         (Rfun i ⟨χi, hχi⟩) :=
       rFamilyDiffData_of_hypothesis12_rFamilyData (h12 i) (hSX i) hRi
-    have hψvirt : Theory.Character.IsVirtualCharacter
+    have hψvirt : IsVirtualCharacter
         (τ j (χj - Section1.conjugateCharacter χj)) :=
       isVirtualCharacter_tau_sub_conjugate_of_hypothesis12
         (L j) (H j) (S j) (SX j) (R j) (τ j) (h12 j) (hSX j) hχj
@@ -1523,7 +1523,7 @@ public theorem theorem_12_17_lowerBoundData_source_leaf
         simp [Section1.conjugateCharacter, Pi.add_apply]
   let Δ : I → Section1.ClassFunction G := fun i =>
     β i + γ i - Section1.principalCharacter G
-  have hΔvirt (i : I) : Theory.Character.IsVirtualCharacter (Δ i) := by
+  have hΔvirt (i : I) : IsVirtualCharacter (Δ i) := by
     exact Section3.isVirtualCharacter_sub
       (Section3.isVirtualCharacter_add (by simpa [β] using hβvirt i)
         (by simpa [γ] using hγvirt i))
@@ -2313,7 +2313,7 @@ public theorem theorem_12_17_lowerBoundData_source_leaf
     rcases hχirr with ⟨n, ρ, hρ, hχeq⟩
     haveI : Representation.IsIrreducible ρ := hρ
     haveI : Nontrivial (Fin n → ℂ) :=
-      Theory.Character.irreducible_nontrivial (ρ := ρ)
+      irreducible_nontrivial (ρ := ρ)
     have hdim_pos : 0 < Module.finrank ℂ (Fin n → ℂ) :=
       (Module.finrank_pos_iff (R := ℂ) (M := Fin n → ℂ)).2 inferInstance
     have hn : 0 < n := by simpa using hdim_pos

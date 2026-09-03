@@ -382,7 +382,7 @@ public theorem IsStronglyEmbedded.involutionCoreIn_normalizer_eq_centralizerTwoP
     exact hx.2
   have hF1sub : F1.subgroupOf N = involutionCore N := by
     simpa [F1, involutionCoreIn] using
-      Theory.GroupAction.subgroupOf_map_subtype_eq (involutionCore N)
+      subgroupOf_map_subtype_eq (involutionCore N)
   have hNfactor_subtype :
       (Set.univ : Set N) =
         (involutionCore N : Set N) * ((R.subgroupOf N) : Set N) := by

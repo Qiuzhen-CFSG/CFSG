@@ -14,7 +14,6 @@ import BenderSuzuki.PFchapter4section1.claim_H5
 import BenderSuzuki.PFchapter4section1.claim_H6_c
 import BenderSuzuki.External.Huppert.V.theorem_8_15
 import Theory.GroupAction.Quotient
-open Theory.GroupAction
 
 
 namespace BenderSuzuki

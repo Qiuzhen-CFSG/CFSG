@@ -4,8 +4,6 @@ public import BenderSuzuki.External.Huppert.XI.TopResidual
 
 public import BenderSuzuki.PFAppendixII.Semilinear
 public import Theory.Representation.Clifford
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 /-!
 # Huppert--Blackburn XI.2.5
@@ -332,7 +330,7 @@ private theorem huppert_XI_2_5_clifford_small_constituent
           (rhoH (eG z)).toFun (eLin.toLinearMap.toFun x) := by
       have hzact : rhoZ z x =
           Additive.ofMul ((z : T) • Additive.toMul x) := by
-        exact Theory.Representation.ofElementaryAbelianAction_apply z x
+        exact Representation.ofElementaryAbelianAction_apply z x
       have hHact : (rhoH (eG z)).toFun (eLin.toLinearMap.toFun x) =
           eLin.toLinearMap.toFun x * (((z : Z) : Kˣ) : K) := by
         change eLin.toLinearMap.toFun x *
@@ -451,7 +449,7 @@ private theorem huppert_XI_2_5_clifford_small_constituent
   have hWirr := (Subrepresentation.irreducible_iff_isAtom W).mpr hWatom
   letI : Finite (Kˣ)ᵐᵒᵖ := Finite.of_equiv Kˣ MulOpposite.opEquiv
   obtain ⟨n, g, hInternal, hConjIrr, hConjEquiv, _hMultiplicity⟩ :=
-    Theory.Representation.isaacs_theorem_6_5.{0, u, u, u} rho H hRhoIrr W hWirr
+    Representation.isaacs_theorem_6_5.{0, u, u, u} rho H hRhoIrr W hWirr
   let VW : Type u := {x : K // W.toSubmodule.carrier x}
   letI : AddCommGroup VW := W.toSubmodule.addCommGroup
   letI : Module (ZMod (addOrderOf (1 : K))) VW := W.toSubmodule.module
@@ -473,7 +471,7 @@ private theorem huppert_XI_2_5_clifford_small_constituent
   have hfinrankEq : f = n * r := by
     let Ui (i : Fin n) : Type u :=
       {x : K //
-        (Theory.Representation.conjugateSubrepresentation rho H W (g i)).toSubmodule.carrier x}
+        (Representation.conjugateSubrepresentation rho H W (g i)).toSubmodule.carrier x}
     let eInternal := Equiv.ofBijective _ hInternal
     let eTotal := (DFinsupp.equivFunOnFintype).symm.trans eInternal
     have hcardVW : Nat.card VW = addOrderOf (1 : K) ^ r := by

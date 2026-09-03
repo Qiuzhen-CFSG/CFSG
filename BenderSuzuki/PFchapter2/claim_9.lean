@@ -6,7 +6,6 @@ import FeitThompson.SubgroupConj
 import BenderSuzuki.PFAppendixII.proposition_2
 import BenderSuzuki.PFchapter2.claim_2_b
 import BenderSuzuki.PFchapter2.claim_4
-open Theory.GroupAction
 
 
 namespace BenderSuzuki

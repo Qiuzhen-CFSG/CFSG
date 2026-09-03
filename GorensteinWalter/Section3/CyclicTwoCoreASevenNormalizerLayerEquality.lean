@@ -15,7 +15,6 @@ public import GorensteinWalter.PGL2Center
 import Mathlib.GroupTheory.Coset.Card
 import Glauberman.DicksonClassification
 import Mathlib.Tactic
-open Theory.ElementaryAbelian
 
 
 /-!

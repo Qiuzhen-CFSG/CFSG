@@ -9,8 +9,6 @@ import FeitThompson.Frattini.Core
 import FeitThompson.Commutator.Core
 import Theory.GroupAction.Invariant
 import Theory.GroupAction.Quotient
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 /-!
@@ -3571,7 +3569,7 @@ public theorem lemma13_no_length_greater_than_three
             exact Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
               (IsElementaryAbelian.exponent_dvd_p 2 (Q ⧸ frattini Q)) u
           let rhoU :=
-            Theory.Representation.ofElementaryAbelianAction (A := X) (G := U) (p := 2)
+            Representation.ofElementaryAbelianAction (A := X) (G := U) (p := 2)
           let rhoEquiv : X →* (Additive U ≃ₗ[ZMod 2] Additive U) :=
             (LinearMap.GeneralLinearGroup.generalLinearEquiv
               (ZMod 2) (Additive U)).toMonoidHom.comp rhoU.asGroupHom
@@ -3580,7 +3578,7 @@ public theorem lemma13_no_length_greater_than_three
           have hT_val (v : Additive U) :
               T v = Additive.ofMul (g • v.toMul) := by
             change rhoU g v = Additive.ofMul (g • v.toMul)
-            exact Theory.Representation.ofElementaryAbelianAction_apply g v
+            exact Representation.ofElementaryAbelianAction_apply g v
           have hT_pow_val :
               ∀ j : ℕ, ∀ v : Additive U,
                 (T ^ j) v = Additive.ofMul (g ^ j • v.toMul) := by

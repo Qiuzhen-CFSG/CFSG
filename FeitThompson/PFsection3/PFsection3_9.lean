@@ -297,23 +297,23 @@ private theorem isBookIrreducibleCharacter_of_group_irreducible_pf39
       simpa [mul_assoc] using Representation.char_conj (ρ := ρ) g x
     have htoeq :
         Section1.toConjClassFunction ρ.character hρclass =
-          Theory.Character.characterClassFunction ρ := by
+          characterClassFunction ρ := by
       apply Section1.toConjClassFunction_eq_of_apply
       intro g
       rfl
     calc
       Section1.scalarProduct G χ χ =
           Section1.scalarProduct G ρ.character ρ.character := by rw [hchar]
-      _ = Theory.Character.classFunctionInner
+      _ = classFunctionInner
           (Section1.toConjClassFunction ρ.character hρclass)
           (Section1.toConjClassFunction ρ.character hρclass) :=
         (Section1.classFunctionInner_toConjClassFunction
           ρ.character ρ.character hρclass hρclass).symm
-      _ = Theory.Character.classFunctionInner
-          (Theory.Character.characterClassFunction ρ)
-          (Theory.Character.characterClassFunction ρ) := by rw [htoeq]
+      _ = classFunctionInner
+          (characterClassFunction ρ)
+          (characterClassFunction ρ) := by rw [htoeq]
       _ = 1 :=
-        (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).1 hirr
+        (irreducible_iff_character_norm_one (ρ := ρ)).1 hirr
 
 private theorem scalarProduct_signed_irreducible_ne_zero_iff_pf39
     {G : Type u} [Group G] [Finite G]
@@ -376,7 +376,7 @@ private theorem signed_irreducible_representation_witness_pf39
 private theorem isaacs_lemma_3_2_core_pf39
     {z : ℂ} (hzint : IsIntegral ℤ z) (hzrat : ∃ q : ℚ, z = (q : ℂ)) :
     ∃ n : ℤ, z = (n : ℂ) := by
-  exact Theory.Character.isaacs_lemma_3_2_core hzint hzrat
+  exact isaacs_lemma_3_2_core hzint hzrat
 
 private theorem isIntegral_value_of_signed_irreducible_pf39
     {G : Type u} [Group G] [Finite G]
@@ -386,9 +386,9 @@ private theorem isIntegral_value_of_signed_irreducible_pf39
   rcases signed_irreducible_representation_witness_pf39 hχ with
     ⟨ε, hε, n, ρ, _hirr, hchar⟩
   rcases hε with rfl | rfl
-  · simpa [hchar] using Theory.Character.representation_character_isIntegral (ρ := ρ) g
+  · simpa [hchar] using representation_character_isIntegral (ρ := ρ) g
   · simpa [hchar] using
-      (Theory.Character.representation_character_isIntegral (ρ := ρ) g).neg
+      (representation_character_isIntegral (ρ := ρ) g).neg
 
 private theorem exists_int_of_signed_irreducible_value_rat_pf39
     {G : Type u} [Group G] [Finite G]
@@ -841,12 +841,12 @@ private theorem irreducibleCharacterOnGroup_argumentPow_of_ringEquiv_pf39
     intro x g
     simpa [mul_assoc] using Representation.char_conj (ρ := ρτ) g x
   have hinnerτ :
-      Theory.Character.classFunctionInner (Theory.Character.characterClassFunction ρτ) (Theory.Character.characterClassFunction ρτ) =
+      classFunctionInner (characterClassFunction ρτ) (characterClassFunction ρτ) =
         Section1.scalarProduct G (fun g : G => χ (g ^ e)) (fun g : G => χ (g ^ e)) := by
     calc
-      Theory.Character.classFunctionInner (Theory.Character.characterClassFunction ρτ) (Theory.Character.characterClassFunction ρτ) =
+      classFunctionInner (characterClassFunction ρτ) (characterClassFunction ρτ) =
           Section1.scalarProduct G ρτ.character ρτ.character := by
-            change Theory.Character.classFunctionInner
+            change classFunctionInner
                 (Section1.toConjClassFunction ρτ.character hcfτ)
                 (Section1.toConjClassFunction ρτ.character hcfτ) =
               Section1.scalarProduct G ρτ.character ρτ.character
@@ -855,7 +855,7 @@ private theorem irreducibleCharacterOnGroup_argumentPow_of_ringEquiv_pf39
       _ = Section1.scalarProduct G (fun g : G => χ (g ^ e)) (fun g : G => χ (g ^ e)) := by
             congr 1 <;> ext g <;> exact hcharτ g
   have hirrτ : Representation.IsIrreducible ρτ := by
-    apply (Theory.Character.irreducible_iff_character_norm_one (ρ := ρτ)).2
+    apply (irreducible_iff_character_norm_one (ρ := ρτ)).2
     rw [hinnerτ]
     exact hnorm
   exact ⟨n, ρτ, hirrτ, (funext hcharτ).symm⟩
@@ -998,29 +998,29 @@ private theorem isClassFunction_of_irreducibleCharacterOnGroup_pf39
 
 private theorem isVirtualCharacter_zsmul_pf39
     {G : Type u} [Group G] (n : ℤ) {χ : G → ℂ}
-    (hχ : Theory.Character.IsVirtualCharacter χ) :
-    Theory.Character.IsVirtualCharacter (n • χ) := by
+    (hχ : IsVirtualCharacter χ) :
+    IsVirtualCharacter (n • χ) := by
   classical
   rcases hχ with ⟨r, m, k, ρ, rfl⟩
   refine ⟨r, fun i => n * m i, k, ρ, ?_⟩
   ext g
-  simp [Theory.Character.virtualCharacterOfRepresentations, Finset.mul_sum, mul_assoc]
+  simp [virtualCharacterOfRepresentations, Finset.mul_sum, mul_assoc]
 
 private theorem isVirtualCharacter_finset_sum_pf39
     {G : Type u} [Group G] {ι : Type*} [Fintype ι]
     (s : Finset ι) (χ : ι → G → ℂ)
-    (hχ : ∀ i ∈ s, Theory.Character.IsVirtualCharacter (χ i)) :
-    Theory.Character.IsVirtualCharacter (fun g => ∑ i ∈ s, χ i g) := by
+    (hχ : ∀ i ∈ s, IsVirtualCharacter (χ i)) :
+    IsVirtualCharacter (fun g => ∑ i ∈ s, χ i g) := by
   classical
   induction s using Finset.induction_on with
   | empty =>
       refine ⟨0, (fun i : Fin 0 => nomatch i), (fun i : Fin 0 => nomatch i),
         (fun i : Fin 0 => nomatch i), ?_⟩
       ext g
-      simp [Theory.Character.virtualCharacterOfRepresentations]
+      simp [virtualCharacterOfRepresentations]
   | @insert i s hi hs =>
       have htail :
-          Theory.Character.IsVirtualCharacter (fun g => ∑ j ∈ s, χ j g) := by
+          IsVirtualCharacter (fun g => ∑ j ∈ s, χ j g) := by
         exact hs (by
           intro j hj
           exact hχ j (by simp [hj]))
@@ -1107,13 +1107,13 @@ private theorem exists_sign_of_int_sq_sum_eq_one_pf39
 public theorem signed_irreducible_of_virtual_norm_one_pf39
     {G : Type u} [Group G] [Finite G]
     {φ : Section1.ClassFunction G}
-    (hvirt : Theory.Character.IsVirtualCharacter φ)
+    (hvirt : IsVirtualCharacter φ)
     (hself : Section1.scalarProduct G φ φ = 1) :
     IsSignedIrreducibleCharacter φ := by
   classical
   have hφclass : Section1.IsClassFunction φ :=
     isVirtualCharacter_isClassFunction hvirt
-  rcases Theory.Character.irreducible_characters_form_basis (G := G) with
+  rcases irreducible_characters_form_basis (G := G) with
     ⟨ι, hι, χ, hχ, _b, _hb⟩
   letI : Fintype ι := hι
   letI : Finite ι := Finite.of_fintype ι
@@ -1138,12 +1138,12 @@ public theorem signed_irreducible_of_virtual_norm_one_pf39
       rfl
     calc
       Section1.scalarProduct G (ψ i) (ψ j) =
-          Theory.Character.classFunctionInner
+          classFunctionInner
             (Section1.toConjClassFunction (ψ i) (hψclass i))
             (Section1.toConjClassFunction (ψ j) (hψclass j)) :=
         (Section1.classFunctionInner_toConjClassFunction
           (ψ i) (ψ j) (hψclass i) (hψclass j)).symm
-      _ = Theory.Character.classFunctionInner (χ i) (χ j) := by
+      _ = classFunctionInner (χ i) (χ j) := by
         rw [hto i, hto j]
       _ = if i = j then 1 else 0 :=
         Section1.representation_completeFamily_orthonormal
@@ -1172,7 +1172,7 @@ public theorem signed_irreducible_of_virtual_norm_one_pf39
     intro ξ hξ
     rcases hall ξ hξ with ⟨i, rfl⟩
     calc
-      Theory.Character.classFunctionInner
+      classFunctionInner
           (Section1.toConjClassFunction φsum hφsumclass) (χ i) =
         Section1.scalarProduct G φsum (ψ i) := by
           rw [← Section1.toConjClassFunction_ofConjClassFunction (χ i)]
@@ -1182,7 +1182,7 @@ public theorem signed_irreducible_of_virtual_norm_one_pf39
           exact Section1.scalarProduct_weightedFamilySum_left_orthonormal
             (w := fun i => (a i : ℂ)) (chi := ψ) horthψ i
       _ = Section1.scalarProduct G φ (ψ i) := (ha i).symm
-      _ = Theory.Character.classFunctionInner
+      _ = classFunctionInner
           (Section1.toConjClassFunction φ hφclass) (χ i) := by
           rw [← Section1.toConjClassFunction_ofConjClassFunction (χ i)]
           exact (Section1.classFunctionInner_toConjClassFunction
@@ -1729,7 +1729,7 @@ public theorem weightedFamilySum_eq_of_inner_omega_pf39
     simpa [Section1.ofConjClassFunction_apply] using congrFun hψeq g
   rw [← hψeq']
   calc
-    Theory.Character.classFunctionInner
+    classFunctionInner
         (Section1.toConjClassFunction
           (Section1.weightedFamilySum
             (fun p : I × J => Section1.scalarProduct W α (ω p.1 p.2))
@@ -1753,7 +1753,7 @@ public theorem weightedFamilySum_eq_of_inner_omega_pf39
               (chi := fun p : I × J => ω p.1 p.2)
               (horth := hω.orthonormal) (j := (i, j)))
     _ =
-      Theory.Character.classFunctionInner
+      classFunctionInner
         (Section1.toConjClassFunction α hαclass)
         (Section1.toConjClassFunction (ω i j) (hω.is_class i j)) := by
           symm
@@ -1926,12 +1926,12 @@ private theorem mapsVirtualCharacters_sigmaOfPF35_pf39
         (_hω.irreducible p.1 p.2))
   have hterm :
       ∀ p : I × J,
-        Theory.Character.IsVirtualCharacter
+        IsVirtualCharacter
           (Section1.scalarProduct W α (ω p.1 p.2) • χ p.1 p.2) := by
     intro p
     rcases hint p with ⟨z, hz⟩
     rw [hz]
-    have hχvirt : Theory.Character.IsVirtualCharacter (χ p.1 p.2) := by
+    have hχvirt : IsVirtualCharacter (χ p.1 p.2) := by
       rcases hsigned p.1 p.2 with ⟨ε, hε, ψ, hψ, hEq⟩
       rcases hε with rfl | rfl
       · simpa [hEq] using isVirtualCharacter_of_irreducibleCharacterOnGroup hψ
@@ -1945,7 +1945,7 @@ private theorem mapsVirtualCharacters_sigmaOfPF35_pf39
     rw [hsmul]
     exact isVirtualCharacter_zsmul_pf39 z hχvirt
   have hsum :
-      Theory.Character.IsVirtualCharacter
+      IsVirtualCharacter
         (Section1.weightedFamilySum
           (fun p : I × J => Section1.scalarProduct W α (ω p.1 p.2))
           (fun p : I × J => χ p.1 p.2)) := by
@@ -2629,9 +2629,9 @@ public theorem pf35_data_of_theorem_3_2_map_statement
       _ = if x = y then 1 else 0 := by
         simpa using hω.orthonormal x y
   · intro i j
-    have hvirtW : Theory.Character.IsVirtualCharacter (ω i j) :=
+    have hvirtW : IsVirtualCharacter (ω i j) :=
       isVirtualCharacter_of_irreducibleCharacterOnGroup (hω.irreducible i j)
-    have hvirtG : Theory.Character.IsVirtualCharacter (σ (ω i j)) :=
+    have hvirtG : IsVirtualCharacter (σ (ω i j)) :=
       hvirt (ω i j) hvirtW
     have hself :
         Section1.scalarProduct G (σ (ω i j)) (σ (ω i j)) = 1 := by
@@ -2849,9 +2849,9 @@ private theorem finite_orthonormal_virtual_coeff_support_card_le_two_pf39
     (χ : ι → Section1.ClassFunction G)
     (horth : ∀ i j : ι,
       Section1.scalarProduct G (χ i) (χ j) = if i = j then 1 else 0)
-    (hχvirt : ∀ i, Theory.Character.IsVirtualCharacter (χ i))
+    (hχvirt : ∀ i, IsVirtualCharacter (χ i))
     {Y : Section1.ClassFunction G}
-    (hYvirt : Theory.Character.IsVirtualCharacter Y)
+    (hYvirt : IsVirtualCharacter Y)
     (hYself : Section1.scalarProduct G Y Y = 2) :
     Fintype.card {i : ι // Section1.scalarProduct G Y (χ i) ≠ 0} ≤ 2 := by
   classical
@@ -3322,7 +3322,7 @@ public theorem eq_signed_sub_cTIiso
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
     (hσ : theorem_3_2_map_statement W1 W2 W σ)
     {φ : Section1.ClassFunction G}
-    (hφvirt : Theory.Character.IsVirtualCharacter φ)
+    (hφvirt : IsVirtualCharacter φ)
     (hφnorm : Section1.scalarProduct G φ φ = 2)
     {δ : ℂ} (hδnorm : Complex.normSq δ = 1)
     (i : I) {j1 j2 : J} (hj : j1 ≠ j2)
@@ -3346,7 +3346,7 @@ public theorem eq_signed_sub_cTIiso
       (hω.is_class p.1 p.2) (hω.is_class q.1 q.2)).trans
         (hω.orthonormal p q)
   have hσωvirt : ∀ p : I × J,
-      Theory.Character.IsVirtualCharacter (σ (ω p.1 p.2)) := by
+      IsVirtualCharacter (σ (ω p.1 p.2)) := by
     intro p
     exact hMapVirt (ω p.1 p.2)
       (isVirtualCharacter_of_irreducibleCharacterOnGroup
@@ -3931,9 +3931,9 @@ public theorem theorem_3_2_map_conjugateCharacter_of_irreducible
     isVirtualCharacter_isClassFunction
       (isVirtualCharacter_of_irreducibleCharacterOnGroup hη)
   have hσηsigned : IsSignedIrreducibleCharacter (σ η) := by
-    have hvirtη : Theory.Character.IsVirtualCharacter η :=
+    have hvirtη : IsVirtualCharacter η :=
       isVirtualCharacter_of_irreducibleCharacterOnGroup hη
-    have hvirtση : Theory.Character.IsVirtualCharacter (σ η) := hvirt η hvirtη
+    have hvirtση : IsVirtualCharacter (σ η) := hvirt η hvirtη
     have hself : Section1.scalarProduct G (σ η) (σ η) = 1 := by
       calc
         Section1.scalarProduct G (σ η) (σ η) =
@@ -4544,14 +4544,14 @@ public theorem proposition_3_9_c_value_mem_cyclotomicOrder_pf35
     {ω' : Section1.ClassFunction W}
     (hω' : Section1.IsIrreducibleCharacterOnGroup ω')
     {η : ℂ} (hη : IsPrimitiveRoot η (Nat.card G)) (g : G) :
-    sigmaOfPF35 ω χ ω' g ∈ Theory.Character.cyclotomicOrder η := by
+    sigmaOfPF35 ω χ ω' g ∈ cyclotomicOrder η := by
   have hsignedImage :
       IsSignedIrreducibleCharacter (sigmaOfPF35 ω χ ω') :=
     sigmaOfPF35_signed_irreducible_of_irreducible
       (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (i0 := i0) (j0 := j0)
       (ω := ω) (χ := χ) hω hsigned hω'
-  exact Theory.Character.virtualCharacter_mem_cyclotomicOrder
+  exact virtualCharacter_mem_cyclotomicOrder
     (isVirtualCharacter_of_signedIrreducible_pf35 hsignedImage) hη g
 
 /-- Build a concrete cyclotomic-field model for a value known to lie in the
@@ -4559,7 +4559,7 @@ cyclotomic order generated by a primitive `(c * b)`-th root. -/
 public theorem pf39_cyclotomic_model_of_mem_cyclotomicOrder
     {c b : ℕ} (hn : c * b ≠ 0) {η z : ℂ}
     (hη : IsPrimitiveRoot η (c * b))
-    (hz : z ∈ Theory.Character.cyclotomicOrder η) :
+    (hz : z ∈ cyclotomicOrder η) :
     ∃ ι : Section1.CyclotomicABField c b →ₐ[ℚ] ℂ,
     ∃ P : Polynomial ℤ,
     ∃ x : Section1.CyclotomicABField c b,
@@ -4582,7 +4582,7 @@ public theorem pf39_cyclotomic_model_of_mem_cyclotomicOrder
   have hιζ : ι ζ = η := by
     change ((hζ.embeddingsEquivPrimitiveRoots ℂ hirr) ι : ℂ) = η
     simp [ι, ηroot]
-  rcases Theory.Character.mem_cyclotomicOrder_iff_exists_intPolynomial_eval.mp hz with
+  rcases mem_cyclotomicOrder_iff_exists_intPolynomial_eval.mp hz with
     ⟨P, hP⟩
   let x : K := Polynomial.eval₂ (Int.castRingHom K) ζ P
   refine ⟨ι, P, x, ?_, ?_, ?_⟩
@@ -4706,7 +4706,7 @@ public theorem pf39_fixed_cyclotomic_model_from_structured_b
   have hηG : IsPrimitiveRoot η (Nat.card G) := by
     simpa [Nat.card_eq_fintype_card, hcardF] using hη
   have hz :
-      sigmaOfPF35 ω χ ω' g ∈ Theory.Character.cyclotomicOrder η := by
+      sigmaOfPF35 ω χ ω' g ∈ cyclotomicOrder η := by
     exact proposition_3_9_c_value_mem_cyclotomicOrder_pf35
       (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (i0 := i0) (j0 := j0)
@@ -4962,7 +4962,7 @@ public theorem proposition_3_9_a_uniqueness
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω) :
     ∃ χ : I → J → Section1.ClassFunction G,
       IsOrthonormalDoubleFamily χ ∧
-        (∀ i j, Theory.Character.IsVirtualCharacter (χ i j)) ∧
+        (∀ i j, IsVirtualCharacter (χ i j)) ∧
         (∀ i j, IsSignedIrreducibleCharacter (χ i j)) ∧
         χ i0 j0 = Section1.principalCharacter G ∧
         (∀ i j, i ≠ i0 → j ≠ j0 →

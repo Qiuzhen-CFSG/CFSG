@@ -19,9 +19,8 @@ open scoped TensorProduct
 
 namespace BenderGlauberman
 
-open Theory.Character
 
--- Local instances matching `Theory.Character`'s subgroup-sum convention; see
+-- Local instances matching `Character`'s subgroup-sum convention; see
 -- `BenderGlauberman/ClassFunction.lean`.
 attribute [local instance] Fintype.ofFinite
 attribute [local instance] Classical.propDecidable
@@ -161,7 +160,7 @@ public theorem fintype_card_irr_eq_conjClasses (G : Type u) [Group G] [Fintype G
     Fintype.card (Irr G) = Nat.card (ConjClasses G) := by
   classical
   let : Finite G := Finite.of_fintype G
-  rcases Theory.Character.card_irreducible_characters_eq_card_conjClasses (G := G) with
+  rcases card_irreducible_characters_eq_card_conjClasses (G := G) with
     ⟨ι, hι, χ, hχ, hcard⟩
   let : Fintype ι := hι
   let f : ι → Irr G := fun i =>

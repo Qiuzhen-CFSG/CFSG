@@ -6,7 +6,6 @@ import Mathlib.GroupTheory.SpecificGroups.Cyclic
 
 public import Theory.ElementaryAbelian.VectorSpace
 
-open Theory.ElementaryAbelian
 
 open scoped IsMulCommutative
 

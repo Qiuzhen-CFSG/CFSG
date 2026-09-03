@@ -4,7 +4,6 @@ public import BenderSuzuki.SE.Section10Lemma104
 public import BenderSuzuki.SE.PermutationQuotient
 import FeitThompson.BGsection3.Remaining
 import FeitThompson.PFsection14.PFsection14_6
-open Theory.GroupAction
 
 
 /-!

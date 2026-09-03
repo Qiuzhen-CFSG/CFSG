@@ -2,7 +2,6 @@ module
 
 public import Glauberman.DicksonCounting
 public import Glauberman.DicksonSmallAlternating
-open Theory.ElementaryAbelian
 
 
 /-!

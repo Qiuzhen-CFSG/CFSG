@@ -8,8 +8,6 @@ import FeitThompson.GroupAction.Cardinalities
 import FeitThompson.GroupAction.CoprimeHall
 import FeitThompson.PCore.PCore
 import Theory.GroupAction.Quotient
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 /-!
@@ -65,7 +63,7 @@ public theorem ig1114_i_actsTrivially_of_fixedPointSubgroup_eq_bot
     letI : IsElementaryAbelian p (T ⧸ Phi) :=
       isElementaryAbelian_quotient_frattini (R := T) (p := p)
     let rho : Representation (ZMod p) S (Additive (T ⧸ Phi)) :=
-      Theory.Representation.ofElementaryAbelianAction
+      Representation.ofElementaryAbelianAction
         (A := S) (G := T ⧸ Phi) (p := p)
     have hAcopT : Nat.Coprime (Nat.card A) (Nat.card T) :=
       Nat.Coprime.of_dvd_left (Subgroup.card_subgroup_dvd_card A) hcopST

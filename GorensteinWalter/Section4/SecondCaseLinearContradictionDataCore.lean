@@ -24,7 +24,6 @@ import GorensteinWalter.NormalComplementEquiv
 import GorensteinWalter.NormalComplementSubgroupOf
 import GorensteinWalter.CentralizerSup
 import Mathlib.Tactic
-open Theory.ElementaryAbelian
 
 
 /-!

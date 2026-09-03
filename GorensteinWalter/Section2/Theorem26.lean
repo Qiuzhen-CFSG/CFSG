@@ -2,7 +2,7 @@ module
 
 public import GorensteinWalter.Section2.Theorem26Core
 public import GorensteinWalter.Section2.Theorem26ComponentTrivial
-open Theory.Representation
+open Representation
 
 
 /-!

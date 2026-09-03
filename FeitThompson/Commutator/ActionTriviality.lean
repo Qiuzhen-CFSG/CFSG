@@ -7,7 +7,6 @@ import Mathlib.GroupTheory.Sylow
 
 public import Theory.GroupAction.Lemmas
 
-open Theory.GroupAction
 
 /-- If all action commutators are trivial, then the action is trivial. -/
 public theorem actsTrivially_of_commutatorAction_eq_bot

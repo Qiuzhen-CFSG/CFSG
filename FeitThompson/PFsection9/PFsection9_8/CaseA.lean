@@ -1,7 +1,6 @@
 module
 
 public import FeitThompson.PFsection9.PFsection9_8.Orbit
-open Theory.ElementaryAbelian
 
 
 noncomputable section
@@ -717,7 +716,7 @@ public theorem irreducible_degree_nat_le_induced_linear_index_of_inner_sec9
   let indρψ : Representation ℂ L (Representation.IndV K.subtype ρψ) :=
     Representation.ind K.subtype ρψ
   haveI : FiniteDimensional ℂ (Representation.IndV K.subtype ρψ) :=
-    Theory.Representation.finiteDimensional_ind K ρψ
+    Representation.finiteDimensional_ind K ρψ
   have hθclass : Section1.IsClassFunction θ := by
     intro x g
     rw [hθeq]

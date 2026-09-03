@@ -5,7 +5,6 @@ import Glauberman.Theorem5_2
 import Glauberman.TheoremA
 import Glauberman.Lemma6_3
 import Glauberman.InvolvedQuotient
-open Theory.GroupAction
 
 
 /-!

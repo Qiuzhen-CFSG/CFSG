@@ -212,7 +212,7 @@ private theorem theorem_6_2_centralModulo_of_centralQuotient
     {L : Type u} [Group L] [Finite L]
     {K B C D : Subgroup L}
     (hcent : centralQuotientHypothesis K B C D) :
-    Theory.Character.IsCentralModulo
+    IsCentralModulo
       ((B.subgroupOf K).subgroupOf (C.subgroupOf K))
       ((D.subgroupOf K).subgroupOf (C.subgroupOf K)) := by
   intro d hd c
@@ -302,7 +302,7 @@ public theorem theorem_6_2_pf18_degree_upper
 
 private theorem theorem_6_2_principalClassFunction_irreducible
     {Q : Type u} [Group Q] [Finite Q] :
-    Theory.Character.IsIrreducibleConjCharacter (fun _ : ConjClasses Q => (1 : ℂ)) := by
+    IsIrreducibleConjCharacter (fun _ : ConjClasses Q => (1 : ℂ)) := by
   classical
   letI := Fintype.ofFinite Q
   constructor
@@ -311,7 +311,7 @@ private theorem theorem_6_2_principalClassFunction_irreducible
     rcases ConjClasses.exists_rep c with ⟨q, rfl⟩
     change (1 : ℂ) = (Representation.trivial ℂ Q (Fin 1 → ℂ)).character q
     simp [Representation.character]
-  · unfold Theory.Character.classFunctionInner
+  · unfold classFunctionInner
     rw [Nat.card_eq_fintype_card]
     have hcard : (Fintype.card Q : ℂ) ≠ 0 := by
       exact_mod_cast Fintype.card_ne_zero
@@ -356,8 +356,8 @@ private theorem theorem_6_2_isIrreducible_comp_surjective
 private theorem theorem_6_2_quotient_irreducible_degree_data
     (Q : Type u) [Group Q] [Finite Q] :
     ∃ (ι : Type) (_ : Fintype ι) (_ : DecidableEq ι)
-      (χ : ι → Theory.Character.ConjClassFunction Q),
-      Theory.Character.IsCompleteIrreducibleCharacterFamily χ ∧
+      (χ : ι → ConjClassFunction Q),
+      IsCompleteIrreducibleCharacterFamily χ ∧
         ∃ (d : ι → ℕ) (i0 : ι),
           (∀ i : ι, χ i (ConjClasses.mk (1 : Q)) = (d i : ℂ)) ∧
             χ i0 = (fun _ : ConjClasses Q => (1 : ℂ)) ∧
@@ -366,7 +366,7 @@ private theorem theorem_6_2_quotient_irreducible_degree_data
                   (Finset.univ.erase i0).sum (fun i => (d i : ℝ) ^ (2 : ℕ)) =
                     (Nat.card Q : ℝ) - 1 := by
   classical
-  rcases Theory.Character.second_orthogonality (G := Q) with
+  rcases second_orthogonality (G := Q) with
     ⟨ι, hι, χ, hχ, horth⟩
   letI : Fintype ι := hι
   letI : DecidableEq ι := Classical.decEq ι
@@ -562,7 +562,7 @@ public theorem theorem_6_2_pf15_degree_lower
   let nQ : ι → ℕ := fun i => Classical.choose (hχQ.1 i).1
   let ρQ : (i : ι) → Representation ℂ Q (Fin (nQ i) → ℂ) :=
     fun i => Classical.choose (Classical.choose_spec (hχQ.1 i).1)
-  have hχρ : ∀ i, χQ i = (Theory.Character.characterClassFunction (ρQ i)) := by
+  have hχρ : ∀ i, χQ i = (characterClassFunction (ρQ i)) := by
     intro i
     exact Classical.choose_spec (Classical.choose_spec (hχQ.1 i).1)
   have hnQ_dQ : ∀ i, nQ i = dQ i := by
@@ -578,10 +578,10 @@ public theorem theorem_6_2_pf15_degree_lower
   let θ : ι → Section1.ClassFunction K := fun i => (ρK i).character
   have hρQirr : ∀ i, Representation.IsIrreducible (ρQ i) := by
     intro i
-    have hnorm : Theory.Character.classFunctionInner (Theory.Character.characterClassFunction (ρQ i))
-        (Theory.Character.characterClassFunction (ρQ i)) = 1 := by
+    have hnorm : classFunctionInner (characterClassFunction (ρQ i))
+        (characterClassFunction (ρQ i)) = 1 := by
       simpa [← hχρ i] using (hχQ.1 i).2
-    exact (Theory.Character.irreducible_iff_character_norm_one (ρQ i)).2 hnorm
+    exact (irreducible_iff_character_norm_one (ρQ i)).2 hnorm
   have hρKirr : ∀ i, Representation.IsIrreducible (ρK i) := by
     intro i
     exact theorem_6_2_isIrreducible_comp_surjective (ρQ i) q

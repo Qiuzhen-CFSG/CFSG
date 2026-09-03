@@ -8,8 +8,6 @@ import FeitThompson.TBS.TBS
 import FeitThompson.PFsection2.Basic
 import BenderSuzuki.External.Huppert.V.Semidirect
 import BenderSuzuki.PFchapter1section1.proposition_5
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 namespace BenderSuzuki

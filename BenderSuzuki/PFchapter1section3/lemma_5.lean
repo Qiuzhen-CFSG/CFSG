@@ -14,10 +14,8 @@ import FeitThompson.GroupAction.CoprimeHall
 import Theory.Representation.ElementaryAbelianAction
 import Theory.Representation.TwoDimensionalOddOrder
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
-open Theory.Representation
+open Representation
 
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 namespace BenderSuzuki
@@ -143,7 +141,7 @@ private theorem lemma_5_D_inf_centralizer_Q_eq_bot
     D ⊓ Subgroup.centralizer (Q : Set G) = ⊥ := by
   have hcore :=
     (PFchapter1section1.proposition_4_c H D Q t s hA.A1 hsH hsI hsStructure).1
-  rw [← hcore, eq_bot_iff]
+  rw [← hcore, _root_.eq_bot_iff]
   intro x hxCore
   have hfix : ∀ omega : Ω, x • omega = omega := by
     have hxAll : ∀ point : Ω, x ∈ MulAction.stabilizer G point := by
@@ -724,7 +722,7 @@ public theorem quotient_scalar_coordinates_of_isomorphic_summands
     exact hEsq (u : E)
   obtain ⟨g, hg⟩ := IsCyclic.exists_generator (α := K)
   let rhoU :=
-    Theory.Representation.ofElementaryAbelianAction (A := K) (G := U) (p := 2)
+    Representation.ofElementaryAbelianAction (A := K) (G := U) (p := 2)
   let rhoEquiv : K →* (Additive U ≃ₗ[ZMod 2] Additive U) :=
     (LinearMap.GeneralLinearGroup.generalLinearEquiv
       (ZMod 2) (Additive U)).toMonoidHom.comp rhoU.asGroupHom
@@ -732,7 +730,7 @@ public theorem quotient_scalar_coordinates_of_isomorphic_summands
   have hrho_val (k : K) (v : Additive U) :
       rhoEquiv k v = Additive.ofMul (k • v.toMul) := by
     change rhoU k v = Additive.ofMul (k • v.toMul)
-    exact Theory.Representation.ofElementaryAbelianAction_apply k v
+    exact Representation.ofElementaryAbelianAction_apply k v
   have hT_val (v : Additive U) :
       T v = Additive.ofMul (g • v.toMul) := by
     exact hrho_val g v
@@ -1134,7 +1132,7 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
       D ⊓ Subgroup.centralizer (Q : Set G) = ⊥ := by
     have hcore := (PFchapter1section1.proposition_4_c H D Q t s
       hsec.section2.hA.A1 hsec.s_mem_H hsec.s_involution hsec.s_conjugate).1
-    rw [← hcore, eq_bot_iff]
+    rw [← hcore, _root_.eq_bot_iff]
     intro x hxCore
     have hfix : ∀ omega : Ω, x • omega = omega := by
       have hxAll : ∀ point : Ω, x ∈ MulAction.stabilizer G point := by
@@ -1448,7 +1446,7 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
         exact ((Subgroup.mem_centralizer_iff.mp hqR.1) x hxP).symm
       apply False.elim
       apply hPne
-      rw [eq_bot_iff]
+      rw [_root_.eq_bot_iff]
       intro x hxP
       rw [← hD_faithful_on_Q]
       exact ⟨hWleD (hPW hxP), hPcentralizesQ hxP⟩
@@ -2208,7 +2206,7 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
     have hStabGne : StabG ≠ ⊥ := by
       intro hbot
       apply hstab
-      rw [eq_bot_iff]
+      rw [_root_.eq_bot_iff]
       intro w hw
       have hwMap : (w : G) ∈ StabG := ⟨w, hw, rfl⟩
       rw [hbot] at hwMap

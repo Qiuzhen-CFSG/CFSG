@@ -4,7 +4,6 @@ public import BenderSuzuki.SE.StrongEmbedding
 public import BenderSuzuki.SE.Compat
 import FeitThompson.BGsection1.proposition_1_16
 import FeitThompson.SubgroupConj
-open Theory.GroupAction
 
 
 /-!

@@ -20,11 +20,11 @@ open Representation
 
 attribute [local instance] Fintype.ofFinite
 
-variable {G V : Type*} [Group G] [Finite G]
-variable [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
 
 /-- Unbundled simplicity criterion: an irreducible complex representation has one-dimensional endomorphism algebra, and conversely when `|G|` is invertible. -/
-theorem irreducible_iff_end_dimension_one (ρ : Representation ℂ G V)
+theorem irreducible_iff_end_dimension_one
+    {G V : Type*} [Group G] [Finite G] [AddCommGroup V] [Module ℂ V]
+    [FiniteDimensional ℂ V] (ρ : Representation ℂ G V)
     : Representation.IsIrreducible ρ
       ↔ Module.finrank ℂ (Representation.IntertwiningMap ρ ρ) = 1 := by
   classical
@@ -137,7 +137,9 @@ theorem irreducible_iff_end_dimension_one (ρ : Representation ℂ G V)
           · exact he_ne_one (by simpa using hc.symm)
 
 /-- Unbundled character-norm criterion for irreducibility. -/
-theorem irreducible_iff_character_norm_one (ρ : Representation ℂ G V)
+theorem irreducible_iff_character_norm_one
+    {G V : Type*} [Group G] [Finite G] [AddCommGroup V] [Module ℂ V]
+    [FiniteDimensional ℂ V] (ρ : Representation ℂ G V)
     : Representation.IsIrreducible ρ
       ↔ classFunctionInner (characterClassFunction ρ) (characterClassFunction ρ) = 1 := by
   classical

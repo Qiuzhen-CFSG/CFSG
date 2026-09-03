@@ -2,8 +2,6 @@ module
 
 public import FeitThompson.BGsection11.lemma_11_1_b
 import Mathlib.GroupTheory.Schreier
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 /-!

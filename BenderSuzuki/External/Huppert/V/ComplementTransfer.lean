@@ -2,7 +2,6 @@ module
 
 public import BenderSuzuki.External.Huppert.IV.ComplementTransfer
 public import BenderSuzuki.External.Huppert.V.SamePrime
-open Theory.GroupAction
 
 
 namespace BenderSuzuki

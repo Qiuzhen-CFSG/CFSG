@@ -23,8 +23,6 @@ import FeitThompson.PFsection8.SourceTypePBridge
 import FeitThompson.PFsection9.PFsection9_1
 import Mathlib.GroupTheory.Schreier
 import Mathlib.RingTheory.ZMod.UnitsCyclic
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 /-!
@@ -49,23 +47,23 @@ private theorem theorem_12_16_virtualCharacter_congruent_at_mul_of_order_dvd
     {p M0 : ℕ} {etaRoot eps : ℂ}
     (heps : IsPrimitiveRoot eps p) (hp : p ≠ 0)
     (hetaRoot : IsPrimitiveRoot etaRoot M0) (hM0 : M0 ≠ 0)
-    (hepsMem : eps ∈ Theory.Character.cyclotomicOrder etaRoot)
-    {chi : K0 → ℂ} (hchi : Theory.Character.IsVirtualCharacter chi)
+    (hepsMem : eps ∈ cyclotomicOrder etaRoot)
+    {chi : K0 → ℂ} (hchi : IsVirtualCharacter chi)
     {x y : K0}
     (hx_order : orderOf x = p)
     (hy_order_dvd : orderOf y ∣ M0)
     (hcomm : x * y = y * x) :
-    ∃ hxy : chi (x * y) ∈ Theory.Character.cyclotomicOrder etaRoot,
-      ∃ hy : chi y ∈ Theory.Character.cyclotomicOrder etaRoot,
-        Theory.Character.CongruentModOneSub etaRoot eps (chi (x * y)) (chi y)
+    ∃ hxy : chi (x * y) ∈ cyclotomicOrder etaRoot,
+      ∃ hy : chi y ∈ cyclotomicOrder etaRoot,
+        CongruentModOneSub etaRoot eps (chi (x * y)) (chi y)
           hepsMem hxy hy := by
   classical
   rcases hchi with ⟨r, m, n, rho, hchieq⟩
-  let A := Theory.Character.cyclotomicOrder etaRoot
+  let A := cyclotomicOrder etaRoot
   have hrep : ∀ i : Fin r,
       ∃ hxy : (rho i).character (x * y) ∈ A,
         ∃ hy : (rho i).character y ∈ A,
-          Theory.Character.CongruentModOneSub etaRoot eps
+          CongruentModOneSub etaRoot eps
             ((rho i).character (x * y)) ((rho i).character y) hepsMem hxy hy := by
     intro i
     let N := orderOf y
@@ -85,7 +83,7 @@ private theorem theorem_12_16_virtualCharacter_congruent_at_mul_of_order_dvd
         rho i x * rho i y = rho i (x * y) := (map_mul (rho i) x y).symm
         _ = rho i (y * x) := by rw [hcomm]
         _ = rho i y * rho i x := map_mul (rho i) y x
-    rcases Theory.Character.finite_order_commuting_trace_mul_congruent
+    rcases finite_order_commuting_trace_mul_congruent
         (η := etaRoot) (ξ := eps) (p := p) (N := N) (M := M0)
         heps hp hetaRoot hM0 hNM hepsMem (f := rho i x) (T := rho i y)
         hN hf hTpow hcommEnd with
@@ -93,45 +91,45 @@ private theorem theorem_12_16_virtualCharacter_congruent_at_mul_of_order_dvd
     have hxy : (rho i).character (x * y) ∈ A := by
       simpa [Representation.character, map_mul] using hmul
     refine ⟨hxy, hy, ?_⟩
-    simpa [Theory.Character.CongruentModOneSub, Representation.character, map_mul] using hcong
+    simpa [CongruentModOneSub, Representation.character, map_mul] using hcong
   choose hxyi hyi hcongi using hrep
   have hxy_mem : chi (x * y) ∈ A := by
     rw [hchieq]
     exact A.sum_mem fun i _ =>
-      A.mul_mem (Theory.Character.intCast_mem_cyclotomicOrder etaRoot (m i)) (hxyi i)
+      A.mul_mem (intCast_mem_cyclotomicOrder etaRoot (m i)) (hxyi i)
   have hy_mem : chi y ∈ A := by
     rw [hchieq]
     exact A.sum_mem fun i _ =>
-      A.mul_mem (Theory.Character.intCast_mem_cyclotomicOrder etaRoot (m i)) (hyi i)
+      A.mul_mem (intCast_mem_cyclotomicOrder etaRoot (m i)) (hyi i)
   refine ⟨hxy_mem, hy_mem, ?_⟩
   let oneSub : A := ⟨1 - eps, A.sub_mem A.one_mem hepsMem⟩
-  change Theory.Character.congruentModIn A oneSub
+  change congruentModIn A oneSub
     (⟨chi (x * y), hxy_mem⟩ : A)
     (⟨chi y, hy_mem⟩ : A)
   let zterm : Fin r → A := fun i =>
     ⟨(m i : ℂ) * (rho i).character (x * y),
-      A.mul_mem (Theory.Character.intCast_mem_cyclotomicOrder etaRoot (m i)) (hxyi i)⟩
+      A.mul_mem (intCast_mem_cyclotomicOrder etaRoot (m i)) (hxyi i)⟩
   let wterm : Fin r → A := fun i =>
     ⟨(m i : ℂ) * (rho i).character y,
-      A.mul_mem (Theory.Character.intCast_mem_cyclotomicOrder etaRoot (m i)) (hyi i)⟩
-  unfold Theory.Character.congruentModIn
+      A.mul_mem (intCast_mem_cyclotomicOrder etaRoot (m i)) (hyi i)⟩
+  unfold congruentModIn
   have hdiff :
       (⟨chi (x * y), hxy_mem⟩ : A) - ⟨chi y, hy_mem⟩ =
         ∑ i : Fin r, (zterm i - wterm i) := by
     ext
     change chi (x * y) - chi y = ((∑ i : Fin r, (zterm i - wterm i) : A) : ℂ)
     rw [hchieq]
-    simp [Theory.Character.virtualCharacterOfRepresentations, zterm, wterm,
+    simp [virtualCharacterOfRepresentations, zterm, wterm,
       Finset.sum_sub_distrib]
   rw [hdiff]
   refine Ideal.sum_mem _ fun i _ => ?_
-  have hci : Theory.Character.congruentModIn A oneSub
+  have hci : congruentModIn A oneSub
       (⟨(rho i).character (x * y), hxyi i⟩ : A)
       (⟨(rho i).character y, hyi i⟩ : A) := by
-    simpa [Theory.Character.CongruentModOneSub, oneSub] using hcongi i
-  change Theory.Character.congruentModIn A oneSub (zterm i) (wterm i)
-  have hmul := Theory.Character.congruentModIn_mul_left hci
-    (⟨(m i : ℂ), Theory.Character.intCast_mem_cyclotomicOrder etaRoot (m i)⟩ : A)
+    simpa [CongruentModOneSub, oneSub] using hcongi i
+  change congruentModIn A oneSub (zterm i) (wterm i)
+  have hmul := congruentModIn_mul_left hci
+    (⟨(m i : ℂ), intCast_mem_cyclotomicOrder etaRoot (m i)⟩ : A)
   simpa [zterm, wterm] using hmul
 
 private theorem theorem_12_16_double_complement_card_le
@@ -194,17 +192,17 @@ private theorem theorem_12_16_abs_int_ge
 
 private theorem theorem_12_16_congruentModIn_symm
     {A : Subring ℂ} {a z w : A}
-    (h : Theory.Character.congruentModIn A a z w) :
-    Theory.Character.congruentModIn A a w z := by
+    (h : congruentModIn A a z w) :
+    congruentModIn A a w z := by
   change w - z ∈ Ideal.span ({a} : Set A)
   convert neg_mem h using 1
   ring
 
 private theorem theorem_12_16_congruentModIn_trans
     {A : Subring ℂ} {a z w v : A}
-    (hzw : Theory.Character.congruentModIn A a z w)
-    (hwv : Theory.Character.congruentModIn A a w v) :
-    Theory.Character.congruentModIn A a z v := by
+    (hzw : congruentModIn A a z w)
+    (hwv : congruentModIn A a w v) :
+    congruentModIn A a z v := by
   change z - v ∈ Ideal.span ({a} : Set A)
   convert Ideal.add_mem _ hzw hwv using 1
   ring
@@ -215,7 +213,7 @@ private theorem theorem_12_16_primitive_root_package
     ∃ etaRoot eps : ℂ,
       IsPrimitiveRoot etaRoot (Nat.card G) ∧
         IsPrimitiveRoot eps p ∧
-        eps ∈ Theory.Character.cyclotomicOrder etaRoot := by
+        eps ∈ cyclotomicOrder etaRoot := by
   let etaRoot : ℂ := Complex.exp (2 * Real.pi * Complex.I / (Nat.card G))
   let eps : ℂ := Complex.exp (2 * Real.pi * Complex.I / p)
   have hGne : Nat.card G ≠ 0 := (Nat.card_pos (α := G)).ne'
@@ -226,7 +224,7 @@ private theorem theorem_12_16_primitive_root_package
     dsimp [eps]
     exact Complex.isPrimitiveRoot_exp p hp.ne_zero
   refine ⟨etaRoot, eps, hetaRoot, heps, ?_⟩
-  exact Theory.Character.primitive_root_mem_cyclotomicOrder_of_dvd
+  exact primitive_root_mem_cyclotomicOrder_of_dvd
     hetaRoot hGne heps hpdvd
 
 
@@ -237,8 +235,8 @@ private theorem theorem_12_16_value_abs_ge
     {chi : Section1.ClassFunction L}
     {psi : Section1.ClassFunction G}
     (hp : Nat.Prime p) (hoddp : Odd p) (hodde : Odd e)
-    (hchiVirt : Theory.Character.IsVirtualCharacter chi)
-    (hpsiVirt : Theory.Character.IsVirtualCharacter psi)
+    (hchiVirt : IsVirtualCharacter chi)
+    (hpsiVirt : IsVirtualCharacter psi)
     (hxL : x ∈ L) (hxorder : orderOf x = p)
     (hcomm : x * g = g * x)
     (hvalue : psi (x * g) = chi ⟨x, hxL⟩)
@@ -252,7 +250,7 @@ private theorem theorem_12_16_value_abs_ge
     exact orderOf_dvd_natCard x
   rcases theorem_12_16_primitive_root_package hp hpdvd with
     ⟨etaRoot, eps, hetaRoot, heps, hepsMem⟩
-  let A := Theory.Character.cyclotomicOrder etaRoot
+  let A := cyclotomicOrder etaRoot
   let oneSub : A := ⟨1 - eps, A.sub_mem A.one_mem hepsMem⟩
   rcases theorem_12_16_virtualCharacter_congruent_at_mul_of_order_dvd
       (K0 := G) (p := p) (M0 := Nat.card G)
@@ -273,29 +271,29 @@ private theorem theorem_12_16_value_abs_ge
   have hchiXMem : chi xL ∈ A := by
     simpa using hchiMulMem
   have hchiCong :
-      Theory.Character.CongruentModOneSub etaRoot eps (chi xL) (chi 1)
+      CongruentModOneSub etaRoot eps (chi xL) (chi 1)
         hepsMem hchiXMem hchiOneMem := by
-    simpa [Theory.Character.CongruentModOneSub] using hchiCongRaw
-  have hpsiCongA : Theory.Character.congruentModIn A oneSub
+    simpa [CongruentModOneSub] using hchiCongRaw
+  have hpsiCongA : congruentModIn A oneSub
       (⟨psi (x * g), hpsiMulMem⟩ : A) ⟨psi g, hpsiGMem⟩ := by
-    simpa [Theory.Character.CongruentModOneSub, A, oneSub] using hpsiCong
-  have hchiCongA : Theory.Character.congruentModIn A oneSub
+    simpa [CongruentModOneSub, A, oneSub] using hpsiCong
+  have hchiCongA : congruentModIn A oneSub
       (⟨chi xL, hchiXMem⟩ : A) ⟨chi 1, hchiOneMem⟩ := by
-    simpa [Theory.Character.CongruentModOneSub, A, oneSub] using hchiCong
+    simpa [CongruentModOneSub, A, oneSub] using hchiCong
   have hpsiSymm := theorem_12_16_congruentModIn_symm hpsiCongA
   have hmulEq :
       (⟨psi (x * g), hpsiMulMem⟩ : A) = ⟨chi xL, hchiXMem⟩ := by
     apply Subtype.ext
     simpa [xL] using hvalue
   rw [hmulEq] at hpsiSymm
-  have hpsiGChiOne : Theory.Character.congruentModIn A oneSub
+  have hpsiGChiOne : congruentModIn A oneSub
       (⟨psi g, hpsiGMem⟩ : A) ⟨chi 1, hchiOneMem⟩ :=
     theorem_12_16_congruentModIn_trans hpsiSymm hchiCongA
   rcases hzg with ⟨z, hz⟩
   have hchiOne : chi 1 = (e : ℂ) := by
     simpa [Section1.degree] using hdegree
   let zA : A :=
-    ⟨(z : ℂ), Theory.Character.intCast_mem_cyclotomicOrder etaRoot z⟩
+    ⟨(z : ℂ), intCast_mem_cyclotomicOrder etaRoot z⟩
   have heMem : (e : ℂ) ∈ A := by
     simp
   let eA : A := ⟨(e : ℂ), heMem⟩
@@ -306,21 +304,21 @@ private theorem theorem_12_16_value_abs_ge
     apply Subtype.ext
     exact hchiOne
   rw [hpsiGEq, hchiOneEq] at hpsiGChiOne
-  have hdiffCong : Theory.Character.congruentModIn A oneSub
+  have hdiffCong : congruentModIn A oneSub
       (zA - eA) (eA - eA) :=
-    Theory.Character.congruentModIn_sub hpsiGChiOne
-      (Theory.Character.congruentModIn_refl A oneSub eA)
+    congruentModIn_sub hpsiGChiOne
+      (congruentModIn_refl A oneSub eA)
   have hcongInt :
-      Theory.Character.CongruentModOneSub etaRoot eps
+      CongruentModOneSub etaRoot eps
         (((z - (e : ℤ) : ℤ) : ℂ)) 0 hepsMem
-        (Theory.Character.intCast_mem_cyclotomicOrder etaRoot (z - (e : ℤ)))
+        (intCast_mem_cyclotomicOrder etaRoot (z - (e : ℤ)))
         A.zero_mem := by
-    unfold Theory.Character.CongruentModOneSub
+    unfold CongruentModOneSub
     convert hdiffCong
     · simp [A, zA, eA]
     · simp [A, eA]
   have hpdiff : (p : ℤ) ∣ z - (e : ℤ) :=
-    Theory.Character.prime_dvd_int_of_congruent_zero_mod_one_sub hp heps
+    prime_dvd_int_of_congruent_zero_mod_one_sub hp heps
       (hetaRoot.isIntegral (Nat.card_pos (α := G))) hepsMem
       (z - (e : ℤ)) hcongInt
   rcases hpdiff with ⟨a, ha⟩
@@ -1075,14 +1073,14 @@ private theorem theorem_12_16_exists_notation_12_13_data
   have hdegreeE : Section1.degree chi = (e : ℂ) := by
     simpa [e, hrel] using hchiDegree
   let psi : Section1.ClassFunction G := tau1 chi
-  have hpsiVirt : Theory.Character.IsVirtualCharacter psi := by
+  have hpsiVirt : IsVirtualCharacter psi := by
     dsimp [psi]
     exact hExt.2.1 chi (Section5.integerSpan_of_mem S hchiS)
   have hpsiClass : Section1.IsClassFunction psi := by
     rcases hpsiVirt with ⟨r, m, n, rho, hpsiEq⟩
     rw [hpsiEq]
     intro y g
-    unfold Theory.Character.virtualCharacterOfRepresentations
+    unfold virtualCharacterOfRepresentations
     refine Finset.sum_congr rfl ?_
     intro i _hi
     have hchar :
@@ -1368,14 +1366,14 @@ private theorem theorem_12_16_contradiction_of_projection_packages
   rcases h78pack with ⟨_T, _h76, _hAgree, h78⟩
   have hchiIrr : Section1.IsIrreducibleCharacterOnGroup chi :=
     h78.2.2.2.2.2.2.1
-  have hchiVirt : Theory.Character.IsVirtualCharacter chi :=
+  have hchiVirt : IsVirtualCharacter chi :=
     Section5.isVirtualCharacter_of_isCharacter
       (isCharacter_of_isIrreducibleCharacterOnGroup hchiIrr)
   have hpsiSigned : Section3.IsSignedIrreducibleCharacter psi := by
     rw [hpsi]
     exact Section6.theorem_6_8_coherentExtension_mem_signedIrreducible
       hExt hchiS hchiIrr
-  have hpsiVirt : Theory.Character.IsVirtualCharacter psi :=
+  have hpsiVirt : IsVirtualCharacter psi :=
     Section3.isVirtualCharacter_of_signedIrreducible_pf35 hpsiSigned
   have h15 := theorem_12_15 M K K' P0 L H Ls E e S R tau tau1 chi
     RM psi psiRho psiRhoM x p h15src h128copy h129copy h13copy hRhoM

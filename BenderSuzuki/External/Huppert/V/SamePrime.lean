@@ -1,8 +1,6 @@
 module
 
 public import BenderSuzuki.External.Huppert.V.FrattiniQuotient
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 namespace BenderSuzuki
@@ -80,7 +78,7 @@ public theorem hkt_frobenius_partition_quotientConjNormal_prod_eq_pow
   let : Fintype K := Fintype.ofFinite K
   let : Fintype R := Fintype.ofFinite R
   let ρ : Representation (ZMod s) SD (Additive N) :=
-    Theory.Representation.ofElementaryAbelianAction (A := SD) (G := N) (p := s)
+    Representation.ofElementaryAbelianAction (A := SD) (G := N) (p := s)
   have hfrob : IsFrobeniusGroupWithKernelComplement K R := by
     simpa [K, R, SD] using
       huppertMQSemidirect_isFrobenius (N := N) (ψ := ψ) hcard hregular
@@ -297,7 +295,7 @@ public theorem huppertMQ_double_count_representation_norm_eval
       let : Fintype (Q ⧸ N) := Fintype.ofFinite _
       let : MulDistribMulAction (Q ⧸ N) N :=
         MulDistribMulAction.compHom N (quotientConjNormal N)
-      (Theory.Representation.ofElementaryAbelianAction (A := Q ⧸ N) (G := N) (p := s)).norm
+      (Representation.ofElementaryAbelianAction (A := Q ⧸ N) (G := N) (p := s)).norm
           (Additive.ofMul n) =
         (Nat.card (Q ⧸ N) : ZMod s) • Additive.ofMul n := by
   classical
@@ -315,7 +313,7 @@ public theorem huppertMQ_double_count_representation_norm_eval
         φ hprod hperiod N hNφ hN_elem hs_ne_r ψ hψ hrp
         hquot_action_distinct hquot_zpowers_cyclic n
   calc
-    (Theory.Representation.ofElementaryAbelianAction (A := Q ⧸ N) (G := N) (p := s)).norm
+    (Representation.ofElementaryAbelianAction (A := Q ⧸ N) (G := N) (p := s)).norm
         (Additive.ofMul n)
         = Additive.ofMul (huppertMQ N n) := by
           exact (huppertMQ_eq_representation_norm N hN_elem n).symm
@@ -365,7 +363,7 @@ public theorem huppertMQ_double_count_eval
   calc
     Additive.ofMul (huppertMQ N n)
         =
-          (Theory.Representation.ofElementaryAbelianAction (A := Q ⧸ N) (G := N) (p := s)).norm
+          (Representation.ofElementaryAbelianAction (A := Q ⧸ N) (G := N) (p := s)).norm
             (Additive.ofMul n) := by
           exact huppertMQ_eq_representation_norm N hN_elem n
     _ = (Nat.card (Q ⧸ N) : ZMod s) • Additive.ofMul n := by

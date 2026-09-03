@@ -11,11 +11,10 @@ open scoped MonoidAlgebra
 
 namespace Representation
 
-variable {F G V : Type*} [Group G] [Field F] [AddCommGroup V] [Module F V]
-  {H : Subgroup G} [hH : H.Normal] (ρ : Representation F H V)
-
 /-- The conjugate representation of `ρ` by the element `x`. -/
-def conjugateRep (x : G) : Representation F H V :=
+def conjugateRep {F G V : Type*} [Group G] [Field F] [AddCommGroup V] [Module F V]
+    {H : Subgroup G} [hH : H.Normal] (ρ : Representation F H V) (x : G) :
+    Representation F H V :=
   {
     toFun := fun h => ρ (⟨x * h.val * x⁻¹, Subgroup.Normal.conj_mem hH h h.prop x⟩)
     map_one' := by
@@ -27,7 +26,9 @@ def conjugateRep (x : G) : Representation F H V :=
         simp only [Subgroup.coe_mul, MulMemClass.mk_mul_mk, conj_mul]
   }
 
-theorem conjugateRep_apply (x : G) (h : H)
+theorem conjugateRep_apply {F G V : Type*} [Group G] [Field F] [AddCommGroup V]
+    [Module F V] {H : Subgroup G} [hH : H.Normal] (ρ : Representation F H V)
+    (x : G) (h : H)
     : (conjugateRep ρ x) h
       = ρ (⟨x * h.val * x⁻¹, Subgroup.Normal.conj_mem hH h h.prop x⟩) :=
   rfl

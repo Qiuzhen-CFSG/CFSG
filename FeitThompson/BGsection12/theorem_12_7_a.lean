@@ -1,8 +1,6 @@
 module
 
 public import FeitThompson.BGsection12.corollary_12_6_f
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 open scoped Pointwise commutatorElement

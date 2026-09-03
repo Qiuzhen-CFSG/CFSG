@@ -6,8 +6,6 @@ import FeitThompson.Frattini.Core
 import FeitThompson.BGsection4.lemma_4_5_a
 import FeitThompson.BGsection7.theorem_7_2
 import FeitThompson.BGsection9.corollary_9_2
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 /-!

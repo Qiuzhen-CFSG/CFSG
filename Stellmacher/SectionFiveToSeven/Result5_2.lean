@@ -20,10 +20,10 @@ public theorem lemma_five_two
     (hP : P ∈ PStarFamily C (S0 : Subgroup H))
     (hK : K ≤ P)
     (hlocal : ∀ U : Subgroup H,
-      Theory.Quasithin.IsTwoLocal U → B0 ≤ U →
+      IsTwoLocal U → B0 ≤ U →
         Group.IsSolvable U ∧ Stellmacher.IsCharacteristicTwoType U)
     (hcomm : K = ⁅K, B0⁆) :
-    ∀ U : Subgroup H, Theory.Quasithin.IsTwoLocal U →
+    ∀ U : Subgroup H, IsTwoLocal U →
       B0 ⊔ K ≤ U → SubnormalIn K U := by
   sorry
 

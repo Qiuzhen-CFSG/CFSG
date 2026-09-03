@@ -4,7 +4,6 @@ public import Glauberman.Lemma3_4
 public import Glauberman.MinimalNormalPSubgroupIsElementaryAbelian
 public import Mathlib.GroupTheory.GroupAction.ConjAct
 public import Mathlib.GroupTheory.QuotientGroup.Basic
-open Theory.ElementaryAbelian
 
 
 /-!

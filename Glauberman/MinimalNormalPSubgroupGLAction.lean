@@ -3,7 +3,6 @@ module
 public import Glauberman.MinimalNormalPSubgroupFaithfulIrreducibleAction
 public import Mathlib.Algebra.Module.Submodule.Lattice
 public import Mathlib.LinearAlgebra.GeneralLinearGroup.Basic
-open Theory.ElementaryAbelian
 
 
 /-!

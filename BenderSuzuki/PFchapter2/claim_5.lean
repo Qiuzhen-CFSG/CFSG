@@ -10,7 +10,6 @@ import BenderSuzuki.PFchapter1section2.corollary
 import BenderSuzuki.PFchapter1section2.proposition_1_b
 import Mathlib.GroupTheory.SpecificGroups.ZGroup
 import Mathlib.GroupTheory.NoncommCoprod
-open Theory.GroupAction
 
 
 namespace BenderSuzuki

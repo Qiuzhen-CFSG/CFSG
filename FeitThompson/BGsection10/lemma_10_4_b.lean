@@ -3,7 +3,6 @@ module
 public import FeitThompson.BGsection10.lemma_10_5
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
-open Theory.ElementaryAbelian
 
 
 open scoped Pointwise

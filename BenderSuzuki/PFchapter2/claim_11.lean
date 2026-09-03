@@ -6,7 +6,6 @@ import BenderSuzuki.PFchapter2.claim_4
 import BenderSuzuki.PFchapter2.claim_7
 import BenderSuzuki.PFchapter2.claim_10
 import BenderSuzuki.PFchapter2.claim_9
-open Theory.GroupAction
 
 
 namespace BenderSuzuki

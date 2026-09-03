@@ -765,19 +765,19 @@ public theorem section14_betaInput_tau_isVirtualCharacter_typeIASet
     (hζirr : Section1.IsIrreducibleCharacterOnGroup ζ)
     (hζdeg : Section1.degree ζ = (H.relIndex L : ℂ))
     (hβ : β = Section7.theorem_7_8_betaInput L H ζ) :
-    Theory.Character.IsVirtualCharacter (τ β) := by
+    IsVirtualCharacter (τ β) := by
   classical
   have hβinputCFOn :
       Section2.CFOn L (Section12.typeIASet L H)
         (Section7.theorem_7_8_betaInput L H ζ) :=
     section14_betaInput_CFOn_typeIASet hMF hPunct hζmem hζdeg
   have hprincipalVirt :
-      Theory.Character.IsVirtualCharacter (Section7.principalInducedCharacter L H) := by
+      IsVirtualCharacter (Section7.principalInducedCharacter L H) := by
     unfold Section7.principalInducedCharacter
     exact Section2.inducedCF_isVirtualCharacter_of_virtualCharacter
       (H.subgroupOf L) Section3.isVirtualCharacter_principalCharacter
   have hβinputVirt :
-      Theory.Character.IsVirtualCharacter
+      IsVirtualCharacter
         (Section7.theorem_7_8_betaInput L H ζ) := by
     exact Section3.isVirtualCharacter_sub hprincipalVirt
       (Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup hζirr)
@@ -807,7 +807,7 @@ public theorem section14_tau1_mem_isVirtualCharacter_of_coherentExtension
     {τ τ₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
     (hExt : Section7.isCoherentExtension F τ τ₁)
     {ζ : Section1.ClassFunction L} (hζmem : ζ ∈ F) :
-    Theory.Character.IsVirtualCharacter (τ₁ ζ) :=
+    IsVirtualCharacter (τ₁ ζ) :=
   hExt.2.1 ζ (Section5.integerSpan_of_mem F hζmem)
 
 public theorem section14_tau1_principal_scalar_zero_of_theorem_7_8_a
@@ -978,24 +978,24 @@ public theorem section14_typeI_correctedDelta_context
     let Δ : Section1.ClassFunction G :=
       τ (Section7.principalInducedCharacter L H - ζ) -
         Section1.principalCharacter G + τ₁ ζ
-    Theory.Character.IsVirtualCharacter Δ ∧
+    IsVirtualCharacter Δ ∧
       Δ = Section1.conjugateCharacter Δ ∧
       Section1.scalarProduct G Δ (Section1.principalCharacter G) = 0 := by
   classical
   let Δ : Section1.ClassFunction G :=
     τ (Section7.principalInducedCharacter L H - ζ) -
       Section1.principalCharacter G + τ₁ ζ
-  change Theory.Character.IsVirtualCharacter Δ ∧
+  change IsVirtualCharacter Δ ∧
       Δ = Section1.conjugateCharacter Δ ∧
       Section1.scalarProduct G Δ (Section1.principalCharacter G) = 0
   have hβVirt :
-      Theory.Character.IsVirtualCharacter
+      IsVirtualCharacter
         (τ (Section7.principalInducedCharacter L H - ζ)) :=
     section14_betaInput_tau_isVirtualCharacter_typeIASet
       (F := F) hMF hDade hPunct hζmem hζirr hζdeg rfl
-  have hτ1Virt : Theory.Character.IsVirtualCharacter (τ₁ ζ) :=
+  have hτ1Virt : IsVirtualCharacter (τ₁ ζ) :=
     section14_tau1_mem_isVirtualCharacter_of_coherentExtension hExt hζmem
-  have hΔVirt : Theory.Character.IsVirtualCharacter Δ := by
+  have hΔVirt : IsVirtualCharacter Δ := by
     dsimp [Δ]
     exact Section3.isVirtualCharacter_add
       (Section3.isVirtualCharacter_sub hβVirt
@@ -1703,10 +1703,10 @@ public theorem section14_theorem_14_14_pf79_delta_odd_source_bridge
         star (Section1.scalarProduct G (τM₁ ψ) (τL₁ φ)) = 0 := by
       simpa [hγLγM] using hswap
     simpa using congrArg star hstarzero
-  have hβMvirt : Theory.Character.IsVirtualCharacter (τM βM) :=
+  have hβMvirt : IsVirtualCharacter (τM βM) :=
     section14_betaInput_tau_isVirtualCharacter_typeIASet
       (F := Mfam) hKMF hDadeM hPunctM hψmem hψirr hψdeg hβM
-  have hγLvirt : Theory.Character.IsVirtualCharacter (τL₁ φ) :=
+  have hγLvirt : IsVirtualCharacter (τL₁ φ) :=
     section14_tau1_mem_isVirtualCharacter_of_coherentExtension hExtL hφmem
   have hβMγL_flip :
       Section1.scalarProduct G (τM βM) (τL₁ φ) =
@@ -2234,7 +2234,7 @@ public theorem section14_typeI_core_ltr_tau1_mem_virtual
     {τ τ₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
     {ζ β : Section1.ClassFunction L}
     (hside : section14_typeI_core_ltr_sideData L H F τ τ₁ ζ β) :
-    Theory.Character.IsVirtualCharacter (τ₁ ζ) := by
+    IsVirtualCharacter (τ₁ ζ) := by
   rcases hside with
     ⟨_hHL, _hPunct, _h52, _hCoh, hExt, hζmem, _hζirr, _hζdeg,
       _hβτ, _hsetup⟩
@@ -2247,7 +2247,7 @@ public theorem section14_typeI_core_ltr_beta_tau_virtual
     {τ τ₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
     {ζ β : Section1.ClassFunction L}
     (hside : section14_typeI_core_ltr_sideData L H F τ τ₁ ζ β) :
-    Theory.Character.IsVirtualCharacter (τ β) := by
+    IsVirtualCharacter (τ β) := by
   classical
   rcases hside with
     ⟨_hHL, _hPunctSide, _h52, _hCoh, _hExt, _hζmemSide, _hζirrSide,
@@ -2318,11 +2318,11 @@ public theorem section14_typeI_core_ltr_beta_tau_virtual
   rcases h78 with ⟨_hHL78, _hST, _hpunctured, _hcoherent, _hν, _hζS,
     hζirr, _hdegζ⟩
   have hprincipalVirt :
-      Theory.Character.IsVirtualCharacter (Section7.principalInducedCharacter L H) := by
+      IsVirtualCharacter (Section7.principalInducedCharacter L H) := by
     unfold Section7.principalInducedCharacter
     exact Section2.inducedCF_isVirtualCharacter_of_virtualCharacter
       (H.subgroupOf L) Section3.isVirtualCharacter_principalCharacter
-  have hβinputVirt : Theory.Character.IsVirtualCharacter βinput := by
+  have hβinputVirt : IsVirtualCharacter βinput := by
     exact Section3.isVirtualCharacter_sub hprincipalVirt
       (Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup hζirr)
   have hβinputVirtOn :
@@ -2334,7 +2334,7 @@ public theorem section14_typeI_core_ltr_beta_tau_virtual
   have hDadeVirt :=
     (Section2.theorem_2_6 (Section12.typeIASet L H) L R h76.2.2.1 hAL).2
       βinput hβinputVirtOn
-  have hτβvirt : Theory.Character.IsVirtualCharacter (τ βinput) := by
+  have hτβvirt : IsVirtualCharacter (τ βinput) := by
     simpa [Section2.virtualCharacterOfG, hτβinput] using hDadeVirt
   simpa [βinput, Section7.theorem_7_8_beta, hβτ] using hτβvirt
 

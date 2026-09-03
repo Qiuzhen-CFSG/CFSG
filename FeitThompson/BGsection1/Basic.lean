@@ -27,8 +27,6 @@ public import Mathlib.GroupTheory.SpecificGroups.ZGroup
 public import FeitThompson.HallSubgroups.Core
 public import FeitThompson.ChiefFactors.BaerCore
 
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 open scoped Pointwise
 
@@ -103,8 +101,8 @@ lemma IsPiGroup.quotient {π : Set Nat.Primes} {G : Type*} [Group G] [Finite G]
     (QuotientGroup.mk' H) (QuotientGroup.mk'_surjective (N := H))
 
 theorem centerIn_eq_map_center_local {G : Type*} [Group G] (H : Subgroup G) :
-    Theory.GroupAction.centerIn H = (Subgroup.center H).map H.subtype := by
-  simp [Theory.GroupAction.centerIn]
+    centerIn H = (Subgroup.center H).map H.subtype := by
+  simp [centerIn]
   ext x
   constructor
   · rintro ⟨hxH, hx_centralizer⟩

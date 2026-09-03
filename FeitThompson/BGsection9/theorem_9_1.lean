@@ -4,8 +4,6 @@ public import FeitThompson.BGsection9.Defs
 public import FeitThompson.BGsection4.theorem_4_20_a
 import Mathlib.GroupTheory.Schreier
 import Mathlib.GroupTheory.Subgroup.Centralizer
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 open scoped Pointwise commutatorElement

@@ -6,7 +6,6 @@ public import Mathlib.GroupTheory.SpecificGroups.Quaternion
 public import Mathlib.LinearAlgebra.Matrix.ProjectiveSpecialLinearGroup
 public import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
 public import Mathlib.Data.ZMod.Basic
-open Theory.ElementaryAbelian
 
 
 open scoped BigOperators Pointwise

@@ -12,10 +12,8 @@ public import FeitThompson.BGsection4.theorem_4_12_c
 public import FeitThompson.BGsection4.lemma_4_13
 public import FeitThompson.BGsection4.lemma_4_15
 public import FeitThompson.BGsection4.gorenstein_5_4_15
-open Theory.Representation
+open Representation
 
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 /-! # Theorem 4.16 from BG Section 4 -/
@@ -519,7 +517,7 @@ private theorem commutator_with_top_lt_of_nontrivial_normal_pSubgroup
         intro x hx
         exact hstep (by simpa [hcomm_eq] using hx)
   have hS_bot : S = ⊥ := by
-    apply eq_bot_iff.2
+    apply _root_.eq_bot_iff.2
     intro x hx
     have hx_lower : x ∈ Subgroup.lowerCentralSeries (⊤ : Subgroup R) n := hS_le_lower n hx
     simpa [hn_bot] using hx_lower

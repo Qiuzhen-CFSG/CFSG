@@ -33,9 +33,8 @@ open scoped Pointwise
 namespace BenderGlauberman
 
 open GorensteinWalter
-open Theory.Character
 
--- Local instances matching `Theory.Character`'s subgroup-sum convention; see
+-- Local instances matching `Character`'s subgroup-sum convention; see
 -- `BenderGlauberman/ClassFunction.lean`.
 attribute [local instance] Fintype.ofFinite
 attribute [local instance] Classical.propDecidable
@@ -610,7 +609,7 @@ private lemma KU_orbit_odd (c : Hyp11 G) [Hyp11KData c] (β : IrrBG19 (↥(KU c)
   exact Nat.coprime_two_left.mp hcopOrbit
 
 /-- The character of an arbitrary finite-dimensional complex representation is
-a `Theory.Character.IsCharacter`. -/
+a `IsCharacter`. -/
 private lemma isCharacter_of_representation {K : Type u} [Group K] [Fintype K]
     {M : Type v} [AddCommGroup M] [Module ℂ M] [FiniteDimensional ℂ M]
     (σ : Representation ℂ K M) : IsCharacter σ.character := by
@@ -653,31 +652,31 @@ private lemma clifford_restrict_char_sum {H : Subgroup G} [H.Normal]
     (W : Subrepresentation (ρ.comp H.subtype)) (hW : W.toRepresentation.IsIrreducible) :
     ∃ (n : ℕ) (g : Fin n → G),
       DirectSum.IsInternal
-        (fun i : Fin n => (Theory.Representation.conjugateSubrepresentation ρ H W (g i)).toSubmodule) ∧
+        (fun i : Fin n => (Representation.conjugateSubrepresentation ρ H W (g i)).toSubmodule) ∧
       (∀ i : Fin n,
-        (Theory.Representation.conjugateSubrepresentation ρ H W (g i)).toRepresentation.IsIrreducible) ∧
+        (Representation.conjugateSubrepresentation ρ H W (g i)).toRepresentation.IsIrreducible) ∧
       (∀ i : Fin n,
         Nonempty
-          ((Theory.Representation.conjugateSubrepresentation ρ H W (g i)).toRepresentation ≃ₗ
-            Theory.Representation.conjugateRep W.toRepresentation (g i))) ∧
+          ((Representation.conjugateSubrepresentation ρ H W (g i)).toRepresentation ≃ₗ
+            Representation.conjugateRep W.toRepresentation (g i))) ∧
       ∀ k : H, ρ.character (k : G) =
         ∑ i : Fin n,
-          ((Theory.Representation.conjugateSubrepresentation ρ H W (g i)).toRepresentation).character k := by
+          ((Representation.conjugateSubrepresentation ρ H W (g i)).toRepresentation).character k := by
   classical
-  rcases Theory.Representation.isaacs_theorem_6_5 ρ H hρ W hW with ⟨n, g, hsum, hirr, hequiv, heq⟩
+  rcases Representation.isaacs_theorem_6_5 ρ H hρ W hW with ⟨n, g, hsum, hirr, hequiv, heq⟩
   let _ := @heq (Fin 0 → ℂ) (by infer_instance) (by infer_instance)
   have hsum' : DirectSum.IsInternal
-      (fun i : Fin n => (Theory.Representation.conjugateSubrepresentation ρ H W (g i)).toSubmodule) := by
+      (fun i : Fin n => (Representation.conjugateSubrepresentation ρ H W (g i)).toSubmodule) := by
     change DirectSum.IsInternal
-      (fun i : Fin n => (Theory.Representation.conjugateSubrepresentation ρ H W (g i)).asSubmodule) at hsum
+      (fun i : Fin n => (Representation.conjugateSubrepresentation ρ H W (g i)).asSubmodule) at hsum
     exact hsum
   refine ⟨n, g, hsum', hirr, hequiv, ?_⟩
   intro k
   let N : Fin n → Submodule ℂ V := fun i =>
-    (Theory.Representation.conjugateSubrepresentation ρ H W (g i)).toSubmodule
+    (Representation.conjugateSubrepresentation ρ H W (g i)).toSubmodule
   have hf : ∀ i : Fin n, Set.MapsTo (ρ (k : G)) (N i) (N i) := by
     intro i x hx
-    exact (Theory.Representation.conjugateSubrepresentation ρ H W (g i)).apply_mem_toSubmodule k hx
+    exact (Representation.conjugateSubrepresentation ρ H W (g i)).apply_mem_toSubmodule k hx
   have htr := LinearMap.trace_eq_sum_trace_restrict (R := ℂ) (M := V) (N := N) hsum' (f := ρ (k : G)) hf
   change LinearMap.trace ℂ V (ρ (k : G)) =
     ∑ i : Fin n, LinearMap.trace ℂ (N i) ((ρ (k : G)).restrict (hf i))
@@ -709,26 +708,26 @@ private lemma constituents_conjugate (c : Hyp11 G) [Hyp11KData c] (α : Irr (↥
   let : MulAction (↥c.U) (IrrBG19 (↥(KU c))) := KU_irr_action c
   have hchar' : ∀ k : ↥(KU c), α.1 (k : ↥c.U) =
       ∑ i : Fin n0,
-        ((Theory.Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation).character k := by
+        ((Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation).character k := by
     intro k
     rw [hαeq]
     exact hchar k
   have hfun : (fun k : ↥(KU c) => α.1 (k : ↥c.U)) =
       ∑ i : Fin n0,
-        ((Theory.Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation).character := by
+        ((Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation).character := by
     funext k
     simpa using hchar' k
   have hsummand_orbit (i : Fin n0) :
       charOfIrrRep
-        ((Theory.Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i) ∈
+        ((Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i) ∈
         MulAction.orbit (↥c.U) β0 := by
     have hχi : charOfIrrRep
-        ((Theory.Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i) =
+        ((Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i) =
         (((g i : ↥c.U)⁻¹) • β0) := by
       apply Subtype.ext
       ext k
       have he := Classical.choice (hequiv i)
-      have heRep := Theory.Representation.RepEquiv.toRepresentationEquiv he
+      have heRep := Representation.RepEquiv.toRepresentationEquiv he
       have hchars := Representation.char_iso heRep
       have hchar_smul : (((g i : ↥c.U)⁻¹) • β0).1 =
           fun u : ↥(KU c) => β0.1 ((((g i : ↥c.U)⁻¹)⁻¹) • u) := rfl
@@ -742,23 +741,23 @@ private lemma constituents_conjugate (c : Hyp11 G) [Hyp11KData c] (α : Irr (↥
       γ ∈ MulAction.orbit (↥c.U) β0 := by
     have hsp_sum : scalarProduct (↥(KU c)) (fun k : ↥(KU c) => α.1 (k : ↥c.U)) γ.1 =
         ∑ i : Fin n0, scalarProduct (↥(KU c))
-          ((Theory.Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation).character γ.1 := by
+          ((Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation).character γ.1 := by
       rw [hfun, scalarProduct_sum_left]
     have hcoeff (i : Fin n0) :
         scalarProduct (↥(KU c))
-          ((Theory.Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation).character γ.1 =
+          ((Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation).character γ.1 =
           if (charOfIrrRep
-            ((Theory.Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i)).1 = γ.1
+            ((Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i)).1 = γ.1
           then 1 else 0 := by
-      have hχ : ((Theory.Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation).character =
+      have hχ : ((Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation).character =
           (charOfIrrRep
-            ((Theory.Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i)).1 := rfl
+            ((Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i)).1 := rfl
       rw [hχ]
       exact scalarProduct_irr_ite
         (charOfIrrRep
-          ((Theory.Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i)).2 γ.2
+          ((Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i)).2 γ.2
     have hex : ∃ i : Fin n0, (charOfIrrRep
-        ((Theory.Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i)).1 = γ.1 := by
+        ((Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i)).1 = γ.1 := by
       by_contra hnone
       push_neg at hnone
       have hsp0 : scalarProduct (↥(KU c)) (fun k : ↥(KU c) => α.1 (k : ↥c.U)) γ.1 = 0 := by
@@ -766,7 +765,7 @@ private lemma constituents_conjugate (c : Hyp11 G) [Hyp11KData c] (α : Irr (↥
         refine Finset.sum_eq_zero ?_
         intro i hi
         have hne' : (charOfIrrRep
-            ((Theory.Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i)).1 ≠ γ.1 := by
+            ((Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i)).1 ≠ γ.1 := by
           intro h
           exact hnone i h
         rw [hcoeff i]
@@ -774,10 +773,10 @@ private lemma constituents_conjugate (c : Hyp11 G) [Hyp11KData c] (α : Irr (↥
       exact hγ hsp0
     rcases hex with ⟨i, hi⟩
     have hmem : charOfIrrRep
-        ((Theory.Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i) ∈
+        ((Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i) ∈
         MulAction.orbit (↥c.U) β0 := hsummand_orbit i
     have hiSub : charOfIrrRep
-        ((Theory.Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i) = γ :=
+        ((Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i) = γ :=
       Subtype.ext hi
     rwa [hiSub] at hmem
   intro γ hγ
@@ -879,12 +878,12 @@ private theorem finite_order_eq_one_of_trace_eq_finrank
       LinearMap.trace ℂ V f =
         ∑ μ : f.Eigenvalues, (μ : ℂ) * (m μ : ℂ) := by
     simpa [m] using
-      (Theory.Representation.trace_pow_eq_sum_eigenvalues (f := f) (n := n) (k := 1) hn hpow)
+      (Representation.trace_pow_eq_sum_eigenvalues (f := f) (n := n) (k := 1) hn hpow)
   have htrace_zero :
       (Module.finrank ℂ V : ℂ) =
         ∑ μ : f.Eigenvalues, (m μ : ℂ) := by
     have h0 :=
-      Theory.Representation.trace_pow_eq_sum_eigenvalues (f := f) (n := n) (k := 0) hn hpow
+      Representation.trace_pow_eq_sum_eigenvalues (f := f) (n := n) (k := 0) hn hpow
     simpa [m, LinearMap.trace_id] using h0
   have hsum_complex :
       ∑ μ : f.Eigenvalues, (μ : ℂ) * (m μ : ℂ) =
@@ -901,7 +900,7 @@ private theorem finite_order_eq_one_of_trace_eq_finrank
         (μ : ℂ).re * m μ ≤ (1 : ℝ) * m μ := by
     intro μ hμ
     have hμpow : (μ : ℂ) ^ n = 1 :=
-      Theory.Representation.eigenvalue_pow_eq_one_of_pow_eq_one hpow μ.property
+      Representation.eigenvalue_pow_eq_one_of_pow_eq_one hpow μ.property
     have hnorm : ‖(μ : ℂ)‖ = 1 := by
       have hpowAbs : ‖(μ : ℂ)‖ ^ n = (1 : ℝ) := by
         simpa [hμpow] using (norm_pow (μ : ℂ) n).symm
@@ -939,7 +938,7 @@ private theorem finite_order_eq_one_of_trace_eq_finrank
       have h := heq_each μ
       nlinarith
     have hμpow : (μ : ℂ) ^ n = 1 :=
-      Theory.Representation.eigenvalue_pow_eq_one_of_pow_eq_one hpow μ.property
+      Representation.eigenvalue_pow_eq_one_of_pow_eq_one hpow μ.property
     have hnorm : ‖(μ : ℂ)‖ = 1 := by
       have hpowAbs : ‖(μ : ℂ)‖ ^ n = (1 : ℝ) := by
         simpa [hμpow] using (norm_pow (μ : ℂ) n).symm
@@ -960,9 +959,9 @@ private theorem finite_order_eq_one_of_trace_eq_finrank
   have htop :
       f.eigenspace (1 : ℂ) = ⊤ := by
     have hsemi : f.IsSemisimple :=
-      Theory.Representation.end_isSemisimple_of_pow_eq_one f hn hpow
+      Representation.end_isSemisimple_of_pow_eq_one f hn hpow
     have hiSup :=
-      Theory.Representation.eigenspace_iSup_eq_top_over_eigenvalues (f := f) hsemi
+      Representation.eigenspace_iSup_eq_top_over_eigenvalues (f := f) hsemi
     apply top_unique
     rw [← hiSup]
     refine iSup_le ?_
@@ -2465,7 +2464,7 @@ private lemma orbit_subset_BOf_zero_mult_false (c : Hyp11 G) [Hyp11KData c] (h12
         apply hμ0ν
         apply Subtype.ext
         exact hEq.symm
-      have hdisj : Theory.Character.Disjoint (tildeNu c h12 μ0) (tildeNu c h12 ν) :=
+      have hdisj : ClassFunction.Disjoint (tildeNu c h12 μ0) (tildeNu c h12 ν) :=
         tildeNu_disjoint c h12 (μ := μ0) (ν := ν) hμ0L hνμ0 hνs_ne_μ0
       have hχν : scalarProduct G χ.1 (tildeNu c h12 ν) ≠ 0 :=
         (BOf_mem_iff c h12 χ.1 ν).1 hνB

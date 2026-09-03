@@ -19,7 +19,6 @@ import FeitThompson.ChiefFactors.Proposition12
 import FeitThompson.GroupAction.CentralizerCondition
 import FeitThompson.SubgroupConj
 import Mathlib.Tactic
-open Theory.GroupAction
 
 
 /-!

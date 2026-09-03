@@ -9,8 +9,6 @@ public import Mathlib.LinearAlgebra.Dimension.Free
 public import Mathlib.LinearAlgebra.StdBasis
 import FeitThompson.Wielandt.FixedPointProduct
 public import FeitThompson.Wielandt.HomocyclicLift
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 /-!

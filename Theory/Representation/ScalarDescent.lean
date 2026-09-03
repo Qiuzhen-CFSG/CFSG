@@ -133,11 +133,10 @@ namespace Representation
 
 open _root_.Representation
 
-variable {F E G V W : Type*} [Field F] [Field E] [Algebra F E] [Group G]
-  [AddCommGroup V] [Module F V] [FiniteDimensional F V]
-  [AddCommGroup W] [Module F W] [FiniteDimensional F W]
-
-def intertwiningConstraint (rho : Representation F G V) (sigma : Representation F G W)
+def intertwiningConstraint
+    {F G V W : Type*} [Field F] [Group G] [AddCommGroup V] [Module F V]
+    [AddCommGroup W] [Module F W]
+    (rho : Representation F G V) (sigma : Representation F G W)
     (g : G)
     : (V →ₗ[F] W) →ₗ[F] (V →ₗ[F] W) :=
   {
@@ -146,11 +145,17 @@ def intertwiningConstraint (rho : Representation F G V) (sigma : Representation 
     map_smul' := by intro a f; ext x; simp [smul_sub]
   }
 
-def intertwiningConstraintSpan (rho : Representation F G V) (sigma : Representation F G W)
+def intertwiningConstraintSpan
+    {F G V W : Type*} [Field F] [Group G] [AddCommGroup V] [Module F V]
+    [AddCommGroup W] [Module F W]
+    (rho : Representation F G V) (sigma : Representation F G W)
     : Submodule F ((V →ₗ[F] W) →ₗ[F] (V →ₗ[F] W)) :=
   Submodule.span F (Set.range (intertwiningConstraint rho sigma))
 
-def finiteIntertwiningConstraint (rho : Representation F G V)
+def finiteIntertwiningConstraint
+    {F G V W : Type*} [Field F] [Group G] [AddCommGroup V] [Module F V]
+    [FiniteDimensional F V] [AddCommGroup W] [Module F W] [FiniteDimensional F W]
+    (rho : Representation F G V)
     (sigma : Representation F G W)
     : (V →ₗ[F] W)
       →ₗ[F] (Fin (Module.finrank F (intertwiningConstraintSpan rho sigma))
@@ -161,6 +166,8 @@ def finiteIntertwiningConstraint (rho : Representation F G V)
     (Module.finBasis F (intertwiningConstraintSpan rho sigma) i).val
 
 theorem mem_ker_finiteIntertwiningConstraint_iff
+    {F G V W : Type*} [Field F] [Group G] [AddCommGroup V] [Module F V]
+    [FiniteDimensional F V] [AddCommGroup W] [Module F W] [FiniteDimensional F W]
     (rho : Representation F G V) (sigma : Representation F G W)
     (f : V →ₗ[F] W)
     : f ∈ (finiteIntertwiningConstraint rho sigma).ker
@@ -207,6 +214,8 @@ theorem mem_ker_finiteIntertwiningConstraint_iff
       simp [hxf]
 
 def kerFiniteIntertwiningConstraintEquiv
+    {F G V W : Type*} [Field F] [Group G] [AddCommGroup V] [Module F V]
+    [FiniteDimensional F V] [AddCommGroup W] [Module F W] [FiniteDimensional F W]
     (rho : Representation F G V) (sigma : Representation F G W)
     : (finiteIntertwiningConstraint rho sigma).ker ≃ₗ[F] (rho →ₗ sigma) where
   toFun f :=
@@ -222,12 +231,19 @@ def kerFiniteIntertwiningConstraintEquiv
   left_inv _ := rfl
   right_inv _ := rfl
 
-def baseChangedEnd (c : (V →ₗ[F] W) →ₗ[F] (V →ₗ[F] W))
+def baseChangedEnd
+    {F E V W : Type*} [Field F] [Field E] [Algebra F E]
+    [AddCommGroup V] [Module F V] [FiniteDimensional F V]
+    [AddCommGroup W] [Module F W] [FiniteDimensional F W]
+    (c : (V →ₗ[F] W) →ₗ[F] (V →ₗ[F] W))
     : (E ⊗[F] V →ₗ[E] E ⊗[F] W) →ₗ[E] (E ⊗[F] V →ₗ[E] E ⊗[F] W) :=
   let e := LinearMap.baseChangeLinearMapEquiv F E V W
   e.toLinearMap.comp ((c.baseChange E).comp e.symm.toLinearMap)
 
 theorem baseChangedEnd_intertwiningConstraint
+    {F E G V W : Type*} [Field F] [Field E] [Algebra F E] [Group G]
+    [AddCommGroup V] [Module F V] [FiniteDimensional F V]
+    [AddCommGroup W] [Module F W] [FiniteDimensional F W]
     (rho : Representation F G V) (sigma : Representation F G W) (g : G)
     : baseChangedEnd (E := E) (intertwiningConstraint rho sigma g)
       = intertwiningConstraint (extendScalars E rho) (extendScalars E sigma) g := by
@@ -252,6 +268,9 @@ theorem baseChangedEnd_intertwiningConstraint
 
 set_option maxRecDepth 10000 in
 def baseChangedEndHom
+    {F E V W : Type*} [Field F] [Field E] [Algebra F E]
+    [AddCommGroup V] [Module F V] [FiniteDimensional F V]
+    [AddCommGroup W] [Module F W] [FiniteDimensional F W]
     : ((V →ₗ[F] W) →ₗ[F] (V →ₗ[F] W))
       →ₗ[F] ((E ⊗[F] V →ₗ[E] E ⊗[F] W) →ₗ[E] (E ⊗[F] V →ₗ[E] E ⊗[F] W)) where
   toFun := baseChangedEnd (E := E)
@@ -269,12 +288,19 @@ def baseChangedEndHom
     exact e.toLinearMap.map_smul_of_tower a _
 
 @[simp]
-theorem baseChangedEndHom_apply (c : (V →ₗ[F] W) →ₗ[F] (V →ₗ[F] W))
+theorem baseChangedEndHom_apply
+    {F E V W : Type*} [Field F] [Field E] [Algebra F E]
+    [AddCommGroup V] [Module F V] [FiniteDimensional F V]
+    [AddCommGroup W] [Module F W] [FiniteDimensional F W]
+    (c : (V →ₗ[F] W) →ₗ[F] (V →ₗ[F] W))
     : baseChangedEndHom (F := F) (E := E) (V := V) (W := W) c
       = baseChangedEnd (E := E) c :=
   rfl
 
 def baseChangedFiniteIntertwiningConstraint
+    {F E G V W : Type*} [Field F] [Field E] [Algebra F E] [Group G]
+    [AddCommGroup V] [Module F V] [FiniteDimensional F V]
+    [AddCommGroup W] [Module F W] [FiniteDimensional F W]
     (rho : Representation F G V) (sigma : Representation F G W)
     : (E ⊗[F] V →ₗ[E] E ⊗[F] W)
       →ₗ[E] (Fin (Module.finrank F (intertwiningConstraintSpan rho sigma))
@@ -286,6 +312,9 @@ def baseChangedFiniteIntertwiningConstraint
       (Module.finBasis F (intertwiningConstraintSpan rho sigma) i).val
 
 theorem mem_ker_baseChangedFiniteIntertwiningConstraint_iff
+    {F E G V W : Type*} [Field F] [Field E] [Algebra F E] [Group G]
+    [AddCommGroup V] [Module F V] [FiniteDimensional F V]
+    [AddCommGroup W] [Module F W] [FiniteDimensional F W]
     (rho : Representation F G V) (sigma : Representation F G W)
     (f : E ⊗[F] V →ₗ[E] E ⊗[F] W)
     : f ∈ (baseChangedFiniteIntertwiningConstraint (E := E) rho sigma).ker
@@ -352,7 +381,11 @@ theorem mem_ker_baseChangedFiniteIntertwiningConstraint_iff
 /-- Transporting a base-field endomorphism of `Hom` commutes with applying it
 and then extending scalars. -/
 @[simp]
-theorem baseChangedEnd_baseChange (c : (V →ₗ[F] W) →ₗ[F] (V →ₗ[F] W)) (f : V →ₗ[F] W)
+theorem baseChangedEnd_baseChange
+    {F E V W : Type*} [Field F] [Field E] [Algebra F E]
+    [AddCommGroup V] [Module F V] [FiniteDimensional F V]
+    [AddCommGroup W] [Module F W] [FiniteDimensional F W]
+    (c : (V →ₗ[F] W) →ₗ[F] (V →ₗ[F] W)) (f : V →ₗ[F] W)
     : baseChangedEnd (E := E) c (LinearMap.baseChange E f)
       = LinearMap.baseChange E (c f) := by
   let e := LinearMap.baseChangeLinearMapEquiv F E V W
@@ -364,6 +397,9 @@ theorem baseChangedEnd_baseChange (c : (V →ₗ[F] W) →ₗ[F] (V →ₗ[F] W)
 /-- The scalar extension of the finite product codomain, with each coordinate
 identified with the extended linear-map space. -/
 noncomputable def finiteIntertwiningConstraintCodomainEquiv
+    {F E G V W : Type*} [Field F] [Field E] [Algebra F E] [Group G]
+    [AddCommGroup V] [Module F V] [FiniteDimensional F V]
+    [AddCommGroup W] [Module F W] [FiniteDimensional F W]
     (rho : Representation F G V) (sigma : Representation F G W)
     : E ⊗[F] (Fin (Module.finrank F (intertwiningConstraintSpan rho sigma)) → (V →ₗ[F] W))
       ≃ₗ[E] (Fin (Module.finrank F (intertwiningConstraintSpan rho sigma))
@@ -378,6 +414,9 @@ noncomputable def finiteIntertwiningConstraintCodomainEquiv
 /-- The base change of the finite intertwining constraint is conjugate to the
 finite constraint on the extended linear-map space. -/
 theorem finiteIntertwiningConstraint_baseChange
+    {F E G V W : Type*} [Field F] [Field E] [Algebra F E] [Group G]
+    [AddCommGroup V] [Module F V] [FiniteDimensional F V]
+    [AddCommGroup W] [Module F W] [FiniteDimensional F W]
     (rho : Representation F G V) (sigma : Representation F G W)
     : (finiteIntertwiningConstraintCodomainEquiv (E := E) rho sigma).toLinearMap.comp
         ((finiteIntertwiningConstraint rho sigma).baseChange E)
@@ -400,6 +439,9 @@ set_option maxRecDepth 10000 in
 /-- Scalar extension of the base-field finite-constraint kernel is canonically
 equivalent to the finite-constraint kernel on the extended Hom space. -/
 noncomputable def kerBaseChangedFiniteConstraintEquiv
+    {F E G V W : Type*} [Field F] [Field E] [Algebra F E] [Group G]
+    [AddCommGroup V] [Module F V] [FiniteDimensional F V]
+    [AddCommGroup W] [Module F W] [FiniteDimensional F W]
     (rho : Representation F G V) (sigma : Representation F G W)
     : E ⊗[F] (finiteIntertwiningConstraint rho sigma).ker
       ≃ₗ[E] (baseChangedFiniteIntertwiningConstraint (E := E) rho sigma).ker := by
@@ -434,6 +476,9 @@ noncomputable def kerBaseChangedFiniteConstraintEquiv
 /-- The transported finite-constraint kernel is the intertwining-map space of
 the scalar-extended representations. -/
 def kerBaseChangedFiniteIntertwiningMapEquiv
+    {F E G V W : Type*} [Field F] [Field E] [Algebra F E] [Group G]
+    [AddCommGroup V] [Module F V] [FiniteDimensional F V]
+    [AddCommGroup W] [Module F W] [FiniteDimensional F W]
     (rho : Representation F G V) (sigma : Representation F G W)
     : (baseChangedFiniteIntertwiningConstraint (E := E) rho sigma).ker
       ≃ₗ[E] (extendScalars E rho →ₗ extendScalars E sigma) where
@@ -455,6 +500,9 @@ set_option maxRecDepth 10000 in
 /-- Scalar extension commutes with the finite-dimensional space of
 intertwining maps. -/
 noncomputable def intertwiningMapBaseChangeEquiv
+    {F E G V W : Type*} [Field F] [Field E] [Algebra F E] [Group G]
+    [AddCommGroup V] [Module F V] [FiniteDimensional F V]
+    [AddCommGroup W] [Module F W] [FiniteDimensional F W]
     (rho : Representation F G V) (sigma : Representation F G W)
     : E ⊗[F] (rho →ₗ sigma) ≃ₗ[E] (extendScalars E rho →ₗ extendScalars E sigma) :=
   ((kerFiniteIntertwiningConstraintEquiv rho sigma).symm.baseChange F E _ _).trans
@@ -466,6 +514,9 @@ set_option maxRecDepth 20000 in
 scalar extension of an intertwiner. -/
 @[simp]
 theorem intertwiningMapBaseChangeEquiv_tmul
+    {F E G V W : Type*} [Field F] [Field E] [Algebra F E] [Group G]
+    [AddCommGroup V] [Module F V] [FiniteDimensional F V]
+    [AddCommGroup W] [Module F W] [FiniteDimensional F W]
     (rho : Representation F G V) (sigma : Representation F G W)
     (a : E) (f : rho →ₗ sigma)
     : intertwiningMapBaseChangeEquiv (E := E) rho sigma (a ⊗ₜ[F] f)
@@ -477,11 +528,13 @@ theorem intertwiningMapBaseChangeEquiv_tmul
 
 section DeterminantSpecialization
 
-variable {ι κ : Type*} [Fintype ι] [DecidableEq ι] [Fintype κ] [DecidableEq κ]
 
 /-- The determinant of the generic linear combination of a finite basis of
 intertwining maps. -/
 noncomputable def intertwinerDeterminantPolynomial
+    {F G V W ι κ : Type*} [Field F] [Group G]
+    [AddCommGroup V] [Module F V] [AddCommGroup W] [Module F W]
+    [Fintype ι] [DecidableEq ι] [Fintype κ] [DecidableEq κ]
     (rho : Representation F G V) (sigma : Representation F G W)
     (bV : Module.Basis ι F V) (bW : Module.Basis ι F W)
     (b : Module.Basis κ F (rho →ₗ sigma))
@@ -492,11 +545,13 @@ noncomputable def intertwinerDeterminantPolynomial
         MvPolynomial.C ((LinearMap.toMatrix bV bW) (b k).toLinearMap i j)
         * MvPolynomial.X k
 
-omit [FiniteDimensional F V] [FiniteDimensional F W] [DecidableEq κ] in
 /-- Evaluating the generic determinant after scalar extension gives the
 matrix determinant of the corresponding linear combination of base-changed
 intertwiners. -/
 theorem aeval_intertwinerDeterminantPolynomial
+    {F G V W ι κ : Type*} [Field F] [Group G]
+    [AddCommGroup V] [Module F V] [AddCommGroup W] [Module F W]
+    [Fintype ι] [DecidableEq ι] [Fintype κ] [DecidableEq κ]
     {S : Type*} [Field S] [Algebra F S]
     (rho : Representation F G V) (sigma : Representation F G W)
     (bV : Module.Basis ι F V) (bW : Module.Basis ι F W)
@@ -524,10 +579,10 @@ theorem aeval_intertwinerDeterminantPolynomial
             MvPolynomial.X k) = _
       simp [LinearMap.toMatrix_apply, Algebra.smul_def, mul_comm]
 
-omit [Fintype κ] [DecidableEq κ] in
 /-- A nonzero multivariate polynomial over a field has a nonzero evaluation in
 an algebraic closure. -/
-theorem exists_aeval_ne_zero_algebraicClosure (p : MvPolynomial κ F) (hp : p ≠ 0)
+theorem exists_aeval_ne_zero_algebraicClosure
+    {F κ : Type*} [Field F] (p : MvPolynomial κ F) (hp : p ≠ 0)
     : ∃ x : κ → AlgebraicClosure F, MvPolynomial.aeval x p ≠ 0 := by
   classical
   by_contra h
@@ -539,10 +594,12 @@ theorem exists_aeval_ne_zero_algebraicClosure (p : MvPolynomial κ F) (hp : p �
   intro x
   simpa [MvPolynomial.aeval_def] using h x
 
-omit [FiniteDimensional F V] [FiniteDimensional F W] [DecidableEq κ] in
 /-- A specialization of the generic intertwiner determinant to a nonzero
 value yields an equivalence of the scalar-extended representations. -/
 theorem repEquiv_of_aeval_intertwinerDeterminantPolynomial_ne_zero
+    {F G V W ι κ : Type*} [Field F] [Group G]
+    [AddCommGroup V] [Module F V] [AddCommGroup W] [Module F W]
+    [Fintype ι] [DecidableEq ι] [Fintype κ] [DecidableEq κ]
     {S : Type*} [Field S] [Algebra F S]
     (rho : Representation F G V) (sigma : Representation F G W)
     (bV : Module.Basis ι F V) (bW : Module.Basis ι F W)
@@ -578,6 +635,8 @@ theorem repEquiv_of_aeval_intertwinerDeterminantPolynomial_ne_zero
 /-- An equivalence of group-algebra modules induces an equivalence of the
 corresponding representations. -/
 def repEquivOfModuleEquiv
+    {F G V W : Type*} [Field F] [Group G] [AddCommGroup V] [Module F V]
+    [AddCommGroup W] [Module F W]
     (rho : Representation F G V) (sigma : Representation F G W)
     (e : rho.asModule ≃ₗ[MonoidAlgebra F G] sigma.asModule)
     : rho ≃ₗ sigma where
@@ -597,16 +656,17 @@ def repEquivOfModuleEquiv
 /-- Restricting a finite scalar extension to the base field identifies the
 base-changed vector space with finitely many copies of the original one. -/
 noncomputable def baseChangeEquivFinCopies
+    {F : Type*} [Field F]
     {S X : Type*} [Field S] [Algebra F S]
     [AddCommGroup X] [Module F X] [FiniteDimensional F S]
     : S ⊗[F] X ≃ₗ[F] (Fin (Module.finrank F S) → X) :=
   (TensorProduct.equivFinsuppOfBasisLeft (Module.finBasis F S)).trans
     (Finsupp.linearEquivFunOnFinite F X (Fin (Module.finrank F S)))
 
-omit [FiniteDimensional F V] in
 /-- Finite-copy coordinates intertwine the base-changed action with the
 coordinatewise original action. -/
 theorem baseChangeEquivFinCopies_map_extendScalars
+    {F G V : Type*} [Field F] [Group G] [AddCommGroup V] [Module F V]
     {S : Type*} [Field S] [Algebra F S] [FiniteDimensional F S]
     (rho : Representation F G V) (g : G) (z : S ⊗[F] V)
     : baseChangeEquivFinCopies (F := F) ((extendScalars S rho g) z)
@@ -627,6 +687,8 @@ theorem baseChangeEquivFinCopies_map_extendScalars
 /-- Noether-Deuring descent over a finite field extension, obtained by
 restricting scalars and cancelling a nonzero finite number of copies. -/
 theorem repEquiv_of_finite_extension
+    {F G V W : Type*} [Field F] [Group G] [AddCommGroup V] [Module F V]
+    [FiniteDimensional F V] [AddCommGroup W] [Module F W] [FiniteDimensional F W]
     {S : Type*} [Field S] [Algebra F S] [FiniteDimensional F S]
     (rho : Representation F G V) (sigma : Representation F G W)
     (hS : Nonempty (extendScalars S rho ≃ₗ extendScalars S sigma))
@@ -698,10 +760,13 @@ theorem repEquiv_of_finite_extension
       (M := V) (N := W) n hn eR
   exact ⟨repEquivOfModuleEquiv rho sigma e⟩
 
-omit [DecidableEq κ] in
 /-- A nonzero generic intertwiner determinant gives an equivalence over a
 finite algebraic extension, hence over the base field. -/
 theorem repEquiv_of_intertwinerDeterminantPolynomial_ne_zero
+    {F G V W ι κ : Type*} [Field F] [Group G]
+    [AddCommGroup V] [Module F V] [FiniteDimensional F V]
+    [AddCommGroup W] [Module F W] [FiniteDimensional F W]
+    [Fintype ι] [DecidableEq ι] [Fintype κ] [DecidableEq κ]
     (rho : Representation F G V) (sigma : Representation F G W)
     (bV : Module.Basis ι F V) (bW : Module.Basis ι F W)
     (b : Module.Basis κ F (rho →ₗ sigma))
@@ -738,6 +803,8 @@ theorem repEquiv_of_intertwinerDeterminantPolynomial_ne_zero
 /-- If finite-dimensional representations become equivalent after an
 arbitrary scalar extension, then they were already equivalent. -/
 theorem repEquiv_of_extendScalars
+    {F G V W : Type*} [Field F] [Group G] [AddCommGroup V] [Module F V]
+    [FiniteDimensional F V] [AddCommGroup W] [Module F W] [FiniteDimensional F W]
     {S : Type*} [Field S] [Algebra F S]
     (rho : Representation F G V) (sigma : Representation F G W)
     (hS : Nonempty (extendScalars S rho ≃ₗ extendScalars S sigma))
@@ -752,14 +819,17 @@ theorem repEquiv_of_extendScalars
     Module.finBasis F V
   let bW : Module.Basis (Fin (Module.finrank F V)) F W :=
     (Module.finBasis F W).reindex (finCongr hdim.symm)
-  let : Module F (rho →ₗ sigma) := Representation.RepMap.instModule rho sigma
+  let : Module F (rho →ₗ sigma) := Representation.RepMap.module rho sigma
   let : Module.Finite F (rho →ₗ sigma) :=
     Module.Finite.of_injective
-      (IntertwiningMap.toLinearMapl (ρ := rho) (σ := sigma))
-      (IntertwiningMap.toLinearMap_injective rho sigma)
+      (IntertwiningMap.toLinearMapl rho sigma)
+      (by
+        intro f g h
+        apply RepMap.toLinearMap_injective f g
+        simpa only [IntertwiningMap.toLinearMapl_apply] using h)
   let : Module.Free F (rho →ₗ sigma) :=
     @Module.Free.of_divisionRing F (rho →ₗ sigma) _ _
-      (Representation.RepMap.instModule rho sigma)
+      (Representation.RepMap.module rho sigma)
   let b : Module.Basis (Fin (Module.finrank F (rho →ₗ sigma))) F
       (rho →ₗ sigma) := Module.finBasis F (rho →ₗ sigma)
   let q := intertwiningMapBaseChangeEquiv (E := S) rho sigma

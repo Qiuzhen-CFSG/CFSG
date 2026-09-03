@@ -31,10 +31,8 @@ public import Mathlib.GroupTheory.Commutator.Basic
 public import Mathlib.LinearAlgebra.GeneralLinearGroup.AlgEquiv
 public import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
 public import Mathlib.LinearAlgebra.Eigenspace.Semisimple
-open Theory.Representation
+open Representation
 
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 open scoped MatrixGroups Pointwise TensorProduct commutatorElement IsMulCommutative
@@ -1610,7 +1608,7 @@ private theorem hasQuadraticMinimalPolynomial_of_square_zero_of_ne_one
 private theorem square_zero_of_kerRepresentation
     {F G V : Type*} [Field F] [Group G] [AddCommGroup V] [Module F V]
     (ρ : Representation F G V) (g : G) (hSq : (ρ g - 1) ^ 2 = 0) :
-    ((Theory.Representation.kerRepresentation ρ) (QuotientGroup.mk' ρ.ker g) - 1) ^ 2 = 0 := by
+    ((Representation.kerRepresentation ρ) (QuotientGroup.mk' ρ.ker g) - 1) ^ 2 = 0 := by
   change (ρ g - 1) ^ 2 = 0
   exact hSq
 
@@ -3328,9 +3326,9 @@ private theorem gorenstein_3_8_1_even_quotient_after_composition_factor
   have : FiniteDimensional F' V' := by
     dsimp [V']
     exact Module.Finite.base_change (R := F) (A := F') (M := V)
-  let ρ' : Representation F' H V' := Theory.Representation.extendScalars F' ρ
+  let ρ' : Representation F' H V' := Representation.extendScalars F' ρ
   have hρ'_faithful : Function.Injective ρ' := by
-    exact (Theory.Representation.extendScalars_faithful_iff F' ρ).mp hρ_faithful
+    exact (Representation.extendScalars_faithful_iff F' ρ).mp hρ_faithful
 
   -- Gorenstein first passes to an algebraically closed coefficient field.
   have hx'_quad : HasQuadraticMinimalPolynomial F' V' (ρ' x) := by
@@ -3421,12 +3419,12 @@ private theorem gorenstein_3_8_1_even_quotient_after_composition_factor
   have hσ_irreducible : Representation.IsIrreducible σ := by
     simpa [σ] using hM_irreducible
   have : Representation.IsIrreducible σ := hσ_irreducible
-  let := finiteDimensional_of_irreducible_finite_group (ρ := σ) hσ_irreducible
+  let := _root_.finiteDimensional_of_irreducible_finite_group (ρ := σ) hσ_irreducible
 
   -- The composition factor is then made faithful by quotienting by its kernel.
-  let σq := Theory.Representation.kerRepresentation σ
+  let σq := Representation.kerRepresentation σ
   have hσq_faithful : Function.Injective σq :=
-    Theory.Representation.kerRepresentation_faithful σ
+    Representation.kerRepresentation_faithful σ
   have hσq_irreducible : Representation.IsIrreducible σq := by
     infer_instance
 

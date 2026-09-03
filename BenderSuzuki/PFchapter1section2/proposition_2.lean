@@ -6,7 +6,6 @@ import BenderSuzuki.PFchapter1section1.lemma_b
 import FeitThompson.BGsection3.Remaining
 import FeitThompson.GroupAction.Cardinalities
 import FeitThompson.SubgroupConj
-open Theory.ElementaryAbelian
 
 
 open scoped IsMulCommutative

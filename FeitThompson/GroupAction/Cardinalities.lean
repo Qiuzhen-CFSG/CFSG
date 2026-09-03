@@ -5,7 +5,6 @@ public import Theory.GroupAction.Quotient
 import Mathlib.SetTheory.Cardinal.NatCard
 import Mathlib.GroupTheory.QuotientGroup.Basic
 
-open Theory.GroupAction
 
 open Subgroup
 

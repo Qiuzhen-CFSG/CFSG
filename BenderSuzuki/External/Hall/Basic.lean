@@ -4,7 +4,6 @@ import Mathlib.Data.Nat.Factorization.Basic
 import Theory.GroupAction.Quotient
 public import BenderSuzuki.PFchapter2.Basic
 public import Mathlib.GroupTheory.Transfer
-open Theory.GroupAction
 
 
 /-!

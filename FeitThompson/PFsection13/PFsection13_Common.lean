@@ -18,7 +18,6 @@ import FeitThompson.PFsection3.PFsection3_9
 import FeitThompson.PFsection5.PFsection5_9
 import FeitThompson.PFsection6.PFsection6_8
 import Mathlib.RingTheory.Polynomial.Cyclotomic.Basic
-open Theory.GroupAction
 
 
 /-!
@@ -714,11 +713,11 @@ public theorem section13_typeP_coherent_subseq_transport_eq_of_cyclicTI_agreemen
         (Section6.theorem_6_8_transportClassFunction e ξ) :=
     Section6.theorem_6_8_transportClassFunction_isClass e hξ_class
   have htransportVirt :
-      Theory.Character.IsVirtualCharacter
+      IsVirtualCharacter
         (Section6.theorem_6_8_transportClassFunction e ξ) :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup htransportIrr
   have hImageVirt :
-      Theory.Character.IsVirtualCharacter
+      IsVirtualCharacter
         (d52.sigma (Section6.theorem_6_8_transportClassFunction e ξ)) :=
     hVirtFull _ htransportVirt
   have hselfW : Section1.scalarProduct W ξ ξ = 1 :=

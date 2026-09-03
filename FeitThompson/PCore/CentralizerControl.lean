@@ -20,8 +20,6 @@ import FeitThompson.HallSubgroups.Core
 import FeitThompson.ChiefFactors.BaerCore
 
 
-open Theory.ElementaryAbelian
-open Theory.GroupAction
 
 open scoped Pointwise
 

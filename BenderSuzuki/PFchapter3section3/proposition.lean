@@ -20,7 +20,6 @@ import Mathlib.FieldTheory.Finite.Trace
 import Mathlib.FieldTheory.Normal.Basic
 import Mathlib.LinearAlgebra.GeneralLinearGroup.Basic
 import Mathlib.RingTheory.AdjoinRoot
-open Theory.GroupAction
 
 
 namespace BenderSuzuki

@@ -1,8 +1,6 @@
 module
 
 public import FeitThompson.BGsection12.theorem_12_7_d
-open Theory.GroupAction
-open Theory.ElementaryAbelian
 
 
 open scoped Pointwise

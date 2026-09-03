@@ -417,14 +417,12 @@ theorem eigenspace_decomposition {F : Type _} [Field F] {V : Type _} [AddCommGro
     exact hN i hmem
 
 section BlockEquality
-variable {F : Type*} [Field F] {V : Type*} [AddCommGroup V] [Module F V]
-  [FiniteDimensional F V] {g : V ≃ₗ[F] V} {h : ℕ} (hge2 : h ≥ 2) (ε : F)
-  (hε : IsPrimitiveRoot ε h)
-
 open IsPrimitiveRoot
-include hge2 hε
 
-lemma zpow_eq_zpow_iff_modEq' (a b : ℤ) : ε ^ a = ε ^ b ↔ a ≡ b [ZMOD h] := by
+lemma zpow_eq_zpow_iff_modEq'
+    {F : Type*} [Field F]
+    {h : ℕ} (hge2 : h ≥ 2) (ε : F)
+    (hε : IsPrimitiveRoot ε h) (a b : ℤ) : ε ^ a = ε ^ b ↔ a ≡ b [ZMOD h] := by
   have h_unit : IsUnit ε := hε.isUnit (by linarith)
   have horder : orderOf h_unit.unit = h := by
     calc
@@ -436,8 +434,10 @@ lemma zpow_eq_zpow_iff_modEq' (a b : ℤ) : ε ^ a = ε ^ b ↔ a ≡ b [ZMOD h]
     simpa [Units.ext_iff, Units.val_zpow_eq_zpow_val] using H
   simpa [h_unit.unit_spec, horder] using H'
 
-omit [FiniteDimensional F V] in
-lemma eigenspace_eq_of_zpow_modEq (a b : ℤ) (hab : a ≡ b [ZMOD h])
+lemma eigenspace_eq_of_zpow_modEq
+    {F V : Type*} [Field F] [AddCommGroup V] [Module F V]
+    {g : V ≃ₗ[F] V} {h : ℕ} (hge2 : h ≥ 2) (ε : F)
+    (hε : IsPrimitiveRoot ε h) (a b : ℤ) (hab : a ≡ b [ZMOD h])
     : Module.End.eigenspace g.toLinearMap (ε ^ a)
       = Module.End.eigenspace g.toLinearMap (ε ^ b) := by
   have hpow : ε ^ a = ε ^ b := (zpow_eq_zpow_iff_modEq' hge2 ε hε a b).mpr hab

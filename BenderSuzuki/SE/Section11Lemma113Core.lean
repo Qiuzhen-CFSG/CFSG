@@ -2,7 +2,6 @@ module
 
 public import BenderSuzuki.SE.Section10Proposition102ExponentData
 import BenderSuzuki.SE.InvolutionCore
-open Theory.GroupAction
 
 
 /-!

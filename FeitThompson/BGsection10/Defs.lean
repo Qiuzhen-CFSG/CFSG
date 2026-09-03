@@ -5,7 +5,6 @@ public import FeitThompson.BGsection9.Defs
 public import FeitThompson.BGsection9.theorem_9_6_in_particular
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
-open Theory.ElementaryAbelian
 
 
 open scoped Pointwise

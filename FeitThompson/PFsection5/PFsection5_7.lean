@@ -462,7 +462,7 @@ private theorem isVirtualCharacter_of_signedIrreducible_pf57
     {G : Type*} [Group G] [Finite G]
     {χ : Section1.ClassFunction G}
     (hχ : Section3.IsSignedIrreducibleCharacter χ) :
-    Theory.Character.IsVirtualCharacter χ := by
+    IsVirtualCharacter χ := by
   rcases hχ with ⟨ε, hε, μ, hμ, rfl⟩
   rcases hε with rfl | rfl
   · simpa using Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup hμ
@@ -472,28 +472,28 @@ private theorem isVirtualCharacter_of_signedIrreducible_pf57
 private theorem isVirtualCharacter_zsmul_pf57
     {G : Type u} [Group G] [Finite G]
     (n : ℤ) {χ : Section1.ClassFunction G}
-    (hχ : Theory.Character.IsVirtualCharacter χ) :
-    Theory.Character.IsVirtualCharacter (n • χ) := by
+    (hχ : IsVirtualCharacter χ) :
+    IsVirtualCharacter (n • χ) := by
   classical
   rcases hχ with ⟨r, m, k, ρ, rfl⟩
   refine ⟨r, fun i => n * m i, k, ρ, ?_⟩
   ext g
-  simp [Theory.Character.virtualCharacterOfRepresentations, Finset.mul_sum, mul_assoc]
+  simp [virtualCharacterOfRepresentations, Finset.mul_sum, mul_assoc]
 
 private theorem isVirtualCharacter_finset_sum_pf57
     {G : Type u} [Group G] [Finite G]
     {ι : Type*} (s : Finset ι) (Φ : ι → Section1.ClassFunction G)
-    (hΦ : ∀ i ∈ s, Theory.Character.IsVirtualCharacter (Φ i)) :
-    Theory.Character.IsVirtualCharacter (Finset.sum s Φ) := by
+    (hΦ : ∀ i ∈ s, IsVirtualCharacter (Φ i)) :
+    IsVirtualCharacter (Finset.sum s Φ) := by
   classical
   induction s using Finset.induction_on with
   | empty =>
       refine ⟨0, (fun i => nomatch i), (fun i => nomatch i), (fun i => nomatch i), ?_⟩
       ext g
-      simp [Theory.Character.virtualCharacterOfRepresentations]
+      simp [virtualCharacterOfRepresentations]
   | @insert a s ha ih =>
-      have ha' : Theory.Character.IsVirtualCharacter (Φ a) := hΦ a (Finset.mem_insert_self a s)
-      have hs' : Theory.Character.IsVirtualCharacter (Finset.sum s Φ) := by
+      have ha' : IsVirtualCharacter (Φ a) := hΦ a (Finset.mem_insert_self a s)
+      have hs' : IsVirtualCharacter (Finset.sum s Φ) := by
         refine ih ?_
         intro i hi
         exact hΦ i (Finset.mem_insert_of_mem hi)
@@ -503,9 +503,9 @@ private theorem isVirtualCharacter_evalCoeff_pf57
     {G : Type u} [Group G] [Finite G]
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (μ : ι → Section1.ClassFunction G)
-    (hμ : ∀ i, Theory.Character.IsVirtualCharacter (μ i))
+    (hμ : ∀ i, IsVirtualCharacter (μ i))
     (v : Section1.CoeffVector ι) :
-    Theory.Character.IsVirtualCharacter (Section1.evalCoeff μ v) := by
+    IsVirtualCharacter (Section1.evalCoeff μ v) := by
   classical
   rw [Section1.evalCoeff]
   refine isVirtualCharacter_finset_sum_pf57 (Finset.univ : Finset ι)
@@ -645,7 +645,7 @@ private theorem orthogonal_projection_decomposition_pf57
     {R : Finset (Section1.ClassFunction G)}
     (hR : signedOrthonormalFinset R)
     {η : Section1.ClassFunction G}
-    (hηvirt : Theory.Character.IsVirtualCharacter η) :
+    (hηvirt : IsVirtualCharacter η) :
     ∃ Xbig Y : Section1.ClassFunction G,
       integerSpan R Xbig ∧
       orthogonalToFinset R Y ∧
@@ -804,7 +804,7 @@ private theorem scalarProduct_self_eq_cfNormSq_of_subsetSum_pf57
     Section1.scalarProduct G φ φ = (cfNormSq φ : ℂ) := by
   rcases hsubset with ⟨E, hE, rfl⟩
   have hvirt :
-      Theory.Character.IsVirtualCharacter (Finset.sum E fun ψ => ψ) := by
+      IsVirtualCharacter (Finset.sum E fun ψ => ψ) := by
     exact isVirtualCharacter_finset_sum_pf57 E (fun ψ => ψ)
       (fun ψ hψ => isVirtualCharacter_of_signedIrreducible_pf57 (hR.1 _ (hE hψ)))
   rcases Section3.scalarProduct_isVirtualCharacter_eq_int hvirt hvirt with ⟨n, hn⟩
@@ -869,7 +869,7 @@ private theorem isVirtualCharacter_of_subsetSum_pf57
     (hR : signedOrthonormalFinset R)
     {φ : Section1.ClassFunction G}
     (hsubset : isSubsetSumOf R φ) :
-    Theory.Character.IsVirtualCharacter φ := by
+    IsVirtualCharacter φ := by
   rcases hsubset with ⟨E, hEsub, rfl⟩
   exact isVirtualCharacter_finset_sum_pf57 E (fun ψ => ψ)
     (fun ψ hψ => isVirtualCharacter_of_signedIrreducible_pf57 (hR.1 _ (hEsub hψ)))
@@ -1132,8 +1132,8 @@ private theorem pair_case_image_split_pf57
     (h52d : hypothesis_5_2_d_statement S T R)
     (X : S) :
     ∃ Xbig Xbarimg : Section1.ClassFunction G,
-      Theory.Character.IsVirtualCharacter Xbig ∧
-        Theory.Character.IsVirtualCharacter Xbarimg ∧
+      IsVirtualCharacter Xbig ∧
+        IsVirtualCharacter Xbarimg ∧
           Section1.scalarProduct G Xbig Xbig =
             Section1.scalarProduct L (X : Section1.ClassFunction L) (X : Section1.ClassFunction L) ∧
           Section1.scalarProduct G Xbarimg Xbarimg =
@@ -1295,7 +1295,7 @@ private theorem complement_image_of_subsetSum_pf57
         Section1.scalarProduct L (X : Section1.ClassFunction L)
           (X : Section1.ClassFunction L)) :
     ∃ Xbarimg : Section1.ClassFunction G,
-      Theory.Character.IsVirtualCharacter Xbarimg ∧
+      IsVirtualCharacter Xbarimg ∧
         integerSpan (R X) Xbarimg ∧
           Section1.scalarProduct G Xbarimg Xbarimg =
             Section1.scalarProduct L
@@ -1349,7 +1349,7 @@ private theorem complement_image_of_subsetSum_pf57
     ext g
     simp [Section1.evalCoeff, μEcomp, oneEcomp]
     simpa using (Finset.sum_attach Ecomp fun c : Section1.ClassFunction G => c g)
-  have hXbarimg_virt : Theory.Character.IsVirtualCharacter Xbarimg := by
+  have hXbarimg_virt : IsVirtualCharacter Xbarimg := by
     dsimp [Xbarimg]
     simpa using Section3.isVirtualCharacter_neg
       (isVirtualCharacter_finset_sum_pf57 Ecomp (fun ψ => ψ)
@@ -1577,7 +1577,7 @@ public theorem theorem_5_4_projection_data_pf57
       (integerSpanOn_of_generators_pf57 (S := S) (U := pairDiff)
         (A := puncturedSet) hpairDiff_gen hφ)).1
   have hTdiffψ_virt :
-      Theory.Character.IsVirtualCharacter (T diffψ) :=
+      IsVirtualCharacter (T diffψ) :=
     (h52b.2 diffψ (by simpa [diffψ] using hdiff_X_ψ)).1
   rcases h52d X with ⟨hRX, hTdiffX⟩
   rcases orthogonal_projection_decomposition_pf57 (R := R X) hRX hTdiffψ_virt with
@@ -1664,7 +1664,7 @@ private theorem theorem_5_7_projection_data_pf57
       (integerSpanOn_of_generators_pf57 (S := S) (U := pairDiff)
         (A := puncturedSet) hpairDiff_gen hφ)).1
   have hTdiffψ_virt :
-      Theory.Character.IsVirtualCharacter (T diffψ) :=
+      IsVirtualCharacter (T diffψ) :=
     (h52b.2 diffψ (by simpa [diffψ] using hdiff_X_X1)).1
   rcases h52d X with ⟨hRX, hTdiffX⟩
   rcases orthogonal_projection_decomposition_pf57 (R := R X) hRX hTdiffψ_virt with
@@ -1814,14 +1814,14 @@ private theorem diff_image_split_of_equal_degree_pf57
       Section1.scalarProduct L χX χYbar = 0 := scalarProduct_zero_swap_pf57 hYbarX_zero
   have horthYX : orthogonalFinsets (R Y) (R X) := h52e X Y hYX_zero hYXbar_zero
   have horthXY : orthogonalFinsets (R X) (R Y) := h52e Y X hXY_zero hXYbar_zero
-  have hηvirt : Theory.Character.IsVirtualCharacter (T (χX - χY)) :=
+  have hηvirt : IsVirtualCharacter (T (χX - χY)) :=
     (h52b.2 (χX - χY) hdiffXY_memOn).1
   rcases h52d X with ⟨hRX, _hTdiffX⟩
   rcases h52d Y with ⟨hRY, _hTdiffY⟩
   rcases orthogonal_projection_decomposition_pf57 (R := R X) hRX hηvirt with
     ⟨Xbig, remX, hXbig_span, hremX_orthX, hsplitX⟩
   let μX : R X → Section1.ClassFunction G := fun r => (r : Section1.ClassFunction G)
-  have hXbig_virt : Theory.Character.IsVirtualCharacter Xbig := by
+  have hXbig_virt : IsVirtualCharacter Xbig := by
     rcases hXbig_span with ⟨v, rfl⟩
     exact isVirtualCharacter_evalCoeff_pf57 μX
       (fun r => isVirtualCharacter_of_signedIrreducible_pf57 (hRX.1 _ r.2)) v
@@ -1833,7 +1833,7 @@ private theorem diff_image_split_of_equal_degree_pf57
     calc
       remX g = Xbig g - (Xbig g - remX g) := by ring
       _ = Xbig g - T (χX - χY) g := by rw [hsplitXg]
-  have hremXvirt : Theory.Character.IsVirtualCharacter remX := by
+  have hremXvirt : IsVirtualCharacter remX := by
     simpa [hremX_eq] using Section3.isVirtualCharacter_sub hXbig_virt hηvirt
   rcases orthogonal_projection_decomposition_pf57 (R := R Y) hRY hremXvirt with
     ⟨Yimg, Yrem, hYimg_span, hYrem_orthY, hsplitY⟩
@@ -1983,7 +1983,7 @@ private theorem anchored_image_general_case_pf57
         Section1.scalarProduct L (X : Section1.ClassFunction L)
           (X : Section1.ClassFunction L)) :
     ∃ Yimg : Section1.ClassFunction G,
-      Theory.Character.IsVirtualCharacter Yimg ∧
+      IsVirtualCharacter Yimg ∧
         orthogonalToFinset (R X) Yimg ∧
           T ((X : Section1.ClassFunction L) - (Y : Section1.ClassFunction L)) =
             Xbig - Yimg ∧
@@ -2019,7 +2019,7 @@ private theorem anchored_image_general_case_pf57
     ⟨XbigY, Yimg, hXbigY_span, _hYimg_span, _hXbigY_subset, hYimg_subset,
       _hXbigY_orthY, hYimg_orthX, hsplitY, hXbigY_self, hYimg_self⟩
   have hRY : signedOrthonormalFinset (R Y) := (h52d Y).1
-  have hYimg_virt : Theory.Character.IsVirtualCharacter Yimg :=
+  have hYimg_virt : IsVirtualCharacter Yimg :=
     isVirtualCharacter_of_subsetSum_pf57 hRY hYimg_subset
   have hXY_zero :
       Section1.scalarProduct L χX (Y : Section1.ClassFunction L) = 0 := by
@@ -2212,7 +2212,7 @@ private theorem anchored_image_of_pf57
         (Y : Section1.ClassFunction L) ≠
           Section1.conjugateCharacter (X : Section1.ClassFunction L) →
           ∃ Yimg : Section1.ClassFunction G,
-            Theory.Character.IsVirtualCharacter Yimg ∧
+            IsVirtualCharacter Yimg ∧
               orthogonalToFinset (R X) Yimg ∧
                 T ((X : Section1.ClassFunction L) - (Y : Section1.ClassFunction L)) =
                   Xbig - Yimg ∧
@@ -2225,7 +2225,7 @@ private theorem anchored_image_of_pf57
   let χX1 : Section1.ClassFunction L := X1
   let χX1bar : Section1.ClassFunction L := Section1.conjugateCharacter χX1
   have hRX1 : signedOrthonormalFinset (R X1) := (h52d X1).1
-  have hX1img_virt : Theory.Character.IsVirtualCharacter X1img :=
+  have hX1img_virt : IsVirtualCharacter X1img :=
     isVirtualCharacter_of_subsetSum_pf57 hRX1 hX1img_subset
   have hXX1_zero :
       Section1.scalarProduct L χX χX1 = 0 := by
@@ -2403,7 +2403,7 @@ private def anchoredImageSpec_pf57
       (Y : Section1.ClassFunction L) ≠
         Section1.conjugateCharacter (X : Section1.ClassFunction L) →
         ∃ Yimg : Section1.ClassFunction G,
-          Theory.Character.IsVirtualCharacter Yimg ∧
+          IsVirtualCharacter Yimg ∧
             orthogonalToFinset (R X) Yimg ∧
               T ((X : Section1.ClassFunction L) - (Y : Section1.ClassFunction L)) =
                 Xbig - Yimg ∧
@@ -2469,9 +2469,9 @@ private theorem anchorImage_pf57_virt
     (Xbig Xbarimg : Section1.ClassFunction G)
     (h52d : hypothesis_5_2_d_statement S T R)
     (hXbig_subset : isSubsetSumOf (R X) Xbig)
-    (hXbarimg_virt : Theory.Character.IsVirtualCharacter Xbarimg)
+    (hXbarimg_virt : IsVirtualCharacter Xbarimg)
     (hanchor : anchoredImageSpec_pf57 S T R X Xbig) :
-    ∀ Y : S, Theory.Character.IsVirtualCharacter (anchorImage_pf57 S T R X Xbig Xbarimg hanchor Y) := by
+    ∀ Y : S, IsVirtualCharacter (anchorImage_pf57 S T R X Xbig Xbarimg hanchor Y) := by
   classical
   have hRX : signedOrthonormalFinset (R X) := (h52d X).1
   intro Y
@@ -2632,7 +2632,7 @@ private theorem image_family_of_anchor_pf57
       Section1.scalarProduct G Xbig Xbig =
         Section1.scalarProduct L (X : Section1.ClassFunction L)
           (X : Section1.ClassFunction L))
-    (hXbarimg_virt : Theory.Character.IsVirtualCharacter Xbarimg)
+    (hXbarimg_virt : IsVirtualCharacter Xbarimg)
     (hXbarimg_self :
       Section1.scalarProduct G Xbarimg Xbarimg =
         Section1.scalarProduct L
@@ -2648,7 +2648,7 @@ private theorem image_family_of_anchor_pf57
     ∃ img : S → Section1.ClassFunction G,
       img X = Xbig ∧
       img ⟨Section1.conjugateCharacter (X : Section1.ClassFunction L), (h52a X).1⟩ = Xbarimg ∧
-      (∀ Y : S, Theory.Character.IsVirtualCharacter (img Y)) ∧
+      (∀ Y : S, IsVirtualCharacter (img Y)) ∧
       (∀ Y : S,
         T ((X : Section1.ClassFunction L) - (Y : Section1.ClassFunction L)) =
           img X - img Y) ∧
@@ -2667,7 +2667,7 @@ private theorem image_family_of_anchor_pf57
       img ⟨Section1.conjugateCharacter (X : Section1.ClassFunction L), (h52a X).1⟩ = Xbarimg := by
     simpa [img] using
       anchorImage_pf57_apply_conj S T R X h52a Xbig Xbarimg hanchor
-  have himg_virt : ∀ Y : S, Theory.Character.IsVirtualCharacter (img Y) := by
+  have himg_virt : ∀ Y : S, IsVirtualCharacter (img Y) := by
     intro Y
     simpa [img] using
       anchorImage_pf57_virt S T R X Xbig Xbarimg h52d hXbig_subset hXbarimg_virt hanchor Y
@@ -2906,7 +2906,7 @@ public theorem exists_extension_fields_of_image_family_pf57
       ∀ Y : S,
         Section1.scalarProduct L (Y : Section1.ClassFunction L)
           (Y : Section1.ClassFunction L) ≠ 0)
-    (himg_virt : ∀ Y : S, Theory.Character.IsVirtualCharacter (img Y))
+    (himg_virt : ∀ Y : S, IsVirtualCharacter (img Y))
     (hgram :
       ∀ Y Z : S,
         Section1.scalarProduct G (img Y) (img Z) =
@@ -2965,7 +2965,7 @@ private theorem coherent_triple_of_image_family_pf57
     (hdeg : ∀ Y Z : S,
       Section1.degree (Y : Section1.ClassFunction L) =
         Section1.degree (Z : Section1.ClassFunction L))
-    (himg_virt : ∀ Y : S, Theory.Character.IsVirtualCharacter (img Y))
+    (himg_virt : ∀ Y : S, IsVirtualCharacter (img Y))
     (himg_split :
       ∀ Y : S,
         T ((X : Section1.ClassFunction L) - (Y : Section1.ClassFunction L)) =
@@ -3067,7 +3067,7 @@ public theorem coherent_triple_of_image_family
     (hdeg : ∀ Y Z : S,
       Section1.degree (Y : Section1.ClassFunction L) =
         Section1.degree (Z : Section1.ClassFunction L))
-    (himg_virt : ∀ Y : S, Theory.Character.IsVirtualCharacter (img Y))
+    (himg_virt : ∀ Y : S, IsVirtualCharacter (img Y))
     (himg_split :
       ∀ Y : S,
         T ((X : Section1.ClassFunction L) - (Y : Section1.ClassFunction L)) =
@@ -3144,7 +3144,7 @@ private theorem theorem_5_7_pair_case_pf57
     · simpa [Xbar, χXbar] using
         degree_conjugateCharacter_eq_of_isCharacter_pf57 hχXchar
     · rfl
-  have himg_virt : ∀ Y : S, Theory.Character.IsVirtualCharacter (img Y) := by
+  have himg_virt : ∀ Y : S, IsVirtualCharacter (img Y) := by
     intro Y
     rcases hY_cases Y with rfl | rfl
     · simpa [img] using hXbig_virt
@@ -3428,7 +3428,7 @@ public theorem bridgeCoherentExtensions
       T1 (X : Section1.ClassFunction L)
     else
       T2 (X : Section1.ClassFunction L)
-  have himgVirt : ∀ X : U, Theory.Character.IsVirtualCharacter (img X) := by
+  have himgVirt : ∀ X : U, IsVirtualCharacter (img X) := by
     intro X
     by_cases hX : (X : Section1.ClassFunction L) ∈ S1
     · simp only [img, dif_pos hX]

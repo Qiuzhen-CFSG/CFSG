@@ -2,7 +2,6 @@ module
 
 public import BenderSuzuki.External.Huppert.XI.FrobeniusKernel
 public import BenderSuzuki.RightNearField
-open Theory.ElementaryAbelian
 
 
 /-!

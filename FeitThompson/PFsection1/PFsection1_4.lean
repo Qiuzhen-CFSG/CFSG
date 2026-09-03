@@ -79,7 +79,7 @@ public theorem standardizeRepresentation_irreducible
     Representation.IsIrreducible (standardizeRepresentation ρ) := by
   let b : Module.Basis (Fin (Module.finrank ℂ V)) ℂ V := Module.finBasis ℂ V
   let e : V ≃ₗ[ℂ] (Fin (Module.finrank ℂ V) → ℂ) := b.equivFun
-  let eRep : Theory.Representation.RepEquiv ρ (standardizeRepresentation ρ) := by
+  let eRep : Representation.RepEquiv ρ (standardizeRepresentation ρ) := by
     refine
       { toLinearEquiv := e
         isIntertwining' := ?_ }
@@ -88,7 +88,7 @@ public theorem standardizeRepresentation_irreducible
     have h := congrArg (fun w => w i)
       (LinearMap.toMatrix_mulVec_repr (v₁ := b) (v₂ := b) (f := ρ g) v)
     simp [standardizeRepresentation, e, b, b.equivFun_apply]
-  exact (Theory.Representation.RepEquiv.irreducible_euqiv eRep).1 hρ
+  exact (Representation.RepEquiv.irreducible_euqiv eRep).1 hρ
 
 public theorem isIrreducibleCharacterOnGroup_of_representation
     {G V : Type*} [Group G] [Finite G]

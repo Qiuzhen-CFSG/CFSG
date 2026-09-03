@@ -68,9 +68,6 @@ lemma mem_blockElementaryMap_iff
 
 section BlockDecomposition
 
-variable {R M ι : Type*} [CommRing R]
-variable [AddCommGroup M] [Module R M]
-variable [DecidableEq ι] (A : ι → Submodule R M) (h : DirectSum.IsInternal A)
 
 section Projections
 
@@ -78,12 +75,18 @@ open DirectSum LinearMap
 
 /-- Given an internal direct sum decomposition `h : IsInternal A`, define the projection
   onto the `i`-th component as an endomorphism of `M`. -/
-noncomputable def projection (i : ι) : Module.End R M :=
+noncomputable def projection
+    {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M]
+    {ι : Type*} [DecidableEq ι] (A : ι → Submodule R M) (h : DirectSum.IsInternal A)
+    (i : ι) : Module.End R M :=
   (A i).subtype
   ∘ₗ component R ι (fun i => ↥(A i)) i
   ∘ₗ (LinearEquiv.ofBijective (coeLinearMap A) h).symm.toLinearMap
 
-lemma projection_apply (i : ι) (x : M)
+lemma projection_apply
+    {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M]
+    {ι : Type*} [DecidableEq ι] (A : ι → Submodule R M) (h : DirectSum.IsInternal A)
+    (i : ι) (x : M)
     : projection A h i x
       = ((LinearEquiv.ofBijective (coeLinearMap A) h).symm x i).val := by
   calc
@@ -96,23 +99,35 @@ lemma projection_apply (i : ι) (x : M)
       rw [← apply_eq_component]
     _ = ((LinearEquiv.ofBijective (coeLinearMap A) h).symm x i).val := rfl
 
-lemma projection_maps_to (i : ι) (x : M) : projection A h i x ∈ A i := by
+lemma projection_maps_to
+    {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M]
+    {ι : Type*} [DecidableEq ι] (A : ι → Submodule R M) (h : DirectSum.IsInternal A)
+    (i : ι) (x : M) : projection A h i x ∈ A i := by
   rw [projection_apply]
   exact ((LinearEquiv.ofBijective (coeLinearMap A) h).symm x i).2
 
-lemma projection_of_mem (i : ι) (x : M) (hx : x ∈ A i) : projection A h i x = x := by
+lemma projection_of_mem
+    {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M]
+    {ι : Type*} [DecidableEq ι] (A : ι → Submodule R M) (h : DirectSum.IsInternal A)
+    (i : ι) (x : M) (hx : x ∈ A i) : projection A h i x = x := by
   rw [projection_apply]
   have := h.ofBijective_coeLinearMap_of_mem hx
   simp_rw [← Subtype.coe_inj] at this
   exact this
 
-lemma projection_of_mem_ne (i j : ι) (hij : i ≠ j) (x : M) (hx : x ∈ A i)
+lemma projection_of_mem_ne
+    {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M]
+    {ι : Type*} [DecidableEq ι] (A : ι → Submodule R M) (h : DirectSum.IsInternal A)
+    (i j : ι) (hij : i ≠ j) (x : M) (hx : x ∈ A i)
     : projection A h j x = 0 := by
   rw [projection_apply]
   have := h.ofBijective_coeLinearMap_of_mem_ne hij hx
   simp [this]
 
-lemma submodule_eq_bot_of_eq_of_ne (i j : ι) (h' : DirectSum.IsInternal A) (hij : i ≠ j)
+lemma submodule_eq_bot_of_eq_of_ne
+    {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M]
+    {ι : Type*} [DecidableEq ι] (A : ι → Submodule R M)
+    (i j : ι) (h' : DirectSum.IsInternal A) (hij : i ≠ j)
     (h_eq : A i = A j)
     : A i = ⊥ := by
   have h_disj := h'.submodule_iSupIndep.pairwiseDisjoint hij
@@ -121,16 +136,21 @@ lemma submodule_eq_bot_of_eq_of_ne (i j : ι) (h' : DirectSum.IsInternal A) (hij
   have h_bot : A j = ⊥ := h_disj.eq_bot_of_self
   exact h_eq.symm ▸ h_bot
 
-variable [Fintype ι]
 
-lemma coeLinearMap_apply (v : ⨁ i, A i) : coeLinearMap A v = ∑ i : ι, (v i).val := by
+lemma coeLinearMap_apply
+    {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M]
+    {ι : Type*} [DecidableEq ι] [Fintype ι] (A : ι → Submodule R M)
+    (v : ⨁ i, A i) : coeLinearMap A v = ∑ i : ι, (v i).val := by
   classical
   simp only [coeLinearMap, toModule, DFinsupp.lsum, LinearEquiv.coe_mk, coe_mk, AddHom.coe_mk]
   show (DFinsupp.sumAddHom fun i ↦ (A i).subtype.toAddMonoidHom) v = ∑ x, (v x)
   rw [DFinsupp.sumAddHom_apply]
   simp_all only [toAddMonoidHom_coe, Submodule.coe_subtype, ZeroMemClass.coe_zero, implies_true, DFinsupp.sum_eq_sum_fintype, DFinsupp.equivFunOnFintype_apply]
 
-lemma sum_projection_id : ∑ i : ι, projection A h i = LinearMap.id := by
+lemma sum_projection_id
+    {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M]
+    {ι : Type*} [DecidableEq ι] [Fintype ι] (A : ι → Submodule R M)
+    (h : DirectSum.IsInternal A) : ∑ i : ι, projection A h i = LinearMap.id := by
   ext x
   classical
   calc
@@ -150,14 +170,23 @@ open CompleteLattice
 
 /-- The `(i,t)` block component of an endomorphism with respect to the internal
 decomposition `A`. -/
-noncomputable def blockComponent (T : Module.End R M) (i t : ι) : Module.End R M :=
+noncomputable def blockComponent
+    {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M]
+    {ι : Type*} [DecidableEq ι] (A : ι → Submodule R M) (h : DirectSum.IsInternal A)
+    (T : Module.End R M) (i t : ι) : Module.End R M :=
   projection A h t ∘ₗ T ∘ₗ projection A h i
 
-lemma blockComponent_apply (T : Module.End R M) (i t : ι) (x : M)
+lemma blockComponent_apply
+    {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M]
+    {ι : Type*} [DecidableEq ι] (A : ι → Submodule R M) (h : DirectSum.IsInternal A)
+    (T : Module.End R M) (i t : ι) (x : M)
     : blockComponent A h T i t x = projection A h t (T (projection A h i x)) :=
   rfl
 
-noncomputable def blockComponentLinear (i t : ι) : Module.End R (Module.End R M) :=
+noncomputable def blockComponentLinear
+    {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M]
+    {ι : Type*} [DecidableEq ι] (A : ι → Submodule R M) (h : DirectSum.IsInternal A)
+    (i t : ι) : Module.End R (Module.End R M) :=
   {
     toFun := fun T => blockComponent A h T i t
     map_add' := by
@@ -170,7 +199,10 @@ noncomputable def blockComponentLinear (i t : ι) : Module.End R (Module.End R M
       simp [blockComponent_apply, LinearMap.smul_apply]
   }
 
-lemma blockComponent_mem_blockElementaryMap (T : Module.End R M) (i t : ι)
+lemma blockComponent_mem_blockElementaryMap
+    {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M]
+    {ι : Type*} [DecidableEq ι] [Fintype ι] (A : ι → Submodule R M)
+    (h : DirectSum.IsInternal A) (T : Module.End R M) (i t : ι)
     : blockComponent A h T i t ∈ blockElementaryMap A i t := by
   rw [mem_blockElementaryMap_iff A h i t]
   constructor
@@ -186,7 +218,10 @@ lemma blockComponent_mem_blockElementaryMap (T : Module.End R M) (i t : ι)
     have hproj : projection A h i v = 0 := projection_of_mem_ne A h j i hij v hv
     rw [hproj, map_zero, map_zero]
 
-lemma blockComponent_of_mem [Fintype ι] (i t : ι) (X : Module.End R M)
+lemma blockComponent_of_mem
+    {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M]
+    {ι : Type*} [DecidableEq ι] [Fintype ι] (A : ι → Submodule R M)
+    (h : DirectSum.IsInternal A) (i t : ι) (X : Module.End R M)
     (hX : X ∈ blockElementaryMap A i t)
     : blockComponent A h X i t = X := by
   classical
@@ -220,7 +255,10 @@ lemma blockComponent_of_mem [Fintype ι] (i t : ι) (X : Module.End R M)
   rw [blockComponent_apply, hsum']
   exact projection_of_mem A h t _ (hX₁ _ (projection_maps_to A h i x))
 
-lemma blockComponent_of_mem_ne (i t i' t' : ι) (hi_disj : i ≠ i' ∨ t ≠ t')
+lemma blockComponent_of_mem_ne
+    {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M]
+    {ι : Type*} [DecidableEq ι] [Fintype ι] (A : ι → Submodule R M)
+    (h : DirectSum.IsInternal A) (i t i' t' : ι) (hi_disj : i ≠ i' ∨ t ≠ t')
     (X : Module.End R M) (hX : X ∈ blockElementaryMap A i t)
     : blockComponent A h X i' t' = 0 := by
   rcases (mem_blockElementaryMap_iff A h i t X).mp hX with ⟨h1, h2⟩
@@ -262,7 +300,10 @@ lemma blockComponent_of_mem_ne (i t i' t' : ι) (hi_disj : i ≠ i' ∨ t ≠ t'
           h2 i' h_eq (projection A h i' x) (projection_maps_to A h i' x)
         rw [hzero, map_zero]
 
-lemma blockComponent_of_mem_ne' (it it' : ι × ι) (hne : it ≠ it') (X : Module.End R M)
+lemma blockComponent_of_mem_ne'
+    {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M]
+    {ι : Type*} [DecidableEq ι] [Fintype ι] (A : ι → Submodule R M)
+    (h : DirectSum.IsInternal A) (it it' : ι × ι) (hne : it ≠ it') (X : Module.End R M)
     (hX : X ∈ blockElementaryMap A it.1 it.2)
     : blockComponent A h X it'.1 it'.2 = 0 := by
   by_cases h_left : it.1 = it'.1
@@ -272,9 +313,11 @@ lemma blockComponent_of_mem_ne' (it it' : ι × ι) (hne : it ≠ it') (X : Modu
     exact blockComponent_of_mem_ne A h it.1 it.2 it'.1 it'.2 (Or.inr h_right) X hX
   · exact blockComponent_of_mem_ne A h it.1 it.2 it'.1 it'.2 (Or.inl h_left) X hX
 
-variable [Fintype ι]
 
-lemma blockElementaryMap_iSupIndep (h : DirectSum.IsInternal A)
+lemma blockElementaryMap_iSupIndep
+    {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M]
+    {ι : Type*} [DecidableEq ι] [Fintype ι] (A : ι → Submodule R M)
+    (h : DirectSum.IsInternal A)
     : iSupIndep (fun (it : ι × ι) => blockElementaryMap A it.1 it.2) := by
   intro it0
   let N := LinearMap.ker (blockComponentLinear A h it0.1 it0.2)
@@ -298,7 +341,10 @@ lemma blockElementaryMap_iSupIndep (h : DirectSum.IsInternal A)
     X = blockComponent A h X it0.1 it0.2 := h_self.symm
     _ = 0 := h_zero
 
-lemma decompose_endomorphism (T : Module.End R M)
+lemma decompose_endomorphism
+    {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M]
+    {ι : Type*} [DecidableEq ι] [Fintype ι] (A : ι → Submodule R M)
+    (h : DirectSum.IsInternal A) (T : Module.End R M)
     : T = ∑ i : ι, ∑ t : ι, blockComponent A h T i t := by
   classical
   ext x
@@ -318,7 +364,10 @@ lemma decompose_endomorphism (T : Module.End R M)
     _ = (∑ i : ι, ∑ t : ι, blockComponent A h T i t) x := by
       simp [LinearMap.sum_apply]
 
-lemma blockElementaryMap_iSup_eq_top (h : DirectSum.IsInternal A)
+lemma blockElementaryMap_iSup_eq_top
+    {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M]
+    {ι : Type*} [DecidableEq ι] [Fintype ι] (A : ι → Submodule R M)
+    (h : DirectSum.IsInternal A)
     : ⨆ it : ι × ι, blockElementaryMap A it.1 it.2 = ⊤ := by
   apply Submodule.eq_top_iff'.mpr
   intro T
@@ -332,7 +381,10 @@ lemma blockElementaryMap_iSup_eq_top (h : DirectSum.IsInternal A)
   rw [← h_decomp] at h_sum_mem
   exact h_sum_mem
 
-lemma isInternal_blockElementaryMap (h : DirectSum.IsInternal A)
+lemma isInternal_blockElementaryMap
+    {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M]
+    {ι : Type*} [DecidableEq ι] [Fintype ι] (A : ι → Submodule R M)
+    (h : DirectSum.IsInternal A)
     : DirectSum.IsInternal (fun (it : ι × ι) => blockElementaryMap A it.1 it.2) := by
   refine (DirectSum.isInternal_submodule_iff_iSupIndep_and_iSup_eq_top (R := R) (ι := ι × ι) (M := Module.End R M) (A := fun (it : ι × ι) => blockElementaryMap A it.1 it.2)).mpr ?_
   exact ⟨blockElementaryMap_iSupIndep A h, blockElementaryMap_iSup_eq_top A h⟩
