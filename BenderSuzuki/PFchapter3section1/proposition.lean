@@ -15,6 +15,7 @@ import BenderSuzuki.PFAppendixIII.lemma_2
 import FeitThompson.GroupAction.CoprimeHall
 import FeitThompson.Wielandt.FixedPointProduct
 public import BenderSuzuki.PFchapter3section1.Basic
+open Theory.ElementaryAbelian
 
 namespace BenderSuzuki
 namespace PFchapter3section1

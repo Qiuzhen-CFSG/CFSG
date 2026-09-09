@@ -11,6 +11,7 @@ public import Mathlib.LinearAlgebra.Dimension.Constructions
 public import Mathlib.LinearAlgebra.GeneralLinearGroup.Basic
 
 public import FeitThompson.ElementaryAbelian
+open Theory.ElementaryAbelian
 
 open scoped IsMulCommutative
 

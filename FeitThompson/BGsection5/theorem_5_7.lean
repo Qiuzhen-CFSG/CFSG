@@ -5,6 +5,7 @@ public import FeitThompson.GeneratorRank
 public import FeitThompson.BGsection5.theorem_5_3
 public import FeitThompson.BGsection5.theorem_5_5_a
 public import FeitThompson.BGsection4.corollary_4_19
+open Theory.ElementaryAbelian
 
 /-! # Theorem 5.7 from BG Section 5 -/
 

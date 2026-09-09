@@ -1,6 +1,7 @@
 module
 
 public import Glauberman.MinimalNormalPSubgroupGLAction
+open Theory.ElementaryAbelian
 
 /-!
 # Quadratic commutators as square-zero linear perturbations

@@ -12,6 +12,7 @@ import BenderSuzuki.PFchapter1section2.AppendixIInput
 import BenderSuzuki.PFchapter1section3.lemma_5
 import BenderSuzuki.PFchapter3section3.proposition
 import FeitThompson.GroupAction.CoprimeHall
+open Theory.ElementaryAbelian
 
 namespace BenderSuzuki
 namespace PFchapter4section4

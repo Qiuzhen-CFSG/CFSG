@@ -1,6 +1,7 @@
 module
 
 public import BenderSuzuki.SE.Section11Lemma115QuotientLift
+open Theory.ElementaryAbelian
 
 /-!
 # Section 11, Lemma 11.5: ambient normalization after the quotient lift

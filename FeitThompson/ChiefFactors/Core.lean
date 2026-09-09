@@ -19,6 +19,7 @@ import Mathlib.Tactic.TypeStar
 public import FeitThompson.ElementaryAbelian
 public import FeitThompson.Fitting.Core
 import FeitThompson.PGroup.Omega
+open Theory.ElementaryAbelian
 
 open scoped IsMulCommutative commutatorElement
 

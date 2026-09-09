@@ -1,6 +1,7 @@
 module
 
 public import FeitThompson.PFsection9.PFsection9_8.Core
+open Theory.ElementaryAbelian
 
 noncomputable section
 

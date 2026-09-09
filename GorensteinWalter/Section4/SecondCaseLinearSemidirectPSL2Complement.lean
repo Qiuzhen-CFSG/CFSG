@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.PSL2CoprimePrimeCentralizer
 public import GorensteinWalter.Section4.SecondCaseLinearSemidirectComplement
 import Mathlib.Tactic
+open Theory.ElementaryAbelian
 
 noncomputable section
 

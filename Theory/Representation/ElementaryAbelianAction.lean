@@ -4,6 +4,7 @@ public import Mathlib.RepresentationTheory.Invariants
 
 public import FeitThompson.ElementaryAbelian
 public import FeitThompson.GroupAction.Defs
+open Theory.ElementaryAbelian
 
 open scoped IsMulCommutative
 

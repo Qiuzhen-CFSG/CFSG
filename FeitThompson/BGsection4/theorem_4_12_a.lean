@@ -6,6 +6,7 @@ public import FeitThompson.BGsection4.lemma_4_5_a
 public import FeitThompson.BGsection4.lemma_4_5_b
 public import FeitThompson.BGsection4.lemma_4_10
 public import Theory.Representation.ElementaryAbelianAction
+open Theory.ElementaryAbelian
 
 open scoped FixedPoints IsMulCommutative commutatorElement
 

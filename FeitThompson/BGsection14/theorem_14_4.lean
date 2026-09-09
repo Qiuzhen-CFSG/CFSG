@@ -1,6 +1,7 @@
 module
 
 public import FeitThompson.BGsection14.corollary_14_3
+open Theory.ElementaryAbelian
 
 open scoped Pointwise
 

@@ -12,6 +12,7 @@ import FeitThompson.PFsection6.PFsection6_5_b
 import FeitThompson.PFsection6.PFsection6_6
 import FeitThompson.HallSubgroups.Core
 import Theory.Character.DegreeBounds
+open Theory.ElementaryAbelian
 
 attribute [local instance] commutatorElement
 open scoped IsMulCommutative

@@ -21,6 +21,7 @@ import FeitThompson.PFsection9.PFsection9_3
 import FeitThompson.PFsection9.PFsection9_4
 import FeitThompson.PFsection9.PFsection9_6
 public import FeitThompson.PFsection9.PFsection9_11
+open Theory.ElementaryAbelian
 
 /-!
 # Peterfalvi, Section 10: Theorem (10.11)

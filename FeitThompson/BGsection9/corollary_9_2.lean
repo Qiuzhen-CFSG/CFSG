@@ -3,6 +3,7 @@ module
 public import FeitThompson.BGsection9.theorem_9_1
 import Mathlib.GroupTheory.Schreier
 import Mathlib.GroupTheory.Subgroup.Centralizer
+open Theory.ElementaryAbelian
 
 open scoped Pointwise
 

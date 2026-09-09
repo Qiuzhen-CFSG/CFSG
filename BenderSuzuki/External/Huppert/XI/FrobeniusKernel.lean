@@ -6,6 +6,7 @@ public import FeitThompson.ElementaryAbelian
 public import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
 public import Mathlib.GroupTheory.PGroup
 import FeitThompson.BGsection3.lemma_3_1
+open Theory.ElementaryAbelian
 
 /-!
 # Point-stabilizer Frobenius kernels for Huppert--Blackburn XI

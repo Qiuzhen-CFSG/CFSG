@@ -14,6 +14,7 @@ import FeitThompson.PFsection1.PFsection1_7_Mackey
 import FeitThompson.PFsection6.PFsection6_8
 import FeitThompson.PCore.Nilpotent
 import Theory.Character.BrauerPermutation
+open Theory.ElementaryAbelian
 
 /-!
 # Feit XI.6.1

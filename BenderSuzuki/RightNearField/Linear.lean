@@ -6,6 +6,7 @@ public import Mathlib.Algebra.Module.ZMod
 
 public import FeitThompson.ElementaryAbelian
 public import Mathlib.RepresentationTheory.Maschke
+open Theory.ElementaryAbelian
 /-!
 # Linear algebra of finite right near-fields
 

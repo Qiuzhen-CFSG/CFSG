@@ -29,6 +29,7 @@ import Mathlib.Algebra.Polynomial.SpecificDegree
 import Mathlib.Algebra.BigOperators.Ring.Nat
 import Mathlib.GroupTheory.GroupAction.ConjAct
 import Mathlib.GroupTheory.Transfer
+open Theory.ElementaryAbelian
 
 /-!
 # Huppert II.8.27
