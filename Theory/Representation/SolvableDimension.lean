@@ -15,10 +15,10 @@ public import Mathlib.RingTheory.SimpleModule.Isotypic
 public import Mathlib.RingTheory.ZMod.Torsion
 public import FeitThompson.BGsection1.CriticalSubgroupLemmas
 public import FeitThompson.Burnside.NormalComplement
-public import FeitThompson.Extraspecial
-public import FeitThompson.LinearAlgebra.BlockElementaryMap
+public import Theory.PGroup.Extraspecial
+public import Theory.LinearAlgebra.BlockDecomposition
 public import Theory.Representation.ConjugateRep
-public import FeitThompson.BGsection2.EndFieldRep
+public import Theory.Representation.EndomorphismField
 public import Theory.Representation.CyclicQuotientExtension
 
 open _root_.Representation
