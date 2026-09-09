@@ -8,6 +8,7 @@ import FeitThompson.FinalTheorem
 import FeitThompson.ChiefFactors.BaerCore
 import FeitThompson.ChiefFactors.Core
 import FeitThompson.HallSubgroups.Conjugacy
+open Theory.ElementaryAbelian
 
 /-!
 # Huppert I.18.3

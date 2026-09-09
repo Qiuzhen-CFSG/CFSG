@@ -13,6 +13,7 @@ import FeitThompson.HallSubgroups.Core
 import FeitThompson.PFsection6.PFsection6_5_a
 import Theory.Representation.SubrepresentationLattice
 import FeitThompson.Wielandt.FixedPointProduct
+open Theory.ElementaryAbelian
 
 namespace BenderSuzuki
 namespace PFchapter2

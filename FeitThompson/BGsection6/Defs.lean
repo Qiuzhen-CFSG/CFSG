@@ -31,6 +31,7 @@ public import Mathlib.GroupTheory.Commutator.Basic
 public import Mathlib.LinearAlgebra.GeneralLinearGroup.AlgEquiv
 public import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
 public import Mathlib.LinearAlgebra.Eigenspace.Semisimple
+open Theory.ElementaryAbelian
 
 open scoped MatrixGroups Pointwise TensorProduct commutatorElement IsMulCommutative
 

@@ -12,6 +12,7 @@ import FeitThompson.GroupAction.MinimalNormal
 import FeitThompson.PGroup.NormalSubgroups
 import FeitThompson.Fitting.Centralizer
 public import Theory.Representation.ElementaryAbelianAction
+open Theory.ElementaryAbelian
 
 open scoped Pointwise TensorProduct commutatorElement IsMulCommutative
 

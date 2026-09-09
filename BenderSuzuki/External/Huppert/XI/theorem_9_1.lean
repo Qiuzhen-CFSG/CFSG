@@ -8,6 +8,7 @@ import FeitThompson.PFsection1.PFsection1_7_Mackey
 import FeitThompson.PFsection6.PFsection6_8
 import Theory.Character.BrauerPermutation
 import Mathlib.NumberTheory.Multiplicity
+open Theory.ElementaryAbelian
 
 /-!
 # Ito XI.9.1

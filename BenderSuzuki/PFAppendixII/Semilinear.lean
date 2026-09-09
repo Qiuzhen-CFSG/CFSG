@@ -3,6 +3,7 @@ module
 public import BenderSuzuki.RightNearField.Linear
 public import BenderSuzuki.PFAppendixI.proposition_2
 public import Theory.Representation.Maschke
+open Theory.ElementaryAbelian
 
 /-!
 # Semilinear coordinates for finite right near-fields

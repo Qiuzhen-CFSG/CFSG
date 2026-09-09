@@ -8,6 +8,7 @@ public import FeitThompson.BGsection3.theorem_3_6
 public import FeitThompson.BGsection9.corollary_9_2
 import Theory.Representation.ElementaryAbelianAction
 import Mathlib.Algebra.Field.ULift
+open Theory.ElementaryAbelian
 
 /-!
 # Huppert IV.6.2

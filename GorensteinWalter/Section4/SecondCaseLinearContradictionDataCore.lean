@@ -24,6 +24,7 @@ import GorensteinWalter.NormalComplementEquiv
 import GorensteinWalter.NormalComplementSubgroupOf
 import GorensteinWalter.CentralizerSup
 import Mathlib.Tactic
+open Theory.ElementaryAbelian
 
 /-!
 # Section 4: the completed linear contradiction-data producer

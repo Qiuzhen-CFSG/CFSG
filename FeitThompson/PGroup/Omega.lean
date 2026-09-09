@@ -8,6 +8,7 @@ public import Mathlib.GroupTheory.PGroup
 import Mathlib.GroupTheory.Sylow
 import Mathlib.Tactic.Basic
 public import FeitThompson.ElementaryAbelian
+open Theory.ElementaryAbelian
 
 open scoped IsMulCommutative
 

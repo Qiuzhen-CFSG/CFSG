@@ -23,6 +23,7 @@ import FeitThompson.PFsection8.SourceTypePBridge
 import FeitThompson.PFsection9.PFsection9_1
 import Mathlib.GroupTheory.Schreier
 import Mathlib.RingTheory.ZMod.UnitsCyclic
+open Theory.ElementaryAbelian
 
 /-!
 # Peterfalvi, Section 12: Theorem (12.16)

@@ -1,6 +1,7 @@
 module
 
 public import FeitThompson.ElementaryAbelian
+open Theory.ElementaryAbelian
 
 /-- An extraspecial `p`-group has center of order `p`, elementary abelian central quotient, and
 nontrivial central quotient. -/

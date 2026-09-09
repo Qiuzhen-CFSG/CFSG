@@ -1,6 +1,7 @@
 module
 
 public import BenderSuzuki.External.Huppert.V.FrattiniQuotient
+open Theory.ElementaryAbelian
 
 namespace BenderSuzuki
 namespace External

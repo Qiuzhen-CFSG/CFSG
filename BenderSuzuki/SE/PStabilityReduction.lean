@@ -5,6 +5,7 @@ import all FeitThompson.BGsection6.Defs
 import FeitThompson.BGsection6.theorem_6_1
 import Theory.Representation.ElementaryAbelianAction
 import FeitThompson.SubgroupConj
+open Theory.ElementaryAbelian
 
 /-!
 # The p-stability reduction for groups with abelian Sylow 2-subgroups

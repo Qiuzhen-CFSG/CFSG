@@ -1,6 +1,7 @@
 module
 
 public import FeitThompson.PFsection14.PFsection14_2
+open Theory.ElementaryAbelian
 
 /-!
 # Peterfalvi, Section 14: section conclusion

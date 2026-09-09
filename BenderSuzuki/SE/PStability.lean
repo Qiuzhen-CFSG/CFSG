@@ -7,6 +7,7 @@ import FeitThompson.BGsection9.corollary_9_2
 import FeitThompson.Burnside.NormalComplement
 import FeitThompson.Frattini.Core
 import Theory.Representation.TwoDimensionalOddOrder
+open Theory.ElementaryAbelian
 
 /-!
 # Abelian Sylow subgroups and the `SL(2,3)` obstruction

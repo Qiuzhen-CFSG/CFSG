@@ -9,6 +9,7 @@ import FeitThompson.Frattini.Core
 import FeitThompson.Commutator.Core
 import FeitThompson.GroupAction.Invariant
 import FeitThompson.GroupAction.Quotient
+open Theory.ElementaryAbelian
 
 /-!
 # Higman Lemma 13

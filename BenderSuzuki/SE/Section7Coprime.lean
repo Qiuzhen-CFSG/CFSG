@@ -5,6 +5,7 @@ public import BenderSuzuki.SE.Compat
 import FeitThompson.GroupAction.CoprimeHall
 import FeitThompson.SubgroupConj
 import FeitThompson.Wielandt.FixedPointProduct
+open Theory.ElementaryAbelian
 
 /-!
 # Section 7: coprime-action generation for Lemma 7.5

@@ -9,6 +9,7 @@ public import Mathlib.LinearAlgebra.Dimension.Free
 public import Mathlib.LinearAlgebra.StdBasis
 import FeitThompson.Wielandt.FixedPointProduct
 public import FeitThompson.Wielandt.HomocyclicLift
+open Theory.ElementaryAbelian
 
 /-!
 # Subgroup rectangular packages for Wielandt fixed-point arguments
