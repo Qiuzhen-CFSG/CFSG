@@ -7,6 +7,7 @@ import FeitThompson.PFsection5.PFsection5_7
 import FeitThompson.PFsection5.PFsection5_8
 import Theory.Character.DegreeBounds
 public import FeitThompson.PFsection9.Basic
+open Theory.GroupAction
 open Theory.ElementaryAbelian
 
 /-!

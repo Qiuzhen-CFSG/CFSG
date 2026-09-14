@@ -1,6 +1,7 @@
 module
 
 public import FeitThompson.BGsection1.proposition_1_10
+open Theory.GroupAction
 
 open scoped Pointwise IsMulCommutative commutatorElement
 

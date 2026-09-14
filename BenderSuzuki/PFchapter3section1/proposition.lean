@@ -25,6 +25,7 @@ open PFchapter1section2
 open PFchapter1section3
 open MatrixGroups
 open scoped LinearAlgebra.Projectivization Pointwise
+open Theory.GroupAction
 
 universe u v
 

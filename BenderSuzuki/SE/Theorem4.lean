@@ -37,6 +37,7 @@ namespace BenderSuzuki
 open scoped Pointwise commutatorElement
 
 open PFAppendixIII PFchapter1section1
+open Theory.GroupAction
 
 universe u
 

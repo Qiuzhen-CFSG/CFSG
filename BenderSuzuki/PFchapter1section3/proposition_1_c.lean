@@ -18,6 +18,7 @@ import BenderSuzuki.External.Huppert.XI.theorem_3_3
 import BenderSuzuki.External.Huppert.XI.theorem_3_6
 import FeitThompson.GroupAction.Cardinalities
 import Mathlib.FieldTheory.Fixed
+open Theory.GroupAction
 open Theory.ElementaryAbelian
 
 namespace BenderSuzuki

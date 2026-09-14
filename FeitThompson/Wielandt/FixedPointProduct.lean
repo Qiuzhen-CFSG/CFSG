@@ -19,6 +19,7 @@ ladder remains in `FeitThompson.Wielandt`.
 noncomputable section
 
 open scoped IsMulCommutative
+open Theory.GroupAction
 
 namespace Wielandt
 

@@ -6,6 +6,7 @@ import FeitThompson.GroupAction.Quotient
 
 import Mathlib.Order.Atoms.Finite
 import Mathlib.Order.RelSeries
+open Theory.GroupAction
 
 section Proposition12
 

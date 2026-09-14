@@ -3,8 +3,8 @@ module
 public import Mathlib.Algebra.Group.Subgroup.Finite
 public import Theory.GroupAction.Defs
 public import Theory.GroupAction.Invariant
-
 open Theory.GroupAction
+
 
 open scoped Pointwise
 

@@ -40,6 +40,7 @@ public import Theory.Representation.RepEquiv
 public import Theory.Representation.kerRepresentation
 public import Theory.Representation.SubrepresentationLattice
 public import FeitThompson.SubgroupConjAction
+open Theory.GroupAction
 
 open scoped FixedPoints TensorProduct Pointwise
 

@@ -20,6 +20,7 @@ import Mathlib.Tactic.TypeStar
 public import FeitThompson.GroupAction.Invariant
 public import FeitThompson.GroupAction.Quotient
 public import FeitThompson.HallSubgroups.Core
+open Theory.GroupAction
 
 section SemidirectInfrastructure
 

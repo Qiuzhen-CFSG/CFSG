@@ -1,6 +1,7 @@
 module
 
 public import Glauberman.MinimalNormalPSubgroupFaithfulIrreducibleAction
+open Theory.GroupAction
 open Theory.ElementaryAbelian
 
 /-!

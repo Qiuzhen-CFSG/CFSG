@@ -6,6 +6,7 @@ import BenderSuzuki.External.Isaacs.VII.problem_7_1
 import BenderSuzuki.PFchapter1section1.lemma_b
 import BenderSuzuki.PFchapter1section1.proposition_2_a
 import FeitThompson.BGsection3.lemma_3_1
+open Theory.GroupAction
 
 /-!
 # Section 9, Lemma 9.8

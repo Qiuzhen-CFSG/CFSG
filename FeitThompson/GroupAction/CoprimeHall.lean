@@ -6,6 +6,7 @@ import FeitThompson.Frattini.CoprimeAction
 import FeitThompson.GroupAction.MinimalNormal
 import FeitThompson.GroupAction.Quotient
 import FeitThompson.HallSubgroups.Conjugacy
+open Theory.GroupAction
 
 open scoped Pointwise
 

@@ -515,3 +515,4 @@ public import FeitThompson.Wielandt.HomocyclicLift
 public import FeitThompson.Wielandt.MatrixTrace
 public import FeitThompson.Wielandt.StandardCover
 public import FeitThompson.Wielandt.SubgroupRectangular
+open Theory.GroupAction

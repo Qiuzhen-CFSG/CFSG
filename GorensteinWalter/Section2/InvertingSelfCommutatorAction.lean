@@ -1,6 +1,7 @@
 module
 
 public import FeitThompson.GroupAction.Lemmas
+open Theory.GroupAction
 
 /-!
 # An inverting operator centralizes a self-commutator action

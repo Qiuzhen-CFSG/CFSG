@@ -4,6 +4,7 @@ public import BenderSuzuki.PFchapter1section1.Basic
 public import BenderSuzuki.PFchapter1section1.proposition_4_b
 public import BenderSuzuki.PFchapter1section1.proposition_4_c
 public import FeitThompson.GroupAction.Cardinalities
+open Theory.GroupAction
 
 namespace BenderSuzuki
 namespace PFchapter1section1

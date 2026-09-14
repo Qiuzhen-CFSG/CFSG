@@ -4,6 +4,8 @@ public import Mathlib.GroupTheory.PGroup
 public import Mathlib.Algebra.Group.Action.Defs
 public import Mathlib.Algebra.Group.Action.End
 public import Mathlib.Algebra.Group.Equiv.TypeTags
+public import Theory.GroupAction.Invariant
+open Theory.GroupAction
 
 /-!
 # Glauberman, Lemma 3.4 — a non-identity `p`-subgroup fixes a proper non-zero subspace

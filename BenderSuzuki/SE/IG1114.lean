@@ -7,6 +7,7 @@ import FeitThompson.Frattini.CoprimeAction
 import FeitThompson.GroupAction.Cardinalities
 import FeitThompson.GroupAction.CoprimeHall
 import FeitThompson.PCore.PCore
+open Theory.GroupAction
 open Theory.ElementaryAbelian
 
 /-!

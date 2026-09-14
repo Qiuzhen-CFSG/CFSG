@@ -3,6 +3,7 @@ module
 
 public import BenderSuzuki.PFAppendixII.proposition_1
 public import BenderSuzuki.SE.Compat
+open Theory.GroupAction
 open Theory.ElementaryAbelian
 
 /-!

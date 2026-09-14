@@ -8,6 +8,7 @@ import FeitThompson.FinalTheorem
 import FeitThompson.ChiefFactors.BaerCore
 import FeitThompson.ChiefFactors.Core
 import FeitThompson.HallSubgroups.Conjugacy
+open Theory.GroupAction
 open Theory.ElementaryAbelian
 
 /-!

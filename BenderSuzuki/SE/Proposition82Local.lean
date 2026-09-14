@@ -5,6 +5,7 @@ public import BenderSuzuki.SE.Theorem2
 import BenderSuzuki.SE.Borel
 import BenderSuzuki.SE.Proposition84Action
 import BenderSuzuki.SE.Proposition84Sylow
+open Theory.GroupAction
 
 /-!
 # The local normalizer step in Proposition 8.2

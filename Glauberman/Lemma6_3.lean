@@ -26,6 +26,7 @@ public import Mathlib.GroupTheory.QuotientGroup.Basic
 public import Mathlib.Tactic
 
 import Glauberman.InvolvedQuotient
+open Theory.GroupAction
 
 noncomputable section
 

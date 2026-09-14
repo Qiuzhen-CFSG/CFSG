@@ -1,6 +1,7 @@
 module
 
 public import FeitThompson.ChiefFactors.Core
+open Theory.GroupAction
 open Theory.ElementaryAbelian
 
 open scoped commutatorElement

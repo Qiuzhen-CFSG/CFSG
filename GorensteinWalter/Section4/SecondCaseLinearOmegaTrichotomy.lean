@@ -11,6 +11,7 @@ import Mathlib.GroupTheory.FixedPointFree
 import Mathlib.GroupTheory.IndexNormal
 import Mathlib.GroupTheory.Sylow
 import Mathlib.Tactic
+open Theory.GroupAction
 
 noncomputable section
 open scoped Pointwise commutatorElement

@@ -10,6 +10,7 @@ public import FeitThompson.GroupAction.Quotient
 public import Mathlib.GroupTheory.Subgroup.Centralizer
 public import Mathlib.GroupTheory.Sylow
 import Mathlib.GroupTheory.NoncommCoprod
+open Theory.GroupAction
 
 /-!
 # Common complement-transfer tools for Huppert IV

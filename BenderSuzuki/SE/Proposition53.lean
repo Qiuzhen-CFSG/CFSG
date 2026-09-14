@@ -5,6 +5,7 @@ public import BenderSuzuki.SE.Permutation
 public import BenderSuzuki.SE.InvolutionCore
 public import BenderSuzuki.PFAppendixII.proposition_1
 import BenderSuzuki.SE.StrongEmbeddingOddCore
+open Theory.GroupAction
 
 /-!
 # Proposition 5.3 normalizer input

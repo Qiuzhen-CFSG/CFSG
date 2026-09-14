@@ -7,6 +7,7 @@ public import BenderSuzuki.External.Higman.theorem_1d
 public import BenderSuzuki.External.Higman.theorem_1e_isomorphic_summands
 public import BenderSuzuki.External.Higman.lemma_12
 public import BenderSuzuki.External.Higman.theorem_1e_scalar_coordinates
+open Theory.GroupAction
 
 /-!
 # Peterfalvi Appendix III, Higman's theorem

@@ -5,6 +5,7 @@ public import FeitThompson.GroupAction.Quotient
 public import FeitThompson.PFsection8.Basic
 public import FeitThompson.PFsection5.PFsection5_2
 public import FeitThompson.PFsection5.PFsection5_3
+open Theory.GroupAction
 open Theory.ElementaryAbelian
 
 /-!

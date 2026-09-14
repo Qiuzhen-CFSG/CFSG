@@ -3,6 +3,7 @@ module
 public import BenderSuzuki.SE.Proposition53
 public import BenderSuzuki.SE.Permutation
 import BenderSuzuki.SE.Section7Final
+open Theory.GroupAction
 
 /-!
 # Theorem 2 and Proposition 5.3

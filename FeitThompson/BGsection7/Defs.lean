@@ -11,6 +11,7 @@ import Mathlib.GroupTheory.IndexNormal
 import Mathlib.GroupTheory.IsSubnormal
 import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Card
 import Mathlib.Order.Preorder.Finite
+open Theory.GroupAction
 
 open scoped Pointwise
 

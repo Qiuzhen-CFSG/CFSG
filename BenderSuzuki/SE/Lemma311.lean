@@ -7,6 +7,7 @@ import FeitThompson.FinalTheorem
 import FeitThompson.GroupAction.CoprimeHall
 import FeitThompson.GroupAction.Cardinalities
 import FeitThompson.SubgroupConj
+open Theory.GroupAction
 open Theory.ElementaryAbelian
 
 /-!

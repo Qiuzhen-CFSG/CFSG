@@ -20,6 +20,7 @@ namespace External
 
 open PFchapter1section1 PFAppendixIII
 open scoped Pointwise
+open Theory.GroupAction
 
 universe u v
 public theorem hkt_regularSemidirect_range_inl_normal

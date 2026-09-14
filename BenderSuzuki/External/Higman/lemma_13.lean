@@ -22,6 +22,7 @@ namespace Higman
 open scoped IsMulCommutative commutatorElement
 
 open PFAppendixIII
+open Theory.GroupAction
 
 universe u
 

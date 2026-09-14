@@ -3,6 +3,7 @@ module
 public import BenderSuzuki.PFAppendixII.proposition_1
 public import BenderSuzuki.PFchapter2.claim_2_a
 import Mathlib.GroupTheory.SchurZassenhaus
+open Theory.GroupAction
 
 namespace BenderSuzuki.PFchapter2
 

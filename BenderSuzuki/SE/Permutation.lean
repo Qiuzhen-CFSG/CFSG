@@ -1,6 +1,7 @@
 module
 
 public import BenderSuzuki.SE.Interfaces
+open Theory.GroupAction
 
 /-!
 # Permutation-group lemmas for Theorem SE

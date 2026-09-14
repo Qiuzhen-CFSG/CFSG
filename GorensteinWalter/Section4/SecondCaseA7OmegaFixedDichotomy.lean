@@ -6,6 +6,7 @@ import GorensteinWalter.Section2.Bender1970_18
 import FeitThompson.GroupAction.Cardinalities
 import Mathlib.GroupTheory.FixedPointFree
 import Mathlib.Tactic
+open Theory.GroupAction
 
 /-! # The fixed-point split for the A7 omega subgroup -/
 

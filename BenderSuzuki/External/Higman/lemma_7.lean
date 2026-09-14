@@ -6,6 +6,7 @@ import FeitThompson.GroupAction.Defs
 import FeitThompson.GroupAction.Quotient
 import FeitThompson.Frattini.Core
 import Mathlib.LinearAlgebra.FixedSubmodule
+open Theory.GroupAction
 
 /-!
 # Higman Lemma 7

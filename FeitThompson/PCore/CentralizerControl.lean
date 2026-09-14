@@ -18,6 +18,7 @@ import FeitThompson.SubgroupConjAction
 import Mathlib.GroupTheory.SpecificGroups.ZGroup
 import FeitThompson.HallSubgroups.Core
 import FeitThompson.ChiefFactors.BaerCore
+open Theory.GroupAction
 
 open scoped Pointwise
 

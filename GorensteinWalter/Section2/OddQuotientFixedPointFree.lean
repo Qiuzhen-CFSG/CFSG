@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Classification
 import FeitThompson.BGsection7.Defs
 import FeitThompson.GroupAction.CoprimeHall
+open Theory.GroupAction
 
 /-!
 # Fixed-point-free quotients of odd solvable groups

@@ -4,6 +4,7 @@ import Mathlib.Data.Nat.Factorization.Basic
 import FeitThompson.GroupAction.Quotient
 public import BenderSuzuki.PFchapter2.Basic
 public import Mathlib.GroupTheory.Transfer
+open Theory.GroupAction
 
 /-!
 # Hall §14.4 basic definitions

@@ -10,6 +10,7 @@ import BenderSuzuki.PFchapter1section2.proposition_1_b
 import BenderSuzuki.PFchapter1section3.lemma_1
 import BenderSuzuki.External.Huppert.V.Semidirect
 import FeitThompson.GroupAction.Cardinalities
+open Theory.GroupAction
 
 namespace BenderSuzuki
 namespace PFchapter1section3

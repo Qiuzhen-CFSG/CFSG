@@ -2,6 +2,7 @@ module
 
 public import BenderSuzuki.PFchapter1section1.Basic
 import Mathlib.GroupTheory.SchurZassenhaus
+open Theory.GroupAction
 
 /-!
 # Quotient permutation actions for Theorem SE

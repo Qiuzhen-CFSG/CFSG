@@ -8,6 +8,7 @@ import GorensteinWalter.Section4.SecondCaseA7OmegaFNormalizer
 import FeitThompson.GroupAction.Cardinalities
 import Mathlib.GroupTheory.IndexNormal
 import Mathlib.Tactic
+open Theory.GroupAction
 
 /-! # The strict order-27 branch of the A7 omega index argument -/
 

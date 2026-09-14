@@ -2,6 +2,7 @@ module
 
 public import FeitThompson.BGsection3.Infrastructure
 public import FeitThompson.BGsection3.lemma_3_3
+open Theory.GroupAction
 open Theory.ElementaryAbelian
 
 open scoped commutatorElement IsMulCommutative

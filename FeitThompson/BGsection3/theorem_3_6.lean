@@ -4,6 +4,7 @@ public import FeitThompson.Fitting.Centralizer
 public import FeitThompson.BGsection3.Defs
 public import FeitThompson.BGsection3.theorem_3_4
 public import FeitThompson.BGsection3.theorem_3_5
+open Theory.GroupAction
 open Theory.ElementaryAbelian
 
 open scoped commutatorElement
@@ -975,7 +976,7 @@ public theorem theorem_3_6_invariant_complement_in_fitting_preimage
     simpa [K] using isInvariant_map_subtype (A := ↥R) (G := ↥H) U K0
   let : IsInvariant (↥R) (↥H) K := hK_inv
   have hNK_inv : IsInvariant (↥R) (↥H) (Subgroup.normalizer K) := by
-    simpa using isInvariant_normalizer_of_isInvariant (A := ↥R) (G := ↥H) K
+    simpa using isInvariant_normalizer (A := ↥R) (G := ↥H) K
   exact ⟨K, hK_le_U, hVK_sup, hVK_disj, hK_inv, hNK_inv⟩
 
 private theorem map_subgroupOf_map_conjNormal_eq

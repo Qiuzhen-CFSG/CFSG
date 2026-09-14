@@ -24,6 +24,7 @@ import FeitThompson.PFsection9.PFsection9_7
 import FeitThompson.PFsection9.PFsection9_8
 import FeitThompson.PFsection9.PFsection9_11
 import FeitThompson.PFsection4.PFsection4_5_to_10
+open Theory.GroupAction
 open Theory.ElementaryAbelian
 
 /-!

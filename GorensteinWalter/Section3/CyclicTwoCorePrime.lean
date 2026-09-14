@@ -10,6 +10,7 @@ public import BenderGlauberman.Defs
 import all BenderGlauberman.Defs
 import BenderGlauberman.FinalTheorem
 import all BenderGlauberman.Lemma19
+open Theory.GroupAction
 
 noncomputable section
 
