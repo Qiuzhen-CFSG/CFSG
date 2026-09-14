@@ -12,6 +12,7 @@ import BenderSuzuki.PFchapter1section2.AppendixIInput
 import BenderSuzuki.PFchapter1section3.lemma_5
 import BenderSuzuki.PFchapter3section3.proposition
 import FeitThompson.GroupAction.CoprimeHall
+open Theory.ElementaryAbelian
 
 namespace BenderSuzuki
 namespace PFchapter4section4
@@ -873,6 +874,7 @@ private theorem quotient_mulEquiv_multiplicative_of_additive_coordinate
 
 open PFchapter1section1 PFchapter1section3 PFAppendixIII
 open PFchapter3section1 PFchapter3section3 PFchapter4section2 PFchapter4section3
+open Theory.GroupAction
 
 set_option maxHeartbeats 800000
 

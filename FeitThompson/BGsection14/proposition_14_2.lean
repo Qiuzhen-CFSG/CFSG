@@ -1,6 +1,8 @@
 module
 
 public import FeitThompson.BGsection14.lemma_14_1
+open Theory.GroupAction
+open Theory.ElementaryAbelian
 
 open scoped Pointwise
 

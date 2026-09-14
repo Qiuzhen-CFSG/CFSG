@@ -1,6 +1,7 @@
 module
 
 public import BenderSuzuki.SE.Section11Lemma115Centralizer
+open Theory.GroupAction
 
 /-!
 # Section 11, Lemma 11.5: fixed points of the anti-fixed subgroup

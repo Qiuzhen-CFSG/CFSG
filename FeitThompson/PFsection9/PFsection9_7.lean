@@ -9,6 +9,8 @@ import Mathlib.FieldTheory.Finite.GaloisField
 import Mathlib.GroupTheory.SpecificGroups.Cyclic
 import Mathlib.RingTheory.SimpleModule.Isotypic
 import Mathlib.RingTheory.ZMod.UnitsCyclic
+open Theory.GroupAction
+open Theory.ElementaryAbelian
 
 noncomputable section
 

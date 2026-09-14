@@ -3,6 +3,7 @@ module
 public import BenderSuzuki.PFchapter1section1.Basic
 public import BenderSuzuki.PFchapter1section1.proposition_3
 public import BenderSuzuki.PFchapter1section1.proposition_4_a
+open Theory.GroupAction
 
 namespace BenderSuzuki
 namespace PFchapter1section1

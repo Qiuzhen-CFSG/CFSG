@@ -3,6 +3,8 @@ module
 public import FeitThompson.BGsection6.theorem_6_1
 import Theory.Representation.ElementaryAbelianAction
 import FeitThompson.SubgroupConj
+open Theory.GroupAction
+open Theory.ElementaryAbelian
 
 open scoped MatrixGroups Pointwise TensorProduct commutatorElement
 

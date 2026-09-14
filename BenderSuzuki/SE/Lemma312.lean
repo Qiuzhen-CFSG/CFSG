@@ -4,6 +4,7 @@ public import BenderSuzuki.SE.Theorem4
 import BenderSuzuki.SE.StrongEmbeddingFusion
 import FeitThompson.ChiefFactors.BaerCore
 import FeitThompson.GroupAction.Cardinalities
+open Theory.GroupAction
 
 /-!
 # Lemma 3.12: the solvable strongly embedded case

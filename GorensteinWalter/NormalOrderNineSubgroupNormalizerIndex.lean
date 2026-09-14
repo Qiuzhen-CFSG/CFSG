@@ -5,6 +5,7 @@ import GorensteinWalter.PrimeOrderSubgroupIntersection
 import FeitThompson.GroupAction.Cardinalities
 import Mathlib.GroupTheory.IndexNormal
 import Mathlib.Tactic
+open Theory.GroupAction
 
 /-! # Normalizers inside normal subgroups of order nine -/
 

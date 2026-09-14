@@ -5,6 +5,7 @@ public import FeitThompson.SubgroupConjAction
 public import FeitThompson.GroupAction.Quotient
 import Mathlib.GroupTheory.GroupAction.Quotient
 import Mathlib.Tactic
+open Theory.GroupAction
 
 /-!
 # Lifting a quotient centralizer across an odd center

@@ -1,6 +1,7 @@
 module
 
 public import FeitThompson.Wielandt.HomocyclicLift
+open Theory.ElementaryAbelian
 
 /-!
 # Standard homocyclic quotient-cover packages for Wielandt

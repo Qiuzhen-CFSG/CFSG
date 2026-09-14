@@ -2,6 +2,7 @@ module
 
 public import FeitThompson.BGsection3.Remaining
 public import FeitThompson.LinearAlgebra.MatrixBlocks
+open Theory.ElementaryAbelian
 
 /-!
 # Matrix trace infrastructure for Wielandt fixed-point arguments

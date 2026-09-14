@@ -1,6 +1,7 @@
 module
 
 public import FeitThompson.Gorenstein.Chapter8_2
+open Theory.GroupAction
 
 /-!
 # Huppert--Blackburn X.1.12, Thompson--Bender

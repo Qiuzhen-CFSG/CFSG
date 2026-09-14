@@ -4,6 +4,7 @@ public import BenderSuzuki.PFAppendixI.Basic
 public import FeitThompson.BGsection2.EndFieldRep
 public import Mathlib.RingTheory.SimpleModule.Rank
 public import Mathlib.GroupTheory.SpecificGroups.Cyclic.Basic
+open Theory.ElementaryAbelian
 /-!
 # Peterfalvi Appendix I, Proposition 2
 -/

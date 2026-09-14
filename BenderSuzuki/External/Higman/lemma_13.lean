@@ -9,6 +9,7 @@ import FeitThompson.Frattini.Core
 import FeitThompson.Commutator.Core
 import FeitThompson.GroupAction.Invariant
 import FeitThompson.GroupAction.Quotient
+open Theory.ElementaryAbelian
 
 /-!
 # Higman Lemma 13
@@ -21,6 +22,7 @@ namespace Higman
 open scoped IsMulCommutative commutatorElement
 
 open PFAppendixIII
+open Theory.GroupAction
 
 universe u
 

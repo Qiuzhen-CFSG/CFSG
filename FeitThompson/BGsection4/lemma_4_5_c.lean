@@ -4,6 +4,7 @@ public import FeitThompson.BGsection3.Defs
 import FeitThompson.Utils
 public import FeitThompson.BGsection4.lemma_4_5_a
 public import FeitThompson.BGsection4.lemma_4_5_a
+open Theory.ElementaryAbelian
 
 open scoped commutatorElement
 

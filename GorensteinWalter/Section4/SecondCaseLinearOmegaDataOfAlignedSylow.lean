@@ -17,6 +17,7 @@ import FeitThompson.BGsection1.CriticalSubgroupLemmas
 import FeitThompson.BGsection4.lemma_4_5_c
 import FeitThompson.ElementaryAbelian
 import Mathlib.Tactic
+open Theory.ElementaryAbelian
 
 /-!
 # The aligned linear omega-data producer

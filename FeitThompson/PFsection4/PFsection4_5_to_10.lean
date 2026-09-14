@@ -8,6 +8,7 @@ public import FeitThompson.PFsection4.PFsection4_9
 public import FeitThompson.PFsection4.PFsection4_7
 public import FeitThompson.PFsection4.PFsection4_10
 import FeitThompson.PFsection4.PFsection4_4
+open Theory.GroupAction
 
 /-!
 # Scratch formalization for Peterfalvi Section 4, items (4.5)–(4.10)

@@ -14,6 +14,8 @@ import FeitThompson.GroupAction.CoprimeHall
 import Theory.Representation.ElementaryAbelianAction
 import Theory.Representation.TwoDimensionalOddOrder
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
+open Theory.GroupAction
+open Theory.ElementaryAbelian
 
 namespace BenderSuzuki
 namespace PFchapter1section3

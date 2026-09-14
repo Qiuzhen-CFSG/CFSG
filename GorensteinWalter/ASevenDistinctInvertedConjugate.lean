@@ -4,6 +4,7 @@ public import GorensteinWalter.ASevenStructureFacts
 import GorensteinWalter.ASevenOrderThreeKleinFourThreeCycle
 import GorensteinWalter.KleinFourCentralizerTransport
 import Mathlib.Tactic
+open Theory.GroupAction
 
 noncomputable section
 

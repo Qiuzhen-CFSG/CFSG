@@ -64,3 +64,4 @@ public import Glauberman.TheoremDTwoPrimeQdExclusion
 public import Glauberman.ThompsonMethodMinimalCounterexample
 public import Glauberman.ZJTheorem
 public import Glauberman.pStability
+open Theory.ElementaryAbelian

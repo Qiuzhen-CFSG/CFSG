@@ -10,6 +10,7 @@ import FeitThompson.GroupAction.CentralizerCondition
 import GorensteinWalter.CentralizerSetupFittingNormal
 import GorensteinWalter.Section1
 import Mathlib.Tactic
+open Theory.GroupAction
 
 /-!
 # Section 4, equation (7): the prime-support half for the `PSL₂` branch

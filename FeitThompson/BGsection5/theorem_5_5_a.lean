@@ -3,6 +3,8 @@ module
 public import FeitThompson.BGsection5.corollary_5_4
 public import FeitThompson.BGsection4.theorem_4_17
 public import FeitThompson.BGsection4.lemma_4_5_b
+open Theory.GroupAction
+open Theory.ElementaryAbelian
 
 /-! # Theorem 5.5(a) from BG Section 5 -/
 

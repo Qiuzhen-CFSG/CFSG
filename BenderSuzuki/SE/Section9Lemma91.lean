@@ -4,6 +4,7 @@ public import BenderSuzuki.SE.Theorem4a
 public import BenderSuzuki.SE.Section9
 public import BenderSuzuki.External.Huppert.V.theorem_8_14
 import FeitThompson.SubgroupConj
+open Theory.GroupAction
 
 /-!
 # Section 9, Lemma 9.1

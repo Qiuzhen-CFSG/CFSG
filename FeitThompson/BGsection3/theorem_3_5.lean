@@ -5,6 +5,7 @@ public import FeitThompson.BGsection3.Infrastructure
 public import FeitThompson.BGsection3.lemma_3_2_a
 public import FeitThompson.BGsection3.lemma_3_2_b
 public import FeitThompson.BGsection3.lemma_3_3
+open Theory.GroupAction
 
 open scoped FixedPoints TensorProduct Pointwise
 

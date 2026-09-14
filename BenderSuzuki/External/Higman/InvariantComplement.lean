@@ -5,8 +5,10 @@ public import Theory.Representation.ElementaryAbelianAction
 public import Mathlib.RepresentationTheory.Submodule
 import Mathlib.Algebra.Field.ZMod
 import FeitThompson.GroupAction.Invariant
+open Theory.ElementaryAbelian
 
 open scoped IsMulCommutative
+open Theory.GroupAction
 
 /-!
 # Invariant complements for odd-order actions over `ZMod 2`

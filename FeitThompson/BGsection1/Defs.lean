@@ -54,6 +54,7 @@ public import FeitThompson.PGroup.Omega
 import FeitThompson.PGroup.NormalSubgroups
 public import Theory.Representation.CompleteReducibility
 public import Theory.Representation.Maschke
+open Theory.GroupAction
 
 open scoped Pointwise
 

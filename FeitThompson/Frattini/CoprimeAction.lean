@@ -13,6 +13,7 @@ public import FeitThompson.Frattini.Core
 public import FeitThompson.GroupAction.Lemmas
 public import FeitThompson.GroupAction.Quotient
 public import FeitThompson.HallSubgroups.Conjugacy
+open Theory.GroupAction
 
 open scoped IsMulCommutative
 

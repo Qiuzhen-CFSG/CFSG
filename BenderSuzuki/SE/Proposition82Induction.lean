@@ -8,6 +8,7 @@ public import BenderSuzuki.SE.Corollary713
 import BenderSuzuki.SE.Proposition84Residual
 import BenderSuzuki.SE.Section7Final
 public import BenderSuzuki.SE.Theorem2
+open Theory.GroupAction
 
 /-!
 # Induction infrastructure for Proposition 8.2(a)

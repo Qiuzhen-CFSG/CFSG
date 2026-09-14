@@ -4,6 +4,8 @@ public import FeitThompson.BGsection1.Defs
 import Mathlib.RepresentationTheory.Submodule
 import FeitThompson.Frattini.Core
 import FeitThompson.GroupAction.CoprimeHall
+open Theory.GroupAction
+open Theory.ElementaryAbelian
 
 open scoped Pointwise
 

@@ -3,6 +3,7 @@ module
 public import BenderSuzuki.SE.StrongEmbeddingCounting
 public import BenderSuzuki.SE.Theorem4
 import BenderSuzuki.PFchapter1section1.proposition_2_a
+open Theory.GroupAction
 
 /-!
 # Source boundary and checked preliminaries for Lemma 8.3

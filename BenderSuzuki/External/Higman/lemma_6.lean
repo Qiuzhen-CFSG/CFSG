@@ -6,6 +6,7 @@ import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
 import FeitThompson.Frattini.CoprimeAction
 import FeitThompson.GroupAction.CoprimeHall
 public import BenderSuzuki.External.Higman.lemma_5
+open Theory.GroupAction
 
 /-!
 # Higman Lemma 6 and its Neumann input

@@ -5,6 +5,7 @@ public import BenderSuzuki.SE.Models
 public import BenderSuzuki.SE.Theorem6
 public import FeitThompson.GroupAction.Cardinalities
 public import Mathlib.GroupTheory.IsSubnormal
+open Theory.GroupAction
 
 /-!
 # Source-facing interfaces for the backward proof of Theorem SE

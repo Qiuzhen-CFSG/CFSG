@@ -5,6 +5,7 @@ public import FeitThompson.BGsection12.lemma_12_1_a
 public import FeitThompson.ElementaryAbelian
 public import FeitThompson.GroupAction.Defs
 public import FeitThompson.Wielandt.MatrixTrace
+open Theory.ElementaryAbelian
 
 /-!
 # Fixed-point product infrastructure for Wielandt
@@ -18,6 +19,7 @@ ladder remains in `FeitThompson.Wielandt`.
 noncomputable section
 
 open scoped IsMulCommutative
+open Theory.GroupAction
 
 namespace Wielandt
 

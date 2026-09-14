@@ -8,6 +8,7 @@ public import Theory.Representation.FreeBasis
 public import Theory.Representation.ScalarDescent
 public import Theory.Representation.PermutationBasisOrbits
 public import Mathlib.FieldTheory.AlgebraicClosure
+open Theory.GroupAction
 
 open scoped TensorProduct
 

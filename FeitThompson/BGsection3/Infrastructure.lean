@@ -9,6 +9,7 @@ public import FeitThompson.GroupAction.Invariant
 public import FeitThompson.GroupAction.Cardinalities
 public import FeitThompson.PCore.PLengthOne
 public import FeitThompson.SubgroupConj
+open Theory.GroupAction
 
 open Subgroup
 

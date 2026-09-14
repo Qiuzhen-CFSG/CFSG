@@ -12,8 +12,10 @@ import FeitThompson.GroupAction.MinimalNormal
 import FeitThompson.PGroup.NormalSubgroups
 import FeitThompson.Fitting.Centralizer
 public import Theory.Representation.ElementaryAbelianAction
+open Theory.ElementaryAbelian
 
 open scoped Pointwise TensorProduct commutatorElement IsMulCommutative
+open Theory.GroupAction
 
 public theorem theorem_3_7_elementCentralizer_eq_bot {G : Type*} [Group G] [Finite G]
     (K R : Subgroup G) (hR_prime : Nat.Prime (Nat.card R))

@@ -1,6 +1,7 @@
 module
 
 public import FeitThompson.PFsection10.Basic
+open Theory.ElementaryAbelian
 
 /-!
 # Peterfalvi, Section 11: basic notation

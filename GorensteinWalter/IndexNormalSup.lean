@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Defs
 import FeitThompson.GroupAction.Cardinalities
 import Mathlib.Tactic
+open Theory.GroupAction
 
 /-! # Relative index in a product with a normal subgroup -/
 

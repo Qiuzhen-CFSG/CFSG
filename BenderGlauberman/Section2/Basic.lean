@@ -17,6 +17,7 @@ import FeitThompson.GroupAction.Quotient
 import FeitThompson.SubgroupConj
 import FeitThompson.SubgroupConjAction
 import Mathlib.GroupTheory.PGroup
+open Theory.GroupAction
 
 /-!
 # Bender--Glauberman: Section 2 setup and the general situation

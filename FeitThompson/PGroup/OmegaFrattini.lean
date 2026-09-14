@@ -1,6 +1,7 @@
 module
 
 public import FeitThompson.BGsection1.Defs
+open Theory.GroupAction
 
 namespace PGroup
 

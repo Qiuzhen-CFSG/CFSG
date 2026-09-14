@@ -1,6 +1,8 @@
 module
 
 public import FeitThompson.BGsection1.theorem_1_11
+open Theory.GroupAction
+open Theory.ElementaryAbelian
 
 open scoped Pointwise IsMulCommutative commutatorElement
 

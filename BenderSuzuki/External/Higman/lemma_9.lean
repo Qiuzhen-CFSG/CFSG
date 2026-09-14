@@ -8,6 +8,7 @@ public import BenderSuzuki.External.Higman.lemma_8
 import FeitThompson.Frattini.Core
 import FeitThompson.GroupAction.Defs
 import FeitThompson.GroupAction.Invariant
+open Theory.GroupAction
 
 /-!
 # Higman Lemma 9

@@ -4,6 +4,7 @@ public import GorensteinWalter.Section4.SecondCaseLinearEquationEightDefs
 import FeitThompson.GroupAction.Cardinalities
 import Mathlib.GroupTheory.FixedPointFree
 import Mathlib.Tactic
+open Theory.GroupAction
 
 /-! # The normalizer of the fixed prime-order part inside omega
 

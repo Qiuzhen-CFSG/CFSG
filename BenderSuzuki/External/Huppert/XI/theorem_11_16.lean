@@ -20,6 +20,7 @@ import BenderSuzuki.PFAppendixII.proposition_2
 public import BenderSuzuki.External.Huppert.XI.SharpNearField
 public import BenderSuzuki.MatrixGroups.PSL2
 public import BenderSuzuki.MatrixGroups.Suzuki
+open Theory.ElementaryAbelian
 
 /-!
 # Huppert-Blackburn XI.11.16

@@ -19,6 +19,7 @@ public import FeitThompson.Extraspecial
 public import FeitThompson.LinearAlgebra.BlockElementaryMap
 public import Theory.Representation.ConjugateRep
 public import FeitThompson.BGsection2.EndFieldRep
+open Theory.ElementaryAbelian
 
 open _root_.Representation
 open Theory.Representation

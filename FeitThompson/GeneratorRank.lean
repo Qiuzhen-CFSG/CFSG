@@ -5,6 +5,7 @@ import Mathlib.GroupTheory.Rank
 import Mathlib.GroupTheory.SpecificGroups.Cyclic
 import Mathlib.GroupTheory.Frattini
 import FeitThompson.ElementaryAbelian
+open Theory.ElementaryAbelian
 
 open scoped IsMulCommutative Subgroup
 

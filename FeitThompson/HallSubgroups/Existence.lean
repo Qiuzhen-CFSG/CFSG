@@ -50,6 +50,7 @@ Let $\pi$ be a set of primes.
 universe u v
 
 open scoped IsMulCommutative
+open Theory.GroupAction
 
 
 -- Proposition 1.5(b)

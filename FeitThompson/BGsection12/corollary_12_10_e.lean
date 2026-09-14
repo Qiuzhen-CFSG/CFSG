@@ -1,6 +1,8 @@
 module
 
 public import FeitThompson.BGsection12.corollary_12_10_d
+open Theory.GroupAction
+open Theory.ElementaryAbelian
 
 open scoped Pointwise
 

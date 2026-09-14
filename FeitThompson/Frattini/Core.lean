@@ -5,6 +5,7 @@ public import Mathlib.GroupTheory.PGroup
 import Mathlib.GroupTheory.SpecificGroups.Cyclic
 
 public import FeitThompson.ElementaryAbelian
+open Theory.ElementaryAbelian
 
 open scoped IsMulCommutative
 

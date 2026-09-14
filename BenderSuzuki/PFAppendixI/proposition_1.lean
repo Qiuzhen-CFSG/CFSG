@@ -8,6 +8,8 @@ public import Mathlib.GroupTheory.SpecificGroups.ZGroup
 public import FeitThompson.FinalTheorem
 public import FeitThompson.Fitting.Centralizer
 public import Mathlib.Algebra.Group.Subgroup.Order
+open Theory.GroupAction
+open Theory.ElementaryAbelian
 
 attribute [local instance] IsMulCommutative.instCommGroup
 

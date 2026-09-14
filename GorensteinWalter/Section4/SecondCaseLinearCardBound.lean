@@ -3,6 +3,7 @@ module
 public import FeitThompson.GroupAction.Lemmas
 public import Mathlib.GroupTheory.Index
 import Mathlib.Tactic
+open Theory.GroupAction
 
 /-!
 # A cardinal bound from a disjoint normalized subgroup

@@ -25,6 +25,7 @@ public import FeitThompson.PGroup.OmegaFrattini
 public import Mathlib.GroupTheory.SpecificGroups.ZGroup
 public import FeitThompson.HallSubgroups.Core
 public import FeitThompson.ChiefFactors.BaerCore
+open Theory.GroupAction
 
 open scoped Pointwise
 

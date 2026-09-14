@@ -3,6 +3,7 @@ module
 public import Mathlib.Algebra.Group.Subgroup.Actions
 
 public import FeitThompson.BGsection3.Defs
+open Theory.GroupAction
 
 open scoped commutatorElement
 
