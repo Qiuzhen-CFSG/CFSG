@@ -2,6 +2,8 @@
 
 Work in progress.
 
+Note: we used a lot of code from tau-ceti and https://github.com/Moonshine-in-Kansas/atlas
+
 ## Finished Theorems
 
 ### (a) The Odd Order Theorem (Feit–Thompson)
@@ -15,6 +17,10 @@ If $X$ is a finite simple group containing a strongly embedded subgroup, then $X
 ### (c) Gorenstein–Walter theorem
 
 The classification of finite groups with a dihedral Sylow 2-subgroup.
+
+### (d) Thompson's N-group classification theorem
+
+### (e) Thompson's classification of minimal finite simple groups
 
 ## Auditable statements
 
