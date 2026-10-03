@@ -2,6 +2,7 @@ module
 
 public import FeitThompson.BGsection1.theorem_1_13
 
+
 open scoped Pointwise
 
 public section
@@ -26,7 +27,7 @@ public theorem corollary_1_12 {G A : Type*} [Group G] [Finite G] [Group A] [Fini
   let C : Subgroup G := fixedPointSubgroup A G
   let D : Subgroup G := Subgroup.centralizer (C : Set G)
   obtain ⟨_, hElemE⟩ := hE
-  haveI : IsElementaryAbelian p (↥E) := hElemE
+  have : IsElementaryAbelian p (↥E) := hElemE
   have hEpows : ∀ x : E, x ^ p = 1 := by
     exact Monoid.exponent_dvd_iff_forall_pow_eq_one.mp (IsElementaryAbelian.exponent_dvd_p p (↥E))
   have hEcent : E ≤ Subgroup.centralizer (E : Set G) := by
@@ -74,8 +75,8 @@ public theorem corollary_1_12 {G A : Type*} [Group G] [Finite G] [Group A] [Fini
         exact this a⁻¹
       have hsmul := congrArg (fun t : G => a⁻¹ • t) (hg c hc)
       simpa [smul_mul_assoc, hcfix] using hsmul
-  letI : IsInvariant A G D := hDinv
-  letI : Fact (IsPGroup p D) := ⟨(Fact.out : IsPGroup p G).to_subgroup D⟩
+  let : IsInvariant A G D := hDinv
+  let : Fact (IsPGroup p D) := ⟨(Fact.out : IsPGroup p G).to_subgroup D⟩
   have hΩD : ActsTriviallyOnSubgroup (A := A) (G := D) (omega₁ (G := D) (p := p)) := by
     have hΩD_le : omega₁ (G := D) (p := p) ≤ fixedPointSubgroup A D := by
       rw [omega₁, omega]

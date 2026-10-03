@@ -41,7 +41,7 @@ private theorem lemma5_irreducible_AEval_isSimple
         (∀ v : V, v ∈ W → T v ∈ W) →
         W = ⊥ ∨ W = ⊤) :
     IsSimpleModule (Polynomial F2) (Module.AEval' (R := F2) T.toLinearMap) := by
-  letI : Nontrivial (Module.AEval' (R := F2) T.toLinearMap) := ‹Nontrivial V›
+  let : Nontrivial (Module.AEval' (R := F2) T.toLinearMap) := ‹Nontrivial V›
   rw [isSimpleModule_iff]
   refine
     { toNontrivial := inferInstance
@@ -92,8 +92,8 @@ private theorem lemma5_irreducible_field_coordinates
       (Module.natCard_eq_pow_finrank (K := F2) (V := V))
   have hsimple := lemma5_irreducible_AEval_isSimple T hT_irreducible
   obtain ⟨I, hI, ⟨e⟩⟩ := isSimpleModule_iff_quot_maximal.mp hsimple
-  letI : I.IsMaximal := hI
-  letI : Field (Polynomial F2 ⧸ I) := Ideal.Quotient.field I
+  let : I.IsMaximal := hI
+  let : Field (Polynomial F2 ⧸ I) := Ideal.Quotient.field I
   let eF2 : V ≃ₗ[F2] Polynomial F2 ⧸ I :=
     (Module.AEval'.of T.toLinearMap).trans (e.restrictScalars F2)
   have hQcard : Nat.card (Polynomial F2 ⧸ I) = 2 ^ m := by
@@ -257,7 +257,7 @@ public theorem lemma5_irreducible_card_of_order
         (∀ x : V, x ∈ A → T x ∈ A) → A = ⊥ ∨ A = ⊤)
     (n : ℕ) (hn : 2 ≤ n) (hT_order : orderOf T = 2 ^ n - 1) :
     Nat.card V = 2 ^ n := by
-  letI : Nontrivial V := by
+  let : Nontrivial V := by
     rw [← not_subsingleton_iff_nontrivial]
     intro hsub
     have hT_one : T = 1 := by
@@ -495,7 +495,7 @@ private theorem lemma5_conjugate_eigenbasis
       Module.finrank K (K ⊗[F2] V) = m :=
     (Module.finrank_baseChange
       (R := K) (S := F2) (M' := V)).trans hVfinrank
-  letI : Nonempty (Fin m) := ⟨⟨0, hm⟩⟩
+  let : Nonempty (Fin m) := ⟨⟨0, hm⟩⟩
   let u : Module.Basis (Fin m) K (K ⊗[F2] V) :=
     basisOfLinearIndependentOfCardEqFinrank huv_li
       (by simp [htensor_finrank])
@@ -1135,7 +1135,7 @@ private theorem lemma5_square_map_normal_form_field_core
       1 < Nat.card (Additive (LowerCentralFactor H 1)) := by
     rw [Nat.card_congr Additive.toMul, hL2_card]
     exact one_lt_pow₀ (by norm_num : 1 < (2 : ℕ)) (by omega)
-  letI : Nontrivial (Additive (LowerCentralFactor H 1)) :=
+  let : Nontrivial (Additive (LowerCentralFactor H 1)) :=
     Finite.one_lt_card_iff_nontrivial.mp hL2_card_gt
   obtain ⟨bracket, _hbracket_mk, _hbracket_equivariant,
       _hbracket_self, hbracket_span⟩ :=
@@ -1163,7 +1163,7 @@ private theorem lemma5_square_map_normal_form_field_core
       simp
     exact top_ne_bot htop_bot
   obtain ⟨v, hv⟩ := hL1_exists
-  letI : Nontrivial (Additive (LowerCentralFactor H 0)) :=
+  let : Nontrivial (Additive (LowerCentralFactor H 0)) :=
     ⟨⟨v, 0, hv⟩⟩
   let T : Additive (LowerCentralFactor H 0) ≃ₗ[F2]
       Additive (LowerCentralFactor H 0) :=
@@ -1205,10 +1205,12 @@ public theorem lemma5_square_map_normal_form_quadratic_core
           Additive (LowerCentralFactor H 1)),
       (∀ v w : Additive (LowerCentralFactor H 0),
         bracketK (1 ⊗ₜ[F2] v) (1 ⊗ₜ[F2] w) =
-          1 ⊗ₜ[F2] bracket v w) ∧      (∀ v w : Additive (LowerCentralFactor H 0),
+          1 ⊗ₜ[F2] bracket v w) ∧
+      (∀ v w : Additive (LowerCentralFactor H 0),
         bracket (lowerCentralFactorLinearAut xi 0 v)
             (lowerCentralFactorLinearAut xi 0 w) =
-          lowerCentralFactorLinearAut xi 1 (bracket v w)) ∧      (∀ v : Additive (LowerCentralFactor H 0), bracket v v = 0) ∧
+          lowerCentralFactorLinearAut xi 1 (bracket v w)) ∧
+      (∀ v : Additive (LowerCentralFactor H 0), bracket v v = 0) ∧
       (∀ x y : higmanLowerCentralSeries H 0,
         ∀ hcomm : ⁅(x : H), (y : H)⁆ ∈ higmanLowerCentralSeries H 1,
           bracket
@@ -1995,7 +1997,6 @@ public theorem lemma5_square_map_normal_form
 end Higman
 end External
 end BenderSuzuki
-
 
 
 

@@ -3,6 +3,7 @@ module
 public import BenderSuzuki.SE.Interfaces
 import FeitThompson.BGsection5.theorem_5_3
 
+
 /-!
 # A normal Sylow intersection lemma for Proposition 8.4
 
@@ -44,7 +45,7 @@ public theorem exists_sylow_inf_of_normal_sylow
   have hQmapP : IsPGroup p ((Q : Subgroup H).map H.subtype) :=
     Q.isPGroup'.map H.subtype
   obtain ⟨T, hQT⟩ := hQmapP.exists_le_sylow
-  letI : Unique (Sylow p G) := Sylow.unique_of_normal P hPnormal
+  let : Unique (Sylow p G) := Sylow.unique_of_normal P hPnormal
   have hTP : T = P := Subsingleton.elim _ _
   have hQleP : (Q : Subgroup H).map H.subtype ≤ (P : Subgroup G) := by
     rw [← hTP]
@@ -114,8 +115,7 @@ public theorem exists_sylow_map_eq_inf_of_normal_sylow_map
           exact Subgroup.map_inf _ _ _ G.subtype_injective
     _ = (P : Subgroup G).map G.subtype ⊓ H := by
           rw [show K.map G.subtype = H by
-            simpa [K, inf_eq_left.mpr hHG] using
-              Subgroup.subgroupOf_map_subtype H G]
+            simp [K, inf_eq_left.mpr hHG]]
 
 /-- A characteristic subgroup of a subgroup normal in `N` is normal in `N`,
 after all subgroup inclusions are mapped into the same ambient group. -/
@@ -128,7 +128,6 @@ public theorem normal_subgroupOf_map_of_characteristic_of_normal
     (K.subgroupOf N).Normal := by
   rw [Subgroup.normal_subgroupOf_iff hKN]
   intro k n hk hn
-  change n * k * n⁻¹ ∈ K
   have hnNormH : n ∈ Subgroup.normalizer (H : Set X) :=
     ((Subgroup.normal_subgroupOf_iff_le_normalizer hHN).mp hHnormal) hn
   rw [hKmap] at hk ⊢
@@ -217,7 +216,7 @@ public theorem sylow_lift_of_central_odd_core
   let P : Sylow 2 H := default
   let Pmap : Sylow 2 B := P.mapSurjective (f := qH) hqHsurj
   have hPmap : (Pmap : Subgroup B) = (Pbar : Subgroup B) := by
-    letI : Unique (Sylow 2 B) :=
+    let : Unique (Sylow 2 B) :=
       Sylow.unique_of_normal Pbar hPbarNormal
     exact congrArg Sylow.toSubgroup (Subsingleton.elim Pmap Pbar)
   have hPmapSub :
@@ -240,7 +239,7 @@ public theorem sylow_lift_of_central_odd_core
     rw [hn, hK_Hcard]
     exact hKodd.pow_left n
   have hPKbot : (P : Subgroup H) ⊓ K.subgroupOf H = ⊥ :=
-    Subgroup.inf_eq_bot_of_coprime hP_Kcop
+    (Subgroup.disjoint_of_coprime_natCard hP_Kcop).eq_bot
   let E : Subgroup H := (Pbar : Subgroup B).comap qH
   have hP_le_E : (P : Subgroup H) ≤ E := by
     intro p hp
@@ -291,9 +290,9 @@ public theorem sylow_lift_of_central_odd_core
       KE.IsComplement' PE := by
     let PE : Subgroup E := (P : Subgroup H).subgroupOf E
     let KE : Subgroup E := (K.subgroupOf H).subgroupOf E
-    letI : (K.subgroupOf H).Normal :=
+    let : (K.subgroupOf H).Normal :=
       (inferInstance : K.Normal).subgroupOf H
-    letI : KE.Normal :=
+    let : KE.Normal :=
       (inferInstance : (K.subgroupOf H).Normal).subgroupOf E
     have hdisj : Disjoint KE PE := by
       rw [Subgroup.disjoint_def]
@@ -312,10 +311,10 @@ public theorem sylow_lift_of_central_odd_core
       KE PE hdisj hsup
   let PE : Subgroup E := (P : Subgroup H).subgroupOf E
   let KE : Subgroup E := (K.subgroupOf H).subgroupOf E
-  letI : (K.subgroupOf H).Normal :=
+  let : (K.subgroupOf H).Normal :=
     (inferInstance : K.Normal).subgroupOf H
-  letI : E.Normal := hE_normal_H
-  letI : KE.Normal :=
+  let : E.Normal := hE_normal_H
+  let : KE.Normal :=
     (inferInstance : (K.subgroupOf H).Normal).subgroupOf E
   have hPEcentral : PE ≤ Subgroup.centralizer (KE : Set E) := by
     intro p hp
@@ -339,7 +338,7 @@ public theorem sylow_lift_of_central_odd_core
       simpa [PEsyl, PE, Sylow.coe_subtype] using hPENormal
     let Pconj : Sylow 2 E :=
       PEsyl.mapSurjective (f := e.toMonoidHom) e.surjective
-    letI : Unique (Sylow 2 E) :=
+    let : Unique (Sylow 2 E) :=
       Sylow.unique_of_normal PEsyl hPEsylNormal
     have hPconj : (Pconj : Subgroup E) = (PEsyl : Subgroup E) :=
       congrArg Sylow.toSubgroup (Subsingleton.elim Pconj PEsyl)
@@ -385,30 +384,6 @@ public theorem sylow_lift_of_central_odd_core
 
 /-! ## Sylow transfer through a normalizer factor -/
 
-private theorem natCard_sup_eq_mul_of_disjoint_of_le_normalizer
-    {G : Type u} [Group G] (A B : Subgroup G)
-    (hnorm : B ≤ Subgroup.normalizer (A : Set G))
-    (hdisj : Disjoint A B) :
-    Nat.card (A ⊔ B : Subgroup G) = Nat.card A * Nat.card B := by
-  let toSup : A × B → ↥(A ⊔ B) := fun z =>
-    ⟨(z.1 : G) * (z.2 : G),
-      Subgroup.mul_mem_sup z.1.property z.2.property⟩
-  have hinj : Function.Injective toSup := by
-    intro x y hxy
-    apply Subgroup.mul_injective_of_disjoint hdisj
-    exact congrArg Subtype.val hxy
-  have hsurj : Function.Surjective toSup := by
-    intro x
-    have hx : (x : G) ∈ (A : Set G) * (B : Set G) := by
-      rw [← Subgroup.coe_mul_of_right_le_normalizer_left A B hnorm]
-      exact x.property
-    rcases hx with ⟨a, ha, b, hb, hab⟩
-    exact ⟨(⟨a, ha⟩, ⟨b, hb⟩), Subtype.ext hab⟩
-  calc
-    Nat.card (A ⊔ B : Subgroup G) = Nat.card (A × B) :=
-      Nat.card_congr (Equiv.ofBijective toSup ⟨hinj, hsurj⟩).symm
-    _ = Nat.card A * Nat.card B := Nat.card_prod A B
-
 /-- Low-layer form of the normalizer criterion used by the Section 9
 Sylow transfer. -/
 private theorem exists_sylow_map_eq_of_normalizer_le_low
@@ -426,12 +401,12 @@ private theorem exists_sylow_map_eq_of_normalizer_le_low
   intro Q hQp hP0Q
   have hQ_le_P0 : Q ≤ P0sub := by
     let K : Subgroup Q := P0sub.subgroupOf Q
-    haveI : Fact (IsPGroup p Q) := ⟨hQp⟩
+    have : Fact (IsPGroup p Q) := ⟨hQp⟩
     have hQnil : Group.IsNilpotent Q :=
       IsPGroup.isNilpotent (p := p) (G := Q) hQp
     have hnc : NormalizerCondition Q := by
-      letI : Group.IsNilpotent Q := hQnil
-      exact normalizerCondition_of_isNilpotent (G := Q)
+      let : Group.IsNilpotent Q := hQnil
+      exact Group.normalizerCondition_of_isNilpotent (G := Q)
     have hnormalizerK_le : Subgroup.normalizer (K : Set Q) ≤ K := by
       intro x hxnormalizer
       have hxnormalizerP0 :
@@ -578,7 +553,7 @@ private theorem sylow_sup_of_sylow_right_of_two_left
       Nat.prime_two).2 hpne2).pow_right n
   have hcardSup : Nat.card (S ⊔ H : Subgroup G) =
       Nat.card S * Nat.card H :=
-    natCard_sup_eq_mul_of_disjoint_of_le_normalizer S H hnorm hdisj
+    PFchapter1section1.natCard_sup_eq_mul_of_disjoint_of_le_normalizer S H hnorm hdisj
   have hindex : Ysup.index = Nat.card S * P.index := by
     apply Nat.mul_left_cancel
       (Nat.card_pos : 0 < Nat.card (P : Subgroup H))
@@ -776,9 +751,7 @@ public theorem normal_sup_normalizerIn_eq_of_sylow
           (M.subtype.comp N.subtype) := by
         rw [show (PN : Subgroup N) =
             (P : Subgroup C).map e.symm.toMonoidHom by
-          simpa [PN] using
-            (Sylow.coe_mapSurjective
-              (f := e.symm.toMonoidHom) e.symm.surjective P)]
+          simp [PN]]
       _ = (P : Subgroup C).map
           ((M.subtype.comp N.subtype).comp e.symm.toMonoidHom) := by
         rw [Subgroup.map_map]
@@ -787,9 +760,9 @@ public theorem normal_sup_normalizerIn_eq_of_sylow
       _ = Y := hPmap
       _ = (Y.subgroupOf M).map M.subtype := by
         symm
-        simpa [Subgroup.subgroupOf_map_subtype,
+        simp [Subgroup.subgroupOf_map_subtype,
           inf_eq_left.mpr hYM]
-  letI : N.Normal := by simpa [N] using hCnormal
+  let : N.Normal := by simpa [N] using hCnormal
   have hFrattini :
       Subgroup.normalizer ((Y.subgroupOf M : Subgroup M) : Set M) ⊔
         N = ⊤ := by

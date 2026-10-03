@@ -3,7 +3,7 @@ public import FeitThompson.BGsection3.Defs
 
 public import Theory.Representation.CyclicQuotientExtension
 public import Theory.Representation.SolvableDimension
-public import FeitThompson.LinearAlgebra.PrimitiveRootEigenspaces
+public import Theory.Representation.PrimitiveRootEigenspaces
 public import Theory.Representation.ExtraspecialFixedPoints
 public import Theory.Representation.TwoDimensionalOddOrder
 public import Mathlib.Algebra.CharP.LinearMaps
@@ -20,16 +20,17 @@ public import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
 public import Mathlib.RingTheory.SimpleModule.Isotypic
 public import Mathlib.RingTheory.ZMod.Torsion
 public import FeitThompson.BGsection1.CriticalSubgroupLemmas
-public import FeitThompson.Burnside.NormalComplement
-public import FeitThompson.Extraspecial
-public import FeitThompson.LinearAlgebra.BlockElementaryMap
+public import Theory.GroupAction.NormalComplement
+public import Theory.ElementaryAbelian.Extraspecial
+public import Theory.Representation.BlockElementaryMap
 public import Theory.Representation.ConjugateRep
-public import FeitThompson.BGsection2.EndFieldRep
+public import Theory.Representation.EndFieldRep
 public import FeitThompson.GeneratorRank
 public import FeitThompson.BGsection4.Defs
 import FeitThompson.PCore.PCore
-import FeitThompson.PGroup.NormalSubgroups
+public import Theory.GroupTheory.PGroup.NormalSubgroups
 import Mathlib.GroupTheory.Schreier
+
 
 /-! # Definitions for BG Section 5 -/
 
@@ -79,7 +80,7 @@ end
 public theorem generatorRank_le_natCard_local
     (G : Type*) [Group G] [Finite G] :
     generatorRank G ≤ Nat.card G := by
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   obtain ⟨S, hS_card, _hS_top⟩ := Group.rank_spec G
   calc
     generatorRank G = Group.rank G := generatorRank_eq_group_rank G
@@ -93,7 +94,7 @@ public theorem generatorRank_le_groupRank_of_commutative_pgroup
     generatorRank G ≤ groupRank G := by
   have hprimeRank_le_natCard : ∀ q : ℕ, primeRank q G ≤ Nat.card G := by
     intro q
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     refine csSup_le ?_ ?_
     · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := G), inferInstance, Nat.zero_le _⟩
     · intro n hn
@@ -103,7 +104,7 @@ public theorem generatorRank_le_groupRank_of_commutative_pgroup
     rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
     exact Group.rank_congr Subgroup.topEquiv
   have hprimeRank : generatorRank G ≤ primeRank p G := by
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     refine le_csSup ?_ ?_
     · exact ⟨Nat.card G, fun n hn => by
         rcases hn with ⟨A, _hAp, _hAcomm, hnA⟩

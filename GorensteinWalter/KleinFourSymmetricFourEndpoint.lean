@@ -18,6 +18,7 @@ public abbrev Perm4Involution := {v : Equiv.Perm (Fin 4) // v * v = 1}
 
 set_option maxRecDepth 1000000 in
 set_option maxHeartbeats 2000000 in
+-- Exhaustive evaluation over `S₄` needs the larger heartbeat budget.
 /-- In `S₄`, no involution centralizes an order-three element. -/
 public theorem no_involution_centralizes_order_three_perm_four :
     ∀ a : Perm4OrderThree, ∀ v : Perm4Involution,

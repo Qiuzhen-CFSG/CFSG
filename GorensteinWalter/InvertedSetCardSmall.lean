@@ -23,7 +23,7 @@ namespace GorensteinWalter
 universe u
 
 private theorem inverted_pow_mem
-    {G : Type u} [Group G] (H : Subgroup G) {y : G} (hy : IsInvolution y)
+    {G : Type u} [Group G] (H : Subgroup G) {y : G}
     {x : G} (hx : x ∈ invertedElements H y) (n : ℕ) :
     x ^ n ∈ invertedElements H y := by
   refine ⟨H.pow_mem hx.1 n, ?_⟩
@@ -34,7 +34,7 @@ private theorem inverted_pow_mem
     _ = (x ^ n)⁻¹ := by exact inv_pow (a := x) (n := n)
 
 private theorem inverted_mul_of_commute
-    {G : Type u} [Group G] (H : Subgroup G) {y a b : G} (hy : IsInvolution y)
+    {G : Type u} [Group G] (H : Subgroup G) {y a b : G}
     (ha : a ∈ invertedElements H y) (hb : b ∈ invertedElements H y)
     (hab : a * b = b * a) :
     a * b ∈ invertedElements H y := by
@@ -65,7 +65,7 @@ private lemma set_ncard_two_of_mem {G : Type u} [Group G] {S : Set G}
     refine ⟨x, hxy.symm, ?_⟩
     ext z
     rw [hS]
-    simp <;> tauto
+    simp ; tauto
 
 /-- A three-element set containing `a` is `{a, b, c}` for distinct
 `b, c ≠ a`. -/
@@ -84,12 +84,12 @@ private lemma set_ncard_three_of_mem {G : Type u} [Group G] {S : Set G}
     refine ⟨x, z, hxy.symm, hyz, hxz, ?_⟩
     ext w
     rw [hS]
-    simp <;> tauto
+    simp ; tauto
   · subst z
     refine ⟨x, y, hxz.symm, hyz.symm, hxy, ?_⟩
     ext w
     rw [hS]
-    simp <;> tauto
+    simp ; tauto
 
 /-- Four pairwise-distinct elements form a set of cardinality four. -/
 private lemma ncard_four_of_pairwise {G : Type u} [Group G]
@@ -143,7 +143,7 @@ public theorem set_ncard_three_forall_mem_cases {G : Type u} [Group G]
 /-- If `|I_H(y)| = 2`, every inverted element squares to one. -/
 public theorem inverted_card_two_mul_self
     {G : Type u} [Group G] [Finite G]
-    (H : Subgroup G) {y t : G} (hy : IsInvolution y)
+    (H : Subgroup G) {y t : G}
     (htI : t ∈ invertedElements H y)
     (hcard : Nat.card {x : G // x ∈ invertedElements H y} = 2) :
     t * t = 1 := by
@@ -162,7 +162,7 @@ public theorem inverted_card_two_mul_self
       rcases (by simpa using ht) with h | h
       · exact False.elim (ht1 h)
       · exact h
-    have ht2 : t ^ 2 ∈ S := inverted_pow_mem H hy htI 2
+    have ht2 : t ^ 2 ∈ S := inverted_pow_mem H htI 2
     have ht2mem : t ^ 2 ∈ ({1, b} : Set G) := by
       rw [← hS']
       exact ht2
@@ -183,7 +183,7 @@ three-element inverted set forces every non-identity element to have order
 three. -/
 private theorem order_eq_three_of_card_three
     {G : Type u} [Group G] [Finite G]
-    (H : Subgroup G) {y t u : G} (hy : IsInvolution y)
+    (H : Subgroup G) {y t u : G}
     (htI : t ∈ invertedElements H y) (htne : t ≠ 1)
     (huS : u ∈ invertedElements H y) (hu_ne_1 : u ≠ 1) (hu_ne_t : u ≠ t)
     (hcases : ∀ x : G, x ∈ invertedElements H y →
@@ -192,8 +192,8 @@ private theorem order_eq_three_of_card_three
     orderOf t = 3 := by
   classical
   let S : Set G := invertedElements H y
-  have hpowT : ∀ n : ℕ, t ^ n ∈ S := fun n => inverted_pow_mem H hy htI n
-  have hpowU : ∀ n : ℕ, u ^ n ∈ S := fun n => inverted_pow_mem H hy huS n
+  have hpowT : ∀ n : ℕ, t ^ n ∈ S := fun n => inverted_pow_mem H htI n
+  have hpowU : ∀ n : ℕ, u ^ n ∈ S := fun n => inverted_pow_mem H huS n
   have htInvI : t⁻¹ ∈ S := by
     refine ⟨H.inv_mem htI.1, ?_⟩
     have h1 : y * t⁻¹ * y⁻¹ = (y * t * y⁻¹)⁻¹ := by group
@@ -215,7 +215,7 @@ private theorem order_eq_three_of_card_three
       rw [hEq]
       exact h
     · have hn' : n = -(n.natAbs : ℤ) := by omega
-      have h := inverted_pow_mem H hy htInvI n.natAbs
+      have h := inverted_pow_mem H htInvI n.natAbs
       have hEq : t ^ n = (t⁻¹) ^ n.natAbs := by
         conv_lhs => rw [hn']
         rw [zpow_neg]
@@ -233,7 +233,7 @@ private theorem order_eq_three_of_card_three
       rw [hEq]
       exact h
     · have hn' : n = -(n.natAbs : ℤ) := by omega
-      have h := inverted_pow_mem H hy huInvI n.natAbs
+      have h := inverted_pow_mem H huInvI n.natAbs
       have hEq : u ^ n = (u⁻¹) ^ n.natAbs := by
         conv_lhs => rw [hn']
         rw [zpow_neg]
@@ -294,7 +294,7 @@ private theorem order_eq_three_of_card_three
         simpa [pow_two] using hu2_1
       have huInv : u⁻¹ = u := (eq_inv_of_mul_eq_one_right hu2').symm
       by_cases hcomm : t * u = u * t
-      · have htuS : t * u ∈ S := inverted_mul_of_commute H hy htI huS hcomm
+      · have htuS : t * u ∈ S := inverted_mul_of_commute H htI huS hcomm
         have htu_ne_1 : t * u ≠ 1 := by
           intro h
           apply hu_ne_t
@@ -416,7 +416,7 @@ private theorem order_eq_three_of_card_three
 three. -/
 public theorem inverted_card_three_orderOf_eq_three
     {G : Type u} [Group G] [Finite G]
-    (H : Subgroup G) {y t : G} (hy : IsInvolution y)
+    (H : Subgroup G) {y t : G}
     (htI : t ∈ invertedElements H y) (htne : t ≠ 1)
     (hcard : Nat.card {x : G // x ∈ invertedElements H y} = 3) :
     orderOf t = 3 := by
@@ -448,7 +448,7 @@ public theorem inverted_card_three_orderOf_eq_three
       · exact Or.inl h
       · exact Or.inr (Or.inl (by simpa [htb] using h))
       · exact Or.inr (Or.inr (by simpa [u] using h))
-    exact order_eq_three_of_card_three H hy htI htne huS hu_ne_1 hu_ne_t
+    exact order_eq_three_of_card_three H htI htne huS hu_ne_1 hu_ne_t
       (by intro x hx; exact hcases x hx) hS
   · -- `t = c`, `u = b`
     let u : G := b
@@ -465,9 +465,9 @@ public theorem inverted_card_three_orderOf_eq_three
         exact hx
       rcases (by simpa using hmem) with h | h | h
       · exact Or.inl h
-      · exact Or.inr (Or.inr (by simpa [u, h] using htc.symm))
+      · exact Or.inr (Or.inr (by simp [u, h]))
       · exact Or.inr (Or.inl (by simpa [htc] using h))
-    exact order_eq_three_of_card_three H hy htI htne huS hu_ne_1 hu_ne_t
+    exact order_eq_three_of_card_three H htI htne huS hu_ne_1 hu_ne_t
       (by intro x hx; exact hcases x hx) hS
 
 /-- If `|I_H(y)| = 3`, no two external involutions `i * y`, `j * y`
@@ -496,9 +496,9 @@ public theorem inverted_card_three_no_commuting_fiber_pair
     apply Subtype.ext
     exact h
   have hord : orderOf t = 3 :=
-    inverted_card_three_orderOf_eq_three H hy htI htne hcard
+    inverted_card_three_orderOf_eq_three H htI htne hcard
   have hpowI : ∀ n : ℕ, t ^ n ∈ invertedElements H y :=
-    inverted_pow_mem H hy htI
+    inverted_pow_mem H htI
   have hInvT : t⁻¹ = t ^ 2 := by
     exact (eq_inv_of_mul_eq_one_right (by
       calc
@@ -608,8 +608,7 @@ public theorem inverted_card_three_no_commuting_fiber_pair
                 simp]
         _ = 3 := hord
     · contradiction
-  intro i j hi hj hij
-  intro hcomm
+  intro i j hi hj hij hcomm
   have hEq : i * j⁻¹ = j * i⁻¹ := by
     have hyy : y⁻¹ = y := inv_eq_of_mul_eq_one_right
       (by simpa [pow_two] using hy.2)

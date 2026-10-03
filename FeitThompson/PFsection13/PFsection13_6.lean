@@ -37,7 +37,7 @@ private theorem theorem_13_6_theorem_13_5_hypothesis_of_core
     (hζ0 : ζ0 ∈ S1)
     (hlam : lam ∈ S1)
     (hζ0_ne_lam : ζ0 ≠ lam)
-    (hvirt : Theory.Character.IsVirtualCharacter lamτ)
+    (hvirt : IsVirtualCharacter lamτ)
     (ha : (1 : ℂ) = Section1.scalarProduct G (τS (lam - ζ0)) lamτ)
     (horth : ∀ ζ : Section1.ClassFunction Smax, ζ ∈ S1 →
       ζ ≠ ζ0 → ζ ≠ lam →
@@ -68,7 +68,7 @@ private theorem theorem_13_6_nonkernelInducedFamily_pairwise_orthogonal
       ∀ η : Section1.ClassFunction M, η ∈ S → ζ ≠ η →
         Section1.scalarProduct M ζ η = 0 := by
   classical
-  letI : (H.subgroupOf M).Normal := hHnormal
+  let : (H.subgroupOf M).Normal := hHnormal
   intro ζ hζ η hη hneq
   rcases (hS.2.2 ζ).mp hζ with ⟨θζ, hθζ, _hθζnotker, hζeq⟩
   rcases (hS.2.2 η).mp hη with ⟨θη, hθη, _hθηnotker, hηeq⟩
@@ -221,7 +221,7 @@ public theorem theorem_13_6_lambda_inducedFromNonkernel_H_source
       hDercomp, _hMFnotcyc, _hsecond, _hfit, _hfitDer, _hW2le, _hW2cyc,
       _hW2ne, _hcent, _hnorm⟩
   rcases hMF with ⟨⟨_hPSmax, hPNormal, _hPnil, _hPHall⟩, _hmax⟩
-  letI : (P.subgroupOf Smax).Normal := hPNormal
+  let : (P.subgroupOf Smax).Normal := hPNormal
   have hPHsub : P.subgroupOf Smax ≤ H.subgroupOf Smax := by
     intro x hx
     change ((x : Smax) : G) ∈ H
@@ -244,7 +244,7 @@ public theorem theorem_13_6_lambda_inducedFromNonkernel_H_source
     have hDnormal : ((ambientDerivedSubgroup Smax).subgroupOf Smax).Normal := by
       simpa using (section12_normalIn_ambientDerivedSubgroup (G := G) (E := Smax)).2
     simpa [← hDer_eq] using hDnormal
-  letI : ((P ⊔ U).subgroupOf Smax).Normal := hPUnormal
+  let : ((P ⊔ U).subgroupOf Smax).Normal := hPUnormal
   have hIndPUker : Section1.subgroupInKernel'
       (Section1.inducedCF ((P ⊔ U).subgroupOf Smax) θPU)
       (P.subgroupOf Smax) := by
@@ -340,11 +340,11 @@ private theorem theorem_13_6_lamTau_virtual_of_sourceContext
     (hcoh : Section6.coherentExtension Sfam τS τ1)
     (hlamS : lam ∈ Sfam)
     (h6hyp : theorem_13_6_hypothesis Smax H P C τ1 lam lamτ p q u) :
-    Theory.Character.IsVirtualCharacter lamτ := by
+    IsVirtualCharacter lamτ := by
   rcases h6hyp with ⟨_hH, _hlam_irred, _hlam_deg, _hlam_linear, hlamτ_eq⟩
   have hspan : Section5.integerSpan Sfam lam :=
     Section5.integerSpan_of_mem Sfam hlamS
-  have hvirt : Theory.Character.IsVirtualCharacter (τ1 lam) :=
+  have hvirt : IsVirtualCharacter (τ1 lam) :=
     hcoh.2.1 lam hspan
   simpa [hlamτ_eq] using hvirt
 
@@ -467,7 +467,7 @@ public theorem theorem_13_6_calS1_split1_conjugate_ne_source
         _hd_card, _hU_card, _hV_card, _hSfam, _hTfam, _hDadeS, _hDadeT,
         _hnotation, _hDadeDiff, _hZeroDegree, _hConjIndex, _hConjBetaTau,
         _hChoice, hMin, _hFourSixS, _hFourSixT⟩
-    letI : IsMinCE G := hMin
+    let : IsMinCE G := hMin
     exact section13_odd_card_subgroup_of_odd_group Smax IsMinCE.odd_order
   have hq_gt_one : 1 < q :=
     (section13_theorem_13_10_rawSourcePositivity_of_sourceData
@@ -885,8 +885,8 @@ public theorem section13_calS1_P_sup_U_constituent_decomposition_source
   rcases Section1.exists_positive_irreducible_decomposition_of_character
       θPU hθPUchar hθPU_ne with
     ⟨ι, hι, hιdec, e, ψ, _i0, hepos, hψbook, hψpair, hdecomp⟩
-  letI : Fintype ι := hι
-  letI : DecidableEq ι := hιdec
+  let : Fintype ι := hι
+  let : DecidableEq ι := hιdec
   have hψclass : ∀ i : ι, Section1.IsClassFunction (ψ i) := by
     intro i
     exact Section1.isBookIrreducibleCharacter_isClassFunction (ψ i) (hψbook i)
@@ -909,9 +909,9 @@ public theorem section13_calS1_P_sup_U_constituent_decomposition_source
       Section1.weightedFamilySum (fun i : ιu => (eu i : ℂ)) ψu =
         Section1.weightedFamilySum (fun i : ι => (e i : ℂ)) ψ := by
     ext g
-    haveI : Finite ι := Finite.of_fintype ι
-    letI : Fintype ι := Fintype.ofFinite ι
-    letI : Fintype ιu := Fintype.ofFinite ιu
+    have : Finite ι := Finite.of_fintype ι
+    let : Fintype ι := Fintype.ofFinite ι
+    let : Fintype ιu := Fintype.ofFinite ιu
     let equivULift : ι ≃ ιu := Equiv.ulift.{u, 0}.symm
     simpa [Section1.weightedFamilySum, ιu, eu, ψu] using
       (Fintype.sum_equiv equivULift
@@ -955,7 +955,7 @@ private theorem section13_subgroupInKernel'_of_irreducible_constituent_of_kernel
       rw [hnone f, hnone g]
     exact hhom_ne (Module.finrank_zero_of_subsingleton)
   rcases hexists with ⟨f, hfne⟩
-  letI : Representation.IsIrreducible φρ := hφρirr
+  let : Representation.IsIrreducible φρ := hφρirr
   have hfinj : Function.Injective f := by
     rcases Representation.IsIrreducible.injective_or_eq_zero f with hfinj | hfzero
     · exact hfinj
@@ -3582,10 +3582,10 @@ public theorem section13_typeP_prTIres_pf4_primeTIirr_spec_product_entry_matchin
   classical
   intro I J instI decI instJ decJ Wsec A0 i0 j0 piChar δSign
     ωsec σsec hpackage
-  letI : Fintype I := instI
-  letI : DecidableEq I := decI
-  letI : Fintype J := instJ
-  letI : DecidableEq J := decJ
+  let : Fintype I := instI
+  let : DecidableEq I := decI
+  let : Fintype J := instJ
+  let : DecidableEq J := decJ
   have hselectedData :
       (∀ i j, Section1.IsIrreducibleCharacterOnGroup (piChar i j)) ∧
         (∀ i j,
@@ -3645,10 +3645,10 @@ public theorem section13_typeP_prTIres_pf4_primeTIirr_spec_product_entry_matchin
   classical
   intro _hq0 _hp0 I J instI decI instJ decJ Wsec A0 i0 j0 piChar δSign
     ωsec σsec hpackage
-  letI : Fintype I := instI
-  letI : DecidableEq I := decI
-  letI : Fintype J := instJ
-  letI : DecidableEq J := decJ
+  let : Fintype I := instI
+  let : DecidableEq I := decI
+  let : Fintype J := instJ
+  let : DecidableEq J := decJ
   exact
     section13_typeP_prTIres_pf4_primeTIirr_spec_product_entry_matching_bounded_source
       Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT
@@ -3702,10 +3702,10 @@ public theorem section13_typeP_prTIres_pf4_primeTIirr_spec_product_matching_raw_
   classical
   intro hq0 hp0 I J instI decI instJ decJ Wsec A0 i0 j0 piChar δSign
     ωsec σsec hpackage
-  letI : Fintype I := instI
-  letI : DecidableEq I := decI
-  letI : Fintype J := instJ
-  letI : DecidableEq J := decJ
+  let : Fintype I := instI
+  let : DecidableEq I := decI
+  let : Fintype J := instJ
+  let : DecidableEq J := decJ
   rcases
       section13_typeP_prTIres_pf4_primeTIirr_spec_product_entry_matching_source
         Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT
@@ -3835,10 +3835,10 @@ public theorem section13_typeP_prTIres_pf4_primeTIirr_spec_product_matching_sour
   classical
   intro hq0 hp0 I J instI decI instJ decJ Wsec A0 i0 j0 piChar δSign
     ωsec σsec hpackage
-  letI : Fintype I := instI
-  letI : DecidableEq I := decI
-  letI : Fintype J := instJ
-  letI : DecidableEq J := decJ
+  let : Fintype I := instI
+  let : DecidableEq I := decI
+  let : Fintype J := instJ
+  let : DecidableEq J := decJ
   rcases
       section13_typeP_prTIres_pf4_primeTIirr_spec_product_matching_base_source
         Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT
@@ -3919,10 +3919,10 @@ public theorem section13_typeP_prTIres_pf4_primeTIirr_spec_table_matching_source
   classical
   intro hq0 hp0 I J instI decI instJ decJ Wsec A0 i0 j0 piChar δSign
     ωsec σsec hpackage
-  letI : Fintype I := instI
-  letI : DecidableEq I := decI
-  letI : Fintype J := instJ
-  letI : DecidableEq J := decJ
+  let : Fintype I := instI
+  let : DecidableEq I := decI
+  let : Fintype J := instJ
+  let : DecidableEq J := decJ
   rcases
       section13_typeP_prTIres_pf4_primeTIirr_spec_product_matching_source
         Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT
@@ -3995,10 +3995,10 @@ public theorem section13_typeP_prTIres_pf4_primeTIirr_spec_core_source
   constructor
   · intro hq0 hp0 I J instI decI instJ decJ Wsec A0 i0 j0 piChar δSign
       ωsec σsec hpackage
-    letI : Fintype I := instI
-    letI : DecidableEq I := decI
-    letI : Fintype J := instJ
-    letI : DecidableEq J := decJ
+    let : Fintype I := instI
+    let : DecidableEq I := decI
+    let : Fintype J := instJ
+    let : DecidableEq J := decJ
     rcases
         section13_typeP_prTIres_pf4_primeTIirr_spec_table_matching_source
           Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT
@@ -4158,10 +4158,10 @@ public theorem section13_typeP_prTIres_natural_primeTIirr_package_source
   rcases hTauS with
     ⟨I, instI, decI, J, instJ, decJ, Wsec, _A, A0, i0, j0, piChar,
       δSign, ωsec, σsec, hnotation10, hSigmaAgree, ⟨H_cyclicA0, hCyclicA0, hTauCyclicA0, hBook⟩⟩
-  letI : Fintype I := instI
-  letI : DecidableEq I := decI
-  letI : Fintype J := instJ
-  letI : DecidableEq J := decJ
+  let : Fintype I := instI
+  let : DecidableEq I := decI
+  let : Fintype J := instJ
+  let : DecidableEq J := decJ
   have hpackage : section13_typeP_prTIres_pf4_sourceSelectedPackageData
       Smax P U W1 W2 Wsec A0 i0 j0 piChar δSign ωsec σsec τS :=
     ⟨_A, hnotation10, hSigmaAgree,
@@ -4196,10 +4196,10 @@ public theorem section13_typeP_prTIres_natural_primeTIirr_package_source
   refine ⟨hbaseNatural, hdistinctNatural, ?_⟩
   intro I' J' instI' decI' instJ' decJ' Wsec' A0' i0' j0' piChar'
     δSign' ωsec' σsec' hpackage' _hp0'
-  letI : Fintype I' := instI'
-  letI : DecidableEq I' := decI'
-  letI : Fintype J' := instJ'
-  letI : DecidableEq J' := decJ'
+  let : Fintype I' := instI'
+  let : DecidableEq I' := decI'
+  let : Fintype J' := instJ'
+  let : DecidableEq J' := decJ'
   rcases
       section13_typeP_prTIres_pf4_natural_table_normalized_functions_choice_source
         Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT
@@ -4541,10 +4541,10 @@ public theorem section13_typeP_prTIres_pf4_natural_table_indexing_functions_sour
   rcases hTauS with
     ⟨I, instI, decI, J, instJ, decJ, Wsec, _A, A0, i0, j0, piChar,
       δSign, ωsec, σsec, hnotation10, hSigmaAgree, ⟨H_cyclicA0, hCyclicA0, hTauCyclicA0, hBook⟩⟩
-  letI : Fintype I := instI
-  letI : DecidableEq I := decI
-  letI : Fintype J := instJ
-  letI : DecidableEq J := decJ
+  let : Fintype I := instI
+  let : DecidableEq I := decI
+  let : Fintype J := instJ
+  let : DecidableEq J := decJ
   have hpackage : section13_typeP_prTIres_pf4_sourceSelectedPackageData
       Smax P U W1 W2 Wsec A0 i0 j0 piChar δSign ωsec σsec τS :=
     ⟨_A, hnotation10, hSigmaAgree,
@@ -4612,10 +4612,10 @@ public theorem section13_typeP_prTIres_pf4_natural_table_indexing_source
         hsource hnotation with
     ⟨I, instI, decI, J, instJ, decJ, Wsec, A, A0, i0, j0, piChar, δSign,
       ωsec, σsec, hnotation10, hp0, fI, fJ, hfI, hfJ, hzero, hentry⟩
-  letI : Fintype I := instI
-  letI : DecidableEq I := decI
-  letI : Fintype J := instJ
-  letI : DecidableEq J := decJ
+  let : Fintype I := instI
+  let : DecidableEq I := decI
+  let : Fintype J := instJ
+  let : DecidableEq J := decJ
   rcases hsource with
     ⟨_hcaseB, hptypeS, _hptypeT, hp, hq, _hC, _hD, _hc, _hd,
       _hUcard, _hVcard, _hSfam, _hTfam, _hDadeS, _hDadeT,
@@ -4744,10 +4744,10 @@ public theorem section13_typeP_prTIres_pf4_natural_muTable_equiv_source
         ω η μ ν μsum νsum δ δ' σ p q u v c d hsource hnotation with
     ⟨I, instI, decI, J, instJ, decJ, Wsec, A, A0, i0, j0, piChar, δSign,
       ωsec, σsec, hnotation10, hp0, eI, eJ, hzeroIndex, hentry⟩
-  letI : Fintype I := instI
-  letI : DecidableEq I := decI
-  letI : Fintype J := instJ
-  letI : DecidableEq J := decJ
+  let : Fintype I := instI
+  let : DecidableEq I := decI
+  let : Fintype J := instJ
+  let : DecidableEq J := decJ
   rcases hsource with
     ⟨_hcaseB, hptypeS, _hptypeT, hp, hq, _hC, _hD, _hc, _hd,
       _hUcard, _hVcard, _hSfam, _hTfam, _hDadeS, _hDadeT,
@@ -4927,10 +4927,10 @@ public theorem section13_typeP_prTIres_pf4_natural_index_source
     ⟨I, instI, decI, J, instJ, decJ, _Wsec, _A, _A0, i0, j0, piChar,
       _δSign, _ωsec, _σsec, xCharD, _hnotation10, h45aD, h45bD, hbase,
       _hcardI, _hcardJ, hp0, eI, eJ, hzeroIndex, hentry⟩
-  letI : Fintype I := instI
-  letI : DecidableEq I := decI
-  letI : Fintype J := instJ
-  letI : DecidableEq J := decJ
+  let : Fintype I := instI
+  let : DecidableEq I := decI
+  let : Fintype J := instJ
+  let : DecidableEq J := decJ
   rcases hnotation with
     ⟨_homega, _hmap, _hη, _hδ, _hδ', _hμirr, _hνirr, _hμnonprincipal,
       _hνnonprincipal, _hμind, _hνind, hμsum, _hνsum⟩
@@ -5044,8 +5044,8 @@ public theorem section13_typeP_prTIres_rowSource_pf4_alignment_source
         Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT
         ω η μ ν μsum νsum δ δ' σ p q u v c d hsource hnotation with
     ⟨hp0, I, instI, J, instJ, piChar, xChar, e, h45a, h45b, hcolumn, hzero⟩
-  letI : Fintype I := instI
-  letI : Fintype J := instJ
+  let : Fintype I := instI
+  let : Fintype J := instJ
   let rowSource : ℕ → Section1.ClassFunction ((P ⊔ U).subgroupOf Smax) :=
     fun j => if hj : j < p then xChar (e ⟨j, hj⟩) else xChar (e ⟨0, hp0⟩)
   refine ⟨rowSource, ?_, ?_, I, instI, J, instJ, piChar, xChar, h45b, ?_⟩
@@ -5105,8 +5105,8 @@ public theorem section13_typeP_prTIres_rowSource_classification_source
         ω η μ ν μsum νsum δ δ' σ p q u v c d hsource hnotation with
     ⟨rowSource, hrowSource, hrowZero, I, instI, J, instJ, piChar, xChar, h45b,
       hrange⟩
-  letI : Fintype I := instI
-  letI : Fintype J := instJ
+  let : Fintype I := instI
+  let : Fintype J := instJ
   refine ⟨rowSource, hrowSource, hrowZero, ?_⟩
   intro ψ hψirr hψnonrow
   exact section13_typeP_prTIres_nonrow_induced_irreducible_of_pf4_range
@@ -5267,8 +5267,8 @@ private theorem section13_scalarProduct_characters_ne_zero_of_common_irreducible
   rcases Section1.exists_positive_irreducible_decomposition_of_character
       χ hχchar hχne with
     ⟨ι, hι, hιdec, e, φs, _i0, hepos, hφsbook, _hφspair, hχdecomp⟩
-  letI : Fintype ι := hι
-  letI : DecidableEq ι := hιdec
+  let : Fintype ι := hι
+  let : DecidableEq ι := hιdec
   have hφsirr : ∀ i : ι, Section1.IsIrreducibleCharacterOnGroup (φs i) := by
     intro i
     exact Section1.isIrreducibleCharacterOnGroup_of_isBookIrreducibleCharacter
@@ -5286,7 +5286,7 @@ private theorem section13_scalarProduct_characters_ne_zero_of_common_irreducible
   choose n hn using fun i : ι =>
     Section1.scalarProduct_character_character_eq_nat
       (φs i) ξ (hφsbook i).1 hξchar
-  haveI : Finite ι := Finite.of_fintype ι
+  have : Finite ι := Finite.of_fintype ι
   let univι : Finset ι := @Finset.univ ι (Fintype.ofFinite ι)
   let total : ℕ := ∑ i ∈ univι, e i * n i
   have hn_iφ_ne : n iφ ≠ 0 := by
@@ -5727,7 +5727,7 @@ public theorem section13_calS1_inducedCF_P_sup_U_constituent_span_decomposition_
       ω η μ ν μsum νsum δ δ' σ p q u v c d
       hsource hnotation hH θ θPU hθirr hθnotker hθPUeq with
     ⟨ι, hι, e, ψ, hdecompPU, hψirr, hψlies⟩
-  letI : Finite ι := hι
+  let : Finite ι := hι
   refine ⟨ι, hι, e, (fun i =>
     Section1.inducedCF ((P ⊔ U).subgroupOf Smax) (ψ i)), ?_, ?_⟩
   · rw [hdecompPU]
@@ -5783,7 +5783,7 @@ public theorem section13_calS1_inducedCF_P_sup_U_integerSpan_of_constituent_clas
       ω η μ ν μsum νsum δ δ' σ p q u v c d
       hsource hnotation hH θ θPU hθirr hθnotker hθPUeq horth with
     ⟨ι, hι, e, χ, hdecomp, hχspan⟩
-  letI : Finite ι := hι
+  let : Finite ι := hι
   rw [hdecomp]
   exact section13_integerSpan_weightedFamilySum_nat
     (section13_irreducibleSubfamily Smax Sfam) e χ hχspan
@@ -6194,7 +6194,7 @@ private theorem theorem_13_6_theorem_13_5_hypothesis_core_of_lambda_mem_source
     theorem_13_6_calS1_subset_integerSpan_source
       Smax Tmax W W1 W2 P Q U V C D H Sfam Tfam τS τ1 τT
       lam lamτ p q u v c d hsource hlamS h6hyp S1 hS1
-  letI : IsMulCommutative (H.subgroupOf Smax) :=
+  let : IsMulCommutative (H.subgroupOf Smax) :=
     theorem_13_5_H_subgroupOf_isMulCommutative
       Smax Tmax W W1 W2 P Q U V C D H Sfam Tfam τS τT
         p q u v c d hsource h6hyp.1 hS1.1
@@ -6247,7 +6247,7 @@ private theorem theorem_13_6_theorem_13_5_hypothesis_core_source
           ζ0 ∈ S1 ∧
           lam ∈ S1 ∧
           ζ0 ≠ lam ∧
-          Theory.Character.IsVirtualCharacter lamτ ∧
+          IsVirtualCharacter lamτ ∧
           (1 : ℂ) = Section1.scalarProduct G (τS (lam - ζ0)) lamτ ∧
           ∀ ζ : Section1.ClassFunction Smax, ζ ∈ S1 →
             ζ ≠ ζ0 → ζ ≠ lam →
@@ -6260,7 +6260,7 @@ private theorem theorem_13_6_theorem_13_5_hypothesis_core_source
       Smax Tmax W W1 W2 P Q U V C D H Sfam Tfam τS τ1 τT
       lam lamτ p q u v c d hsource hcoh hlamS h6hyp S1 hS1 hlamS1 with
     ⟨ζ0, hζ0, hζ0_ne_lam, ha, horth⟩
-  have hvirt : Theory.Character.IsVirtualCharacter lamτ :=
+  have hvirt : IsVirtualCharacter lamτ :=
     theorem_13_6_lamTau_virtual_of_sourceContext
       Smax Tmax W W1 W2 P Q U V C D H Sfam Tfam τS τ1 τT
       lam lamτ p q u v c d hsource hcoh hlamS h6hyp
@@ -6378,7 +6378,7 @@ private theorem theorem_13_6_virtualCharacter_one_eq_int
     [Group G]
     [Finite G]
     {χ : Section1.ClassFunction G}
-    (hχ : Theory.Character.IsVirtualCharacter χ) :
+    (hχ : IsVirtualCharacter χ) :
     ∃ n : ℤ, χ 1 = (n : ℂ) := by
   classical
   rcases hχ with ⟨r, m, n, ρ, hχeq⟩
@@ -6387,26 +6387,26 @@ private theorem theorem_13_6_virtualCharacter_one_eq_int
     intro i
     simp
   rw [hχeq]
-  unfold Theory.Character.virtualCharacterOfRepresentations
+  unfold virtualCharacterOfRepresentations
   simp_rw [hdeg]
   exact_mod_cast (rfl : (∑ i : Fin r, m i * (n i : ℤ)) =
     ∑ i : Fin r, m i * (n i : ℤ))
 
 private theorem theorem_13_6_congruentModOneSub_symm
     {etaRoot eps z w : ℂ}
-    (hepsMem : eps ∈ Theory.Character.cyclotomicOrder etaRoot)
-    (hzMem : z ∈ Theory.Character.cyclotomicOrder etaRoot)
-    (hwMem : w ∈ Theory.Character.cyclotomicOrder etaRoot)
-    (hcong : Theory.Character.CongruentModOneSub etaRoot eps z w hepsMem hzMem hwMem) :
-    Theory.Character.CongruentModOneSub etaRoot eps w z hepsMem hwMem hzMem := by
-  let A := Theory.Character.cyclotomicOrder etaRoot
+    (hepsMem : eps ∈ cyclotomicOrder etaRoot)
+    (hzMem : z ∈ cyclotomicOrder etaRoot)
+    (hwMem : w ∈ cyclotomicOrder etaRoot)
+    (hcong : CongruentModOneSub etaRoot eps z w hepsMem hzMem hwMem) :
+    CongruentModOneSub etaRoot eps w z hepsMem hwMem hzMem := by
+  let A := cyclotomicOrder etaRoot
   let oneSub : A := ⟨1 - eps, A.sub_mem A.one_mem hepsMem⟩
-  have hcongA : Theory.Character.congruentModIn A oneSub (⟨z, hzMem⟩ : A)
+  have hcongA : congruentModIn A oneSub (⟨z, hzMem⟩ : A)
       ⟨w, hwMem⟩ := by
-    simpa [Theory.Character.CongruentModOneSub, A, oneSub] using hcong
-  rw [Theory.Character.congruentModIn_iff_dvd] at hcongA
-  change Theory.Character.congruentModIn A oneSub (⟨w, hwMem⟩ : A) ⟨z, hzMem⟩
-  rw [Theory.Character.congruentModIn_iff_dvd]
+    simpa [CongruentModOneSub, A, oneSub] using hcong
+  rw [congruentModIn_iff_dvd] at hcongA
+  change congruentModIn A oneSub (⟨w, hwMem⟩ : A) ⟨z, hzMem⟩
+  rw [congruentModIn_iff_dvd]
   obtain ⟨r, hr⟩ := hcongA
   refine ⟨-r, ?_⟩
   calc
@@ -6417,24 +6417,24 @@ private theorem theorem_13_6_congruentModOneSub_symm
 
 private theorem theorem_13_6_congruentModOneSub_trans
     {etaRoot eps z w v : ℂ}
-    (hepsMem : eps ∈ Theory.Character.cyclotomicOrder etaRoot)
-    (hzMem : z ∈ Theory.Character.cyclotomicOrder etaRoot)
-    (hwMem : w ∈ Theory.Character.cyclotomicOrder etaRoot)
-    (hvMem : v ∈ Theory.Character.cyclotomicOrder etaRoot)
-    (hzw : Theory.Character.CongruentModOneSub etaRoot eps z w hepsMem hzMem hwMem)
-    (hwv : Theory.Character.CongruentModOneSub etaRoot eps w v hepsMem hwMem hvMem) :
-    Theory.Character.CongruentModOneSub etaRoot eps z v hepsMem hzMem hvMem := by
-  let A := Theory.Character.cyclotomicOrder etaRoot
+    (hepsMem : eps ∈ cyclotomicOrder etaRoot)
+    (hzMem : z ∈ cyclotomicOrder etaRoot)
+    (hwMem : w ∈ cyclotomicOrder etaRoot)
+    (hvMem : v ∈ cyclotomicOrder etaRoot)
+    (hzw : CongruentModOneSub etaRoot eps z w hepsMem hzMem hwMem)
+    (hwv : CongruentModOneSub etaRoot eps w v hepsMem hwMem hvMem) :
+    CongruentModOneSub etaRoot eps z v hepsMem hzMem hvMem := by
+  let A := cyclotomicOrder etaRoot
   let oneSub : A := ⟨1 - eps, A.sub_mem A.one_mem hepsMem⟩
-  have hzwA : Theory.Character.congruentModIn A oneSub (⟨z, hzMem⟩ : A)
+  have hzwA : congruentModIn A oneSub (⟨z, hzMem⟩ : A)
       ⟨w, hwMem⟩ := by
-    simpa [Theory.Character.CongruentModOneSub, A, oneSub] using hzw
-  have hwvA : Theory.Character.congruentModIn A oneSub (⟨w, hwMem⟩ : A)
+    simpa [CongruentModOneSub, A, oneSub] using hzw
+  have hwvA : congruentModIn A oneSub (⟨w, hwMem⟩ : A)
       ⟨v, hvMem⟩ := by
-    simpa [Theory.Character.CongruentModOneSub, A, oneSub] using hwv
-  rw [Theory.Character.congruentModIn_iff_dvd] at hzwA hwvA
-  change Theory.Character.congruentModIn A oneSub (⟨z, hzMem⟩ : A) ⟨v, hvMem⟩
-  rw [Theory.Character.congruentModIn_iff_dvd]
+    simpa [CongruentModOneSub, A, oneSub] using hwv
+  rw [congruentModIn_iff_dvd] at hzwA hwvA
+  change congruentModIn A oneSub (⟨z, hzMem⟩ : A) ⟨v, hvMem⟩
+  rw [congruentModIn_iff_dvd]
   obtain ⟨r, hr⟩ := hzwA
   obtain ⟨s, hs⟩ := hwvA
   refine ⟨r + s, ?_⟩
@@ -6450,23 +6450,23 @@ private theorem theorem_13_6_virtualCharacter_congruent_at_mul_of_order_dvd
     {p M : ℕ} {etaRoot eps : ℂ}
     (heps : IsPrimitiveRoot eps p) (hp : p ≠ 0)
     (hetaRoot : IsPrimitiveRoot etaRoot M) (hM : M ≠ 0)
-    (hepsMem : eps ∈ Theory.Character.cyclotomicOrder etaRoot)
-    {χ : K → ℂ} (hχ : Theory.Character.IsVirtualCharacter χ)
+    (hepsMem : eps ∈ cyclotomicOrder etaRoot)
+    {χ : K → ℂ} (hχ : IsVirtualCharacter χ)
     {x y : K}
     (hx_order : orderOf x = p)
     (hy_order_dvd : orderOf y ∣ M)
     (hcomm : x * y = y * x) :
-    ∃ hxy : χ (x * y) ∈ Theory.Character.cyclotomicOrder etaRoot,
-      ∃ hy : χ y ∈ Theory.Character.cyclotomicOrder etaRoot,
-        Theory.Character.CongruentModOneSub etaRoot eps (χ (x * y)) (χ y)
+    ∃ hxy : χ (x * y) ∈ cyclotomicOrder etaRoot,
+      ∃ hy : χ y ∈ cyclotomicOrder etaRoot,
+        CongruentModOneSub etaRoot eps (χ (x * y)) (χ y)
           hepsMem hxy hy := by
   classical
   rcases hχ with ⟨r, m, n, ρ, hχeq⟩
-  let A := Theory.Character.cyclotomicOrder etaRoot
+  let A := cyclotomicOrder etaRoot
   have hrep : ∀ i : Fin r,
       ∃ hxy : (ρ i).character (x * y) ∈ A,
         ∃ hy : (ρ i).character y ∈ A,
-          Theory.Character.CongruentModOneSub etaRoot eps
+          CongruentModOneSub etaRoot eps
             ((ρ i).character (x * y)) ((ρ i).character y) hepsMem hxy hy := by
     intro i
     let N := orderOf y
@@ -6486,7 +6486,7 @@ private theorem theorem_13_6_virtualCharacter_congruent_at_mul_of_order_dvd
         ρ i x * ρ i y = ρ i (x * y) := (map_mul (ρ i) x y).symm
         _ = ρ i (y * x) := by rw [hcomm]
         _ = ρ i y * ρ i x := map_mul (ρ i) y x
-    rcases Theory.Character.finite_order_commuting_trace_mul_congruent
+    rcases finite_order_commuting_trace_mul_congruent
         (η := etaRoot) (ξ := eps) (p := p) (N := N) (M := M)
         heps hp hetaRoot hM hNM hepsMem (f := ρ i x) (T := ρ i y)
         hN hf hTpow hcommEnd with
@@ -6494,45 +6494,45 @@ private theorem theorem_13_6_virtualCharacter_congruent_at_mul_of_order_dvd
     have hxy : (ρ i).character (x * y) ∈ A := by
       simpa [Representation.character, map_mul] using hmul
     refine ⟨hxy, hy, ?_⟩
-    simpa [Theory.Character.CongruentModOneSub, Representation.character, map_mul] using hcong
+    simpa [CongruentModOneSub, Representation.character, map_mul] using hcong
   choose hxyi hyi hcongi using hrep
   have hxy_mem : χ (x * y) ∈ A := by
     rw [hχeq]
     exact A.sum_mem fun i _ =>
-      A.mul_mem (Theory.Character.intCast_mem_cyclotomicOrder etaRoot (m i)) (hxyi i)
+      A.mul_mem (intCast_mem_cyclotomicOrder etaRoot (m i)) (hxyi i)
   have hy_mem : χ y ∈ A := by
     rw [hχeq]
     exact A.sum_mem fun i _ =>
-      A.mul_mem (Theory.Character.intCast_mem_cyclotomicOrder etaRoot (m i)) (hyi i)
+      A.mul_mem (intCast_mem_cyclotomicOrder etaRoot (m i)) (hyi i)
   refine ⟨hxy_mem, hy_mem, ?_⟩
   let oneSub : A := ⟨1 - eps, A.sub_mem A.one_mem hepsMem⟩
-  change Theory.Character.congruentModIn A oneSub
+  change congruentModIn A oneSub
     (⟨χ (x * y), hxy_mem⟩ : A)
     (⟨χ y, hy_mem⟩ : A)
   let zterm : Fin r → A := fun i =>
     ⟨(m i : ℂ) * (ρ i).character (x * y),
-      A.mul_mem (Theory.Character.intCast_mem_cyclotomicOrder etaRoot (m i)) (hxyi i)⟩
+      A.mul_mem (intCast_mem_cyclotomicOrder etaRoot (m i)) (hxyi i)⟩
   let wterm : Fin r → A := fun i =>
     ⟨(m i : ℂ) * (ρ i).character y,
-      A.mul_mem (Theory.Character.intCast_mem_cyclotomicOrder etaRoot (m i)) (hyi i)⟩
-  unfold Theory.Character.congruentModIn
+      A.mul_mem (intCast_mem_cyclotomicOrder etaRoot (m i)) (hyi i)⟩
+  unfold congruentModIn
   have hdiff :
       (⟨χ (x * y), hxy_mem⟩ : A) - ⟨χ y, hy_mem⟩ =
         ∑ i : Fin r, (zterm i - wterm i) := by
     ext
     change χ (x * y) - χ y = ((∑ i : Fin r, (zterm i - wterm i) : A) : ℂ)
     rw [hχeq]
-    simp [Theory.Character.virtualCharacterOfRepresentations, zterm, wterm,
+    simp [virtualCharacterOfRepresentations, zterm, wterm,
       Finset.sum_sub_distrib]
   rw [hdiff]
   refine Ideal.sum_mem _ fun i _ => ?_
-  have hci : Theory.Character.congruentModIn A oneSub
+  have hci : congruentModIn A oneSub
       (⟨(ρ i).character (x * y), hxyi i⟩ : A)
       (⟨(ρ i).character y, hyi i⟩ : A) := by
-    simpa [Theory.Character.CongruentModOneSub, oneSub] using hcongi i
-  change Theory.Character.congruentModIn A oneSub (zterm i) (wterm i)
-  have hmul := Theory.Character.congruentModIn_mul_left hci
-    (⟨(m i : ℂ), Theory.Character.intCast_mem_cyclotomicOrder etaRoot (m i)⟩ : A)
+    simpa [CongruentModOneSub, oneSub] using hcongi i
+  change congruentModIn A oneSub (zterm i) (wterm i)
+  have hmul := congruentModIn_mul_left hci
+    (⟨(m i : ℂ), intCast_mem_cyclotomicOrder etaRoot (m i)⟩ : A)
   simpa [zterm, wterm] using hmul
 
 private theorem theorem_13_6_alpha_one_q_multiple_of_congruence
@@ -6542,23 +6542,23 @@ private theorem theorem_13_6_alpha_one_q_multiple_of_congruence
     {q : ℕ}
     {α : Section1.ClassFunction G}
     (hq : Nat.Prime q)
-    (hvirt : Theory.Character.IsVirtualCharacter α)
+    (hvirt : IsVirtualCharacter α)
     {etaRoot eps : ℂ}
     (hetaInt : IsIntegral ℤ etaRoot)
     (heps : IsPrimitiveRoot eps q)
-    (hepsMem : eps ∈ Theory.Character.cyclotomicOrder etaRoot)
-    (hαmem : α 1 ∈ Theory.Character.cyclotomicOrder etaRoot)
-    (hcong : Theory.Character.CongruentModOneSub etaRoot eps (α 1) 0
-      hepsMem hαmem (Theory.Character.cyclotomicOrder etaRoot).zero_mem) :
+    (hepsMem : eps ∈ cyclotomicOrder etaRoot)
+    (hαmem : α 1 ∈ cyclotomicOrder etaRoot)
+    (hcong : CongruentModOneSub etaRoot eps (α 1) 0
+      hepsMem hαmem (cyclotomicOrder etaRoot).zero_mem) :
     ∃ b : ℤ, α 1 = (q : ℂ) * (b : ℂ) := by
   rcases theorem_13_6_virtualCharacter_one_eq_int hvirt with ⟨n, hn⟩
-  have hcongInt : Theory.Character.CongruentModOneSub etaRoot eps (n : ℂ) 0
+  have hcongInt : CongruentModOneSub etaRoot eps (n : ℂ) 0
       hepsMem
-      (Theory.Character.intCast_mem_cyclotomicOrder etaRoot n)
-      (Theory.Character.cyclotomicOrder etaRoot).zero_mem := by
-    simpa [hn, Theory.Character.CongruentModOneSub] using hcong
+      (intCast_mem_cyclotomicOrder etaRoot n)
+      (cyclotomicOrder etaRoot).zero_mem := by
+    simpa [hn, CongruentModOneSub] using hcong
   have hdiv : (q : ℤ) ∣ n :=
-    Theory.Character.prime_dvd_int_of_congruent_zero_mod_one_sub
+    prime_dvd_int_of_congruent_zero_mod_one_sub
       hq heps hetaInt hepsMem n hcongInt
   rcases hdiv with ⟨b, hb⟩
   refine ⟨b, ?_⟩
@@ -6580,7 +6580,7 @@ private theorem theorem_13_6_lambda_normSq_one_of_hypothesis
   rw [show Section1.scalarProduct Smax lam lam = 1 by
     rcases h6hyp.2.1 with ⟨_n, ρ, hρirr, hlam_char⟩
     rw [hlam_char]
-    exact (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr]
+    exact (irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr]
   simp
 
 private theorem theorem_13_6_alpha_one_congruent_zero_mod_one_sub_of_lambda_congruence
@@ -6592,7 +6592,7 @@ private theorem theorem_13_6_alpha_one_congruent_zero_mod_one_sub_of_lambda_cong
     {lamτ : Section1.ClassFunction G}
     {lamH α : Section1.ClassFunction H}
     {etaRoot eps : ℂ}
-    (hepsMem : eps ∈ Theory.Character.cyclotomicOrder etaRoot)
+    (hepsMem : eps ∈ cyclotomicOrder etaRoot)
     (hcf : Section5.cfNormSq lam = 1)
     (hα : virtualCharacterKernelConstituentData H P α)
     (x : H)
@@ -6601,14 +6601,14 @@ private theorem theorem_13_6_alpha_one_congruent_zero_mod_one_sub_of_lambda_cong
     (hexp : ∀ y : H, (y : G) ≠ 1 →
       lamτ (y : G) =
         ((1 : ℂ) / (Section5.cfNormSq lam : ℂ)) * lamH y + α y)
-    (hτMem : lamτ (x : G) ∈ Theory.Character.cyclotomicOrder etaRoot)
-    (hLamMem : lamH x ∈ Theory.Character.cyclotomicOrder etaRoot)
-    (hαMem : α 1 ∈ Theory.Character.cyclotomicOrder etaRoot)
-    (hcong : Theory.Character.CongruentModOneSub etaRoot eps (lamτ (x : G)) (lamH x)
+    (hτMem : lamτ (x : G) ∈ cyclotomicOrder etaRoot)
+    (hLamMem : lamH x ∈ cyclotomicOrder etaRoot)
+    (hαMem : α 1 ∈ cyclotomicOrder etaRoot)
+    (hcong : CongruentModOneSub etaRoot eps (lamτ (x : G)) (lamH x)
       hepsMem hτMem hLamMem) :
-    Theory.Character.CongruentModOneSub etaRoot eps (α 1) 0
-      hepsMem hαMem (Theory.Character.cyclotomicOrder etaRoot).zero_mem := by
-  let A := Theory.Character.cyclotomicOrder etaRoot
+    CongruentModOneSub etaRoot eps (α 1) 0
+      hepsMem hαMem (cyclotomicOrder etaRoot).zero_mem := by
+  let A := cyclotomicOrder etaRoot
   let oneSub : A := ⟨1 - eps,
     A.sub_mem A.one_mem hepsMem⟩
   have hαker : Section1.subgroupInKernel' α (P.subgroupOf H) :=
@@ -6623,13 +6623,13 @@ private theorem theorem_13_6_alpha_one_congruent_zero_mod_one_sub_of_lambda_cong
   have hdiff : α 1 - 0 = lamτ (x : G) - lamH x := by
     rw [hxexp]
     ring
-  have hcongA : Theory.Character.congruentModIn A oneSub
+  have hcongA : congruentModIn A oneSub
       (⟨lamτ (x : G), hτMem⟩ : A) ⟨lamH x, hLamMem⟩ := by
-    simpa [Theory.Character.CongruentModOneSub, A, oneSub] using hcong
-  rw [Theory.Character.congruentModIn_iff_dvd] at hcongA
-  change Theory.Character.congruentModIn A oneSub
+    simpa [CongruentModOneSub, A, oneSub] using hcong
+  rw [congruentModIn_iff_dvd] at hcongA
+  change congruentModIn A oneSub
     (⟨α 1, hαMem⟩ : A) (⟨0, A.zero_mem⟩ : A)
-  rw [Theory.Character.congruentModIn_iff_dvd]
+  rw [congruentModIn_iff_dvd]
   rcases hcongA with ⟨r, hr⟩
   refine ⟨r, ?_⟩
   ext
@@ -6652,7 +6652,7 @@ private theorem theorem_13_6_primitive_root_package_of_q_prime
       Nat.Prime q ∧
         IsPrimitiveRoot etaRoot (Nat.card G) ∧
         IsPrimitiveRoot eps q ∧
-        eps ∈ Theory.Character.cyclotomicOrder etaRoot := by
+        eps ∈ cyclotomicOrder etaRoot := by
   let etaRoot : ℂ := Complex.exp (2 * Real.pi * Complex.I / (Nat.card G))
   let eps : ℂ := Complex.exp (2 * Real.pi * Complex.I / q)
   have hGne : Nat.card G ≠ 0 := (Nat.card_pos (α := G)).ne'
@@ -6663,7 +6663,7 @@ private theorem theorem_13_6_primitive_root_package_of_q_prime
     dsimp [eps]
     exact Complex.isPrimitiveRoot_exp q hqprime.ne_zero
   refine ⟨etaRoot, eps, hqprime, hetaRoot, heps, ?_⟩
-  exact Theory.Character.primitive_root_mem_cyclotomicOrder_of_dvd
+  exact primitive_root_mem_cyclotomicOrder_of_dvd
     hetaRoot hGne heps hqdvd
 
 private theorem theorem_13_6_primitive_root_package_source
@@ -6682,7 +6682,7 @@ private theorem theorem_13_6_primitive_root_package_source
       Nat.Prime q ∧
         IsPrimitiveRoot etaRoot (Nat.card G) ∧
         IsPrimitiveRoot eps q ∧
-        eps ∈ Theory.Character.cyclotomicOrder etaRoot := by
+        eps ∈ cyclotomicOrder etaRoot := by
   have hqprime : Nat.Prime q :=
     theorem_13_6_q_prime_of_source Smax Tmax W W1 W2 P Q U V C D
       Sfam Tfam τS τT p q u v c d hsource
@@ -6708,8 +6708,8 @@ private theorem theorem_13_6_lambda_congruent_mod_one_sub_of_vanish
     (hqprime : Nat.Prime q)
     (hetaRoot : IsPrimitiveRoot etaRoot (Nat.card G))
     (heps : IsPrimitiveRoot eps q)
-    (hepsMem : eps ∈ Theory.Character.cyclotomicOrder etaRoot)
-    (hτvirt : Theory.Character.IsVirtualCharacter lamτ)
+    (hepsMem : eps ∈ cyclotomicOrder etaRoot)
+    (hτvirt : IsVirtualCharacter lamτ)
     (hlamIrr : Section1.IsIrreducibleCharacterOnGroup lam)
     (hres : classFunctionRestrictionData H Smax lam lamH)
     (hyS : y ∈ Smax)
@@ -6718,9 +6718,9 @@ private theorem theorem_13_6_lambda_congruent_mod_one_sub_of_vanish
     (hcomm : y * (x : G) = (x : G) * y)
     (hτzero : lamτ (y * (x : G)) = 0)
     (hlamzero : lam ⟨y * (x : G), hxyS⟩ = 0) :
-    ∃ hτMem : lamτ (x : G) ∈ Theory.Character.cyclotomicOrder etaRoot,
-      ∃ hLamMem : lamH x ∈ Theory.Character.cyclotomicOrder etaRoot,
-        Theory.Character.CongruentModOneSub etaRoot eps (lamτ (x : G)) (lamH x)
+    ∃ hτMem : lamτ (x : G) ∈ cyclotomicOrder etaRoot,
+      ∃ hLamMem : lamH x ∈ cyclotomicOrder etaRoot,
+        CongruentModOneSub etaRoot eps (lamτ (x : G)) (lamH x)
           hepsMem hτMem hLamMem := by
   rcases hres with ⟨hHS, hres_eval⟩
   let xS : Smax := ⟨(x : G), hHS x.property⟩
@@ -6739,38 +6739,38 @@ private theorem theorem_13_6_lambda_congruent_mod_one_sub_of_vanish
       heps hqprime.ne_zero hetaRoot (Nat.card_pos (α := G)).ne' hepsMem
       (χ := lamτ) hτvirt (x := y) (y := (x : G)) hy_order hx_order_dvd hcomm with
     ⟨hτyxMem, hτxMem, hτcong⟩
-  have hlamVirt : Theory.Character.IsVirtualCharacter lam :=
+  have hlamVirt : IsVirtualCharacter lam :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup hlamIrr
   rcases theorem_13_6_virtualCharacter_congruent_at_mul_of_order_dvd
       (K := Smax) (p := q) (M := Nat.card G) (etaRoot := etaRoot) (eps := eps)
       heps hqprime.ne_zero hetaRoot (Nat.card_pos (α := G)).ne' hepsMem
       (χ := lam) hlamVirt (x := yS) (y := xS) hyS_order hxS_order_dvd hcommS with
     ⟨hLamYXMem, hLamXMem, hLamConj⟩
-  have hτ0x : Theory.Character.CongruentModOneSub etaRoot eps 0 (lamτ (x : G))
-      hepsMem (Theory.Character.cyclotomicOrder etaRoot).zero_mem hτxMem := by
-    simpa [Theory.Character.CongruentModOneSub, hτzero] using hτcong
+  have hτ0x : CongruentModOneSub etaRoot eps 0 (lamτ (x : G))
+      hepsMem (cyclotomicOrder etaRoot).zero_mem hτxMem := by
+    simpa [CongruentModOneSub, hτzero] using hτcong
   have hyxS_eq : yS * xS = ⟨y * (x : G), hxyS⟩ := by
     ext
     rfl
   have hlam_yx_zero' : lam (yS * xS) = 0 := by
     rw [hyxS_eq]
     exact hlamzero
-  have hLam0xS : Theory.Character.CongruentModOneSub etaRoot eps 0 (lam xS)
-      hepsMem (Theory.Character.cyclotomicOrder etaRoot).zero_mem hLamXMem := by
-    simpa [Theory.Character.CongruentModOneSub, hlam_yx_zero'] using hLamConj
-  have hLamMem : lamH x ∈ Theory.Character.cyclotomicOrder etaRoot := by
+  have hLam0xS : CongruentModOneSub etaRoot eps 0 (lam xS)
+      hepsMem (cyclotomicOrder etaRoot).zero_mem hLamXMem := by
+    simpa [CongruentModOneSub, hlam_yx_zero'] using hLamConj
+  have hLamMem : lamH x ∈ cyclotomicOrder etaRoot := by
     rw [hres_eval x]
     exact hLamXMem
-  have hLam0H : Theory.Character.CongruentModOneSub etaRoot eps 0 (lamH x)
-      hepsMem (Theory.Character.cyclotomicOrder etaRoot).zero_mem hLamMem := by
-    simpa [Theory.Character.CongruentModOneSub, hres_eval x] using hLam0xS
-  have hτx0 : Theory.Character.CongruentModOneSub etaRoot eps (lamτ (x : G)) 0
-      hepsMem hτxMem (Theory.Character.cyclotomicOrder etaRoot).zero_mem :=
+  have hLam0H : CongruentModOneSub etaRoot eps 0 (lamH x)
+      hepsMem (cyclotomicOrder etaRoot).zero_mem hLamMem := by
+    simpa [CongruentModOneSub, hres_eval x] using hLam0xS
+  have hτx0 : CongruentModOneSub etaRoot eps (lamτ (x : G)) 0
+      hepsMem hτxMem (cyclotomicOrder etaRoot).zero_mem :=
     theorem_13_6_congruentModOneSub_symm hepsMem
-      (Theory.Character.cyclotomicOrder etaRoot).zero_mem hτxMem hτ0x
+      (cyclotomicOrder etaRoot).zero_mem hτxMem hτ0x
   exact ⟨hτxMem, hLamMem,
     theorem_13_6_congruentModOneSub_trans hepsMem hτxMem
-      (Theory.Character.cyclotomicOrder etaRoot).zero_mem hLamMem hτx0 hLam0H⟩
+      (cyclotomicOrder etaRoot).zero_mem hLamMem hτx0 hLam0H⟩
 
 private theorem theorem_13_6_exists_Hsharp_mem_W2_of_source
     {G : Type u}
@@ -6835,7 +6835,7 @@ private theorem theorem_13_6_exists_W1_order_comm_of_source
     ⟨_hMF, hW1cyc, hW1ne, _hW1Hall, _hScomp, _hUleDer, _hUnil,
       _hW1norm, _hDercomp, _hMFnotcyc, _hsecond, _hfit, _hfitDer,
       _hW2le, _hW2cyc, _hW2ne, hcentW1, _hnorm⟩
-  letI : IsCyclic W1 := hW1cyc
+  let : IsCyclic W1 := hW1cyc
   rcases IsCyclic.exists_generator (α := W1) with ⟨yW1, hygen⟩
   let y : G := yW1
   have hyW1 : y ∈ W1 := yW1.property
@@ -6986,7 +6986,7 @@ private theorem theorem_13_6_lambda_vanish_on_yx_of_not_mem_P_sup_U
     (hgPU : g ∉ P ⊔ U) :
     lam ⟨g, hgS⟩ = 0 := by
   rcases hind with ⟨θPU, hlam⟩
-  letI : ((P ⊔ U).subgroupOf Smax).Normal := hnormal
+  let : ((P ⊔ U).subgroupOf Smax).Normal := hnormal
   have hgPUsub : (⟨g, hgS⟩ : Smax) ∉ (P ⊔ U).subgroupOf Smax := by
     intro hg
     exact hgPU (by
@@ -7303,7 +7303,7 @@ private theorem theorem_13_6_lambda_tau_vanish_on_yx_cyclicTI_source
       _hUcard, _hVcard, hSfam, _hTfam, hDadeS, _hDadeT,
       hnotationData, _hDadeDiff, _hZeroDegree, _hConjIndex, _hConjBetaTau,
       _hChoice, _hMin, hFourSixS, _hFourSixT⟩
-  letI : IsMinCE G := _hMin
+  let : IsMinCE G := _hMin
   rcases hnotationData with
     ⟨ω, η, μ, ν, μsum, νsum, δ, δ', σ, hnotation⟩
   exact theorem_13_6_lambda_tau_vanish_on_yx_of_coherent_source
@@ -7537,10 +7537,10 @@ private theorem theorem_13_6_lambda_congruent_mod_one_sub_source
           IsPrimitiveRoot eps q ∧
             ∃ (etaRoot : ℂ),
               IsIntegral ℤ etaRoot ∧
-                ∃ hepsMem : eps ∈ Theory.Character.cyclotomicOrder etaRoot,
-                ∃ hτMem : lamτ (x : G) ∈ Theory.Character.cyclotomicOrder etaRoot,
-                  ∃ hLamMem : lamH x ∈ Theory.Character.cyclotomicOrder etaRoot,
-                    Theory.Character.CongruentModOneSub etaRoot eps
+                ∃ hepsMem : eps ∈ cyclotomicOrder etaRoot,
+                ∃ hτMem : lamτ (x : G) ∈ cyclotomicOrder etaRoot,
+                  ∃ hLamMem : lamH x ∈ cyclotomicOrder etaRoot,
+                    CongruentModOneSub etaRoot eps
                       (lamτ (x : G)) (lamH x) hepsMem hτMem hLamMem := by
   have h6hypOrig := h6hyp
   have h5hypOrig := h5hyp
@@ -7595,10 +7595,10 @@ private theorem theorem_13_6_alpha_one_congruent_zero_mod_one_sub_source
     ∃ (etaRoot eps : ℂ),
       IsIntegral ℤ etaRoot ∧
         IsPrimitiveRoot eps q ∧
-          ∃ hepsMem : eps ∈ Theory.Character.cyclotomicOrder etaRoot,
-          ∃ hαMem : α 1 ∈ Theory.Character.cyclotomicOrder etaRoot,
-            Theory.Character.CongruentModOneSub etaRoot eps (α 1) 0
-              hepsMem hαMem (Theory.Character.cyclotomicOrder etaRoot).zero_mem := by
+          ∃ hepsMem : eps ∈ cyclotomicOrder etaRoot,
+          ∃ hαMem : α 1 ∈ cyclotomicOrder etaRoot,
+            CongruentModOneSub etaRoot eps (α 1) 0
+              hepsMem hαMem (cyclotomicOrder etaRoot).zero_mem := by
   have hcf : Section5.cfNormSq lam = 1 :=
     theorem_13_6_lambda_normSq_one_of_hypothesis lamτ h6hyp
   rcases theorem_13_6_lambda_congruent_mod_one_sub_source
@@ -7607,9 +7607,9 @@ private theorem theorem_13_6_alpha_one_congruent_zero_mod_one_sub_source
     ⟨x, eps, hxne, hxP, heps, etaRoot, hetaInt, hepsMem, hτMem, hLamMem, hcong⟩
   rcases hα with ⟨hαvirt, hαker⟩
   rcases theorem_13_6_virtualCharacter_one_eq_int hαvirt with ⟨n, hn⟩
-  have hαMem : α 1 ∈ Theory.Character.cyclotomicOrder etaRoot := by
+  have hαMem : α 1 ∈ cyclotomicOrder etaRoot := by
     rw [hn]
-    exact Theory.Character.intCast_mem_cyclotomicOrder etaRoot n
+    exact intCast_mem_cyclotomicOrder etaRoot n
   exact ⟨etaRoot, eps, hetaInt, heps, hepsMem, hαMem,
     theorem_13_6_alpha_one_congruent_zero_mod_one_sub_of_lambda_congruence
       hepsMem hcf ⟨hαvirt, hαker⟩ x hxne hxP hexp hτMem hLamMem hαMem hcong⟩
@@ -7787,7 +7787,7 @@ private theorem theorem_13_6_p_ne_two_of_source
       _hnotation, _hDadeDiff, _hZeroBase, _hConjIndex, _hConjBeta,
       _hChoice, hMin, _hTauS, _hTauT⟩
   have hoddG : Odd (Nat.card G) := by
-    letI : IsMinCE G := hMin
+    let : IsMinCE G := hMin
     exact IsMinCE.odd_order
   have hW2_ne_two : Nat.card W2 ≠ 2 :=
     Odd.ne_two_of_dvd_nat hoddG (Subgroup.card_subgroup_dvd_card W2)

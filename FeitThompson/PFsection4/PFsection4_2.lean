@@ -5,7 +5,7 @@ public import FeitThompson.PFsection2.Basic
 public import FeitThompson.PFsection1.PFsection1_2
 public import FeitThompson.PFsection1.PFsection1_5
 public import FeitThompson.PFsection1.PFsection1_6
-public import FeitThompson.HallSubgroups.Core
+public import Theory.GroupTheory.Hall.Basic
 
 /-!
 # Peterfalvi, Section 4: Theorem (4.2)

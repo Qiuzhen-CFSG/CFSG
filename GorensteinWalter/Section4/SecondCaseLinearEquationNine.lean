@@ -8,6 +8,7 @@ public import GorensteinWalter.MinimalCounterexample
 public import GorensteinWalter.Section2.Lemma27IndexTwo
 import Mathlib.Tactic
 
+
 /-!
 # Section 4, equation (9): the `PSL₂(q)` numeric data
 
@@ -165,7 +166,6 @@ private theorem inverted_odd_quotient_injective
   have hxyA : (x : G) / (y : G) ∈ A := A.div_mem x.2 y.2
   have hxyE : (x : G) / (y : G) ∈ d.E := hA_le_E hxyA
   have hz : (⟨(x : G) / (y : G), hxyE⟩ : d.E) ∈ Subgroup.center d.E := by
-    change (⟨(x : G) / (y : G), hxyE⟩ : d.E) ∈ Subgroup.center d.E
     exact hdiv
   have hxyZ : (x : G) / (y : G) ∈
       (Subgroup.center d.E).map d.E.subtype :=
@@ -185,9 +185,9 @@ private theorem inverted_odd_quotient_le_torus
     {G : Type u} [Group G] [Finite G]
     (c : CentralizerSetup G) (w : SecondCaseWitness c)
     (d : SecondCaseComponentData w)
-    (s : d.E) (A : Subgroup G)
+    (_s : d.E) (A : Subgroup G)
     (hA_le_U : A ≤ c.U)
-    (hA_le_E : A ≤ d.E)
+    (_hA_le_E : A ≤ d.E)
     (T : Subgroup (d.E ⧸ Subgroup.center d.E))
     (hcontainT : ∀ X : Subgroup (d.E ⧸ Subgroup.center d.E),
       (∀ x : d.E ⧸ Subgroup.center d.E, x ∈ X → Odd (orderOf x)) →
@@ -285,7 +285,7 @@ public theorem secondCase_equationNine_K0_intersection_center_eq_bot
     (s : d.E) (Kinv K0 : Subgroup G)
     (hKinv_carrier : (Kinv : Set G) = invertedElements (c.U ⊓ w.M) (s : G))
     (hK0_def : K0 = fittingSubgroupOf c.U ⊓ Kinv)
-    (hsI : IsInvolution s) :
+    (_hsI : IsInvolution s) :
     K0 ⊓ (Subgroup.center d.E).map d.E.subtype = ⊥ := by
   have hK0_le_U : K0 ≤ c.U := by
     intro a ha
@@ -313,7 +313,7 @@ public theorem secondCase_equationNine_quotient_injective_on_K0
     (hKinv_carrier : (Kinv : Set G) = invertedElements (c.U ⊓ w.M) (s : G))
     (hK0_def : K0 = fittingSubgroupOf c.U ⊓ Kinv)
     (hK0leE : K0 ≤ d.E)
-    (hsI : IsInvolution s) :
+    (_hsI : IsInvolution s) :
     Function.Injective
       (fun x : K0 => QuotientGroup.mk' (Subgroup.center d.E)
         (⟨(x : G), hK0leE x.2⟩ : d.E)) := by
@@ -342,7 +342,7 @@ public theorem secondCase_equationNine_K0_quotient_le_torus
     (c : CentralizerSetup G) (w : SecondCaseWitness c)
     (d : SecondCaseComponentData w)
     (s : d.E) (Kinv K0 : Subgroup G)
-    (hKinv_carrier : (Kinv : Set G) = invertedElements (c.U ⊓ w.M) (s : G))
+    (_hKinv_carrier : (Kinv : Set G) = invertedElements (c.U ⊓ w.M) (s : G))
     (hK0_def : K0 = fittingSubgroupOf c.U ⊓ Kinv)
     (hK0leE : K0 ≤ d.E)
     (T : Subgroup (d.E ⧸ Subgroup.center d.E))
@@ -369,7 +369,7 @@ public theorem secondCase_equationNine_K0_card_le_torus
     (hKinv_carrier : (Kinv : Set G) = invertedElements (c.U ⊓ w.M) (s : G))
     (hK0_def : K0 = fittingSubgroupOf c.U ⊓ Kinv)
     (hK0leE : K0 ≤ d.E)
-    (hsI : IsInvolution s)
+    (_hsI : IsInvolution s)
     (T : Subgroup (d.E ⧸ Subgroup.center d.E))
     (hcontainT : ∀ X : Subgroup (d.E ⧸ Subgroup.center d.E),
       (∀ x : d.E ⧸ Subgroup.center d.E, x ∈ X → Odd (orderOf x)) →
@@ -467,7 +467,7 @@ public theorem secondCase_equationNine_k_le_torus
     (s : d.E) (Kinv : Subgroup G)
     (hKinv_carrier : (Kinv : Set G) = invertedElements (c.U ⊓ w.M) (s : G))
     (hKinv_le_E : Kinv ≤ d.E)
-    (hKinv_cyclic : IsCyclic Kinv)
+    (_hKinv_cyclic : IsCyclic Kinv)
     (hSleE : (c.S : Subgroup G) ≤ d.E)
     (T : Subgroup (d.E ⧸ Subgroup.center d.E))
     (hcontainT : ∀ X : Subgroup (d.E ⧸ Subgroup.center d.E),
@@ -566,7 +566,6 @@ public theorem secondCase_equationNine_k_le_torus
       have hdivS0 : (x : G) / (y : G) ∈ c.S0 := c.S0.div_mem x.2 y.2
       have hdivE : (x : G) / (y : G) ∈ d.E := hS0_le_E hdivS0
       have hz : (⟨(x : G) / (y : G), hdivE⟩ : d.E) ∈ Subgroup.center d.E := by
-        change (⟨(x : G) / (y : G), hdivE⟩ : d.E) ∈ Subgroup.center d.E
         exact hdiv
       have hzS0 : (⟨(x : G) / (y : G), hdivE⟩ : d.E) ∈
           (c.S0.subgroupOf d.E) ⊓ Subgroup.center d.E := by
@@ -759,7 +758,7 @@ Explicit unresolved prerequisites (taken as hypotheses):
     (hKinv_cyclic : IsCyclic Kinv)
     (hKinv_le_E : Kinv ≤ d.E)
     (hK0_def : K0 = fittingSubgroupOf c.U ⊓ Kinv)
-    (hsI : IsInvolution s)
+    (_hsI : IsInvolution s)
     -- equations (4)--(7): the fixed part `F`, its component
     -- centralization, and the normalizer-layer control feeding the
     -- (5)--(7) transfer
@@ -878,7 +877,7 @@ public theorem secondCase_equationNine_two_p_le_k
     (d : SecondCaseComponentData w)
     (K : Type u) [Field K] [Finite K]
     (D : SecondCaseLinearEquationNineData d K) {p : ℕ}
-    (hp : Nat.Prime p) (hpodd : Odd p) (hpdvd : p ∣ Nat.card D.Kinv) :
+    (_hp : Nat.Prime p) (_hpodd : Odd p) (hpdvd : p ∣ Nat.card D.Kinv) :
     2 * p ≤ D.k := by
   have hS0even : 2 ∣ Nat.card c.S0 := by
     have hdvd : orderOf c.t ∣ Nat.card c.S0 :=

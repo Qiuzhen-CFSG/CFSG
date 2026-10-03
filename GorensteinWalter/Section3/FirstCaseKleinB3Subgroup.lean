@@ -7,6 +7,7 @@ public import GorensteinWalter.Section3.FirstCaseCountData
 public import GorensteinWalter.InvertedSetCardSmall
 import Mathlib.Tactic
 
+
 noncomputable section
 
 open scoped Pointwise
@@ -64,7 +65,7 @@ public theorem firstCase_klein_J3_inverted_subgroup
     apply Subtype.ext
     exact h
   have hord : orderOf t = 3 :=
-    inverted_card_three_orderOf_eq_three c.Hhat hy htI htne hI3
+    inverted_card_three_orderOf_eq_three c.Hhat htI htne hI3
   let X : Subgroup G := Subgroup.zpowers t
   have hXne : X ≠ ⊥ := by
     intro hbot

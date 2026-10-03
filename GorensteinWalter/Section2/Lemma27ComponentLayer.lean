@@ -46,7 +46,7 @@ public theorem isQuasisimple_four_dvd_card {Q : Type u} [Group Q] [Finite Q]
       rw [← Nat.not_even_iff_odd]
       intro heven
       exact hnot (even_iff_two_dvd.mp heven)
-    have hsolv : IsSolvable Q := odd_order_theorem Q hodd
+    have hsolv : Group.IsSolvable Q := odd_order_theorem Q hodd
     exact Group.IsPerfect.not_isSolvable Q hsolv
   by_contra hnot4
   have hodd2 : Odd (Nat.card Q / 2) := by
@@ -110,7 +110,7 @@ public theorem isQuasisimple_four_dvd_card {Q : Type u} [Group Q] [Finite Q]
       have hNmul : Nat.card (↥N) * 2 = 2 * m := by
         calc
           Nat.card (↥N) * 2 = Nat.card (↥N) * Nat.card (↥(P : Subgroup Q)) := by rw [hPcard2]
-          _ = Nat.card Q := hcomp.card_mul
+          _ = Nat.card Q := hcomp.card_mul_card
           _ = 2 * m := hm
       exact Nat.eq_of_mul_eq_mul_left (by norm_num : 0 < 2)
         (by simpa [mul_comm] using hNmul)
@@ -143,14 +143,14 @@ private theorem componentLayerOf_ne_bot_iff {G : Type u} [Group G]
   constructor
   · intro hE
     by_contra hnone
-    push_neg at hnone
+    push Not at hnone
     apply hE
     apply le_bot_iff.mp
     rw [componentLayerOf]
     refine sSup_le ?_
     intro S hS
     have hSbot : S = ⊥ := hnone S hS
-    simpa [hSbot]
+    simp [hSbot]
   · rintro ⟨S, hS, hSne⟩ hbot
     have hSle : S ≤ componentLayerOf N := le_sSup hS
     have hSbot' : S = ⊥ := le_bot_iff.mp (hSle.trans (le_of_eq hbot))

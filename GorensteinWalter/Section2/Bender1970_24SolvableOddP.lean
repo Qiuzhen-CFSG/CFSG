@@ -8,7 +8,8 @@ import FeitThompson.Fitting.Centralizer
 import FeitThompson.BGsection1.PLengthLemmas
 import FeitThompson.BGsection9.theorem_9_1
 import FeitThompson.BGsection1.CentralizerLemmas
-import FeitThompson.SubgroupConj
+import Theory.GroupTheory.SubgroupConjugation
+
 
 /-!
 # Bender §2.4, solvable odd-`p` branch

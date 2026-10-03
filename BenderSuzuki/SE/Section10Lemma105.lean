@@ -5,6 +5,7 @@ public import BenderSuzuki.SE.PermutationQuotient
 import FeitThompson.BGsection3.Remaining
 import FeitThompson.PFsection14.PFsection14_6
 
+
 /-!
 # Section 10, Lemma 10.5
 
@@ -100,7 +101,7 @@ private theorem lemma105_normalComplement_subtype_isComplement
     exact le_sup_right
   have hKnormal : Kloc.Normal := by
     simpa [Kloc] using hcomp.normal_in_M
-  letI : Kloc.Normal := hKnormal
+  let : Kloc.Normal := hKnormal
   have hdisj : Disjoint Kloc Cloc := by
     rw [Subgroup.disjoint_def]
     intro x hxK hxC
@@ -141,7 +142,7 @@ public theorem lemma105_invariant_sylow_p
       R ≤ Subgroup.normalizer
         (((P1 : Subgroup N).map N.subtype : Subgroup X) : Set X) := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let Kloc : Subgroup N := K.subgroupOf N
   let Cloc : Subgroup N := C.subgroupOf N
   have hKle : K ≤ N := hcomp.le_M
@@ -150,7 +151,7 @@ public theorem lemma105_invariant_sylow_p
     exact le_sup_right
   have hKnormal : Kloc.Normal := by
     simpa [Kloc] using hcomp.normal_in_M
-  letI : Kloc.Normal := hKnormal
+  let : Kloc.Normal := hKnormal
   have hcompLoc : Kloc.IsComplement' Cloc :=
     (lemma105_normalComplement_subtype_isComplement hcomp).2
   have hKHall : IsHallSubgroup (subgroupPrimeSet C)ᶜ Kloc :=
@@ -161,16 +162,16 @@ public theorem lemma105_invariant_sylow_p
   let Rloc : Subgroup N := R.subgroupOf N
   have hRlocsolv : Group.IsSolvable Rloc := by
     let eR : Rloc ≃* R := Subgroup.subgroupOfEquivOfLe hRN
-    letI : Group.IsSolvable R := hRsolv
+    let : Group.IsSolvable R := hRsolv
     exact Group.isSolvable_of_surjective (f := eR.symm.toMonoidHom) eR.symm.surjective
   have hRnormK : Rloc ≤ Subgroup.normalizer (Kloc : Set N) := by
     have htop : Subgroup.normalizer (Kloc : Set N) = ⊤ :=
       Subgroup.normalizer_eq_top_iff.mpr hKnormal
-    simpa [htop] using (show Rloc ≤ (⊤ : Subgroup N) from le_top)
-  letI : Subgroup.Normalizes Rloc Kloc := ⟨hRnormK⟩
-  letI : MulDistribMulAction Rloc Kloc :=
+    simp [htop]
+  let : Subgroup.Normalizes Rloc Kloc := ⟨hRnormK⟩
+  let : MulDistribMulAction Rloc Kloc :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer Rloc Kloc hRnormK
-  letI : Group.IsSolvable Rloc := hRlocsolv
+  let : Group.IsSolvable Rloc := hRlocsolv
   have hcopLoc : Nat.Coprime (Nat.card Rloc) (Nat.card Kloc) := by
     have hRcard : Nat.card Rloc = Nat.card R :=
       natCard_subgroupOf_eq R N hRN
@@ -193,7 +194,7 @@ public theorem lemma105_invariant_sylow_p
     hPp.of_equiv
       (Subgroup.subgroupOfEquivOfLe (show P ≤ N from hPK.trans hKle)).symm
   have hPPN : P.subgroupOf N ≤ (PN : Subgroup N) := by
-    letI : (P.subgroupOf N).Normal := hPNnormal
+    let : (P.subgroupOf N).Normal := hPNnormal
     exact hPpN.le_sylow_of_normal PN
   have hPmap : P ≤ (PN : Subgroup N).map N.subtype := by
     intro x hx
@@ -227,7 +228,7 @@ public theorem lemma105_invariant_sylow_p
       Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe
         Rloc Kloc rloc k
     have hsmulX := congrArg (fun z : N => (z : X)) hsmulN
-    simpa [k', rloc, rN, hkX] using hsmulX
+    simp [k', rloc, rN, hkX]
   · intro hx
     have hx' : r⁻¹ * (r * x * r⁻¹) * (r⁻¹)⁻¹ ∈
         ((PN : Subgroup N).map N.subtype : Subgroup X) := by
@@ -253,7 +254,7 @@ public theorem lemma105_invariant_sylow_p
         Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe
           Rloc Kloc rinvloc k
       have hsmulX := congrArg (fun z : N => (z : X)) hsmulN
-      simpa [k', rinvloc, rinvN, hkX, mul_assoc] using hsmulX
+      simp [k', rinvloc, rinvN, hkX, mul_assoc]
     simpa [mul_assoc] using hx'
 
 /-- The elementwise core of the source deduction `C_{P₁}(U) = P` from the
@@ -271,7 +272,7 @@ public theorem lemma105_fixed_centralizer_of_strong_factor
       (S : Set X) * ((P : Set X) * (normalizerIn C U : Set X))) :
     P1 ⊓ Subgroup.centralizer (U : Set X) = P := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   apply le_antisymm
   · intro x hx
     have hxNorm : x ∈ normalizerIn N U :=
@@ -316,9 +317,8 @@ public theorem lemma105_fixed_centralizer_of_strong_factor
       exact P1.mul_mem hx.1 (P1.inv_mem (hP_P1 hyP))
     have hcop : Nat.Coprime (Nat.card S) (Nat.card P1) :=
       IsPGroup.coprime_card_of_ne 2 p (Ne.symm hpne2) S P1 hSp hP1p
-    have hSP1 : Disjoint S P1 := by
-      rw [disjoint_iff]
-      exact Subgroup.inf_eq_bot_of_coprime hcop
+    have hSP1 : Disjoint S P1 :=
+      Subgroup.disjoint_of_coprime_natCard hcop
     have hsOne : s = 1 := by
       have hsBot : s ∈ (⊥ : Subgroup X) := hSP1.le_bot ⟨hsS, hsP1⟩
       simpa using hsBot
@@ -335,7 +335,7 @@ private theorem lemma105_theorem4bIsSylowSubgroupOf_of_card_eq
     (hPsyl : theorem4bIsSylowSubgroupOf p P F)
     (hPD : P ≤ D) (hcard : Nat.card D = Nat.card F) :
     theorem4bIsSylowSubgroupOf p P D := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   rcases hPsyl with ⟨PF, hP⟩
   have hPcard : Nat.card P = p ^ (Nat.card F).factorization p := by
     rw [hP, Subgroup.card_map_of_injective F.subtype_injective]
@@ -368,7 +368,7 @@ public theorem lemma105_pSubgroup_le_pair_kernel
       MulAction.stabilizer G gamma ⊓ MulAction.stabilizer G delta) :
     A ≤ P := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   rw [MulAction.is_two_pretransitive_iff] at htwo
   obtain ⟨g, hgAlpha, hgBeta⟩ := htwo hab hgd
   let D0 : Subgroup G :=
@@ -413,7 +413,7 @@ public theorem lemma105_pSubgroup_le_pair_kernel
   have hA1p : IsPGroup p A1 :=
     hAp.of_equiv (Subgroup.subgroupOfEquivOfLe hA_pair).symm
   obtain ⟨T, hA1T⟩ := hA1p.exists_le_sylow
-  letI : Unique (Sylow p D1) := Sylow.unique_of_normal S hSnormal
+  let : Unique (Sylow p D1) := Sylow.unique_of_normal S hSnormal
   have hTS : T = S := Subsingleton.elim _ _
   intro x hxA
   let xD1 : D1 := ⟨x, hA_pair hxA⟩
@@ -433,13 +433,14 @@ public theorem lemma105_regular_on_regular_normal
     (alpha : Omega) (hPalpha : P ≤ MulAction.stabilizer G alpha)
     (hpair : ∀ {beta : Omega}, beta ≠ alpha →
       ∀ x : G, x ∈ P → x ∈ MulAction.stabilizer G beta → x = 1) :
-    letI : Subgroup.Normalizes P Q := ⟨hPQnorm⟩
+    let : Subgroup.Normalizes P Q := ⟨hPQnorm⟩
     letI : MulDistribMulAction P Q :=
       Subgroup.conjMulDistribMulActionOfLeNormalizer P Q hPQnorm
     ActsRegularly P Q := by
   classical
-  letI : Subgroup.Normalizes P Q := ⟨hPQnorm⟩
-  letI : MulDistribMulAction P Q :=
+  dsimp only
+  let : Subgroup.Normalizes P Q := ⟨hPQnorm⟩
+  let : MulDistribMulAction P Q :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer P Q hPQnorm
   intro a ha
   apply (Subgroup.eq_bot_iff_forall _).2
@@ -482,7 +483,7 @@ public theorem lemma105_P_le_actionKernel
   classical
   let N : Subgroup X := lemma103NStar P
   let Omega := lemma103OmegaP M P
-  letI : MulAction N Omega := lemma103NormalizerAction M P
+  let : MulAction N Omega := lemma103NormalizerAction M P
   intro x hxP
   have hxN : x ∈ N := Subgroup.le_normalizer hxP
   refine Subgroup.mem_map.mpr ⟨(⟨x, hxN⟩ : N), ?_, rfl⟩
@@ -503,7 +504,7 @@ public theorem lemma105_pSubgroup_le_normal_of_sylow_le
     (hHp : IsPGroup p H) :
     H ≤ N := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   obtain ⟨T, hHT⟩ := hHp.exists_le_sylow
   obtain ⟨g, hg⟩ := MulAction.exists_smul_eq G T SP
   intro x hxH
@@ -533,12 +534,12 @@ public theorem lemma105_pSubgroup_le_normal_complement
     (hHp : IsPGroup p H) (hHN : H ≤ N) :
     H ≤ K := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let Kloc : Subgroup N := K.subgroupOf N
   let Cloc : Subgroup N := C.subgroupOf N
   have hKnormal : Kloc.Normal :=
     (lemma105_normalComplement_subtype_isComplement hcomp).1
-  letI : Kloc.Normal := hKnormal
+  let : Kloc.Normal := hKnormal
   have hcompLoc : Kloc.IsComplement' Cloc :=
     (lemma105_normalComplement_subtype_isComplement hcomp).2
   have hKHall : IsHallSubgroup (subgroupPrimeSet C)ᶜ Kloc :=
@@ -579,7 +580,7 @@ public theorem lemma105_sylow_normalizer_ne_P
     (P1 : Subgroup (lemma104N d)).map (lemma104N d).subtype ≠
       d.choice.P := by
   classical
-  letI : Fact d.choice.p.Prime := ⟨d.choice.p_prime⟩
+  let : Fact d.choice.p.Prime := ⟨d.choice.p_prime⟩
   let P : Subgroup X := d.choice.P
   let N : Subgroup X := lemma104N d
   let P1X : Subgroup X := (P1 : Subgroup N).map N.subtype
@@ -636,7 +637,7 @@ public theorem lemma105_sylow_normalizer_ne_P
     change (x : X) ∈ P
     exact hxP
   have hR1locP : R1loc ≤ Ploc := by
-    letI : Ploc.Normal := hPlocNormal
+    let : Ploc.Normal := hPlocNormal
     exact lemma105_pSubgroup_le_normal_of_sylow_le d.choice.p_prime
       hPlocNormal P1 hP1lePloc hR1locp
   apply hPR1.2
@@ -675,20 +676,20 @@ public theorem lemma105_quotient_pair_stabilizer_trivial
         xbar = 1 := by
   classical
   dsimp only
-  letI : Fact d.choice.p.Prime := ⟨d.choice.p_prime⟩
+  let : Fact d.choice.p.Prime := ⟨d.choice.p_prime⟩
   let D : Subgroup X := M ⊓ rightConjugate M t
   let P : Subgroup X := d.choice.P
   let Nstar : Subgroup X := lemma103NStar P
   let core : Subgroup Nstar := lemma103NZeroStar M P
   let Omega := lemma103OmegaP M P
-  letI : MulAction Nstar Omega := lemma103NormalizerAction M P
-  letI : (pointStabilizerCore Nstar Omega).Normal :=
+  let : MulAction Nstar Omega := lemma103NormalizerAction M P
+  let : (pointStabilizerCore Nstar Omega).Normal :=
     pointStabilizerCore_normal
-  letI : core.Normal := by
+  let : core.Normal := by
     dsimp [core, Nstar, P]
     infer_instance
   let Nbar := Nstar ⧸ core
-  letI : MulAction Nbar Omega := by
+  let : MulAction Nbar Omega := by
     simpa [Nbar, core, Nstar, P] using lemma103QuotientAction M P
   have hP1Nstar : P1 ≤ Nstar := fun _ hx => (hP1N hx).2
   let P1star : Subgroup Nstar := P1.subgroupOf Nstar
@@ -849,16 +850,16 @@ public theorem lemma105_Pbar_actsRegularly_Qbar
   let core : Subgroup Nstar := lemma103NZeroStar M P
   let Nbar := lemma103NBar M P
   let Omega := lemma103OmegaP M P
-  letI : Finite Omega := by
+  let : Finite Omega := by
     dsimp [Omega, P, lemma103OmegaP]
     infer_instance
-  letI : MulAction Nstar Omega := lemma103NormalizerAction M P
-  letI : (pointStabilizerCore Nstar Omega).Normal :=
+  let : MulAction Nstar Omega := lemma103NormalizerAction M P
+  let : (pointStabilizerCore Nstar Omega).Normal :=
     pointStabilizerCore_normal
-  letI : core.Normal := by
+  let : core.Normal := by
     dsimp [core, Nstar, P]
     infer_instance
-  letI : MulAction Nbar Omega := lemma103QuotientAction M P
+  let : MulAction Nbar Omega := lemma103QuotientAction M P
   have hP1Nstar : P1 ≤ Nstar := fun _ hx => (hP1N hx).2
   let P1star : Subgroup Nstar := P1.subgroupOf Nstar
   let Pbar : Subgroup Nbar := P1star.map (QuotientGroup.mk' core)
@@ -910,11 +911,11 @@ public theorem lemma105_cyclic_of_regular_Qbar
       ActsRegularly Pbar d103.Qbar) :
     IsCyclic Pbar := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
-  haveI : Nontrivial d103.Qbar :=
+  let : Fact p.Prime := ⟨hp⟩
+  have : Nontrivial d103.Qbar :=
     (Subgroup.nontrivial_iff_ne_bot d103.Qbar).2 d103.Qbar_ne_bot
-  letI : Subgroup.Normalizes Pbar d103.Qbar := ⟨hQnorm⟩
-  letI : MulDistribMulAction Pbar d103.Qbar :=
+  let : Subgroup.Normalizes Pbar d103.Qbar := ⟨hQnorm⟩
+  let : MulDistribMulAction Pbar d103.Qbar :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer
       Pbar d103.Qbar hQnorm
   have hcardOdd : Odd (Nat.card Pbar) := by
@@ -942,7 +943,7 @@ public theorem lemma105_pSubgroup_le_P_of_pair_normalizer
     (hHN : H ≤ lemma103NStar d.choice.P) :
     H ≤ d.choice.P := by
   classical
-  letI : Fact d.choice.p.Prime := ⟨d.choice.p_prime⟩
+  let : Fact d.choice.p.Prime := ⟨d.choice.p_prime⟩
   let P : Subgroup X := d.choice.P
   let D : Subgroup X := M ⊓ rightConjugate M t
   let Nstar : Subgroup X := lemma103NStar P
@@ -968,7 +969,7 @@ public theorem lemma105_pSubgroup_le_P_of_pair_normalizer
   obtain ⟨H0sub, hH0sub⟩ := hHp.of_equiv
     (Subgroup.subgroupOfEquivOfLe (show H ≤ H0 from fun x hx =>
       ⟨hHD hx, hHN hx⟩)).symm |>.exists_le_sylow
-  letI : Unique (Sylow d.choice.p H0) := Sylow.unique_of_normal SP (by
+  let : Unique (Sylow d.choice.p H0) := Sylow.unique_of_normal SP (by
     have hSPeq : (SP : Subgroup H0) = P0 := by
       apply Subgroup.map_injective H0.subtype_injective
       calc
@@ -1043,7 +1044,7 @@ public theorem lemma105_P1_quotient_cyclic
     [(d.choice.P.subgroupOf P1).Normal] :
     IsCyclic (P1 ⧸ (d.choice.P.subgroupOf P1)) := by
   classical
-  letI : Fact d.choice.p.Prime := ⟨d.choice.p_prime⟩
+  let : Fact d.choice.p.Prime := ⟨d.choice.p_prime⟩
   let P : Subgroup X := d.choice.P
   let Nstar : Subgroup X := lemma103NStar P
   let core : Subgroup Nstar := lemma103NZeroStar M P
@@ -1064,7 +1065,7 @@ public theorem lemma105_P1_quotient_cyclic
   have hpodd : Odd d.choice.p := by
     simpa [P, d.P_card] using hPodd
   have hPbarcyc : IsCyclic Pbar := by
-    letI : Finite (lemma103OmegaP M P) := by
+    let : Finite (lemma103OmegaP M P) := by
       dsimp [lemma103OmegaP]
       infer_instance
     let hPbarQ : Pbar ≤
@@ -1074,7 +1075,7 @@ public theorem lemma105_P1_quotient_cyclic
     exact lemma105_cyclic_of_regular_Qbar d103 d.choice.p_prime hpodd
       Pbar hPbarp hPbarQ hPbarReg
   let Ploc : Subgroup P1 := P.subgroupOf P1
-  letI : Ploc.Normal := by
+  let : Ploc.Normal := by
     simpa [Ploc, P] using
       (inferInstance : (d.choice.P.subgroupOf P1).Normal)
   have hInf := lemma105_P1_inf_actionKernel_eq_P d ht hP1p hPP1
@@ -1129,8 +1130,8 @@ public theorem lemma105_card_dvd_pred_of_faithful_cyclic_pgroup
     [Nontrivial H] :
     Nat.card R ∣ p - 1 := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
-  letI : IsCyclic H := hHcyc
+  let : Fact p.Prime := ⟨hp⟩
+  let : IsCyclic H := hHcyc
   let phi : R →* MulAut H := MulDistribMulAction.toMulAut R H
   have hphi : Function.Injective phi := by
     intro a b hab
@@ -1166,7 +1167,7 @@ public theorem lemma105_faithful_quotient_of_fixed_zpowers
   classical
   let quotientActionR : MulDistribMulAction R (G ⧸ H) :=
     quotientMulDistribMulAction (A := R) (G := G) H hHinv
-  letI : MulDistribMulAction R (G ⧸ H) := quotientActionR
+  let : MulDistribMulAction R (G ⧸ H) := quotientActionR
   have hkernel : ∀ r : R,
       (∀ x : G ⧸ H, r • x = x) → r = 1 := by
     intro r hr
@@ -1178,7 +1179,7 @@ public theorem lemma105_faithful_quotient_of_fixed_zpowers
       simpa only [Subgroup.smul_def] using hHinv.invariant (a : R) x
     let quotientActionA : MulDistribMulAction A (G ⧸ H) :=
       quotientMulDistribMulAction (A := A) (G := G) H hAinv
-    letI : MulDistribMulAction A (G ⧸ H) := quotientActionA
+    let : MulDistribMulAction A (G ⧸ H) := quotientActionA
     let rA : A := ⟨r, Subgroup.mem_zpowers r⟩
     have hrAfix : ∀ x : G ⧸ H, rA • x = x := by
       intro x
@@ -1197,8 +1198,8 @@ public theorem lemma105_faithful_quotient_of_fixed_zpowers
       Nat.Coprime.of_dvd_left hAcardDvd hcop
     have hfixedEq : fixedPointSubgroup A (G ⧸ H) =
         (fixedPointSubgroup A G).map (QuotientGroup.mk' H) := by
-      exact fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
-        (G := G) (A := A) hGsolv hcopA (∅ : Set Nat.Primes) H hAinv
+      exact fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
+        (G := G) (A := A) hGsolv hcopA H hAinv
     have hHmap : H.map (QuotientGroup.mk' H) = ⊥ := by
       apply (Subgroup.eq_bot_iff_forall _).2
       intro x hx
@@ -1234,8 +1235,8 @@ public theorem lemma105_fixed_zpowers_eq_subgroupOf
       Subgroup.conjMulDistribMulActionOfLeNormalizer R P1 hRP1
     ∀ r : R, r ≠ 1 →
       fixedPointSubgroup (Subgroup.zpowers r) P1 = P.subgroupOf P1 := by
-  letI : Subgroup.Normalizes R P1 := ⟨hRP1⟩
-  letI : MulDistribMulAction R P1 :=
+  let : Subgroup.Normalizes R P1 := ⟨hRP1⟩
+  let : MulDistribMulAction R P1 :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer R P1 hRP1
   intro r hr
   let U : Subgroup X := Subgroup.zpowers (r : X)
@@ -1277,7 +1278,7 @@ public theorem lemma105_faithful_action_on_P1_quotient
     let hHnormal : H.Normal := by
       apply (Subgroup.normal_subgroupOf_iff_le_normalizer hPP1).2
       exact hP1Pnorm
-    letI : H.Normal := hHnormal
+    let : H.Normal := hHnormal
     let hHinv : IsInvariant R P1 H := by
       refine ⟨?_⟩
       intro r x
@@ -1288,21 +1289,21 @@ public theorem lemma105_faithful_action_on_P1_quotient
       quotientMulDistribMulAction (A := R) (G := P1) H hHinv
     FaithfulSMul R (P1 ⧸ H) := by
   classical
-  letI : Subgroup.Normalizes R P1 := ⟨hRP1⟩
-  letI : MulDistribMulAction R P1 :=
+  let : Subgroup.Normalizes R P1 := ⟨hRP1⟩
+  let : MulDistribMulAction R P1 :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer R P1 hRP1
   let H : Subgroup P1 := P.subgroupOf P1
   have hHnormal : H.Normal := by
     apply (Subgroup.normal_subgroupOf_iff_le_normalizer hPP1).2
     exact hP1Pnorm
-  letI : H.Normal := hHnormal
+  let : H.Normal := hHnormal
   have hHinv : IsInvariant R P1 H := by
     refine ⟨?_⟩
     intro r x
     change (x : X) ∈ P ↔
       (r : X) * (x : X) * (r : X)⁻¹ ∈ P
     exact Subgroup.mem_normalizer_iff.mp (hRPnorm r.property) (x : X)
-  letI : Nontrivial (P1 ⧸ H) :=
+  let : Nontrivial (P1 ⧸ H) :=
     QuotientGroup.nontrivial_iff.mpr hPsubne
   have hfixedZ : ∀ r : R, r ≠ 1 →
       fixedPointSubgroup (Subgroup.zpowers r) P1 = H := by
@@ -1322,7 +1323,7 @@ public theorem lemma105_natCard_dvd_of_sylow_card_dvd
   apply (Nat.factorization_le_iff_dvd Nat.card_pos.ne' hn).1
   intro q
   by_cases hq : q.Prime
-  · letI : Fact q.Prime := ⟨hq⟩
+  · let : Fact q.Prime := ⟨hq⟩
     by_cases hqC : q ∈ (Nat.card C).primeFactors
     · obtain ⟨R, hRdvd⟩ := hSylow q hq hqC
       have hpowdvd : q ^ (Nat.card C).factorization q ∣ n := by
@@ -1367,7 +1368,7 @@ public theorem lemma_10_5
   let C : Subgroup X := lemma104C d
   let N : Subgroup X := lemma104N d
   have hp : p.Prime := by simpa [p] using d.choice.p_prime
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hPD : P ≤ D := by
     simpa [P, D] using d.choice.P_le_V.trans inf_le_left
   have hPM : P ≤ M := hPD.trans inf_le_left
@@ -1389,7 +1390,7 @@ public theorem lemma_10_5
   have hpne2 : p ≠ 2 := by
     intro h
     apply hpodd.not_two_dvd_nat
-    simpa [h]
+    simp [h]
   have hA1V : d.choice.initial.A1 ≤ V := by
     rw [d.choice.initial.A1_eq]
     exact inf_le_left
@@ -1426,7 +1427,7 @@ public theorem lemma_10_5
     omega
   apply lemma105_natCard_dvd_of_sylow_card_dvd hpredne
   intro q hq hqPrimeFactors
-  letI : Fact q.Prime := ⟨hq⟩
+  let : Fact q.Prime := ⟨hq⟩
   let q' : Nat.Primes := ⟨q, hq⟩
   have hqC : q' ∈ subgroupPrimeSet C := by
     have hqdvd : q ∣ Nat.card C := (Nat.mem_primeFactors.mp hqPrimeFactors).2.1
@@ -1449,7 +1450,7 @@ public theorem lemma_10_5
   let Cloc : Subgroup N := C.subgroupOf N
   have hKnormal : Kloc.Normal := by
     simpa [Kloc, N] using hcomp.normal_in_M
-  letI : Kloc.Normal := hKnormal
+  let : Kloc.Normal := hKnormal
   have hdisjLoc : Disjoint Kloc Cloc := by
     rw [Subgroup.disjoint_def]
     intro x hxK hxC
@@ -1543,10 +1544,10 @@ public theorem lemma_10_5
       intro x hx
       exact centralizer_le_normalizer P (by simpa [C, P, lemma104C] using hx.2))
   have hP1solv : Group.IsSolvable P1 := by
-    letI : Group.IsNilpotent P1 := hP1p.isNilpotent
+    let : Group.IsNilpotent P1 := hP1p.isNilpotent
     infer_instance
-  letI : Subgroup.Normalizes R P1 := ⟨by simpa [R, P1, N, C] using hRP1⟩
-  letI : MulDistribMulAction R P1 :=
+  let : Subgroup.Normalizes R P1 := ⟨by simpa [R, P1, N, C] using hRP1⟩
+  let : MulDistribMulAction R P1 :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer R P1
       (by simpa [R, P1, N, C] using hRP1)
   let Ploc : Subgroup P1 := P.subgroupOf P1
@@ -1554,15 +1555,15 @@ public theorem lemma_10_5
     apply (Subgroup.normal_subgroupOf_iff_le_normalizer
       (by simpa [P1, P, N] using hPP1)).2
     exact hP1normP
-  letI : Ploc.Normal := hPlocNormal
+  let : Ploc.Normal := hPlocNormal
   have hPlocInv : IsInvariant R P1 Ploc := by
     refine ⟨?_⟩
     intro r x
     change (x : X) ∈ P ↔ (r : X) * (x : X) * (r : X)⁻¹ ∈ P
     exact Subgroup.mem_normalizer_iff.mp (hRnormP r.property) (x : X)
-  letI : MulDistribMulAction R (P1 ⧸ Ploc) :=
+  let : MulDistribMulAction R (P1 ⧸ Ploc) :=
     quotientMulDistribMulAction (A := R) (G := P1) Ploc hPlocInv
-  haveI : Nontrivial (P1 ⧸ Ploc) :=
+  have : Nontrivial (P1 ⧸ Ploc) :=
     QuotientGroup.nontrivial_iff.mpr (by simpa [Ploc] using hPsubne)
   have hfaithful : FaithfulSMul R (P1 ⧸ Ploc) := by
     simpa [Ploc] using
@@ -1570,7 +1571,7 @@ public theorem lemma_10_5
         (by simpa [R, P1, N, C] using hRP1)
         (by simpa [P1, P, N] using hPP1)
         hP1normP hRnormP hP1solv hRcopP1 hPsubne hfixed)
-  letI : FaithfulSMul R (P1 ⧸ Ploc) := hfaithful
+  let : FaithfulSMul R (P1 ⧸ Ploc) := hfaithful
   have hcyclic : IsCyclic (P1 ⧸ Ploc) := by
     simpa [Ploc, P, P1, N] using
       (lemma105_P1_quotient_cyclic

@@ -4,6 +4,7 @@ public import GorensteinWalter.Section4.SecondCaseA7OmegaInvertedElements
 import GorensteinWalter.Section2.Theorem26
 import GorensteinWalter.Section2.Bender1970_18
 
+
 /-! # Normality in the inversion branch of the A7 omega argument -/
 
 noncomputable section

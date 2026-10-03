@@ -9,6 +9,8 @@ import BenderSuzuki.SE.Proposition84Coprime
 import BenderSuzuki.SE.Proposition84Sylow
 import BenderSuzuki.SE.Proposition84TorusModels
 import BenderSuzuki.PFchapter1section3.lemma_1
+import Theory.GroupAction.Lemmas
+
 
 /-!
 # Proposition 8.4: the base case `Y₁ = Y`
@@ -326,7 +328,7 @@ public theorem IsStronglyEmbedded.involutionCoreIn_normalizer_eq_centralizerTwoP
       (Subgroup.mem_zpowers t)
   have hF_le_N : F ≤ N :=
     (centralizerTwoPrimeResidual_le_ambientCentralizer Y).trans hC_le_N
-  letI : (F.subgroupOf N).Normal := by
+  let : (F.subgroupOf N).Normal := by
     simpa [F, N] using centralizerTwoPrimeResidual_normal_in_normalizer Y
   let tN : N := ⟨t, htN⟩
   have htNInv : IsInvolution tN := IsInvolution.subtype ht htN

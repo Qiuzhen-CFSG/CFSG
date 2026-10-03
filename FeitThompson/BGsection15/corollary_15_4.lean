@@ -2,9 +2,10 @@ module
 
 public import FeitThompson.BGsection15.corollary_15_3
 import FeitThompson.PCore.CentralizerControl
-import FeitThompson.HallSubgroups.Conjugacy
+public import Theory.GroupTheory.Hall.Conjugacy
 import Mathlib.Algebra.Group.Subgroup.Order
 import Mathlib.GroupTheory.Schreier
+
 
 open scoped Pointwise
 
@@ -29,7 +30,7 @@ private theorem section15_corollary15_4_exists_nontrivial_sylow
     exact hHne ((Subgroup.card_eq_one (H := H)).1 hcard)
   obtain ⟨p, hpPrime, hpDvd⟩ := Nat.exists_prime_and_dvd hcard_ne_one
   let p' : Nat.Primes := ⟨p, hpPrime⟩
-  haveI : Fact p'.val.Prime := ⟨p'.property⟩
+  have : Fact p'.val.Prime := ⟨p'.property⟩
   let P : Sylow p'.val H := Classical.choice (Sylow.nonempty (p := p'.val) (G := H))
   let S : Subgroup G := section10AmbientSylowSubgroup H P
   have hSleH : S ≤ H := by
@@ -80,17 +81,17 @@ private theorem section15_normalizer_ne_top_of_nontrivial_pSubgroup
     (hSne : S ≠ ⊥) (hSp : IsPGroup p.val S) :
     Subgroup.normalizer (S : Set G) ≠ ⊤ := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   intro hnorm_top
   have hSnormal : S.Normal := Subgroup.normalizer_eq_top_iff.mp hnorm_top
-  letI : IsSimpleGroup G := IsMinCE.simple
+  let : IsSimpleGroup G := IsMinCE.simple
   rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal S hSnormal with hSbot | hStop
   · exact hSne hSbot
   · have htop_p : IsPGroup p.val (⊤ : Subgroup G) :=
       hSp.of_equiv (MulEquiv.subgroupCongr hStop)
     have hGp : IsPGroup p.val G :=
       htop_p.of_equiv (Subgroup.topEquiv : (⊤ : Subgroup G) ≃* G)
-    haveI : Group.IsNilpotent G := IsPGroup.isNilpotent (p := p.val) (G := G)
+    have : Group.IsNilpotent G := IsPGroup.isNilpotent (p := p.val) (G := G)
       (h := hGp)
     exact IsMinCE.not_solvable (G := G) (inferInstance : Group.IsSolvable G)
 
@@ -109,7 +110,7 @@ private theorem section15_corollary15_4_exists_maximal_for_sylow
         S ≤ section10Msigma M ∧
           section15HallSubgroupOf S (section10Msigma M) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   rcases hHall with ⟨_hHtop, hHHall⟩
   rcases hSHall with ⟨_hSleH', hSHallH⟩
   have hSprimeSet : subgroupPrimeSet S = ({p} : Set Nat.Primes) := by
@@ -248,7 +249,7 @@ private theorem section15_hall_pSubgroup_subgroupOf_normal_of_nilpotent
     (hSHall : section15HallSubgroupOf S H) :
     (S.subgroupOf H).Normal := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   rcases hSHall with ⟨_hSleH', hHallS⟩
   let Ssub : Subgroup H := S.subgroupOf H
   have hSprimeSet : subgroupPrimeSet S = ({p} : Set Nat.Primes) := by
@@ -283,7 +284,7 @@ private theorem section15_corollary15_4_exists_sylow_M_for_hall_subgroup
     (hTHall : section15HallSubgroupOf T H) :
     ∃ P : Sylow q.val M, section10AmbientSylowSubgroup M P = T := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   let TsubM : Subgroup M := T.subgroupOf M
   have hTsubM_p : IsPGroup q.val TsubM := by
     exact hTp.of_equiv
@@ -431,7 +432,7 @@ private theorem section15_corollary15_4_centralizer_hall_le_msigma
       section15_le_normalizer_subgroupCentralizerIn
         (G := G) (N := C) (E := section10Msigma M) (A := S)
         hC_norm_sigma hC_norm_S
-  haveI : Cσloc.Normal :=
+  have : Cσloc.Normal :=
     (Subgroup.normal_subgroupOf_iff_le_normalizer hCσleC).2 hC_norm_Cσ
   have hXsubτ2 : IsPiSubgroup (G := C) (section12Tau2Primes M) Xsub := by
     intro r hrX
@@ -467,9 +468,9 @@ private theorem section15_corollary15_4_centralizer_hall_le_msigma
           simp [hCtop]
         exact hCleM hxC
       exact hM.1 (top_le_iff.mp htop_le_M)
-    have hCsolv : IsSolvable C :=
+    have hCsolv : Group.IsSolvable C :=
       IsMinCE.proper_subgroups_solvable C (lt_top_iff_ne_top.mpr hCne_top)
-    letI : MulDistribMulAction Unit C := {
+    let : MulDistribMulAction Unit C := {
       smul := fun _ x => x
       one_smul := fun _ => rfl
       mul_smul := fun _ _ _ => rfl
@@ -571,8 +572,8 @@ private theorem section15_corollary15_4_centralizing_sylow_le_msigma
     (hTHall : section15HallSubgroupOf T H) :
     T ≤ section10Msigma M := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   have hSnormalH : (S.subgroupOf H).Normal :=
     section15_hall_pSubgroup_subgroupOf_normal_of_nilpotent
       (H := H) (S := S) (p := p) hNil hSleH hSne hSp hSHall
@@ -589,7 +590,7 @@ private theorem section15_corollary15_4_centralizing_sylow_le_msigma
     have hTsub_p : IsPGroup p.val (T.subgroupOf H) := by
       exact hTp.of_equiv
         (Subgroup.subgroupOfEquivOfLe (H := T) (K := H) hTleH).symm
-    haveI : (S.subgroupOf H).Normal := hSnormalH
+    have : (S.subgroupOf H).Normal := hSnormalH
     have hTsub_le_Ssub : T.subgroupOf H ≤ S.subgroupOf H :=
       section15_pSubgroup_le_normal_hall_of_prime_mem
         (R := H) (π := subgroupPrimeSet S) (H := S.subgroupOf H)
@@ -670,7 +671,7 @@ private theorem section15_corollary15_4_nilpotent_hall_le_msigma_of_chosen_sylow
     intro hr
     have hrprime : Nat.Prime r := Nat.prime_of_mem_primeFactors hr
     let q : Nat.Primes := ⟨r, hrprime⟩
-    haveI : Fact q.val.Prime := ⟨q.property⟩
+    have : Fact q.val.Prime := ⟨q.property⟩
     let P : Sylow q.val H := default
     let T : Subgroup G := section10AmbientSylowSubgroup H P
     have hTleH : T ≤ H := by

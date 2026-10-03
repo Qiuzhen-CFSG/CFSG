@@ -165,7 +165,8 @@ public theorem huppert_II_10_4_norm_surjective
         (b : K) * J.conj (b : K) := by
     rw [FiniteField.algebraMap_norm_eq_prod_pow]
     erw [hfinrank]
-    simp [Finset.prod_range_succ]
+    simp only [Finset.prod_range_succ, Finset.range_one, Finset.prod_singleton,
+      pow_zero, pow_one, mul_eq_mul_left_iff, Units.ne_zero, or_false]
     rw [hk0card, hpow]
   rw [← hnorm]
   simpa [au, a0, Subfield.algebraMap_ofSubfield] using hbval
@@ -196,7 +197,8 @@ public theorem huppert_II_10_4_trace_surjective
       b + J.conj b := by
     rw [FiniteField.algebraMap_trace_eq_sum_pow]
     erw [hfinrank]
-    simp [Finset.sum_range_succ]
+    simp only [Finset.sum_range_succ, Finset.range_one, Finset.sum_singleton,
+      pow_zero, pow_one, add_right_inj]
     rw [hk0card, hpow]
   rw [← htrace, hb]
   rfl
@@ -220,12 +222,12 @@ public theorem huppert_II_10_4_a_orthonormal_basis
       J.conjTranspose (P : Matrix (Fin n) (Fin n) K) * J.form *
           (P : Matrix (Fin n) (Fin n) K) = 1 := by
   classical
-  letI : Star K := ⟨J.conj⟩
-  letI : InvolutiveStar K := ⟨J.conj_involutive⟩
-  letI : StarMul K := ⟨fun r s => by
+  let : Star K := ⟨J.conj⟩
+  let : InvolutiveStar K := ⟨J.conj_involutive⟩
+  let : StarMul K := ⟨fun r s => by
     change J.conj (r * s) = J.conj s * J.conj r
     rw [map_mul, mul_comm]⟩
-  letI : StarRing K := ⟨fun r s => by
+  let : StarRing K := ⟨fun r s => by
     change J.conj (r + s) = J.conj r + J.conj s
     rw [map_add]⟩
   have htrace_nonzero : ∃ a : K, a + J.conj a ≠ 0 := by

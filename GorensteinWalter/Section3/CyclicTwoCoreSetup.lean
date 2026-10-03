@@ -8,6 +8,7 @@ public import BenderGlauberman.Defs
 import BenderGlauberman.FinalTheorem
 import all BenderGlauberman.Lemma19
 
+
 noncomputable section
 
 open scoped commutatorElement
@@ -229,7 +230,7 @@ public theorem exists_firstCaseBGData
     I2_hall := hHall2
   }⟩
 
-@[expose] public noncomputable def firstCaseBGKData
+@[expose, instance_reducible] public noncomputable def firstCaseBGKData
     {G : Type u} [Group G] [Finite G]
     (hmin : IsMinimalCounterexample G)
     (c : CentralizerSetup G)

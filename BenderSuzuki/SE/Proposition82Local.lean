@@ -5,6 +5,8 @@ public import BenderSuzuki.SE.Theorem2
 import BenderSuzuki.SE.Borel
 import BenderSuzuki.SE.Proposition84Action
 import BenderSuzuki.SE.Proposition84Sylow
+import Theory.GroupAction.Lemmas
+
 
 /-!
 # The local normalizer step in Proposition 8.2
@@ -53,7 +55,7 @@ public theorem exists_involution_centralizing_of_regular_twoSubgroup
     simpa [FixedP] using hthree
   have hnontrivial : Nontrivial FixedP :=
     Finite.one_lt_card_iff_nontrivial.mp (by omega)
-  letI : Nontrivial FixedP := hnontrivial
+  let : Nontrivial FixedP := hnontrivial
   obtain ⟨betaP, hbetaAlpha⟩ := exists_ne alphaP
   have hthreeCardinal : (3 : Cardinal) ≤ Cardinal.mk FixedP := by
     rw [← Nat.cast_card]
@@ -340,7 +342,6 @@ public theorem exists_local_normalizer_involution_of_maximal_containing
     have hfixedQToA : Function.Injective fixedQToA := by
       intro a b hab
       apply Subtype.ext
-      change (a : Omega) = (b : Omega)
       exact congrArg (fun z : FixedA => (z : Omega)) hab
     have hAcard : 2 < Nat.card FixedA :=
       hQ.2.trans_le (Nat.card_le_card_of_injective
@@ -359,7 +360,7 @@ public theorem exists_local_normalizer_involution_of_maximal_containing
       apply hrMove
       exact MulAction.mem_stabilizer_iff.mpr h
     have hFixedQpos : 0 < Nat.card FixedQ := lt_trans (by decide) hQ.2
-    letI : Nonempty FixedQ := (Nat.card_pos_iff.mp hFixedQpos).1
+    let : Nonempty FixedQ := (Nat.card_pos_iff.mp hFixedQpos).1
     let betaQ : FixedQ := Classical.choice inferInstance
     let beta : Omega := betaQ
     have hbetaQ : beta ∈ fixedPointsOfSubgroup X Omega Q :=
@@ -684,7 +685,7 @@ public theorem exists_local_normalizer_involution_of_corollary713_borel
       ⟨alpha, ⟨⟨1, by simp⟩, hPalpha⟩⟩
     have hnontrivial : Nontrivial FixedOrbitP :=
       Finite.one_lt_card_iff_nontrivial.mp (by omega)
-    letI : Nontrivial FixedOrbitP := hnontrivial
+    let : Nontrivial FixedOrbitP := hnontrivial
     obtain ⟨betaP, hbetaAlpha⟩ := exists_ne alphaP
     have hthreeCardinal : (3 : Cardinal) ≤ Cardinal.mk FixedOrbitP := by
       rw [← Nat.cast_card]

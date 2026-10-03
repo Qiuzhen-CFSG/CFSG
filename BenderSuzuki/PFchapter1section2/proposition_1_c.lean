@@ -6,6 +6,7 @@ import BenderSuzuki.PFchapter1section1.proposition_5
 import FeitThompson.BGsection8.theorem_8_1
 import FeitThompson.PCore.Nilpotent
 
+
 namespace BenderSuzuki
 namespace PFchapter1section2
 
@@ -15,23 +16,6 @@ open PFchapter1section1 PFAppendixIII
 # Peterfalvi, Part II, Chapter I, Section 2, Proposition 1(c)
 -/
 
-private theorem proposition_1_c_isMulCommutative_of_forall_sq_one
-    {A : Type*} [Group A] (hA : ∀ x : A, x ^ 2 = 1) :
-    IsMulCommutative A := by
-  refine IsMulCommutative.mk <| Std.Commutative.mk ?_
-  intro a b
-  have hinv : ∀ x : A, x⁻¹ = x := by
-    intro x
-    have hx : x * x = 1 := by
-      simpa [pow_two] using hA x
-    calc
-      x⁻¹ = x⁻¹ * 1 := by simp
-      _ = x⁻¹ * (x * x) := by rw [hx]
-      _ = x := by simp
-  calc
-    a * b = (a * b)⁻¹ := (hinv (a * b)).symm
-    _ = b⁻¹ * a⁻¹ := by simp
-    _ = b * a := by rw [hinv a, hinv b]
 
 private theorem proposition_1_c_Q_conj_mem_of_mem_D
     {G Ω : Type*} [Group G] [Finite G] [MulAction G Ω] [Finite Ω]
@@ -216,7 +200,7 @@ public theorem proposition_1_c_exists_Q0_of_hypothesisA1
     · simp [hx]
     · exact hxI.sq_eq_one
   exact ⟨Q0, hQ0_le_Q, hQ0_def,
-    proposition_1_c_isMulCommutative_of_forall_sq_one hsq, hsq⟩
+    isMulCommutative_of_forall_sq_one hsq, hsq⟩
 
 public theorem proposition_1_c_involutions_center_of_hA
     {G Ω : Type*} [Group G] [Finite G] [MulAction G Ω] [Finite Ω]
@@ -280,7 +264,7 @@ public theorem proposition_1_c_exists_Q0
     · simp [hx]
     · exact hxI.sq_eq_one
   exact ⟨Q0, hQ0_le_Q, hQ0_def,
-    proposition_1_c_isMulCommutative_of_forall_sq_one hsq, hsq⟩
+    isMulCommutative_of_forall_sq_one hsq, hsq⟩
 
 /-- The Sylow `2`-factor and the commuting odd-order factor in the
 decomposition of the nilpotent group `Q`. -/
@@ -382,7 +366,7 @@ private theorem proposition_1_c_Q0_elementary_of_centered_involutions_obligation
     rcases (hsec.Q0_def (x : G)).mp hxQ0 with hx_one | hx_inv
     · simp [hx_one]
     · simpa using hx_inv.2.sq_eq_one
-  exact ⟨proposition_1_c_isMulCommutative_of_forall_sq_one hsq, hsq⟩
+  exact ⟨isMulCommutative_of_forall_sq_one hsq, hsq⟩
 
 -- See PFchapter1section1/proposition_2_a.lean for why x : G can be converted to x : Q in the statement of this theorem.
 public theorem proposition_1_c

@@ -5,7 +5,7 @@ public import FeitThompson.BGsection3.Remaining
 public import FeitThompson.BGsection3.lemma_3_3
 public import FeitThompson.BGsection6.Defs
 public import FeitThompson.BGsection8.theorem_8_1
-public import FeitThompson.GroupAction.MinimalNormal
+public import Theory.GroupAction.MinimalNormal
 public import Mathlib.GroupTheory.FixedPointFree
 public import Mathlib.LinearAlgebra.Dimension.Free
 public import Mathlib.FieldTheory.Finite.GaloisField
@@ -14,6 +14,7 @@ public import Mathlib.GroupTheory.SemidirectProduct
 public import Mathlib.GroupTheory.Subgroup.Centralizer
 public import Mathlib.GroupTheory.SpecificGroups.Cyclic
 public import Mathlib.GroupTheory.Sylow
+
 namespace BenderSuzuki
 namespace External
 
@@ -1272,3 +1273,4 @@ public theorem huppertV813_quotient_distinct_prime_regular_action
 
 end External
 end BenderSuzuki
+

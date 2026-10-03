@@ -52,7 +52,7 @@ public instance instMulDistribMulAction_fittingSubgroup (G A : Type*) [Group G] 
     simp
 
 public theorem faithful_on_fitting_of_coprime {G : Type*} [Group G] [Finite G] {A : Type*} [Group A]
-    [MulDistribMulAction A G] [FaithfulSMul A G] (hsolv : IsSolvable G) :
+    [MulDistribMulAction A G] [FaithfulSMul A G] (hsolv : Group.IsSolvable G) :
     Nat.Coprime (Nat.card A) (Nat.card G) -> FaithfulSMul A (fittingSubgroup G) := by
   intro hcoprime
   classical

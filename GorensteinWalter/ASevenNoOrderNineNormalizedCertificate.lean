@@ -7,6 +7,7 @@ namespace GorensteinWalter
 
 set_option maxRecDepth 1000000 in
 set_option maxHeartbeats 2000000 in
+-- Exhaustive evaluation over the concrete permutation certificate needs this heartbeat budget.
 public theorem a7_no_order_nine_normalized_by_t_certificate :
     ∀ x : A7OrderThree,
       ((x : ASevenCertificateGroup) * a7a = a7a * (x : ASevenCertificateGroup) ∧

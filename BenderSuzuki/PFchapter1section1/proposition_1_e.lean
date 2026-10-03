@@ -3,7 +3,8 @@ module
 public import BenderSuzuki.PFchapter1section1.proposition_1_b
 public import BenderSuzuki.PFchapter1section1.proposition_1_c
 public import FeitThompson.BGsection1.Basic
-public import FeitThompson.SubgroupConjAction
+public import Theory.GroupAction.SubgroupConjugation
+
 
 namespace BenderSuzuki
 namespace PFchapter1section1
@@ -38,7 +39,7 @@ private theorem pointStabilizerCore_le_pPrimeCore_two
     (hA1 : HypothesisA1 G Ω H D Q t) :
     pointStabilizerCore G Ω ≤ (pPrimeCore 2 G) := by
   classical
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   let K : Subgroup G := pointStabilizerCore G Ω
   obtain ⟨α, hH⟩ := hA1.point_stabilizer
   have hKleD : K ≤ D := by
@@ -63,23 +64,6 @@ private theorem pointStabilizerCore_le_pPrimeCore_two
   exact le_pPrimeCore_two_of_normal_coprime
     (K := K) pointStabilizerCore_normal hK_coprime
 
-private theorem isMulCommutative_of_forall_sq_one
-    {A : Type*} [Group A] (hA : ∀ x : A, x ^ 2 = 1) :
-    IsMulCommutative A := by
-  refine IsMulCommutative.mk <| Std.Commutative.mk ?_
-  intro a b
-  have hinv : ∀ x : A, x⁻¹ = x := by
-    intro x
-    have hx : x * x = 1 := by
-      simpa [pow_two] using hA x
-    calc
-      x⁻¹ = x⁻¹ * 1 := by simp
-      _ = x⁻¹ * (x * x) := by rw [hx]
-      _ = x := by simp
-  calc
-    a * b = (a * b)⁻¹ := (hinv (a * b)).symm
-    _ = b⁻¹ * a⁻¹ := by simp
-    _ = b * a := by rw [hinv a, hinv b]
 
 private theorem noncyclic_of_card_four_and_sq_one
     {A : Type*} [Group A] [Finite A]
@@ -100,7 +84,7 @@ private theorem exists_rank_two_subgroup_le_Q
     (h2rank : TwoRankAtLeastTwo G) :
     ∃ A : Subgroup G, A ≤ Q ∧ Nat.card A = 4 ∧ ∀ x : A, x ^ 2 = 1 := by
   classical
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   obtain ⟨E₀, hE₀card, hE₀sq⟩ := TwoRankAtLeastTwo.exists_subgroup h2rank
   have hE₀p : IsPGroup 2 E₀ := by
     refine IsPGroup.of_card (p := 2) (G := E₀) (n := 2) ?_
@@ -203,16 +187,16 @@ private theorem pPrimeCore_two_le_pointStabilizerCore
     (h2rank : TwoRankAtLeastTwo G) :
     (pPrimeCore 2 G) ≤ pointStabilizerCore G Ω := by
   classical
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   obtain ⟨A, hAQ, hAcard, hAsq⟩ :=
     exists_rank_two_subgroup_le_Q H D Q t hA1 h2rank
   let O : Subgroup G := (pPrimeCore 2 G)
-  letI : O.Normal := by
+  let : O.Normal := by
     simpa [O] using (pPrimeCore_normal (p := 2) (G := G))
   have hAcomm : IsMulCommutative A := isMulCommutative_of_forall_sq_one hAsq
-  letI : IsMulCommutative A := hAcomm
-  letI : CommGroup A := IsMulCommutative.instCommGroup
-  haveI : Fact (IsPGroup 2 A) := by
+  let : IsMulCommutative A := hAcomm
+  let : CommGroup A := IsMulCommutative.instCommGroup
+  have : Fact (IsPGroup 2 A) := by
     refine ⟨IsPGroup.of_card (p := 2) (G := A) (n := 2) ?_⟩
     norm_num [hAcard]
   have hncyc : ¬ IsCyclic A :=
@@ -238,7 +222,7 @@ private theorem pPrimeCore_two_le_pointStabilizerCore
       exact hsup_le (by simp [hgen])
     exact hxComap
   obtain ⟨α, hH⟩ := hA1.point_stabilizer
-  haveI : MulAction.IsMultiplyPretransitive G Ω 2 := hA1.two_transitive
+  have : MulAction.IsMultiplyPretransitive G Ω 2 := hA1.two_transitive
   have htrans : MulAction.IsPretransitive G Ω :=
     MulAction.isPretransitive_of_is_two_pretransitive
   have hO_le_stab : (pPrimeCore 2 G) ≤ MulAction.stabilizer G α := by

@@ -7,6 +7,7 @@ public import GorensteinWalter.Section3.FirstCaseKleinUCardThree
 public import GorensteinWalter.Section3.FirstCaseCountConstructor
 import Mathlib.Tactic
 
+
 noncomputable section
 
 namespace GorensteinWalter

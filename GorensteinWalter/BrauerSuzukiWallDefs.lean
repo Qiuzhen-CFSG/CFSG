@@ -1,7 +1,7 @@
 module
 
 public import GorensteinWalter.Defs
-public import FeitThompson.SubgroupConj
+public import Theory.GroupTheory.SubgroupConjugation
 
 /-!
 # The Brauer--Suzuki--Wall theorem: source-faithful interfaces

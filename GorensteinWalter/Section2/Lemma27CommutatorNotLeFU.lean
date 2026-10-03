@@ -9,6 +9,7 @@ public import GorensteinWalter.Section2.PiCoreCharacteristic
 import GorensteinWalter.Section2.Bender1970_18
 import Mathlib.Tactic
 
+
 /-!
 # Fixed-point ingredient for the final `[S,U] ≰ F(U)` conjunct
 
@@ -166,8 +167,7 @@ public theorem piCore_compl_fitting_ne_bot_of_Lemma27Hypothesis
 public theorem piCore_compl_odd_card_of_Lemma27Hypothesis
     {G : Type u} [Group G] [Finite G]
     (hmin : IsMinimalCounterexample G)
-    (c : CentralizerSetup G) (M : Subgroup G)
-    (hM : Lemma27Hypothesis c M) :
+    (c : CentralizerSetup G) (M : Subgroup G) :
     let π := primesOfOrder (fittingSubgroupOf c.Hhat)
     let A := piCoreOf (fittingSubgroupOf M) πᶜ
     Nat.Coprime 2 (Nat.card (↥A)) := by
@@ -215,7 +215,7 @@ public theorem exists_fixed_involution_of_Lemma27Hypothesis
   have hAne : A ≠ ⊥ :=
     piCore_compl_fitting_ne_bot_of_Lemma27Hypothesis hmin c M hM'
   have hAodd : Nat.Coprime 2 (Nat.card (↥A)) :=
-    piCore_compl_odd_card_of_Lemma27Hypothesis hmin c M hM'
+    piCore_compl_odd_card_of_Lemma27Hypothesis hmin c M
   have hAnorm : IsNormalIn A M := by
     have h := fstar_characteristic_subgroupOf_map_normal_in
       (A := M) (F := fittingSubgroupOf M)
@@ -307,7 +307,7 @@ public theorem lemma_2_7_commutator_S_U_not_le_FU
   have hxA : x ∈ A := xS.2.1
   have hxCt' : x ∈ Subgroup.centralizer ({t'} : Set G) := xS.2.2
   have hAodd : Nat.Coprime 2 (Nat.card (↥A)) :=
-    piCore_compl_odd_card_of_Lemma27Hypothesis hmin c M hM
+    piCore_compl_odd_card_of_Lemma27Hypothesis hmin c M
   have hxodd : Nat.Coprime 2 (orderOf x) := by
     have hdvd : orderOf x ∣ Nat.card (↥A) := by
       let : Fintype (↥A) := Fintype.ofFinite _
@@ -358,14 +358,13 @@ public theorem lemma_2_7_commutator_S_U_not_le_FU
     rcases Subgroup.mem_map.mp hxmem with ⟨w, hw, hw_eq⟩
     have hw_eq' : w = e.symm x := by
       apply e.injective
-      change e w = e (e.symm x)
       rw [e.apply_symm_apply x]
       exact hw_eq
     simpa [hw_eq'] using hw
   have hXodd : Nat.Coprime 2
       (Nat.card (↥(Subgroup.zpowers (e.symm x)))) := by
     have hord : orderOf (e.symm x) = orderOf x := by
-      simpa using (orderOf_injective e.symm.toMonoidHom e.symm.injective x)
+      simp
     rw [Nat.card_zpowers, hord]
     exact hxodd
   have hXH : Subgroup.zpowers (e.symm x) ≤ c.H := by
@@ -409,7 +408,7 @@ public theorem lemma_2_7_commutator_S_U_not_le_FU
     intro y hy
     rcases Subgroup.mem_map.mp hy with ⟨s, hs, rfl⟩
     exact Subgroup.mem_map.mpr ⟨s, centralizerSetup_S_le_H c hs, by
-      simp [S', H', e, MulAut.conj_apply]⟩
+      simp [e, MulAut.conj_apply]⟩
   have hS'Hp : IsPGroup 2 (S'.subgroupOf H') := by
     have hS'p : IsPGroup 2 S' := by
       exact c.S.isPGroup'.of_equiv
@@ -452,7 +451,7 @@ public theorem lemma_2_7_commutator_S_U_not_le_FU
     by_cases hr1 : rH = 1
     · rw [hr1]
       apply IsPGroup.of_card (n := 0)
-      simp [Nat.card_zpowers]
+      simp
     · apply IsPGroup.of_card (n := 1)
       have hpow : rH * rH = 1 := by
         apply Subtype.ext
@@ -495,23 +494,23 @@ public theorem lemma_2_7_commutator_S_U_not_le_FU
     refine ⟨?_, ?_⟩
     · intro y hy
       rcases Subgroup.mem_map.mp hy with ⟨u, hu, rfl⟩
-      exact Subgroup.mem_map.mpr ⟨u, hUnormH.1 hu, by simp [U', H', e, MulAut.conj_apply]⟩
+      exact Subgroup.mem_map.mpr ⟨u, hUnormH.1 hu, by simp [e, MulAut.conj_apply]⟩
     · intro n hn u hu
       rcases Subgroup.mem_map.mp hn with ⟨n0, hn0, rfl⟩
       rcases Subgroup.mem_map.mp hu with ⟨u0, hu0, rfl⟩
       refine Subgroup.mem_map.mpr ⟨n0 * u0 * n0⁻¹, hUnormH.2 n0 hn0 u0 hu0, ?_⟩
-      simp [U', e, MulAut.conj_apply]
+      simp [e, MulAut.conj_apply]
       group
   have hF'normH' : IsNormalIn F' H' := by
     refine ⟨?_, ?_⟩
     · intro y hy
       rcases Subgroup.mem_map.mp hy with ⟨f, hf, rfl⟩
-      exact Subgroup.mem_map.mpr ⟨f, hFUnormH.1 hf, by simp [F', H', e, MulAut.conj_apply]⟩
+      exact Subgroup.mem_map.mpr ⟨f, hFUnormH.1 hf, by simp [e, MulAut.conj_apply]⟩
     · intro n hn f hf
       rcases Subgroup.mem_map.mp hn with ⟨n0, hn0, rfl⟩
       rcases Subgroup.mem_map.mp hf with ⟨f0, hf0, rfl⟩
       refine Subgroup.mem_map.mpr ⟨n0 * f0 * n0⁻¹, hFUnormH.2 n0 hn0 f0 hf0, ?_⟩
-      simp [F', e, MulAut.conj_apply]
+      simp [e, MulAut.conj_apply]
       group
   have huU' : (h : G)⁻¹ * x * (h : G) ∈ U' := by
     rcases Subgroup.mem_map.mp hxU' with ⟨x0, hx0, hx0_eq⟩
@@ -521,7 +520,7 @@ public theorem lemma_2_7_commutator_S_U_not_le_FU
       simpa using hUnormH.2 (h0⁻¹) (c.H.inv_mem hh0) x0 hx0
     refine Subgroup.mem_map.mpr ⟨h0⁻¹ * x0 * h0, hnx, ?_⟩
     rw [← hh0_eq, ← hx0_eq]
-    simp [U', e, hx0_eq, hh0_eq, MulAut.conj_apply]
+    simp [e, MulAut.conj_apply]
     group
   have hS'U' : ⁅S', U'⁆ ≤ F' := by
     have hmap : (⁅(c.S : Subgroup G), c.U⁆).map e.toMonoidHom ≤

@@ -1,13 +1,26 @@
 module
 
-public import Theory.Character
+public import Theory.Character.ClassFunction
+public import Theory.Character.Orthogonality
+public import Theory.Character.Integrality
+public import Theory.Character.Induction
+public import Theory.Character.BrauerSuzuki
+public import Theory.Character.ConjClassFunction
+public import Theory.Character.SimpleCriteria
+public import Theory.Character.Completeness
+public import Theory.Character.Divisibility
+public import Theory.Character.BrauerPermutation
+public import Theory.Character.CharacterValues
+public import Theory.Character.DegreeBounds
+public import Theory.Character.Cyclotomic
+public import Theory.Character.CrossCharBrauer
 
 /-!
 # Bender--Glauberman character machinery
 
 The base character theory (class functions `G → ℂ`, the scalar product,
 characters and irreducible characters, orthonormality, integrality, induction,
-and the Brauer--Suzuki pairing) is provided by `Theory.Character`; this file
+and the Brauer--Suzuki pairing) is provided by `Character`; this file
 contains only the Bender--Glauberman-specific additions: the `g⁻¹`-form
 `scalarProductInv`, character decomposition, linear characters, the regular
 representation, and Frobenius reciprocity.
@@ -19,7 +32,6 @@ open scoped BigOperators
 open scoped MonoidAlgebra
 open scoped TensorProduct
 
-open Theory.Character
 
 namespace BenderGlauberman
 
@@ -27,7 +39,7 @@ universe u v w
 
 -- This file's sums over subgroups need `Fintype ↥H`.  As in
 -- `Theory/Character/BrauerSuzuki.lean`, use local instances so that statement
--- and proof contexts synthesize the *same* instance that `Theory.Character`
+-- and proof contexts synthesize the *same* instance that `Character`
 -- statements embed; deliberately not exported.
 attribute [local instance] Fintype.ofFinite
 attribute [local instance] Classical.propDecidable
@@ -100,7 +112,7 @@ public theorem isIrreducibleCharacter_of_norm_one_inv {χ : ClassFunction G}
   unfold scalarProduct
   unfold scalarProductInv at hnorm
   convert hnorm using 1
-  simp only [Theory.Representation.representation_character_inv_eq_star_character]
+  simp only [Representation.representation_character_inv_eq_star_character]
   congr 1
   congr 1
   exact Finset.ext fun x => by simp
@@ -199,14 +211,14 @@ section StarBridge
 public theorem star_trace_char_inv {G : Type u} [Group G] [Fintype G] {V : Type v}
     [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V] (ρ : Representation ℂ G V) (g : G) :
     star ((LinearMap.trace ℂ V) (ρ g)) = (LinearMap.trace ℂ V) (ρ g⁻¹) :=
-  (Theory.Representation.representation_character_inv_eq_star_character ρ g).symm
+  (Representation.representation_character_inv_eq_star_character ρ g).symm
 
 /-- For a character χ: star (χ g) = χ g⁻¹. -/
 public theorem star_char_eq_char_inv {G : Type u} [Group G] [Fintype G] {χ : ClassFunction G}
     (hχ : IsCharacter χ) (g : G) : star (χ g) = χ g⁻¹ := by
   rcases hχ with ⟨n, ρ, hχeq⟩
   rw [hχeq]
-  exact (Theory.Representation.representation_character_inv_eq_star_character ρ g).symm
+  exact (Representation.representation_character_inv_eq_star_character ρ g).symm
 
 /-- For a character χ, the conjugate scalar product is the g⁻¹-form. -/
 public theorem star_scalarProduct_eq_inv_of_char {G : Type u} [Group G] [Fintype G]
@@ -280,9 +292,10 @@ section Norms
 
 variable {G : Type u} [Group G] [Fintype G]
 
+omit [Group G] in
 /-- `star (φ, ψ₁ - ψ₂) = ...`: the scalar product is additive in the second
 argument. -/
-public lemma scalarProduct_sub_right [Group G] (φ ψ₁ ψ₂ : ClassFunction G) :
+public lemma scalarProduct_sub_right (φ ψ₁ ψ₂ : ClassFunction G) :
     scalarProduct G φ (ψ₁ - ψ₂) = scalarProduct G φ ψ₁ - scalarProduct G φ ψ₂ := by
   calc
     scalarProduct G φ (ψ₁ - ψ₂) = scalarProduct G φ (ψ₁ + (-1 : ℂ) • ψ₂) := by
@@ -293,9 +306,10 @@ public lemma scalarProduct_sub_right [Group G] (φ ψ₁ ψ₂ : ClassFunction G
       simp
       ring
 
+omit [Fintype G] in
 /-- The character of a direct product representation is the sum of the
 characters. -/
-public theorem char_prod [Fintype G] {V W : Type v} [AddCommGroup V] [Module ℂ V]
+public theorem char_prod {V W : Type v} [AddCommGroup V] [Module ℂ V]
     [Module.Finite ℂ V] [AddCommGroup W] [Module ℂ W] [Module.Finite ℂ W]
     (ρ : Representation ℂ G V) (σ : Representation ℂ G W) :
     (ρ.prod σ).character = ρ.character + σ.character := by
@@ -306,6 +320,7 @@ public theorem char_prod [Fintype G] {V W : Type v} [AddCommGroup V] [Module ℂ
     (LinearMap.trace ℂ V) (ρ g) + (LinearMap.trace ℂ W) (σ g)
   exact LinearMap.trace_prodMap' (ρ g) (σ g)
 
+omit [Fintype G] in
 /-- The sum of two characters is a character. -/
 public theorem isCharacter_add {φ ψ : ClassFunction G} (hφ : IsCharacter φ)
     (hψ : IsCharacter ψ) : IsCharacter (φ + ψ) := by
@@ -319,12 +334,14 @@ public theorem isCharacter_add {φ ψ : ClassFunction G} (hφ : IsCharacter φ)
   refine ⟨n + m, charTrans e (ρ.prod σ), ?_⟩
   rw [← Representation.char_iso (equiv_charTrans e (ρ.prod σ)), char_prod, hφeq, hψeq]
 
+omit [Fintype G] in
 /-- An irreducible character is a character. -/
-public theorem isCharacter_of_isIrreducibleCharacter [Fintype G] {χ : ClassFunction G}
+public theorem isCharacter_of_isIrreducibleCharacter {χ : ClassFunction G}
     (hχ : IsIrreducibleCharacter χ) : IsCharacter χ := by
   rcases hχ with ⟨n, ρ, hρ, hχeq⟩
   exact ⟨n, ρ, hχeq⟩
 
+omit [Fintype G] in
 /-- Subtracting a character from a generalized character yields a generalized
 character. -/
 public theorem isGeneralizedCharacter_sub_char {φ : ClassFunction G}
@@ -337,6 +354,7 @@ public theorem isGeneralizedCharacter_sub_char {φ : ClassFunction G}
   simp [Pi.add_apply, Pi.sub_apply]
   ring
 
+omit [Fintype G] in
 /-- Adding a character to a generalized character yields a generalized
 character. -/
 public theorem isGeneralizedCharacter_add_char {φ : ClassFunction G}
@@ -366,8 +384,9 @@ public theorem scalarProduct_irreducible_orthogonal {χ ψ : ClassFunction G}
   have hinv : scalarProductInv G χ ψ = 0 := isIrreducible_orthogonal_inv hχ hψ hne
   exact star_inj.mp (by simpa using hb.trans hinv)
 
+omit [Group G] in
 /-- `|φ|²` is a nonnegative real number. -/
-public lemma normSq_nonneg [Group G] (φ : ClassFunction G) : 0 ≤ (normSq G φ).re := by
+public lemma normSq_nonneg (φ : ClassFunction G) : 0 ≤ (normSq G φ).re := by
   classical
   have hsum : (∑ g : G, (Complex.normSq (φ g) : ℂ)) = (∑ g : G, φ g * star (φ g)) := by
     refine Finset.sum_congr rfl ?_
@@ -476,8 +495,9 @@ public theorem scalarProduct_irreducible_char_nonneg {G : Type u} [Group G] [Fin
       _ = (Module.finrank ℂ (Representation.IntertwiningMap ρψ ρχ) : ℂ) := by simp
       _ = ((Module.finrank ℂ (Representation.IntertwiningMap ρψ ρχ) : ℝ) : ℂ) := by norm_num
 
+omit [Fintype G] in
 /-- The degree of an irreducible character is nonzero. -/
-public lemma irreducible_char_one_ne_zero [Fintype G] {χ : ClassFunction G}
+public lemma irreducible_char_one_ne_zero {χ : ClassFunction G}
     (hχ : IsIrreducibleCharacter χ) :
     χ 1 ≠ 0 := by
   classical
@@ -504,8 +524,9 @@ section DecompScalar
 
 variable {G : Type u} [Group G] [Fintype G]
 
+omit [Group G] in
 /-- The scalar product is additive in the first argument. -/
-public lemma scalarProduct_sum_left [Group G] {ι : Type*} [Fintype ι]
+public lemma scalarProduct_sum_left {ι : Type*} [Fintype ι]
     (f : ι → ClassFunction G)
     (ψ : ClassFunction G) :
     scalarProduct G (∑ i, f i) ψ = ∑ i, scalarProduct G (f i) ψ := by
@@ -523,8 +544,9 @@ public lemma scalarProduct_sum_left [Group G] {ι : Type*} [Fintype ι]
       exact Finset.sum_comm (s := Finset.univ) (t := Finset.univ)
         (f := fun g i => f i g * star (ψ g))
 
+omit [Group G] in
 /-- The scalar product is additive in the second argument. -/
-public lemma scalarProduct_sum_right [Group G] (φ : ClassFunction G) {ι : Type*} [Fintype ι]
+public lemma scalarProduct_sum_right (φ : ClassFunction G) {ι : Type*} [Fintype ι]
     (g : ι → ClassFunction G) :
     scalarProduct G φ (∑ i, g i) = ∑ i, scalarProduct G φ (g i) := by
   classical
@@ -556,8 +578,9 @@ public theorem scalarProduct_irr_ite {χ ψ : ClassFunction G}
   · simp [h]
     exact scalarProduct_irreducible_orthogonal hχ hψ h
 
+omit [Group G] in
 /-- Expansion of the scalar product of two two-term sums. -/
-public theorem scalarProduct_expand_four [Group G] (a b c d : ℂ)
+public theorem scalarProduct_expand_four (a b c d : ℂ)
     (χ₁ χ₂ ψ₁ ψ₂ : ClassFunction G) :
     scalarProduct G (a • χ₁ + b • χ₂) (c • ψ₁ + d • ψ₂) =
       a * (scalarProduct G χ₁ ψ₁ * star c + scalarProduct G χ₁ ψ₂ * star d) +
@@ -654,42 +677,8 @@ variable {G : Type u} [Group G]
 public theorem isIrreducible_equiv {V : Type v} {W : Type w} [AddCommGroup V] [Module ℂ V]
     [AddCommGroup W] [Module ℂ W] {ρ : Representation ℂ G V} {σ : Representation ℂ G W}
     (φ : ρ.Equiv σ) : Representation.IsIrreducible ρ ↔ Representation.IsIrreducible σ := by
-  classical
-  have e : ρ.asModule ≃ₗ[ℂ[G]] σ.asModule := by
-    refine { toFun := φ, invFun := φ.symm, left_inv := φ.left_inv, right_inv := φ.right_inv,
-             map_add' := φ.map_add, map_smul' := ?_ }
-    intro a v
-    induction a using MonoidAlgebra.induction_linear with
-    | zero =>
-        exact add_right_cancel (a := φ 0) (b := φ 0) (c := 0)
-          (by simpa using (φ.map_add' 0 0).symm)
-    | add x y hx hy =>
-        rw [add_smul]
-        have hsplit : φ (x • v + y • v) = φ (x • v) + φ (y • v) := by
-          exact φ.map_add _ _
-        rw [hsplit, hx, hy]
-        simp only [RingHom.id_apply]
-        let wv : σ.asModule := φ v
-        exact (add_smul x y wv).symm
-    | single g c =>
-        simp only [RingHom.id_apply, Representation.single_smul]
-        rw [map_smul]
-        let wv : σ.asModule := φ v
-        have hσ := Representation.single_smul σ c g wv
-        have hφ : φ ((ρ g) (ρ.asModuleEquiv v)) = (σ g) (φ (ρ.asModuleEquiv v)) :=
-          congrFun (congrArg (fun f : V →ₗ[ℂ] W => (f : V → W)) (φ.isIntertwining' g))
-            (ρ.asModuleEquiv v)
-        change (c • (φ ((ρ g) (ρ.asModuleEquiv v)) : σ.asModule)) =
-          MonoidAlgebra.single g c • wv
-        let z : σ.asModule := c • ((σ g) (φ (ρ.asModuleEquiv v)) : σ.asModule)
-        have hleft : (c • (φ ((ρ g) (ρ.asModuleEquiv v)) : σ.asModule)) = z := by
-          exact congrArg (fun z : W => (c • z : σ.asModule)) hφ
-        have hright : z = MonoidAlgebra.single g c • wv := by
-          convert hσ.symm using 1 <;> rfl
-        exact hleft.trans hright
-  rw [Representation.irreducible_iff_isSimpleModule_asModule,
-    Representation.irreducible_iff_isSimpleModule_asModule]
-  exact LinearEquiv.isSimpleModule_iff e
+  exact Representation.RepEquiv.irreducible_euqiv
+    (Representation.RepEquiv.ofRepresentationEquiv φ)
 
 /-- Given complementary subrepresentations `W`, `W'`, the representation splits
 as their direct sum. -/
@@ -698,64 +687,25 @@ public lemma coprod_equiv_of_isCompl {V : Type v} [AddCommGroup V] [Module ℂ V
     (hcompl : IsCompl (W.asSubmodule) (W'.asSubmodule)) :
     ∃ e : (W.toSubmodule × W'.toSubmodule) ≃ₗ[ℂ] V,
       ∀ g : G, e ∘ₗ ((W.toRepresentation g).prodMap (W'.toRepresentation g)) = (ρ g) ∘ₗ e := by
-  classical
-  let : Module ℂ[G] V := (inferInstance : Module ℂ[G] ρ.asModule)
-  let f : (W.toSubmodule × W'.toSubmodule) →ₗ[ℂ] V :=
-    LinearMap.coprod W.toSubmodule.subtype W'.toSubmodule.subtype
-  have hinj : Function.Injective f := by
-    intro p q hpq
-    have hpq' : (p.1 : V) + (p.2 : V) = (q.1 : V) + (q.2 : V) := by
-      simpa [f, LinearMap.coprod_apply] using hpq
-    have hsub : (p.1 : V) - (q.1 : V) = (q.2 : V) - (p.2 : V) := by
-      calc
-        (p.1 : V) - (q.1 : V) = (p.1 : V) + (p.2 : V) - (q.1 : V) - (p.2 : V) := by abel
-        _ = (q.1 : V) + (q.2 : V) - (q.1 : V) - (p.2 : V) := by rw [hpq']
-        _ = (q.2 : V) - (p.2 : V) := by abel
-    have hmemW : (p.1 : V) - (q.1 : V) ∈ (W.toSubmodule : Submodule ℂ V) := by
-      exact W.toSubmodule.sub_mem p.1.2 q.1.2
-    have hmemW' : (p.1 : V) - (q.1 : V) ∈ (W'.toSubmodule : Submodule ℂ V) := by
-      rw [hsub]
-      exact W'.toSubmodule.sub_mem q.2.2 p.2.2
-    have hzero : (p.1 : V) - (q.1 : V) = 0 := by
-      have hmem : (p.1 : V) - (q.1 : V) ∈ (W.asSubmodule ⊓ W'.asSubmodule : Submodule ℂ[G] ρ.asModule) := by
-        exact (Submodule.mem_inf (R := ℂ[G]) (M := ρ.asModule)).mpr ⟨by simpa [Subrepresentation.mem_asSubmodule_iff],
-          by simpa [Subrepresentation.mem_asSubmodule_iff]⟩
-      have hinf : W.asSubmodule ⊓ W'.asSubmodule = ⊥ :=
-        hcompl.disjoint.eq_bot
-      rw [hinf] at hmem
-      exact (Submodule.mem_bot (R := ℂ[G]) (M := ρ.asModule)).1 hmem
-    have hp1 : p.1 = q.1 := Subtype.ext (sub_eq_zero.mp hzero)
-    have hzero' : (q.2 : V) - (p.2 : V) = 0 := by
-      simpa [hsub] using hzero
-    have hp2 : p.2 = q.2 := Subtype.ext (sub_eq_zero.mp hzero').symm
-    exact Prod.ext hp1 hp2
-  have hsurj : Function.Surjective f := by
-    intro v
-    have hv' : (v : ρ.asModule) ∈ (W.asSubmodule ⊔ W'.asSubmodule : Submodule ℂ[G] ρ.asModule) := by
-      have hcod : W.asSubmodule ⊔ W'.asSubmodule = ⊤ :=
-        top_le_iff.mp hcompl.codisjoint.top_le
-      rw [hcod]
-      exact Submodule.mem_top (R := ℂ[G]) (M := ρ.asModule)
-    rcases (Submodule.mem_sup (R := ℂ[G]) (M := ρ.asModule)).mp hv' with ⟨a, ha, b, hb, hab⟩
-    refine ⟨⟨⟨a, by
-        change a ∈ (W : Set V)
-        exact (Subrepresentation.mem_asSubmodule_iff (σ := W)).mp ha⟩,
-             ⟨b, by
-        change b ∈ (W' : Set V)
-        exact (Subrepresentation.mem_asSubmodule_iff (σ := W')).mp hb⟩⟩, ?_⟩
-    change (a : V) + (b : V) = v
-    exact hab
-  let e : (W.toSubmodule × W'.toSubmodule) ≃ₗ[ℂ] V :=
-    LinearEquiv.ofBijective f ⟨hinj, hsurj⟩
+  let eₘ : (W.asSubmodule × W'.asSubmodule) ≃ₗ[ℂ[G]] ρ.asModule :=
+    Submodule.prodEquivOfIsCompl W.asSubmodule W'.asSubmodule hcompl
+  let e : (W.toSubmodule × W'.toSubmodule) ≃ₗ[ℂ] V := eₘ.restrictScalars ℂ
+  have he (p : W.toSubmodule) (q : W'.toSubmodule) : e (p, q) = (p : V) + (q : V) := by
+    change (p : V) + (q : V) = (p : V) + (q : V)
+    rfl
   refine ⟨e, ?_⟩
   intro g
   ext p
-  · change f (((W.toRepresentation g).prodMap (W'.toRepresentation g)) (p, 0)) =
-      (ρ g) (f (p, 0))
-    simp [f, LinearMap.coprod_apply, Subrepresentation.toRepresentation]
-  · change f (((W.toRepresentation g).prodMap (W'.toRepresentation g)) (0, p)) =
-      (ρ g) (f (0, p))
-    simp [f, LinearMap.coprod_apply, Subrepresentation.toRepresentation]
+  · simp only [LinearMap.comp_apply, LinearMap.inl_apply, LinearMap.prodMap_apply, map_zero]
+    change e ((W.toRepresentation g) p, 0) = (ρ g) (e (p, 0))
+    rw [he, he]
+    simp
+    rfl
+  · simp only [LinearMap.comp_apply, LinearMap.inr_apply, LinearMap.prodMap_apply, map_zero]
+    change e (0, (W'.toRepresentation g) p) = (ρ g) (e (0, p))
+    rw [he, he]
+    simp
+    rfl
 
 /-- The character of a representation with complementary subrepresentations is
 the sum of the two sub-characters. -/
@@ -782,8 +732,9 @@ public noncomputable def addPair [DecidableEq (ClassFunction G)] (χ : ClassFunc
   | [] => [(χ, m)]
   | (p, k) :: rest => if p = χ then (p, k + m) :: rest else (p, k) :: addPair χ m rest
 
+omit [Group G] in
 /-- The sum over a catalog is increased by `m • χ` after adding `(χ, m)`. -/
-public lemma addPair_sum [Group G] [DecidableEq (ClassFunction G)]
+public lemma addPair_sum [DecidableEq (ClassFunction G)]
     (χ : ClassFunction G) (m : ℕ)
     (acc : List (ClassFunction G × ℕ)) :
     ((addPair χ m acc).map (fun p => (p.2 : ℂ) • p.1)).sum =
@@ -798,9 +749,10 @@ public lemma addPair_sum [Group G] [DecidableEq (ClassFunction G)]
       · simp [addPair, hp, ih]
         ring
 
+omit [Group G] in
 /-- Membership in the first components of `addPair`: the element is either the
 merged character or already present. -/
-public lemma mem_map_addPair_fst [Group G] [DecidableEq (ClassFunction G)]
+public lemma mem_map_addPair_fst [DecidableEq (ClassFunction G)]
     (χ : ClassFunction G) (m : ℕ)
     {acc : List (ClassFunction G × ℕ)} {x : ClassFunction G} :
     x ∈ (addPair χ m acc).map Prod.fst → x = χ ∨ x ∈ acc.map Prod.fst := by
@@ -827,6 +779,7 @@ public lemma mem_map_addPair_fst [Group G] [DecidableEq (ClassFunction G)]
           · right
             exact List.mem_cons_of_mem p.1 h
 
+omit [Group G] in
 /-- The first components of a catalog remain distinct after adding a pair. -/
 public lemma addPair_nodup [DecidableEq (ClassFunction G)] (χ : ClassFunction G) (m : ℕ)
     (acc : List (ClassFunction G × ℕ)) (h : (acc.map Prod.fst).Nodup) :
@@ -876,6 +829,7 @@ public noncomputable def mergeCats [DecidableEq (ClassFunction G)]
     (A B : List (ClassFunction G × ℕ)) : List (ClassFunction G × ℕ) :=
   B.foldl (fun acc q => addPair q.1 q.2 acc) A
 
+omit [Group G] in
 /-- The sum over a merged catalog is the sum of the two sums. -/
 public lemma mergeCats_sum [DecidableEq (ClassFunction G)]
     (A B : List (ClassFunction G × ℕ)) :
@@ -892,6 +846,7 @@ public lemma mergeCats_sum [DecidableEq (ClassFunction G)]
       rw [addPair_sum, List.map_cons, List.sum_cons]
       ring
 
+omit [Group G] in
 /-- First components remain distinct across a merge. -/
 public lemma mergeCats_nodup [DecidableEq (ClassFunction G)]
     (A B : List (ClassFunction G × ℕ)) (hA : (A.map Prod.fst).Nodup)
@@ -903,8 +858,9 @@ public lemma mergeCats_nodup [DecidableEq (ClassFunction G)]
       rw [mergeCats, List.foldl_cons]
       exact ih (addPair q.1 q.2 A) (addPair_nodup q.1 q.2 A hA) hB.tail
 
+omit [Group G] in
 /-- The character `χ` itself appears among the first components after adding a pair. -/
-public lemma mem_map_addPair_fst_self [Group G] [DecidableEq (ClassFunction G)]
+public lemma mem_map_addPair_fst_self [DecidableEq (ClassFunction G)]
     (χ : ClassFunction G)
     (m : ℕ) (acc : List (ClassFunction G × ℕ)) :
     χ ∈ (addPair χ m acc).map Prod.fst := by
@@ -915,8 +871,9 @@ public lemma mem_map_addPair_fst_self [Group G] [DecidableEq (ClassFunction G)]
       · simp [addPair, hp]
       · simpa [addPair, hp] using (Or.inr ih)
 
+omit [Group G] in
 /-- The first components of `A` are contained in those of the merge. -/
-public lemma mergeCats_fst_subset [Group G] [DecidableEq (ClassFunction G)]
+public lemma mergeCats_fst_subset [DecidableEq (ClassFunction G)]
     (A B : List (ClassFunction G × ℕ)) :
     A.map Prod.fst ⊆ (mergeCats A B).map Prod.fst := by
   classical
@@ -958,8 +915,9 @@ public noncomputable def mult [DecidableEq (ClassFunction G)]
     (l : List (ClassFunction G × ℕ)) (χ : ClassFunction G) : ℤ :=
   ((l.filter (fun p => p.1 = χ)).map (fun p => (p.2 : ℤ))).sum
 
+omit [Group G] in
 /-- The multiplicity of a character absent from the catalog is zero. -/
-public lemma mult_eq_zero [Group G] [DecidableEq (ClassFunction G)]
+public lemma mult_eq_zero [DecidableEq (ClassFunction G)]
     {l : List (ClassFunction G × ℕ)}
     {χ : ClassFunction G} (h : χ ∉ l.map Prod.fst) : mult l χ = 0 := by
   unfold mult
@@ -971,9 +929,10 @@ public lemma mult_eq_zero [Group G] [DecidableEq (ClassFunction G)]
     exact h (List.mem_map.mpr ⟨p, (List.mem_filter.mp hp).1, hpc⟩)
   simp [hf]
 
+omit [Group G] in
 /-- Reindexing: the sum over a catalog equals the sum over its distinct
 characters of (multiplicity · character). -/
-public lemma sum_pairs_reindex [Group G] [DecidableEq (ClassFunction G)]
+public lemma sum_pairs_reindex [DecidableEq (ClassFunction G)]
     (l : List (ClassFunction G × ℕ)) (hnod : (l.map Prod.fst).Nodup) :
     (l.map (fun p => (p.2 : ℂ) • p.1)).sum =
       ((l.map Prod.fst).toFinset).sum (fun χ => (mult l χ : ℂ) • χ) := by
@@ -1117,6 +1076,7 @@ public theorem char_decomp {V : Type v} [AddCommGroup V] [Module ℂ V]
                       exact (mergeCats_sum csW csW').symm
   exact hP (Module.finrank ℂ V) (V := V) rfl ρ
 
+omit [Group G] in
 -- The first components of `B` are contained in those of the merge.
 public lemma mergeCats_snd_subset [DecidableEq (ClassFunction G)]
     (A B : List (ClassFunction G × ℕ)) :
@@ -1286,8 +1246,7 @@ public lemma int_sq_sum_mem {ι : Type v} [Fintype ι] {m : ι → ℤ} {k : ℕ
     have hz : ((m i).natAbs : ℤ)^2 ≤ (k : ℤ) := by
       simpa [Int.natAbs_mul_self] using hb
     have hz' : (m i).natAbs ^ 2 ≤ k := by exact_mod_cast hz
-    have hzr : (((m i).natAbs : ℕ) : ℝ)^2 ≤ (k : ℝ) := by exact_mod_cast hz'
-    nlinarith [sq_nonneg ((m i).natAbs : ℝ), hk]
+    nlinarith
   have hcases : (m i).natAbs = 0 ∨ (m i).natAbs = 1 := by omega
   rcases hcases with h0 | h1
   · left
@@ -1327,6 +1286,9 @@ public lemma norm_one_signed_irreducible {ψ : ClassFunction G}
     · contradiction
     · exact Or.inl h
     · exact Or.inr h
+  have hsqR : (∑ j, ((ms j : ℤ) : ℝ)^2) = ((1 : ℕ) : ℝ) := int_sq_sum_real hsq
+  have h1 : ((ms i₀ : ℤ) : ℝ)^2 = 1 := by
+    rcases hmi₀mem with h | h <;> simp [h]
   have hone : ∀ i, i ≠ i₀ → ms i = 0 := by
     intro i hi
     by_contra hmi
@@ -1335,9 +1297,6 @@ public lemma norm_one_signed_irreducible {ψ : ClassFunction G}
       · contradiction
       · exact Or.inl h
       · exact Or.inr h
-    have hsqR : (∑ j, ((ms j : ℤ) : ℝ)^2) = ((1 : ℕ) : ℝ) := int_sq_sum_real hsq
-    have h1 : ((ms i₀ : ℤ) : ℝ)^2 = 1 := by
-      rcases hmi₀mem with h | h <;> simp [h]
     have h2 : ((ms i : ℤ) : ℝ)^2 = 1 := by
       rcases hmi_mem with h | h <;> simp [h]
     have hpair : ((ms i₀ : ℤ) : ℝ)^2 + ((ms i : ℤ) : ℝ)^2 ≤ ∑ j, ((ms j : ℤ) : ℝ)^2 := by
@@ -1564,15 +1523,19 @@ private theorem char_decomp_coeff_one {G : Type u} [Group G] [Fintype G]
       exact_mod_cast (Nat.zero_le p.2))
   exact ⟨ι, inferInstance, χs, ms, i₀, hirr, hdist, hms_nonneg, hχs, hms1, hψsum⟩
 
-/-- If an irreducible character occurs in a character with scalar product
-`1`, the degree of the character is at least the degree of the irreducible. -/
-public theorem irreducible_char_degree_le_of_scalarProduct_one {G : Type u}
-    [Group G] [Fintype G] {ψ χ : ClassFunction G} (hψ : IsCharacter ψ)
-    (hχ : IsIrreducibleCharacter χ) (hsp : scalarProduct G χ ψ = 1) :
-    ∃ rψ rχ : ℕ, ψ 1 = (rψ : ℂ) ∧ χ 1 = (rχ : ℂ) ∧ rχ ≤ rψ := by
+private theorem decomp_degree_data {G : Type u} [Group G] [Fintype G]
+    {ψ χ : ClassFunction G} {ι : Type*} [Fintype ι]
+    {χs : ι → ClassFunction G} {ms : ι → ℤ} {i₀ : ι}
+    (hirr : ∀ i, IsIrreducibleCharacter (χs i))
+    (hms_nonneg : ∀ i, 0 ≤ ms i) (hχs : χs i₀ = χ)
+    (hms1 : (ms i₀ : ℂ) = 1) (hψsum : ψ = ∑ i, (ms i : ℂ) • χs i) :
+    ∃ d m : ι → ℕ,
+      (∀ i, χs i 1 = (d i : ℂ)) ∧
+      (∀ i, ms i = (m i : ℤ)) ∧
+      (ψ 1 = (d i₀ : ℂ) +
+        (∑ i ∈ Finset.univ.erase i₀, (m i * d i : ℕ) : ℂ)) ∧
+      χ 1 = (d i₀ : ℂ) := by
   classical
-  rcases char_decomp_coeff_one hψ hχ hsp with
-    ⟨ι, _, χs, ms, i₀, hirr, hdist, hms_nonneg, hχs, hms1, hψsum⟩
   have hdeg_nat : ∀ i : ι, ∃ r : ℕ, χs i 1 = (r : ℂ) := by
     intro i
     rcases hirr i with ⟨nᵢ, ρᵢ, hρᵢ, hχsEq⟩
@@ -1612,6 +1575,19 @@ public theorem irreducible_char_degree_le_of_scalarProduct_one {G : Type u}
   have hχ1' : χ 1 = (d i₀ : ℂ) := by
     rw [← hχs]
     exact hd i₀
+  exact ⟨d, m, hd, hm, hψ1', hχ1'⟩
+
+/-- If an irreducible character occurs in a character with scalar product
+`1`, the degree of the character is at least the degree of the irreducible. -/
+public theorem irreducible_char_degree_le_of_scalarProduct_one {G : Type u}
+    [Group G] [Fintype G] {ψ χ : ClassFunction G} (hψ : IsCharacter ψ)
+    (hχ : IsIrreducibleCharacter χ) (hsp : scalarProduct G χ ψ = 1) :
+    ∃ rψ rχ : ℕ, ψ 1 = (rψ : ℂ) ∧ χ 1 = (rχ : ℂ) ∧ rχ ≤ rψ := by
+  classical
+  rcases char_decomp_coeff_one hψ hχ hsp with
+    ⟨ι, _, χs, ms, i₀, hirr, hdist, hms_nonneg, hχs, hms1, hψsum⟩
+  rcases decomp_degree_data hirr hms_nonneg hχs hms1 hψsum with
+    ⟨d, m, hd, hm, hψ1', hχ1'⟩
   refine ⟨d i₀ + ∑ i ∈ Finset.univ.erase i₀, (m i * d i : ℕ), d i₀, ?_, ?_, ?_⟩
   · simpa using hψ1'
   · exact hχ1'
@@ -1626,45 +1602,8 @@ public theorem char_eq_irreducible_of_scalarProduct_one_and_degree {G : Type u}
   classical
   rcases char_decomp_coeff_one hψ hχ hsp with
     ⟨ι, _, χs, ms, i₀, hirr, hdist, hms_nonneg, hχs, hms1, hψsum⟩
-  have hdeg_nat : ∀ i : ι, ∃ r : ℕ, χs i 1 = (r : ℂ) := by
-    intro i
-    rcases hirr i with ⟨nᵢ, ρᵢ, hρᵢ, hχsEq⟩
-    refine ⟨nᵢ, ?_⟩
-    rw [hχsEq, Representation.char_one, Module.finrank_pi, Fintype.card_fin]
-  have hms_nat : ∀ i : ι, ∃ m : ℕ, ms i = (m : ℤ) := by
-    intro i
-    refine ⟨(ms i).toNat, ?_⟩
-    exact (Int.toNat_of_nonneg (hms_nonneg i)).symm
-  let d : ι → ℕ := fun i => Classical.choose (hdeg_nat i)
-  let m : ι → ℕ := fun i => Classical.choose (hms_nat i)
-  have hd (i : ι) : χs i 1 = (d i : ℂ) := Classical.choose_spec (hdeg_nat i)
-  have hm (i : ι) : ms i = (m i : ℤ) := Classical.choose_spec (hms_nat i)
-  have hterm_nat (i : ι) : (ms i : ℂ) * χs i 1 = (m i : ℂ) * (d i : ℂ) := by
-    rw [hm i, hd i]
-    norm_cast
-  have hψ1' : ψ 1 = (d i₀ : ℂ) +
-      (∑ i ∈ Finset.univ.erase i₀, (m i * d i : ℕ) : ℂ) := by
-    calc
-      ψ 1 = (∑ i, (ms i : ℂ) • χs i) 1 := by rw [hψsum]
-      _ = ∑ i, (ms i : ℂ) • χs i 1 := by simp [Finset.sum_apply]
-      _ = (ms i₀ : ℂ) • χs i₀ 1 +
-            ∑ i ∈ Finset.univ.erase i₀, (ms i : ℂ) • χs i 1 := by
-            have huniv : Finset.univ = insert i₀ (Finset.univ.erase i₀) := by
-              rw [Finset.insert_erase]
-              exact Finset.mem_univ i₀
-            rw [huniv, Finset.sum_insert]
-            · simp
-            · simp
-      _ = (d i₀ : ℂ) + (∑ i ∈ Finset.univ.erase i₀, (m i * d i : ℕ) : ℂ) := by
-            rw [hd i₀, hms1]
-            simp
-            have hsum_all : (∑ x, (ms x : ℂ) * χs x 1) = ∑ x, (m x : ℂ) * (d x : ℂ) :=
-              Finset.sum_congr rfl (fun i hi => hterm_nat i)
-            have hsub : (ms i₀ : ℂ) * χs i₀ 1 = (m i₀ : ℂ) * (d i₀ : ℂ) := hterm_nat i₀
-            rw [hsum_all, hsub]
-  have hχ1' : χ 1 = (d i₀ : ℂ) := by
-    rw [← hχs]
-    exact hd i₀
+  rcases decomp_degree_data hirr hms_nonneg hχs hms1 hψsum with
+    ⟨d, m, hd, hm, hψ1', hχ1'⟩
   have hrest_nat : (∑ i ∈ Finset.univ.erase i₀, (m i * d i : ℕ)) = 0 := by
     have hdeg' : (d i₀ : ℂ) + (∑ i ∈ Finset.univ.erase i₀, (m i * d i : ℕ) : ℂ) = (d i₀ : ℂ) := by
       rw [← hψ1', hdeg, hχ1']
@@ -1703,16 +1642,18 @@ public theorem char_eq_irreducible_of_scalarProduct_one_and_degree {G : Type u}
   rw [hsum_one, hχs, hms1]
   simp
 
+omit [Group G] in
 /-- The scalar product is anti-linear in the first argument. -/
-public lemma scalarProduct_neg_left [Group G] (φ ψ : ClassFunction G) :
+public lemma scalarProduct_neg_left (φ ψ : ClassFunction G) :
     scalarProduct G (-φ) ψ = -scalarProduct G φ ψ := by
   calc
     scalarProduct G (-φ) ψ = scalarProduct G ((-1 : ℂ) • φ) ψ := by simp
     _ = (-1 : ℂ) * scalarProduct G φ ψ := scalarProduct_smul_left (-1 : ℂ) φ ψ
     _ = -scalarProduct G φ ψ := by simp
 
+omit [Group G] in
 /-- The scalar product is conjugate-linear in the second argument. -/
-public lemma scalarProduct_neg_right [Group G] (φ ψ : ClassFunction G) :
+public lemma scalarProduct_neg_right (φ ψ : ClassFunction G) :
     scalarProduct G φ (-ψ) = -scalarProduct G φ ψ := by
   calc
     scalarProduct G φ (-ψ) = scalarProduct G φ ((-1 : ℂ) • ψ) := by simp
@@ -1734,7 +1675,7 @@ private theorem linearChar_finrank_one {G : Type u} [Group G] {lam : ClassFuncti
   rcases hlam.1 with ⟨n, ρ, hρ, hlameq⟩
   have hn : n = 1 := by
     have htr : (LinearMap.trace ℂ (Fin n → ℂ)) (ρ 1) = (n : ℂ) := by
-      simpa using (LinearMap.trace_id ℂ (Fin n → ℂ))
+      simp
     have htr' : (LinearMap.trace ℂ (Fin n → ℂ)) (ρ 1) = (1 : ℂ) := by
       change ρ.character 1 = (1 : ℂ)
       rw [← hlameq]
@@ -1749,76 +1690,21 @@ private theorem linearChar_scalar {G : Type u} [Group G] {lam : ClassFunction G}
     (hlameq : lam = ρ.character) :
     ∀ x : G, ρ x = (lam x) • (1 : (Fin 1 → ℂ) →ₗ[ℂ] (Fin 1 → ℂ)) := by
   intro x
-  refine LinearMap.ext ?_
-  intro v
-  have hsplit : v = v 0 • (fun _ : Fin 1 => (1 : ℂ)) := by
-    ext i
-    fin_cases i
-    simp
-  have hdiag : (ρ x (fun _ : Fin 1 => (1 : ℂ))) 0 = lam x := by
-    have htr : (LinearMap.trace ℂ (Fin 1 → ℂ)) (ρ x) = lam x := by
-      rw [hlameq]
-      rfl
-    have hsc : ρ x = (ρ x (fun _ : Fin 1 => (1 : ℂ))) 0 •
-        (1 : (Fin 1 → ℂ) →ₗ[ℂ] (Fin 1 → ℂ)) := by
-      refine LinearMap.ext ?_
-      intro w
-      have hsplit' : w = w 0 • (fun _ : Fin 1 => (1 : ℂ)) := by
-        ext i
-        fin_cases i
+  obtain ⟨c, hc, _⟩ :=
+    LinearMap.existsUnique_eq_smul_id_of_finrank_eq_one (R := ℂ) (M := Fin 1 → ℂ)
+      (by simp) (ρ x)
+  have hc_eq : c = lam x := by
+    calc
+      c = (LinearMap.trace ℂ (Fin 1 → ℂ)) (c • (1 : (Fin 1 → ℂ) →ₗ[ℂ] (Fin 1 → ℂ))) := by
+        rw [Module.End.one_eq_id, map_smul]
         simp
-      have hdiag' : ρ x (fun _ : Fin 1 => (1 : ℂ)) =
-          (ρ x (fun _ : Fin 1 => (1 : ℂ))) 0 • (fun _ : Fin 1 => (1 : ℂ)) := by
-        ext i
-        fin_cases i
-        simp
-      calc
-        ρ x w = ρ x (w 0 • (fun _ : Fin 1 => (1 : ℂ))) := congrArg (ρ x) hsplit'
-        _ = w 0 • ρ x (fun _ : Fin 1 => (1 : ℂ)) := by rw [map_smul]
-        _ = w 0 • ((ρ x (fun _ : Fin 1 => (1 : ℂ))) 0 • (fun _ : Fin 1 => (1 : ℂ))) := by
-                rw [hdiag']
-                simp
-        _ = (w 0 * (ρ x (fun _ : Fin 1 => (1 : ℂ))) 0) • (fun _ : Fin 1 => (1 : ℂ)) := by
-                rw [smul_smul]
-        _ = (ρ x (fun _ : Fin 1 => (1 : ℂ))) 0 • (w 0 • (fun _ : Fin 1 => (1 : ℂ))) := by
-                rw [mul_comm, ← smul_smul]
-        _ = ((ρ x (fun _ : Fin 1 => (1 : ℂ))) 0 •
-            (1 : (Fin 1 → ℂ) →ₗ[ℂ] (Fin 1 → ℂ))) w := by
-                calc
-                  (ρ x (fun _ : Fin 1 => (1 : ℂ))) 0 • (w 0 • (fun _ : Fin 1 => (1 : ℂ)))
-                      = (ρ x (fun _ : Fin 1 => (1 : ℂ))) 0 • w := by rw [← hsplit']
-                  _ = ((ρ x (fun _ : Fin 1 => (1 : ℂ))) 0 •
-                      (1 : (Fin 1 → ℂ) →ₗ[ℂ] (Fin 1 → ℂ))) w := by simp
-    have htrsc : (LinearMap.trace ℂ (Fin 1 → ℂ))
-        ((ρ x (fun _ : Fin 1 => (1 : ℂ))) 0 • (1 : (Fin 1 → ℂ) →ₗ[ℂ] (Fin 1 → ℂ))) =
-        (ρ x (fun _ : Fin 1 => (1 : ℂ))) 0 := by
-      rw [map_smul]
-      have ht : (LinearMap.trace ℂ (Fin 1 → ℂ)) (1 : (Fin 1 → ℂ) →ₗ[ℂ] (Fin 1 → ℂ)) =
-          (1 : ℂ) := by
-        simpa using (LinearMap.trace_id ℂ (Fin 1 → ℂ))
-      rw [ht]
-      simp
-    have htr' : (LinearMap.trace ℂ (Fin 1 → ℂ)) (ρ x) = (ρ x (fun _ : Fin 1 => (1 : ℂ))) 0 := by
-      rw [hsc, htrsc]
-      simp
-    rw [← htr']
-    exact htr
-  calc
-    ρ x v = ρ x (v 0 • (fun _ : Fin 1 => (1 : ℂ))) := congrArg (ρ x) hsplit
-    _ = v 0 • ρ x (fun _ : Fin 1 => (1 : ℂ)) := by rw [map_smul]
-    _ = v 0 • (lam x • (fun _ : Fin 1 => (1 : ℂ))) := by
-          congr 1
-          ext i
-          fin_cases i
-          simp [hdiag]
-    _ = (v 0 * lam x) • (fun _ : Fin 1 => (1 : ℂ)) := by rw [smul_smul]
-    _ = (lam x • (1 : (Fin 1 → ℂ) →ₗ[ℂ] (Fin 1 → ℂ))) v := by
-          calc
-            (v 0 * lam x) • (fun _ : Fin 1 => (1 : ℂ))
-                = (lam x * v 0) • (fun _ : Fin 1 => (1 : ℂ)) := by rw [mul_comm]
-            _ = lam x • (v 0 • (fun _ : Fin 1 => (1 : ℂ))) := by rw [smul_smul]
-            _ = lam x • v := by rw [← hsplit]
-            _ = (lam x • (1 : (Fin 1 → ℂ) →ₗ[ℂ] (Fin 1 → ℂ))) v := by simp
+      _ = (LinearMap.trace ℂ (Fin 1 → ℂ)) (ρ x) := by
+        rw [Module.End.one_eq_id, hc]
+      _ = lam x := by
+        change ρ.character x = lam x
+        rw [hlameq]
+  rw [← hc_eq]
+  exact hc
 
 /-- A linear character is multiplicative. -/
 public theorem linearChar_mul {G : Type u} [Group G] {lam : ClassFunction G}
@@ -1923,7 +1809,7 @@ public theorem isLinearCharacter_of_hom {G : Type u} [Group G] [Fintype G]
         (1 : (Fin 1 → ℂ) →ₗ[ℂ] (Fin 1 → ℂ)))
     rw [map_smul]
     have ht : (LinearMap.trace ℂ (Fin 1 → ℂ)) (1 : (Fin 1 → ℂ) →ₗ[ℂ] (Fin 1 → ℂ)) = (1 : ℂ) := by
-      simpa using (LinearMap.trace_id ℂ (Fin 1 → ℂ))
+      simp
     rw [ht]
     simp
   · calc
@@ -1970,7 +1856,7 @@ public theorem isLinearCharacter_one {G : Type u} [Group G] [Fintype G] :
     change (1 : ℂ) =
       (LinearMap.trace ℂ (Fin 1 → ℂ)) (1 : (Fin 1 → ℂ) →ₗ[ℂ] (Fin 1 → ℂ))
     have ht : (LinearMap.trace ℂ (Fin 1 → ℂ)) (1 : (Fin 1 → ℂ) →ₗ[ℂ] (Fin 1 → ℂ)) = (1 : ℂ) := by
-      simpa using (LinearMap.trace_id ℂ (Fin 1 → ℂ))
+      simp
     rw [ht]
   · simp [scalarProductInv]
 
@@ -2113,52 +1999,29 @@ public def regularRep (G : Type u) [Group G] : Representation ℂ G (G →₀ �
 private theorem regularRep_char_sum {G : Type u} [Group G] [Fintype G] [DecidableEq G] (g : G) :
     (regularRep G).character g = ∑ x : G, (if g * x = x then (1 : ℂ) else 0) := by
   classical
-  let e : G ≃ Fin (Nat.card G) :=
-    Fintype.equivFinOfCardEq (show Fintype.card G = Nat.card G by rw [Nat.card_eq_fintype_card])
-  let b : Module.Basis (Fin (Nat.card G)) ℂ (G →₀ ℂ) :=
-    Module.Basis.ofRepr (Finsupp.lcongr e (LinearEquiv.refl ℂ ℂ))
-  have hmat : ∀ i j : Fin (Nat.card G),
+  let b : Module.Basis G ℂ (G →₀ ℂ) := Finsupp.basisSingleOne
+  have hmat : ∀ i j : G,
       (LinearMap.toMatrix b b ((regularRep G) g)) i j =
-        if e (g * e.symm j) = i then (1 : ℂ) else 0 := by
+        if g * j = i then (1 : ℂ) else 0 := by
     intro i j
     rw [LinearMap.toMatrix_apply]
-    have hbj : b j = Finsupp.single (e.symm j) (1 : ℂ) := by
+    have hbj : b j = Finsupp.single j (1 : ℂ) := by
       simp [b]
     rw [hbj]
     change (b.repr (Finsupp.lmapDomain ℂ ℂ (fun x : G => g * x)
-      (Finsupp.single (e.symm j) (1 : ℂ)))) i = if e (g * e.symm j) = i then (1 : ℂ) else 0
+      (Finsupp.single j (1 : ℂ)))) i = if g * j = i then (1 : ℂ) else 0
     rw [Finsupp.lmapDomain_apply, Finsupp.mapDomain_single]
     simp [b]
     rw [Finsupp.single_apply]
   calc
-    (regularRep G).character g
-        = (LinearMap.trace ℂ (G →₀ ℂ)) ((regularRep G) g) := rfl
+    (regularRep G).character g = (LinearMap.trace ℂ (G →₀ ℂ)) ((regularRep G) g) := rfl
     _ = (LinearMap.toMatrix b b ((regularRep G) g)).trace := by
             rw [LinearMap.trace_eq_matrix_trace ℂ b]
-    _ = ∑ x : Fin (Nat.card G), (LinearMap.toMatrix b b ((regularRep G) g)) x x := rfl
-    _ = ∑ x : Fin (Nat.card G), (if e (g * e.symm x) = x then (1 : ℂ) else 0) := by
+    _ = ∑ x : G, (LinearMap.toMatrix b b ((regularRep G) g)) x x := rfl
+    _ = ∑ x : G, (if g * x = x then (1 : ℂ) else 0) := by
             refine Finset.sum_congr rfl ?_
             intro x hx
             rw [hmat]
-    _ = ∑ x : G, (if g * x = x then (1 : ℂ) else 0) := by
-            refine Finset.sum_bij (fun x hx => e.symm x) (by intro x hx; simp) ?_ ?_ ?_
-            · intro a ha b hb hEq
-              exact e.symm.injective hEq
-            · intro x hx
-              refine ⟨e x, by simp, ?_⟩
-              exact e.symm_apply_apply x
-            · intro x hx
-              by_cases h : e (g * e.symm x) = x
-              · have h' : g * e.symm x = e.symm x := by
-                  have := congrArg e.symm h
-                  simpa using this
-                simp [h']
-              · have h' : ¬ g * e.symm x = e.symm x := by
-                  intro hq
-                  apply h
-                  have := congrArg e hq
-                  simpa using this
-                simp [h, h']
 
 /-- The regular character at the identity: `|G|`. -/
 public theorem regularRep_char_one {G : Type u} [Group G] [Fintype G] :
@@ -2449,114 +2312,8 @@ public theorem scalarProduct_induced_neg {G : Type u} [Group G] [Fintype G]
 public theorem frobenius_reciprocity {G : Type u} [Group G] [Fintype G] (H : Subgroup G)
     (δ : ClassFunction (↥H)) {χ : ClassFunction G} (hχ : IsClassFunction χ) :
     scalarProduct G (inducedClassFunction H δ) χ =
-      scalarProduct (↥H) δ (fun x : ↥H => χ (x : G)) := by
-  classical
-  let F : G → G → ℂ := fun g x =>
-    if hx : x⁻¹ * g * x ∈ H then δ ⟨x⁻¹ * g * x, hx⟩ else 0
-  calc
-    scalarProduct G (inducedClassFunction H δ) χ
-        = (Nat.card G : ℂ)⁻¹ * ∑ g : G, (inducedClassFunction H δ) g * star (χ g) := rfl
-    _ = (Nat.card G : ℂ)⁻¹ * ∑ g : G,
-          ((Nat.card (↥H) : ℂ)⁻¹ * ∑ x : G, F g x) * star (χ g) := rfl
-    _ = (Nat.card G : ℂ)⁻¹ * (Nat.card (↥H) : ℂ)⁻¹ *
-          ∑ g : G, ∑ x : G, F g x * star (χ g) := by
-          calc
-            (Nat.card G : ℂ)⁻¹ * ∑ g : G, ((Nat.card (↥H) : ℂ)⁻¹ * ∑ x : G, F g x) * star (χ g)
-                = (Nat.card G : ℂ)⁻¹ * ((Nat.card (↥H) : ℂ)⁻¹ *
-                    ∑ g : G, ∑ x : G, F g x * star (χ g)) := by
-                    congr 1
-                    calc
-                      (∑ g : G, ((Nat.card (↥H) : ℂ)⁻¹ * ∑ x : G, F g x) * star (χ g))
-                          = ∑ g : G, (Nat.card (↥H) : ℂ)⁻¹ *
-                              ((∑ x : G, F g x) * star (χ g)) := by
-                              refine Finset.sum_congr rfl ?_
-                              intro g hg
-                              ring
-                      _ = (Nat.card (↥H) : ℂ)⁻¹ * ∑ g : G, (∑ x : G, F g x) * star (χ g) := by
-                              rw [← Finset.mul_sum]
-                      _ = (Nat.card (↥H) : ℂ)⁻¹ * ∑ g : G, ∑ x : G, F g x * star (χ g) := by
-                              refine congrArg (fun t : ℂ => (Nat.card (↥H) : ℂ)⁻¹ * t) ?_
-                              refine Finset.sum_congr rfl ?_
-                              intro g hg
-                              rw [Finset.sum_mul]
-            _ = (Nat.card G : ℂ)⁻¹ * (Nat.card (↥H) : ℂ)⁻¹ *
-                  ∑ g : G, ∑ x : G, F g x * star (χ g) := by
-                  rw [← mul_assoc]
-    _ = (Nat.card G : ℂ)⁻¹ * (Nat.card (↥H) : ℂ)⁻¹ *
-          ∑ x : G, ∑ g : G, F g x * star (χ g) := by
-          congr 1
-          exact Finset.sum_comm
-    _ = (Nat.card G : ℂ)⁻¹ * (Nat.card (↥H) : ℂ)⁻¹ *
-          ∑ x : G, ∑ h : ↥H, δ h * star (χ (x * (h : G) * x⁻¹)) := by
-          congr 1
-          refine Finset.sum_congr rfl ?_
-          intro x hx
-          calc
-            (∑ g : G, F g x * star (χ g))
-                = ∑ g ∈ Finset.univ.filter (fun g : G => x⁻¹ * g * x ∈ H),
-                    F g x * star (χ g) := by
-                    symm
-                    exact Finset.sum_subset (Finset.subset_univ _) (by
-                      intro g hg hnot
-                      have hg' : ¬ x⁻¹ * g * x ∈ H := by
-                        intro h
-                        exact hnot (by simpa)
-                      simp [F, hg'])
-            _ = ∑ h : ↥H, δ h * star (χ (x * (h : G) * x⁻¹)) := by
-                    refine Finset.sum_bij (fun g hg => ⟨x⁻¹ * g * x, (Finset.mem_filter.mp hg).2⟩)
-                      (by intro g hg; simp)
-                      ?_ ?_ ?_
-                    · intro a ha b hb hEq
-                      have hval : (⟨x⁻¹ * a * x, (Finset.mem_filter.mp ha).2⟩ : ↥H).1 =
-                          (⟨x⁻¹ * b * x, (Finset.mem_filter.mp hb).2⟩ : ↥H).1 :=
-                        congrArg Subtype.val hEq
-                      exact mul_left_cancel (mul_right_cancel hval)
-                    · intro h hh
-                      refine ⟨x * (h : G) * x⁻¹, ?_, ?_⟩
-                      · apply Finset.mem_filter.mpr
-                        constructor
-                        · exact Finset.mem_univ _
-                        · change x⁻¹ * (x * (h : G) * x⁻¹) * x ∈ H
-                          rw [show x⁻¹ * (x * (h : G) * x⁻¹) * x = (h : G) by group]
-                          exact h.property
-                      · apply Subtype.ext
-                        group
-                    · intro g hg
-                      have hmem : x⁻¹ * g * x ∈ H := (Finset.mem_filter.mp hg).2
-                      simp [F, hmem]
-                      · left
-                        congr 2
-                        group
-    _ = (Nat.card G : ℂ)⁻¹ * (Nat.card (↥H) : ℂ)⁻¹ *
-          ((Nat.card G : ℂ) * ∑ h : ↥H, δ h * star (χ h)) := by
-          congr 1
-          have hinner : ∀ x : G,
-              (∑ h : ↥H, δ h * star (χ (x * (h : G) * x⁻¹))) =
-                ∑ h : ↥H, δ h * star (χ h) := by
-            intro x
-            refine Finset.sum_congr rfl ?_
-            intro h hh
-            congr 2
-            exact hχ h x
-          calc
-            ∑ x : G, ∑ h : ↥H, δ h * star (χ (x * (h : G) * x⁻¹))
-                = ∑ x : G, ∑ h : ↥H, δ h * star (χ h) := by
-                    refine Finset.sum_congr rfl ?_
-                    intro x hx
-                    exact hinner x
-            _ = (Nat.card G : ℂ) * ∑ h : ↥H, δ h * star (χ h) := by
-                    rw [Nat.card_eq_fintype_card]
-                    simp
-    _ = (Nat.card (↥H) : ℂ)⁻¹ * ∑ h : ↥H, δ h * star (χ h) := by
-          let S : ℂ := ∑ h : ↥H, δ h * star (χ h)
-          have hc : (Nat.card G : ℂ) ≠ 0 := by
-            exact_mod_cast (Nat.card_ne_zero.mpr ⟨inferInstance, inferInstance⟩)
-          calc
-            (Nat.card G : ℂ)⁻¹ * (Nat.card (↥H) : ℂ)⁻¹ * ((Nat.card G : ℂ) * S)
-                = (Nat.card G : ℂ)⁻¹ * (Nat.card G : ℂ) * ((Nat.card (↥H) : ℂ)⁻¹ * S) := by ring
-            _ = (Nat.card (↥H) : ℂ)⁻¹ * S := by
-                    rw [inv_mul_cancel₀ hc, one_mul]
-    _ = scalarProduct (↥H) δ (fun x : ↥H => χ (x : G)) := rfl
+      scalarProduct (↥H) δ (fun x : ↥H => χ (x : G)) :=
+  scalarProduct_inducedClassFunction H δ hχ
 
 /-- Induction is additive on differences: `(δ₁ - δ₂)* = δ₁* - δ₂*`. -/
 public theorem inducedClassFunction_sub {G : Type u} [Group G] [Fintype G]
@@ -2697,4 +2454,114 @@ public theorem char_apply_central_sign {t : G} (htc : ∀ g : G, t * g = g * t)
 
 end CentralValues
 
+public theorem norm_two_pair {G : Type*} [Group G] [Fintype G]
+    {δ : ClassFunction G} (hδ : IsGeneralizedCharacter δ) (hn : normSq G δ = 2) :
+    ∃ χ ψ : ClassFunction G,
+      IsIrreducibleCharacter χ ∧ IsIrreducibleCharacter ψ ∧ χ ≠ ψ ∧
+        (δ = χ - ψ ∨ δ = χ + ψ ∨ δ = -χ - ψ ∨ δ = -χ + ψ) := by
+  classical
+  rcases char_decomp_generalized hδ with ⟨ι, _, χs, ms, hirr, hdist, hδsum⟩
+  have hnorm : (∑ i, ((ms i : ℤ) : ℂ)^2) = (2 : ℂ) := by
+    rw [← decomp_scalarProduct hirr hdist]
+    rw [← hδsum]
+    simpa [normSq] using hn
+  have hmem : ∀ i, ms i = 0 ∨ ms i = 1 ∨ ms i = -1 :=
+    int_sq_sum_mem (k := 2) (by norm_num) hnorm
+  let S : Finset ι := Finset.univ.filter (fun i => ms i ≠ 0)
+  have hSeq : (∑ i : ι, ((ms i : ℤ) : ℂ)^2) =
+      (∑ i : ι, (if ms i ≠ 0 then (1 : ℂ) else 0)) := by
+    refine Finset.sum_congr rfl ?_
+    intro i hi
+    by_cases h : ms i = 0
+    · simp [h]
+    · rcases hmem i with h0 | h1 | hneg1
+      · contradiction
+      · simp [h1]
+      · simp [hneg1]
+  have hcard : S.card = 2 := by
+    have h' : (∑ i : ι, (if ms i ≠ 0 then (1 : ℂ) else 0)) = (2 : ℂ) := by
+      rw [← hSeq, hnorm]
+    have h'' : (∑ i : ι, (if ms i ≠ 0 then (1 : ℂ) else 0)) = (S.card : ℂ) := by
+      unfold S
+      rw [Finset.sum_boole]
+    exact_mod_cast (h''.symm.trans h')
+  rcases Finset.card_eq_two.mp hcard with ⟨i₀, i₁, hi01, hSm⟩
+  have hmi₀S : i₀ ∈ S := by
+    rw [hSm]
+    simp
+  have hmi₁S : i₁ ∈ S := by
+    rw [hSm]
+    simp
+  have hmi₀ : ms i₀ = 1 ∨ ms i₀ = -1 := by
+    rcases hmem i₀ with h0 | h1 | hneg1
+    · exfalso
+      exact (Finset.mem_filter.mp hmi₀S).2 h0
+    · exact Or.inl h1
+    · exact Or.inr hneg1
+  have hmi₁ : ms i₁ = 1 ∨ ms i₁ = -1 := by
+    rcases hmem i₁ with h0 | h1 | hneg1
+    · exfalso
+      exact (Finset.mem_filter.mp hmi₁S).2 h0
+    · exact Or.inl h1
+    · exact Or.inr hneg1
+  have hzero : ∀ i, i ≠ i₀ → i ≠ i₁ → ms i = 0 := by
+    intro i hi0 hi1
+    by_contra h
+    have hiS : i ∈ S := Finset.mem_filter.mpr ⟨Finset.mem_univ i, h⟩
+    rw [hSm] at hiS
+    simp [hi0, hi1] at hiS
+  -- `δ` is the sum of the two constituents
+  have hδtwo : δ = (ms i₀ : ℂ) • χs i₀ + (ms i₁ : ℂ) • χs i₁ := by
+    rw [hδsum]
+    have hrest : (∑ i ∈ (Finset.univ \ ({i₀, i₁} : Finset ι)), (ms i : ℂ) • χs i) = 0 := by
+      refine Finset.sum_eq_zero ?_
+      intro i hi
+      simp at hi
+      rcases hi with ⟨hi0, hi1⟩
+      simp [hzero i hi0 hi1]
+    have hsum : (∑ i : ι, (ms i : ℂ) • χs i) =
+        (ms i₀ : ℂ) • χs i₀ + (ms i₁ : ℂ) • χs i₁ := by
+      rw [← Finset.sum_sdiff (by simp : ({i₀, i₁} : Finset ι) ⊆ Finset.univ)]
+      rw [hrest, zero_add]
+      simp [hi01]
+    exact hsum
+  rcases hmi₀ with h0 | h0
+  · rcases hmi₁ with h1 | h1
+    · refine ⟨χs i₀, χs i₁, hirr i₀, hirr i₁, hdist i₀ i₁ hi01, ?_⟩
+      right
+      left
+      rw [hδtwo, h0, h1]
+      simp
+    · refine ⟨χs i₀, χs i₁, hirr i₀, hirr i₁, hdist i₀ i₁ hi01, ?_⟩
+      left
+      rw [hδtwo, h0, h1]
+      simp [sub_eq_add_neg]
+  · rcases hmi₁ with h1 | h1
+    · refine ⟨χs i₀, χs i₁, hirr i₀, hirr i₁, hdist i₀ i₁ hi01, ?_⟩
+      right
+      right
+      right
+      rw [hδtwo, h0, h1]
+      simp
+    · refine ⟨χs i₀, χs i₁, hirr i₀, hirr i₁, hdist i₀ i₁ hi01, ?_⟩
+      right
+      right
+      left
+      rw [hδtwo, h0, h1]
+      simp [sub_eq_add_neg]
+
+
+public theorem irreducible_degree_ge_one {G : Type*} [Group G]
+    {χ : ClassFunction G} (hχ : IsIrreducibleCharacter χ) : 1 ≤ (χ 1).re := by
+  have h := irreducible_char_one_ne_zero hχ
+  obtain ⟨n, ρ, _, hρ⟩ := hχ
+  have hn : n ≠ 0 := by
+    simpa [hρ, Representation.char_one, Module.finrank_pi, Fintype.card_fin] using h
+  have he : χ 1 = (n : ℂ) := by
+    simp [hρ, Representation.char_one, Fintype.card_fin]
+  rw [he]
+  norm_cast
+  omega
+
 end BenderGlauberman
+

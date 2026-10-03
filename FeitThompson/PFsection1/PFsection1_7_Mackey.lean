@@ -342,8 +342,8 @@ public theorem scalarProduct_conjugateOnNormal_eq_zero_of_ne
       _ = theta := htheta.symm
   rw [hconjRepTheta]
   rw [htheta]
-  letI : Representation.IsIrreducible rho := hirr
-  letI : Representation.IsIrreducible (conjugateRepresentation H rho a) :=
+  let : Representation.IsIrreducible rho := hirr
+  let : Representation.IsIrreducible (conjugateRepresentation H rho a) :=
     irreducible_conjugateRepresentation H rho a
   exact scalarProduct_representation_char_eq_zero_of_ne rho
     (conjugateRepresentation H rho a) hne'
@@ -833,8 +833,8 @@ public theorem finite_sum_fiberwise_univ
       ∑ j ∈ (@Finset.univ κ (Fintype.ofFinite κ)),
         ∑ i ∈ (@Finset.univ ι (Fintype.ofFinite ι)) with g i = j, f i := by
   classical
-  letI : Fintype ι := Fintype.ofFinite ι
-  letI : Fintype κ := Fintype.ofFinite κ
+  let : Fintype ι := Fintype.ofFinite ι
+  let : Fintype κ := Fintype.ofFinite κ
   simpa using
     (Finset.sum_fiberwise (s := (Finset.univ : Finset ι)) (g := g) (f := f)).symm
 

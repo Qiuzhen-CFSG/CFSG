@@ -5,6 +5,7 @@ public import GorensteinWalter.Section3.FirstCaseKleinDataComplete
 public import GorensteinWalter.Section2.Basic
 import Mathlib.Tactic
 
+
 /-!
 # The order-six intersection in restriction (6)
 
@@ -88,8 +89,7 @@ public theorem firstCase_klein_restrictionSix_index_eq
   let Q : Subgroup (A ⧸ B0) := fD.range
   have hker : fD.ker = B0.subgroupOf D0 := by
     ext z
-    simpa [fD, Subgroup.mem_subgroupOf] using
-      (QuotientGroup.eq_one_iff (N := B0) (D0.subtype z))
+    simp [fD, Subgroup.mem_subgroupOf]
   have hidxQ : (B0.subgroupOf D0).index = Nat.card Q := by
     rw [← hker]
     simpa [Q] using Subgroup.index_ker fD
@@ -108,7 +108,7 @@ public theorem firstCase_klein_restrictionSix_index_eq
         Subgroup.relIndex_subgroupOf (H := B) (K := D) (L := A)
           (by dsimp [D, A]; exact inf_le_left)
       _ = (N.subgroupOf D).index := by
-        simpa [Subgroup.relIndex, hNsubeq]
+        simp [Subgroup.relIndex, hNsubeq]
   have hbound := firstCase_klein_restrictionSix_index_bound
     hmin c hfirst hklein hy hyH
   have hge : 4 ≤ (N.subgroupOf D).index := by

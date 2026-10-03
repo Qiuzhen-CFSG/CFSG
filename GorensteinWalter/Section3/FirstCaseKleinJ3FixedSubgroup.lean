@@ -5,6 +5,7 @@ public import GorensteinWalter.Section3.FirstCaseKleinCardThreeCentralizer
 public import GorensteinWalter.Section3.FirstCaseKleinInvertedInfVU
 import Mathlib.Tactic
 
+
 noncomputable section
 
 open scoped Pointwise

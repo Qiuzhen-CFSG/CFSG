@@ -12,6 +12,7 @@ public import Mathlib.GroupTheory.Sylow
 public import Mathlib.GroupTheory.PGroup
 import Mathlib.Tactic
 
+
 /-!
 # The Sylow 3-counting in the Suzuki recognition step
 

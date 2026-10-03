@@ -768,10 +768,10 @@ private theorem normalizer_order_three_subgroup_of_normalizer_le
   let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   have hXNp : IsPGroup 3 XN := by
     apply IsPGroup.of_card (n := 1)
-    simpa [hXNcard]
+    simp [hXNcard]
   have hYNp : IsPGroup 3 YN := by
     apply IsPGroup.of_card (n := 1)
-    simpa [hYNcard]
+    simp [hYNcard]
   have hXnot : ¬ 3 ∣ XN.index := by
     rw [hXNindex]
     norm_num
@@ -930,7 +930,7 @@ private theorem normalizer_mulEquiv_perm_four
   let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   have hXNp : IsPGroup 3 XN := by
     apply IsPGroup.of_card (n := 1)
-    simpa [hXNcard]
+    simp [hXNcard]
   have hthreeNotIndex : ¬ 3 ∣ XN.index := by
     rw [hXNindex]
     norm_num

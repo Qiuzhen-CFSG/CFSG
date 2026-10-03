@@ -11,6 +11,7 @@ public import GorensteinWalter.MinimalCounterexample
 public import FeitThompson.GroupAction.NoncyclicAbelianPGroup
 public import FeitThompson.FinalTheorem
 
+
 /-!
 # Lemma 2.9 (Bender, "Finite Groups with Dihedral Sylow 2-Subgroups")
 
@@ -148,7 +149,7 @@ private lemma central_inv_mem_normal_subgroup_dihedral
       rw [Subgroup.mem_zpowers_iff]
       refine ⟨n, ?_⟩
       rw [hcast]
-      simpa [DihedralGroup.r_pow]
+      simp [DihedralGroup.r_pow]
     rw [hD, dihedralRotationSubgroup_def]
     simpa using hmem
   · rw [htop]
@@ -384,7 +385,7 @@ private lemma isQuasisimple_even_card {Q : Type u} [Group Q] [Finite Q]
     rw [← Nat.not_even_iff_odd]
     intro heven
     exact hnot (even_iff_two_dvd.mp heven)
-  have hsolv : IsSolvable Q := odd_order_theorem Q hodd
+  have hsolv : Group.IsSolvable Q := odd_order_theorem Q hodd
   exact Group.IsPerfect.not_isSolvable Q hsolv
 
 private lemma isQuasisimple_mulEquiv_local
@@ -454,8 +455,7 @@ private lemma componentLayer_top_map_eq_componentLayerOf_local
     change sSup {E : Subgroup (↥B) | IsComponentOf E (⊤ : Subgroup (↥B))} ≤
       Subgroup.comap B.subtype (componentLayerOf B)
     refine sSup_le ?_
-    intro E hE
-    intro y hy
+    intro E hE y hy
     rw [Subgroup.mem_comap]
     exact le_sSup (s := {E' : Subgroup G | IsComponentOf E' B})
       (a := E.map B.subtype)
@@ -465,8 +465,7 @@ private lemma componentLayer_top_map_eq_componentLayerOf_local
       Subgroup.map B.subtype
         (sSup {E : Subgroup (↥B) | IsComponentOf E (⊤ : Subgroup (↥B))})
     refine sSup_le ?_
-    intro E hE
-    intro y hy
+    intro E hE y hy
     exact Subgroup.mem_map.mpr
       ⟨⟨y, hE.1 hy⟩,
         Subgroup.mem_sSup_of_mem
@@ -492,14 +491,14 @@ private lemma componentLayerOf_ne_bot_iff {G : Type u} [Group G]
   constructor
   · intro hE
     by_contra hnone
-    push_neg at hnone
+    push Not at hnone
     apply hE
     apply le_bot_iff.mp
     rw [componentLayerOf]
     refine sSup_le ?_
     intro S hS
     have hSbot : S = ⊥ := hnone S hS
-    simpa [hSbot]
+    simp [hSbot]
   · rintro ⟨S, hS, hSne⟩ hbot
     have hSle : S ≤ componentLayerOf N := le_sSup hS
     have hSbot' : S = ⊥ := le_bot_iff.mp (hSle.trans (le_of_eq hbot))
@@ -1191,7 +1190,7 @@ private theorem lemma_2_9_centralizes_oddCore_inf_fitting
       exact orderOf_eq_prime (by simpa [pow_two] using htInv.2) htInv.1
     rw [hcard]
     exact hcopK
-  have hsolv : IsSolvable (↥K) := odd_order_theorem (G := ↥K) (Nat.coprime_two_left.mp hcopK)
+  have hsolv : Group.IsSolvable (↥K) := odd_order_theorem (G := ↥K) (Nat.coprime_two_left.mp hcopK)
   simpa [K] using
     (centralizes_of_subnormal_selfCentralizing_coprime
       (Subgroup.zpowers t) K K₁ hPK hK₁leK hsub hPK₁ hself hcop hsolv)
@@ -1239,8 +1238,7 @@ public theorem lemma_2_9_kleinFour_fixedPoints
     {G : Type u} [Group G] [Finite G]
     {V N : Subgroup G}
     (hV : IsKleinFour V) (hVN : V ≤ N)
-    (hAne : oddCoreOf N ≠ ⊥)
-    (hfaith : oddCoreOf N ⊓ Subgroup.centralizer (V : Set G) = ⊥) :
+    (hAne : oddCoreOf N ≠ ⊥) :
     ∃ s : G, s ∈ V ∧ s ≠ 1 ∧
       oddCoreOf N ⊓ Subgroup.centralizer ({s} : Set G) ≠ ⊥ := by
   let A : Subgroup G := oddCoreOf N
@@ -1275,7 +1273,7 @@ public theorem lemma_2_9_kleinFour_fixedPoints
     rw [Subgroup.card_map_of_injective N.subtype_injective]
     exact pPrimeCore_coprime_card (p := 2) (G := N)
   simpa [A] using (exists_ne_one_fixedPoints_of_kleinFour_action
-    (G := G) (V := V) (A := A) hV hVA hAodd hAne hfaith)
+    (G := G) (V := V) (A := A) hV hVA hAodd hAne)
 
 /-- The local "choose `s`" transfer: if `V` acts fixed-point-freely on the
 odd group `A` (`C_A(V) = ⊥`) and `t ∈ V` has `C_A(t) ≠ ⊥`, then some other
@@ -1296,7 +1294,7 @@ private lemma lemma_2_9_exists_s_commutator_ne_bot
   classical
   let C : Subgroup G := A ⊓ Subgroup.centralizer ({t} : Set G)
   by_contra hnone
-  push_neg at hnone
+  push Not at hnone
   have hAll : ∀ v : G, v ∈ V → v ≠ 1 → v ≠ t →
       C ≤ Subgroup.centralizer ({v} : Set G) := by
     intro v hv hv1 hvt
@@ -1336,7 +1334,7 @@ private theorem commutator_double_eq_self_of_coprime_solvable
     {G : Type u} [Group G] [Finite G]
     (P K : Subgroup G) (hPK : P ≤ Subgroup.normalizer (K : Set G))
     (hcop : Nat.Coprime (Nat.card P) (Nat.card (↥K)))
-    (hsolv : IsSolvable K) :
+    (hsolv : Group.IsSolvable K) :
     ⁅⁅K, P⁆, P⁆ = ⁅K, P⁆ := by
   classical
   let : Subgroup.Normalizes P K := ⟨hPK⟩
@@ -1546,7 +1544,7 @@ private theorem exists_faithful_action_pair
   let : IsMulCommutative (↥V) := IsKleinFour.isMulCommutative
   let : CommGroup (↥V) := IsMulCommutative.instCommGroup
   have hV2 : IsPGroup 2 (↥V) := IsPGroup.of_card (n := 2) (by
-    simpa [IsKleinFour.card_four])
+    simp [IsKleinFour.card_four])
   let : Fact (IsPGroup 2 (↥V)) := ⟨hV2⟩
   let : V.Normalizes A := ⟨hVA⟩
   let : MulDistribMulAction (↥V) (↥A) :=
@@ -1694,7 +1692,7 @@ private theorem transport_local_to_pair
   let VgH : Subgroup c.H := Vg.subgroupOf c.H
   have hVgHp : IsPGroup 2 VgH := by
     have hVgp : IsPGroup 2 Vg :=
-      IsPGroup.of_card (n := 2) (by simpa [hVg.card_four])
+      IsPGroup.of_card (n := 2) (by simp)
     exact hVgp.of_equiv (Subgroup.subgroupOfEquivOfLe hVgH).symm
   obtain ⟨Q, hVgHQ⟩ := IsPGroup.exists_le_sylow (G := c.H) hVgHp
   have hSH : (c.S : Subgroup G) ≤ c.H := centralizerSetup_S_le_H c
@@ -1870,7 +1868,7 @@ private theorem lemma_2_9_two_involution_bridge
   have htOrd : orderOf c.t = 2 :=
     orderOf_eq_prime (by simpa [pow_two] using c.t_involution.2)
       c.t_involution.1
-  have hCsolv : IsSolvable C :=
+  have hCsolv : Group.IsSolvable C :=
     odd_order_theorem (G := ↥C)
       (Nat.coprime_two_left.mp hCodd)
   have hXcomm' : ⁅⁅C, P⁆, P⁆ = ⁅C, P⁆ :=

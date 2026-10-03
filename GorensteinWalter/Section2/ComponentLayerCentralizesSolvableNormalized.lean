@@ -2,6 +2,7 @@ module
 
 public import GorensteinWalter.Section2.Bender1970_18
 public import GorensteinWalter.Section2.FStarSubnormal
+import FeitThompson.BGsection1.Defs
 
 /-!
 # A component layer centralizes normalized solvable subgroups

@@ -9,6 +9,7 @@ public import FeitThompson.FinalTheorem
 public import FeitThompson.Fitting.Centralizer
 public import Mathlib.Algebra.Group.Subgroup.Order
 
+
 attribute [local instance] IsMulCommutative.instCommGroup
 
 /-!
@@ -36,7 +37,7 @@ private theorem peterfalvi_appendixI_proposition_1_pGroup_fixedPointFree_samePri
     ∀ x : P, x ≠ 1 → ∀ e : E, x • e = e → e = 1 := by
   classical
   by_cases hE : Nontrivial E
-  · letI : Nontrivial E := hE
+  · let : Nontrivial E := hE
     have hEp : IsPGroup p E := IsElementaryAbelian.isPGroup p E
     obtain ⟨n, hEcard⟩ := hEp.exists_card_eq
     have hn_ne_zero : n ≠ 0 := by
@@ -67,12 +68,12 @@ private theorem peterfalvi_appendixI_proposition_1_pGroup_fixedPointFree_samePri
       · simp [hb]
       · have hy : y ∈ MulAction.stabilizer P b := by simp [hstab_top b hb]
         exact MulAction.mem_stabilizer_iff.mp hy
-    letI : Subsingleton P :=
+    let : Subsingleton P :=
       ⟨fun y z => FaithfulSMul.eq_of_smul_eq_smul (α := E) fun b =>
         (htrivial y b).trans (htrivial z b).symm⟩
     intro x hx
     exact False.elim (hx (Subsingleton.elim x 1))
-  · letI : Subsingleton E := not_nontrivial_iff_subsingleton.mp hE
+  · let : Subsingleton E := not_nontrivial_iff_subsingleton.mp hE
     intro _ _ e _
     exact Subsingleton.elim e 1
 
@@ -192,7 +193,7 @@ private theorem peterfalvi_appendixI_proposition_1_fixedPointSubgroup_family_iSu
     (hpair : Pairwise (fun i j => Disjoint (F i) (F j))) :
     iSupIndep F := by
   classical
-  letI : CommGroup M := IsMulCommutative.instCommGroup
+  let : CommGroup M := IsMulCommutative.instCommGroup
   have hF_inv (i j : ι) : IsInvariant (T i) M (F j) := by
     have hforward : ∀ a : T i, ∀ x : M, x ∈ F j → a • x ∈ F j := by
       intro a x hx
@@ -256,8 +257,8 @@ private theorem peterfalvi_appendixI_proposition_1_fixedPointSubgroup_family_iSu
           simpa using hxone
     | @insert j s hj ih =>
         intro i
-        letI : IsInvariant (T i) M (F j) := hF_inv i j
-        letI : IsInvariant (T i) M (s.sup F) := ih i
+        let : IsInvariant (T i) M (F j) := hF_inv i j
+        let : IsInvariant (T i) M (s.sup F) := ih i
         have hinv : IsInvariant (T i) M (F j ⊔ s.sup F) :=
           isInvariant_sup_of_le_normalizer (A := T i) (G := M)
             (X := F j) (Y := s.sup F) (hnormalizer (F j) (s.sup F))
@@ -280,9 +281,9 @@ private theorem peterfalvi_appendixI_proposition_1_fixedPointSubgroup_family_iSu
         intro j hj
         have hji : j ≠ i := fun h => hj (h ▸ Finset.mem_insert_self i s)
         have hjs : j ∉ s := fun h => hj (Finset.mem_insert_of_mem h)
-        letI : IsInvariant (T j) M (F i) := hF_inv j i
-        letI : IsInvariant (T j) M (s.sup F) := hsup_inv s j
-        letI : IsInvariant (T j) M (F i ⊔ s.sup F) :=
+        let : IsInvariant (T j) M (F i) := hF_inv j i
+        let : IsInvariant (T j) M (s.sup F) := hsup_inv s j
+        let : IsInvariant (T j) M (F i ⊔ s.sup F) :=
           isInvariant_sup_of_le_normalizer (A := T j) (G := M)
             (X := F i) (Y := s.sup F) (hnormalizer (F i) (s.sup F))
         have hfix_i : Disjoint (F i) (fixedPointSubgroup (T j) M) := by
@@ -308,11 +309,11 @@ private theorem peterfalvi_appendixI_proposition_1_hyperplane_fixed_iSupIndep_an
     let F : Ω → Subgroup E := fun Y => fixedPointSubgroup (↥Y.1) E
     iSupIndep F ∧ iSup F = ⊤ := by
   classical
-  letI : CommGroup R := IsMulCommutative.instCommGroup
+  let : CommGroup R := IsMulCommutative.instCommGroup
   let Ω := {Y : Subgroup R //
     Y.index = p ∧ fixedPointSubgroup (↥Y) E ≠ ⊥}
   let F : Ω → Subgroup E := fun Y => fixedPointSubgroup (↥Y.1) E
-  letI : Fintype Ω := Fintype.ofFinite Ω
+  let : Fintype Ω := Fintype.ofFinite Ω
   have hcyc (Y : Ω) : IsCyclic (R ⧸ Y.1) := by
     have hcard : Nat.card (R ⧸ Y.1) = p := by
       simpa [Subgroup.index_eq_card] using Y.2.1
@@ -749,9 +750,9 @@ private theorem peterfalvi_appendixI_proposition_1_fixedPointFree_of_invariant_i
     have hmem : e ∈ U ⊔ V := by
       rw [hcompl.sup_eq_top]
       exact Subgroup.mem_top e
-    letI : IsMulCommutative E :=
+    let : IsMulCommutative E :=
       (inferInstance : IsElementaryAbelian q E).toIsMulCommutative
-    letI : V.Normal := Subgroup.normal_of_isMulCommutative V
+    let : V.Normal := Subgroup.normal_of_isMulCommutative V
     obtain ⟨u, hu, v, hv, huv⟩ := Subgroup.mem_sup_of_normal_right.mp hmem
     calc
       g • e = g • (u * v) := by rw [huv]
@@ -779,7 +780,7 @@ private theorem peterfalvi_appendixI_proposition_1_fixedPointFree_of_isCompl_sub
     [IsElementaryAbelian q E]
     [MulDistribMulAction P E] [FaithfulSMul P E]
     (ρ : Representation (ZMod q) P (Additive E))
-    (hρ : ρ = Theory.Representation.ofElementaryAbelianAction
+    (hρ : ρ = Representation.ofElementaryAbelianAction
       (A := P) (G := E) (p := q))
     (W C : Subrepresentation ρ)
     (hW : W ≠ ⊥) (hC : C ≠ ⊥) (hcompl : IsCompl W C)
@@ -788,7 +789,7 @@ private theorem peterfalvi_appendixI_proposition_1_fixedPointFree_of_isCompl_sub
         Nat.card (MulAction.stabilizer P b)) :
     ∀ x : P, x ≠ 1 → ∀ e : E, x • e = e → e = 1 := by
   classical
-  letI : CommGroup E := IsMulCommutative.instCommGroup
+  let : CommGroup E := IsMulCommutative.instCommGroup
   let η : Subgroup E ≃o Submodule (ZMod q) (Additive E) :=
     Subgroup.toAddSubgroup.trans (AddSubgroup.toZModSubmodule (n := q))
   let U : Subgroup E := η.symm W.toSubmodule
@@ -826,7 +827,7 @@ private theorem peterfalvi_appendixI_proposition_1_fixedPointFree_of_isCompl_sub
   have hcompl_UV : IsCompl U V := by
     apply (OrderIso.isCompl_iff (f := η) (x := U) (y := V)).2
     simpa [U, V] using hcompl_sub
-  letI : IsInvariant P E U := by
+  let : IsInvariant P E U := by
     refine ⟨?_⟩
     intro g e
     constructor
@@ -840,7 +841,7 @@ private theorem peterfalvi_appendixI_proposition_1_fixedPointFree_of_isCompl_sub
         simpa [U, η] using hge
       have hsmul := W.apply_mem_toSubmodule g⁻¹ hgeW
       simpa [hρ, U, η, inv_smul_smul] using hsmul
-  letI : IsInvariant P E V := by
+  let : IsInvariant P E V := by
     refine ⟨?_⟩
     intro g e
     constructor
@@ -867,15 +868,15 @@ private theorem peterfalvi_appendixI_proposition_1_irreducible_noncyclic_centerL
         z ∈ R ∧ z ≠ 1 ∧ z ∈ Subgroup.center P ∧
           Nat.card (Subgroup.zpowers z) = p := by
   classical
-  letI : Fact (IsPGroup p P) := ⟨hP⟩
+  let : Fact (IsPGroup p P) := ⟨hP⟩
   obtain ⟨R, hRnormal, hRcard, hRelem⟩ :=
     lemma_4_5_a (p := p) (R := P) hp_ne_two hncyc
-  letI : R.Normal := hRnormal
+  let : R.Normal := hRnormal
   have hR_nontrivial : Nontrivial R :=
     Finite.one_lt_card_iff_nontrivial.mp (by
       rw [hRcard]
       exact one_lt_pow' (Fact.out : Nat.Prime p).one_lt two_ne_zero)
-  letI : Nontrivial R := hR_nontrivial
+  let : Nontrivial R := hR_nontrivial
   obtain ⟨zR, hzR_ne, hz_center⟩ :=
     exists_nontrivial_center_mem_normal (G := P) (p := p) R
   let z : P := zR
@@ -883,7 +884,7 @@ private theorem peterfalvi_appendixI_proposition_1_irreducible_noncyclic_centerL
   have hz_ne : z ≠ 1 := by
     intro hz
     exact hzR_ne (Subtype.ext (by simpa [z] using hz))
-  letI : IsElementaryAbelian p R := hRelem
+  let : IsElementaryAbelian p R := hRelem
   have hzR_pow : zR ^ p = 1 :=
     Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
       (IsElementaryAbelian.exponent_dvd_p p R) zR
@@ -930,12 +931,12 @@ private theorem peterfalvi_appendixI_proposition_1_fixedPointSubgroup_centerLine
     [MulDistribMulAction P E] [FaithfulSMul P E]
     (z : P) (hz_ne : z ≠ 1) (hz_center : z ∈ Subgroup.center P)
     (hirr : Representation.IsIrreducible
-      (Theory.Representation.ofElementaryAbelianAction (A := P) (G := E) (p := q))) :
+      (Representation.ofElementaryAbelianAction (A := P) (G := E) (p := q))) :
     fixedPointSubgroup (Subgroup.zpowers z) E = ⊥ := by
   classical
-  letI : CommGroup E := IsMulCommutative.instCommGroup
-  let ρ := Theory.Representation.ofElementaryAbelianAction (A := P) (G := E) (p := q)
-  letI : Representation.IsIrreducible ρ := by simpa [ρ] using hirr
+  let : CommGroup E := IsMulCommutative.instCommGroup
+  let ρ := Representation.ofElementaryAbelianAction (A := P) (G := E) (p := q)
+  let : Representation.IsIrreducible ρ := by simpa [ρ] using hirr
   let Z : Subgroup P := Subgroup.zpowers z
   have hZ_le_center : Z ≤ Subgroup.center P :=
     Subgroup.zpowers_le.mpr hz_center
@@ -947,7 +948,7 @@ private theorem peterfalvi_appendixI_proposition_1_fixedPointSubgroup_centerLine
     have hconj : g * x * g⁻¹ = x := by rw [hcomm]; simp
     rw [hconj]
     exact hx
-  letI : Z.Normal := hZnormal
+  let : Z.Normal := hZnormal
   have hρinj : Function.Injective ρ := by
     intro a b hab
     apply FaithfulSMul.eq_of_smul_eq_smul (α := E)
@@ -996,9 +997,9 @@ private theorem peterfalvi_appendixI_proposition_1_pGroup_fixedPointFree_crossPr
     ∀ x : P, x ≠ 1 → ∀ e : E, x • e = e → e = 1 := by
   classical
   by_cases hE : Nontrivial E
-  · letI : Nontrivial E := hE
+  · let : Nontrivial E := hE
     let ρ : Representation (ZMod q) P (Additive E) :=
-      Theory.Representation.ofElementaryAbelianAction (A := P) (G := E) (p := q)
+      Representation.ofElementaryAbelianAction (A := P) (G := E) (p := q)
     obtain ⟨n, hcardP⟩ := hP.exists_card_eq
     have hp_not_dvd_q : ¬ p ∣ q := by
       intro hpq
@@ -1021,19 +1022,19 @@ private theorem peterfalvi_appendixI_proposition_1_pGroup_fixedPointFree_crossPr
     have hsemi : ρ.IsCompletelyReducible :=
       Representation.isCompletelyReducible_of_ringChar_eq_zero_or_prime_coprime
         ρ hchar
-    letI : ComplementedLattice (Subrepresentation ρ) := by
+    let : ComplementedLattice (Subrepresentation ρ) := by
       exact
         (Representation.isSemisimpleRepresentation_iff_isSemisimpleModule_asModule
           (ρ := ρ)).2 hsemi
     by_cases hirr : Representation.IsIrreducible ρ
-    · letI : Representation.IsIrreducible ρ := hirr
+    · let : Representation.IsIrreducible ρ := hirr
       by_cases hPcyc : IsCyclic P
-      · letI : IsCyclic P := hPcyc
-        letI : IsMulCommutative P := IsCyclic.isMulCommutative
+      · let : IsCyclic P := hPcyc
+        let : IsMulCommutative P := IsCyclic.isMulCommutative
         intro x hx e hxe
         by_contra he
         let H : Subgroup P := Subgroup.zpowers x
-        letI : H.Normal := Subgroup.normal_of_isMulCommutative H
+        let : H.Normal := Subgroup.normal_of_isMulCommutative H
         let S : Subrepresentation ρ := {
           toSubmodule := ρ.fixedSubspace H
           apply_mem_toSubmodule := by
@@ -1056,7 +1057,7 @@ private theorem peterfalvi_appendixI_proposition_1_pGroup_fixedPointFree_crossPr
             Subgroup.zpowers_le.mpr hxe
           have hhfix : (h : P) • e = e :=
             MulAction.mem_stabilizer_iff.mp (hzp_le h.2)
-          simpa [ρ, Theory.Representation.ofElementaryAbelianAction_apply_ofMul] using hhfix
+          simpa [ρ, Representation.ofElementaryAbelianAction_apply_ofMul] using hhfix
         have hS_ne : S ≠ ⊥ := by
           intro hS
           have hfix_bot : ρ.fixedSubspace H = ⊥ := by
@@ -1087,14 +1088,14 @@ private theorem peterfalvi_appendixI_proposition_1_pGroup_fixedPointFree_crossPr
         apply FaithfulSMul.eq_of_smul_eq_smul (α := E)
         intro a
         have ha := DFunLike.congr_fun hxrep (Additive.ofMul a)
-        simpa [ρ, Theory.Representation.ofElementaryAbelianAction_apply_ofMul] using ha
+        simpa [ρ, Representation.ofElementaryAbelianAction_apply_ofMul] using ha
       · have hnoncyclicEndpoint :
             ∀ x : P, x ≠ 1 → ∀ e : E, x • e = e → e = 1 := by
           obtain ⟨R, z, hRnormal, hRcard, hRelem, hzR, hz_ne, hz_center, _hzcard⟩ :=
             peterfalvi_appendixI_proposition_1_irreducible_noncyclic_centerLine
               (p := p) hP hp_ne_two hPcyc
-          letI : R.Normal := hRnormal
-          letI : IsElementaryAbelian p R := hRelem
+          let : R.Normal := hRnormal
+          let : IsElementaryAbelian p R := hRelem
           have hRnoncyc : ¬ IsCyclic R :=
             IsElementaryAbelian.not_isCyclic_of_card_eq_prime_sq hRcard
           have hfix_z : fixedPointSubgroup (Subgroup.zpowers z) E = ⊥ :=
@@ -1120,7 +1121,7 @@ private theorem peterfalvi_appendixI_proposition_1_pGroup_fixedPointFree_crossPr
           obtain ⟨hFindep, hFspan⟩ :=
             peterfalvi_appendixI_proposition_1_hyperplane_fixed_iSupIndep_and_iSup_top
               (R := R) (E := E) (p := p) (q := q) hp_ne_q hRnoncyc hfix_top
-          letI : Fintype Ω := Fintype.ofFinite Ω
+          let : Fintype Ω := Fintype.ofFinite Ω
           have hΩ_nonempty : Nonempty Ω := by
             by_contra hΩ
             have hbot : iSup F = ⊥ := by
@@ -1131,8 +1132,9 @@ private theorem peterfalvi_appendixI_proposition_1_pGroup_fixedPointFree_crossPr
             exact top_ne_bot (hFspan.symm.trans hbot)
           have hfaithR :
               actionCentralizerIn (A := R) (G := E) (⊤ : Subgroup R) = ⊥ := by
-            rw [actionCentralizerIn, top_inf_eq,
-              fixingSubgroupOf_univ_eq_ker_toMulAut, MonoidHom.ker_eq_bot_iff]
+            rw [actionCentralizerIn, top_inf_eq]
+            change fixingSubgroup (M := ↥R) (α := E) Set.univ = ⊥
+            rw [fixingSubgroup_univ_eq_ker_toMulAut, MonoidHom.ker_eq_bot_iff]
             intro a b hab
             apply FaithfulSMul.eq_of_smul_eq_smul (α := E)
             intro e
@@ -1153,7 +1155,7 @@ private theorem peterfalvi_appendixI_proposition_1_pGroup_fixedPointFree_crossPr
               exact isCyclic_of_prime_card (α := R ⧸ Y.1) hcard
             exact theorem_3_6_hyperplane_fixed_singleton_false
               hfaithR hYcyc hRnoncyc (by simpa [F] using hFYtop)
-          letI : MulDistribMulAction P R :=
+          let : MulDistribMulAction P R :=
             MulDistribMulAction.compHom R ConjAct.toConjAct.toMonoidHom
           let ρR : P →* MulAut R := MulDistribMulAction.toMulAut P R
           let ρE : P →* MulAut E := MulDistribMulAction.toMulAut P E
@@ -1180,7 +1182,7 @@ private theorem peterfalvi_appendixI_proposition_1_pGroup_fixedPointFree_crossPr
                 simpa using congrArg (fun t : R => t • ((ρE g) x)) hyr.symm
               _ = (ρE g) (y • x) := hρ_transport g y x
               _ = (ρE g) x := by rw [hxfix ⟨y, hy⟩]
-          letI : MulAction P Ω := {
+          let : MulAction P Ω := {
             smul := fun g Y => by
               refine ⟨Y.1.map (ρR g : R →* R), ?_⟩
               have hindex : (Y.1.map (ρR g : R →* R)).index = p := by
@@ -1263,7 +1265,7 @@ private theorem peterfalvi_appendixI_proposition_1_pGroup_fixedPointFree_crossPr
       exact
         peterfalvi_appendixI_proposition_1_fixedPointFree_of_isCompl_subrepresentations
           (q := q) (P := P) (E := E) ρ rfl W C hWbot hCbot hcompl hstab
-  · letI : Subsingleton E := not_nontrivial_iff_subsingleton.mp hE
+  · let : Subsingleton E := not_nontrivial_iff_subsingleton.mp hE
     intro _ _ e _
     exact Subsingleton.elim e 1
 /-- Fixed-point-free core of the p-group lemma. This is the two-branch
@@ -1310,7 +1312,7 @@ public theorem peterfalvi_appendixI_proposition_1_pGroup
       (p := p) (q := q) hP hp_ne_two hstab
   refine ⟨?_, hfixed⟩
   by_cases hE : Nontrivial E
-  · letI : Nontrivial E := hE
+  · let : Nontrivial E := hE
     have hregular : ActsRegularly P E := by
       intro x hx
       rw [Subgroup.eq_bot_iff_forall]
@@ -1326,8 +1328,8 @@ public theorem peterfalvi_appendixI_proposition_1_pGroup
       isCyclic_of_odd_regular_pSubgroup
         (p := p) (H := E) (R := P) Fact.out hPodd hregular htop_p
     exact (Subgroup.topEquiv : (⊤ : Subgroup P) ≃* P).isCyclic.mp htop_cyclic
-  · letI : Subsingleton E := not_nontrivial_iff_subsingleton.mp hE
-    letI : Subsingleton P :=
+  · let : Subsingleton E := not_nontrivial_iff_subsingleton.mp hE
+    let : Subsingleton P :=
       ⟨fun _ _ => FaithfulSMul.eq_of_smul_eq_smul (α := E) fun _ =>
         Subsingleton.elim _ _⟩
     exact isCyclic_of_subsingleton
@@ -1341,7 +1343,7 @@ private theorem peterfalvi_appendixI_proposition_1_sylow_map_le_pCore
     Group.IsNilpotent.sylow_normal hnil p P
   have hP_char :=
     Sylow.characteristic_of_normal P hP_normal
-  letI : (P : Subgroup N).Characteristic := hP_char
+  let : (P : Subgroup N).Characteristic := hP_char
   have hmap_normal : ((P : Subgroup N).map N.subtype).Normal := by
     infer_instance
   have hmap_p := P.isPGroup'.map N.subtype
@@ -1395,7 +1397,7 @@ private theorem peterfalvi_appendixI_proposition_1_fitting_cyclic
   have hZ : IsZGroup (fittingSubgroup D) := by
     rw [isZGroup_iff]
     intro p hp P
-    letI : Fact p.Prime := ⟨hp⟩
+    let : Fact p.Prime := ⟨hp⟩
     rcases P.isPGroup'.card_eq_or_dvd with hPcard | hpP
     · apply isCyclic_of_card_dvd_prime (p := p)
       simp [hPcard]
@@ -1404,7 +1406,7 @@ private theorem peterfalvi_appendixI_proposition_1_fitting_cyclic
           (Subgroup.card_subgroup_dvd_card (fittingSubgroup D)))
       have hpcore_cyclic : IsCyclic (pCore p D) :=
         (peterfalvi_appendixI_proposition_1_pCore (q := q) hDodd htrans hpD).1
-      letI : IsCyclic (pCore p D) := hpcore_cyclic
+      let : IsCyclic (pCore p D) := hpcore_cyclic
       have hle :
           (P : Subgroup (fittingSubgroup D)).map (fittingSubgroup D).subtype ≤
             pCore p D :=
@@ -1420,7 +1422,7 @@ private theorem peterfalvi_appendixI_proposition_1_fitting_cyclic
           (P : Subgroup (fittingSubgroup D))
           (fittingSubgroup D).subtype
           (fittingSubgroup D).subtype_injective)).mpr hmap_cyclic
-  letI : IsZGroup (fittingSubgroup D) := hZ
+  let : IsZGroup (fittingSubgroup D) := hZ
   exact inferInstance
 
 private theorem peterfalvi_appendixI_proposition_1_fitting_fixedPointFree
@@ -1439,7 +1441,7 @@ private theorem peterfalvi_appendixI_proposition_1_fitting_fixedPointFree
     exact hx (orderOf_eq_one_iff.mp hxorder)
   obtain ⟨p, hp, hp_dvd_zx⟩ :=
     Nat.exists_prime_and_dvd (n := Nat.card (Subgroup.zpowers x)) hxcard
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   obtain ⟨y, hy_order⟩ :=
     exists_prime_orderOf_dvd_card' (G := Subgroup.zpowers x) p hp_dvd_zx
   let yF : fittingSubgroup D := y
@@ -1512,9 +1514,9 @@ private theorem peterfalvi_appendixI_proposition_1_fitting_quotient_commutative
     (hDodd : Odd (Nat.card D))
     (hFcyclic : IsCyclic (fittingSubgroup D)) :
     IsMulCommutative (D ⧸ fittingSubgroup D) := by
-  letI : Group.IsSolvable D := odd_order_theorem D hDodd
-  letI : IsCyclic (fittingSubgroup D) := hFcyclic
-  haveI : IsMulCommutative (fittingSubgroup D) :=
+  let : Group.IsSolvable D := odd_order_theorem D hDodd
+  let : IsCyclic (fittingSubgroup D) := hFcyclic
+  have : IsMulCommutative (fittingSubgroup D) :=
     IsCyclic.isMulCommutative
   have hcent_eq :
       Subgroup.centralizer (fittingSubgroup D : Set D) = fittingSubgroup D := by
@@ -1533,8 +1535,8 @@ private theorem peterfalvi_appendixI_proposition_1_fitting_quotient_commutative
       (mul_comm
         ((IsCyclic.mulAutMulEquiv (fittingSubgroup D)) alpha)
         ((IsCyclic.mulAutMulEquiv (fittingSubgroup D)) beta))
-  letI : IsMulCommutative (MulAut (fittingSubgroup D)) := hAutComm
-  letI : CommGroup (MulAut (fittingSubgroup D)) := IsMulCommutative.instCommGroup
+  let : IsMulCommutative (MulAut (fittingSubgroup D)) := hAutComm
+  let : CommGroup (MulAut (fittingSubgroup D)) := IsMulCommutative.instCommGroup
   let equivRange :
       D ⧸ fittingSubgroup D ≃* phi.range :=
     (QuotientGroup.quotientMulEquivOfEq hker.symm).trans
@@ -1568,10 +1570,6 @@ public theorem peterfalvi_appendixI_proposition_1
 
 end PFAppendixI
 end BenderSuzuki
-
-
-
-
 
 
 

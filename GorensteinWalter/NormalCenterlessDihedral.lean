@@ -4,6 +4,7 @@ public import GorensteinWalter.Classification
 public import GorensteinWalter.DihedralCore
 import FeitThompson.PCore.PPrimeCore
 
+
 /-!
 # Centralizers of normal centerless subgroups with dihedral Sylow 2-subgroups
 
@@ -42,8 +43,8 @@ public theorem centralizer_card_coprime_two_of_normal_centerless_dihedral
   obtain ⟨t, htord⟩ := exists_prime_orderOf_dvd_card' (G := C) 2 hdivC
   have htne : t ≠ (1 : C) := by
     intro ht
-    have : (1 : ℕ) = 2 := by simpa [ht] using htord
-    omega
+    subst t
+    simp at htord
   have ht2C : t ^ 2 = (1 : C) := by
     have htpow := pow_orderOf_eq_one t
     simpa [htord] using htpow
@@ -55,7 +56,7 @@ public theorem centralizer_card_coprime_two_of_normal_centerless_dihedral
   have htG2 : tG ^ 2 = (1 : G) := by
     simpa [tG] using congrArg (fun z : C => (z : G)) ht2C
   have htC : tG ∈ Subgroup.centralizer (H : Set G) := by
-    simpa [C, tG] using t.property
+    simp [C, tG]
   let P : Sylow 2 (↥H) := Classical.choice Sylow.nonempty
   let Pmap : Subgroup G := (P : Subgroup H).map H.subtype
   let T : Subgroup G := Subgroup.zpowers tG

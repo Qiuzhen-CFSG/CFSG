@@ -2,9 +2,10 @@ module
 
 public import BenderSuzuki.SE.Section7Signalizer
 public import BenderSuzuki.SE.Compat
-import FeitThompson.GroupAction.CoprimeHall
-import FeitThompson.SubgroupConj
+import Theory.GroupAction.CoprimeHall
+import Theory.GroupTheory.SubgroupConjugation
 import FeitThompson.Wielandt.FixedPointProduct
+
 
 /-!
 # Section 7: coprime-action generation for Lemma 7.5
@@ -71,7 +72,7 @@ public theorem lemma75_actor_commutator_eq
   have hWAnormal : WA.Normal := by
     exact (Subgroup.normal_subgroupOf_iff_le_normalizer
       (H := W) (K := A) (by simp [A])).mpr hAnormW
-  letI : WA.Normal := hWAnormal
+  let : WA.Normal := hWAnormal
   have hsupTop : WA ⊔ ZA = ⊤ := by
     rw [← Subgroup.subgroupOf_sup (A := W) (A' := Z) (B := A)
       (by simp [A]) (by simp [A])]
@@ -80,7 +81,7 @@ public theorem lemma75_actor_commutator_eq
     rw [Subgroup.commutator_le]
     intro x hxZ a haA
     let aA : A := ⟨a, haA⟩
-    have haTop : aA ∈ WA ⊔ ZA := by simpa [hsupTop]
+    have haTop : aA ∈ WA ⊔ ZA := by simp [hsupTop]
     rcases (Subgroup.mem_sup_of_normal_left.mp haTop) with
       ⟨wA, hwA, zA, hzA, hdecomp⟩
     have hwW : (wA : X) ∈ W := hwA
@@ -136,7 +137,7 @@ public theorem lemma75_actor_card_coprime
     simpa [WA, A, Z] using
       (Subgroup.normal_subgroupOf_sup_of_le_normalizer
         (H := Z) (N := W) hZnormW)
-  letI : WA.Normal := hWAnormal
+  let : WA.Normal := hWAnormal
   have hsupTop : ZA ⊔ WA = ⊤ := by
     rw [← Subgroup.subgroupOf_sup (A := Z) (A' := W) (B := A)
       (by simp [A, Z]) (by simp [A, Z])]
@@ -146,7 +147,7 @@ public theorem lemma75_actor_card_coprime
     apply top_unique
     intro x hx
     obtain ⟨a, rfl⟩ := (QuotientGroup.mk'_surjective WA) x
-    have ha : a ∈ ZA ⊔ WA := by simpa [hsupTop]
+    have ha : a ∈ ZA ⊔ WA := by simp [hsupTop]
     rcases (Subgroup.mem_sup_of_normal_right.mp ha) with ⟨z', hz', w', hw', hzw⟩
     refine Subgroup.mem_map.mpr ⟨z', hz', ?_⟩
     change q z' = q a
@@ -181,7 +182,7 @@ public theorem lemma75_pgroup_odd_card
     {X : Type u} [Group X] [Finite X] {W : Subgroup X} {p : ℕ}
     (hp : Nat.Prime p) (hpOdd : Odd p) (hWp : IsPGroup p W) :
     Odd (Nat.card W) := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   obtain ⟨n, hn⟩ := hWp.exists_card_eq
   rw [hn]
   exact hpOdd.pow
@@ -192,7 +193,7 @@ public theorem lemma75_pgroup_coprime_card
     (hp : Nat.Prime p) (hWp : IsPGroup p W)
     (hpcop : Nat.Coprime p (Nat.card T)) :
     Nat.Coprime (Nat.card W) (Nat.card T) := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   obtain ⟨n, hn⟩ := hWp.exists_card_eq
   rw [hn]
   exact hpcop.pow_left n
@@ -220,7 +221,7 @@ public theorem lemma75_theta_p_coprime_card
     {X : Type u} [Group X] [Finite X] {p : ℕ}
     (hp : Nat.Prime p) (F : Subgroup X) :
     Nat.Coprime p (Nat.card (corollary64Theta p F)) := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let O : Subgroup X := corollary64OddCore F
   let T : Subgroup X := corollary64Theta p F
   have hcardT : Nat.card T = Nat.card (pPrimeCore p O) := by
@@ -394,8 +395,8 @@ private theorem lemma75_minimal_elementary
       rw [hrho]
       rfl
     simp [hJfix]
-  · letI : IsMulCommutative V := IsElementaryAbelian.toIsMulCommutative r
-    letI : CommGroup V := IsMulCommutative.instCommGroup
+  · let : IsMulCommutative V := IsElementaryAbelian.toIsMulCommutative r
+    let : CommGroup V := IsMulCommutative.instCommGroup
     have hOnormal : O.Normal := by infer_instance
     have hOinv : IsInvariant H V O := by
       simpa [O] using lemma75ActorOrbit_isInvariant (H := H) (V := V) K
@@ -421,7 +422,7 @@ private theorem lemma75_minimal_elementary
         have hh : h ∈ J ⊔ Subgroup.zpowers z := by
           rw [hgen]
           exact Subgroup.mem_top h
-        letI : J.Normal := hJnormal
+        let : J.Normal := hJnormal
         obtain ⟨j, hjJ, k, hkZ, hjk⟩ :=
           Subgroup.mem_sup_of_normal_left.mp hh
         let jJ : J := ⟨j, hjJ⟩
@@ -448,12 +449,12 @@ private theorem lemma75_generated_map_subtype_le
     (fixedPointSubgroup J N ⊔
         lemma75JOrbit (H := H) (V := N) J z).map N.subtype ≤
       fixedPointSubgroup J V ⊔ lemma75JOrbit J z := by
-  letI : IsInvariant J V N :=
+  let : IsInvariant J V N :=
     ⟨fun j v =>
       IsInvariant.invariant (A := H) (G := V) (H := N) (j : H) v⟩
   rw [Subgroup.map_sup]
   apply sup_le
-  · rw [fixedPointSubgroup_map_subtype_eq_inf]
+  · rw [fixedPoints_subgroup_map_subtype_eq_inf]
     exact inf_le_right.trans le_sup_left
   · intro x hx
     rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
@@ -495,15 +496,15 @@ private theorem lemma75_generated_map_quotient_eq
     (hsolv : Group.IsSolvable V)
     (hcopJ : Nat.Coprime (Nat.card J) (Nat.card V))
     (hcopZ : Nat.Coprime (Nat.card (Subgroup.zpowers z)) (Nat.card V)) :
-    letI : IsInvariant H V N := hNinv
+    let : IsInvariant H V N := hNinv
     letI : MulDistribMulAction H (V ⧸ N) :=
       quotientMulDistribMulAction (A := H) (G := V) N hNinv
     (fixedPointSubgroup J V ⊔ lemma75JOrbit J z).map
         (QuotientGroup.mk' N) =
       fixedPointSubgroup J (V ⧸ N) ⊔
         lemma75JOrbit (H := H) (V := V ⧸ N) J z := by
-  letI : IsInvariant H V N := hNinv
-  letI : MulDistribMulAction H (V ⧸ N) :=
+  let : IsInvariant H V N := hNinv
+  let : MulDistribMulAction H (V ⧸ N) :=
     quotientMulDistribMulAction (A := H) (G := V) N hNinv
   let q : V →* V ⧸ N := QuotientGroup.mk' N
   let hJinv : IsInvariant J V N := by
@@ -518,15 +519,15 @@ private theorem lemma75_generated_map_quotient_eq
       fixedPointSubgroup J (V ⧸ N) =
         (fixedPointSubgroup J V).map q := by
     simpa [q] using
-      (fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
-        (G := V) (A := J) hsolv hcopJ (∅ : Set Nat.Primes) N hJinv)
+      (fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
+        (G := V) (A := J) hsolv hcopJ N hJinv)
   have hZfix :
       fixedPointSubgroup (Subgroup.zpowers z) (V ⧸ N) =
         (fixedPointSubgroup (Subgroup.zpowers z) V).map q := by
     simpa [q] using
-      (fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
+      (fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
         (G := V) (A := Subgroup.zpowers z) hsolv hcopZ
-          (∅ : Set Nat.Primes) N hZinv)
+          N hZinv)
   have hLmap : (lemma75JOrbit (H := H) (V := V) J z).map q =
       lemma75JOrbit (H := H) (V := V ⧸ N) J z := by
     apply le_antisymm
@@ -607,7 +608,7 @@ private theorem lemma75_generation_of_solvable_coprime
           N.Normal → IsInvariant H V' N → N ≠ ⊥ → N = ⊤
     · rcases Wielandt.chiefFactor_elementaryAbelian_or_subsingleton
           hsolv' hminv with hsub | ⟨hnontriv, r, hr, hElem⟩
-      · letI : Subsingleton V' := hsub
+      · let : Subsingleton V' := hsub
         have hfix : fixedPointSubgroup J V' = ⊤ := by
           apply top_unique
           intro x _hx
@@ -615,16 +616,16 @@ private theorem lemma75_generation_of_solvable_coprime
           intro a
           exact Subsingleton.elim (a • x) x
         simp [hfix]
-      · letI : Nontrivial V' := hnontriv
-        letI : Fact r.Prime := ⟨hr⟩
-        letI : IsElementaryAbelian r V' := hElem
+      · let : Nontrivial V' := hnontriv
+        let : Fact r.Prime := ⟨hr⟩
+        let : IsElementaryAbelian r V' := hElem
         exact lemma75_minimal_elementary (H := H) (V := V') (r := r)
           J z hz hJnormal hgen hcomm hminv
-    · push_neg at hminv
+    · push Not at hminv
       rcases hminv with ⟨N, hNnormal, hNinv, hNne_bot, hNne_top⟩
-      letI : N.Normal := hNnormal
-      letI : IsInvariant H V' N := hNinv
-      letI : MulDistribMulAction H (V' ⧸ N) :=
+      let : N.Normal := hNnormal
+      let : IsInvariant H V' N := hNinv
+      let : MulDistribMulAction H (V' ⧸ N) :=
         quotientMulDistribMulAction (A := H) (G := V') N hNinv
       have hNlt : Nat.card N < n := by
         have hN_lt_top : N < ⊤ := lt_top_iff_ne_top.mpr hNne_top
@@ -767,7 +768,7 @@ public theorem lemma75_II146_specialized
       (Subgroup.mem_zpowers z)⟩
   have hAT : A ≤ Subgroup.normalizer (T : Set X) := by
     simpa [A] using lemma75_actor_le_normalizer hWTnorm hzTnorm
-  letI : Subgroup.Normalizes A T := ⟨hAT⟩
+  let : Subgroup.Normalizes A T := ⟨hAT⟩
   have hzA : IsInvolution zA := by
     constructor
     · intro h
@@ -892,8 +893,7 @@ public theorem lemma75_le_of_II146Conclusion
   rw [hgen]
   apply sup_le hCTW
   refine iSup_le ?_
-  intro w
-  intro x hx
+  intro w x hx
   rcases Subgroup.mem_map.mp hx with ⟨c, hc, rfl⟩
   change (w : X) * c * (w : X)⁻¹ ∈ E
   exact E.mul_mem (E.mul_mem (hWE w.property) (hCTz hc))

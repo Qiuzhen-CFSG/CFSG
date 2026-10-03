@@ -2,7 +2,8 @@ module
 
 public import GorensteinWalter.Classification
 import FeitThompson.BGsection7.Defs
-import FeitThompson.GroupAction.CoprimeHall
+import Theory.GroupAction.CoprimeHall
+
 
 /-!
 # Fixed-point-free quotients of odd solvable groups
@@ -28,7 +29,7 @@ public theorem fixedPointFree_quotient_of_odd_solvable_and_fixedPoints_le
     (htnormK : t ∈ Subgroup.normalizer (K : Set X))
     (htnormD : t ∈ Subgroup.normalizer (D : Set X))
     (ht : IsInvolution t)
-    (hKsolv : IsSolvable K)
+    (hKsolv : Group.IsSolvable K)
     (hKodd : Odd (Nat.card K))
     (hfixed : K ⊓ Subgroup.centralizer ({t} : Set X) ≤ D) :
     ∀ k : K,
@@ -57,8 +58,8 @@ public theorem fixedPointFree_quotient_of_odd_solvable_and_fixedPoints_le
       fixedPointSubgroup A (K ⧸ DK) =
         (fixedPointSubgroup A K).map (QuotientGroup.mk' DK) := by
     simpa using
-      fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
-        (G := K) (A := A) hKsolv hcoprime (∅ : Set Nat.Primes)
+      fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
+        (G := K) (A := A) hKsolv hcoprime
         DK hDKinv
   let a : A := ⟨t, Subgroup.mem_zpowers t⟩
   intro k hk

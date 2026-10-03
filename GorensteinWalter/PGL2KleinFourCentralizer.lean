@@ -232,7 +232,7 @@ public theorem pgl2_no_kleinFour_centralizes_odd_cyclic
       have htne : t ≠ 1 := by
         intro htone
         apply htJ
-        simpa [htone] using J.one_mem
+        simp [htone]
       let : IsKleinFour V := hVK
       have htsq : t * t = 1 :=
         congrArg Subtype.val (IsKleinFour.mul_self (⟨t, htV⟩ : V))

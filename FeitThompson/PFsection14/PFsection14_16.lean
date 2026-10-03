@@ -167,7 +167,7 @@ public def section14_theorem_14_16_case_b_norm_one_remainder_data
     ∃ ε : Fin q → Fin p → ℤ,
       (∀ i j, ε i j = 1 ∨ ε i j = -1) ∧
         ∃ χ : Section1.ClassFunction G,
-          Theory.Character.IsVirtualCharacter χ ∧
+          IsVirtualCharacter χ ∧
             Section1.scalarProduct G χ χ = 1 ∧
             βLτ =
               (∑ i : Fin q, ∑ j : Fin p, ((ε i j : ℂ) • η i j)) - χ ∧
@@ -183,7 +183,7 @@ public def section14_theorem_14_16_case_b_post_coefficients_data
     ∃ ε : Fin q → Fin p → ℤ,
       (∀ i j, ε i j = 1 ∨ ε i j = -1) ∧
         ∃ χ : Section1.ClassFunction G,
-          Theory.Character.IsVirtualCharacter χ ∧
+          IsVirtualCharacter χ ∧
             Section1.scalarProduct G χ χ = 1 ∧
             βLτ =
               (∑ i : Fin q, ∑ j : Fin p, ((ε i j : ℂ) • η i j)) - χ ∧
@@ -711,7 +711,7 @@ public theorem section14_tauL_betaL_self_scalar_of_hypothesis_14_3
       h76 hDadeAgree h78
     rw [hnorm]
     norm_num
-  have hβVirt : Theory.Character.IsVirtualCharacter (τL βL) := by
+  have hβVirt : IsVirtualCharacter (τL βL) := by
     exact section14_typeI_core_ltr_beta_tau_virtual
       ⟨_hHL, _hPunct, _h52, _hCoh, _hExt, _hφmem, _hφirr, _hφdeg,
         hβτ, ⟨R, T, h76, hDadeAgree, h78, _hhalf⟩⟩
@@ -816,7 +816,7 @@ public theorem section14_tauL1_phi_diff_conjugate_betaL_tau_scalar_of_hypothesis
   have hφchar : Section1.IsCharacter φ :=
     Section12.isCharacter_of_isIrreducibleCharacterOnGroup hφirr
   have hrel_ne : (H.relIndex L : ℂ) ≠ 0 := by
-    haveI : (H.subgroupOf L).FiniteIndex := inferInstance
+    have : (H.subgroupOf L).FiniteIndex := inferInstance
     have hrel : H.relIndex L ≠ 0 := by
       simpa [Subgroup.relIndex] using
         (Subgroup.FiniteIndex.index_ne_zero (H := H.subgroupOf L))
@@ -897,7 +897,7 @@ public theorem section14_hypothesis_14_10_data_of_hypothesis_14_3
       _hVcard, _hSfam, _hTfam, _hDadeS, _hDadeT, _hNotation, _hDadeDiff,
       _hZeroDegree, _hConjIndex, _hConjBetaTau, hChoice,
       hMin, _hFourSixS, _hFourSixT⟩
-  haveI : IsMinCE G := hMin
+  have : IsMinCE G := hMin
   rcases h143 with
     ⟨hLmax, hNormUleL, hHMF, hTypeI, hDadeL, hPunctL,
       h52L, hExtL, hφmem, hφirr, hφdeg, _hβS, _hβT,
@@ -978,7 +978,7 @@ public theorem section14_theorem_14_16_case_b_l_support_coherence_source_bridge
         ∃ ε : Fin q → Fin p → ℤ,
           (∀ i j, ε i j = 1 ∨ ε i j = -1) ∧
             ∃ χ : Section1.ClassFunction G,
-              Theory.Character.IsVirtualCharacter χ ∧
+              IsVirtualCharacter χ ∧
                 Section1.scalarProduct G χ χ = 1 ∧
                 τL βL =
                   (∑ i : Fin q, ∑ j : Fin p,
@@ -994,7 +994,7 @@ public theorem section14_theorem_14_16_case_b_l_support_coherence_source_bridge
       _hUcard, _hVcard, _hSfam, _hTfam, _hDadeS, _hDadeT,
       _hNotation, _hDadeDiff, _hZeroDegree, _hConjIndex, _hConjBetaTau,
       _hChoice, hMin, _hFourSixS, _hFourSixT⟩
-  haveI : IsMinCE G := hMin
+  have : IsMinCE G := hMin
   rcases heta with
     ⟨ωNat0, ηNat0, μ, ν, μsum, νsum, δ, δ', σ, hnotation, hηFin⟩
   have hnotation_saved := hnotation
@@ -1019,10 +1019,10 @@ public theorem section14_theorem_14_16_case_b_l_support_coherence_source_bridge
       section14_typeI_core_ltr_sideData L H Lfam τL τL₁ φ βL :=
     section14_typeI_core_ltr_sideData_of_hypothesis_14_3
       Smax Tmax L H P Q U W1 W2 Lfam RL τL τL₁ φ μ01 ν10 βS βT βL h143
-  have hβVirt : Theory.Character.IsVirtualCharacter (τL βL) :=
+  have hβVirt : IsVirtualCharacter (τL βL) :=
     section14_typeI_core_ltr_beta_tau_virtual hside
   have hσωVirt :
-      ∀ i j, Theory.Character.IsVirtualCharacter (σ (ωFin i j)) := by
+      ∀ i j, IsVirtualCharacter (σ (ωFin i j)) := by
     intro i j
     exact hσ.2.1 (ωFin i j)
       (Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup
@@ -1173,16 +1173,16 @@ public theorem section14_theorem_14_16_case_b_l_support_coherence_source_bridge
     ext g
     simp [Sigma, Sigmaσ, hη_sigma]
   let χ : Section1.ClassFunction G := Sigma - τL βL
-  have hSigmaσVirt : Theory.Character.IsVirtualCharacter Sigmaσ := by
+  have hSigmaσVirt : IsVirtualCharacter Sigmaσ := by
     dsimp [Sigmaσ]
     exact section14_int_weighted_sigma_double_sum_isVirtualCharacter
       (W1 := W1) (W2 := W2) (W := W)
       ⟨hσIso, _hσVirt, _hσInd, _hσClass, hσprincipal, _hσAgree, _hσVanish⟩
       (fun i j => hωFin.irreducible i j) coeff
-  have hSigmaVirt : Theory.Character.IsVirtualCharacter Sigma := by
+  have hSigmaVirt : IsVirtualCharacter Sigma := by
     rw [hSigma_eq_sigma]
     exact hSigmaσVirt
-  have hχVirt : Theory.Character.IsVirtualCharacter χ := by
+  have hχVirt : IsVirtualCharacter χ := by
     dsimp [χ]
     exact Section3.isVirtualCharacter_sub hSigmaVirt hβVirt
   let sigmaFamily : Fin q × Fin p → Section1.ClassFunction G := fun ij =>

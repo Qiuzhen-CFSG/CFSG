@@ -2,6 +2,7 @@ module
 
 public import FeitThompson.BGsection1.theorem_1_11
 
+
 open scoped Pointwise IsMulCommutative commutatorElement
 
 public section

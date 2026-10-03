@@ -1,7 +1,7 @@
 module
 
 public import FeitThompson.PFsection12.Basic
-import FeitThompson.GroupAction.MinimalNormal
+import Theory.GroupAction.MinimalNormal
 import FeitThompson.PFsection5.RealVirtualParity
 import FeitThompson.PFsection6.PFsection6_5_a
 import FeitThompson.PFsection7.PFsection7_3
@@ -51,7 +51,7 @@ public theorem theorem_12_2_a
   intro hhyp
   rcases hhyp with ⟨_hmax, hMF, hTypeI, hS, hτ⟩
   rcases hTypeI with ⟨U, U1, U0, hTypeF, _hTypeI_extra⟩
-  haveI : (H.subgroupOf L).Normal := by
+  have : (H.subgroupOf L).Normal := by
     simpa using section16MFSubgroup_subgroupOf_normal hMF
   have hchoice : ∀ χ : S,
       ∃ SX : Finset (Section1.ClassFunction L),
@@ -144,7 +144,7 @@ public theorem theorem_12_2_b
     constituentFamily_hypothesis_5_2_a_of_parts
       L H S SX Rade τ SXall hhyp hodd hsets hmem h52aS
   have hvirtAll : ∀ φ : Section1.ClassFunction L, φ ∈ SXall →
-      Theory.Character.IsVirtualCharacter φ := by
+      IsVirtualCharacter φ := by
     intro φ hφ
     exact Section5.isVirtualCharacter_of_isCharacter
       (isCharacter_of_isIrreducibleCharacterOnGroup

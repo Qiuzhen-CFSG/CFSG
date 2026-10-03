@@ -34,7 +34,7 @@ public theorem normalizer_eq_of_nontrivial_normal_in_coatom
       exact hA.1 hAtop
   apply le_antisymm
   · by_cases hEq : A = Subgroup.normalizer (K : Set G)
-    · simpa [hEq]
+    · simp [hEq]
     · have hlt : A < Subgroup.normalizer (K : Set G) :=
         lt_of_le_of_ne hAleN hEq
       exact False.elim (hNne (hA.2 _ hlt))

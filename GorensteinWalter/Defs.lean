@@ -4,6 +4,7 @@ public import GorensteinWalter.Classification
 public import Mathlib.GroupTheory.IsSubnormal
 public import FeitThompson.Fitting.Core
 
+
 /-!
 # Common subgroup and involution-centralizer definitions
 -/
@@ -38,6 +39,16 @@ universe u
 @[expose] public def fittingSubgroupOf {G : Type*} [Group G]
     (H : Subgroup G) : Subgroup G :=
   (fittingSubgroup H).map H.subtype
+
+/-- The Fitting subgroup of a finite subgroup is nilpotent, viewed in the
+ambient group. -/
+public theorem fittingSubgroupOf_isNilpotent
+    {G : Type*} [Group G] [Finite G] (H : Subgroup G) :
+    Group.IsNilpotent (↥(fittingSubgroupOf H)) := by
+  change Group.IsNilpotent (↥((fittingSubgroup (↥H)).map H.subtype))
+  have : Group.IsNilpotent (fittingSubgroup (↥H)) := by infer_instance
+  exact Group.nilpotent_of_mulEquiv
+    (Subgroup.equivMapOfInjective (fittingSubgroup (↥H)) H.subtype H.subtype_injective)
 
 /-- Normality of `K` inside `H`, written without changing ambient types. -/
 @[expose] public def IsNormalIn {G : Type*} [Group G]

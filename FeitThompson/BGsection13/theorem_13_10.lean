@@ -1,9 +1,10 @@
 module
 
 public import FeitThompson.BGsection13.theorem_13_9
-import FeitThompson.HallSubgroups.Conjugacy
+public import Theory.GroupTheory.Hall.Conjugacy
 import Mathlib.Data.Finset.NatDivisors
 import Mathlib.GroupTheory.Schreier
+
 
 open scoped Pointwise
 
@@ -84,7 +85,7 @@ private theorem section13_theorem_13_10_exists_regular_tau3_sylow
       simpa [hcardE3sub, subgroupPrimeSet] using hqE₃)
   have hQbot : (section10AmbientSylowSubgroup E₃ S : Subgroup G) ≠ ⊥ := by
     intro hbot
-    haveI : Fact q.val.Prime := ⟨q.property⟩
+    have : Fact q.val.Prime := ⟨q.property⟩
     have hSbot : (S : Subgroup E₃) = ⊥ :=
       (Subgroup.map_eq_bot_iff_of_injective
         (H := (S : Subgroup E₃)) (f := E₃.subtype) E₃.subtype_injective).mp
@@ -94,7 +95,7 @@ private theorem section13_theorem_13_10_exists_regular_tau3_sylow
   have hQ_E3 : (section10AmbientSylowSubgroup E₃ S : Subgroup G) ≤ E₃ :=
     section13_ambient_sylow_le_base (G := G) E₃ S
   have hQcyc : IsCyclic (section10AmbientSylowSubgroup E₃ S) := by
-    letI : IsCyclic E₃ := hE3cyc
+    let : IsCyclic E₃ := hE3cyc
     exact Subgroup.isCyclic_of_le hQ_E3
   have hQq : IsPGroup q.val (section10AmbientSylowSubgroup E₃ S : Subgroup G) := by
     change IsPGroup q.val ((S : Subgroup E₃).map E₃.subtype)
@@ -260,7 +261,7 @@ private theorem section13_theorem_13_10_beta_Qstar_data
           subgroupCentralizerIn Qstar P = ⊥ ∧
             Subgroup.normalizer (Qstar : Set G) ≤ M := by
   classical
-  haveI : Fact qstar.val.Prime := ⟨qstar.property⟩
+  have : Fact qstar.val.Prime := ⟨qstar.property⟩
   let C : Subgroup G := subgroupCentralizerIn (section10Msigma M) Q
   have hC_E₃_le_C_Q :
       subgroupCentralizerIn (section10Msigma M) E₃ ≤ C := by
@@ -440,7 +441,7 @@ private theorem section13_theorem_13_10_not_beta_Qstar_data
           subgroupCentralizerIn Qstar P = ⊥ ∧
             Subgroup.normalizer (Qstar : Set G) ≤ M := by
   classical
-  haveI : Fact qstar.val.Prime := ⟨qstar.property⟩
+  have : Fact qstar.val.Prime := ⟨qstar.property⟩
   let C : Subgroup G := subgroupCentralizerIn (section10Msigma M) Q
   let K : Subgroup G := section10Msigma M
   have hC_E₃_le_C_Q :

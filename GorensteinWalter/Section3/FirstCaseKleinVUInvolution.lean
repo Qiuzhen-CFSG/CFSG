@@ -4,6 +4,7 @@ public import GorensteinWalter.Section3.FirstCaseKleinData
 public import GorensteinWalter.Section2.Theorem26
 import Mathlib.Tactic
 
+
 /-!
 # Involutions in the Klein-four-by-odd kernel
 -/

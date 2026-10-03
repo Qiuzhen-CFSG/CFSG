@@ -34,7 +34,7 @@ public theorem centralizer_odd_rotation_le_rotationSubgroup
   intro x hx
   rcases x with j | j
   · exact Subgroup.mem_zpowers_iff.mpr ⟨j.val, by
-      simpa [DihedralGroup.r_one_pow, ZMod.natCast_zmod_val]⟩
+      simp⟩
   · exfalso
     obtain ⟨a, ha1⟩ := Subgroup.ne_bot_iff_exists_ne_one.mp hAne
     have haA : (a : DihedralGroup n) ∈ A := a.2
@@ -80,7 +80,7 @@ public theorem centralizer_odd_rotation_le_rotationSubgroup
       exact h2i
     have hsq : (DihedralGroup.r i) ^ 2 = 1 := by
       rw [DihedralGroup.r_pow]
-      simpa [h2i']
+      simp [h2i']
     exact hnot2 hsq
 
 public theorem mem_sup_zpowers_of_involution_inverts
@@ -305,7 +305,7 @@ public theorem center_dihedral_odd_eq_one
       exact h2i
     have hsq : (DihedralGroup.r i) ^ 2 = 1 := by
       rw [DihedralGroup.r_pow]
-      simpa [h2i']
+      simp [h2i']
     have hord2 : orderOf (DihedralGroup.r i) ∣ 2 :=
       orderOf_dvd_of_pow_eq_one (by simpa [pow_two] using hsq)
     have hord1 : orderOf (DihedralGroup.r i) = 1 := by

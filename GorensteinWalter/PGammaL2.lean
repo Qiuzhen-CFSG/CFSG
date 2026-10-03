@@ -78,7 +78,7 @@ public def pGammaL2QuotientPGL2
   let q : PGammaL2 K →* (K ≃+* K) := SemidirectProduct.rightHom
   have hNker : N = q.ker :=
     SemidirectProduct.range_inl_eq_ker_rightHom
-  letI : N.Normal := hNker ▸ inferInstance
+  let : N.Normal := hNker ▸ inferInstance
   exact (QuotientGroup.quotientMulEquivOfEq hNker).trans
     (QuotientGroup.quotientKerEquivOfRightInverse
       (φ := q)

@@ -1,7 +1,7 @@
 module
 
 public import BenderSuzuki.MatrixGroups.PSL2
-public import FeitThompson.ElementaryAbelian
+public import Theory.ElementaryAbelian.VectorSpace
 import Glauberman.DicksonUnipotent
 import Mathlib.Algebra.CharP.CharAndCard
 import Mathlib.Algebra.BigOperators.Ring.Nat
@@ -194,7 +194,6 @@ public theorem huppert_II_8_2_a_sylow_equiv_additive
                 rfl
           exact Nat.card_congr slEquivDetKer
         _ = Nat.card F * (Nat.card F ^ 2 - 1) := hker
-
     have hcard_center :
         Nat.card
             (Subgroup.center

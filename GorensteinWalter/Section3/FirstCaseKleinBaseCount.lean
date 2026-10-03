@@ -4,6 +4,7 @@ public import GorensteinWalter.Section3.FirstCaseHhatInvolutionCount
 public import GorensteinWalter.Section3.FirstCaseOrderInfra
 import Mathlib.Tactic
 
+
 noncomputable section
 namespace GorensteinWalter
 universe u

@@ -9,10 +9,11 @@ import BenderSuzuki.MatrixGroups.PSL28Facts
 import BenderSuzuki.External.Huppert.III.lemma_1_3
 public import BenderSuzuki.RightNearField.Linear
 
+
 namespace BenderSuzuki
 namespace PFchapter2
 
-open PFchapter1section1 PFAppendixII PFAppendixIII MatrixGroups
+open PFchapter1section1 PFAppendixII PFAppendixIII _root_.BenderSuzuki.MatrixGroups
 open PFchapter1section2 PFchapter1section3
 open scoped Pointwise commutatorElement
 
@@ -34,7 +35,7 @@ private theorem cyclic_order_nine_mulAut_eq_inv
     (hcyc : IsCyclic C) (alpha : MulAut C)
     (halpha_sq : alpha ^ 2 = 1) (halpha_ne : alpha ≠ 1) :
     ∀ x : C, alpha x = x⁻¹ := by
-  letI : IsCyclic C := hcyc
+  let : IsCyclic C := hcyc
   let u : (ZMod (Nat.card C))ˣ := IsCyclic.mulAutMulEquiv C alpha
   have hu_sq : u ^ 2 = 1 := by
     dsimp [u]
@@ -50,7 +51,7 @@ private theorem cyclic_order_nine_mulAut_eq_inv
     apply (IsCyclic.mulAutMulEquiv C).injective
     simpa [u] using hu
   have hu_neg : u = -1 := hu_cases.resolve_left hu_ne
-  letI : IsMulCommutative C := IsCyclic.isMulCommutative
+  let : IsMulCommutative C := IsCyclic.isMulCommutative
   let invAut : MulAut C :=
     { toFun := fun x ↦ x⁻¹
       invFun := fun x ↦ x⁻¹
@@ -105,7 +106,7 @@ private theorem cyclic_order_nine_fixed_subgroup_eq
     (hq_not_cent_L : q ∉ Subgroup.centralizer (L : Set G)) :
     ∀ x : G, x ∈ L → q * x * q⁻¹ = x → x ∈ Z := by
   classical
-  letI : CommGroup L := hLcyc.commGroup
+  let : CommGroup L := hLcyc.commGroup
   let qN : Subgroup.normalizer (L : Set G) := ⟨q, hq_norm_L⟩
   let alpha : MulAut L := L.normalizerMonoidHom qN
   let f : L →* L :=
@@ -185,7 +186,7 @@ private theorem chapter2_claim15_cube_eq_one_iff_mem_cyclic_order_three_subgroup
     (hAcard : Nat.card A = 3 ∨ Nat.card A = 9)
     (hZcard : Nat.card Z = 3) (hZ_le_A : Z ≤ A) :
     ∀ x : G, x ∈ A → (x ^ 3 = 1 ↔ x ∈ Z) := by
-  letI : CommGroup A := hAcyc.commGroup
+  let : CommGroup A := hAcyc.commGroup
   let cubeKer : Subgroup A := (powMonoidHom 3 : A →* A).ker
   have hZsub_le : Z.subgroupOf A ≤ cubeKer := by
     intro z hzZ
@@ -227,7 +228,7 @@ private theorem chapter2_claim15_commutator_mem_cyclic_order_three_subgroup
     (hZ_le_CP : Z ≤ Subgroup.centralizer (P : Set G)) :
     ∀ a : G, a ∈ A → ∀ q : G, q ∈ P → ⁅a, q⁆ ∈ Z := by
   classical
-  letI : CommGroup A := hAcyc.commGroup
+  let : CommGroup A := hAcyc.commGroup
   intro a haA q hqP
   let qN : Subgroup.normalizer (A : Set G) := ⟨q, hP_norm_A hqP⟩
   let alpha : MulAut A := A.normalizerMonoidHom qN
@@ -332,8 +333,8 @@ private theorem chapter2_claim15_commutator_mem_sup_cyclic_factors
     hW_le_CL.trans (centralizer_le_normalizer (R := L))
   have hAcomm : IsMulCommutative (L ⊔ W : Subgroup G) := by
     rw [Subgroup.sup_eq_closure]
-    letI : IsCyclic L := hLcyc
-    letI : IsCyclic W := hWcyc
+    let : IsCyclic L := hLcyc
+    let : IsCyclic W := hWcyc
     exact Subgroup.isMulCommutative_closure (by
       intro x hx y hy
       rcases hx with hxL | hxW
@@ -344,8 +345,8 @@ private theorem chapter2_claim15_commutator_mem_sup_cyclic_factors
         · exact (Subgroup.mem_centralizer_iff.mp (hW_le_CL hxW) y hyL).symm
         · exact setLike_mul_comm hxW hyW)
   let A : Subgroup G := L ⊔ W
-  letI : IsMulCommutative A := by simpa [A] using hAcomm
-  letI : CommGroup A := IsMulCommutative.instCommGroup
+  let : IsMulCommutative A := by simpa [A] using hAcomm
+  let : CommGroup A := IsMulCommutative.instCommGroup
   have hP_norm_A : P ≤ Subgroup.normalizer (A : Set G) := by
     intro q hqP
     have hqL := hP_norm_L hqP
@@ -980,30 +981,6 @@ private theorem chapter2_claim15_sylow_card_from_factorization
   rw [hufac]
   simp
 
-private theorem chapter2_claim15_natCard_sup_eq_mul_of_disjoint_of_le_normalizer
-    {G : Type*} [Group G] (A B : Subgroup G)
-    (hnormal : B ≤ Subgroup.normalizer (A : Set G))
-    (hdisjoint : Disjoint A B) :
-    Nat.card (A ⊔ B : Subgroup G) = Nat.card A * Nat.card B := by
-  let toSup : A × B → ↥(A ⊔ B) := fun z =>
-    ⟨(z.1 : G) * (z.2 : G),
-      Subgroup.mul_mem_sup z.1.property z.2.property⟩
-  have hinj : Function.Injective toSup := by
-    intro x y hxy
-    apply Subgroup.mul_injective_of_disjoint hdisjoint
-    exact congrArg Subtype.val hxy
-  have hsurj : Function.Surjective toSup := by
-    intro z
-    have hz : (z : G) ∈ (A : Set G) * (B : Set G) := by
-      rw [← Subgroup.coe_mul_of_right_le_normalizer_left A B hnormal]
-      exact z.property
-    rcases hz with ⟨a, ha, b, hb, hab⟩
-    exact ⟨(⟨a, ha⟩, ⟨b, hb⟩), Subtype.ext hab⟩
-  calc
-    Nat.card (A ⊔ B : Subgroup G) = Nat.card (A × B) :=
-      Nat.card_congr (Equiv.ofBijective toSup ⟨hinj, hsurj⟩).symm
-    _ = Nat.card A * Nat.card B := Nat.card_prod A B
-
 private theorem chapter2_claim15_normal_of_index_eq_prime_of_isPGroup
     {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p.Prime]
     (hGp : IsPGroup p G) (A : Subgroup G) (hindex : A.index = p) :
@@ -1012,7 +989,7 @@ private theorem chapter2_claim15_normal_of_index_eq_prime_of_isPGroup
   have hn_ne : n ≠ 0 := by
     intro hn
     have hcard_one : Nat.card G = 1 := by simpa [hn] using hGcard
-    haveI : Subsingleton G := (Nat.card_eq_one_iff_unique.mp hcard_one).1
+    have : Subsingleton G := (Nat.card_eq_one_iff_unique.mp hcard_one).1
     have hAtop : A = ⊤ := by
       apply le_antisymm le_top
       intro x _hx
@@ -1508,7 +1485,7 @@ private theorem chapter2_claim15_P_not_centralizes_L_source_interface
       ⟨hL_le_R2 hxL, hL_le_CP hxL⟩
     rw [hR2_inf_CP] at hxInf
     exact hxInf
-  letI : IsCyclic L := hL_cyclic
+  let : IsCyclic L := hL_cyclic
   obtain ⟨g, hgorder⟩ := IsCyclic.exists_ofOrder_eq_natCard (α := L)
   rw [hL_order] at hgorder
   have hgcube : (g : G) ^ 3 = 1 := hXcube g (hL_le_X g.property)
@@ -1610,7 +1587,7 @@ private theorem chapter2_claim15_LV_index_source_interface
     (hLV_le_R2 : L ⊔ V ≤ R2) :
     ((L ⊔ V).subgroupOf R2).index = 3 := by
   classical
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   have hP_norm_W : P ≤ Subgroup.normalizer (W : Set G) := by
     rcases (claim_1 H D Q K V W Q0 S Q1 P t s p hch).1 with
       ⟨_hW_le_V, hP_le_V, hW_norm, _hdisjoint, _hWP⟩
@@ -1632,7 +1609,7 @@ private theorem chapter2_claim15_LV_index_source_interface
       rw [← Subgroup.coe_mul_of_right_le_normalizer_left W P hP_norm_W, hWP]
       exact hxV
     rcases hxProd with ⟨w, hwW, q, hqP, hwq⟩
-    letI : CommGroup L := hL_cyclic.commGroup
+    let : CommGroup L := hL_cyclic.commGroup
     have hxCL : x ∈ Subgroup.centralizer (L : Set G) := by
       rw [Subgroup.mem_centralizer_iff]
       intro y hyL
@@ -1667,10 +1644,10 @@ private theorem chapter2_claim15_LV_index_source_interface
     exact Subgroup.disjoint_def.mp hdisjoint_L_W hxL hxW
   have hVcard : Nat.card V = Nat.card W * 3 := by
     rw [← hWP,
-      chapter2_claim15_natCard_sup_eq_mul_of_disjoint_of_le_normalizer
+            PFchapter1section1.natCard_sup_eq_mul_of_disjoint_of_le_normalizer
         W P hP_norm_W hdisjoint_W_P, hPcard]
   have hLVcard : Nat.card (L ⊔ V : Subgroup G) = 27 * Nat.card W := by
-    rw [chapter2_claim15_natCard_sup_eq_mul_of_disjoint_of_le_normalizer
+    rw [PFchapter1section1.natCard_sup_eq_mul_of_disjoint_of_le_normalizer
       L V hV_norm hdisjoint_L_V, hL_order, hVcard]
     ring
   rcases hR2s with ⟨R2s, hR2s⟩
@@ -1733,7 +1710,7 @@ private theorem chapter2_claim15_center_LV_source_interface
     (L ⊔ V) ⊓ Subgroup.centralizer ((L ⊔ V : Subgroup G) : Set G) =
       Z1 ⊔ Sigma := by
   classical
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   have hZ1_le_L : Z1 ≤ L := by
     rw [hZ1]
     apply Subgroup.zpowers_le.mpr
@@ -1763,7 +1740,7 @@ private theorem chapter2_claim15_center_LV_source_interface
   have hW_norm_L : W ≤ Subgroup.normalizer (L : Set G) :=
     hW_cent.trans (chapter2_claim15_centralizer_le_normalizer L)
   have hZ1_le_CL : Z1 ≤ Subgroup.centralizer (L : Set G) := by
-    letI : CommGroup L := hL_cyclic.commGroup
+    let : CommGroup L := hL_cyclic.commGroup
     intro z hzZ
     rw [Subgroup.mem_centralizer_iff]
     intro x hxL
@@ -1781,7 +1758,7 @@ private theorem chapter2_claim15_center_LV_source_interface
     rw [hSigma]
     exact inf_le_right
   have hSigma_le_CW : Sigma ≤ Subgroup.centralizer (W : Set G) := by
-    letI : CommGroup W := hW_cyclic.commGroup
+    let : CommGroup W := hW_cyclic.commGroup
     intro z hzSigma
     rw [Subgroup.mem_centralizer_iff]
     intro w hwW
@@ -1826,7 +1803,7 @@ private theorem chapter2_claim15_center_LV_source_interface
     rcases hxProd with ⟨a, haA, q, hqP, haq⟩
     have hA_le_CL : A ≤ Subgroup.centralizer (L : Set G) := by
       apply sup_le
-      · letI : CommGroup L := hL_cyclic.commGroup
+      · let : CommGroup L := hL_cyclic.commGroup
         intro z hzL
         rw [Subgroup.mem_centralizer_iff]
         intro y hyL
@@ -1975,7 +1952,7 @@ private theorem chapter2_claim15_omega_one_LV_source_interface
     (hXcube : ∀ x : G, x ∈ R ⊔ Sigma → x ^ 3 = 1) :
     ∀ x : G, x ∈ L ⊔ V → (x ^ 3 = 1 ↔ x ∈ Z1 ⊔ Sigma ⊔ P) := by
   classical
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   have hZ1_le_L : Z1 ≤ L := by
     rw [hZ1]
     apply Subgroup.zpowers_le.mpr
@@ -2205,7 +2182,7 @@ public theorem claim_15
         hL_constructed hZ1 hR2_inf_CP hXcube hL_order hL_cyclic
   have hL_le_R1 : L ≤ R1 := by
     classical
-    letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+    let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
     have hZ1_le_L : Z1 ≤ L := by
       rw [hZ1]
       apply Subgroup.zpowers_le.mpr
@@ -2221,7 +2198,7 @@ public theorem claim_15
       rw [hch.B1.P_card, hp_three]
     have hdisjoint_L_P : Disjoint L P := by
       let LP : Subgroup P := L.comap P.subtype
-      letI : Fact (Nat.card P).Prime := ⟨by simpa [hPcard] using Nat.prime_three⟩
+      let : Fact (Nat.card P).Prime := ⟨by simpa [hPcard] using Nat.prime_three⟩
       have hLP_bot : LP = ⊥ := by
         rcases LP.eq_bot_or_eq_top_of_prime_card with hbot | htop
         · exact hbot
@@ -2231,7 +2208,7 @@ public theorem claim_15
             intro x hxP
             have hxLP : (⟨x, hxP⟩ : P) ∈ LP := by simp [LP, htop]
             exact hxLP
-          letI : CommGroup L := hL_cyclic.commGroup
+          let : CommGroup L := hL_cyclic.commGroup
           intro x hxP
           rw [Subgroup.mem_centralizer_iff]
           intro y hyL
@@ -2247,7 +2224,7 @@ public theorem claim_15
       chapter2_claim15_P_normalizes_L H D Q K V W Q0 S Q1 P L t s
         hch.section3 hch.B1.P_le_V hL_constructed
     have hLP_card : Nat.card (L ⊔ P : Subgroup G) = 27 := by
-      rw [chapter2_claim15_natCard_sup_eq_mul_of_disjoint_of_le_normalizer
+      rw [PFchapter1section1.natCard_sup_eq_mul_of_disjoint_of_le_normalizer
         L P hP_norm_L hdisjoint_L_P, hL_order, hPcard]
     have hZ1card : Nat.card Z1 = 3 := by
       rw [hZ1, Nat.card_zpowers, hst_order]
@@ -2264,7 +2241,7 @@ public theorem claim_15
     have hP_norm_Z1 : P ≤ Subgroup.normalizer (Z1 : Set G) :=
       hP_le_CZ1.trans (chapter2_claim15_centralizer_le_normalizer Z1)
     have hZ1P_card : Nat.card (Z1 ⊔ P : Subgroup G) = 9 := by
-      rw [chapter2_claim15_natCard_sup_eq_mul_of_disjoint_of_le_normalizer
+      rw [PFchapter1section1.natCard_sup_eq_mul_of_disjoint_of_le_normalizer
         Z1 P hP_norm_Z1 hdisjoint_Z1_P, hZ1card, hPcard]
     have hZ1P_le_LP : Z1 ⊔ P ≤ L ⊔ P :=
       sup_le (hZ1_le_L.trans le_sup_left) le_sup_right
@@ -2321,7 +2298,7 @@ public theorem claim_15
         hch.section3.s_involution
     have hNcard : Nat.card N = Nat.card R1 * 2 := by
       rw [hN_eq,
-        chapter2_claim15_natCard_sup_eq_mul_of_disjoint_of_le_normalizer
+        PFchapter1section1.natCard_sup_eq_mul_of_disjoint_of_le_normalizer
           R1 C hC_norm_R1 (by simpa [C] using hR1_disjoint_s),
         hCcard]
     have hR1_index_N : (R1.subgroupOf N).index = 2 := by
@@ -2339,7 +2316,7 @@ public theorem claim_15
     have hR1sub_normal : (R1.subgroupOf N).Normal :=
       (Subgroup.normal_subgroupOf_iff_le_normalizer hR1_le_N).mpr
         (by simpa [N] using hNormalizerNormR1)
-    letI : (R1.subgroupOf N).Normal := hR1sub_normal
+    let : (R1.subgroupOf N).Normal := hR1sub_normal
     have hLsub_le_R1sub : L.subgroupOf N ≤ R1.subgroupOf N :=
       chapter2_claim15_pgroup_le_normal_sylow
         (R1.subgroupOf N) (L.subgroupOf N) hR1sub_p

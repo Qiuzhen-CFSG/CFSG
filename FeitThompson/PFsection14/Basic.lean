@@ -3,6 +3,7 @@ module
 public import FeitThompson.BGappendixC.theorem_C
 public import FeitThompson.PFsection13.PFsection13_19
 
+
 /-!
 # Peterfalvi, Section 14: basic notation
 
@@ -47,7 +48,7 @@ the prime-field additive subgroup. -/
     (P U W2 : Subgroup G)
     (p q : ℕ) : Prop :=
   ∃ hp : Nat.Prime p, ∃ _hq : Nat.Prime q,
-    letI : Fact p.Prime := ⟨hp⟩
+    let : Fact p.Prime := ⟨hp⟩
     ∃ σ : appendixCH p q →* G,
       Function.Injective σ ∧
         Subgroup.map σ (⊤ : Subgroup (appendixCH p q)) = P ⊔ U ∧

@@ -7,6 +7,7 @@ import GorensteinWalter.Section1
 import FeitThompson.ChiefFactors.Core
 import Mathlib.Tactic
 
+
 /-! # The center of the A7 odd core -/
 
 noncomputable section

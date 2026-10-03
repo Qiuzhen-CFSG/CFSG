@@ -4,6 +4,7 @@ import FeitThompson.PFsection9.PFsection9_3
 import FeitThompson.BGsection3.Remaining
 public import FeitThompson.PFsection9.Basic
 
+
 noncomputable section
 
 open scoped IsMulCommutative commutatorElement
@@ -46,9 +47,9 @@ public theorem quotientSubgroupNormalizedBy_of_isInvariant_sec9
       IsInvariant A (MF ⧸ H0.subgroupOf MF) Q) :
     quotientSubgroupNormalizedBy MF H0 A Q := by
   classical
-  letI : MulAction.QuotientAction A (H0.subgroupOf MF) :=
+  let : MulAction.QuotientAction A (H0.subgroupOf MF) :=
     quotientAction_of_isInvariant (A := A) (G := MF) (H0.subgroupOf MF) hH0_inv
-  letI : MulDistribMulAction A (MF ⧸ H0.subgroupOf MF) :=
+  let : MulDistribMulAction A (MF ⧸ H0.subgroupOf MF) :=
     quotientMulDistribMulAction (A := A) (G := MF) (H0.subgroupOf MF) hH0_inv
   intro a
   let hconjMF : ∀ h : MF, (a : G)⁻¹ * (h : G) * (a : G) ∈ MF := by
@@ -112,10 +113,10 @@ public theorem isInvariant_of_quotientSubgroupNormalizedBy_sec9
   classical
   intro hQnorm
   let H0MF : Subgroup MF := H0.subgroupOf MF
-  haveI : H0MF.Normal := hnormal
-  letI : MulAction.QuotientAction A H0MF :=
+  have : H0MF.Normal := hnormal
+  let _ : MulAction.QuotientAction A H0MF :=
     quotientAction_of_isInvariant (A := A) (G := MF) H0MF hH0_inv
-  letI : MulDistribMulAction A (MF ⧸ H0MF) :=
+  let _ : MulDistribMulAction A (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := A) (G := MF) H0MF hH0_inv
   have hforward : ∀ (a : A) (x : MF ⧸ H0MF), x ∈ Q → a • x ∈ Q := by
     intro a x hx
@@ -159,15 +160,15 @@ private theorem quotient_isInvariant_sup_of_isInvariant_left_right_sec9
     (hH0_inv_W1 : IsInvariant W1 MF (H0.subgroupOf MF))
     (hH0_inv_UW1 : IsInvariant (U ⊔ W1 : Subgroup G) MF (H0.subgroupOf MF))
     (Q : Subgroup (MF ⧸ H0.subgroupOf MF)) :
-    (letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
+    (let : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
       quotientMulDistribMulAction (A := U) (G := MF)
         (H0.subgroupOf MF) hH0_inv_U;
       IsInvariant U (MF ⧸ H0.subgroupOf MF) Q) →
-    (letI : MulDistribMulAction W1 (MF ⧸ H0.subgroupOf MF) :=
+    (let : MulDistribMulAction W1 (MF ⧸ H0.subgroupOf MF) :=
       quotientMulDistribMulAction (A := W1) (G := MF)
         (H0.subgroupOf MF) hH0_inv_W1;
       IsInvariant W1 (MF ⧸ H0.subgroupOf MF) Q) →
-    (letI : MulDistribMulAction (U ⊔ W1 : Subgroup G) (MF ⧸ H0.subgroupOf MF) :=
+    (let : MulDistribMulAction (U ⊔ W1 : Subgroup G) (MF ⧸ H0.subgroupOf MF) :=
       quotientMulDistribMulAction (A := (U ⊔ W1 : Subgroup G)) (G := MF)
         (H0.subgroupOf MF) hH0_inv_UW1;
       IsInvariant (U ⊔ W1 : Subgroup G) (MF ⧸ H0.subgroupOf MF) Q) := by
@@ -175,12 +176,12 @@ private theorem quotient_isInvariant_sup_of_isInvariant_left_right_sec9
   intro hQ_inv_U hQ_inv_W1
   let H0MF : Subgroup MF := H0.subgroupOf MF
   let UW1 : Subgroup G := U ⊔ W1
-  haveI : H0MF.Normal := hnormal
-  letI : MulDistribMulAction U (MF ⧸ H0MF) :=
+  have : H0MF.Normal := hnormal
+  let : MulDistribMulAction U (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := U) (G := MF) H0MF hH0_inv_U
-  letI : MulDistribMulAction W1 (MF ⧸ H0MF) :=
+  let : MulDistribMulAction W1 (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := W1) (G := MF) H0MF hH0_inv_W1
-  letI : MulDistribMulAction UW1 (MF ⧸ H0MF) :=
+  let : MulDistribMulAction UW1 (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := UW1) (G := MF) H0MF (by
       simpa [UW1] using hH0_inv_UW1)
   have hpreserve_closure :
@@ -264,10 +265,10 @@ private theorem intermediateQuotientSubgroup_normalizedBy_sec9
       (show A ≤ Subgroup.normalizer (MF : Set G) from
         Subgroup.Normalizes.le_normalizer)
   let H0MF : Subgroup MF := H0.subgroupOf MF
-  haveI : H0MF.Normal := hnormal
-  letI : MulAction.QuotientAction A H0MF :=
+  have : H0MF.Normal := hnormal
+  let : MulAction.QuotientAction A H0MF :=
     quotientAction_of_isInvariant (A := A) (G := MF) H0MF hH0_inv_A
-  letI : MulDistribMulAction A (MF ⧸ H0MF) :=
+  let : MulDistribMulAction A (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := A) (G := MF) H0MF hH0_inv_A
   let NMF : Subgroup MF := N.comap (Subgroup.inclusion hMF_le_M)
   let Q : Subgroup (MF ⧸ H0MF) := NMF.map (QuotientGroup.mk' H0MF)
@@ -311,7 +312,7 @@ private theorem quotientCentralizedBy_of_quotient_U_fixed_top_sec9
     (MF U H0 : Subgroup G) [Subgroup.Normalizes U MF]
     (hH0_inv : IsInvariant U MF (H0.subgroupOf MF))
     (hnormal : (H0.subgroupOf MF).Normal) :
-    (letI : (H0.subgroupOf MF).Normal := hnormal;
+    (let : (H0.subgroupOf MF).Normal := hnormal;
       letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
         quotientMulDistribMulAction (A := U) (G := MF) (H0.subgroupOf MF) hH0_inv;
       fixedPointSubgroup U (MF ⧸ H0.subgroupOf MF) = ⊤) →
@@ -319,8 +320,8 @@ private theorem quotientCentralizedBy_of_quotient_U_fixed_top_sec9
   classical
   intro htop u huU h hhMF
   let H0MF : Subgroup MF := H0.subgroupOf MF
-  haveI : H0MF.Normal := hnormal
-  letI : MulDistribMulAction U (MF ⧸ H0MF) :=
+  have : H0MF.Normal := hnormal
+  let : MulDistribMulAction U (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := U) (G := MF) H0MF hH0_inv
   let uU : U := ⟨u, huU⟩
   let hMF : MF := ⟨h, hhMF⟩
@@ -347,11 +348,13 @@ private theorem quotient_U_fixed_ne_top_of_not_quotientCentralizedBy_sec9
     (hH0_inv : IsInvariant U MF (H0.subgroupOf MF))
     (hnormal : (H0.subgroupOf MF).Normal) :
     ¬ quotientCentralizedBy MF H0 U →
-      (letI : (H0.subgroupOf MF).Normal := hnormal;
+      (let : (H0.subgroupOf MF).Normal := hnormal;
         letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
           quotientMulDistribMulAction (A := U) (G := MF) (H0.subgroupOf MF) hH0_inv;
         fixedPointSubgroup U (MF ⧸ H0.subgroupOf MF) ≠ ⊤) := by
-  intro hnon htop
+  intro hnon
+  dsimp only
+  intro htop
   exact hnon
     (quotientCentralizedBy_of_quotient_U_fixed_top_sec9 MF U H0
       hH0_inv hnormal htop)
@@ -361,7 +364,7 @@ public theorem quotient_W1_fixedPointSubgroup_card_eq_barW2_subtype_sec9
     (MF W1 H0 : Subgroup G) [Subgroup.Normalizes W1 MF]
     (hH0_inv : IsInvariant W1 MF (H0.subgroupOf MF))
     (hnormal : (H0.subgroupOf MF).Normal) :
-    (letI : (H0.subgroupOf MF).Normal := hnormal;
+    (let : (H0.subgroupOf MF).Normal := hnormal;
       letI : MulDistribMulAction W1 (MF ⧸ H0.subgroupOf MF) :=
         quotientMulDistribMulAction (A := W1) (G := MF) (H0.subgroupOf MF) hH0_inv;
       Nat.card {x : MF ⧸ H0.subgroupOf MF //
@@ -370,8 +373,8 @@ public theorem quotient_W1_fixedPointSubgroup_card_eq_barW2_subtype_sec9
         Nat.card (fixedPointSubgroup W1 (MF ⧸ H0.subgroupOf MF))) := by
   classical
   let H0MF : Subgroup MF := H0.subgroupOf MF
-  haveI : H0MF.Normal := hnormal
-  letI : MulDistribMulAction W1 (MF ⧸ H0MF) :=
+  have : H0MF.Normal := hnormal
+  let : MulDistribMulAction W1 (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := W1) (G := MF) H0MF hH0_inv
   have hiff : ∀ x : MF ⧸ H0MF,
       (∀ h : MF, QuotientGroup.mk' H0MF h = x →
@@ -419,12 +422,12 @@ private theorem quotient_U_fixedPointSubgroup_subgroupOf_eq_bot_sec9
     (hnormal : (H0.subgroupOf MF).Normal)
     (hH0_inv_U : IsInvariant U MF (H0.subgroupOf MF))
     (hH0_inv_UW1 : IsInvariant (U ⊔ W1 : Subgroup G) MF (H0.subgroupOf MF)) :
-    (letI : (H0.subgroupOf MF).Normal := hnormal;
+    (let : (H0.subgroupOf MF).Normal := hnormal;
       letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
         quotientMulDistribMulAction (A := U) (G := MF)
           (H0.subgroupOf MF) hH0_inv_U;
       fixedPointSubgroup U (MF ⧸ H0.subgroupOf MF) = ⊥) →
-    (letI : (H0.subgroupOf MF).Normal := hnormal;
+    (let : (H0.subgroupOf MF).Normal := hnormal;
       letI : MulDistribMulAction (U ⊔ W1 : Subgroup G) (MF ⧸ H0.subgroupOf MF) :=
         quotientMulDistribMulAction (A := (U ⊔ W1 : Subgroup G)) (G := MF)
           (H0.subgroupOf MF) hH0_inv_UW1;
@@ -433,10 +436,10 @@ private theorem quotient_U_fixedPointSubgroup_subgroupOf_eq_bot_sec9
   classical
   intro hUbot
   let H0MF : Subgroup MF := H0.subgroupOf MF
-  haveI : H0MF.Normal := hnormal
-  letI : MulDistribMulAction U (MF ⧸ H0MF) :=
+  have : H0MF.Normal := hnormal
+  let : MulDistribMulAction U (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := U) (G := MF) H0MF hH0_inv_U
-  letI : MulDistribMulAction (U ⊔ W1 : Subgroup G) (MF ⧸ H0MF) :=
+  let : MulDistribMulAction (U ⊔ W1 : Subgroup G) (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := (U ⊔ W1 : Subgroup G)) (G := MF)
       H0MF hH0_inv_UW1
   apply le_antisymm
@@ -466,24 +469,24 @@ private theorem quotient_W1_subgroupOf_fixedPointSubgroup_card_eq_sec9
     (hnormal : (H0.subgroupOf MF).Normal)
     (hH0_inv_W1 : IsInvariant W1 MF (H0.subgroupOf MF))
     (hH0_inv_UW1 : IsInvariant (U ⊔ W1 : Subgroup G) MF (H0.subgroupOf MF)) :
-    (letI : (H0.subgroupOf MF).Normal := hnormal;
+    (let : (H0.subgroupOf MF).Normal := hnormal;
       letI : MulDistribMulAction (U ⊔ W1 : Subgroup G) (MF ⧸ H0.subgroupOf MF) :=
         quotientMulDistribMulAction (A := (U ⊔ W1 : Subgroup G)) (G := MF)
           (H0.subgroupOf MF) hH0_inv_UW1;
       Nat.card (fixedPointSubgroup (↥(W1.subgroupOf (U ⊔ W1 : Subgroup G)))
         (MF ⧸ H0.subgroupOf MF))) =
-    (letI : (H0.subgroupOf MF).Normal := hnormal;
+    (let : (H0.subgroupOf MF).Normal := hnormal;
       letI : MulDistribMulAction W1 (MF ⧸ H0.subgroupOf MF) :=
         quotientMulDistribMulAction (A := W1) (G := MF)
           (H0.subgroupOf MF) hH0_inv_W1;
       Nat.card (fixedPointSubgroup W1 (MF ⧸ H0.subgroupOf MF))) := by
   classical
   let H0MF : Subgroup MF := H0.subgroupOf MF
-  haveI : H0MF.Normal := hnormal
-  letI : MulDistribMulAction (U ⊔ W1 : Subgroup G) (MF ⧸ H0MF) :=
+  have : H0MF.Normal := hnormal
+  let : MulDistribMulAction (U ⊔ W1 : Subgroup G) (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := (U ⊔ W1 : Subgroup G)) (G := MF)
       H0MF hH0_inv_UW1
-  letI : MulDistribMulAction W1 (MF ⧸ H0MF) :=
+  let : MulDistribMulAction W1 (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := W1) (G := MF) H0MF hH0_inv_W1
   change
     Nat.card (fixedPointSubgroup (↥(W1.subgroupOf (U ⊔ W1 : Subgroup G)))
@@ -524,16 +527,17 @@ private theorem fixedPointSubgroup_quotient_normalizedBy_self_sec9
     (MF U H0 : Subgroup G) [Subgroup.Normalizes U MF]
     (hnormal : (H0.subgroupOf MF).Normal)
     (hH0_inv_U : IsInvariant U MF (H0.subgroupOf MF)) :
-    (letI : (H0.subgroupOf MF).Normal := hnormal;
+    (let : (H0.subgroupOf MF).Normal := hnormal;
       letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
         quotientMulDistribMulAction (A := U) (G := MF)
           (H0.subgroupOf MF) hH0_inv_U;
       quotientSubgroupNormalizedBy MF H0 U
         (fixedPointSubgroup U (MF ⧸ H0.subgroupOf MF))) := by
+  dsimp only
   classical
   let H0MF : Subgroup MF := H0.subgroupOf MF
-  haveI : H0MF.Normal := hnormal
-  letI : MulDistribMulAction U (MF ⧸ H0MF) :=
+  have : H0MF.Normal := hnormal
+  let : MulDistribMulAction U (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := U) (G := MF) H0MF hH0_inv_U
   intro a
   refine ⟨?_, ?_⟩
@@ -680,7 +684,7 @@ private theorem quotientSubgroupPreimageInAmbient_le_normalizer_of_commutative_s
   constructor
   · intro hx
     let H0MF : Subgroup MF := H0.subgroupOf MF
-    haveI : IsMulCommutative (MF ⧸ H0MF) := by
+    have : IsMulCommutative (MF ⧸ H0MF) := by
       simpa [H0MF] using hcomm
     rcases Subgroup.mem_map.mp hx with ⟨y, hyQ, rfl⟩
     change QuotientGroup.mk' H0MF y ∈ Q at hyQ
@@ -695,7 +699,7 @@ private theorem quotientSubgroupPreimageInAmbient_le_normalizer_of_commutative_s
     simpa [hqeq] using hyQ
   · intro hx
     let H0MF : Subgroup MF := H0.subgroupOf MF
-    haveI : IsMulCommutative (MF ⧸ H0MF) := by
+    have : IsMulCommutative (MF ⧸ H0MF) := by
       simpa [H0MF] using hcomm
     rcases Subgroup.mem_map.mp hx with ⟨y, hyQ, hyx⟩
     change QuotientGroup.mk' H0MF y ∈ Q at hyQ
@@ -722,18 +726,19 @@ private theorem fixedPointSubgroup_quotient_normalizedBy_of_normalizes_sec9
     (hnormal : (H0.subgroupOf MF).Normal)
     (hH0_inv_U : IsInvariant U MF (H0.subgroupOf MF))
     (hH0_inv_A : IsInvariant A MF (H0.subgroupOf MF)) :
-    (letI : (H0.subgroupOf MF).Normal := hnormal;
+    (let : (H0.subgroupOf MF).Normal := hnormal;
       letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
         quotientMulDistribMulAction (A := U) (G := MF)
           (H0.subgroupOf MF) hH0_inv_U;
       quotientSubgroupNormalizedBy MF H0 A
         (fixedPointSubgroup U (MF ⧸ H0.subgroupOf MF))) := by
+  dsimp only
   classical
   let H0MF : Subgroup MF := H0.subgroupOf MF
-  haveI : H0MF.Normal := hnormal
-  letI : MulDistribMulAction U (MF ⧸ H0MF) :=
+  have : H0MF.Normal := hnormal
+  let : MulDistribMulAction U (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := U) (G := MF) H0MF hH0_inv_U
-  letI : MulDistribMulAction A (MF ⧸ H0MF) :=
+  let : MulDistribMulAction A (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := A) (G := MF) H0MF hH0_inv_A
   have hpreserve :
       ∀ b : A, ∀ x : MF ⧸ H0MF,
@@ -821,7 +826,7 @@ private theorem quotientSubgroup_dichotomy_of_chief_factor_sec9
   classical
   intro hH0_le_MF hMF_le_M hchief hquot_comm hM_eq hQnormU hQnormW1
   let H0MF : Subgroup MF := H0.subgroupOf MF
-  haveI : H0MF.Normal := hnormal
+  have : H0MF.Normal := hnormal
   let N : Subgroup G := quotientSubgroupPreimageInAmbient_sec9 MF H0 Q
   have hN_le_MF : N ≤ MF := by
     simpa [N] using quotientSubgroupPreimageInAmbient_le_sec9 MF H0 Q
@@ -921,13 +926,15 @@ public theorem quotientSubgroup_dichotomy_of_quotientChiefFactorData_sec9
       hoReductionData M MF U W2 H0 p →
         quotientChiefFactorData_9_6 M MF H0 W1 p →
           (hnormal : (H0.subgroupOf MF).Normal) →
-            letI : (H0.subgroupOf MF).Normal := hnormal
+            let : (H0.subgroupOf MF).Normal := hnormal
             ∀ Q : Subgroup (MF ⧸ H0.subgroupOf MF),
               quotientSubgroupNormalizedBy MF H0 U Q →
                 quotientSubgroupNormalizedBy MF H0 W1 Q →
                   Q = ⊥ ∨ Q = ⊤ := by
   classical
-  intro h92 hpData h96 hnormal Q hQnormU hQnormW1
+  intro h92 hpData h96 hnormal
+  dsimp only
+  intro Q hQnormU hQnormW1
   have h92Full : hypothesis_9_2_statement M MF U W1 W2 q := h92
   have hPsource := h92.typePDefinitionData
   rcases hPsource with
@@ -946,8 +953,8 @@ public theorem quotientSubgroup_dichotomy_of_quotientChiefFactorData_sec9
     le_sup_left.trans hUW1_norm_MF
   have hW1_norm_MF : W1 ≤ Subgroup.normalizer (MF : Set G) :=
     le_sup_right.trans hUW1_norm_MF
-  letI : Subgroup.Normalizes U MF := ⟨hU_norm_MF⟩
-  letI : Subgroup.Normalizes W1 MF := ⟨hW1_norm_MF⟩
+  let : Subgroup.Normalizes U MF := ⟨hU_norm_MF⟩
+  let : Subgroup.Normalizes W1 MF := ⟨hW1_norm_MF⟩
   have hU_le_M : U ≤ M :=
     hUleD.trans (section12_ambientDerivedSubgroup_le (G := G) (E := M))
   have hM_eq : M = (MF ⊔ U) ⊔ W1 := by
@@ -955,7 +962,7 @@ public theorem quotientSubgroup_dichotomy_of_quotientChiefFactorData_sec9
       M = ambientDerivedSubgroup M ⊔ W1 := hcompMW1.2.2.1
       _ = (MF ⊔ U) ⊔ W1 := by rw [hcompDU.2.2.1]
   let H0MF : Subgroup MF := H0.subgroupOf MF
-  haveI : H0MF.Normal := hnormal
+  have : H0MF.Normal := hnormal
   have hquot_comm : IsMulCommutative (MF ⧸ H0MF) := by
     rcases helem with ⟨_hnormal_elem, helemQ⟩
     have helemQ' : IsElementaryAbelian p.val (MF ⧸ H0MF) := by
@@ -974,13 +981,15 @@ public theorem quotientSubgroup_not_W1_normalized_of_proper_U_normalized_quotien
       hoReductionData M MF U W2 H0 p →
         quotientChiefFactorData_9_6 M MF H0 W1 p →
           (hnormal : (H0.subgroupOf MF).Normal) →
-            letI : (H0.subgroupOf MF).Normal := hnormal
+            let : (H0.subgroupOf MF).Normal := hnormal
             ∀ Q : Subgroup (MF ⧸ H0.subgroupOf MF),
               quotientSubgroupNormalizedBy MF H0 U Q →
                 Q ≠ ⊥ →
                   Q ≠ ⊤ →
                     ¬ quotientSubgroupNormalizedBy MF H0 W1 Q := by
-  intro h92 hpData h96 hnormal Q hQnormU hQneBot hQneTop hQnormW1
+  intro h92 hpData h96 hnormal
+  dsimp only
+  intro Q hQnormU hQneBot hQneTop hQnormW1
   have hcases :
       Q = ⊥ ∨ Q = ⊤ :=
     quotientSubgroup_dichotomy_of_quotientChiefFactorData_sec9
@@ -994,18 +1003,18 @@ private theorem quotient_U_fixed_eq_bot_of_fixedPointSubgroup_dichotomy_sec9
     (MF U H0 : Subgroup G) [Subgroup.Normalizes U MF]
     (hnormal : (H0.subgroupOf MF).Normal)
     (hH0_inv_U : IsInvariant U MF (H0.subgroupOf MF)) :
-    (letI : (H0.subgroupOf MF).Normal := hnormal;
+    (let : (H0.subgroupOf MF).Normal := hnormal;
       letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
         quotientMulDistribMulAction (A := U) (G := MF)
           (H0.subgroupOf MF) hH0_inv_U;
       fixedPointSubgroup U (MF ⧸ H0.subgroupOf MF) = ⊥ ∨
         fixedPointSubgroup U (MF ⧸ H0.subgroupOf MF) = ⊤) →
-      (letI : (H0.subgroupOf MF).Normal := hnormal;
+      (let : (H0.subgroupOf MF).Normal := hnormal;
         letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
           quotientMulDistribMulAction (A := U) (G := MF)
             (H0.subgroupOf MF) hH0_inv_U;
         fixedPointSubgroup U (MF ⧸ H0.subgroupOf MF) ≠ ⊤) →
-      (letI : (H0.subgroupOf MF).Normal := hnormal;
+      (let : (H0.subgroupOf MF).Normal := hnormal;
         letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
           quotientMulDistribMulAction (A := U) (G := MF)
             (H0.subgroupOf MF) hH0_inv_U;
@@ -1013,8 +1022,8 @@ private theorem quotient_U_fixed_eq_bot_of_fixedPointSubgroup_dichotomy_sec9
   classical
   intro hcases hnotTop
   let H0MF : Subgroup MF := H0.subgroupOf MF
-  haveI : H0MF.Normal := hnormal
-  letI : MulDistribMulAction U (MF ⧸ H0MF) :=
+  have : H0MF.Normal := hnormal
+  let : MulDistribMulAction U (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := U) (G := MF) H0MF hH0_inv_U
   let Q : Subgroup (MF ⧸ H0MF) := fixedPointSubgroup U (MF ⧸ H0MF)
   rcases hcases with hbot | htop
@@ -1028,20 +1037,20 @@ private theorem solvable_of_nilpotent_frobenius_kernel_cyclic_complement_sec9
     (hUnil : Group.IsNilpotent U)
     (hW1cyc : IsCyclic W1)
     (hfrob : section12FrobeniusJoinWithKernel U W1) :
-    IsSolvable (U ⊔ W1 : Subgroup G) := by
+    Group.IsSolvable (U ⊔ W1 : Subgroup G) := by
   classical
   let S : Subgroup G := U ⊔ W1
   let Usub : Subgroup S := U.subgroupOf S
   let W1sub : Subgroup S := W1.subgroupOf S
   have hUnil_sub : Group.IsNilpotent Usub := by
-    haveI : Group.IsNilpotent U := hUnil
+    have : Group.IsNilpotent U := hUnil
     exact Group.nilpotent_of_mulEquiv
       (Subgroup.subgroupOfEquivOfLe (H := U) (K := S)
         (by
           change U ≤ U ⊔ W1
           exact le_sup_left)).symm
   have hUsolv : Group.IsSolvable Usub := by
-    letI : Group.IsNilpotent Usub := hUnil_sub
+    let : Group.IsNilpotent Usub := hUnil_sub
     exact IsNilpotent.to_isSolvable
   have hnormal : Usub.Normal := by
     simpa [section12FrobeniusJoinWithKernel, S, Usub, W1sub] using
@@ -1055,16 +1064,16 @@ private theorem solvable_of_nilpotent_frobenius_kernel_cyclic_complement_sec9
         change W1 ≤ U ⊔ W1
         exact le_sup_right)).isCyclic.mpr hW1cyc
   have hquot_solv : Group.IsSolvable (S ⧸ Usub) := by
-    haveI : Usub.Normal := hnormal
-    haveI : IsCyclic W1sub := hW1sub_cyc
-    haveI : CommGroup W1sub := IsCyclic.commGroup
-    haveI : Group.IsSolvable W1sub := by infer_instance
+    have : Usub.Normal := hnormal
+    have : IsCyclic W1sub := hW1sub_cyc
+    have : CommGroup W1sub := IsCyclic.commGroup
+    have : Group.IsSolvable W1sub := by infer_instance
     exact Group.isSolvable_of_isSolvable_injective
       (f := hcompl.symm.QuotientMulEquiv.toMonoidHom)
       hcompl.symm.QuotientMulEquiv.injective
-  haveI : Usub.Normal := hnormal
-  letI : Group.IsSolvable Usub := hUsolv
-  letI : Group.IsSolvable (S ⧸ Usub) := hquot_solv
+  have : Usub.Normal := hnormal
+  let : Group.IsSolvable Usub := hUsolv
+  let : Group.IsSolvable (S ⧸ Usub) := hquot_solv
   exact
     Group.isSolvable_of_ker_le_range
       Usub.subtype
@@ -1118,7 +1127,7 @@ private theorem theorem_9_6_typeII_quotient_fixed_points_sec9
   rcases haction with ⟨_hcomp, _hfrob, hUW1_norm_MF, hsolvMF, hcopUW1⟩
   have hU_norm_MF : U ≤ Subgroup.normalizer (MF : Set G) :=
     le_sup_left.trans hUW1_norm_MF
-  letI : Subgroup.Normalizes U MF := ⟨hU_norm_MF⟩
+  let : Subgroup.Normalizes U MF := ⟨hU_norm_MF⟩
   have hU_dvd_UW1 : Nat.card U ∣ Nat.card (U ⊔ W1 : Subgroup G) :=
     Subgroup.card_dvd_of_le le_sup_left
   have hcopU : Nat.Coprime (Nat.card U) (Nat.card MF) :=
@@ -1135,11 +1144,11 @@ private theorem theorem_9_6_typeII_quotient_fixed_points_sec9
   have hU_le_M : U ≤ M :=
     hUleD.trans (section12_ambientDerivedSubgroup_le (G := G) (E := M))
   let H0MF : Subgroup MF := H0.subgroupOf MF
-  haveI : H0MF.Normal := hnormal
+  have : H0MF.Normal := hnormal
   have hH0_inv : IsInvariant U MF H0MF :=
     H0_subgroupOf_MF_isInvariant_under_U_sec9 M MF U H0
       hMF_le_M hU_le_M hH0_normal_M hU_norm_MF
-  letI : MulDistribMulAction U (MF ⧸ H0MF) :=
+  let : MulDistribMulAction U (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := U) (G := MF) H0MF hH0_inv
   have hquot_fixed_eq :
       fixedPointSubgroup U (MF ⧸ H0MF) =
@@ -1185,7 +1194,7 @@ private theorem theorem_9_6_typeII_quotient_U_fixed_eq_bot_sec9
         section16TypeII M MF →
           (hnormal : (H0.subgroupOf MF).Normal) →
             (hH0_inv_U : IsInvariant U MF (H0.subgroupOf MF)) →
-              (letI : (H0.subgroupOf MF).Normal := hnormal;
+              (let : (H0.subgroupOf MF).Normal := hnormal;
                 letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
                   quotientMulDistribMulAction (A := U) (G := MF)
                     (H0.subgroupOf MF) hH0_inv_U;
@@ -1193,8 +1202,8 @@ private theorem theorem_9_6_typeII_quotient_U_fixed_eq_bot_sec9
   classical
   intro h95 hp hII hnormal hH0_inv_U
   let H0MF : Subgroup MF := H0.subgroupOf MF
-  haveI : H0MF.Normal := hnormal
-  letI : MulDistribMulAction U (MF ⧸ H0MF) :=
+  have : H0MF.Normal := hnormal
+  let : MulDistribMulAction U (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := U) (G := MF) H0MF hH0_inv_U
   have hfixed_point :=
     theorem_9_6_typeII_quotient_fixed_points_sec9
@@ -1235,12 +1244,12 @@ private theorem theorem_9_6_quotient_cardinality_formula_of_U_fixed_bot_sec9
         (hnormal : (H0.subgroupOf MF).Normal) →
           (hH0_inv_U : IsInvariant U MF (H0.subgroupOf MF)) →
             (hH0_inv_W1 : IsInvariant W1 MF (H0.subgroupOf MF)) →
-              (letI : (H0.subgroupOf MF).Normal := hnormal;
+              (let : (H0.subgroupOf MF).Normal := hnormal;
                 letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
                   quotientMulDistribMulAction (A := U) (G := MF)
                     (H0.subgroupOf MF) hH0_inv_U;
                 fixedPointSubgroup U (MF ⧸ H0.subgroupOf MF) = ⊥) →
-              (letI : (H0.subgroupOf MF).Normal := hnormal;
+              (let : (H0.subgroupOf MF).Normal := hnormal;
                 letI : MulDistribMulAction W1 (MF ⧸ H0.subgroupOf MF) :=
                   quotientMulDistribMulAction (A := W1) (G := MF)
                     (H0.subgroupOf MF) hH0_inv_W1;
@@ -1270,7 +1279,7 @@ private theorem theorem_9_6_quotient_cardinality_formula_of_U_fixed_bot_sec9
   rcases haction with ⟨_hcomp, hfrob, hUW1_norm_MF, _hsolvMF, hcopUW1⟩
   let H0MF : Subgroup MF := H0.subgroupOf MF
   let UW1 : Subgroup G := U ⊔ W1
-  haveI : H0MF.Normal := hnormal
+  have : H0MF.Normal := hnormal
   have hH0MF_ne_top : H0MF ≠ ⊤ := by
     intro htop
     have hMF_le_H0 : MF ≤ H0 := by
@@ -1280,12 +1289,12 @@ private theorem theorem_9_6_quotient_cardinality_formula_of_U_fixed_bot_sec9
         simp [htop]
       simpa [H0MF, xMF, Subgroup.mem_subgroupOf] using hxH0MF
     exact (not_le_of_gt hH0lt) hMF_le_H0
-  haveI : Nontrivial (MF ⧸ H0MF) :=
+  have : Nontrivial (MF ⧸ H0MF) :=
     (QuotientGroup.nontrivial_iff (N := H0MF)).2 hH0MF_ne_top
-  letI : Subgroup.Normalizes UW1 MF := ⟨by simpa [UW1] using hUW1_norm_MF⟩
-  letI : MulDistribMulAction U (MF ⧸ H0MF) :=
+  let : Subgroup.Normalizes UW1 MF := ⟨by simpa [UW1] using hUW1_norm_MF⟩
+  let : MulDistribMulAction U (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := U) (G := MF) H0MF hH0_inv_U
-  letI : MulDistribMulAction W1 (MF ⧸ H0MF) :=
+  let : MulDistribMulAction W1 (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := W1) (G := MF) H0MF hH0_inv_W1
   have hU_le_M : U ≤ M :=
     hUleD.trans (section12_ambientDerivedSubgroup_le (G := G) (E := M))
@@ -1295,7 +1304,7 @@ private theorem theorem_9_6_quotient_cardinality_formula_of_U_fixed_bot_sec9
   have hH0_inv_UW1 : IsInvariant UW1 MF H0MF :=
     H0_subgroupOf_MF_isInvariant_under_U_sec9 M MF UW1 H0
       hMF_le_M hUW1_le_M hH0_normal_M (by simpa [UW1] using hUW1_norm_MF)
-  letI : MulDistribMulAction UW1 (MF ⧸ H0MF) :=
+  let : MulDistribMulAction UW1 (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := UW1) (G := MF) H0MF hH0_inv_UW1
   have hU_fixed_bot' :
       fixedPointSubgroup U (MF ⧸ H0MF) = ⊥ := by
@@ -1305,12 +1314,12 @@ private theorem theorem_9_6_quotient_cardinality_formula_of_U_fixed_bot_sec9
     simpa [H0MF, UW1] using
       quotient_U_fixedPointSubgroup_subgroupOf_eq_bot_sec9
         MF U W1 H0 hnormal hH0_inv_U hH0_inv_UW1 hU_fixed_bot'
-  have hUW1_solv : IsSolvable UW1 := by
+  have hUW1_solv : Group.IsSolvable UW1 := by
     simpa [UW1] using
       solvable_of_nilpotent_frobenius_kernel_cyclic_complement_sec9
         U W1 hUnil hW1cyc hfrob
   have hquot_nil : Group.IsNilpotent (MF ⧸ H0MF) := by
-    haveI : Group.IsNilpotent MF := hMFnil
+    have : Group.IsNilpotent MF := hMFnil
     exact Group.nilpotent_of_surjective
       (QuotientGroup.mk' H0MF) (QuotientGroup.mk'_surjective H0MF)
   have hquot_dvd_MF : Nat.card (MF ⧸ H0MF) ∣ Nat.card MF :=
@@ -1390,7 +1399,7 @@ public theorem quotient_W1_fixedPointSubgroup_eq_W2_map_of_hypothesis_9_2_sec9
     hypothesis_9_2_statement M MF U W1 W2 q →
       (hnormal : (H0.subgroupOf MF).Normal) →
         (hH0_inv_W1 : IsInvariant W1 MF (H0.subgroupOf MF)) →
-          letI : (H0.subgroupOf MF).Normal := hnormal
+          let : (H0.subgroupOf MF).Normal := hnormal
           letI : MulDistribMulAction W1 (MF ⧸ H0.subgroupOf MF) :=
             quotientMulDistribMulAction (A := W1) (G := MF)
               (H0.subgroupOf MF) hH0_inv_W1
@@ -1402,8 +1411,8 @@ public theorem quotient_W1_fixedPointSubgroup_eq_W2_map_of_hypothesis_9_2_sec9
     ⟨haction, _hII, _hIIIIV⟩
   rcases haction with ⟨_hcompUW1, _hfrob, hUW1_norm_MF, hsolvMF, hcopUW1⟩
   let H0MF : Subgroup MF := H0.subgroupOf MF
-  haveI : H0MF.Normal := hnormal
-  letI : MulDistribMulAction W1 (MF ⧸ H0MF) :=
+  have : H0MF.Normal := hnormal
+  let : MulDistribMulAction W1 (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := W1) (G := MF) H0MF hH0_inv_W1
   have hW1_norm_MF : W1 ≤ Subgroup.normalizer (MF : Set G) :=
     le_sup_right.trans hUW1_norm_MF
@@ -1438,7 +1447,7 @@ private theorem theorem_9_6_typeII_cardinality_of_chief_factor_sec9
         section16TypeII M MF →
           (hnormal : (H0.subgroupOf MF).Normal) →
             IsChiefFactor (H0.subgroupOf M) (MF.subgroupOf M) →
-              (letI : (H0.subgroupOf MF).Normal := hnormal;
+              (let : (H0.subgroupOf MF).Normal := hnormal;
                 Nat.card {x : MF ⧸ H0.subgroupOf MF //
                   ∀ h : MF, QuotientGroup.mk' (H0.subgroupOf MF) h = x →
                     ∀ w : G, w ∈ W1 → ⁅w, (h : G)⁆ ∈ H0} = p.val) ∧
@@ -1466,8 +1475,8 @@ private theorem theorem_9_6_typeII_cardinality_of_chief_factor_sec9
     le_sup_left.trans hUW1_norm_MF
   have hW1_norm_MF : W1 ≤ Subgroup.normalizer (MF : Set G) :=
     le_sup_right.trans hUW1_norm_MF
-  letI : Subgroup.Normalizes U MF := ⟨hU_norm_MF⟩
-  letI : Subgroup.Normalizes W1 MF := ⟨hW1_norm_MF⟩
+  let : Subgroup.Normalizes U MF := ⟨hU_norm_MF⟩
+  let : Subgroup.Normalizes W1 MF := ⟨hW1_norm_MF⟩
   have hU_le_M : U ≤ M :=
     hUleD.trans (section12_ambientDerivedSubgroup_le (G := G) (E := M))
   have hH0_inv_U : IsInvariant U MF (H0.subgroupOf MF) :=
@@ -1482,8 +1491,8 @@ private theorem theorem_9_6_typeII_cardinality_of_chief_factor_sec9
     H0_subgroupOf_MF_isInvariant_under_U_sec9 M MF W1 H0
       hMF_le_M hW1_le_M hH0_normal_M hW1_norm_MF
   let H0MF : Subgroup MF := H0.subgroupOf MF
-  haveI : H0MF.Normal := hnormal
-  letI : MulDistribMulAction W1 (MF ⧸ H0MF) :=
+  have : H0MF.Normal := hnormal
+  let : MulDistribMulAction W1 (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := W1) (G := MF) H0MF hH0_inv_W1
   have hU_fixed_bot :
       fixedPointSubgroup U (MF ⧸ H0MF) = ⊥ := by
@@ -1512,7 +1521,7 @@ private theorem theorem_9_6_typeII_cardinality_of_chief_factor_sec9
   have hW2sub_cyclic : IsCyclic (W2.subgroupOf MF) :=
     (Subgroup.subgroupOfEquivOfLe (H := W2) (K := MF) hW2_le_MF).isCyclic.mpr hW2cyc
   have hfixed_cyclic : IsCyclic (fixedPointSubgroup W1 (MF ⧸ H0MF)) := by
-    letI : IsCyclic (W2.subgroupOf MF) := hW2sub_cyclic
+    let : IsCyclic (W2.subgroupOf MF) := hW2sub_cyclic
     rw [hquot_fixed_eq]
     exact isCyclic_of_surjective
       (f := (QuotientGroup.mk' H0MF).subgroupMap (W2.subgroupOf MF))
@@ -1526,7 +1535,7 @@ private theorem theorem_9_6_typeII_cardinality_of_chief_factor_sec9
         simp [htop]
       simpa [H0MF, xMF, Subgroup.mem_subgroupOf] using hxH0MF
     exact (not_le_of_gt hH0lt) hMF_le_H0
-  haveI : Nontrivial (MF ⧸ H0MF) :=
+  have : Nontrivial (MF ⧸ H0MF) :=
     (QuotientGroup.nontrivial_iff (N := H0MF)).2 hH0MF_ne_top
   have hquot_gt_one : 1 < Nat.card (MF ⧸ H0MF) :=
     Finite.one_lt_card_iff_nontrivial.mpr inferInstance
@@ -1537,7 +1546,7 @@ private theorem theorem_9_6_typeII_cardinality_of_chief_factor_sec9
       rw [hquot_formula, hfixed_one]
       simp
     exact (Nat.ne_of_gt hquot_gt_one) hquot_one
-  haveI : IsElementaryAbelian p.val (MF ⧸ H0MF) := by
+  have : IsElementaryAbelian p.val (MF ⧸ H0MF) := by
     rcases helem with ⟨_hnormal_elem, helemQ⟩
     simpa [H0MF] using helemQ
   have hfixed_card :
@@ -1590,21 +1599,21 @@ public theorem theorem_9_6_typeII_quotient_cardinality_source_core_sec9
     le_sup_left.trans hUW1_norm_MF
   have hW1_norm_MF : W1 ≤ Subgroup.normalizer (MF : Set G) :=
     le_sup_right.trans hUW1_norm_MF
-  letI : Subgroup.Normalizes U MF := ⟨hU_norm_MF⟩
-  letI : Subgroup.Normalizes W1 MF := ⟨hW1_norm_MF⟩
+  let : Subgroup.Normalizes U MF := ⟨hU_norm_MF⟩
+  let : Subgroup.Normalizes W1 MF := ⟨hW1_norm_MF⟩
   have hU_le_M : U ≤ M :=
     hUleD.trans (section12_ambientDerivedSubgroup_le (G := G) (E := M))
   let H0MF : Subgroup MF := H0.subgroupOf MF
-  haveI : H0MF.Normal := hnormal
+  have : H0MF.Normal := hnormal
   have hH0_inv_U : IsInvariant U MF H0MF :=
     H0_subgroupOf_MF_isInvariant_under_U_sec9 M MF U H0
       hMF_le_M hU_le_M hH0_normal_M hU_norm_MF
   have hH0_inv_W1 : IsInvariant W1 MF H0MF :=
     H0_subgroupOf_MF_isInvariant_under_U_sec9 M MF W1 H0
       hMF_le_M hW1_le_M hH0_normal_M hW1_norm_MF
-  letI : MulDistribMulAction U (MF ⧸ H0MF) :=
+  let : MulDistribMulAction U (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := U) (G := MF) H0MF hH0_inv_U
-  letI : MulDistribMulAction W1 (MF ⧸ H0MF) :=
+  let : MulDistribMulAction W1 (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := W1) (G := MF) H0MF hH0_inv_W1
   have hfixed_point :
       ∀ h : G, h ∈ MF →
@@ -1694,7 +1703,7 @@ public theorem theorem_9_6_typeII_quotient_cardinality_source_core_sec9
     (Subgroup.subgroupOfEquivOfLe (H := W2) (K := MF) hW2_le_MF).isCyclic.mpr
       hW2cyc
   have hfixed_cyclic : IsCyclic (fixedPointSubgroup W1 (MF ⧸ H0MF)) := by
-    letI : IsCyclic (W2.subgroupOf MF) := hW2sub_cyclic
+    let : IsCyclic (W2.subgroupOf MF) := hW2sub_cyclic
     rw [hquot_fixed_eq]
     exact isCyclic_of_surjective
       (f := (QuotientGroup.mk' H0MF).subgroupMap (W2.subgroupOf MF))
@@ -1709,7 +1718,7 @@ public theorem theorem_9_6_typeII_quotient_cardinality_source_core_sec9
         simp [htop]
       simpa [H0MF, xMF, Subgroup.mem_subgroupOf] using hxH0MF
     exact (not_le_of_gt hH0lt) hMF_le_H0
-  haveI : Nontrivial (MF ⧸ H0MF) :=
+  have : Nontrivial (MF ⧸ H0MF) :=
     (QuotientGroup.nontrivial_iff (N := H0MF)).2 hH0MF_ne_top
   have hquot_gt_one : 1 < Nat.card (MF ⧸ H0MF) :=
     Finite.one_lt_card_iff_nontrivial.mpr inferInstance
@@ -1720,7 +1729,7 @@ public theorem theorem_9_6_typeII_quotient_cardinality_source_core_sec9
       rw [hquot_formula, hfixed_one]
       simp
     exact (Nat.ne_of_gt hquot_gt_one) hquot_one
-  haveI : IsElementaryAbelian p.val (MF ⧸ H0MF) := by
+  have : IsElementaryAbelian p.val (MF ⧸ H0MF) := by
     rcases helem with ⟨_hnormal_elem, helemQ⟩
     simpa [H0MF] using helemQ
   have hfixed_card :
@@ -1746,7 +1755,7 @@ private theorem theorem_9_6_typeII_factor_fixed_bottom_contradiction_sec9
               (hH0_inv_W1 : IsInvariant W1 MF (H0.subgroupOf MF)) →
                 (hH0_inv_UW1 :
                   IsInvariant (U ⊔ W1 : Subgroup G) MF (H0.subgroupOf MF)) →
-                  letI : (H0.subgroupOf MF).Normal := hnormal
+                  let : (H0.subgroupOf MF).Normal := hnormal
                   letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
                     quotientMulDistribMulAction (A := U) (G := MF)
                       (H0.subgroupOf MF) hH0_inv_U
@@ -1762,16 +1771,17 @@ private theorem theorem_9_6_typeII_factor_fixed_bottom_contradiction_sec9
                       IsInvariant (U ⊔ W1 : Subgroup G)
                         (MF ⧸ H0.subgroupOf MF) L) →
                       (hL_inv_W1 : IsInvariant W1 (MF ⧸ H0.subgroupOf MF) L) →
-                        letI : IsInvariant (U ⊔ W1 : Subgroup G)
+                        let : IsInvariant (U ⊔ W1 : Subgroup G)
                             (MF ⧸ H0.subgroupOf MF) L := hL_inv_UW1
-                        letI : IsInvariant W1 (MF ⧸ H0.subgroupOf MF) L := hL_inv_W1
+                        let : IsInvariant W1 (MF ⧸ H0.subgroupOf MF) L := hL_inv_W1
                         fixedPointSubgroup W1 L = ⊥ →
                           fixedPointSubgroup U (MF ⧸ H0.subgroupOf MF) = ⊥ →
                             L ≠ ⊥ →
                               False := by
   classical
   intro h95 hp _hII hnormal hH0_inv_U hH0_inv_W1 hH0_inv_UW1
-    L hL_inv_UW1 hL_inv_W1 hL_W1_fixed_bot hU_fixed_bot hL_ne_bot
+  dsimp only
+  intro L hL_inv_UW1 hL_inv_W1 hL_W1_fixed_bot hU_fixed_bot hL_ne_bot
   have h95Full : notation_9_5_data M MF U W1 W2 H0 C Cprime T S := h95
   rcases h95 with
     ⟨h92, _hp95, _hC, _hBarU, _hCprimeC, _hCprimeEq, _hDade, _hS⟩
@@ -1794,17 +1804,17 @@ private theorem theorem_9_6_typeII_factor_fixed_bottom_contradiction_sec9
   let K : Type u := MF ⧸ H0MF
   let UW1 : Subgroup G := U ⊔ W1
   let W1sub : Subgroup UW1 := W1.subgroupOf UW1
-  haveI : H0MF.Normal := hnormal
-  letI : MulDistribMulAction U K :=
+  have : H0MF.Normal := hnormal
+  let : MulDistribMulAction U K :=
     quotientMulDistribMulAction (A := U) (G := MF) H0MF hH0_inv_U
-  letI : MulDistribMulAction W1 K :=
+  let : MulDistribMulAction W1 K :=
     quotientMulDistribMulAction (A := W1) (G := MF) H0MF hH0_inv_W1
-  letI : MulDistribMulAction UW1 K :=
+  let : MulDistribMulAction UW1 K :=
     quotientMulDistribMulAction (A := UW1) (G := MF) H0MF (by
       simpa [UW1, H0MF] using hH0_inv_UW1)
-  letI : IsInvariant UW1 K L := by
+  let : IsInvariant UW1 K L := by
     simpa [K, UW1, H0MF] using hL_inv_UW1
-  letI : IsInvariant W1 K L := by
+  let : IsInvariant W1 K L := by
     simpa [K, H0MF] using hL_inv_W1
   have hL_W1sub_fixed_eq :
       fixedPointSubgroup (↥W1sub) L = fixedPointSubgroup W1 L := by
@@ -1853,7 +1863,7 @@ private theorem theorem_9_6_typeII_factor_fixed_bottom_contradiction_sec9
         Subgroup.mem_bot.mp hxK_bot
       exact Subgroup.mem_bot.mpr (Subtype.ext hxK_one)
     · exact bot_le
-  have hUW1_solv : IsSolvable UW1 := by
+  have hUW1_solv : Group.IsSolvable UW1 := by
     simpa [UW1] using
       solvable_of_nilpotent_frobenius_kernel_cyclic_complement_sec9
         U W1 hUnil hW1cyc hfrob
@@ -1894,14 +1904,14 @@ private theorem theorem_9_6_typeII_factor_fixed_bottom_contradiction_sec9
         _ = (⊤ : Subgroup W1sub).map W1sub.subtype := by rw [hx_top]
         _ = W1sub := htop_map
     rw [hzpow_eq]
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   have hK_elem : IsElementaryAbelian p.val K := by
     rcases helem with ⟨_hnormal_elem, helemQ⟩
     simpa [K, H0MF] using helemQ
-  letI : IsElementaryAbelian p.val K := hK_elem
+  let : IsElementaryAbelian p.val K := hK_elem
   have hK_nil : Group.IsNilpotent K := by infer_instance
   have hL_nil : Group.IsNilpotent L := by
-    letI : Group.IsNilpotent K := hK_nil
+    let : Group.IsNilpotent K := hK_nil
     infer_instance
   have hfrob_sub :
       IsFrobeniusGroupWithKernelComplement (U.subgroupOf UW1) W1sub := by
@@ -1914,7 +1924,7 @@ private theorem theorem_9_6_typeII_factor_fixed_bottom_contradiction_sec9
   have hcopL : Nat.Coprime (Nat.card UW1) (Nat.card L) :=
     Nat.Coprime.coprime_dvd_right hL_dvd_MF (by
       simpa [UW1] using hcopUW1.symm)
-  haveI : Nontrivial L :=
+  have : Nontrivial L :=
     (Subgroup.nontrivial_iff_ne_bot (H := L)).2 hL_ne_bot
   have hcard_formula :
       Nat.card L = Nat.card (fixedPointSubgroup (↥W1sub) L) ^ Nat.card W1sub :=
@@ -1934,12 +1944,12 @@ private theorem quotient_isInvariant_W1_of_isInvariant_UW1_sec9
     (hH0_inv_W1 : IsInvariant W1 MF (H0.subgroupOf MF))
     (hH0_inv_UW1 : IsInvariant (U ⊔ W1 : Subgroup G) MF (H0.subgroupOf MF))
     (Q : Subgroup (MF ⧸ H0.subgroupOf MF)) :
-    (letI : MulDistribMulAction (U ⊔ W1 : Subgroup G)
+    (let : MulDistribMulAction (U ⊔ W1 : Subgroup G)
         (MF ⧸ H0.subgroupOf MF) :=
       quotientMulDistribMulAction (A := (U ⊔ W1 : Subgroup G)) (G := MF)
         (H0.subgroupOf MF) hH0_inv_UW1;
       IsInvariant (U ⊔ W1 : Subgroup G) (MF ⧸ H0.subgroupOf MF) Q) →
-    (letI : MulDistribMulAction W1 (MF ⧸ H0.subgroupOf MF) :=
+    (let : MulDistribMulAction W1 (MF ⧸ H0.subgroupOf MF) :=
       quotientMulDistribMulAction (A := W1) (G := MF)
         (H0.subgroupOf MF) hH0_inv_W1;
       IsInvariant W1 (MF ⧸ H0.subgroupOf MF) Q) := by
@@ -1947,13 +1957,13 @@ private theorem quotient_isInvariant_W1_of_isInvariant_UW1_sec9
   intro hQ_inv_UW1
   let H0MF : Subgroup MF := H0.subgroupOf MF
   let UW1 : Subgroup G := U ⊔ W1
-  haveI : H0MF.Normal := hnormal
-  letI : MulDistribMulAction W1 (MF ⧸ H0MF) :=
+  have : H0MF.Normal := hnormal
+  let : MulDistribMulAction W1 (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := W1) (G := MF) H0MF hH0_inv_W1
-  letI : MulDistribMulAction UW1 (MF ⧸ H0MF) :=
+  let : MulDistribMulAction UW1 (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := UW1) (G := MF) H0MF (by
       simpa [UW1] using hH0_inv_UW1)
-  letI : IsInvariant UW1 (MF ⧸ H0MF) Q := by
+  let : IsInvariant UW1 (MF ⧸ H0MF) Q := by
     simpa [H0MF, UW1] using hQ_inv_UW1
   constructor
   intro w x
@@ -1981,7 +1991,7 @@ private theorem theorem_9_6_typeII_maschke_factor_fixed_choice_source_sec9
               (hH0_inv_W1 : IsInvariant W1 MF (H0.subgroupOf MF)) →
                 (hH0_inv_UW1 :
                   IsInvariant (U ⊔ W1 : Subgroup G) MF (H0.subgroupOf MF)) →
-                  letI : (H0.subgroupOf MF).Normal := hnormal
+                  let : (H0.subgroupOf MF).Normal := hnormal
                   letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
                     quotientMulDistribMulAction (A := U) (G := MF)
                       (H0.subgroupOf MF) hH0_inv_U
@@ -2007,24 +2017,25 @@ private theorem theorem_9_6_typeII_maschke_factor_fixed_choice_source_sec9
                               fixedPointSubgroup U (MF ⧸ H0.subgroupOf MF) = ⊥ →
                                 Q ≠ ⊥ →
                                   Qcompl ≠ ⊥ →
-                                    letI : IsInvariant W1
+                                    let : IsInvariant W1
                                         (MF ⧸ H0.subgroupOf MF) Q := hQ_inv_W1
-                                    letI : IsInvariant W1
+                                    let : IsInvariant W1
                                         (MF ⧸ H0.subgroupOf MF) Qcompl := hQcompl_inv_W1
                                     fixedPointSubgroup W1 Q = ⊥ ∨
                                       fixedPointSubgroup W1 Qcompl = ⊥ := by
   classical
   intro h95 hp _hII hnormal hH0_inv_U hH0_inv_W1 hH0_inv_UW1
-    Q Qcompl hQcompl _hQ_inv_UW1 _hQcompl_inv_UW1
+  dsimp only
+  intro Q Qcompl hQcompl _hQ_inv_UW1 _hQcompl_inv_UW1
     hQ_inv_W1 hQcompl_inv_W1 _hU_fixed_bot _hQ_ne_bot _hQcompl_ne_bot
   let H0MF : Subgroup MF := H0.subgroupOf MF
   let K : Type u := MF ⧸ H0MF
-  haveI : H0MF.Normal := hnormal
-  letI : MulDistribMulAction W1 K :=
+  have : H0MF.Normal := hnormal
+  let : MulDistribMulAction W1 K :=
     quotientMulDistribMulAction (A := W1) (G := MF) H0MF hH0_inv_W1
-  letI : IsInvariant W1 K Q := by
+  let : IsInvariant W1 K Q := by
     simpa [K, H0MF] using hQ_inv_W1
-  letI : IsInvariant W1 K Qcompl := by
+  let : IsInvariant W1 K Qcompl := by
     simpa [K, H0MF] using hQcompl_inv_W1
   by_cases hQ_fixed_bot : fixedPointSubgroup W1 Q = ⊥
   · exact Or.inl hQ_fixed_bot
@@ -2050,7 +2061,7 @@ private theorem theorem_9_6_typeII_maschke_factor_fixed_choice_source_sec9
   rcases haction with ⟨_hcomp, _hfrob, hUW1_norm_MF, hsolvMF, hcopUW1⟩
   have hW1_norm_MF : W1 ≤ Subgroup.normalizer (MF : Set G) :=
     le_sup_right.trans hUW1_norm_MF
-  letI : Subgroup.Normalizes W1 MF := ⟨hW1_norm_MF⟩
+  let : Subgroup.Normalizes W1 MF := ⟨hW1_norm_MF⟩
   have hW1_dvd_UW1 : Nat.card W1 ∣ Nat.card (U ⊔ W1 : Subgroup G) :=
     Subgroup.card_dvd_of_le le_sup_right
   have hcopW1 : Nat.Coprime (Nat.card W1) (Nat.card MF) :=
@@ -2066,18 +2077,18 @@ private theorem theorem_9_6_typeII_maschke_factor_fixed_choice_source_sec9
     (Subgroup.subgroupOfEquivOfLe (H := W2) (K := MF) hW2_le_MF).isCyclic.mpr
       hW2cyc
   have htotal_fixed_cyclic : IsCyclic (fixedPointSubgroup W1 K) := by
-    letI : IsCyclic (W2.subgroupOf MF) := hW2sub_cyclic
+    let : IsCyclic (W2.subgroupOf MF) := hW2sub_cyclic
     change IsCyclic (fixedPointSubgroup W1 K)
     rw [hquot_fixed_eq]
     exact isCyclic_of_surjective
       (f := (QuotientGroup.mk' H0MF).subgroupMap (W2.subgroupOf MF))
       (MonoidHom.subgroupMap_surjective (QuotientGroup.mk' H0MF)
         (W2.subgroupOf MF))
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   have hK_elem : IsElementaryAbelian p.val K := by
     rcases helem with ⟨_hnormal_elem, helemQ⟩
     simpa [K, H0MF] using helemQ
-  letI : IsElementaryAbelian p.val K := hK_elem
+  let : IsElementaryAbelian p.val K := hK_elem
   let xK : K := ((x : fixedPointSubgroup W1 Q) : Q)
   have hxK_mem_fixed : xK ∈ fixedPointSubgroup W1 K := by
     change ∀ w : W1, w • xK = xK
@@ -2166,7 +2177,7 @@ private theorem theorem_9_6_typeII_maschke_factor_contradiction_source_sec9
               (hH0_inv_W1 : IsInvariant W1 MF (H0.subgroupOf MF)) →
                 (hH0_inv_UW1 :
                   IsInvariant (U ⊔ W1 : Subgroup G) MF (H0.subgroupOf MF)) →
-                  letI : (H0.subgroupOf MF).Normal := hnormal
+                  let : (H0.subgroupOf MF).Normal := hnormal
                   letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
                     quotientMulDistribMulAction (A := U) (G := MF)
                       (H0.subgroupOf MF) hH0_inv_U
@@ -2185,14 +2196,15 @@ private theorem theorem_9_6_typeII_maschke_factor_contradiction_source_sec9
                                 False := by
   classical
   intro h95 hp hII hnormal hH0_inv_U hH0_inv_W1 hH0_inv_UW1
-    Q Qcompl hQcompl hQ_inv_UW1 hQcompl_inv_UW1 hU_fixed_bot hQ_ne_bot hQcompl_ne_bot
+  dsimp only
+  intro Q Qcompl hQcompl hQ_inv_UW1 hQcompl_inv_UW1 hU_fixed_bot hQ_ne_bot hQcompl_ne_bot
   let H0MF : Subgroup MF := H0.subgroupOf MF
-  haveI : H0MF.Normal := hnormal
-  letI : MulDistribMulAction U (MF ⧸ H0MF) :=
+  have : H0MF.Normal := hnormal
+  let : MulDistribMulAction U (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := U) (G := MF) H0MF hH0_inv_U
-  letI : MulDistribMulAction W1 (MF ⧸ H0MF) :=
+  let : MulDistribMulAction W1 (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := W1) (G := MF) H0MF hH0_inv_W1
-  letI : MulDistribMulAction (U ⊔ W1 : Subgroup G) (MF ⧸ H0MF) :=
+  let : MulDistribMulAction (U ⊔ W1 : Subgroup G) (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := (U ⊔ W1 : Subgroup G)) (G := MF)
       H0MF hH0_inv_UW1
   have hQ_inv_W1 : IsInvariant W1 (MF ⧸ H0MF) Q := by
@@ -2231,13 +2243,15 @@ private theorem theorem_9_6_typeII_quotient_subgroup_dichotomy_source_sec9
       hoReductionData M MF U W2 H0 p →
         section16TypeII M MF →
           (hnormal : (H0.subgroupOf MF).Normal) →
-            letI : (H0.subgroupOf MF).Normal := hnormal
+            let : (H0.subgroupOf MF).Normal := hnormal
             ∀ Q : Subgroup (MF ⧸ H0.subgroupOf MF),
               quotientSubgroupNormalizedBy MF H0 U Q →
                 quotientSubgroupNormalizedBy MF H0 W1 Q →
                   Q = ⊥ ∨ Q = ⊤ := by
   classical
-  intro h95 hp hII hnormal Q hQ_norm_U hQ_norm_W1
+  intro h95 hp hII hnormal
+  dsimp only
+  intro Q hQ_norm_U hQ_norm_W1
   have h95Full : notation_9_5_data M MF U W1 W2 H0 C Cprime T S := h95
   have hpFull : hoReductionData M MF U W2 H0 p := hp
   rcases h95 with
@@ -2260,12 +2274,12 @@ private theorem theorem_9_6_typeII_quotient_subgroup_dichotomy_source_sec9
     le_sup_left.trans hUW1_norm_MF
   have hW1_norm_MF : W1 ≤ Subgroup.normalizer (MF : Set G) :=
     le_sup_right.trans hUW1_norm_MF
-  letI : Subgroup.Normalizes U MF := ⟨hU_norm_MF⟩
-  letI : Subgroup.Normalizes W1 MF := ⟨hW1_norm_MF⟩
+  let : Subgroup.Normalizes U MF := ⟨hU_norm_MF⟩
+  let : Subgroup.Normalizes W1 MF := ⟨hW1_norm_MF⟩
   have hU_le_M : U ≤ M :=
     hUleD.trans (section12_ambientDerivedSubgroup_le (G := G) (E := M))
   let UW1 : Subgroup G := U ⊔ W1
-  letI : Subgroup.Normalizes UW1 MF := ⟨by simpa [UW1] using hUW1_norm_MF⟩
+  let : Subgroup.Normalizes UW1 MF := ⟨by simpa [UW1] using hUW1_norm_MF⟩
   have hUW1_le_M : UW1 ≤ M := by
     dsimp [UW1]
     exact sup_le hU_le_M hW1_le_M
@@ -2279,12 +2293,12 @@ private theorem theorem_9_6_typeII_quotient_subgroup_dichotomy_source_sec9
     H0_subgroupOf_MF_isInvariant_under_U_sec9 M MF UW1 H0
       hMF_le_M hUW1_le_M hH0_normal_M (by simpa [UW1] using hUW1_norm_MF)
   let H0MF : Subgroup MF := H0.subgroupOf MF
-  haveI : H0MF.Normal := hnormal
-  letI : MulDistribMulAction U (MF ⧸ H0MF) :=
+  have : H0MF.Normal := hnormal
+  let : MulDistribMulAction U (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := U) (G := MF) H0MF hH0_inv_U
-  letI : MulDistribMulAction W1 (MF ⧸ H0MF) :=
+  let : MulDistribMulAction W1 (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := W1) (G := MF) H0MF hH0_inv_W1
-  letI : MulDistribMulAction UW1 (MF ⧸ H0MF) :=
+  let : MulDistribMulAction UW1 (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := UW1) (G := MF) H0MF hH0_inv_UW1
   have hQ_inv_U : IsInvariant U (MF ⧸ H0MF) Q := by
     simpa [H0MF] using
@@ -2308,11 +2322,11 @@ private theorem theorem_9_6_typeII_quotient_subgroup_dichotomy_source_sec9
   · exact Or.inl hQ_bot
   by_cases hQ_top : Q = ⊤
   · exact Or.inr hQ_top
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   have hK_elem : IsElementaryAbelian p.val (MF ⧸ H0MF) := by
     rcases _helem with ⟨_hnormal_elem, helemQ⟩
     simpa [H0MF] using helemQ
-  letI : IsElementaryAbelian p.val (MF ⧸ H0MF) := hK_elem
+  let : IsElementaryAbelian p.val (MF ⧸ H0MF) := hK_elem
   have hH0MF_ne_top : H0MF ≠ ⊤ := by
     intro htop
     have hMF_le_H0 : MF ≤ H0 := by
@@ -2322,7 +2336,7 @@ private theorem theorem_9_6_typeII_quotient_subgroup_dichotomy_source_sec9
         simp [htop]
       simpa [H0MF, xMF, Subgroup.mem_subgroupOf] using hxH0MF
     exact (not_le_of_gt _hH0lt) hMF_le_H0
-  haveI : Nontrivial (MF ⧸ H0MF) :=
+  have : Nontrivial (MF ⧸ H0MF) :=
     (QuotientGroup.nontrivial_iff (N := H0MF)).2 hH0MF_ne_top
   obtain ⟨n, hncard⟩ :=
     (IsElementaryAbelian.isPGroup p.val (MF ⧸ H0MF)).exists_card_eq
@@ -2340,7 +2354,7 @@ private theorem theorem_9_6_typeII_quotient_subgroup_dichotomy_source_sec9
   have hp_dvd_MF : p.val ∣ Nat.card MF := hp_dvd_K.trans hquot_dvd_MF
   have hcop_p_UW1 : Nat.Coprime p.val (Nat.card UW1) :=
     Nat.Coprime.of_dvd_left hp_dvd_MF (by simpa [UW1] using _hcopUW1)
-  letI : IsInvariant UW1 (MF ⧸ H0MF) Q := hQ_inv_UW1
+  let : IsInvariant UW1 (MF ⧸ H0MF) Q := hQ_inv_UW1
   obtain ⟨Qcompl, hQcompl, hQcompl_inv⟩ :=
     exists_isCompl_isInvariant_of_elementaryAbelian_coprime
       (G := MF ⧸ H0MF) (A := UW1) (p := p.val) hcop_p_UW1 Q
@@ -2397,7 +2411,7 @@ private theorem theorem_9_6_typeII_chief_factor_maximal_source_sec9
       _hM2le, _hFitEq, _hFitLeD, _hW2le, _hW2cyc, _hW2ne,
       _hcentW1, _hnormX⟩
   let H0MF : Subgroup MF := H0.subgroupOf MF
-  haveI : H0MF.Normal := hnormal
+  have : H0MF.Normal := hnormal
   let Q : Subgroup (MF ⧸ H0MF) :=
     intermediateQuotientSubgroup_sec9 M MF H0 N hMF_le_M
   have hU_le_M : U ≤ M :=
@@ -2410,8 +2424,8 @@ private theorem theorem_9_6_typeII_chief_factor_maximal_source_sec9
     le_sup_left.trans hUW1_norm_MF
   have hW1_norm_MF : W1 ≤ Subgroup.normalizer (MF : Set G) :=
     le_sup_right.trans hUW1_norm_MF
-  letI : Subgroup.Normalizes U MF := ⟨hU_norm_MF⟩
-  letI : Subgroup.Normalizes W1 MF := ⟨hW1_norm_MF⟩
+  let : Subgroup.Normalizes U MF := ⟨hU_norm_MF⟩
+  let : Subgroup.Normalizes W1 MF := ⟨hW1_norm_MF⟩
   have hQ_norm_U : quotientSubgroupNormalizedBy MF H0 U Q := by
     simpa [Q, H0MF] using
       intermediateQuotientSubgroup_normalizedBy_sec9
@@ -2525,7 +2539,7 @@ private theorem theorem_9_6_typeII_chief_cardinality_payload_sec9
         section16TypeII M MF →
           (hnormal : (H0.subgroupOf MF).Normal) →
             IsChiefFactor (H0.subgroupOf M) (MF.subgroupOf M) ∧
-            (letI : (H0.subgroupOf MF).Normal := hnormal;
+            (let : (H0.subgroupOf MF).Normal := hnormal;
               Nat.card {x : MF ⧸ H0.subgroupOf MF //
                 ∀ h : MF, QuotientGroup.mk' (H0.subgroupOf MF) h = x →
                   ∀ w : G, w ∈ W1 → ⁅w, (h : G)⁆ ∈ H0} = p.val) ∧
@@ -2547,7 +2561,7 @@ public theorem quotientChiefFactorData_9_6_of_source_facts
       hoReductionData M MF U W2 H0 p →
         IsChiefFactor (H0.subgroupOf M) (MF.subgroupOf M) →
           (∃ hnormal : (H0.subgroupOf MF).Normal,
-            letI : (H0.subgroupOf MF).Normal := hnormal
+            let : (H0.subgroupOf MF).Normal := hnormal
             Nat.card {x : MF ⧸ H0.subgroupOf MF //
               ∀ h : MF, QuotientGroup.mk' (H0.subgroupOf MF) h = x →
                 ∀ w : G, w ∈ W1 → ⁅w, (h : G)⁆ ∈ H0} = p.val) →
@@ -2574,7 +2588,7 @@ private theorem theorem_9_6_typeII_source_payload_sec9
             (∀ h : G, h ∈ MF →
               (∀ u : G, u ∈ U → ⁅u, h⁆ ∈ H0) → h ∈ H0) ∧
             IsChiefFactor (H0.subgroupOf M) (MF.subgroupOf M) ∧
-            (letI : (H0.subgroupOf MF).Normal := hnormal;
+            (let : (H0.subgroupOf MF).Normal := hnormal;
               Nat.card {x : MF ⧸ H0.subgroupOf MF //
                 ∀ h : MF, QuotientGroup.mk' (H0.subgroupOf MF) h = x →
                   ∀ w : G, w ∈ W1 → ⁅w, (h : G)⁆ ∈ H0} = p.val) ∧
@@ -2601,7 +2615,7 @@ private theorem theorem_9_6_typeII_source_bridge_sec9
             (∀ u : G, u ∈ U → ⁅u, h⁆ ∈ H0) → h ∈ H0) ∧
             IsChiefFactor (H0.subgroupOf M) (MF.subgroupOf M) ∧
             (∃ hnormal : (H0.subgroupOf MF).Normal,
-              letI : (H0.subgroupOf MF).Normal := hnormal
+              let : (H0.subgroupOf MF).Normal := hnormal
               Nat.card {x : MF ⧸ H0.subgroupOf MF //
                 ∀ h : MF, QuotientGroup.mk' (H0.subgroupOf MF) h = x →
                   ∀ w : G, w ∈ W1 → ⁅w, (h : G)⁆ ∈ H0} = p.val) ∧
@@ -2670,13 +2684,13 @@ private theorem theorem_9_6_typeIIIIV_quotient_U_fixed_dichotomy_source_sec9
         (section16TypeIII M MF ∨ section16TypeIV M MF) →
           (hnormal : (H0.subgroupOf MF).Normal) →
             (hH0_inv_U : IsInvariant U MF (H0.subgroupOf MF)) →
-              (letI : (H0.subgroupOf MF).Normal := hnormal;
+              (let : (H0.subgroupOf MF).Normal := hnormal;
                 letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
                   quotientMulDistribMulAction (A := U) (G := MF)
                     (H0.subgroupOf MF) hH0_inv_U;
                 quotientSubgroupNormalizedBy MF H0 U
                   (fixedPointSubgroup U (MF ⧸ H0.subgroupOf MF))) →
-              (letI : (H0.subgroupOf MF).Normal := hnormal;
+              (let : (H0.subgroupOf MF).Normal := hnormal;
                 letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
                   quotientMulDistribMulAction (A := U) (G := MF)
                     (H0.subgroupOf MF) hH0_inv_U;
@@ -2699,7 +2713,7 @@ private theorem theorem_9_6_typeIIIIV_quotient_U_fixed_dichotomy_source_sec9
   rcases haction with ⟨_hcomp, _hfrob, hUW1_norm_MF, _hsolvMF, _hcopUW1⟩
   have hW1_norm_MF : W1 ≤ Subgroup.normalizer (MF : Set G) :=
     le_sup_right.trans hUW1_norm_MF
-  letI : Subgroup.Normalizes W1 MF := ⟨hW1_norm_MF⟩
+  let : Subgroup.Normalizes W1 MF := ⟨hW1_norm_MF⟩
   have hH0_inv_W1 : IsInvariant W1 MF (H0.subgroupOf MF) :=
     H0_subgroupOf_MF_isInvariant_under_U_sec9 M MF W1 H0
       hMF_le_M hW1_le_M hH0_normal_M hW1_norm_MF
@@ -2711,8 +2725,8 @@ private theorem theorem_9_6_typeIIIIV_quotient_U_fixed_dichotomy_source_sec9
       M = ambientDerivedSubgroup M ⊔ W1 := hcompMW1.2.2.1
       _ = (MF ⊔ U) ⊔ W1 := by rw [hcompDU.2.2.1]
   let H0MF : Subgroup MF := H0.subgroupOf MF
-  haveI : H0MF.Normal := hnormal
-  letI : MulDistribMulAction U (MF ⧸ H0MF) :=
+  have : H0MF.Normal := hnormal
+  let : MulDistribMulAction U (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := U) (G := MF) H0MF hH0_inv_U
   have hquot_comm : IsMulCommutative (MF ⧸ H0MF) := by
     rcases helem with ⟨_hnormal_elem, helemQ⟩
@@ -2749,7 +2763,7 @@ private theorem theorem_9_6_typeII_source_core_sec9
           U ≠ C ∧
             IsChiefFactor (H0.subgroupOf M) (MF.subgroupOf M) ∧
             (∃ hnormal : (H0.subgroupOf MF).Normal,
-              letI : (H0.subgroupOf MF).Normal := hnormal
+              let : (H0.subgroupOf MF).Normal := hnormal
               Nat.card {x : MF ⧸ H0.subgroupOf MF //
                 ∀ h : MF, QuotientGroup.mk' (H0.subgroupOf MF) h = x →
                   ∀ w : G, w ∈ W1 → ⁅w, (h : G)⁆ ∈ H0} = p.val) ∧
@@ -2772,19 +2786,19 @@ private theorem theorem_9_6_typeIIIIV_quotient_U_fixed_eq_bot_of_fixed_proper_so
         (section16TypeIII M MF ∨ section16TypeIV M MF) →
           (hnormal : (H0.subgroupOf MF).Normal) →
             (hH0_inv_U : IsInvariant U MF (H0.subgroupOf MF)) →
-              (letI : (H0.subgroupOf MF).Normal := hnormal;
+              (let : (H0.subgroupOf MF).Normal := hnormal;
                 letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
                   quotientMulDistribMulAction (A := U) (G := MF)
                     (H0.subgroupOf MF) hH0_inv_U;
                 fixedPointSubgroup U (MF ⧸ H0.subgroupOf MF) ≠ ⊤) →
-              (letI : (H0.subgroupOf MF).Normal := hnormal;
+              (let : (H0.subgroupOf MF).Normal := hnormal;
                 letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
                   quotientMulDistribMulAction (A := U) (G := MF)
                     (H0.subgroupOf MF) hH0_inv_U;
                 fixedPointSubgroup U (MF ⧸ H0.subgroupOf MF) = ⊥) := by
   intro h92 hp hIIIIV hnormal hH0_inv_U hnotTop
   have hQnorm :
-      (letI : (H0.subgroupOf MF).Normal := hnormal;
+      (let : (H0.subgroupOf MF).Normal := hnormal;
         letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
           quotientMulDistribMulAction (A := U) (G := MF)
             (H0.subgroupOf MF) hH0_inv_U;
@@ -2809,12 +2823,12 @@ private theorem theorem_9_6_typeIIIIV_quotient_cardinality_formula_of_U_fixed_pr
           (hnormal : (H0.subgroupOf MF).Normal) →
             (hH0_inv_U : IsInvariant U MF (H0.subgroupOf MF)) →
               (hH0_inv_W1 : IsInvariant W1 MF (H0.subgroupOf MF)) →
-                (letI : (H0.subgroupOf MF).Normal := hnormal;
+                (let : (H0.subgroupOf MF).Normal := hnormal;
                   letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
                     quotientMulDistribMulAction (A := U) (G := MF)
                       (H0.subgroupOf MF) hH0_inv_U;
                   fixedPointSubgroup U (MF ⧸ H0.subgroupOf MF) ≠ ⊤) →
-                (letI : (H0.subgroupOf MF).Normal := hnormal;
+                (let : (H0.subgroupOf MF).Normal := hnormal;
                   letI : MulDistribMulAction W1 (MF ⧸ H0.subgroupOf MF) :=
                     quotientMulDistribMulAction (A := W1) (G := MF)
                       (H0.subgroupOf MF) hH0_inv_W1;
@@ -2845,7 +2859,7 @@ private theorem theorem_9_6_typeIIIIV_quotient_cardinality_formula_of_U_fixed_pr
   rcases haction with ⟨_hcomp, hfrob, hUW1_norm_MF, _hsolvMF, hcopUW1⟩
   let H0MF : Subgroup MF := H0.subgroupOf MF
   let UW1 : Subgroup G := U ⊔ W1
-  haveI : H0MF.Normal := hnormal
+  have : H0MF.Normal := hnormal
   have hH0MF_ne_top : H0MF ≠ ⊤ := by
     intro htop
     have hMF_le_H0 : MF ≤ H0 := by
@@ -2855,12 +2869,12 @@ private theorem theorem_9_6_typeIIIIV_quotient_cardinality_formula_of_U_fixed_pr
         simp [htop]
       simpa [H0MF, xMF, Subgroup.mem_subgroupOf] using hxH0MF
     exact (not_le_of_gt hH0lt) hMF_le_H0
-  haveI : Nontrivial (MF ⧸ H0MF) :=
+  have : Nontrivial (MF ⧸ H0MF) :=
     (QuotientGroup.nontrivial_iff (N := H0MF)).2 hH0MF_ne_top
-  letI : Subgroup.Normalizes UW1 MF := ⟨by simpa [UW1] using hUW1_norm_MF⟩
-  letI : MulDistribMulAction U (MF ⧸ H0MF) :=
+  let : Subgroup.Normalizes UW1 MF := ⟨by simpa [UW1] using hUW1_norm_MF⟩
+  let : MulDistribMulAction U (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := U) (G := MF) H0MF hH0_inv_U
-  letI : MulDistribMulAction W1 (MF ⧸ H0MF) :=
+  let : MulDistribMulAction W1 (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := W1) (G := MF) H0MF hH0_inv_W1
   have hU_le_M : U ≤ M :=
     hUleD.trans (section12_ambientDerivedSubgroup_le (G := G) (E := M))
@@ -2870,7 +2884,7 @@ private theorem theorem_9_6_typeIIIIV_quotient_cardinality_formula_of_U_fixed_pr
   have hH0_inv_UW1 : IsInvariant UW1 MF H0MF :=
     H0_subgroupOf_MF_isInvariant_under_U_sec9 M MF UW1 H0
       hMF_le_M hUW1_le_M hH0_normal_M (by simpa [UW1] using hUW1_norm_MF)
-  letI : MulDistribMulAction UW1 (MF ⧸ H0MF) :=
+  let : MulDistribMulAction UW1 (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := UW1) (G := MF) H0MF hH0_inv_UW1
   have hU_fixed_bot :
       fixedPointSubgroup U (MF ⧸ H0MF) = ⊥ := by
@@ -2883,12 +2897,12 @@ private theorem theorem_9_6_typeIIIIV_quotient_cardinality_formula_of_U_fixed_pr
     simpa [H0MF, UW1] using
       quotient_U_fixedPointSubgroup_subgroupOf_eq_bot_sec9
         MF U W1 H0 hnormal hH0_inv_U hH0_inv_UW1 hU_fixed_bot
-  have hUW1_solv : IsSolvable UW1 := by
+  have hUW1_solv : Group.IsSolvable UW1 := by
     simpa [UW1] using
       solvable_of_nilpotent_frobenius_kernel_cyclic_complement_sec9
         U W1 hUnil hW1cyc hfrob
   have hquot_nil : Group.IsNilpotent (MF ⧸ H0MF) := by
-    haveI : Group.IsNilpotent MF := hMFnil
+    have : Group.IsNilpotent MF := hMFnil
     exact Group.nilpotent_of_surjective
       (QuotientGroup.mk' H0MF) (QuotientGroup.mk'_surjective H0MF)
   have hquot_dvd_MF : Nat.card (MF ⧸ H0MF) ∣ Nat.card MF :=
@@ -2971,12 +2985,12 @@ private theorem theorem_9_6_typeIIIIV_W1_fixed_cardinality_of_U_fixed_proper_sou
           (hnormal : (H0.subgroupOf MF).Normal) →
             (hH0_inv_U : IsInvariant U MF (H0.subgroupOf MF)) →
               (hH0_inv_W1 : IsInvariant W1 MF (H0.subgroupOf MF)) →
-                (letI : (H0.subgroupOf MF).Normal := hnormal;
+                (let : (H0.subgroupOf MF).Normal := hnormal;
                   letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
                     quotientMulDistribMulAction (A := U) (G := MF)
                       (H0.subgroupOf MF) hH0_inv_U;
                   fixedPointSubgroup U (MF ⧸ H0.subgroupOf MF) ≠ ⊤) →
-                (letI : (H0.subgroupOf MF).Normal := hnormal;
+                (let : (H0.subgroupOf MF).Normal := hnormal;
                   letI : MulDistribMulAction W1 (MF ⧸ H0.subgroupOf MF) :=
                     quotientMulDistribMulAction (A := W1) (G := MF)
                       (H0.subgroupOf MF) hH0_inv_W1;
@@ -2994,14 +3008,14 @@ private theorem theorem_9_6_typeIIIIV_W1_fixed_cardinality_of_U_fixed_proper_sou
   rcases haction with ⟨_hcomp, _hfrob, hUW1_norm_MF, hsolvMF, hcopUW1⟩
   have hW1_norm_MF : W1 ≤ Subgroup.normalizer (MF : Set G) :=
     le_sup_right.trans hUW1_norm_MF
-  letI : Subgroup.Normalizes W1 MF := ⟨hW1_norm_MF⟩
+  let : Subgroup.Normalizes W1 MF := ⟨hW1_norm_MF⟩
   have hW1_dvd_UW1 : Nat.card W1 ∣ Nat.card (U ⊔ W1 : Subgroup G) :=
     Subgroup.card_dvd_of_le le_sup_right
   have hcopW1 : Nat.Coprime (Nat.card W1) (Nat.card MF) :=
     (Nat.Coprime.coprime_dvd_right hW1_dvd_UW1 hcopUW1).symm
   let H0MF : Subgroup MF := H0.subgroupOf MF
-  haveI : H0MF.Normal := hnormal
-  letI : MulDistribMulAction W1 (MF ⧸ H0MF) :=
+  have : H0MF.Normal := hnormal
+  let : MulDistribMulAction W1 (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := W1) (G := MF) H0MF hH0_inv_W1
   have hquot_formula :
       Nat.card (MF ⧸ H0MF) =
@@ -3040,7 +3054,7 @@ private theorem theorem_9_6_typeIIIIV_W1_fixed_cardinality_of_U_fixed_proper_sou
         simp [htop]
       simpa [H0MF, xMF, Subgroup.mem_subgroupOf] using hxH0MF
     exact (not_le_of_gt hH0lt) hMF_le_H0
-  haveI : Nontrivial (MF ⧸ H0MF) :=
+  have : Nontrivial (MF ⧸ H0MF) :=
     (QuotientGroup.nontrivial_iff (N := H0MF)).2 hH0MF_ne_top
   have hquot_gt_one : 1 < Nat.card (MF ⧸ H0MF) :=
     Finite.one_lt_card_iff_nontrivial.mpr inferInstance
@@ -3074,12 +3088,12 @@ private theorem theorem_9_6_typeIIIIV_quotient_cardinality_of_fixed_proper_sourc
         (section16TypeIII M MF ∨ section16TypeIV M MF) →
           (hnormal : (H0.subgroupOf MF).Normal) →
             (hH0_inv : IsInvariant U MF (H0.subgroupOf MF)) →
-              (letI : (H0.subgroupOf MF).Normal := hnormal;
+              (let : (H0.subgroupOf MF).Normal := hnormal;
                 letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
                   quotientMulDistribMulAction (A := U) (G := MF)
                     (H0.subgroupOf MF) hH0_inv;
                 fixedPointSubgroup U (MF ⧸ H0.subgroupOf MF) ≠ ⊤) →
-              (letI : (H0.subgroupOf MF).Normal := hnormal;
+              (let : (H0.subgroupOf MF).Normal := hnormal;
                 Nat.card {x : MF ⧸ H0.subgroupOf MF //
                   ∀ h : MF, QuotientGroup.mk' (H0.subgroupOf MF) h = x →
                     ∀ w : G, w ∈ W1 → ⁅w, (h : G)⁆ ∈ H0} = Nat.card W2) ∧
@@ -3095,7 +3109,7 @@ private theorem theorem_9_6_typeIIIIV_quotient_cardinality_of_fixed_proper_sourc
   rcases haction with ⟨_hcomp, _hfrob, hUW1_norm_MF, _hsolvMF, _hcopUW1⟩
   have hW1_norm_MF : W1 ≤ Subgroup.normalizer (MF : Set G) :=
     le_sup_right.trans hUW1_norm_MF
-  letI : Subgroup.Normalizes W1 MF := ⟨hW1_norm_MF⟩
+  let : Subgroup.Normalizes W1 MF := ⟨hW1_norm_MF⟩
   have hsource : Section8.typePDefinitionData M MF U W1 W2 := h92.typePDefinitionData
   rcases hsource with
     ⟨_hMFsource, _hW1cyc, _hW1ne, hW1hall, _hcompMW1, _hUleD,
@@ -3105,8 +3119,8 @@ private theorem theorem_9_6_typeIIIIV_quotient_cardinality_of_fixed_proper_sourc
   have hH0_inv_W1 : IsInvariant W1 MF (H0.subgroupOf MF) :=
     H0_subgroupOf_MF_isInvariant_under_U_sec9 M MF W1 H0
       hMF_le_M hW1_le_M hH0_normal_M hW1_norm_MF
-  haveI : (H0.subgroupOf MF).Normal := hnormal
-  letI : MulDistribMulAction W1 (MF ⧸ H0.subgroupOf MF) :=
+  have : (H0.subgroupOf MF).Normal := hnormal
+  let : MulDistribMulAction W1 (MF ⧸ H0.subgroupOf MF) :=
     quotientMulDistribMulAction (A := W1) (G := MF)
       (H0.subgroupOf MF) hH0_inv_W1
   rcases theorem_9_6_typeIIIIV_W1_fixed_cardinality_of_U_fixed_proper_source_sec9
@@ -3132,7 +3146,7 @@ private theorem theorem_9_6_typeIIIIV_quotient_cardinality_payload_sec9
       hoReductionData M MF U W2 H0 p →
         (section16TypeIII M MF ∨ section16TypeIV M MF) →
           (hnormal : (H0.subgroupOf MF).Normal) →
-          (letI : (H0.subgroupOf MF).Normal := hnormal;
+          (let : (H0.subgroupOf MF).Normal := hnormal;
             Nat.card {x : MF ⧸ H0.subgroupOf MF //
               ∀ h : MF, QuotientGroup.mk' (H0.subgroupOf MF) h = x →
                 ∀ w : G, w ∈ W1 → ⁅w, (h : G)⁆ ∈ H0} = Nat.card W2) ∧
@@ -3149,7 +3163,7 @@ private theorem theorem_9_6_typeIIIIV_quotient_cardinality_payload_sec9
   rcases haction with ⟨_hcomp, _hfrob, hUW1_norm_MF, _hsolvMF, _hcopUW1⟩
   have hU_norm_MF : U ≤ Subgroup.normalizer (MF : Set G) :=
     le_sup_left.trans hUW1_norm_MF
-  letI : Subgroup.Normalizes U MF := ⟨hU_norm_MF⟩
+  let : Subgroup.Normalizes U MF := ⟨hU_norm_MF⟩
   have hPsource := h92.typePDefinitionData
   rcases hPsource with
     ⟨_hMFsource, _hW1cyc, _hW1ne, _hW1hall, _hcompMW1, hUleD,
@@ -3161,7 +3175,7 @@ private theorem theorem_9_6_typeIIIIV_quotient_cardinality_payload_sec9
     H0_subgroupOf_MF_isInvariant_under_U_sec9 M MF U H0
       hMF_le_M hU_le_M hH0_normal_M hU_norm_MF
   have hnotTop :
-      (letI : (H0.subgroupOf MF).Normal := hnormal;
+      (let : (H0.subgroupOf MF).Normal := hnormal;
         letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
           quotientMulDistribMulAction (A := U) (G := MF)
             (H0.subgroupOf MF) hH0_inv;
@@ -3182,7 +3196,7 @@ public theorem theorem_9_6_typeIIIIV_cardinality_source_core_sec9
       hoReductionData M MF U W2 H0 p →
         (section16TypeIII M MF ∨ section16TypeIV M MF) →
           (∃ hnormal : (H0.subgroupOf MF).Normal,
-            letI : (H0.subgroupOf MF).Normal := hnormal
+            let : (H0.subgroupOf MF).Normal := hnormal
             Nat.card {x : MF ⧸ H0.subgroupOf MF //
                 ∀ h : MF, QuotientGroup.mk' (H0.subgroupOf MF) h = x →
                   ∀ w : G, w ∈ W1 → ⁅w, (h : G)⁆ ∈ H0} = p.val) ∧
@@ -3212,7 +3226,7 @@ public theorem theorem_9_6_source_core_sec9
         U ≠ C ∧
           IsChiefFactor (H0.subgroupOf M) (MF.subgroupOf M) ∧
           (∃ hnormal : (H0.subgroupOf MF).Normal,
-            letI : (H0.subgroupOf MF).Normal := hnormal
+            let : (H0.subgroupOf MF).Normal := hnormal
             Nat.card {x : MF ⧸ H0.subgroupOf MF //
               ∀ h : MF, QuotientGroup.mk' (H0.subgroupOf MF) h = x →
                 ∀ w : G, w ∈ W1 → ⁅w, (h : G)⁆ ∈ H0} = p.val) ∧
@@ -3229,7 +3243,7 @@ public theorem theorem_9_6_source_core_sec9
         U ≠ C ∧
           IsChiefFactor (H0.subgroupOf M) (MF.subgroupOf M) ∧
           (∃ hnormal : (H0.subgroupOf MF).Normal,
-            letI : (H0.subgroupOf MF).Normal := hnormal
+            let : (H0.subgroupOf MF).Normal := hnormal
             Nat.card {x : MF ⧸ H0.subgroupOf MF //
               ∀ h : MF, QuotientGroup.mk' (H0.subgroupOf MF) h = x →
                 ∀ w : G, w ∈ W1 → ⁅w, (h : G)⁆ ∈ H0} = p.val) ∧

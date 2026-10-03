@@ -15,6 +15,7 @@ public import GorensteinWalter.Section1
 import BenderSuzuki.External.Hall.Basic
 import FeitThompson.FinalTheorem
 
+
 /-!
 # Lemma 2.8 (Bender, "Finite Groups with Dihedral Sylow 2-Subgroups")
 
@@ -99,7 +100,7 @@ private lemma S_not_cyclic {G : Type u} [Group G] [Finite G]
       _ ≤ 2 ^ c.m := Nat.pow_le_pow_right (by norm_num) c.one_le_m
   have hne : 2 ^ c.m ≠ 1 := by
     intro h1
-    have : 2 ≤ (1 : ℕ) := by simpa [h1] using hpow
+    have : 2 ≤ (1 : ℕ) := by simp [h1] at hpow
     norm_num at this
   exact hne hD
 

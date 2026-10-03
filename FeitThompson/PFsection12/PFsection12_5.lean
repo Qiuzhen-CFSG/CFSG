@@ -1,7 +1,7 @@
 module
 
 public import FeitThompson.PFsection12.Basic
-import FeitThompson.GroupAction.MinimalNormal
+import Theory.GroupAction.MinimalNormal
 import FeitThompson.PFsection5.RealVirtualParity
 import FeitThompson.PFsection6.PFsection6_5_a
 import FeitThompson.PFsection7.PFsection7_3
@@ -295,7 +295,7 @@ public theorem scalar_product_sub_eq_zero_of_equal_degree_125
     exact transformed_difference_mem_integerSpan_of_subsetSum_extension
       hagree₁₂ hTχ₁_union hTχ₂_union
   classical
-  haveI : (H.subgroupOf L).Normal := section16MFSubgroup_subgroupOf_normal _hMF
+  have : (H.subgroupOf L).Normal := section16MFSubgroup_subgroupOf_normal _hMF
   have horth_union : Section5.orthogonalToFinset Rχ₁χ₂ ψ := by
     intro α hα
     rcases Finset.mem_union.mp hα with hα | hα
@@ -692,7 +692,7 @@ public theorem theorem_12_5_restriction_projection_isClassFunction
       (Section1.subgroupRestriction (H.subgroupOf L) ψρ) := by
   classical
   rcases h12_1 with ⟨_hmax, hMF, _hTypeI, _hS, _hτ⟩
-  haveI : (H.subgroupOf L).Normal := section16MFSubgroup_subgroupOf_normal hMF
+  have : (H.subgroupOf L).Normal := section16MFSubgroup_subgroupOf_normal hMF
   have hHsharp_subset_typeIA : ∀ l : L, (l : G) ∈ H → (l : G) ≠ 1 →
       (l : G) ∈ typeIASet L H := by
     intro l hlH hl1
@@ -771,8 +771,8 @@ public theorem induced_restriction_eq_regular_characterInflation_sum
       Section1.familySum
         (fun χ : Q →* ℂˣ => Section1.characterInflationByHom π χ * φ) := by
   classical
-  letI : Fintype T := Fintype.ofFinite T
-  letI : Fintype K := Fintype.ofFinite K
+  let : Fintype T := Fintype.ofFinite T
+  let : Fintype K := Fintype.ofFinite K
   have hcardK_ne : (Nat.card K : ℂ) ≠ 0 := by
     exact_mod_cast (Nat.card_pos (α := K)).ne'
   have hindex_card : (Subgroup.index K : ℂ) * Nat.card K = Nat.card T := by
@@ -969,7 +969,7 @@ public theorem degree_eq_one_of_irreducible_subgroupInKernel'_quotient_abelian
       (QuotientGroup.mk'_surjective K)
     simpa [hcomp_eq] using hρirr
   have hn : n = 1 := by
-    haveI : Representation.IsIrreducible ρq := hρqirr
+    have : Representation.IsIrreducible ρq := hρqirr
     simpa using
       (Representation.IsIrreducible.finrank_eq_one_of_isMulCommutative (ρ := ρq))
   rw [hθeq, Section1.degree_representation_character]
@@ -1024,9 +1024,9 @@ public theorem scalarProduct_subgroupRestriction_principal_eq_zero_of_not_subgro
       (Section1.subgroupRestriction K θ)
       (Section1.principalCharacter K) = 0 := by
   classical
-  letI : Fintype K := Fintype.ofFinite K
+  let : Fintype K := Fintype.ofFinite K
   rcases hθirr with ⟨n, ρ, hρirr, hθeq⟩
-  haveI : Representation.IsIrreducible ρ := hρirr
+  have : Representation.IsIrreducible ρ := hρirr
   have hnotkerρ : ¬ Section1.subgroupInKernel' ρ.character K := by
     intro hkerρ
     exact hnotker (by simpa [hθeq] using hkerρ)
@@ -1038,7 +1038,7 @@ public theorem scalarProduct_subgroupRestriction_principal_eq_zero_of_not_subgro
     invariants_eq_bot_of_irreducible_not_subgroupInKernel ρ K hnotρ
   have hcardK : (Nat.card K : ℂ) ≠ 0 := by
     exact_mod_cast (Nat.card_pos (α := K)).ne'
-  letI : Invertible (Nat.card K : ℂ) := invertibleOfNonzero hcardK
+  let : Invertible (Nat.card K : ℂ) := invertibleOfNonzero hcardK
   let ρK : Representation ℂ K (Fin n → ℂ) := ρ.comp K.subtype
   have havg := Representation.card_inv_mul_sum_char_eq_finrank (ρ := ρK)
   have havg0 : (Nat.card K : ℂ)⁻¹ * ∑ k : K, ρK.character k = 0 := by
@@ -1282,7 +1282,7 @@ public theorem quotient_twist_invariant_induced_weighted_decomposition_exists
         δ = Section1.weightedFamilySum a_lam
           (fun i : ι => Section1.inducedCF K (lam i)) := by
   classical
-  letI : Fintype (Q →* ℂˣ) := Fintype.ofFinite (Q →* ℂˣ)
+  let : Fintype (Q →* ℂˣ) := Fintype.ofFinite (Q →* ℂˣ)
   have hregular := induced_restriction_eq_regular_characterInflation_sum
     K δ π hδclass hker hcard
   have hchars_card : Nat.card (Q →* ℂˣ) = Nat.card Q := by
@@ -1327,8 +1327,8 @@ public theorem quotient_twist_invariant_induced_weighted_decomposition_exists
   rcases classFunction_irreducible_decomposition_all
       (Section1.subgroupRestriction K δ) hresclass with
     ⟨ι, hι, hιdec, c, lam, hlamirr, _hlampair, hlamcomplete, hresdecomp⟩
-  letI : Fintype ι := hι
-  letI : DecidableEq ι := hιdec
+  let : Fintype ι := hι
+  let : DecidableEq ι := hιdec
   refine ⟨ι, hι, lam, fun i => (Nat.card Q : ℂ)⁻¹ * c i,
     hlamirr, hlamcomplete, ?_⟩
   calc
@@ -1356,7 +1356,7 @@ public theorem weightedFamilySum_split_by_pred
       Section1.weightedFamilySum (fun i => if p i then 0 else c i) η +
       Section1.weightedFamilySum (fun i => if p i then c i else 0) η := by
   classical
-  letI : Fintype ι := Fintype.ofFinite ι
+  let : Fintype ι := Fintype.ofFinite ι
   ext t
   unfold Section1.weightedFamilySum
   change (∑ i : ι, c i * η i t) =
@@ -1375,8 +1375,8 @@ public theorem weightedFamilySum_ulift
         (fun i : ULift.{u, v} ι => η i.down) =
       Section1.weightedFamilySum c η := by
   classical
-  letI : Fintype ι := Fintype.ofFinite ι
-  letI : Fintype (ULift.{u, v} ι) := Fintype.ofFinite (ULift.{u, v} ι)
+  let : Fintype ι := Fintype.ofFinite ι
+  let : Fintype (ULift.{u, v} ι) := Fintype.ofFinite (ULift.{u, v} ι)
   ext t
   unfold Section1.weightedFamilySum
   simpa using
@@ -1417,9 +1417,9 @@ public theorem weightedFamilySum_option_inducedCF_principal_add
         Section1.weightedFamilySum a_lam
           (fun i : ι => Section1.inducedCF K (lam i)) := by
   classical
-  letI : Fintype ι := Fintype.ofFinite ι
-  letI : Fintype (ULift.{u, v} ι) := Fintype.ofFinite (ULift.{u, v} ι)
-  letI : Fintype (Option (ULift.{u, v} ι)) :=
+  let : Fintype ι := Fintype.ofFinite ι
+  let : Fintype (ULift.{u, v} ι) := Fintype.ofFinite (ULift.{u, v} ι)
+  let : Fintype (Option (ULift.{u, v} ι)) :=
     Fintype.ofFinite (Option (ULift.{u, v} ι))
   ext t
   simp only [Section1.weightedFamilySum, Pi.add_apply, Pi.smul_apply, smul_eq_mul]
@@ -1508,7 +1508,7 @@ public theorem theorem_12_5_induced_decomposition_exists
   classical
   let T : Type u := H.subgroupOf L
   let K : Subgroup T := ambientDerivedSubgroupInSubgroupOf L H
-  haveI : K.Normal := by
+  have : K.Normal := by
     simpa [T, K] using ambientDerivedSubgroupInSubgroupOf_normal L H
   have hprincipalK :
       Section1.subgroupInKernel' (Section1.principalCharacter T) K := by
@@ -1522,9 +1522,9 @@ public theorem theorem_12_5_induced_decomposition_exists
         L H S Rade τ ψ ψρ h12_1 hψ hρ
   rcases classFunction_irreducible_decomposition_all β hβclass with
     ⟨ι, hι, hιdec, c, η, hηirr, hηpair, hηcomplete, hβdecomp⟩
-  letI : Fintype ι := hι
-  letI : DecidableEq ι := hιdec
-  letI : Finite ι := inferInstance
+  let : Fintype ι := hι
+  let : DecidableEq ι := hιdec
+  let : Finite ι := inferInstance
   have hηorth : ∀ i j : ι,
       Section1.scalarProduct T (η i) (η j) = if i = j then 1 else 0 := by
     intro i j
@@ -1576,13 +1576,13 @@ public theorem theorem_12_5_induced_decomposition_exists
     change ((((x * y)⁻¹ * (y * x) : T) : G) ∈ ambientDerivedSubgroup H)
     rw [section12_ambientDerivedSubgroup_eq_commutator]
     simpa [T, K, commutatorElement_def, mul_assoc] using hcomm
-  haveI : IsMulCommutative Q := IsMulCommutative.of_comm hQcomm
-  letI : CommGroup Q := IsMulCommutative.instCommGroup
-  haveI : Finite Q := by
+  have : IsMulCommutative Q := IsMulCommutative.of_comm hQcomm
+  let : CommGroup Q := IsMulCommutative.instCommGroup
+  have : Finite Q := by
     infer_instance
-  letI : DecidableEq Q := Classical.decEq Q
-  haveI : NeZero (Monoid.exponent Q) := Monoid.neZero_exponent_of_finite
-  haveI : HasEnoughRootsOfUnity ℂ (Monoid.exponent Q) :=
+  let : DecidableEq Q := Classical.decEq Q
+  have : NeZero (Monoid.exponent Q) := Monoid.neZero_exponent_of_finite
+  have : HasEnoughRootsOfUnity ℂ (Monoid.exponent Q) :=
     Section1.complex_hasEnoughRootsOfUnity (Monoid.exponent Q)
   let π : T →* Q := QuotientGroup.mk' K
   have hker : ∀ t : T, π t = 1 ↔ t ∈ K := by
@@ -1644,8 +1644,8 @@ public theorem theorem_12_5_induced_decomposition_exists
   rcases quotient_twist_invariant_induced_weighted_decomposition_exists
       K δ π hδclass hker hcard hδtwist with
     ⟨ιδ, hιδ, lamδ, aδ, hlamδirr, hlamδcomplete, hδdecomp⟩
-  letI : Fintype ιδ := hιδ
-  letI : Finite ιδ := inferInstance
+  let : Fintype ιδ := hιδ
+  let : Finite ιδ := inferInstance
   let b : ℂ :=
     if h : ∃ i : ι,
         Section1.subgroupInKernel' (η i) K ∧
@@ -1699,7 +1699,7 @@ public theorem theorem_12_5_induced_decomposition_exists
       match i with
       | none => b
       | some j => aδ j.down
-  letI : Fintype I := Fintype.ofFinite I
+  let : Fintype I := Fintype.ofFinite I
   have hIraw :
       (∑ i : I, aI i • Section1.inducedCF K (lamI i)) =
         Section1.weightedFamilySum aI
@@ -1784,9 +1784,9 @@ public theorem theorem_12_5
   rcases theorem_12_5_induced_decomposition_exists
       L H S SX Rade R1 R τ ψ ψρ h12_1 hdata hRdata h52 hψ horth hρ with
     ⟨ι, hι, lam, a_lam, a, _hlamirr, _hlamcomplete, hdecomp⟩
-  letI : Fintype ι := hι
+  let : Fintype ι := hι
   let K : Subgroup (H.subgroupOf L) := ambientDerivedSubgroupInSubgroupOf L H
-  haveI : K.Normal := by
+  have : K.Normal := by
     simpa [K] using ambientDerivedSubgroupInSubgroupOf_normal L H
   intro x y hxH hxnot hyH hynot
   let xT : H.subgroupOf L := ⟨x, by

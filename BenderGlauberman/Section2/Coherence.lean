@@ -3,6 +3,7 @@ module
 public import BenderGlauberman.Section2.Basic
 public import BenderGlauberman.Section2.Lemma22
 
+
 /-!
 # Bender--Glauberman: Section 2 — the Coherence Theorem 2.3 cluster
 
@@ -20,9 +21,8 @@ open scoped Pointwise
 namespace BenderGlauberman
 
 open GorensteinWalter
-open Theory.Character
 
--- Local instances matching `Theory.Character`'s subgroup-sum convention; see
+-- Local instances matching `Character`'s subgroup-sum convention; see
 -- `BenderGlauberman/ClassFunction.lean`.
 attribute [local instance] Fintype.ofFinite
 attribute [local instance] Classical.propDecidable
@@ -83,7 +83,7 @@ structure CoherenceData (c : Hyp11 G) (h12 : Hyp12 c) where
   disjoint : ∀ μ ν : Irr (↥c.H0), μ.1 ∈ orbit c.H0 c.U ν.1 →
     ν.1 ≠ μ.1 →
     conjChar c.H0 (s_normalizes_H0 c h12) ν.1 ≠ μ.1 →
-    Theory.Character.Disjoint (tildeNu μ) (tildeNu ν)
+    ClassFunction.Disjoint (tildeNu μ) (tildeNu ν)
   /-- (iv) for `Λ`-orbits `L1` and `L2` not conjugate under `⟨s⟩` (distinct,
   and `L1^s ≠ L2`), the generalized characters `μ̃1−ν̃1` and `μ̃2−ν̃2` are
   orthogonal whenever `μj, νj ∈ Lj`. -/
@@ -706,12 +706,12 @@ private lemma orbit_eq_of_mem (c : Hyp11 G) [Fintype ↥(LambdaHom c.H0 c.U)]
     refine Finset.mem_image.mpr ⟨l * l₀, Finset.mem_univ _, ?_⟩
     rw [← hEq₀]
     ext x
-    simp [LambdaChar, map_mul, mul_assoc]
+    simp [LambdaChar, mul_assoc]
   · intro hψ
     rcases (Finset.mem_image.mp hψ) with ⟨l, hl, rfl⟩
     refine Finset.mem_image.mpr ⟨l * l₀⁻¹, Finset.mem_univ _, ?_⟩
     ext x
-    simp [LambdaChar, map_mul, map_inv, Units.val_inv, mul_assoc]
+    simp [LambdaChar, mul_assoc]
     have hμx : μ x = (l₀.1 x : ℂ) * ν x := (congrFun hEq₀ x).symm
     rw [hμx]
     have hne : (l₀.1 x : ℂ) ≠ 0 := unit_val_ne_zero (l₀.1 x)
@@ -771,9 +771,6 @@ private lemma orbit_conjChar_subset (c : Hyp11 G) (h12 : Hyp12 c)
   rcases (Finset.mem_image.mp hμ) with ⟨l, hl, rfl⟩
   refine Finset.mem_image.mpr ⟨conjLambda c h12 l, Finset.mem_univ _, ?_⟩
   ext x
-  change (LambdaChar (conjLambda c h12 l).1 * ν) x =
-    (conjChar c.H0 (s_normalizes_H0 c h12) (LambdaChar l.1 *
-      conjChar c.H0 (s_normalizes_H0 c h12) ν)) x
   simp [conjChar, conjLambda, LambdaChar]
   have hx : (conjMonoidHom c.H0 c.s (s_normalizes_H0 c h12) x : ↥c.H0) =
       ⟨c.s * (x : G) * c.s⁻¹, s_normalizes_H0 c h12 x⟩ := rfl
@@ -795,8 +792,6 @@ private lemma orbit_subset_conjChar (c : Hyp11 G) (h12 : Hyp12 c)
   rcases (Finset.mem_image.mp hμ) with ⟨l, hl, rfl⟩
   refine Finset.mem_image.mpr ⟨conjLambda c h12 l, Finset.mem_univ _, ?_⟩
   ext x
-  change (LambdaChar (conjLambda c h12 l).1 * conjChar c.H0 (s_normalizes_H0 c h12) ν) x =
-    (conjChar c.H0 (s_normalizes_H0 c h12) (LambdaChar l.1 * ν)) x
   simp [conjChar, conjLambda, LambdaChar]
 
 /-- `s` is an involution, so conjugation by `s` is an involution on class
@@ -973,7 +968,7 @@ private lemma theta_pair_scalar_H0 (c : Hyp11 G) (h12 : Hyp12 c)
         rw [hx]
       rw [h1, h2]
     rw [hθ₁, hθ₂]
-    simp [map_add, add_mul, mul_add, mul_assoc, mul_left_comm, mul_comm]
+    simp [add_mul, mul_add]
     ring
   -- the factor `(Nat.card ↥H0)⁻¹` distributes over the four sums
   change (Nat.card (↥c.H0) : ℂ)⁻¹ * (∑ y : ↥c.H0,
@@ -987,8 +982,7 @@ set_option maxHeartbeats 20000000 in
 scalar product over `H0` (they vanish outside `H0`; `|H : H0| = 2`). -/
 private lemma theta_pair_scalar_H (c : Hyp11 G) (h12 : Hyp12 c)
     (hH0index : (c.H0.subgroupOf c.H).index = 2)
-    {ν₁ ν₂ : ClassFunction (↥c.H0)} (hν₁ : IsIrreducibleCharacter ν₁)
-    (hν₂ : IsIrreducibleCharacter ν₂) :
+    (ν₁ ν₂ : ClassFunction (↥c.H0)) :
     scalarProduct (↥c.H) (inducedFromSub (h12.H0_normal_in_H).1 ν₁)
         (inducedFromSub (h12.H0_normal_in_H).1 ν₂) =
       (2 : ℂ)⁻¹ * scalarProduct (↥c.H0)
@@ -1113,7 +1107,7 @@ private lemma theta_pair_scalar_H' (c : Hyp11 G) (h12 : Hyp12 c)
         scalarProduct (↥c.H0) (conjChar c.H0 (s_normalizes_H0 c h12) ν₁)
           (conjChar c.H0 (s_normalizes_H0 c h12) ν₂)) := by
   classical
-  rw [theta_pair_scalar_H c h12 hH0index hν₁ hν₂]
+  rw [theta_pair_scalar_H c h12 hH0index ν₁ ν₂]
   rw [theta_pair_scalar_H0 c h12 hH0index hν₁ hν₂]
 
 /-- `|ν^H| = 2` if `ν^s = ν`, and `= 1` otherwise (the `(i)`-value for the
@@ -1235,7 +1229,6 @@ to the `H`-sum (`induced_sum_eq_sum_subgroup`), and the summands agree
 with the `H0 → H`-induction summands. -/
 private lemma induced_star_eq_on_T (c : Hyp11 G) (h12 : Hyp12 c)
     [Fintype ↥(LambdaHom c.H0 c.U)]
-    (hH0index : (c.H0.subgroupOf c.H).index = 2)
     {μ ν : ClassFunction (↥c.H0)}
     (hμL : μ ∈ orbit c.H0 c.U ν) (x : ↥c.H0) (hx : (x : G) ∈ c.T) :
     (inducedClassFunction c.H0 (μ - ν)) (x : G) =
@@ -1263,8 +1256,7 @@ private lemma induced_star_eq_on_T (c : Hyp11 G) (h12 : Hyp12 c)
     by_cases hmem : (g : G)⁻¹ * (x : G) * g ∈ c.H0
     · have hh : g⁻¹ * xH * g ∈ c.H0.subgroupOf c.H := hiff.mpr hmem
       simp [ψ, hmem, hh]
-      all_goals
-        try congr 1 <;> congr 1 <;> ext <;> rfl
+      congr 1
     · have hhnot : ¬ (g⁻¹ * xH * g ∈ c.H0.subgroupOf c.H) := by
         intro h
         exact hmem (hiff.mp h)
@@ -1341,12 +1333,10 @@ private lemma theta_tilde_two_eval (c : Hyp11 G) (h12 : Hyp12 c)
       (μ := ⟨μ, hμirr⟩) (ν := ⟨ν, hν⟩) hμL' hμs hνs
   have hnorm1μ : normSq G (thetaTilde (inducedFromSub (h12.H0_normal_in_H).1 μ)) = 1 := by
     rw [hnorm (inducedFromSub (h12.H0_normal_in_H).1 μ) hθμΘ]
-    change normSq (↥c.H) (inducedFromSub (h12.H0_normal_in_H).1 μ) = 1
     rw [theta_norm c h12 hH0index hμirr]
     rw [if_neg hμs]
   have hnorm1ν : normSq G (thetaTilde (inducedFromSub (h12.H0_normal_in_H).1 ν)) = 1 := by
     rw [hnorm (inducedFromSub (h12.H0_normal_in_H).1 ν) hθνΘ]
-    change normSq (↥c.H) (inducedFromSub (h12.H0_normal_in_H).1 ν) = 1
     rw [theta_norm c h12 hH0index hν]
     rw [if_neg hνs]
   rcases norm_one_signed_irreducible (hgen (inducedFromSub (h12.H0_normal_in_H).1 μ) hθμΘ)
@@ -1772,7 +1762,7 @@ private lemma theta_irreducible_iff (c : Hyp11 G) (h12 : Hyp12 c)
 
 /-- `(ν−μ)*(1) = 0` for orbit members `ν, μ` (equal degrees): the value of the
 induced difference at `1`. -/
-private lemma inducedFromSub_one_eq (c : Hyp11 G) (h12 : Hyp12 c)
+private lemma inducedFromSub_one_eq (c : Hyp11 G)
     {ν μ : ClassFunction (↥c.H0)} (hdeg : ν 1 = μ 1) :
     inducedClassFunction c.H0 (ν - μ) 1 = 0 := by
   classical
@@ -1839,20 +1829,14 @@ public lemma lambda_card_eq_index (c : Hyp11 G) (h12 : Hyp12 c) :
         intro l
         apply Subtype.ext
         ext x
-        simpa using QuotientGroup.lift_mk (φ := l.1) (N := K)
-          (by
-            intro k hk
-            exact MonoidHom.mem_ker.mpr (l.2 (k : ↥c.H0) (Subgroup.mem_subgroupOf.mp hk))) x
+        simp
       right_inv := by
         intro ψ
         apply MonoidHom.ext
         intro q
         refine QuotientGroup.induction_on q ?_
         intro x
-        simpa using QuotientGroup.lift_mk (φ := ψ.comp (QuotientGroup.mk' K)) (N := K)
-          (by
-            intro k hk
-            simp) x
+        simp
     }
   calc
     Nat.card (LambdaHom c.H0 c.U) = Nat.card (↥c.H0 ⧸ K →* ℂˣ) := by
@@ -2186,7 +2170,7 @@ private lemma theta_eq_imp_conj (c : Hyp11 G) (h12 : Hyp12 c)
   have hnorm1 : normSq (↥c.H) (inducedFromSub (h12.H0_normal_in_H).1 ν₁) ≠ 0 := by
     have hn := theta_norm c h12 hH0index hν₁
     rw [hn]
-    by_cases h : conjChar c.H0 (s_normalizes_H0 c h12) ν₁ = ν₁ <;> simp [h] <;> norm_num
+    by_cases h : conjChar c.H0 (s_normalizes_H0 c h12) ν₁ = ν₁ <;> simp [h]
   have hpair : scalarProduct (↥c.H) (inducedFromSub (h12.H0_normal_in_H).1 ν₁)
       (inducedFromSub (h12.H0_normal_in_H).1 ν₂) =
         normSq (↥c.H) (inducedFromSub (h12.H0_normal_in_H).1 ν₁) := by
@@ -2566,7 +2550,6 @@ private lemma theta_card_ge_five_of_ge_four (c : Hyp11 G) (h12 : Hyp12 c)
   let n := (thetaOfOrbit c h12 (orbit c.H0 c.U ν)).card
   rcases orbit_card_is_pow_two c h12 ν with ⟨k, hk⟩
   have h2n : n * 2 = (orbit c.H0 c.U ν).card + 2 := by
-    change n * 2 = (orbit c.H0 c.U ν).card + 2
     exact theta_card_mul_two_eq_orbit_card_add_two c h12 hν hνs
   have hpow6 : 6 ≤ 2 ^ k := by
     rw [← hk]
@@ -2676,7 +2659,7 @@ private lemma scalarProduct_star_comm {G : Type u} [Group G] [Fintype G]
     star (scalarProduct G φ ψ) = scalarProduct G ψ φ := by
   classical
   unfold scalarProduct
-  simp [map_sum, map_mul, map_star, mul_comm, mul_left_comm, mul_assoc]
+  simp [mul_comm]
 
 private lemma delta_norm (c : Hyp11 G) (h12 : Hyp12 c)
     (hH0index : (c.H0.subgroupOf c.H).index = 2)
@@ -2823,7 +2806,7 @@ signed irreducible `χ` with `(χ,δ₂) = (χ,δ₃) = 1` (Remark 1.5's input f
 from the decompositions (`Σmᵢ² = 2` gives a two-element support with
 multiplicities `±1`; `aᵢ := (χs₂ i, δ₃) ∈ {0, ±1}` via the pairing with
 `δ₃`'s constituents; `signed_pair_sum_one` extracts the matching index). -/
-private lemma exists_common_constituent_self (c : Hyp11 G) (h12 : Hyp12 c)
+private lemma exists_common_constituent_self
     {δ₂ δ₃ : ClassFunction G} (hδ₂ : IsGeneralizedCharacter δ₂)
     (hδ₃ : IsGeneralizedCharacter δ₃) (hn₂ : normSq G δ₂ = 2)
     (hn₃ : normSq G δ₃ = 2) (hpair : scalarProduct G δ₂ δ₃ = 1) :
@@ -3100,7 +3083,7 @@ orbit: `|δᵢ*|² = |θ₁| + |θᵢ| = 1 + 2 = 3`): `(δ₂,δ₃)_G = 1` with
 `|δ₂| = |δ₃| = 3` gives a signed irreducible `χ` with `(χ,δ₂) = (χ,δ₃) = 1`.
 The extraction is the norm-2 argument with the three-element support
 (`Σmᵢ² = 3`; `signed_triple_sum_one` extracts the matching index). -/
-private lemma exists_common_constituent_self_norm3 (c : Hyp11 G) (h12 : Hyp12 c)
+private lemma exists_common_constituent_self_norm3
     {δ₂ δ₃ : ClassFunction G} (hδ₂ : IsGeneralizedCharacter δ₂)
     (hδ₃ : IsGeneralizedCharacter δ₃) (hn₂ : normSq G δ₂ = 3)
     (hn₃ : normSq G δ₃ = 3) (hpair : scalarProduct G δ₂ δ₃ = 1) :
@@ -3390,7 +3373,7 @@ public theorem signed_pair_decomp {G : Type u} [Group G] [Fintype G]
       right
       left
       rw [hδtwo, h0, h1]
-      simp [sub_eq_add_neg]
+      simp
     · refine ⟨χs i₀, χs i₁, hirr i₀, hirr i₁, hdist i₀ i₁ hi01, ?_⟩
       left
       rw [hδtwo, h0, h1]
@@ -3401,7 +3384,7 @@ public theorem signed_pair_decomp {G : Type u} [Group G] [Fintype G]
       right
       right
       rw [hδtwo, h0, h1]
-      simp [sub_eq_add_neg]
+      simp
     · refine ⟨χs i₀, χs i₁, hirr i₀, hirr i₁, hdist i₀ i₁ hi01, ?_⟩
       right
       right
@@ -3509,7 +3492,7 @@ private lemma scalarProduct_norm_one_signed_norm_two_mem {G : Type u} [Group G]
       rw [hδcase, hbna] at hn
       have hzero : a + -a = 0 := by
         ext
-        simp [sub_eq_add_neg]
+        simp
       have h0 : normSq G (0 : ClassFunction G) = 0 := by
         exact (normSq_eq_zero_iff (0 : ClassFunction G)).2 rfl
       rw [hzero, h0] at hn
@@ -3518,7 +3501,7 @@ private lemma scalarProduct_norm_one_signed_norm_two_mem {G : Type u} [Group G]
       rw [hδcase, hbna] at hn
       have hzero : -a - -a = 0 := by
         ext
-        simp [sub_eq_add_neg]
+        simp
       have h0 : normSq G (0 : ClassFunction G) = 0 := by
         exact (normSq_eq_zero_iff (0 : ClassFunction G)).2 rfl
       rw [hzero, h0] at hn
@@ -3644,13 +3627,13 @@ private lemma scalarProduct_norm_one_signed_norm_three_mem {G : Type u} [Group G
     rcases hχi with hχi | hχi
     · rw [hχi] at horth
       rw [hstar]
-      simpa [horth]
+      simp [horth]
     · rw [hχi] at horth
       have horth' : scalarProduct G (χs j) χ = 0 := by
         rw [scalarProduct_neg_right] at horth
         exact neg_eq_zero.mp horth
       rw [hstar]
-      simpa [horth']
+      simp [horth']
   by_cases hnone : ∀ i, scalarProduct G χ (χs i) = 0
   · right
     left
@@ -3721,19 +3704,19 @@ private lemma scalarProduct_signed_irr_signed_irr_mem {G : Type u} [Group G]
     rcases scalarProduct_signed_irr_irr_mem hχ hψneg with h1 | h0 | hm1
     · right
       right
-      simpa [h1]
+      simp [h1]
     · right
       left
-      simpa [h0]
+      simp [h0]
     · left
-      simpa [hm1]
+      simp [hm1]
 
 /-- The induced class function of a character of `H0` is a character of `G`:
 the explicit induced representation (`Representation.ind`), transported to a
 `Fin m → ℂ` module via `charTrans` + the finite basis, with the character
 matched to `inducedClassFunction` by `induced_character_formula` and the
 `x ↦ x⁻¹` reindexing. -/
-private lemma isCharacter_induced (c : Hyp11 G) (h12 : Hyp12 c)
+private lemma isCharacter_induced (c : Hyp11 G)
     (ν : ClassFunction (↥c.H0)) (hν : IsCharacter ν) :
     IsCharacter (inducedClassFunction c.H0 ν) := by
   classical
@@ -3755,7 +3738,7 @@ private lemma isCharacter_induced (c : Hyp11 G) (h12 : Hyp12 c)
           if hx : x * g * x⁻¹ ∈ c.H0 then ρ.character ⟨x * g * x⁻¹, hx⟩ else 0 := by
             -- the formula's sum uses the `Fintype.ofFinite` instance; bridge to
             -- the section's `[Fintype G]` binder
-            have hf := Theory.Representation.induced_character_formula c.H0 ρ g
+            have hf := Representation.induced_character_formula c.H0 ρ g
             rw [hf]
             have hbridge : (∑ x ∈ @Finset.univ G (Fintype.ofFinite G),
                   if hx : x * g * x⁻¹ ∈ c.H0 then ρ.character ⟨x * g * x⁻¹, hx⟩ else 0) =
@@ -3790,13 +3773,13 @@ private lemma isCharacter_induced (c : Hyp11 G) (h12 : Hyp12 c)
 
 /-- The induced of a generalized character of `H0` is a generalized character
 of `G` (via `isCharacter_induced` + the linearity of induction). -/
-private lemma isGeneralizedCharacter_induced (c : Hyp11 G) (h12 : Hyp12 c)
+private lemma isGeneralizedCharacter_induced (c : Hyp11 G)
     (δ : ClassFunction (↥c.H0)) (hδ : IsGeneralizedCharacter δ) :
     IsGeneralizedCharacter (inducedClassFunction c.H0 δ) := by
   classical
   rcases hδ with ⟨χ, ψ, hχ, hψ, hδeq⟩
   refine ⟨inducedClassFunction c.H0 χ, inducedClassFunction c.H0 ψ,
-    isCharacter_induced c h12 χ hχ, isCharacter_induced c h12 ψ hψ, ?_⟩
+    isCharacter_induced c χ hχ, isCharacter_induced c ψ hψ, ?_⟩
   rw [hδeq]
   exact inducedClassFunction_sub c.H0 χ ψ
 
@@ -3816,11 +3799,11 @@ private lemma disjoint_of_orthogonal_norm_one {G : Type u} [Group G] [Fintype G]
     (hψ : IsGeneralizedCharacter ψ)
     (hφ1 : scalarProduct G φ φ = 1) (hψ1 : scalarProduct G ψ ψ = 1)
     (horth : scalarProduct G φ ψ = 0) :
-    Theory.Character.Disjoint φ ψ := by
+    ClassFunction.Disjoint φ ψ := by
   classical
   rcases norm_one_signed_irreducible hφ hφ1 with ⟨χ, hχ, hφeq⟩
   rcases norm_one_signed_irreducible hψ hψ1 with ⟨χ', hχ', hψeq⟩
-  unfold Theory.Character.Disjoint
+  unfold ClassFunction.Disjoint
   intro α hα hαφ
   by_contra hαψ
   have hαχ : α = χ := by
@@ -3870,11 +3853,11 @@ private lemma disjoint_of_orthogonal_norm_one {G : Type u} [Group G] [Fintype G]
       norm_num at this
   exact hχχ' (hαχ.symm.trans hαχ')
 
-/-- `Disjoint` is symmetric. -/
+/-- `ClassFunction.Disjoint` is symmetric. -/
 private lemma disjoint_comm {G : Type u} [Group G] [Fintype G]
-    {φ ψ : ClassFunction G} (h : Theory.Character.Disjoint φ ψ) :
-    Theory.Character.Disjoint ψ φ := by
-  unfold Theory.Character.Disjoint
+    {φ ψ : ClassFunction G} (h : ClassFunction.Disjoint φ ψ) :
+    ClassFunction.Disjoint ψ φ := by
+  unfold ClassFunction.Disjoint
   intro χ hχ hχψ
   by_contra hχφ
   exact hχψ (h χ hχ hχφ)
@@ -3884,13 +3867,12 @@ private lemma disjoint_comm {G : Type u} [Group G] [Fintype G]
 constituent's occurrence in the norm-two side). -/
 private lemma disjoint_of_orthogonal_norm_one_two {G : Type u} [Group G] [Fintype G]
     {φ ψ : ClassFunction G} (hφ : IsGeneralizedCharacter φ)
-    (hψ : IsGeneralizedCharacter ψ)
-    (hφ1 : scalarProduct G φ φ = 1) (hψ2 : scalarProduct G ψ ψ = 2)
+    (hφ1 : scalarProduct G φ φ = 1)
     (horth : scalarProduct G φ ψ = 0) :
-    Theory.Character.Disjoint φ ψ := by
+    ClassFunction.Disjoint φ ψ := by
   classical
   rcases norm_one_signed_irreducible hφ hφ1 with ⟨χ, hχ, hφeq⟩
-  unfold Theory.Character.Disjoint
+  unfold ClassFunction.Disjoint
   intro α hα hαφ
   have hαχ : α = χ := by
     have hαχ0 : scalarProduct G α χ ≠ 0 := by
@@ -4038,8 +4020,7 @@ private lemma normSq_signed_pair_two {G : Type u} [Group G] [Fintype G]
     normSq G ((ε₁ : ℂ) • χ + (ε₂ : ℂ) • ψ) = 2 := by
   rcases hε₁ with hε₁ | hε₁ <;> rcases hε₂ with hε₂ | hε₂ <;>
     simp [normSq, hε₁, hε₂, scalarProduct_add_left, scalarProduct_add_right,
-      scalarProduct_smul_left, scalarProduct_smul_right, scalarProduct_neg_left,
-      scalarProduct_neg_right, star_intCast,
+      scalarProduct_neg_left, scalarProduct_neg_right,
       irreducible_scalarProduct_self hχ, irreducible_scalarProduct_self hψ,
       scalarProduct_irreducible_orthogonal hχ hψ hne,
       scalarProduct_irreducible_orthogonal hψ hχ hne.symm] <;> norm_num
@@ -4049,8 +4030,8 @@ private lemma scalarProduct_signed_pair_pair_zero {G : Type u} [Group G] [Fintyp
     {χ ψ φ ρ : ClassFunction G}
     (hχ : IsIrreducibleCharacter χ) (hψ : IsIrreducibleCharacter ψ)
     (hφ : IsIrreducibleCharacter φ) (hρ : IsIrreducibleCharacter ρ)
-    (hχψ : χ ≠ ψ) (hχφ : χ ≠ φ) (hχρ : χ ≠ ρ)
-    (hψφ : ψ ≠ φ) (hψρ : ψ ≠ ρ) (hφρ : φ ≠ ρ)
+    (hχφ : χ ≠ φ) (hχρ : χ ≠ ρ)
+    (hψφ : ψ ≠ φ) (hψρ : ψ ≠ ρ)
     (ε₁ ε₂ ε₃ ε₄ : ℤ)
     (hε₁ : ε₁ = 1 ∨ ε₁ = -1) (hε₂ : ε₂ = 1 ∨ ε₂ = -1)
     (hε₃ : ε₃ = 1 ∨ ε₃ = -1) (hε₄ : ε₄ = 1 ∨ ε₄ = -1) :
@@ -4058,12 +4039,11 @@ private lemma scalarProduct_signed_pair_pair_zero {G : Type u} [Group G] [Fintyp
   rcases hε₁ with hε₁ | hε₁ <;> rcases hε₂ with hε₂ | hε₂ <;>
     rcases hε₃ with hε₃ | hε₃ <;> rcases hε₄ with hε₄ | hε₄ <;>
       simp [hε₁, hε₂, hε₃, hε₄, scalarProduct_add_left, scalarProduct_add_right,
-        scalarProduct_smul_left, scalarProduct_smul_right, scalarProduct_neg_left,
-        scalarProduct_neg_right, star_intCast,
+        scalarProduct_neg_left, scalarProduct_neg_right,
         scalarProduct_irreducible_orthogonal hχ hφ hχφ,
         scalarProduct_irreducible_orthogonal hχ hρ hχρ,
         scalarProduct_irreducible_orthogonal hψ hφ hψφ,
-        scalarProduct_irreducible_orthogonal hψ hρ hψρ] <;> norm_num
+        scalarProduct_irreducible_orthogonal hψ hρ hψρ]
 
 /-- The norm-4 signed decomposition with a vanishing value at `1`: a
 generalized character `δ` with `|δ|² = 4` and `δ(1) = 0` is a difference
@@ -4247,8 +4227,8 @@ private lemma normSq4_decomp_of_zero_one {G : Type u} [Group G] [Fintype G]
     exact normSq_signed_pair_two (hirr i₂) (hirr i₃) (hdist i₂ i₃ hi23) (-ms i₂) (-ms i₃) hε₂ hε₃
   · -- `(A, B) = 0`
     exact scalarProduct_signed_pair_pair_zero (hirr i₀) (hirr i₁) (hirr i₂) (hirr i₃)
-      (hdist i₀ i₁ hi01) (hdist i₀ i₂ hi02) (hdist i₀ i₃ hi03)
-      (hdist i₁ i₂ hi12) (hdist i₁ i₃ hi13) (hdist i₂ i₃ hi23)
+      (hdist i₀ i₂ hi02) (hdist i₀ i₃ hi03)
+      (hdist i₁ i₂ hi12) (hdist i₁ i₃ hi13)
       (ms i₀) (ms i₁) (-ms i₂) (-ms i₃) hmi₀ hmi₁ hε₂ hε₃
   · -- `δ = A − B`
     rw [hδfour]
@@ -4466,13 +4446,13 @@ private lemma delta_star_decomp_of_undefined (c : Hyp11 G) (h12 : Hyp12 c)
   -- the degree facts: `δ*(1) = 0`, `th2(1) = th3(1) = χ₂₃(1)`, `χ₂₃(1) ≠ 0`
   have hδ₂1 : δ₂ 1 = 0 := by
     change inducedClassFunction c.H0 (ν₁ - ν₂) 1 = 0
-    exact inducedFromSub_one_eq c h12 (orbit_mem_degree_eq c h₂₁).symm
+    exact inducedFromSub_one_eq c (orbit_mem_degree_eq c h₂₁).symm
   have hδ₃1 : δ₃ 1 = 0 := by
     change inducedClassFunction c.H0 (ν₁ - ν₃) 1 = 0
-    exact inducedFromSub_one_eq c h12 (orbit_mem_degree_eq c h₃₁).symm
+    exact inducedFromSub_one_eq c (orbit_mem_degree_eq c h₃₁).symm
   have hdj1 : dj 1 = 0 := by
     change inducedClassFunction c.H0 (ν₁ - νⱼ) 1 = 0
-    exact inducedFromSub_one_eq c h12 (orbit_mem_degree_eq c hⱼ₁).symm
+    exact inducedFromSub_one_eq c (orbit_mem_degree_eq c hⱼ₁).symm
   have hth21 : th2 1 = χ₂₃ 1 := by
     change (χ₂₃ - δ₂) 1 = χ₂₃ 1
     simp [hδ₂1]
@@ -4523,7 +4503,6 @@ private lemma delta_star_decomp_of_undefined (c : Hyp11 G) (h12 : Hyp12 c)
   have hth3th2 : scalarProduct G th3 th2 = 0 := by
     apply star_inj.mp
     rw [scalarProduct_star_comm]
-    change scalarProduct G th2 th3 = star 0
     simpa using hth2th3
   have hth2dj : scalarProduct G th2 dj = -1 := by
     change scalarProduct G (χ₂₃ - δ₂) dj = -1
@@ -4536,12 +4515,10 @@ private lemma delta_star_decomp_of_undefined (c : Hyp11 G) (h12 : Hyp12 c)
   have hdjth2 : scalarProduct G dj th2 = -1 := by
     apply star_inj.mp
     rw [scalarProduct_star_comm]
-    change scalarProduct G th2 dj = star (-1)
     simpa using hth2dj
   have hdjth3 : scalarProduct G dj th3 = -1 := by
     apply star_inj.mp
     rw [scalarProduct_star_comm]
-    change scalarProduct G th3 dj = star (-1)
     simpa using hth3dj
   -- `|dj*|² = 3`: the `|dj*|² = 2` case would force `dj* = −th2 − th3`,
   -- contradicting `dj*(1) = 0` and `th2(1) = th3(1) = χ₂₃(1) ≠ 0`
@@ -4575,13 +4552,13 @@ private lemma delta_star_decomp_of_undefined (c : Hyp11 G) (h12 : Hyp12 c)
     norm_num
   have hdjg : IsGeneralizedCharacter dj := by
     change IsGeneralizedCharacter (inducedClassFunction c.H0 (ν₁ - νⱼ))
-    exact isGeneralizedCharacter_induced c h12 (ν₁ - νⱼ) (isGeneralizedCharacter_sub_irr hν₁ hνⱼ)
+    exact isGeneralizedCharacter_induced c (ν₁ - νⱼ) (isGeneralizedCharacter_sub_irr hν₁ hνⱼ)
   have hδ₂g : IsGeneralizedCharacter δ₂ := by
     change IsGeneralizedCharacter (inducedClassFunction c.H0 (ν₁ - ν₂))
-    exact isGeneralizedCharacter_induced c h12 (ν₁ - ν₂) (isGeneralizedCharacter_sub_irr hν₁ hν₂)
+    exact isGeneralizedCharacter_induced c (ν₁ - ν₂) (isGeneralizedCharacter_sub_irr hν₁ hν₂)
   have hδ₃g : IsGeneralizedCharacter δ₃ := by
     change IsGeneralizedCharacter (inducedClassFunction c.H0 (ν₁ - ν₃))
-    exact isGeneralizedCharacter_induced c h12 (ν₁ - ν₃) (isGeneralizedCharacter_sub_irr hν₁ hν₃)
+    exact isGeneralizedCharacter_induced c (ν₁ - ν₃) (isGeneralizedCharacter_sub_irr hν₁ hν₃)
   have hφg : IsGeneralizedCharacter (dj + th2 + th3) := by
     have hth2g : IsGeneralizedCharacter th2 := by
       change IsGeneralizedCharacter (χ₂₃ - δ₂)
@@ -4637,7 +4614,6 @@ private lemma pairing_eq_one_of_norm_two (c : Hyp11 G) (h12 : Hyp12 c)
     (hν₁s : conjChar c.H0 (s_normalizes_H0 c h12) ν₁ ≠ ν₁)
     (hν₂s : conjChar c.H0 (s_normalizes_H0 c h12) ν₂ ≠ ν₂)
     (hν₃s : conjChar c.H0 (s_normalizes_H0 c h12) ν₃ ≠ ν₃)
-    (hνⱼs : conjChar c.H0 (s_normalizes_H0 c h12) νⱼ ≠ νⱼ)
     (h₁₂ : ν₁ ≠ ν₂ ∧ conjChar c.H0 (s_normalizes_H0 c h12) ν₁ ≠ ν₂)
     (h₁₃ : ν₁ ≠ ν₃ ∧ conjChar c.H0 (s_normalizes_H0 c h12) ν₁ ≠ ν₃)
     (h₁ⱼ : ν₁ ≠ νⱼ ∧ conjChar c.H0 (s_normalizes_H0 c h12) ν₁ ≠ νⱼ)
@@ -4654,13 +4630,13 @@ private lemma pairing_eq_one_of_norm_two (c : Hyp11 G) (h12 : Hyp12 c)
   classical
   by_contra hχjne1
   have hδⱼg : IsGeneralizedCharacter (inducedClassFunction c.H0 (ν₁ - νⱼ)) := by
-    exact isGeneralizedCharacter_induced c h12 (ν₁ - νⱼ)
+    exact isGeneralizedCharacter_induced c (ν₁ - νⱼ)
       (isGeneralizedCharacter_sub_irr hν₁ hνⱼ)
   have hδ₂g : IsGeneralizedCharacter (inducedClassFunction c.H0 (ν₁ - ν₂)) := by
-    exact isGeneralizedCharacter_induced c h12 (ν₁ - ν₂)
+    exact isGeneralizedCharacter_induced c (ν₁ - ν₂)
       (isGeneralizedCharacter_sub_irr hν₁ hν₂)
   have hδ₃g : IsGeneralizedCharacter (inducedClassFunction c.H0 (ν₁ - ν₃)) := by
-    exact isGeneralizedCharacter_induced c h12 (ν₁ - ν₃)
+    exact isGeneralizedCharacter_induced c (ν₁ - ν₃)
       (isGeneralizedCharacter_sub_irr hν₁ hν₃)
   have hχjmem :
       scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - νⱼ)) = 1 ∨
@@ -4681,20 +4657,11 @@ private lemma pairing_eq_one_of_norm_two (c : Hyp11 G) (h12 : Hyp12 c)
         (inducedClassFunction c.H0 (ν₁ - νⱼ)) = 1 := by
     rw [delta_pair_scalar c h12 (ν₁ := ν₂) (ν₂ := νⱼ) (μ₁ := ν₁)
       (μ₂ := ν₁) hν₂ hνⱼ h₁₂L h₁ⱼL]
-    change scalarProduct (↥c.H)
-      (inducedFromSub (h12.H0_normal_in_H).1 ν₁ -
-        inducedFromSub (h12.H0_normal_in_H).1 ν₂)
-      (inducedFromSub (h12.H0_normal_in_H).1 ν₁ -
-        inducedFromSub (h12.H0_normal_in_H).1 νⱼ) = 1
     have hθ₁₁ : scalarProduct (↥c.H)
         (inducedFromSub (h12.H0_normal_in_H).1 ν₁)
         (inducedFromSub (h12.H0_normal_in_H).1 ν₁) = 1 := by
       change normSq (↥c.H) (inducedFromSub (h12.H0_normal_in_H).1 ν₁) = 1
       rw [theta_norm c h12 hH0index hν₁, if_neg hν₁s]
-    have hθ₁₂ : scalarProduct (↥c.H)
-        (inducedFromSub (h12.H0_normal_in_H).1 ν₁)
-        (inducedFromSub (h12.H0_normal_in_H).1 ν₂) = 0 :=
-      theta_pair_scalar_zero c h12 hH0index hν₁ hν₂ h₁₂.1 h₁₂.2
     have hθ₁ⱼ : scalarProduct (↥c.H)
         (inducedFromSub (h12.H0_normal_in_H).1 ν₁)
         (inducedFromSub (h12.H0_normal_in_H).1 νⱼ) = 0 :=
@@ -4711,7 +4678,7 @@ private lemma pairing_eq_one_of_norm_two (c : Hyp11 G) (h12 : Hyp12 c)
         (inducedFromSub (h12.H0_normal_in_H).1 νⱼ) = 0 :=
       theta_pair_scalar_zero c h12 hH0index hν₂ hνⱼ h₂ⱼ.1 h₂ⱼ.2
     simp [scalarProduct_sub_left, scalarProduct_sub_right,
-      hθ₁₁, hθ₁₂, hθ₁ⱼ, hθ₂₁, hθ₂ⱼ]
+      hθ₁₁, hθ₁ⱼ, hθ₂₁, hθ₂ⱼ]
   have hχj0 :
       scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - νⱼ)) = 0 := by
     rcases hχjmem with hχj1 | hχj0 | hχjm1
@@ -4725,8 +4692,6 @@ private lemma pairing_eq_one_of_norm_two (c : Hyp11 G) (h12 : Hyp12 c)
           scalarProduct G (inducedClassFunction c.H0 (ν₁ - ν₂)) χ₂₃ = 1 := by
         apply star_inj.mp
         rw [scalarProduct_star_comm]
-        change scalarProduct G χ₂₃
-          (inducedClassFunction c.H0 (ν₁ - ν₂)) = star 1
         simpa using hχ₂
       have hth2norm :
           normSq G (χ₂₃ - inducedClassFunction c.H0 (ν₁ - ν₂)) = 1 := by
@@ -4843,32 +4808,25 @@ common constituent `χ₂₃` is `0` or `1` (the `-1` case is excluded by the
 norm-one signed `θ̃₂`, whose pairing with `δa*` would be `-2`). -/
 private lemma fixed_member_pairing_eq_zero_or_one (c : Hyp11 G) (h12 : Hyp12 c)
     (hH0index : (c.H0.subgroupOf c.H).index = 2)
-    {ν₁ ν₂ ν₃ a : ClassFunction (↥c.H0)}
+    {ν₁ ν₂ a : ClassFunction (↥c.H0)}
     (hν₁ : IsIrreducibleCharacter ν₁) (hν₂ : IsIrreducibleCharacter ν₂)
-    (hν₃ : IsIrreducibleCharacter ν₃) (ha : IsIrreducibleCharacter a)
-    (h₂₁ : ν₂ ∈ orbit c.H0 c.U ν₁) (h₃₁ : ν₃ ∈ orbit c.H0 c.U ν₁)
-    (ha₁ : a ∈ orbit c.H0 c.U ν₁)
+    (ha : IsIrreducibleCharacter a)
+    (h₂₁ : ν₂ ∈ orbit c.H0 c.U ν₁) (ha₁ : a ∈ orbit c.H0 c.U ν₁)
     (hν₁s : conjChar c.H0 (s_normalizes_H0 c h12) ν₁ ≠ ν₁)
     (hν₂s : conjChar c.H0 (s_normalizes_H0 c h12) ν₂ ≠ ν₂)
-    (hν₃s : conjChar c.H0 (s_normalizes_H0 c h12) ν₃ ≠ ν₃)
-    (hfixa : conjChar c.H0 (s_normalizes_H0 c h12) a = a)
     (h₁a : ν₁ ≠ a ∧ conjChar c.H0 (s_normalizes_H0 c h12) ν₁ ≠ a)
     (h₂a : ν₂ ≠ a ∧ conjChar c.H0 (s_normalizes_H0 c h12) ν₂ ≠ a)
-    (h₃a : ν₃ ≠ a ∧ conjChar c.H0 (s_normalizes_H0 c h12) ν₃ ≠ a)
     (h₁₂ : ν₁ ≠ ν₂ ∧ conjChar c.H0 (s_normalizes_H0 c h12) ν₁ ≠ ν₂)
-    (h₁₃ : ν₁ ≠ ν₃ ∧ conjChar c.H0 (s_normalizes_H0 c h12) ν₁ ≠ ν₃)
-    (h₂₃ : ν₂ ≠ ν₃ ∧ conjChar c.H0 (s_normalizes_H0 c h12) ν₂ ≠ ν₃)
     {χ₂₃ : ClassFunction G}
     (hχsig : IsIrreducibleCharacter χ₂₃ ∨ IsIrreducibleCharacter (-χ₂₃))
     (hχg : IsGeneralizedCharacter χ₂₃) (hχ₁ : normSq G χ₂₃ = 1)
     (hχ₂ : scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - ν₂)) = 1)
-    (hχ₃ : scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - ν₃)) = 1)
     (hδanorm : normSq G (inducedClassFunction c.H0 (ν₁ - a)) = 3) :
     scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - a)) = 0 ∨
       scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - a)) = 1 := by
   classical
   have hδag : IsGeneralizedCharacter (inducedClassFunction c.H0 (ν₁ - a)) := by
-    exact isGeneralizedCharacter_induced c h12 (ν₁ - a)
+    exact isGeneralizedCharacter_induced c (ν₁ - a)
       (isGeneralizedCharacter_sub_irr hν₁ ha)
   have hχamem : scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - a)) = 1 ∨
       scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - a)) = 0 ∨
@@ -4894,7 +4852,6 @@ private lemma fixed_member_pairing_eq_zero_or_one (c : Hyp11 G) (h12 : Hyp12 c)
     have hδ₂χ : scalarProduct G (inducedClassFunction c.H0 (ν₁ - ν₂)) χ₂₃ = 1 := by
       apply star_inj.mp
       rw [scalarProduct_star_comm]
-      change scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - ν₂)) = star 1
       simpa using hχ₂
     have hth2norm : normSq G (χ₂₃ - inducedClassFunction c.H0 (ν₁ - ν₂)) = 1 := by
       unfold normSq
@@ -4903,7 +4860,7 @@ private lemma fixed_member_pairing_eq_zero_or_one (c : Hyp11 G) (h12 : Hyp12 c)
       rw [hχ₁, hχ₂, hδ₂χ, hδ₂self]
       norm_num
     have hδ₂g : IsGeneralizedCharacter (inducedClassFunction c.H0 (ν₁ - ν₂)) := by
-      exact isGeneralizedCharacter_induced c h12 (ν₁ - ν₂)
+      exact isGeneralizedCharacter_induced c (ν₁ - ν₂)
         (isGeneralizedCharacter_sub_irr hν₁ hν₂)
     have hth2g : IsGeneralizedCharacter (χ₂₃ - inducedClassFunction c.H0 (ν₁ - ν₂)) :=
       isGeneralizedCharacter_sub hχg hδ₂g
@@ -4940,6 +4897,7 @@ private lemma fixed_member_pairing_eq_zero_or_one (c : Hyp11 G) (h12 : Hyp12 c)
       norm_num at hm1'
 
 
+omit [Group G] in
 /-- Expanding `(φ − th2 − th3, φ' − th2 − th3)` with the orthogonality of
 `th2, th3` against everything and their norm-one self-pairings. -/
 private lemma scalarProduct_twice_minus_two_three (φ φ' th2 th3 : ClassFunction G)
@@ -4970,7 +4928,6 @@ private lemma two_bad_fixed_contradiction (c : Hyp11 G) (h12 : Hyp12 c)
     (hν₂s : conjChar c.H0 (s_normalizes_H0 c h12) ν₂ ≠ ν₂)
     (hν₃s : conjChar c.H0 (s_normalizes_H0 c h12) ν₃ ≠ ν₃)
     (hfixν : conjChar c.H0 (s_normalizes_H0 c h12) ν = ν)
-    (hfixν' : conjChar c.H0 (s_normalizes_H0 c h12) ν' = ν')
     (hνν' : ν ≠ ν')
     (h₁ν : ν₁ ≠ ν ∧ conjChar c.H0 (s_normalizes_H0 c h12) ν₁ ≠ ν)
     (h₂ν : ν₂ ≠ ν ∧ conjChar c.H0 (s_normalizes_H0 c h12) ν₂ ≠ ν)
@@ -4991,9 +4948,7 @@ private lemma two_bad_fixed_contradiction (c : Hyp11 G) (h12 : Hyp12 c)
     (hδ₂₃pair : scalarProduct G (inducedClassFunction c.H0 (ν₁ - ν₂))
       (inducedClassFunction c.H0 (ν₁ - ν₃)) = 1)
     (hχ0ν : scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - ν)) = 0)
-    (hχ0ν' : scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - ν')) = 0)
-    (hδνnorm : normSq G (inducedClassFunction c.H0 (ν₁ - ν)) = 3)
-    (hδν'norm : normSq G (inducedClassFunction c.H0 (ν₁ - ν')) = 3) :
+    (hχ0ν' : scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - ν')) = 0) :
     False := by
   classical
   let δ₂ : ClassFunction G := inducedClassFunction c.H0 (ν₁ - ν₂)
@@ -5025,12 +4980,10 @@ private lemma two_bad_fixed_contradiction (c : Hyp11 G) (h12 : Hyp12 c)
   have hδ₂χ : scalarProduct G δ₂ χ₂₃ = 1 := by
     apply star_inj.mp
     rw [scalarProduct_star_comm]
-    change scalarProduct G χ₂₃ δ₂ = star 1
     simpa [δ₂] using hχ₂
   have hδ₃χ : scalarProduct G δ₃ χ₂₃ = 1 := by
     apply star_inj.mp
     rw [scalarProduct_star_comm]
-    change scalarProduct G χ₂₃ δ₃ = star 1
     simpa [δ₃] using hχ₃
   have hδ₂self : scalarProduct G δ₂ δ₂ = 2 := by
     change normSq G δ₂ = 2
@@ -5090,12 +5043,10 @@ private lemma two_bad_fixed_contradiction (c : Hyp11 G) (h12 : Hyp12 c)
       simpa [δ₃, scalarProduct_sub_right] using hφ'th3
     exact (sub_eq_zero.mp h).symm
   have hχχ : scalarProduct G χ₂₃ χ₂₃ = 1 := by
-    change scalarProduct G χ₂₃ χ₂₃ = 1
     exact hχ₁
   have hδ₃δ₂ : scalarProduct G δ₃ δ₂ = 1 := by
     apply star_inj.mp
     rw [scalarProduct_star_comm]
-    change scalarProduct G δ₂ δ₃ = star 1
     simpa using hδ₂₃pair
   have hδνν' : scalarProduct G δν δν' = 1 := by
     change scalarProduct G (inducedClassFunction c.H0 (ν₁ - ν))
@@ -5115,8 +5066,7 @@ private lemma two_bad_fixed_contradiction (c : Hyp11 G) (h12 : Hyp12 c)
       exact scalarProduct_twice_minus_two_three φ φ' th2 th3
         hφth2 hφth3
         hth2φ' hth3φ' hth2th3 hth3th2
-        (by change scalarProduct G th2 th2 = 1; exact hth2norm)
-        (by change scalarProduct G th3 th3 = 1; exact hth3norm)
+        hth2norm hth3norm
     rw [hcalc] at hδνν'
     linear_combination hδνν'
   have hφ'φ : scalarProduct G φ' φ = -1 := by
@@ -5148,16 +5098,16 @@ private lemma two_bad_fixed_contradiction (c : Hyp11 G) (h12 : Hyp12 c)
     linear_combination hsum0
   have hδν1 : δν 1 = 0 := by
     change inducedClassFunction c.H0 (ν₁ - ν) 1 = 0
-    exact inducedFromSub_one_eq c h12 (orbit_mem_degree_eq c hνmem).symm
+    exact inducedFromSub_one_eq c (orbit_mem_degree_eq c hνmem).symm
   have hδν'1 : δν' 1 = 0 := by
     change inducedClassFunction c.H0 (ν₁ - ν') 1 = 0
-    exact inducedFromSub_one_eq c h12 (orbit_mem_degree_eq c hν'mem).symm
+    exact inducedFromSub_one_eq c (orbit_mem_degree_eq c hν'mem).symm
   have hδ₂1 : δ₂ 1 = 0 := by
     change inducedClassFunction c.H0 (ν₁ - ν₂) 1 = 0
-    exact inducedFromSub_one_eq c h12 (orbit_mem_degree_eq c h₂₁).symm
+    exact inducedFromSub_one_eq c (orbit_mem_degree_eq c h₂₁).symm
   have hδ₃1 : δ₃ 1 = 0 := by
     change inducedClassFunction c.H0 (ν₁ - ν₃) 1 = 0
-    exact inducedFromSub_one_eq c h12 (orbit_mem_degree_eq c h₃₁).symm
+    exact inducedFromSub_one_eq c (orbit_mem_degree_eq c h₃₁).symm
   have hth21 : th2 1 = χ₂₃ 1 := by
     change (χ₂₃ - δ₂) 1 = χ₂₃ 1
     simp [hδ₂1]
@@ -5169,7 +5119,7 @@ private lemma two_bad_fixed_contradiction (c : Hyp11 G) (h12 : Hyp12 c)
     · exact irreducible_char_one_ne_zero hχ
     · intro h0
       have hneg : (-χ₂₃) 1 ≠ 0 := irreducible_char_one_ne_zero hχ
-      exact hneg (by simpa [h0])
+      exact hneg (by simp [h0])
   have hφdeg : φ 1 = 2 * χ₂₃ 1 := by
     have h := congrFun hφdec 1
     change δν 1 = φ 1 - th2 1 - th3 1 at h
@@ -5209,20 +5159,17 @@ multiplicity in `(μ−γ)*`, and `φ` has twice that multiplicity. -/
 private lemma theta_pairings_eq_of_cross_orbit (c : Hyp11 G) (h12 : Hyp12 c)
     (hH0index : (c.H0.subgroupOf c.H).index = 2)
     {ν₁ ν₂ ν₃ νⱼ μ γ : ClassFunction (↥c.H0)}
-    (hν₁ : IsIrreducibleCharacter ν₁) (hν₂ : IsIrreducibleCharacter ν₂)
+    (hν₂ : IsIrreducibleCharacter ν₂)
     (hν₃ : IsIrreducibleCharacter ν₃) (hνⱼ : IsIrreducibleCharacter νⱼ)
-    (hμ : IsIrreducibleCharacter μ) (hγ : IsIrreducibleCharacter γ)
+    (hγ : IsIrreducibleCharacter γ)
     (h₂₁ : ν₂ ∈ orbit c.H0 c.U ν₁) (h₃₁ : ν₃ ∈ orbit c.H0 c.U ν₁)
     (hⱼ₁ : νⱼ ∈ orbit c.H0 c.U ν₁) (hμγ : μ ∈ orbit c.H0 c.U γ)
-    (hν₁μ : ν₁ ∉ orbit c.H0 c.U μ)
-    (hν₁sμ : conjChar c.H0 (s_normalizes_H0 c h12) ν₁ ∉ orbit c.H0 c.U μ)
     (hν₂μ : ν₂ ∉ orbit c.H0 c.U μ)
     (hν₂sμ : conjChar c.H0 (s_normalizes_H0 c h12) ν₂ ∉ orbit c.H0 c.U μ)
     (hν₃μ : ν₃ ∉ orbit c.H0 c.U μ)
     (hν₃sμ : conjChar c.H0 (s_normalizes_H0 c h12) ν₃ ∉ orbit c.H0 c.U μ)
     (hνⱼμ : νⱼ ∉ orbit c.H0 c.U μ)
     (hνⱼsμ : conjChar c.H0 (s_normalizes_H0 c h12) νⱼ ∉ orbit c.H0 c.U μ)
-    (hμne : μ ≠ γ) (hμs : conjChar c.H0 (s_normalizes_H0 c h12) μ ≠ γ)
     {χ₂₃ φ : ClassFunction G}
     (hφdec : inducedClassFunction c.H0 (ν₁ - νⱼ) =
       φ - (χ₂₃ - inducedClassFunction c.H0 (ν₁ - ν₂)) -
@@ -5275,29 +5222,14 @@ private lemma theta_pairings_eq_of_cross_orbit (c : Hyp11 G) (h12 : Hyp12 c)
   have hδ₂δ : scalarProduct G δ₂ δ = 0 := by
     change scalarProduct G (inducedClassFunction c.H0 (ν₁ - ν₂)) δ = 0
     rw [delta_pair_scalar c h12 hν₂ hγ h₁₂L hμγ]
-    change scalarProduct (↥c.H)
-      (inducedFromSub (h12.H0_normal_in_H).1 ν₁ -
-        inducedFromSub (h12.H0_normal_in_H).1 ν₂)
-      (inducedFromSub (h12.H0_normal_in_H).1 μ -
-        inducedFromSub (h12.H0_normal_in_H).1 γ) = 0
     exact theta_pair_orth c h12 hH0index hν₂ hγ h₁₂L hμγ hν₂γ hν₂sγ
   have hδ₃δ : scalarProduct G δ₃ δ = 0 := by
     change scalarProduct G (inducedClassFunction c.H0 (ν₁ - ν₃)) δ = 0
     rw [delta_pair_scalar c h12 hν₃ hγ h₁₃L hμγ]
-    change scalarProduct (↥c.H)
-      (inducedFromSub (h12.H0_normal_in_H).1 ν₁ -
-        inducedFromSub (h12.H0_normal_in_H).1 ν₃)
-      (inducedFromSub (h12.H0_normal_in_H).1 μ -
-        inducedFromSub (h12.H0_normal_in_H).1 γ) = 0
     exact theta_pair_orth c h12 hH0index hν₃ hγ h₁₃L hμγ hν₃γ hν₃sγ
   have hδⱼδ : scalarProduct G δⱼ δ = 0 := by
     change scalarProduct G (inducedClassFunction c.H0 (ν₁ - νⱼ)) δ = 0
     rw [delta_pair_scalar c h12 hνⱼ hγ h₁ⱼL hμγ]
-    change scalarProduct (↥c.H)
-      (inducedFromSub (h12.H0_normal_in_H).1 ν₁ -
-        inducedFromSub (h12.H0_normal_in_H).1 νⱼ)
-      (inducedFromSub (h12.H0_normal_in_H).1 μ -
-        inducedFromSub (h12.H0_normal_in_H).1 γ) = 0
     exact theta_pair_orth c h12 hH0index hνⱼ hγ h₁ⱼL hμγ hνⱼγ hνⱼsγ
   -- `(θ̃₁, δ) = (θ̃₂, δ)` and `(θ̃₂, δ) = (θ̃₃, δ)`
   have hm₁₂ : scalarProduct G χ₂₃ δ - scalarProduct G th2 δ = 0 := by
@@ -5365,53 +5297,43 @@ private lemma normSq_re_ge_seven_sq {G : Type u} [Group G] [Fintype G]
   have hth2th1 : scalarProduct G th2 th1 = 0 := by
     apply star_inj.mp
     rw [scalarProduct_star_comm]
-    change scalarProduct G th1 th2 = star 0
     simpa using hth1th2
   have hth3th1 : scalarProduct G th3 th1 = 0 := by
     apply star_inj.mp
     rw [scalarProduct_star_comm]
-    change scalarProduct G th1 th3 = star 0
     simpa using hth1th3
   have hth3th2 : scalarProduct G th3 th2 = 0 := by
     apply star_inj.mp
     rw [scalarProduct_star_comm]
-    change scalarProduct G th2 th3 = star 0
     simpa using hth2th3
   have hφth1 : scalarProduct G φ th1 = 0 := by
     apply star_inj.mp
     rw [scalarProduct_star_comm]
-    change scalarProduct G th1 φ = star 0
     simpa using hth1φ
   have hφth2 : scalarProduct G φ th2 = 0 := by
     apply star_inj.mp
     rw [scalarProduct_star_comm]
-    change scalarProduct G th2 φ = star 0
     simpa using hth2φ
   have hφth3 : scalarProduct G φ th3 = 0 := by
     apply star_inj.mp
     rw [scalarProduct_star_comm]
-    change scalarProduct G th3 φ = star 0
     simpa using hth3φ
   -- the star of the multiplicities: `(δ, thi) = (x : ℂ)`, `(δ, φ) = (2x : ℂ)`
   have hδth1 : scalarProduct G δ th1 = (x : ℂ) := by
     apply star_inj.mp
     rw [scalarProduct_star_comm]
-    change scalarProduct G th1 δ = star (x : ℂ)
     simpa using hm₁
   have hδth2 : scalarProduct G δ th2 = (x : ℂ) := by
     apply star_inj.mp
     rw [scalarProduct_star_comm]
-    change scalarProduct G th2 δ = star (x : ℂ)
     simpa using hm₂
   have hδth3 : scalarProduct G δ th3 = (x : ℂ) := by
     apply star_inj.mp
     rw [scalarProduct_star_comm]
-    change scalarProduct G th3 δ = star (x : ℂ)
     simpa using hm₃
   have hδφ : scalarProduct G δ φ = (2 * x : ℂ) := by
     apply star_inj.mp
     rw [scalarProduct_star_comm]
-    change scalarProduct G φ δ = star (2 * x : ℂ)
     simpa using hmφ
   -- `(proj, proj) = (δ, proj) = 7x²`
   have hproj : normSq G proj = (7 * (x : ℤ) * x : ℂ) := by
@@ -5434,7 +5356,6 @@ private lemma normSq_re_ge_seven_sq {G : Type u} [Group G] [Fintype G]
   have hprojψ : scalarProduct G proj ψ = 0 := by
     apply star_inj.mp
     rw [scalarProduct_star_comm]
-    change scalarProduct G ψ proj = star 0
     simpa using hψproj
   -- `|δ|² = |ψ|² + |proj|²` (the orthogonality of the projection)
   have hnorm : normSq G δ = normSq G ψ + normSq G proj := by
@@ -5569,8 +5490,6 @@ private lemma cross_orbit_coeff_zero_of_undefined (c : Hyp11 G) (h12 : Hyp12 c)
     (h₂₃ : ν₂ ≠ ν₃ ∧ conjChar c.H0 (s_normalizes_H0 c h12) ν₂ ≠ ν₃)
     (h₂ⱼ : ν₂ ≠ νⱼ ∧ conjChar c.H0 (s_normalizes_H0 c h12) ν₂ ≠ νⱼ)
     (h₃ⱼ : ν₃ ≠ νⱼ ∧ conjChar c.H0 (s_normalizes_H0 c h12) ν₃ ≠ νⱼ)
-    (hν₁μ : ν₁ ∉ orbit c.H0 c.U μ)
-    (hν₁sμ : conjChar c.H0 (s_normalizes_H0 c h12) ν₁ ∉ orbit c.H0 c.U μ)
     (hν₂μ : ν₂ ∉ orbit c.H0 c.U μ)
     (hν₂sμ : conjChar c.H0 (s_normalizes_H0 c h12) ν₂ ∉ orbit c.H0 c.U μ)
     (hν₃μ : ν₃ ∉ orbit c.H0 c.U μ)
@@ -5579,12 +5498,10 @@ private lemma cross_orbit_coeff_zero_of_undefined (c : Hyp11 G) (h12 : Hyp12 c)
     (hνⱼsμ : conjChar c.H0 (s_normalizes_H0 c h12) νⱼ ∉ orbit c.H0 c.U μ)
     (hμne : μ ≠ γ) (hμs : conjChar c.H0 (s_normalizes_H0 c h12) μ ≠ γ)
     {χ₂₃ : ClassFunction G}
-    (hχsig : IsIrreducibleCharacter χ₂₃ ∨ IsIrreducibleCharacter (-χ₂₃))
     (hχg : IsGeneralizedCharacter χ₂₃) (hχ₁ : normSq G χ₂₃ = 1)
     (hχ₂ : scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - ν₂)) = 1)
     (hχ₃ : scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - ν₃)) = 1)
-    (hχj0 : scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - νⱼ)) = 0)
-    (hδⱼnorm : normSq G (inducedClassFunction c.H0 (ν₁ - νⱼ)) = 3) :
+    (hχj0 : scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - νⱼ)) = 0) :
     scalarProduct G (χ₂₃ - inducedClassFunction c.H0 (ν₁ - ν₂))
         (inducedClassFunction c.H0 (μ - γ)) = 0 ∧
     scalarProduct G (χ₂₃ - inducedClassFunction c.H0 (ν₁ - ν₃))
@@ -5598,19 +5515,19 @@ private lemma cross_orbit_coeff_zero_of_undefined (c : Hyp11 G) (h12 : Hyp12 c)
   let th3 : ClassFunction G := χ₂₃ - δ₃
   have hδ₂g : IsGeneralizedCharacter δ₂ := by
     change IsGeneralizedCharacter (inducedClassFunction c.H0 (ν₁ - ν₂))
-    exact isGeneralizedCharacter_induced c h12 (ν₁ - ν₂)
+    exact isGeneralizedCharacter_induced c (ν₁ - ν₂)
       (isGeneralizedCharacter_sub_irr hν₁ hν₂)
   have hδ₃g : IsGeneralizedCharacter δ₃ := by
     change IsGeneralizedCharacter (inducedClassFunction c.H0 (ν₁ - ν₃))
-    exact isGeneralizedCharacter_induced c h12 (ν₁ - ν₃)
+    exact isGeneralizedCharacter_induced c (ν₁ - ν₃)
       (isGeneralizedCharacter_sub_irr hν₁ hν₃)
   have hδⱼg : IsGeneralizedCharacter δj := by
     change IsGeneralizedCharacter (inducedClassFunction c.H0 (ν₁ - νⱼ))
-    exact isGeneralizedCharacter_induced c h12 (ν₁ - νⱼ)
+    exact isGeneralizedCharacter_induced c (ν₁ - νⱼ)
       (isGeneralizedCharacter_sub_irr hν₁ hνⱼ)
   have hδg : IsGeneralizedCharacter δ := by
     change IsGeneralizedCharacter (inducedClassFunction c.H0 (μ - γ))
-    exact isGeneralizedCharacter_induced c h12 (μ - γ)
+    exact isGeneralizedCharacter_induced c (μ - γ)
       (isGeneralizedCharacter_sub_irr hμ hγ)
   rcases delta_star_decomp_of_undefined c h12 hH0index hν₁ hν₂ hν₃ hνⱼ
       h₂₁ h₃₁ hⱼ₁ hν₁s hν₂s hν₃s h₁₂ h₁₃ h₁ⱼ h₂₃ h₂ⱼ h₃ⱼ
@@ -5676,9 +5593,6 @@ private lemma cross_orbit_coeff_zero_of_undefined (c : Hyp11 G) (h12 : Hyp12 c)
         (inducedFromSub (h12.H0_normal_in_H).1 ν₁) = 1 := by
       change normSq (↥c.H) (inducedFromSub (h12.H0_normal_in_H).1 ν₁) = 1
       rw [theta_norm c h12 hH0index hν₁, if_neg hν₁s]
-    have hθ₁₂ : scalarProduct (↥c.H) (inducedFromSub (h12.H0_normal_in_H).1 ν₁)
-        (inducedFromSub (h12.H0_normal_in_H).1 ν₂) = 0 :=
-      theta_pair_scalar_zero c h12 hH0index hν₁ hν₂ h₁₂.1 h₁₂.2
     have hθ₂₁ : scalarProduct (↥c.H) (inducedFromSub (h12.H0_normal_in_H).1 ν₂)
         (inducedFromSub (h12.H0_normal_in_H).1 ν₁) = 0 := by
       exact theta_pair_scalar_zero c h12 hH0index hν₂ hν₁ h₁₂.1.symm (by
@@ -5694,7 +5608,7 @@ private lemma cross_orbit_coeff_zero_of_undefined (c : Hyp11 G) (h12 : Hyp12 c)
         (inducedFromSub (h12.H0_normal_in_H).1 ν₃) = 0 :=
       theta_pair_scalar_zero c h12 hH0index hν₂ hν₃ h₂₃.1 h₂₃.2
     rw [scalarProduct_sub_left, scalarProduct_sub_right, scalarProduct_sub_right]
-    simp [hθ₁₁, hθ₁₂, hθ₂₁, hθ₁₃, hθ₂₃]
+    simp [hθ₁₁, hθ₂₁, hθ₁₃, hθ₂₃]
   have hth2norm : scalarProduct G th2 th2 = 1 := by
     change scalarProduct G (χ₂₃ - δ₂) (χ₂₃ - δ₂) = 1
     rw [scalarProduct_sub_left, scalarProduct_sub_right, scalarProduct_sub_right]
@@ -5727,10 +5641,8 @@ private lemma cross_orbit_coeff_zero_of_undefined (c : Hyp11 G) (h12 : Hyp12 c)
     norm_num
   have hφnorm : scalarProduct G φ φ = 1 := by
     rcases hφsig with hφ | hφneg
-    · change scalarProduct G φ φ = 1
-      exact irreducible_scalarProduct_self hφ
-    · change scalarProduct G φ φ = 1
-      simpa [scalarProduct_neg_left, scalarProduct_neg_right] using
+    · exact irreducible_scalarProduct_self hφ
+    · simpa [scalarProduct_neg_left, scalarProduct_neg_right] using
         irreducible_scalarProduct_self hφneg
   have hth1th2 : scalarProduct G χ₂₃ th2 = 0 := by
     change scalarProduct G χ₂₃ (χ₂₃ - δ₂) = 0
@@ -5779,8 +5691,8 @@ private lemma cross_orbit_coeff_zero_of_undefined (c : Hyp11 G) (h12 : Hyp12 c)
       simpa [hcase] using hη
   rcases signed_multiplicity_int hth2sig hδg with ⟨x, hx⟩
   have hp := theta_pairings_eq_of_cross_orbit c h12 hH0index
-    hν₁ hν₂ hν₃ hνⱼ hμ hγ h₂₁ h₃₁ hⱼ₁ hμγ
-    hν₁μ hν₁sμ hν₂μ hν₂sμ hν₃μ hν₃sμ hνⱼμ hνⱼsμ hμne hμs hφdec
+    hν₂ hν₃ hνⱼ hγ h₂₁ h₃₁ hⱼ₁ hμγ
+    hν₂μ hν₂sμ hν₃μ hν₃sμ hνⱼμ hνⱼsμ hφdec
   have hm₂ : scalarProduct G th2 δ = (x : ℂ) := by
     change scalarProduct G (χ₂₃ - δ₂) (inducedClassFunction c.H0 (μ - γ)) = (x : ℂ)
     exact hx
@@ -5828,12 +5740,10 @@ private lemma cross_orbit_zero_for_rep (c : Hyp11 G) (h12 : Hyp12 c)
     (hrep : ∀ ν : {ν : ClassFunction (↥c.H0) // IsIrreducibleCharacter ν},
       ∃! i : ι, ν.1 ∈ orbit c.H0 c.U (rep i))
     {χ₂₃ : ClassFunction G}
-    (hχsig : IsIrreducibleCharacter χ₂₃ ∨ IsIrreducibleCharacter (-χ₂₃))
     (hχg : IsGeneralizedCharacter χ₂₃) (hχ₁ : normSq G χ₂₃ = 1)
     (hχ₂ : scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - ν₂)) = 1)
     (hχ₃ : scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - ν₃)) = 1)
-    (hχj0 : scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - νⱼ)) = 0)
-    (hδⱼnorm : normSq G (inducedClassFunction c.H0 (ν₁ - νⱼ)) = 3) :
+    (hχj0 : scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - νⱼ)) = 0) :
     ∀ ν : {ν : ClassFunction (↥c.H0) // IsIrreducibleCharacter ν},
       ν.1 ∉ L →
         scalarProduct G (χ₂₃ - inducedClassFunction c.H0 (ν₁ - ν₂))
@@ -5889,12 +5799,6 @@ private lemma cross_orbit_zero_for_rep (c : Hyp11 G) (h12 : Hyp12 c)
         intro ξ hξ
         have h := orbit_s_closed_of_invariant c h12 hσ₁orb hξ
         simpa [orbit_eq_of_mem c hξ] using h
-      have hν₁μ : ν₁ ∉ orbit c.H0 c.U ν.1 :=
-        hnotmem ν₁ (hmemL ν₁ (orbit_self_mem c ν₁))
-      have hσν₁μ : conjChar c.H0 (s_normalizes_H0 c h12) ν₁ ∉ orbit c.H0 c.U ν.1 :=
-        hnotmem (conjChar c.H0 (s_normalizes_H0 c h12) ν₁)
-          (hmemL (conjChar c.H0 (s_normalizes_H0 c h12) ν₁)
-            (hσmem ν₁ (orbit_self_mem c ν₁)))
       have hν₂μ : ν₂ ∉ orbit c.H0 c.U ν.1 := hnotmem ν₂ (hmemL ν₂ h₂₁)
       have hσν₂μ : conjChar c.H0 (s_normalizes_H0 c h12) ν₂ ∉ orbit c.H0 c.U ν.1 :=
         hnotmem (conjChar c.H0 (s_normalizes_H0 c h12) ν₂)
@@ -5913,15 +5817,11 @@ private lemma cross_orbit_zero_for_rep (c : Hyp11 G) (h12 : Hyp12 c)
       have hres := cross_orbit_coeff_zero_of_undefined c h12 hH0index
         hν₁ hν₂ hν₃ hνⱼ ν.2 hγirr h₂₁ h₃₁ hⱼ₁ hνγ
         hν₁s hν₂s hν₃s h₁₂ h₁₃ h₁ⱼ h₂₃ h₂ⱼ h₃ⱼ
-        hν₁μ hσν₁μ hν₂μ hσν₂μ hν₃μ hσν₃μ hνⱼμ hσνⱼμ
-        hνγeq hνsγ hχsig hχg hχ₁ hχ₂ hχ₃ hχj0 hδⱼnorm
+        hν₂μ hσν₂μ hν₃μ hσν₃μ hνⱼμ hσνⱼμ
+        hνγeq hνsγ hχg hχ₁ hχ₂ hχ₃ hχj0
       constructor
-      · change scalarProduct G (χ₂₃ - inducedClassFunction c.H0 (ν₁ - ν₂))
-          (inducedClassFunction c.H0 (ν.1 - rep (Classical.choose (hrep ν)))) = 0
-        simpa [γ, i] using hres.1
-      · change scalarProduct G (χ₂₃ - inducedClassFunction c.H0 (ν₁ - ν₃))
-          (inducedClassFunction c.H0 (ν.1 - rep (Classical.choose (hrep ν)))) = 0
-        simpa [γ, i] using hres.2
+      · simpa [γ, i] using hres.1
+      · simpa [γ, i] using hres.2
 
 
 /-- `V = 0` is consumed directly from `lemma_2_2_V_zero_of_pair_sum`
@@ -5949,7 +5849,7 @@ structure ThetaLift (c : Hyp11 G) (h12 : Hyp12 c)
     ν ∈ L → ν ≠ μ → conjChar c.H0 (s_normalizes_H0 c h12) ν ≠ μ →
     inducedFromSub (h12.H0_normal_in_H).1 ν ∈ Θ →
     inducedFromSub (h12.H0_normal_in_H).1 μ ∈ Θ →
-    Theory.Character.Disjoint (lift (inducedFromSub (h12.H0_normal_in_H).1 μ))
+    ClassFunction.Disjoint (lift (inducedFromSub (h12.H0_normal_in_H).1 μ))
       (lift (inducedFromSub (h12.H0_normal_in_H).1 ν))
 
 /-- Existence of the per-orbit lift (the `θ̃ⱼ` construction): the `n = 2`
@@ -5964,22 +5864,13 @@ are downstream of the constituent extraction, which is itself recorded as a
 `sorry` in `exists_common_constituent_self`. -/
 private lemma exists_theta_lift (c : Hyp11 G) (h12 : Hyp12 c)
     (hH0index : (c.H0.subgroupOf c.H).index = 2)
-    (ν₀ ν₁ ν₂ ν₃ : ClassFunction (↥c.H0))
+    (ν₀ ν₁ : ClassFunction (↥c.H0))
     (hν₀ : IsIrreducibleCharacter ν₀) (hν₁ : IsIrreducibleCharacter ν₁)
-    (hν₂ : IsIrreducibleCharacter ν₂) (hν₃ : IsIrreducibleCharacter ν₃)
-    (h₁₀ : ν₁ ∈ orbit c.H0 c.U ν₀) (h₂₀ : ν₂ ∈ orbit c.H0 c.U ν₀)
-    (h₃₀ : ν₃ ∈ orbit c.H0 c.U ν₀)
+    (h₁₀ : ν₁ ∈ orbit c.H0 c.U ν₀)
     (hν₀s : conjChar c.H0 (s_normalizes_H0 c h12) ν₀ ∉ orbit c.H0 c.U ν₀)
     (hν₁s : conjChar c.H0 (s_normalizes_H0 c h12) ν₁ ≠ ν₁)
-    (hν₂s : conjChar c.H0 (s_normalizes_H0 c h12) ν₂ ≠ ν₂)
-    (hν₃s : conjChar c.H0 (s_normalizes_H0 c h12) ν₃ ≠ ν₃)
-    (h₁₂ : ν₁ ≠ ν₂ ∧ conjChar c.H0 (s_normalizes_H0 c h12) ν₁ ≠ ν₂)
-    (h₁₃ : ν₁ ≠ ν₃ ∧ conjChar c.H0 (s_normalizes_H0 c h12) ν₁ ≠ ν₃)
-    (h₂₃ : ν₂ ≠ ν₃ ∧ conjChar c.H0 (s_normalizes_H0 c h12) ν₂ ≠ ν₃)
     {χ₂₃ : ClassFunction G}
     (hχg : IsGeneralizedCharacter χ₂₃) (hχ₁ : normSq G χ₂₃ = 1)
-    (hχ₂ : scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - ν₂)) = 1)
-    (hχ₃ : scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - ν₃)) = 1)
     (hχall : ∀ ν ∈ orbit c.H0 c.U ν₀, ν ≠ ν₁ →
       scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - ν)) = 1) :
     Nonempty (ThetaLift c h12 (orbit c.H0 c.U ν₀)
@@ -6095,7 +5986,6 @@ private lemma exists_theta_lift (c : Hyp11 G) (h12 : Hyp12 c)
       have hδχ : scalarProduct G (inducedClassFunction c.H0 (ν₁ - νθ θ')) χ₂₃ = 1 := by
         apply star_inj.mp
         rw [scalarProduct_star_comm]
-        change scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - νθ θ')) = star 1
         simpa using hχ
       have hδδ : scalarProduct G (inducedClassFunction c.H0 (ν₁ - νθ θ'))
           (inducedClassFunction c.H0 (ν₁ - νθ θ')) = 2 := hδnorm
@@ -6111,7 +6001,7 @@ private lemma exists_theta_lift (c : Hyp11 G) (h12 : Hyp12 c)
   have hgen : ∀ θ' ∈ Θ, IsGeneralizedCharacter (lift θ') := by
     intro θ' hθ'
     unfold lift
-    exact isGeneralizedCharacter_sub hχg (isGeneralizedCharacter_induced c h12 (ν₁ - νθ θ')
+    exact isGeneralizedCharacter_sub hχg (isGeneralizedCharacter_induced c (ν₁ - νθ θ')
       (isGeneralizedCharacter_sub_irr hν₁ (hνirr (νθ θ') (hw hθ').1)))
   apply Nonempty.intro
   refine ⟨lift, ?_, ?_, ?_, ?_⟩
@@ -6180,7 +6070,6 @@ private lemma exists_theta_lift (c : Hyp11 G) (h12 : Hyp12 c)
       · exact hν'.2
     -- orthogonality `(θ̃(θμ), θ̃(θν)) = 0`, split on whether `μ = ν₁` / `ν = ν₁`
     have hpairχχ : scalarProduct G χ₂₃ χ₂₃ = 1 := by
-      change scalarProduct G χ₂₃ χ₂₃ = 1
       exact hχ₁
     have horth : scalarProduct G (lift (θ μ)) (lift (θ ν)) = 0 := by
       by_cases hμ1 : μ = ν₁
@@ -6216,7 +6105,6 @@ private lemma exists_theta_lift (c : Hyp11 G) (h12 : Hyp12 c)
           have hpair1 : scalarProduct G (inducedClassFunction c.H0 (ν₁ - μ)) χ₂₃ = 1 := by
             apply star_inj.mp
             rw [scalarProduct_star_comm]
-            change scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - μ)) = star 1
             simpa using hχall μ hμL' hμ1
           rw [hpairχχ, hpair1]
           norm_num
@@ -6236,7 +6124,6 @@ private lemma exists_theta_lift (c : Hyp11 G) (h12 : Hyp12 c)
           have hpairμχ : scalarProduct G (inducedClassFunction c.H0 (ν₁ - μ)) χ₂₃ = 1 := by
             apply star_inj.mp
             rw [scalarProduct_star_comm]
-            change scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - μ)) = star 1
             simpa using hpairχμ
           have hσν₁μ : conjChar c.H0 (s_normalizes_H0 c h12) ν₁ ≠ μ := by
             intro hEq
@@ -6372,7 +6259,7 @@ private lemma exists_theta_lift_invariant (c : Hyp11 G) (h12 : Hyp12 c)
   have hgen : ∀ θ' ∈ Θ, IsGeneralizedCharacter (lift θ') := by
     intro θ' hθ'
     unfold lift
-    exact isGeneralizedCharacter_sub hχg (isGeneralizedCharacter_induced c h12 (ν₁ - νθ θ')
+    exact isGeneralizedCharacter_sub hχg (isGeneralizedCharacter_induced c (ν₁ - νθ θ')
       (isGeneralizedCharacter_sub_irr hν₁ (hνirr (νθ θ') (hw hθ').1)))
   apply Nonempty.intro
   refine ⟨lift, ?_, ?_, ?_, ?_⟩
@@ -6393,7 +6280,6 @@ private lemma exists_theta_lift_invariant (c : Hyp11 G) (h12 : Hyp12 c)
       rw [hχ₁]
       rw [← hw'.2]
       rw [h₁]
-      change 1 = normSq (↥c.H) (inducedFromSub (h12.H0_normal_in_H).1 ν₁)
       rw [theta_norm c h12 hH0index hν₁]
       rw [if_neg hν₁s]
     · by_cases h₂ : νθ θ' = conjChar c.H0 (s_normalizes_H0 c h12) ν₁
@@ -6414,7 +6300,6 @@ private lemma exists_theta_lift_invariant (c : Hyp11 G) (h12 : Hyp12 c)
         rw [h₂]
         change 1 = normSq (↥c.H) (inducedFromSub (h12.H0_normal_in_H).1 (conjChar c.H0 (s_normalizes_H0 c h12) ν₁))
         rw [inducedFromSub_conjChar_eq c h12 hH0index hν₁]
-        change 1 = normSq (↥c.H) (inducedFromSub (h12.H0_normal_in_H).1 ν₁)
         rw [theta_norm c h12 hH0index hν₁]
         rw [if_neg hν₁s]
       · -- the generic case: `a := νθ θ' ∉ {ν₁, σν₁}`, `|θ̃|² = |θ'|²`
@@ -6435,26 +6320,19 @@ private lemma exists_theta_lift_invariant (c : Hyp11 G) (h12 : Hyp12 c)
           rw [if_neg hν₁s]
         have hliftnorm : normSq G (lift θ') = normSq (↥c.H) (θ (νθ θ')) := by
           unfold lift
-          change normSq G (χ₂₃ - inducedClassFunction c.H0 (ν₁ - νθ θ')) =
-              normSq (↥c.H) (θ (νθ θ'))
           change scalarProduct G (χ₂₃ - inducedClassFunction c.H0 (ν₁ - νθ θ'))
               (χ₂₃ - inducedClassFunction c.H0 (ν₁ - νθ θ')) =
               normSq (↥c.H) (θ (νθ θ'))
           rw [scalarProduct_sub_left, scalarProduct_sub_right, scalarProduct_sub_right]
           have hχχ : scalarProduct G χ₂₃ χ₂₃ = 1 := by
-            change scalarProduct G χ₂₃ χ₂₃ = 1
             exact hχ₁
           have hδχ : scalarProduct G (inducedClassFunction c.H0 (ν₁ - νθ θ')) χ₂₃ = 1 := by
             apply star_inj.mp
             rw [scalarProduct_star_comm]
-            change scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - νθ θ')) = star 1
             simpa using hχa
           have hδδ : scalarProduct G (inducedClassFunction c.H0 (ν₁ - νθ θ'))
               (inducedClassFunction c.H0 (ν₁ - νθ θ')) =
               1 + normSq (↥c.H) (θ (νθ θ')) := by
-            change scalarProduct G (inducedClassFunction c.H0 (ν₁ - νθ θ'))
-                (inducedClassFunction c.H0 (ν₁ - νθ θ')) =
-                1 + normSq (↥c.H) (θ (νθ θ'))
             exact hδnorm
           rw [hχχ, hχa, hδχ, hδδ]
           ring
@@ -6515,9 +6393,6 @@ private lemma exists_theta_lift_invariant (c : Hyp11 G) (h12 : Hyp12 c)
     have hmain : inducedClassFunction c.H0 (νθ (θ μ) - νθ (θ ν)) =
         lift (θ μ) - lift (θ ν) := by
       unfold lift
-      change inducedClassFunction c.H0 (νθ (θ μ) - νθ (θ ν)) =
-        (χ₂₃ - inducedClassFunction c.H0 (ν₁ - νθ (θ μ))) -
-          (χ₂₃ - inducedClassFunction c.H0 (ν₁ - νθ (θ ν)))
       have hrhs : (χ₂₃ - inducedClassFunction c.H0 (ν₁ - νθ (θ μ))) -
             (χ₂₃ - inducedClassFunction c.H0 (ν₁ - νθ (θ ν))) =
             inducedClassFunction c.H0 (νθ (θ μ) - νθ (θ ν)) := by
@@ -6614,7 +6489,6 @@ private lemma exists_theta_lift_invariant (c : Hyp11 G) (h12 : Hyp12 c)
             simp
             rw [scalarProduct_sub_right]
             have hpairχχ : scalarProduct G χ₂₃ χ₂₃ = 1 := by
-              change scalarProduct G χ₂₃ χ₂₃ = 1
               exact hχ₁
             have hpairχb : scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - νθ (θ ν))) = 1 :=
               hχall (νθ (θ ν)) hν'.1 (by intro hEq; exact hν₁' hEq)
@@ -6642,7 +6516,6 @@ private lemma exists_theta_lift_invariant (c : Hyp11 G) (h12 : Hyp12 c)
               simp
               rw [scalarProduct_sub_right]
               have hpairχχ : scalarProduct G χ₂₃ χ₂₃ = 1 := by
-                change scalarProduct G χ₂₃ χ₂₃ = 1
                 exact hχ₁
               have hpairχb : scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - νθ (θ ν))) = 1 :=
                 hχall (νθ (θ ν)) hν'.1 (by intro hEq; exact hν₁' hEq)
@@ -6660,7 +6533,6 @@ private lemma exists_theta_lift_invariant (c : Hyp11 G) (h12 : Hyp12 c)
             simp
             rw [scalarProduct_sub_left]
             have hpairχχ : scalarProduct G χ₂₃ χ₂₃ = 1 := by
-              change scalarProduct G χ₂₃ χ₂₃ = 1
               exact hχ₁
             have hpairχa : scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - νθ (θ μ))) = 1 :=
               hχall (νθ (θ μ)) hμ'.1 (by intro hEq; exact hμ₁ hEq)
@@ -6668,7 +6540,6 @@ private lemma exists_theta_lift_invariant (c : Hyp11 G) (h12 : Hyp12 c)
             have hpairaχ : scalarProduct G (inducedClassFunction c.H0 (ν₁ - νθ (θ μ))) χ₂₃ = 1 := by
               apply star_inj.mp
               rw [scalarProduct_star_comm]
-              change scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - νθ (θ μ))) = star 1
               simpa using hpairχa
             rw [hpairχχ, hpairaχ]
             norm_num
@@ -6684,7 +6555,6 @@ private lemma exists_theta_lift_invariant (c : Hyp11 G) (h12 : Hyp12 c)
               simp
               rw [scalarProduct_sub_left]
               have hpairχχ : scalarProduct G χ₂₃ χ₂₃ = 1 := by
-                change scalarProduct G χ₂₃ χ₂₃ = 1
                 exact hχ₁
               have hpairχa : scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - νθ (θ μ))) = 1 :=
                 hχall (νθ (θ μ)) hμ'.1 (by intro hEq; exact hμ₁ hEq)
@@ -6692,7 +6562,6 @@ private lemma exists_theta_lift_invariant (c : Hyp11 G) (h12 : Hyp12 c)
               have hpairaχ : scalarProduct G (inducedClassFunction c.H0 (ν₁ - νθ (θ μ))) χ₂₃ = 1 := by
                 apply star_inj.mp
                 rw [scalarProduct_star_comm]
-                change scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - νθ (θ μ))) = star 1
                 simpa using hpairχa
               rw [hpairχχ, hpairaχ]
               norm_num
@@ -6718,7 +6587,6 @@ private lemma exists_theta_lift_invariant (c : Hyp11 G) (h12 : Hyp12 c)
               rw [hliftμ, hliftν]
               rw [scalarProduct_sub_left, scalarProduct_sub_right, scalarProduct_sub_right]
               have hpairχχ : scalarProduct G χ₂₃ χ₂₃ = 1 := by
-                change scalarProduct G χ₂₃ χ₂₃ = 1
                 exact hχ₁
               have hpairχa : scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - νθ (θ μ))) = 1 :=
                 hχall (νθ (θ μ)) hμ'.1 (by intro hEq; exact hμ₁ hEq)
@@ -6729,7 +6597,6 @@ private lemma exists_theta_lift_invariant (c : Hyp11 G) (h12 : Hyp12 c)
               have hpairaχ : scalarProduct G (inducedClassFunction c.H0 (ν₁ - νθ (θ μ))) χ₂₃ = 1 := by
                 apply star_inj.mp
                 rw [scalarProduct_star_comm]
-                change scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - νθ (θ μ))) = star 1
                 simpa using hpairχa
               have hpairδδ : scalarProduct G (inducedClassFunction c.H0 (ν₁ - νθ (θ μ)))
                   (inducedClassFunction c.H0 (ν₁ - νθ (θ ν))) = 1 := by
@@ -6811,12 +6678,10 @@ private lemma exists_theta_lift_invariant (c : Hyp11 G) (h12 : Hyp12 c)
               (χ₂₃ - inducedClassFunction c.H0 (ν₁ - νθ θ')) = 1
           rw [scalarProduct_sub_left, scalarProduct_sub_right, scalarProduct_sub_right]
           have hχχ : scalarProduct G χ₂₃ χ₂₃ = 1 := by
-            change scalarProduct G χ₂₃ χ₂₃ = 1
             exact hχ₁
           have hδχ : scalarProduct G (inducedClassFunction c.H0 (ν₁ - νθ θ')) χ₂₃ = 1 := by
             apply star_inj.mp
             rw [scalarProduct_star_comm]
-            change scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - νθ θ')) = star 1
             simpa using hχa
           have hδδ : scalarProduct G (inducedClassFunction c.H0 (ν₁ - νθ θ'))
               (inducedClassFunction c.H0 (ν₁ - νθ θ')) = 2 := by
@@ -6859,12 +6724,10 @@ private lemma exists_theta_lift_invariant (c : Hyp11 G) (h12 : Hyp12 c)
               (χ₂₃ - inducedClassFunction c.H0 (ν₁ - νθ θ')) = 2
           rw [scalarProduct_sub_left, scalarProduct_sub_right, scalarProduct_sub_right]
           have hχχ : scalarProduct G χ₂₃ χ₂₃ = 1 := by
-            change scalarProduct G χ₂₃ χ₂₃ = 1
             exact hχ₁
           have hδχ : scalarProduct G (inducedClassFunction c.H0 (ν₁ - νθ θ')) χ₂₃ = 1 := by
             apply star_inj.mp
             rw [scalarProduct_star_comm]
-            change scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - νθ θ')) = star 1
             simpa using hχa
           have hδδ : scalarProduct G (inducedClassFunction c.H0 (ν₁ - νθ θ'))
               (inducedClassFunction c.H0 (ν₁ - νθ θ')) = 3 := by
@@ -6886,11 +6749,11 @@ private lemma exists_theta_lift_invariant (c : Hyp11 G) (h12 : Hyp12 c)
     -- `δ*(1) = 0` for the equal-degree orbit members)
     have hdegμν : (lift (θ μ)) 1 = (lift (θ ν)) 1 := by
       have hδμ1 : (inducedClassFunction c.H0 (ν₁ - νθ (θ μ))) 1 = 0 := by
-        exact inducedFromSub_one_eq c h12 (orbit_mem_degree_eq c (by
+        exact inducedFromSub_one_eq c (orbit_mem_degree_eq c (by
           rw [orbit_eq_of_mem c h₁₀]
           exact hμ'.1)).symm
       have hδν1 : (inducedClassFunction c.H0 (ν₁ - νθ (θ ν))) 1 = 0 := by
-        exact inducedFromSub_one_eq c h12 (orbit_mem_degree_eq c (by
+        exact inducedFromSub_one_eq c (orbit_mem_degree_eq c (by
           rw [orbit_eq_of_mem c h₁₀]
           exact hν'.1)).symm
       unfold lift
@@ -6941,29 +6804,21 @@ private lemma exists_theta_lift_invariant (c : Hyp11 G) (h12 : Hyp12 c)
           hdegμν horth
       · -- `μ` fixed (norm 2), `ν` non-fixed (norm 1)
         exact disjoint_comm (disjoint_of_orthogonal_norm_one_two
-          (hgen (θ ν) hθνΘ) (hgen (θ μ) hθμΘ)
+          (hgen (θ ν) hθνΘ)
           (by change scalarProduct G (lift (θ ν)) (lift (θ ν)) = 1
               exact hnorm1 (θ ν) hθνΘ (by
                 intro hEq
                 exact hνfix ((hfixνθ hνL).2 hEq)))
-          (by change scalarProduct G (lift (θ μ)) (lift (θ μ)) = 2
-              exact hnorm2 (θ μ) hθμΘ (by
-                rw [← hfixνθ hμL']
-                exact hμfix))
           (by
             rw [← scalarProduct_star_comm]
             simpa using congrArg star horth))
     · by_cases hνfix : conjChar c.H0 (s_normalizes_H0 c h12) ν = ν
       · -- `μ` non-fixed (norm 1), `ν` fixed (norm 2)
-        exact disjoint_of_orthogonal_norm_one_two (hgen (θ μ) hθμΘ) (hgen (θ ν) hθνΘ)
+        exact disjoint_of_orthogonal_norm_one_two (hgen (θ μ) hθμΘ)
           (by change scalarProduct G (lift (θ μ)) (lift (θ μ)) = 1
               exact hnorm1 (θ μ) hθμΘ (by
                 intro hEq
                 exact hμfix ((hfixνθ hμL').2 hEq)))
-          (by change scalarProduct G (lift (θ ν)) (lift (θ ν)) = 2
-              exact hnorm2 (θ ν) hθνΘ (by
-                rw [← hfixνθ hνL]
-                exact hνfix))
           horth
       · -- both non-fixed: the norm-1 pair
         exact disjoint_of_orthogonal_norm_one (hgen (θ μ) hθμΘ) (hgen (θ ν) hθνΘ)
@@ -6997,7 +6852,6 @@ private lemma theta_tilde_two_pair_data (c : Hyp11 G) (h12 : Hyp12 c)
     (hν₃s : conjChar c.H0 (s_normalizes_H0 c h12) ν₃ ≠ ν₃)
     (hμs : conjChar c.H0 (s_normalizes_H0 c h12) μ ≠ μ)
     (hν₂₁ : ν₂ ∈ orbit c.H0 c.U ν₁) (hν₃₁ : ν₃ ∈ orbit c.H0 c.U ν₁)
-    (hμ₁ : μ ∈ orbit c.H0 c.U ν₁)
     (h₁₂ : ν₁ ≠ ν₂ ∧ conjChar c.H0 (s_normalizes_H0 c h12) ν₁ ≠ ν₂)
     (h₁₃ : ν₁ ≠ ν₃ ∧ conjChar c.H0 (s_normalizes_H0 c h12) ν₁ ≠ ν₃)
     (h₂₃ : ν₂ ≠ ν₃ ∧ conjChar c.H0 (s_normalizes_H0 c h12) ν₂ ≠ ν₃)
@@ -7058,13 +6912,13 @@ private lemma theta_tilde_two_pair_data (c : Hyp11 G) (h12 : Hyp12 c)
     unfold lift
     have hw' := hw (thetaOfOrbit_mem c h12 hν₂L')
     exact isGeneralizedCharacter_sub hχg (isGeneralizedCharacter_induced
-      c h12 (ν₁ - νθ (θ ν₂))
+      c (ν₁ - νθ (θ ν₂))
       (isGeneralizedCharacter_sub_irr hν₁ (hνirr (νθ (θ ν₂)) hw'.1)))
   have hgenμ : IsGeneralizedCharacter (lift (θ μ)) := by
     unfold lift
     have hw' := hw (thetaOfOrbit_mem c h12 hμL')
     exact isGeneralizedCharacter_sub hχg (isGeneralizedCharacter_induced
-      c h12 (ν₁ - νθ (θ μ))
+      c (ν₁ - νθ (θ μ))
       (isGeneralizedCharacter_sub_irr hν₁ (hνirr (νθ (θ μ)) hw'.1)))
   have hnormν : normSq G (lift (θ ν₂)) = 1 := by
     have hw' := hw (thetaOfOrbit_mem c h12 hν₂L')
@@ -7083,7 +6937,6 @@ private lemma theta_tilde_two_pair_data (c : Hyp11 G) (h12 : Hyp12 c)
       have hδ₂χ : scalarProduct G (inducedClassFunction c.H0 (ν₁ - ν₂)) χ₂₃ = 1 := by
         apply star_inj.mp
         rw [scalarProduct_star_comm]
-        change scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - ν₂)) = star 1
         simpa using hχ₂
       change normSq G (χ₂₃ - inducedClassFunction c.H0 (ν₁ - ν₂)) = 1
       unfold normSq
@@ -7126,7 +6979,6 @@ private lemma theta_tilde_two_pair_data (c : Hyp11 G) (h12 : Hyp12 c)
       have hδ₂χ : scalarProduct G (inducedClassFunction c.H0 (ν₁ - ν₂)) χ₂₃ = 1 := by
         apply star_inj.mp
         rw [scalarProduct_star_comm]
-        change scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - ν₂)) = star 1
         simpa using hχ₂
       change normSq G (χ₂₃ - inducedClassFunction c.H0 (ν₁ - ν₂)) = 1
       unfold normSq
@@ -7170,7 +7022,6 @@ private lemma theta_tilde_two_pair_data (c : Hyp11 G) (h12 : Hyp12 c)
       have hδ₂χ : scalarProduct G (inducedClassFunction c.H0 (ν₁ - ν₂)) χ₂₃ = 1 := by
         apply star_inj.mp
         rw [scalarProduct_star_comm]
-        change scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - ν₂)) = star 1
         simpa using hχ₂
       change normSq G (χ₂₃ - inducedClassFunction c.H0 (ν₁ - ν₂)) = 1
       unfold normSq
@@ -7218,7 +7069,6 @@ private lemma theta_tilde_two_pair_data (c : Hyp11 G) (h12 : Hyp12 c)
             have hδ₂χ : scalarProduct G (inducedClassFunction c.H0 (ν₁ - ν₂)) χ₂₃ = 1 := by
               apply star_inj.mp
               rw [scalarProduct_star_comm]
-              change scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - ν₂)) = star 1
               simpa using hχ₂
             change normSq G (χ₂₃ - inducedClassFunction c.H0 (ν₁ - ν₂)) = 1
             unfold normSq
@@ -7233,7 +7083,6 @@ private lemma theta_tilde_two_pair_data (c : Hyp11 G) (h12 : Hyp12 c)
               have hδ₃χ : scalarProduct G (inducedClassFunction c.H0 (ν₁ - ν₃)) χ₂₃ = 1 := by
                 apply star_inj.mp
                 rw [scalarProduct_star_comm]
-                change scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - ν₃)) = star 1
                 simpa using hχ₃
               have hδ₃self : scalarProduct G (inducedClassFunction c.H0 (ν₁ - ν₃))
                   (inducedClassFunction c.H0 (ν₁ - ν₃)) = 2 := by
@@ -7268,7 +7117,6 @@ private lemma theta_tilde_two_pair_data (c : Hyp11 G) (h12 : Hyp12 c)
                 have hδ₃χ : scalarProduct G (inducedClassFunction c.H0 (ν₁ - ν₃)) χ₂₃ = 1 := by
                   apply star_inj.mp
                   rw [scalarProduct_star_comm]
-                  change scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - ν₃)) = star 1
                   simpa using hχ₃
                 have hδ₃self : scalarProduct G (inducedClassFunction c.H0 (ν₁ - ν₃))
                     (inducedClassFunction c.H0 (ν₁ - ν₃)) = 2 := by
@@ -7320,12 +7168,11 @@ private lemma theta_tilde_two_pair_data (c : Hyp11 G) (h12 : Hyp12 c)
                 have hχb : scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - b)) = 1 :=
                   pairing_eq_one_of_norm_two c h12 hH0index
                     hν₁ hν₂ hν₃ hbirr hν₂₁ hν₃₁ hbL'
-                    hν₁s hν₂s hν₃s hbs h₁₂ h₁₃ h₁b h₂₃ h₂b h₃b
+                    hν₁s hν₂s hν₃s h₁₂ h₁₃ h₁b h₂₃ h₂b h₃b
                     hχsig hχg hχ₁ hχ₂ hχ₃ hδbnorm
                 have hδbχ : scalarProduct G (inducedClassFunction c.H0 (ν₁ - b)) χ₂₃ = 1 := by
                   apply star_inj.mp
                   rw [scalarProduct_star_comm]
-                  change scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₁ - b)) = star 1
                   simpa using hχb
                 unfold lift
                 change normSq G (χ₂₃ - inducedClassFunction c.H0 (ν₁ - b)) = 1
@@ -7392,9 +7239,6 @@ private lemma theta_tilde_two_pair_data (c : Hyp11 G) (h12 : Hyp12 c)
     have hmain : inducedClassFunction c.H0 (νθ (θ μ) - νθ (θ ν₂)) =
         lift (θ μ) - lift (θ ν₂) := by
       unfold lift
-      change inducedClassFunction c.H0 (νθ (θ μ) - νθ (θ ν₂)) =
-        (χ₂₃ - inducedClassFunction c.H0 (ν₁ - νθ (θ μ))) -
-          (χ₂₃ - inducedClassFunction c.H0 (ν₁ - νθ (θ ν₂)))
       have hrhs : (χ₂₃ - inducedClassFunction c.H0 (ν₁ - νθ (θ μ))) -
             (χ₂₃ - inducedClassFunction c.H0 (ν₁ - νθ (θ ν₂))) =
             inducedClassFunction c.H0 (νθ (θ μ) - νθ (θ ν₂)) := by
@@ -7438,7 +7282,7 @@ private lemma theta_tilde_two_pair_data (c : Hyp11 G) (h12 : Hyp12 c)
     have hμν₂ : μ ∈ orbit c.H0 c.U ν₂ := by
       rw [orbit_eq_of_mem c hν₂L']
       exact hμL'
-    have hstar := induced_star_eq_on_T c h12 hH0index hμν₂ (tH0 c) htT
+    have hstar := induced_star_eq_on_T c h12 hμν₂ (tH0 c) htT
     have hcast : (⟨c.t, (h12.H0_normal_in_H).1 (tH0 c).2⟩ : ↥c.H) = ⟨c.t, hg⟩ := by
       apply Subtype.ext
       rfl
@@ -7516,7 +7360,7 @@ private lemma isCharacter_one (G : Type u) [Group G] :
     IsCharacter (1 : ClassFunction G) := by
   refine ⟨1, Representation.trivial ℂ G (Fin 1 → ℂ), ?_⟩
   ext g
-  simp [Representation.character, LinearMap.trace_id, Module.finrank_fin_fun]
+  simp [Representation.character, LinearMap.trace_id]
 
 /-- The constant-one class function is a generalized character. -/
 private lemma isGeneralizedCharacter_one (G : Type u) [Group G] [Fintype G] :
@@ -7537,7 +7381,7 @@ satisfies the `ThetaLift` fields. -/
 private lemma theta_lift_two (c : Hyp11 G) (h12 : Hyp12 c)
     (hH0index : (c.H0.subgroupOf c.H).index = 2)
     (ν₀ ν₂ : ClassFunction (↥c.H0))
-    (hν₀ : IsIrreducibleCharacter ν₀) (hν₂ : IsIrreducibleCharacter ν₂)
+    (hν₀ : IsIrreducibleCharacter ν₀)
     (h₂₀ : ν₂ ∈ orbit c.H0 c.U ν₀)
     (hν₀s : conjChar c.H0 (s_normalizes_H0 c h12) ν₀ ∉ orbit c.H0 c.U ν₀)
     (hν₁s : conjChar c.H0 (s_normalizes_H0 c h12) ν₀ ≠ ν₀)
@@ -7735,7 +7579,7 @@ members `s`-fixed, the two norm-2 `θ`-values): `θ̃(θν₀) := A`,
 private lemma theta_lift_two_invariant (c : Hyp11 G) (h12 : Hyp12 c)
     (hH0index : (c.H0.subgroupOf c.H).index = 2)
     (ν₀ ν₂ : ClassFunction (↥c.H0))
-    (hν₀ : IsIrreducibleCharacter ν₀) (hν₂ : IsIrreducibleCharacter ν₂)
+    (hν₀ : IsIrreducibleCharacter ν₀)
     (h₂₀ : ν₂ ∈ orbit c.H0 c.U ν₀)
     (hν₀s_inv : conjChar c.H0 (s_normalizes_H0 c h12) ν₀ ∈ orbit c.H0 c.U ν₀)
     (hfix₀ : conjChar c.H0 (s_normalizes_H0 c h12) ν₀ = ν₀)
@@ -7936,51 +7780,50 @@ private lemma theta_lift_two_invariant (c : Hyp11 G) (h12 : Hyp12 c)
         apply hνμne
         exact hν₂e.trans hμ₂e.symm
 
-/-- The `Λ`-orbits of the irreducible characters of `H0` (early copy, used by
-the per-orbit lift wrapper before the assembly block below). -/
-private noncomputable def orbitSetEarly (c : Hyp11 G) (h12 : Hyp12 c) :
+/-- The shared `Λ`-orbit indexing used by the per-orbit lift wrapper. -/
+private noncomputable def orbitSetEarly (c : Hyp11 G) :
     Finset (Finset (ClassFunction (↥c.H0))) := by
   classical
   exact (Finset.univ : Finset (Irr (↥c.H0))).image (fun ν : Irr (↥c.H0) => orbit c.H0 c.U ν.1)
 
 /-- An orbit in `orbitSetEarly` is nonempty. -/
-private lemma orbitSetEarly_mem_nonempty (c : Hyp11 G) (h12 : Hyp12 c)
-    {L : Finset (ClassFunction (↥c.H0))} (hL : L ∈ orbitSetEarly c h12) : L.Nonempty := by
+private lemma orbitSetEarly_mem_nonempty (c : Hyp11 G)
+    {L : Finset (ClassFunction (↥c.H0))} (hL : L ∈ orbitSetEarly c) : L.Nonempty := by
   rcases Finset.mem_image.mp hL with ⟨ν, hν, hLν⟩
   refine ⟨ν.1, ?_⟩
   rw [← hLν]
   exact orbit_self_mem c ν.1
 
-/-- The orbit representatives of `Irr(H0)` (early copy). -/
-private lemma exists_orbit_representatives_early (c : Hyp11 G) (h12 : Hyp12 c) :
+/-- The orbit representatives of `Irr(H0)`. -/
+private lemma exists_orbit_representatives_early (c : Hyp11 G) :
     ∃ (ι : Type u) (_ : Fintype ι) (rep : ι → ClassFunction (↥c.H0)),
       (∀ i : ι, IsIrreducibleCharacter (rep i)) ∧
       (∀ ν : {ν : ClassFunction (↥c.H0) // IsIrreducibleCharacter ν},
         ∃! i : ι, ν.1 ∈ orbit c.H0 c.U (rep i)) := by
   classical
-  let ι : Type u := {L : Finset (ClassFunction (↥c.H0)) // L ∈ orbitSetEarly c h12}
+  let ι : Type u := {L : Finset (ClassFunction (↥c.H0)) // L ∈ orbitSetEarly c}
   let rep : ι → ClassFunction (↥c.H0) := fun L =>
-    Classical.choose (orbitSetEarly_mem_nonempty c h12 L.2)
+    Classical.choose (orbitSetEarly_mem_nonempty c L.2)
   refine ⟨ι, inferInstance, rep, ?_, ?_⟩
   · intro L
     rcases Finset.mem_image.mp L.2 with ⟨ν, hν, hLν⟩
-    have hspec : rep L ∈ L.1 := Classical.choose_spec (orbitSetEarly_mem_nonempty c h12 L.2)
+    have hspec : rep L ∈ L.1 := Classical.choose_spec (orbitSetEarly_mem_nonempty c L.2)
     have hνL' : rep L ∈ orbit c.H0 c.U ν.1 := hLν ▸ hspec
     exact orbit_mem_isIrreducible c.H0 c.U ν.2 hνL'
   · intro ν
     refine ⟨⟨orbit c.H0 c.U ν.1, Finset.mem_image.mpr ⟨ν, Finset.mem_univ ν, rfl⟩⟩, ?_, ?_⟩
     · have hspec : rep ⟨orbit c.H0 c.U ν.1,
           Finset.mem_image.mpr ⟨ν, Finset.mem_univ ν, rfl⟩⟩ ∈ orbit c.H0 c.U ν.1 :=
-        Classical.choose_spec (orbitSetEarly_mem_nonempty c h12
+        Classical.choose_spec (orbitSetEarly_mem_nonempty c
           (Finset.mem_image.mpr ⟨ν, Finset.mem_univ ν, rfl⟩ :
-            orbit c.H0 c.U ν.1 ∈ orbitSetEarly c h12))
+            orbit c.H0 c.U ν.1 ∈ orbitSetEarly c))
       change ν.1 ∈ orbit c.H0 c.U
         (rep ⟨orbit c.H0 c.U ν.1, Finset.mem_image.mpr ⟨ν, Finset.mem_univ ν, rfl⟩⟩)
       rw [orbit_eq_of_mem c hspec]
       exact orbit_self_mem c ν.1
     · intro L hLmem
       have hEqOrbit : L.1 = orbit c.H0 c.U ν.1 := by
-        have hspec : rep L ∈ L.1 := Classical.choose_spec (orbitSetEarly_mem_nonempty c h12 L.2)
+        have hspec : rep L ∈ L.1 := Classical.choose_spec (orbitSetEarly_mem_nonempty c L.2)
         rcases Finset.mem_image.mp L.2 with ⟨μ, hμ, hLμ⟩
         have ho1 : orbit c.H0 c.U (rep L) = orbit c.H0 c.U ν.1 :=
           (orbit_eq_of_mem c hLmem).symm
@@ -7995,20 +7838,20 @@ private lemma exists_orbit_representatives_early (c : Hyp11 G) (h12 : Hyp12 c) :
 /-- Orbit representatives with a prescribed representative `ν₁` for the
 `Λ`-orbit of `ν₁`.  Used by the Lemma-1.7 Fourier reduction in the
 fixed-member case (the orbit sum must be based at the construction's `ν₁`). -/
-private lemma exists_orbit_representatives_with_base (c : Hyp11 G) (h12 : Hyp12 c)
+private lemma exists_orbit_representatives_with_base (c : Hyp11 G)
     (ν₁ : ClassFunction (↥c.H0)) (hν₁ : IsIrreducibleCharacter ν₁) :
     ∃ (ι : Type u) (_ : Fintype ι) (rep : ι → ClassFunction (↥c.H0))
-      (hrep_irr : ∀ i : ι, IsIrreducibleCharacter (rep i))
+      (_hrep_irr : ∀ i : ι, IsIrreducibleCharacter (rep i))
       (hrep : ∀ ν : {ν : ClassFunction (↥c.H0) // IsIrreducibleCharacter ν},
         ∃! i : ι, ν.1 ∈ orbit c.H0 c.U (rep i)),
       ∀ ν : {ν : ClassFunction (↥c.H0) // IsIrreducibleCharacter ν},
         ν.1 ∈ orbit c.H0 c.U ν₁ → rep (Classical.choose (hrep ν)) = ν₁ := by
   classical
-  let ι : Type u := {L : Finset (ClassFunction (↥c.H0)) // L ∈ orbitSetEarly c h12}
+  let ι : Type u := {L : Finset (ClassFunction (↥c.H0)) // L ∈ orbitSetEarly c}
   let oldRep : ι → ClassFunction (↥c.H0) := fun i =>
-    Classical.choose (orbitSetEarly_mem_nonempty c h12 i.2)
+    Classical.choose (orbitSetEarly_mem_nonempty c i.2)
   have hOld_mem : ∀ i : ι, oldRep i ∈ i.1 := fun i =>
-    Classical.choose_spec (orbitSetEarly_mem_nonempty c h12 i.2)
+    Classical.choose_spec (orbitSetEarly_mem_nonempty c i.2)
   have hOld_irr : ∀ i : ι, IsIrreducibleCharacter (oldRep i) := by
     intro i
     rcases Finset.mem_image.mp i.2 with ⟨μ, hμ, hi⟩
@@ -8027,27 +7870,12 @@ private lemma exists_orbit_representatives_with_base (c : Hyp11 G) (h12 : Hyp12 
   have hOld_uniq : ∀ ν : {ν : ClassFunction (↥c.H0) // IsIrreducibleCharacter ν},
       ∃! i : ι, ν.1 ∈ orbit c.H0 c.U (oldRep i) := by
     intro ν
-    refine ⟨⟨orbit c.H0 c.U ν.1,
-      (by simpa [orbitSetEarly] using
-        (Finset.mem_image.mpr ⟨ν, Finset.mem_univ _, rfl⟩ :
-          orbit c.H0 c.U ν.1 ∈ (Finset.univ : Finset (Irr (↥c.H0))).image
-            (fun μ : Irr (↥c.H0) => orbit c.H0 c.U μ.1)))⟩, ?_, ?_⟩
-    · have hspec : oldRep ⟨orbit c.H0 c.U ν.1,
-          (by simpa [orbitSetEarly] using
-            (Finset.mem_image.mpr ⟨ν, Finset.mem_univ _, rfl⟩ :
-              orbit c.H0 c.U ν.1 ∈ (Finset.univ : Finset (Irr (↥c.H0))).image
-                (fun μ : Irr (↥c.H0) => orbit c.H0 c.U μ.1)))⟩ ∈
-          orbit c.H0 c.U ν.1 :=
-        hOld_mem ⟨orbit c.H0 c.U ν.1,
-          (by simpa [orbitSetEarly] using
-            (Finset.mem_image.mpr ⟨ν, Finset.mem_univ _, rfl⟩ :
-              orbit c.H0 c.U ν.1 ∈ (Finset.univ : Finset (Irr (↥c.H0))).image
-                (fun μ : Irr (↥c.H0) => orbit c.H0 c.U μ.1)))⟩
-      change ν.1 ∈ orbit c.H0 c.U (oldRep ⟨orbit c.H0 c.U ν.1,
-        (by simpa [orbitSetEarly] using
-          (Finset.mem_image.mpr ⟨ν, Finset.mem_univ _, rfl⟩ :
-            orbit c.H0 c.U ν.1 ∈ (Finset.univ : Finset (Irr (↥c.H0))).image
-              (fun μ : Irr (↥c.H0) => orbit c.H0 c.U μ.1)))⟩)
+    have hνidx : orbit c.H0 c.U ν.1 ∈ orbitSetEarly c := by
+      simp [orbitSetEarly]
+    let iν : ι := ⟨orbit c.H0 c.U ν.1, hνidx⟩
+    refine ⟨iν, ?_, ?_⟩
+    · have hspec : oldRep iν ∈ orbit c.H0 c.U ν.1 := hOld_mem iν
+      change ν.1 ∈ orbit c.H0 c.U (oldRep iν)
       rw [orbit_eq_of_mem c hspec]
       exact orbit_self_mem c ν.1
     · intro L hLmem
@@ -8064,7 +7892,7 @@ private lemma exists_orbit_representatives_with_base (c : Hyp11 G) (h12 : Hyp12 
       apply Subtype.ext
       exact hEqOrbit
   let L : Finset (ClassFunction (↥c.H0)) := orbit c.H0 c.U ν₁
-  let hLidx : L ∈ orbitSetEarly c h12 :=
+  let hLidx : L ∈ orbitSetEarly c :=
     by
       simpa [orbitSetEarly] using
         (Finset.mem_image.mpr ⟨⟨ν₁, hν₁⟩, Finset.mem_univ _, rfl⟩ :
@@ -8084,7 +7912,7 @@ private lemma exists_orbit_representatives_with_base (c : Hyp11 G) (h12 : Hyp12 
     · refine ⟨⟨L, hLidx⟩, ?_, ?_⟩
       · change ν.1 ∈ orbit c.H0 c.U (rep' ⟨L, hLidx⟩)
         have hrepL : rep' ⟨L, hLidx⟩ = ν₁ := by
-          simp [rep', hLidx]
+          simp [rep']
         rw [hrepL]
         exact hνL
       · intro j hj
@@ -8131,13 +7959,13 @@ private lemma exists_orbit_representatives_with_base (c : Hyp11 G) (h12 : Hyp12 
   intro ν hνL
   have hLmem : ν.1 ∈ orbit c.H0 c.U (rep' ⟨L, hLidx⟩) := by
     have hrepL : rep' ⟨L, hLidx⟩ = ν₁ := by
-      simp [rep', hLidx]
+      simp [rep']
     rw [hrepL]
     exact hνL
   have hchoose : Classical.choose (hrep'_uniq ν) = ⟨L, hLidx⟩ :=
     ((Classical.choose_spec (hrep'_uniq ν)).2 ⟨L, hLidx⟩ hLmem).symm
   rw [hchoose]
-  simp [rep', hLidx]
+  simp [rep']
 
 /-- Lemma 1.7(ii), reduced to a single `Λ`-orbit `L`: if the chosen
 representative of `L` is `ν₁` and all coefficients outside `L` vanish, then
@@ -8150,7 +7978,7 @@ private lemma fourier_value_eq_orbit_sum (c : Hyp11 G) (h12 : Hyp12 c)
     {χ : ClassFunction G} (hχ : IsGeneralizedCharacter χ)
     {x : ↥c.H0} (hx : (x : G) ∉ c.U)
     {L : Finset (ClassFunction (↥c.H0))}
-    (ν₁ : ClassFunction (↥c.H0)) (hν₁ : IsIrreducibleCharacter ν₁) (hν₁L : ν₁ ∈ L)
+    (ν₁ : ClassFunction (↥c.H0)) (hν₁ : IsIrreducibleCharacter ν₁)
     (hL : L = orbit c.H0 c.U ν₁)
     (hrepL : ∀ ν : {ν : ClassFunction (↥c.H0) // IsIrreducibleCharacter ν},
       ν.1 ∈ L → rep (Classical.choose (hrep ν)) = ν₁)
@@ -8195,9 +8023,9 @@ private lemma fourier_value_eq_orbit_sum (c : Hyp11 G) (h12 : Hyp12 c)
           exact hμ
         refine ⟨⟨μ, orbit_mem_isIrreducible c.H0 c.U hν₁ hμ₁⟩, ?_, ?_⟩
         · exact Finset.mem_filter.mpr ⟨Finset.mem_univ _, hμ⟩
-        · simpa [f, g, hrepL ⟨μ, orbit_mem_isIrreducible c.H0 c.U hν₁ hμ₁⟩ hμ]
+        · simp
       · intro a ha
-        simpa [f, g, hrepL a (Finset.mem_filter.mp ha).2]
+        simp [f, g, hrepL a (Finset.mem_filter.mp ha).2]
     rw [hsum2a, hsum2b]
   rw [hii, hsum1, hsum2]
   simp [g]
@@ -8260,8 +8088,8 @@ private lemma orbit_sum_coeff_fixed (c : Hyp11 G)
     · intro h
       rw [Finset.mem_insert, Finset.mem_singleton] at h
       rcases h with h | h
-      · exact hν₁₂ (by simpa [h])
-      · exact hν₁₃ (by simpa [h])
+      · exact hν₁₂ (by simp [h])
+      · exact hν₁₃ (by simp [h])
   have hBadSum : (∑ μ ∈ Bad, coeff μ * μ x) = - (∑ μ ∈ Bad, μ x) := by
     rw [Finset.sum_congr rfl (by intro μ hμ; rw [hcoeffBad μ hμ])]
     simp [Finset.sum_neg_distrib]
@@ -8275,8 +8103,6 @@ member `ν'`, and `0` everywhere else. -/
 private lemma orbit_sum_coeff_theta_tilde_two (c : Hyp11 G)
     {L U : Finset (ClassFunction (↥c.H0))}
     (ν₁ ν₂ σν₂ ν ν' : ClassFunction (↥c.H0)) (m : ℂ)
-    (hν₁L : ν₁ ∈ L) (hν₂L : ν₂ ∈ L) (hσL : σν₂ ∈ L)
-    (hνL : ν ∈ L) (hν'L : ν' ∈ L)
     (hUL : U ⊆ L)
     (hU : U = insert ν' (insert ν (insert σν₂ (insert ν₂ {ν₁}))))
     (hν₁₂ : ν₁ ≠ ν₂) (hν₁σ : ν₁ ≠ σν₂) (hν₁ν : ν₁ ≠ ν) (hν₁ν' : ν₁ ≠ ν')
@@ -8310,8 +8136,6 @@ private lemma orbit_sum_coeff_theta_tilde_two (c : Hyp11 G)
     simp [hν₁₂.symm]
   have hsumU : (∑ μ ∈ U, coeff μ * μ x) = ν₂ x + σν₂ x + ν x + m * ν' x := by
     rw [hU]
-    change (∑ μ ∈ insert ν' (insert ν (insert σν₂ (insert ν₂ {ν₁}))),
-        coeff μ * μ x) = ν₂ x + σν₂ x + ν x + m * ν' x
     rw [Finset.sum_insert hν'ne, Finset.sum_insert hνne,
       Finset.sum_insert hσne, Finset.sum_insert hν₂ne, Finset.sum_singleton]
     simp [hcoeff₁, hcoeff₂, hcoeffσ, hcoeffν, hcoeffν']
@@ -8414,7 +8238,6 @@ values at the central involution `t` are `±ν₂(t)` and `|Bad| ≤ 2`). -/
 private lemma fixed_pairing_contradiction_of_formulas (c : Hyp11 G)
     (ν₂ ν₃ : ClassFunction (↥c.H0)) (a : ℂ) (ha : a ≠ 0)
     (hν₂t : ν₂ (tH0 c) = a ∨ ν₂ (tH0 c) = -a)
-    (hν₃t : ν₃ (tH0 c) = a ∨ ν₃ (tH0 c) = -a)
     (Bad : Finset (ClassFunction (↥c.H0)))
     (hBadcard : Bad.card = 1 ∨ Bad.card = 2)
     (hBad_t : ∀ μ ∈ Bad, μ (tH0 c) = a ∨ μ (tH0 c) = -a)
@@ -8522,7 +8345,7 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
         exact (Finset.mem_filter.mp hν₂f).2
       -- `δ* = (ν₀ − ν₂)*`: a generalized character of norm `4` vanishing at `1`
       have hδg : IsGeneralizedCharacter (inducedClassFunction c.H0 (ν₀ - ν₂)) := by
-        exact isGeneralizedCharacter_induced c h12 (ν₀ - ν₂)
+        exact isGeneralizedCharacter_induced c (ν₀ - ν₂)
           (isGeneralizedCharacter_sub_irr hν₀ (hνirr ν₂ hν₂L))
       have hν₀₂ : ν₀ ∈ orbit c.H0 c.U ν₂ := by
         rw [orbit_eq_of_mem c hν₂L]
@@ -8539,7 +8362,7 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
         norm_num
       have hdeg01 : ν₀ 1 = ν₂ 1 := (orbit_mem_degree_eq c hν₂L).symm
       have hδdeg : (inducedClassFunction c.H0 (ν₀ - ν₂)) 1 = 0 :=
-        inducedFromSub_one_eq c h12 hdeg01
+        inducedFromSub_one_eq c hdeg01
       -- the norm-4 decomposition into the norm-2 halves
       rcases normSq4_decomp_of_zero_one hδg hδnorm hδdeg with
         ⟨A, B, hAg, hBg, hAnorm, hBnorm, hAB, hδAB⟩
@@ -8547,7 +8370,7 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
         have hδ1 := hδdeg
         rw [hδAB] at hδ1
         exact sub_eq_zero.mp (by simpa using hδ1)
-      exact theta_lift_two_invariant c h12 hH0index ν₀ ν₂ hν₀ (hνirr ν₂ hν₂L) hν₂L h_inv
+      exact theta_lift_two_invariant c h12 hH0index ν₀ ν₂ hν₀ hν₂L h_inv
         hfix₀ hfix₂ hν₂ne hL2 A B hAg hBg hAnorm hBnorm hAB hdegAB hδAB
     · by_cases hL4 : L.card = 4
       · -- the `n = 3` sub-case: `ν₁ :=` the non-fixed member, `ν₂, ν₃ :=`
@@ -8624,10 +8447,10 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
           exact hEq.symm
         -- `δ₂*`, `δ₃*`: generalized characters of norm `3` with pairing `1`
         have hδ₂g : IsGeneralizedCharacter (inducedClassFunction c.H0 (ν₁ - ν₂)) := by
-          exact isGeneralizedCharacter_induced c h12 (ν₁ - ν₂)
+          exact isGeneralizedCharacter_induced c (ν₁ - ν₂)
             (isGeneralizedCharacter_sub_irr hν₁irr hν₂irr)
         have hδ₃g : IsGeneralizedCharacter (inducedClassFunction c.H0 (ν₁ - ν₃)) := by
-          exact isGeneralizedCharacter_induced c h12 (ν₁ - ν₃)
+          exact isGeneralizedCharacter_induced c (ν₁ - ν₃)
             (isGeneralizedCharacter_sub_irr hν₁irr hν₃irr)
         have h₁₂' : ν₁ ∈ orbit c.H0 c.U ν₂ := by
           rw [orbit_eq_of_mem c hν₂L]
@@ -8681,7 +8504,7 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
           rw [hθ₂₃, hθ₂₁, hθ₁₃, hθ₁₁]
           norm_num
         -- the common constituent `χ₂₃` via the norm-3 extraction
-        rcases exists_common_constituent_self_norm3 c h12 hδ₂g hδ₃g hδ₂norm hδ₃norm hδ₂₃pair with
+        rcases exists_common_constituent_self_norm3 hδ₂g hδ₃g hδ₂norm hδ₃norm hδ₂₃pair with
           ⟨χ₂₃, hχ23irr, hχ₂, hχ₃⟩
         have hχg : IsGeneralizedCharacter χ₂₃ := by
           rcases hχ23irr with hχ | hχ
@@ -8912,10 +8735,10 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
           ⟨hν₃ne2.symm, hσ₂₃⟩
         -- `δ₂*`, `δ₃*`: generalized characters of norm `2` with pairing `1`
         have hδ₂g : IsGeneralizedCharacter (inducedClassFunction c.H0 (ν₁ - ν₂)) := by
-          exact isGeneralizedCharacter_induced c h12 (ν₁ - ν₂)
+          exact isGeneralizedCharacter_induced c (ν₁ - ν₂)
             (isGeneralizedCharacter_sub_irr hν₁irr hν₂irr)
         have hδ₃g : IsGeneralizedCharacter (inducedClassFunction c.H0 (ν₁ - ν₃)) := by
-          exact isGeneralizedCharacter_induced c h12 (ν₁ - ν₃)
+          exact isGeneralizedCharacter_induced c (ν₁ - ν₃)
             (isGeneralizedCharacter_sub_irr hν₁irr hν₃irr)
         have h₁₂' : ν₁ ∈ orbit c.H0 c.U ν₂ := by
           rw [orbit_eq_of_mem c hν₂L]
@@ -8975,7 +8798,7 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
           rw [hθ₂₃, hθ₂₁, hθ₁₃, hθ₁₁]
           norm_num
         -- the common constituent `χ₂₃` via the norm-2 extraction
-        rcases exists_common_constituent_self c h12 hδ₂g hδ₃g hδ₂norm hδ₃norm hδ₂₃pair with
+        rcases exists_common_constituent_self hδ₂g hδ₃g hδ₂norm hδ₃norm hδ₂₃pair with
           ⟨χ₂₃, hχ23irr, hχ₂, hχ₃⟩
         have hχg : IsGeneralizedCharacter χ₂₃ := by
           rcases hχ23irr with hχ | hχ
@@ -9074,7 +8897,7 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
                       norm_num
                     have hδνg : IsGeneralizedCharacter
                         (inducedClassFunction c.H0 (ν₁ - ν)) := by
-                      exact isGeneralizedCharacter_induced c h12 (ν₁ - ν)
+                      exact isGeneralizedCharacter_induced c (ν₁ - ν)
                         (isGeneralizedCharacter_sub_irr hν₁irr hνⱼirr)
                     by_contra hχjne1
                     have hχjmem :
@@ -9091,14 +8914,12 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
                       · exfalso
                         have hδ₂g : IsGeneralizedCharacter
                             (inducedClassFunction c.H0 (ν₁ - ν₂)) := by
-                          exact isGeneralizedCharacter_induced c h12 (ν₁ - ν₂)
+                          exact isGeneralizedCharacter_induced c (ν₁ - ν₂)
                             (isGeneralizedCharacter_sub_irr hν₁irr hν₂irr)
                         have hδ₂χ :
                             scalarProduct G (inducedClassFunction c.H0 (ν₁ - ν₂)) χ₂₃ = 1 := by
                           apply star_inj.mp
                           rw [scalarProduct_star_comm]
-                          change scalarProduct G χ₂₃
-                            (inducedClassFunction c.H0 (ν₁ - ν₂)) = star 1
                           simpa using hχ₂
                         have hth2norm :
                             normSq G (χ₂₃ - inducedClassFunction c.H0 (ν₁ - ν₂)) = 1 := by
@@ -9142,21 +8963,11 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
                               (inducedClassFunction c.H0 (ν₁ - ν)) = 1 := by
                           rw [delta_pair_scalar c h12 (ν₁ := ν₂) (ν₂ := ν)
                             (μ₁ := ν₁) (μ₂ := ν₁) hν₂irr hνⱼirr h₁₂' h₁ⱼ']
-                          change scalarProduct (↥c.H)
-                            (inducedFromSub (h12.H0_normal_in_H).1 ν₁ -
-                              inducedFromSub (h12.H0_normal_in_H).1 ν₂)
-                            (inducedFromSub (h12.H0_normal_in_H).1 ν₁ -
-                              inducedFromSub (h12.H0_normal_in_H).1 ν) = 1
                           have hθ₁₁ : scalarProduct (↥c.H)
                               (inducedFromSub (h12.H0_normal_in_H).1 ν₁)
                               (inducedFromSub (h12.H0_normal_in_H).1 ν₁) = 1 := by
                             change normSq (↥c.H) (inducedFromSub (h12.H0_normal_in_H).1 ν₁) = 1
                             rw [theta_norm c h12 hH0index hν₁irr, if_neg hν₁s]
-                          have hθ₁₂ : scalarProduct (↥c.H)
-                              (inducedFromSub (h12.H0_normal_in_H).1 ν₁)
-                              (inducedFromSub (h12.H0_normal_in_H).1 ν₂) = 0 :=
-                            theta_pair_scalar_zero c h12 hH0index hν₁irr hν₂irr
-                              h₁₂.1 h₁₂.2
                           have hθ₁ⱼ : scalarProduct (↥c.H)
                               (inducedFromSub (h12.H0_normal_in_H).1 ν₁)
                               (inducedFromSub (h12.H0_normal_in_H).1 ν) = 0 :=
@@ -9176,7 +8987,7 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
                             theta_pair_scalar_zero c h12 hH0index hν₂irr hνⱼirr
                               h₂ⱼ.1 h₂ⱼ.2
                           simp [scalarProduct_sub_left, scalarProduct_sub_right,
-                            hθ₁₁, hθ₁₂, hθ₁ⱼ, hθ₂₁, hθ₂ⱼ]
+                            hθ₁₁, hθ₁ⱼ, hθ₂₁, hθ₂ⱼ]
                         have hth2jneg2 :
                             scalarProduct G (χ₂₃ - inducedClassFunction c.H0 (ν₁ - ν₂))
                               (inducedClassFunction c.H0 (ν₁ - ν)) = -2 := by
@@ -9206,14 +9017,14 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
                     have hσ₁L : conjChar c.H0 (s_normalizes_H0 c h12) ν₁ ∈ L := by
                       change conjChar c.H0 (s_normalizes_H0 c h12) ν₁ ∈ orbit c.H0 c.U ν₀
                       exact orbit_s_closed_of_invariant c h12 h_inv hν₁L
-                    rcases exists_orbit_representatives_with_base c h12 ν₁ hν₁irr with
+                    rcases exists_orbit_representatives_with_base c ν₁ hν₁irr with
                       ⟨ι, hFintype, rep, hrep_irr, hrep, hrepL⟩
                     let : Fintype ι := hFintype
                     have hz := cross_orbit_zero_for_rep c h12 hH0index
                       hν₁irr hν₂irr hν₃irr hνⱼirr hν₂₁ hν₃₁ hⱼ₁
                       hν₁s hν₂s hν₃s h₁₂ h₁₃ h₁ⱼ h₂₃ h₂ⱼ h₃ⱼ
                       hLν₁ hσ₁L rep hrep_irr hrep
-                      hχ23irr hχg hχ₁ hχ₂ hχ₃ hχj0 hδνnorm
+                      hχg hχ₁ hχ₂ hχ₃ hχj0
                     have hz2 : ∀ ν : {ν : ClassFunction (↥c.H0) //
                         IsIrreducibleCharacter ν},
                         ν.1 ∉ L → scalarProduct G
@@ -9226,7 +9037,7 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
                     have hth2g : IsGeneralizedCharacter
                         (χ₂₃ - inducedClassFunction c.H0 (ν₁ - ν₂)) := by
                       exact isGeneralizedCharacter_sub hχg (isGeneralizedCharacter_induced
-                        c h12 (ν₁ - ν₂) (isGeneralizedCharacter_sub_irr hν₁irr hν₂irr))
+                        c (ν₁ - ν₂) (isGeneralizedCharacter_sub_irr hν₁irr hν₂irr))
                     have hrepL' : ∀ ν : {ν : ClassFunction (↥c.H0) //
                         IsIrreducibleCharacter ν},
                         ν.1 ∈ L → rep (Classical.choose (hrep ν)) = ν₁ := by
@@ -9234,7 +9045,7 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
                       exact hrepL ν (by rwa [← hLν₁])
                     have hfourier := fourier_value_eq_orbit_sum c h12 rep hrep_irr hrep
                       (χ := χ₂₃ - inducedClassFunction c.H0 (ν₁ - ν₂)) hth2g
-                      (x := tH0 c) hx (L := L) ν₁ hν₁irr hν₁L hLν₁ hrepL' hz2
+                      (x := tH0 c) hx (L := L) ν₁ hν₁irr hLν₁ hrepL' hz2
                     let coeff : ClassFunction (↥c.H0) → ℂ := fun μ =>
                       scalarProduct G (χ₂₃ - inducedClassFunction c.H0 (ν₁ - ν₂))
                         (inducedClassFunction c.H0 (μ - ν₁))
@@ -9297,8 +9108,6 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
                         scalarProduct G (inducedClassFunction c.H0 (ν₁ - ν₂)) χ₂₃ = 1 := by
                       apply star_inj.mp
                       rw [scalarProduct_star_comm]
-                      change scalarProduct G χ₂₃
-                        (inducedClassFunction c.H0 (ν₁ - ν₂)) = star 1
                       simpa using hχ₂
                     have hδ₂self : scalarProduct G
                         (inducedClassFunction c.H0 (ν₁ - ν₂))
@@ -9487,29 +9296,19 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
                                   norm_num
                                 have hχμ := pairing_eq_one_of_norm_two c h12 hH0index
                                   hν₁irr hν₂irr hν₃irr hμirr hν₂₁ hν₃₁ hμ₁
-                                  hν₁s hν₂s hν₃s hμs h₁₂ h₁₃ h₁μ h₂₃ h₂μ h₃μ
+                                  hν₁s hν₂s hν₃s h₁₂ h₁₃ h₁μ h₂₃ h₂μ h₃μ
                                   hχ23irr hχg hχ₁ hχ₂ hχ₃ hδμnorm
                                 have hδ₂μpair :
                                     scalarProduct G (inducedClassFunction c.H0 (ν₁ - ν₂))
                                       (inducedClassFunction c.H0 (ν₁ - μ)) = 1 := by
                                   rw [delta_pair_scalar c h12 (ν₁ := ν₂) (ν₂ := μ)
                                     (μ₁ := ν₁) (μ₂ := ν₁) hν₂irr hμirr h₁₂' h₁μ']
-                                  change scalarProduct (↥c.H)
-                                    (inducedFromSub (h12.H0_normal_in_H).1 ν₁ -
-                                      inducedFromSub (h12.H0_normal_in_H).1 ν₂)
-                                    (inducedFromSub (h12.H0_normal_in_H).1 ν₁ -
-                                      inducedFromSub (h12.H0_normal_in_H).1 μ) = 1
                                   have hθ₁₁ : scalarProduct (↥c.H)
                                       (inducedFromSub (h12.H0_normal_in_H).1 ν₁)
                                       (inducedFromSub (h12.H0_normal_in_H).1 ν₁) = 1 := by
                                     change normSq (↥c.H)
                                       (inducedFromSub (h12.H0_normal_in_H).1 ν₁) = 1
                                     rw [theta_norm c h12 hH0index hν₁irr, if_neg hν₁s]
-                                  have hθ₁₂ : scalarProduct (↥c.H)
-                                      (inducedFromSub (h12.H0_normal_in_H).1 ν₁)
-                                      (inducedFromSub (h12.H0_normal_in_H).1 ν₂) = 0 :=
-                                    theta_pair_scalar_zero c h12 hH0index hν₁irr hν₂irr
-                                      h₁₂.1 h₁₂.2
                                   have hθ₁μ : scalarProduct (↥c.H)
                                       (inducedFromSub (h12.H0_normal_in_H).1 ν₁)
                                       (inducedFromSub (h12.H0_normal_in_H).1 μ) = 0 :=
@@ -9529,7 +9328,7 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
                                     theta_pair_scalar_zero c h12 hH0index hν₂irr hμirr
                                       h₂μ.1 h₂μ.2
                                   simp [scalarProduct_sub_left, scalarProduct_sub_right,
-                                    hθ₁₁, hθ₁₂, hθ₁μ, hθ₂₁, hθ₂μ]
+                                    hθ₁₁, hθ₁μ, hθ₂₁, hθ₂μ]
                                 have hδμneg : inducedClassFunction c.H0 (μ - ν₁) =
                                     -inducedClassFunction c.H0 (ν₁ - μ) := by
                                   rw [show μ - ν₁ = -(ν₁ - μ) by ring]
@@ -9542,7 +9341,7 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
                         ν₂ (tH0 c) + σν₂ (tH0 c) + ν (tH0 c) + m * ν' (tH0 c) := by
                       exact orbit_sum_coeff_theta_tilde_two c (L := L) (U := U)
                         ν₁ ν₂ σν₂ ν ν' m
-                        hν₁L hν₂L hσ₂L hνL hν'L hUL rfl
+                        hUL rfl
                         h₁₂.1 hν₁σ hνne1.symm hν₁ν' hν₂s.symm hν₂ν hν₂ν'
                         hσν hσν' hνν'
                         coeff hcoeff₁ hcoeff₂ hcoeffσ hcoeffν hcoeffν' hcoeff0 (tH0 c)
@@ -9564,14 +9363,11 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
                     have hμL' : μ ∈ L := by
                       rw [orbit_eq_of_mem c hν₂L] at hμL
                       exact hμL
-                    have hμ₁ : μ ∈ orbit c.H0 c.U ν₁ := by
-                      rw [orbit_eq_of_mem c hν₁L]
-                      exact hμL'
                     have hpairdata := theta_tilde_two_pair_data c h12 hH0index
                       hν₀ hν₁irr hν₂irr hν₃irr hμirr
                       h_inv hν₁L hν₂L hν₃L hμL'
                       hν₁s hν₂s hν₃s hμs
-                      hν₂₁ hν₃₁ hμ₁ h₁₂ h₁₃ h₂₃
+                      hν₂₁ hν₃₁ h₁₂ h₁₃ h₂₃
                       hχ23irr hχg hχ₁ hχ₂ hχ₃
                     rcases hpairdata with
                       ⟨thetaTilde, hgenν, hgenμ, hnormν, hnormμ, hδeq, honT, hliftν⟩
@@ -9631,10 +9427,9 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
                       delta_pair_same_base_eq_one c h12 hH0index
                         hν₁irr hν₂irr hν'irr hν₂₁ hν'₁ hν₁s h₁₂ h₁ν' h₂ν'
                     rcases fixed_member_pairing_eq_zero_or_one c h12 hH0index
-                      hν₁irr hν₂irr hν₃irr hν'irr hν₂₁ hν₃₁ hν'₁
-                      hν₁s hν₂s hν₃s hfixν'
-                      h₁ν' h₂ν' h₃ν' h₁₂ h₁₃ h₂₃
-                      hχ23irr hχg hχ₁ hχ₂ hχ₃ hδν'norm with hχ0ν' | hχ1ν'
+                      hν₁irr hν₂irr hν'irr hν₂₁ hν'₁
+                      hν₁s hν₂s h₁ν' h₂ν' h₁₂
+                      hχ23irr hχg hχ₁ hχ₂ hδν'norm with hχ0ν' | hχ1ν'
                     · -- `(χ₂₃, δν'*) = 0`: both `s`-fixed members are undefined,
                       -- contradicting the degree identities
                       exfalso
@@ -9642,7 +9437,7 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
                         hν₁irr hν₂irr hν₃irr hνⱼirr hν'irr
                         hν₂₁ hν₃₁ hⱼ₁ hν'₁
                         hν₁s hν₂s hν₃s
-                        hfixν hfixν'
+                        hfixν
                         hνν'
                         h₁ⱼ h₂ⱼ h₃ⱼ
                         h₁ν' h₂ν' h₃ν'
@@ -9650,7 +9445,6 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
                         hχ23irr hχg hχ₁ hχ₂ hχ₃
                         hδ₂norm hδ₃norm hδ₂₃pair
                         hχj0 hχ0ν'
-                        hδνnorm hδν'norm
                     · -- `(χ₂₃, δν'*) = 1`: the coefficient of `ν'` is `0`, so
                       -- the Fourier formula forces `ν(t) = 0`, contradicting
                       -- the nonzero value of the irreducible `ν` at `t`
@@ -9715,7 +9509,7 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
                       norm_num
                     exact pairing_eq_one_of_norm_two c h12 hH0index
                       hν₁irr hν₂irr hν₃irr hνⱼirr hν₂₁ hν₃₁ hⱼ₁
-                      hν₁s hν₂s hν₃s hνⱼs h₁₂ h₁₃ h₁ⱼ h₂₃ h₂ⱼ h₃ⱼ
+                      hν₁s hν₂s hν₃s h₁₂ h₁₃ h₁ⱼ h₂₃ h₂ⱼ h₃ⱼ
                       hχ23irr hχg hχ₁ hχ₂ hχ₃ hδνnorm
         exact exists_theta_lift_invariant c h12 hH0index ν₀ ν₁ hν₀ hν₁irr hν₁L h_inv hν₁s
           hχg hχ₁ hχall
@@ -9770,10 +9564,10 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
         ⟨(Finset.mem_erase.mp hν₃e).1.symm, hσ₂₃⟩
       -- `δ₂*` and `δ₃*` are generalized characters of norm `2` with pairing `1`
       have hδ₂g : IsGeneralizedCharacter (inducedClassFunction c.H0 (ν₀ - ν₂)) := by
-        exact isGeneralizedCharacter_induced c h12 (ν₀ - ν₂)
+        exact isGeneralizedCharacter_induced c (ν₀ - ν₂)
           (isGeneralizedCharacter_sub_irr hν₀ (hνirr ν₂ hν₂L))
       have hδ₃g : IsGeneralizedCharacter (inducedClassFunction c.H0 (ν₀ - ν₃)) := by
-        exact isGeneralizedCharacter_induced c h12 (ν₀ - ν₃)
+        exact isGeneralizedCharacter_induced c (ν₀ - ν₃)
           (isGeneralizedCharacter_sub_irr hν₀ (hνirr ν₃ hν₃L))
       have h₀₂ : ν₀ ∈ orbit c.H0 c.U ν₂ := by
         rw [orbit_eq_of_mem c hν₂L]
@@ -9825,7 +9619,7 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
         rw [hθ₂₃, hθ₂₀, hθ₀₃, hθ₀₀]
         norm_num
       -- the common constituent `χ₂₃` of `δ₂*` and `δ₃*`
-      rcases exists_common_constituent_self c h12 hδ₂g hδ₃g hδ₂norm hδ₃norm hδ₂₃pair with
+      rcases exists_common_constituent_self hδ₂g hδ₃g hδ₂norm hδ₃norm hδ₂₃pair with
         ⟨χ₂₃, hχ23irr, hχ₂, hχ₃⟩
       have hχg : IsGeneralizedCharacter χ₂₃ := by
         rcases hχ23irr with hχ | hχ
@@ -9841,9 +9635,8 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
       by_cases hχall : ∀ ν ∈ orbit c.H0 c.U ν₀, ν ≠ ν₀ →
           scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₀ - ν)) = 1
       · -- the defined case: `θ̃ᵢ := χ₂₃ − δᵢ*` for every member
-        exact exists_theta_lift c h12 hH0index ν₀ ν₀ ν₂ ν₃ hν₀ hν₀
-          (hνirr ν₂ hν₂L) (hνirr ν₃ hν₃L) hν₀L hν₂L hν₃L h_inv hν₁s hν₂s hν₃s
-          h₁₂ h₁₃ h₂₃ hχg hχ₁ hχ₂ hχ₃ hχall
+        exact exists_theta_lift c h12 hH0index ν₀ ν₀ hν₀ hν₀
+          hν₀L h_inv hν₁s hχg hχ₁ hχall
       · -- the undefined case: some `νⱼ` with `(χ₂₃, δⱼ*) ≠ 1` — the paper's
         -- `δⱼ* = φ − θ̃₂ − θ̃₃` route.  In a non-invariant orbit every
         -- induced value has norm one, so Fact 4's corrected `normSq = 3`
@@ -9863,7 +9656,7 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
           rwa [hEq]
         have hδⱼg : IsGeneralizedCharacter
             (inducedClassFunction c.H0 (ν₀ - νⱼ)) := by
-          exact isGeneralizedCharacter_induced c h12 (ν₀ - νⱼ)
+          exact isGeneralizedCharacter_induced c (ν₀ - νⱼ)
             (isGeneralizedCharacter_sub_irr hν₀ hνⱼirr)
         have hν₀ⱼne : ν₀ ≠ νⱼ := fun h => hνjne0 h.symm
         have hδⱼnorm : normSq G (inducedClassFunction c.H0 (ν₀ - νⱼ)) = 2 := by
@@ -9882,21 +9675,11 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
               (inducedClassFunction c.H0 (ν₀ - νⱼ)) = 1 := by
           rw [delta_pair_scalar c h12 (ν₁ := ν₂) (ν₂ := νⱼ) (μ₁ := ν₀)
             (μ₂ := ν₀) (hνirr ν₂ hν₂L) hνⱼirr h₀₂ h₀ⱼ]
-          change scalarProduct (↥c.H)
-            (inducedFromSub (h12.H0_normal_in_H).1 ν₀ -
-              inducedFromSub (h12.H0_normal_in_H).1 ν₂)
-            (inducedFromSub (h12.H0_normal_in_H).1 ν₀ -
-              inducedFromSub (h12.H0_normal_in_H).1 νⱼ) = 1
           have hθ₀₀ : scalarProduct (↥c.H)
               (inducedFromSub (h12.H0_normal_in_H).1 ν₀)
               (inducedFromSub (h12.H0_normal_in_H).1 ν₀) = 1 := by
             change normSq (↥c.H) (inducedFromSub (h12.H0_normal_in_H).1 ν₀) = 1
             rw [theta_norm c h12 hH0index hν₀, if_neg hν₁s]
-          have hθ₀₂ : scalarProduct (↥c.H)
-              (inducedFromSub (h12.H0_normal_in_H).1 ν₀)
-              (inducedFromSub (h12.H0_normal_in_H).1 ν₂) = 0 :=
-            theta_pair_scalar_zero c h12 hH0index hν₀ (hνirr ν₂ hν₂L)
-              (Ne.symm hν₂ne) hσ₀₂
           have hθ₀ⱼ : scalarProduct (↥c.H)
               (inducedFromSub (h12.H0_normal_in_H).1 ν₀)
               (inducedFromSub (h12.H0_normal_in_H).1 νⱼ) = 0 :=
@@ -9921,7 +9704,7 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
             theta_pair_scalar_zero c h12 hH0index (hνirr ν₂ hν₂L) hνⱼirr
               hν₂ⱼne hσ₂ⱼ
           simp [scalarProduct_sub_left, scalarProduct_sub_right,
-            hθ₀₀, hθ₀₂, hθ₀ⱼ, hθ₂₀, hθ₂ⱼ]
+            hθ₀₀, hθ₀ⱼ, hθ₂₀, hθ₂ⱼ]
         have hχj0 :
             scalarProduct G χ₂₃ (inducedClassFunction c.H0 (ν₀ - νⱼ)) = 0 := by
           rcases hχjmem with hχj1 | hχj0 | hχjm1
@@ -9935,8 +9718,6 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
                 scalarProduct G (inducedClassFunction c.H0 (ν₀ - ν₂)) χ₂₃ = 1 := by
               apply star_inj.mp
               rw [scalarProduct_star_comm]
-              change scalarProduct G χ₂₃
-                (inducedClassFunction c.H0 (ν₀ - ν₂)) = star 1
               simpa using hχ₂
             have hth2norm :
                 normSq G (χ₂₃ - inducedClassFunction c.H0 (ν₀ - ν₂)) = 1 := by
@@ -10040,7 +9821,6 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
           change normSq G (1 : ClassFunction G) =
               normSq (↥c.H) (inducedFromSub (h12.H0_normal_in_H).1 ν₀)
           rw [normSq_one]
-          change 1 = normSq (↥c.H) (inducedFromSub (h12.H0_normal_in_H).1 ν₀)
           rw [theta_norm c h12 hH0index hν₀]
           rw [if_neg (hνsall ν₀ hν₀L)]
         · -- isGeneralized
@@ -10083,7 +9863,7 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
           rwa [hEq]
         -- `δ₂* = (ν₀ − ν₂)*`: a generalized character of norm `2`
         have hδ₂g : IsGeneralizedCharacter (inducedClassFunction c.H0 (ν₀ - ν₂)) := by
-          exact isGeneralizedCharacter_induced c h12 (ν₀ - ν₂)
+          exact isGeneralizedCharacter_induced c (ν₀ - ν₂)
             (isGeneralizedCharacter_sub_irr hν₀ (hνirr ν₂ hν₂L))
         have h₀₂ : ν₀ ∈ orbit c.H0 c.U ν₂ := by
           rw [orbit_eq_of_mem c hν₂L]
@@ -10128,12 +9908,10 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
             unfold normSq
             rw [scalarProduct_sub_left, scalarProduct_sub_right, scalarProduct_sub_right]
             have hχχ : scalarProduct G χ χ = 1 := by
-              change scalarProduct G χ χ = 1
               exact irreducible_scalarProduct_self hχ
             have hδχ : scalarProduct G (inducedClassFunction c.H0 (ν₀ - ν₂)) χ = 1 := by
               apply star_inj.mp
               rw [scalarProduct_star_comm]
-              change scalarProduct G χ (inducedClassFunction c.H0 (ν₀ - ν₂)) = star 1
               simpa using hχδ1
             have hδδ : scalarProduct G (inducedClassFunction c.H0 (ν₀ - ν₂))
                 (inducedClassFunction c.H0 (ν₀ - ν₂)) = 2 := hδ₂norm
@@ -10142,7 +9920,6 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
           have hAB : scalarProduct G χ (χ - inducedClassFunction c.H0 (ν₀ - ν₂)) = 0 := by
             rw [scalarProduct_sub_right]
             rw [show scalarProduct G χ χ = 1 by
-              change scalarProduct G χ χ = 1
               exact irreducible_scalarProduct_self hχ]
             rw [hχδ1]
             norm_num
@@ -10150,7 +9927,7 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
             ring
           have hBg : IsGeneralizedCharacter (χ - inducedClassFunction c.H0 (ν₀ - ν₂)) := by
             exact isGeneralizedCharacter_sub hχg hδ₂g
-          exact theta_lift_two c h12 hH0index ν₀ ν₂ hν₀ (hνirr ν₂ hν₂L) hν₂L h_inv
+          exact theta_lift_two c h12 hH0index ν₀ ν₂ hν₀ hν₂L h_inv
             (hνsall ν₀ hν₀L) hν₂s hν₂ne (by simpa [L] using hL2)
             χ (χ - inducedClassFunction c.H0 (ν₀ - ν₂)) hχg hBg hχnorm hBnorm hAB hδAB
         · -- `(χ, δ₂*) = −1`: `A := −χ`, `B := −χ − δ₂*`
@@ -10160,12 +9937,10 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
             rw [scalarProduct_neg_left, scalarProduct_neg_right]
             rw [scalarProduct_add_left, scalarProduct_add_right, scalarProduct_add_right]
             have hχχ : scalarProduct G χ χ = 1 := by
-              change scalarProduct G χ χ = 1
               exact irreducible_scalarProduct_self hχ
             have hδχ : scalarProduct G (inducedClassFunction c.H0 (ν₀ - ν₂)) χ = -1 := by
               apply star_inj.mp
               rw [scalarProduct_star_comm]
-              change scalarProduct G χ (inducedClassFunction c.H0 (ν₀ - ν₂)) = star (-1)
               simpa using hχδ1
             have hδδ : scalarProduct G (inducedClassFunction c.H0 (ν₀ - ν₂))
                 (inducedClassFunction c.H0 (ν₀ - ν₂)) = 2 := hδ₂norm
@@ -10176,7 +9951,6 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
             rw [scalarProduct_neg_left, scalarProduct_neg_right]
             rw [scalarProduct_add_right]
             rw [show scalarProduct G χ χ = 1 by
-              change scalarProduct G χ χ = 1
               exact irreducible_scalarProduct_self hχ]
             rw [hχδ1]
             norm_num
@@ -10189,65 +9963,9 @@ private lemma exists_theta_lift_orbit (c : Hyp11 G) (h12 : Hyp12 c)
             simpa using irreducible_scalarProduct_self hχ
           have hBg : IsGeneralizedCharacter (-χ - inducedClassFunction c.H0 (ν₀ - ν₂)) := by
             exact isGeneralizedCharacter_sub hχg' hδ₂g
-          exact theta_lift_two c h12 hH0index ν₀ ν₂ hν₀ (hνirr ν₂ hν₂L) hν₂L h_inv
+          exact theta_lift_two c h12 hH0index ν₀ ν₂ hν₀ hν₂L h_inv
             (hνsall ν₀ hν₀L) hν₂s hν₂ne (by simpa [L] using hL2)
             (-χ) (-χ - inducedClassFunction c.H0 (ν₀ - ν₂)) hχg' hBg hχnorm' hBnorm hAB hδAB
-
-/-- The `Λ`-orbits of the irreducible characters of `H0`. -/
-private noncomputable def orbitSet (c : Hyp11 G) (h12 : Hyp12 c) :
-    Finset (Finset (ClassFunction (↥c.H0))) := by
-  classical
-  exact (Finset.univ : Finset (Irr (↥c.H0))).image (fun ν : Irr (↥c.H0) => orbit c.H0 c.U ν.1)
-
-/-- An orbit in `orbitSet` is nonempty (the base character's own orbit). -/
-private lemma orbitSet_mem_nonempty (c : Hyp11 G) (h12 : Hyp12 c)
-    {L : Finset (ClassFunction (↥c.H0))} (hL : L ∈ orbitSet c h12) : L.Nonempty := by
-  rcases Finset.mem_image.mp hL with ⟨ν, hν, hLν⟩
-  refine ⟨ν.1, ?_⟩
-  rw [← hLν]
-  exact orbit_self_mem c ν.1
-
-/-- The orbit representatives of `Irr(H0)`: the `ι`-indexing required by
-`lemma_1_7_iii` (`∀ ν, ∃! i, ν ∈ orbit (rep i)`), with each `rep i`
-irreducible. -/
-private lemma exists_orbit_representatives (c : Hyp11 G) (h12 : Hyp12 c) :
-    ∃ (ι : Type u) (_ : Fintype ι) (rep : ι → ClassFunction (↥c.H0)),
-      (∀ i : ι, IsIrreducibleCharacter (rep i)) ∧
-      (∀ ν : {ν : ClassFunction (↥c.H0) // IsIrreducibleCharacter ν},
-        ∃! i : ι, ν.1 ∈ orbit c.H0 c.U (rep i)) := by
-  classical
-  let ι : Type u := {L : Finset (ClassFunction (↥c.H0)) // L ∈ orbitSet c h12}
-  let rep : ι → ClassFunction (↥c.H0) := fun L =>
-    Classical.choose (orbitSet_mem_nonempty c h12 L.2)
-  refine ⟨ι, inferInstance, rep, ?_, ?_⟩
-  · intro L
-    rcases Finset.mem_image.mp L.2 with ⟨ν, hν, hLν⟩
-    have hspec : rep L ∈ L.1 := Classical.choose_spec (orbitSet_mem_nonempty c h12 L.2)
-    have hνL' : rep L ∈ orbit c.H0 c.U ν.1 := hLν ▸ hspec
-    exact orbit_mem_isIrreducible c.H0 c.U ν.2 hνL'
-  · intro ν
-    refine ⟨⟨orbit c.H0 c.U ν.1, Finset.mem_image.mpr ⟨ν, Finset.mem_univ ν, rfl⟩⟩, ?_, ?_⟩
-    · have hspec : rep ⟨orbit c.H0 c.U ν.1, Finset.mem_image.mpr ⟨ν, Finset.mem_univ ν, rfl⟩⟩ ∈
-          orbit c.H0 c.U ν.1 :=
-        Classical.choose_spec (orbitSet_mem_nonempty c h12
-          (Finset.mem_image.mpr ⟨ν, Finset.mem_univ ν, rfl⟩ : orbit c.H0 c.U ν.1 ∈ orbitSet c h12))
-      change ν.1 ∈ orbit c.H0 c.U
-        (rep ⟨orbit c.H0 c.U ν.1, Finset.mem_image.mpr ⟨ν, Finset.mem_univ ν, rfl⟩⟩)
-      rw [orbit_eq_of_mem c hspec]
-      exact orbit_self_mem c ν.1
-    · intro L hLmem
-      have hEqOrbit : L.1 = orbit c.H0 c.U ν.1 := by
-        have hspec : rep L ∈ L.1 := Classical.choose_spec (orbitSet_mem_nonempty c h12 L.2)
-        rcases Finset.mem_image.mp L.2 with ⟨μ, hμ, hLμ⟩
-        have ho1 : orbit c.H0 c.U (rep L) = orbit c.H0 c.U ν.1 :=
-          (orbit_eq_of_mem c hLmem).symm
-        have ho2 : orbit c.H0 c.U (rep L) = orbit c.H0 c.U μ.1 := by
-          rw [← hLμ] at hspec
-          exact orbit_eq_of_mem c hspec
-        have ho3 : orbit c.H0 c.U μ.1 = L.1 := hLμ
-        rw [← ho1, ho2, ho3]
-      apply Subtype.ext
-      exact hEqOrbit
 
 /-- The Coherence-Theorem map: `ν̃ := θ̃_{ν^H}` (the lift of the induced
 character of `ν`, from the per-orbit `ThetaLift`). -/
@@ -10287,7 +10005,7 @@ by the induced-character set `Θ`, rather than by a base member of the orbit;
 this makes the choices for `ν` and `ν^s` definitionally identical. -/
 private noncomputable def tildeTheta (c : Hyp11 G) (h12 : Hyp12 c)
     (hH0index : (c.H0.subgroupOf c.H).index = 2)
-    (ν : ClassFunction (↥c.H0)) (hν : IsIrreducibleCharacter ν) :
+    (ν : ClassFunction (↥c.H0)) (_hν : IsIrreducibleCharacter ν) :
     ClassFunction G :=
   let Θ := thetaOfOrbit c h12 (orbit c.H0 c.U ν)
   canonicalLift c h12 hH0index Θ
@@ -10932,7 +10650,7 @@ private theorem exists_coherence_data (c : Hyp11 G) (h12 : Hyp12 c) :
   · -- on_T: `(ii)` plus Lemma 1.3 pointwise plus `inducedFromSub_sub`
     intro μ ν hμL g hg hgH
     have hind := tildeTheta_ind c h12 hH0index μ ν hμL
-    have hstar := induced_star_eq_on_T c h12 hH0index hμL
+    have hstar := induced_star_eq_on_T c h12 hμL
       ⟨g, hg.1⟩ hg
     have hpoint := congrFun hind (g : G)
     rw [hpoint] at hstar
@@ -11006,7 +10724,7 @@ private theorem exists_coherence_data (c : Hyp11 G) (h12 : Hyp12 c) :
         exact hμL
       have htT : c.t ∈ c.T :=
         ⟨S0_le_H0 c c.t_mem_S0, t_not_mem_U c⟩
-      have hstar := induced_star_eq_on_T c h12 hH0index hμν'L
+      have hstar := induced_star_eq_on_T c h12 hμν'L
         ⟨c.t, (tH0 c).2⟩ htT
       simpa using hstar
     have hres := theta_tilde_two_eval c h12 hH0index (ν := ν.1) ν.2 hνs hnot
@@ -11079,7 +10797,7 @@ public theorem tildeNu_disjoint (c : Hyp11 G) (h12 : Hyp12 c)
     {μ ν : Irr (↥c.H0)} (hμν : μ.1 ∈ orbit c.H0 c.U ν.1)
     (hνμ : ν.1 ≠ μ.1)
     (hνs : conjChar c.H0 (s_normalizes_H0 c h12) ν.1 ≠ μ.1) :
-    Theory.Character.Disjoint (tildeNu c h12 μ) (tildeNu c h12 ν) := by
+    ClassFunction.Disjoint (tildeNu c h12 μ) (tildeNu c h12 ν) := by
   classical
   let D : CoherenceData c h12 := Classical.choice (exists_coherence_data c h12)
   simpa [tildeNu, D] using D.disjoint μ ν hμν hνμ hνs
@@ -11156,9 +10874,9 @@ public theorem BOf_scalar_eq_pm_one (c : Hyp11 G) (h12 : Hyp12 c) {χ : ClassFun
       · rw [hψeq]
         rw [scalarProduct_neg_right]
         rcases scalarProduct_signed_irr_signed_irr_mem hχ (Or.inl hψ) with h1 | h0 | hm1
-        · exact Or.inr (Or.inr (by simpa [h1]))
-        · exact Or.inr (Or.inl (by simpa [h0]))
-        · exact Or.inl (by simpa [hm1])
+        · exact Or.inr (Or.inr (by simp [h1]))
+        · exact Or.inr (Or.inl (by simp [h0]))
+        · exact Or.inl (by simp [hm1])
     rcases hmem with h1 | h0 | hm1
     · exact Or.inl h1
     · exact False.elim (hpair_ne h0)
@@ -11194,7 +10912,7 @@ public theorem BOf_orbit_card_le_two (c : Hyp11 G) (h12 : Hyp12 c) (χ : ClassFu
     have hab' : a.1 ≠ b.1 := by
       intro h
       exact hab (Subtype.ext h)
-    have hdisj : Theory.Character.Disjoint (tildeNu c h12 b) (tildeNu c h12 a) := by
+    have hdisj : ClassFunction.Disjoint (tildeNu c h12 b) (tildeNu c h12 a) := by
       simpa [tildeNu, D] using D.disjoint b a hbaL hab' habs
     have haPair : scalarProduct G χ (tildeNu c h12 a) ≠ 0 := by
       simpa [BOf] using haB

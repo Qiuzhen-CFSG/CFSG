@@ -1,10 +1,12 @@
 module
 
 public import FeitThompson.BGsection15.theorem_15_7
+import Theory.GroupAction.Lemmas
 import FeitThompson.PCore.CentralizerControl
-import FeitThompson.HallSubgroups.Conjugacy
+public import Theory.GroupTheory.Hall.Conjugacy
 import Mathlib.Algebra.Group.Subgroup.Order
 import Mathlib.GroupTheory.Schreier
+
 
 open scoped Pointwise
 
@@ -157,7 +159,7 @@ private theorem section15_exists_msigma_sylow_eq_of_sylowSubgroupIn
     ∃ S : Sylow q.val (section10Msigma M),
       section10AmbientSylowSubgroup (section10Msigma M) S = Q := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   let σ : Subgroup G := section10Msigma M
   rcases hQ with ⟨P, hPamb⟩
   let Qσ : Subgroup σ := Q.subgroupOf σ
@@ -261,8 +263,8 @@ private theorem section15_theorem15_8_no_rankTwo_centralizes_K_core
     (hpq : p ≠ q) :
     False := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   have hσD : section10Msigma Mstar = ambientDerivedSubgroup Mstar :=
     section15_msigma_eq_ambientDerived_of_familyP1
       (G := G) (M := Mstar) (K := section14KStar M K)
@@ -272,7 +274,7 @@ private theorem section15_theorem15_8_no_rankTwo_centralizes_K_core
     exact inf_le_left
   have hAp : IsPGroup p.val A := by
     rcases section15_rankTwo_elementary hA_Mstar with ⟨_hcard, hElem⟩
-    haveI : IsElementaryAbelian p.val A := hElem
+    have : IsElementaryAbelian p.val A := hElem
     exact IsElementaryAbelian.isPGroup p.val A
   have hAnoncyc : ¬ IsCyclic A :=
     section15_rankTwo_not_isCyclic (G := G) hA_Mstar
@@ -420,8 +422,8 @@ private theorem section15_theorem15_8_no_rankTwo_centralizes_K_of_ne_q
     (hAcentK : A ≤ Subgroup.centralizer (K : Set G)) :
     False := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   have hqcard : q.val = Nat.card K :=
     section15_theorem15_8_q_card_K
       (G := G) (M := M) (H := H) (K := K) (Mstar := Mstar) (U := U)
@@ -574,8 +576,8 @@ private theorem section15_theorem15_8_rankTwo_in_H_inter_Mstar_prime_eq
     (hA : A ∈ section12RankTwoElementaryAbelianIn p (H ⊓ Mstar)) :
     p = q := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   let D : Subgroup G := H ⊓ Mstar
   have hqcard : q.val = Nat.card K :=
     section15_theorem15_8_q_card_K
@@ -593,7 +595,7 @@ private theorem section15_theorem15_8_rankTwo_in_H_inter_Mstar_prime_eq
   have hA_D : A ∈ section12RankTwoElementaryAbelianIn p D := by
     simpa [D] using hA
   rcases section12_rankTwo_elementary hA_D with ⟨_hAcard, hAelem⟩
-  haveI : IsElementaryAbelian p.val A := hAelem
+  have : IsElementaryAbelian p.val A := hAelem
   have hAp : IsPGroup p.val A := IsElementaryAbelian.isPGroup p.val A
   have hAnil : Group.IsNilpotent A :=
     IsPGroup.isNilpotent (p := p.val) (G := A) (h := hAp)
@@ -649,7 +651,7 @@ private theorem section15_theorem15_8_rankTwo_in_H_inter_Mstar_isPGroup
       (U := U) (MFstar := MFstar) (A := A) (p := p) (q := q)
       hSituation hMFstar hqK hpτ2H hA
   rcases section12_rankTwo_elementary hA with ⟨_hAcard, hAelem⟩
-  haveI : IsElementaryAbelian p.val A := hAelem
+  have : IsElementaryAbelian p.val A := hAelem
   have hAp : IsPGroup p.val A := IsElementaryAbelian.isPGroup p.val A
   simpa [hpq] using hAp
 
@@ -809,7 +811,7 @@ private theorem section15_tau2_empty_of_centralizer_U_not_le
     have hAE : A ≤ E := section15_rankTwo_le hA
     have hAsub_p : IsPGroup r.val (A.subgroupOf E) :=
       section15_rankTwo_subgroupOf_isPGroup (G := G) (M := E) hA
-    haveI : (U.subgroupOf E).Normal := hUnormE.2
+    have : (U.subgroupOf E).Normal := hUnormE.2
     have hAsub_le_Usub : A.subgroupOf E ≤ U.subgroupOf E :=
       section15_pSubgroup_le_normal_hall_of_prime_mem
         (R := E) (π := ((section14KappaPrimes M ∪ section10SigmaPrimes M)ᶜ))
@@ -842,13 +844,10 @@ private theorem section15_isMulCommutative_of_surjective
     (f : A →* B) (hf : Function.Surjective f)
     (hA : IsMulCommutative A) :
     IsMulCommutative B := by
-  classical
-  refine ⟨⟨fun x y => ?_⟩⟩
-  rcases hf x with ⟨a, rfl⟩
-  rcases hf y with ⟨b, rfl⟩
-  letI : IsMulCommutative A := hA
-  letI : CommGroup A := IsMulCommutative.instCommGroup
-  simpa using congrArg f (mul_comm a b)
+  let _ : IsMulCommutative A := hA
+  let _ : CommGroup A := IsMulCommutative.instCommGroup
+  let _ : CommGroup B := MonoidHom.commGroupOfSurjective f hf
+  exact ⟨⟨fun x y => mul_comm x y⟩⟩
 
 omit [IsMinCE G] in
 private theorem section15_ambientDerived_le_pPrimeCore_map_of_nilpotent_pCore_commutative
@@ -857,11 +856,11 @@ private theorem section15_ambientDerived_le_pPrimeCore_map_of_nilpotent_pCore_co
     (hPcomm : IsMulCommutative (pCore p.val H)) :
     ambientDerivedSubgroup H ≤ (pPrimeCore p.val H).map H.subtype := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let P : Subgroup H := pCore p.val H
   let L : Subgroup H := pPrimeCore p.val H
   let qH : H →* H ⧸ L := QuotientGroup.mk' L
-  letI : Group.IsNilpotent H := hHnil
+  let : Group.IsNilpotent H := hHnil
   have hfit_top : fittingSubgroup H = ⊤ :=
     fitting_eq_top_of_nilpotent (G := H)
   have htop_le_PL : (⊤ : Subgroup H) ≤ P ⊔ L := by
@@ -915,7 +914,7 @@ private theorem section15_theorem15_8_hasNonabelianSylow_q
     (hqK : q ∈ subgroupPrimeSet K) :
     section12HasNonabelianSylowSubgroup q G := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   let σ : Subgroup G := section10Msigma Mstar
   let Kstar : Subgroup G := section14KStar M K
   have hSituationFull := hSituation
@@ -1062,7 +1061,7 @@ private theorem section15_theorem15_8_hasNonabelianSylow_q
       Subgroup.equivMapOfInjective (f := σ.subtype) (S : Subgroup σ)
         σ.subtype_injective
     have hScomm : IsMulCommutative (S : Subgroup σ) :=
-      section15_isMulCommutative_of_mulEquiv e
+      section12_isMulCommutative_of_mulEquiv e
         (by
           change IsMulCommutative ((S : Subgroup σ).map σ.subtype) at hQamb_comm
           exact hQamb_comm)
@@ -1158,7 +1157,7 @@ private theorem section15_theorem15_8_centralizer_U_not_le_M
     (hqK : q ∈ subgroupPrimeSet K) :
     ¬ Subgroup.centralizer (U : Set G) ≤ M := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   let D : Subgroup G := H ⊓ Mstar
   have hSituationFull := hSituation
   have hqcard : q.val = Nat.card K :=

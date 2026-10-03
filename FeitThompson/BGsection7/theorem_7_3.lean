@@ -1,7 +1,8 @@
 module
 
 public import FeitThompson.BGsection7.theorem_7_2
-import FeitThompson.SubgroupConj
+import Theory.GroupTheory.SubgroupConjugation
+
 /-! # Theorem 7.3 from BG Section 7 -/
 
 open scoped Pointwise
@@ -22,14 +23,14 @@ private theorem primeRank_le_card {R : Type*} [Group R] [Finite R] (q : ℕ) :
   by_cases hS : S.Nonempty
   · have hsSup_mem : sSup S ∈ S := Nat.sSup_mem hS hSbdd
     rcases hsSup_mem with ⟨A, _hAq, _hAcomm, hsSup_le⟩
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     exact le_trans hsSup_le (le_trans (generatorRank_le_card_local (H := A)) (Subgroup.card_le_card_group A))
   · have hSempty : S = ∅ := Set.not_nonempty_iff_eq_empty.mp hS
     have hSet :
         {n : ℕ | ∃ A : Subgroup R, IsPGroup q A ∧ IsMulCommutative A ∧ n ≤ generatorRank A} =
           ∅ := by
       simpa [S] using hSempty
-    rw [primeRank, hSet]
+    rw [primeRank_eq_sSup_generatorRank, hSet]
     simp
 
 private theorem exists_pSubgroup_two_le_generatorRank_of_one_lt_groupRank
@@ -55,7 +56,7 @@ private theorem exists_pSubgroup_two_le_generatorRank_of_one_lt_groupRank
   let T : Set ℕ :=
     {n : ℕ | ∃ B : Subgroup R, IsPGroup q B ∧ IsMulCommutative B ∧ n ≤ generatorRank B}
   have hqrank' : 1 < sSup T := by
-    simpa [primeRank, T] using hqrank
+    simpa [primeRank_eq_sSup_generatorRank, T] using hqrank
   have hTbdd : BddAbove T := by
     refine ⟨Nat.card R, ?_⟩
     intro n hn
@@ -84,7 +85,7 @@ public theorem theorem_7_3
     section7HStarFamily.mem_family hQ₁
   have hQ₂fam : Q₂ ∈ section7HFamily (⊤ : Subgroup G) A ({q} : Set Nat.Primes) :=
     section7HStarFamily.mem_family hQ₂
-  letI : Fact q.val.Prime := ⟨q.2⟩
+  let : Fact q.val.Prime := ⟨q.2⟩
   let C : Subgroup G := Subgroup.centralizer (A : Set G)
   let S₀ : Sylow q.val C := Classical.choice (Sylow.nonempty (p := q.val) (G := C))
   have hS₀_ne_bot : (S₀ : Subgroup C) ≠ ⊥ :=
@@ -125,16 +126,16 @@ public theorem theorem_7_3
       rw [hQ₂bot] at hR_eq_Q₂
       exact hR_eq_Q₂
     exact hR_ne_bot hRbot
-  letI : Nontrivial ↥Q₁ := Q₁.nontrivial_iff_ne_bot.mpr hQ₁_ne_bot
-  letI : Nontrivial ↥Q₂ := Q₂.nontrivial_iff_ne_bot.mpr hQ₂_ne_bot
+  let : Nontrivial ↥Q₁ := Q₁.nontrivial_iff_ne_bot.mpr hQ₁_ne_bot
+  let : Nontrivial ↥Q₂ := Q₂.nontrivial_iff_ne_bot.mpr hQ₂_ne_bot
   have hcenterRank' : 1 < groupRank (Subgroup.center A) :=
     lt_of_lt_of_le (by decide : 1 < 2) hcenterRank
   obtain ⟨p, B, hBp, hBcomm, hBrank⟩ :=
     exists_pSubgroup_two_le_generatorRank_of_one_lt_groupRank
       (R := Subgroup.center A) hcenterRank'
-  letI : Fact p.val.Prime := ⟨p.2⟩
-  letI : CommGroup B := IsMulCommutative.instCommGroup
-  letI : Fact (IsPGroup p.val B) := ⟨hBp⟩
+  let : Fact p.val.Prime := ⟨p.2⟩
+  let : CommGroup B := IsMulCommutative.instCommGroup
+  let : Fact (IsPGroup p.val B) := ⟨hBp⟩
   have hB_noncyc : ¬ IsCyclic B := not_isCyclic_of_two_le_generatorRank hBrank
   have hB_ne_bot : B ≠ ⊥ := by
     intro hBbot
@@ -155,8 +156,8 @@ public theorem theorem_7_3
   obtain ⟨n₁, hQ₁card⟩ := hQ₁q.exists_card_eq
   obtain ⟨n₂, hQ₂card⟩ := hQ₂q.exists_card_eq
   let ιBA : B →* A := (Subgroup.center A).subtype.comp B.subtype
-  haveI : Subgroup.Normalizes A Q₁ := ⟨hQ₁fam.2.2⟩
-  letI : MulDistribMulAction (↥B) (↥Q₁) := MulDistribMulAction.compHom (↥Q₁) ιBA
+  have : Subgroup.Normalizes A Q₁ := ⟨hQ₁fam.2.2⟩
+  let : MulDistribMulAction (↥B) (↥Q₁) := MulDistribMulAction.compHom (↥Q₁) ιBA
   have hcopBQ₁ : Nat.Coprime p.val (Nat.card Q₁) := by
     rw [hQ₁card]
     simpa using Nat.coprime_pow_primes 1 n₁ p.2 q.2 hpval_ne_qval
@@ -212,8 +213,8 @@ public theorem theorem_7_3
     intro s hs
     exact ⟨hS_le_H₁ hs, hS_le_R hs⟩
   obtain ⟨f, hf⟩ := lemma_7_1 hA hq hQ₁ hR hAH₁ hH₁proper hH₁Q₁ hH₁R
-  haveI : Subgroup.Normalizes A Q₂ := ⟨hQ₂fam.2.2⟩
-  letI : MulDistribMulAction (↥B) (↥Q₂) := MulDistribMulAction.compHom (↥Q₂) ιBA
+  have : Subgroup.Normalizes A Q₂ := ⟨hQ₂fam.2.2⟩
+  let : MulDistribMulAction (↥B) (↥Q₂) := MulDistribMulAction.compHom (↥Q₂) ιBA
   have hcopBQ₂ : Nat.Coprime p.val (Nat.card Q₂) := by
     rw [hQ₂card]
     simpa using Nat.coprime_pow_primes 1 n₂ p.2 q.2 hpval_ne_qval

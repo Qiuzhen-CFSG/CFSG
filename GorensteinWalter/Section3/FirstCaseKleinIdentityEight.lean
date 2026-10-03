@@ -8,6 +8,7 @@ public import GorensteinWalter.Section3.FirstCaseJNCoset
 public import GorensteinWalter.CosetInvolutionCount
 import Mathlib.Tactic
 
+
 noncomputable section
 
 open scoped Pointwise BigOperators
@@ -55,8 +56,8 @@ private abbrev PairFiber {G : Type u} [Group G] [Finite G] (c : CentralizerSetup
 would force the coset to be the base coset. -/
 private lemma fiber_mem_out {G : Type u} [Group G] [Finite G]
     (c : CentralizerSetup G)
-    {y : G} (hy : IsInvolution y) (hyH : y ∉ c.Hhat)
-    {z : G} (hzI : IsInvolution z)
+    {y : G} (_hy : IsInvolution y) (hyH : y ∉ c.Hhat)
+    {z : G} (_hzI : IsInvolution z)
     (hzcos : cosetInvolution_proj c.Hhat z = cosetInvolution_proj c.Hhat y) :
     z ∉ c.Hhat := by
   intro hz
@@ -78,7 +79,6 @@ private def fiberEquiv {G : Type u} [Group G] [Finite G] (c : CentralizerSetup G
     (ω : G ⧸ c.Hhat) (hω : cosetInvolution_proj c.Hhat y = ω) :
     Fiber c ω ≃ cosetFiber c y where
   toFun := fun z => ⟨(z.1 : G), z.1.2.1, by
-    change cosetInvolution_proj c.Hhat (z.1 : G) = cosetInvolution_proj c.Hhat y
     rw [hω]
     exact z.2⟩
   invFun := fun z => ⟨⟨(z : G), z.2.1, fiber_mem_out c hy hyH z.2.1 z.2.2⟩, by
@@ -142,7 +142,6 @@ private lemma involution_fiber_bound_of_vanishing
       _ = n := by rfl
   have hyn : y ∈ firstCaseJ c n := by
     refine ⟨hy, hyH, ?_⟩
-    change firstCaseCosetInvolutions c y = n
     rw [firstCase_coset_fiber_card_eq c hy]
     exact hfib
   have hnonempty : 0 < Nat.card {x : G // x ∈ firstCaseJ c n} :=
@@ -247,7 +246,6 @@ private lemma fiberCard_subtype_eq_coset_b
       Nat.card (Fiber c ω.1) = Nat.card (involutionFiber π ω.1) := by
     let f : Fiber c ω.1 → involutionFiber π ω.1 := fun z =>
       ⟨(z.1 : G), z.1.2.1, by
-        change π (z.1 : G) = ω.1
         exact z.2⟩
     let g : involutionFiber π ω.1 → Fiber c ω.1 := fun z =>
       ⟨⟨(z.1 : G), z.2.1, by

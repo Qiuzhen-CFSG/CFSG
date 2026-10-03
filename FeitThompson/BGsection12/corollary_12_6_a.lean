@@ -2,6 +2,7 @@ module
 
 public import FeitThompson.BGsection12.theorem_12_5_f
 
+
 open scoped Pointwise
 
 section Section12
@@ -166,10 +167,10 @@ public theorem section12_primeOrderSubgroupsIn_E_eq_rankTwo_pre
   constructor
   · intro hX
     rcases (by simpa [section10PrimeOrderSubgroupsIn] using hX) with ⟨hXE, hXcard⟩
-    haveI : Fact p.val.Prime := ⟨p.2⟩
+    have : Fact p.val.Prime := ⟨p.2⟩
     have hAp : IsPGroup p.val A := by
       rcases section12_rankTwo_elementary hA with ⟨_hcard, hElem⟩
-      haveI : IsElementaryAbelian p.val A := hElem
+      have : IsElementaryAbelian p.val A := hElem
       exact IsElementaryAbelian.isPGroup p.val A
     have hXp : IsPGroup p.val X := by
       refine IsPGroup.of_card (p := p.val) (G := X) (n := 1) ?_

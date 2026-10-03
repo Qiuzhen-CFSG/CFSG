@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section2.PreambleHSU
 import Mathlib.Tactic
 
+
 /-!
 # Two-subgroups centralizing the centralizer odd core
 

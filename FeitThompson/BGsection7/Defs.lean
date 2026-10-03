@@ -3,14 +3,16 @@ module
 public import FeitThompson.BGsection6.Defs
 public import FeitThompson.MinCE
 import FeitThompson.BGsection3.theorem_3_4
-import FeitThompson.HallSubgroups.Conjugacy
-import FeitThompson.SubgroupConj
+public import Theory.GroupTheory.Hall.Conjugacy
+public import Theory.GroupTheory.PiCore
+import Theory.GroupTheory.SubgroupConjugation
 import FeitThompson.PCore.CentralizerControl
 import Theory.Representation.SolvableDimension
 import Mathlib.GroupTheory.IndexNormal
 import Mathlib.GroupTheory.IsSubnormal
 import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Card
 import Mathlib.Order.Preorder.Finite
+
 
 open scoped Pointwise
 
@@ -80,162 +82,6 @@ with each term normal in the next. -/
   A ≠ ⊥ ∧ A ≠ ⊤ ∧
     ∀ X : Subgroup G, A ≤ X → X ≠ ⊤ →
       section7Generated X A (subgroupPrimeSet A)ᶜ = piCoreIn (subgroupPrimeSet A)ᶜ X
-
-omit [Finite G] in
-public lemma IsPiSubgroup.map {G' : Type*} [Group G'] {π : Set Nat.Primes}
-    {H : Subgroup G} (hH : IsPiSubgroup (G := G) π H) (f : G →* G') :
-    IsPiSubgroup (G := G') π (H.map f) := by
-  intro p hp
-  exact hH p (hp.trans (Subgroup.card_map_dvd (H := H) f))
-
-omit [Finite G] in
-public lemma IsPiSubgroup.sup_of_normal_right {π : Set Nat.Primes}
-    {H K : Subgroup G} (hH : IsPiSubgroup (G := G) π H)
-    (hK : IsPiSubgroup (G := G) π K) [K.Normal] :
-    IsPiSubgroup (G := G) π (H ⊔ K) := by
-  intro p hpSup
-  have hmul : (↑(H ⊔ K) : Set G) = (H : Set G) * (K : Set G) := by
-    simpa using (Subgroup.mul_normal H K)
-  have hcard_sup_set :
-      Nat.card (↑(H ⊔ K) : Set G) = Nat.card ((H : Set G) * (K : Set G) : Set G) :=
-    Nat.card_congr (Equiv.setCongr hmul)
-  have hcard_sup :
-      Nat.card (↥(H ⊔ K)) = Nat.card ((H : Set G) * (K : Set G) : Set G) := by
-    simpa using hcard_sup_set
-  have hcard_mul :
-      Nat.card ((H : Set G) * (K : Set G) : Set G) =
-        Nat.card K * Nat.card ((H : Set G).image (↑) : Set (G ⧸ K)) := by
-    simpa using
-      (Subgroup.card_mul_eq_card_subgroup_mul_card_quotient (s := K) (t := (H : Set G)))
-  have hset_image :
-      ((H : Set G).image (↑) : Set (G ⧸ K)) =
-        (H.map (QuotientGroup.mk' K) : Set (G ⧸ K)) := by
-    simp [Subgroup.coe_map]
-  have hcard_image_set :
-      Nat.card ((H : Set G).image (↑) : Set (G ⧸ K)) =
-        Nat.card (H.map (QuotientGroup.mk' K) : Set (G ⧸ K)) :=
-    Nat.card_congr (Equiv.setCongr hset_image)
-  have hcard_image_subgroup :
-      Nat.card ((H : Set G).image (↑) : Set (G ⧸ K)) = Nat.card (H.map (QuotientGroup.mk' K)) := by
-    exact hcard_image_set
-  have hp_mul :
-      p.val ∣ Nat.card K * Nat.card ((H : Set G).image (↑) : Set (G ⧸ K)) := by
-    rw [← hcard_mul, ← hcard_sup]
-    exact hpSup
-  rcases p.2.dvd_mul.mp hp_mul with hpK | hpImg
-  · exact hK p hpK
-  · have hpMap : p.val ∣ Nat.card (H.map (QuotientGroup.mk' K)) := by
-      rwa [hcard_image_subgroup] at hpImg
-    exact (hH.map (QuotientGroup.mk' K)) p hpMap
-
-omit [Finite G] in
-public lemma normalPiSubgroups_nonempty (π : Set Nat.Primes) :
-    ({K : Subgroup G | K.Normal ∧ IsPiSubgroup (G := G) π K} : Set (Subgroup G)).Nonempty := by
-  refine ⟨⊥, ?_⟩
-  constructor
-  · infer_instance
-  · intro p hp
-    exfalso
-    exact p.2.not_dvd_one (by simpa using hp)
-
-omit [Finite G] in
-public lemma directedOn_normal_piSubgroups (π : Set Nat.Primes) :
-    DirectedOn (· ≤ ·) ({K : Subgroup G | K.Normal ∧ IsPiSubgroup (G := G) π K} : Set (Subgroup G)) := by
-  intro H hH K hK
-  rcases hH with ⟨hHnorm, hHπ⟩
-  rcases hK with ⟨hKnorm, hKπ⟩
-  refine ⟨H ⊔ K, ⟨?_, ?_⟩, le_sup_left, le_sup_right⟩
-  · haveI : H.Normal := hHnorm
-    haveI : K.Normal := hKnorm
-    exact Subgroup.sup_normal H K
-  · haveI : K.Normal := hKnorm
-    exact hHπ.sup_of_normal_right hKπ
-
-omit [Finite G] in
-public lemma piCore_map_iso {π : Set Nat.Primes} {G' : Type*} [Group G']
-    (f : G ≃* G') :
-    (piCore π G).map f.toMonoidHom = piCore π G' := by
-  let S : Set (Subgroup G) := {K | K.Normal ∧ IsPiSubgroup (G := G) π K}
-  let S' : Set (Subgroup G') := {K' | K'.Normal ∧ IsPiSubgroup (G := G') π K'}
-  let F : Subgroup G ≃o Subgroup G' := MulEquiv.mapSubgroup f
-  have hImage : F '' S = S' := by
-    ext K'
-    constructor
-    · rintro ⟨K, ⟨hKnorm, hKπ⟩, rfl⟩
-      constructor
-      · exact Subgroup.Normal.map hKnorm f.toMonoidHom f.surjective
-      · change IsPiSubgroup (G := G') π (K.map f.toMonoidHom)
-        exact hKπ.map f.toMonoidHom
-    · intro hK'
-      refine ⟨F.symm K', ?_, ?_⟩
-      constructor
-      · exact Subgroup.Normal.map hK'.1 f.symm.toMonoidHom f.symm.surjective
-      · simpa [F] using hK'.2.map f.symm.toMonoidHom
-      · ext x
-        simp [F]
-  calc
-    (piCore π G).map f.toMonoidHom = (sSup S).map f.toMonoidHom := rfl
-    _ = F (sSup S) := rfl
-    _ = ⨆ K ∈ S, F K := OrderIso.map_sSup F S
-    _ = sSup (F '' S) := by simp [sSup_image]
-    _ = sSup S' := by rw [hImage]
-    _ = piCore π G' := rfl
-
-public instance piCore_characteristic (π : Set Nat.Primes) : (piCore π G).Characteristic := by
-  rw [Subgroup.characteristic_iff_map_eq]
-  intro φ
-  simpa using (piCore_map_iso (G := G) (G' := G) (π := π) φ)
-
-public instance piCore_normal (π : Set Nat.Primes) : (piCore π G).Normal := by
-  refine ⟨?_⟩
-  intro n hn g
-  have hdir := directedOn_normal_piSubgroups (G := G) π
-  have hne := normalPiSubgroups_nonempty (G := G) π
-  rcases ((Subgroup.mem_sSup_of_directedOn hne hdir).mp hn) with ⟨K, hK, hnK⟩
-  exact Subgroup.mem_sSup_of_mem hK (hK.1.conj_mem n hnK g)
-
-public lemma piCore_isPiSubgroup (π : Set Nat.Primes) :
-    IsPiSubgroup (G := G) π (piCore π G) := by
-  let S : Set (Subgroup G) := {K | K.Normal ∧ IsPiSubgroup (G := G) π K}
-  have hne : S.Nonempty := normalPiSubgroups_nonempty (G := G) π
-  have hImageFinite : ((fun L : Subgroup G => Nat.card L) '' S).Finite := by
-    refine (Set.finite_Iic (Nat.card G)).subset ?_
-    rintro n ⟨K, hK, rfl⟩
-    simpa [Set.mem_Iic] using
-      (Subgroup.card_le_of_le (show K ≤ (⊤ : Subgroup G) by exact le_top))
-  obtain ⟨K, hKmax⟩ :=
-    hImageFinite.exists_maximalFor' (f := fun L : Subgroup G => Nat.card L) S hne
-  have hKmem : K ∈ S := hKmax.1
-  have hpiCore_le : piCore π G ≤ K := by
-    intro x hx
-    have hdir := directedOn_normal_piSubgroups (G := G) π
-    have hne' := normalPiSubgroups_nonempty (G := G) π
-    rcases (Subgroup.mem_sSup_of_directedOn hne' hdir).mp hx with ⟨L, hLmem, hxL⟩
-    have hsup_mem : L ⊔ K ∈ S := by
-      rcases hLmem with ⟨hLnorm, hLπ⟩
-      rcases hKmem with ⟨hKnorm, hKπ⟩
-      refine ⟨?_, ?_⟩
-      · haveI : L.Normal := hLnorm
-        haveI : K.Normal := hKnorm
-        exact Subgroup.sup_normal L K
-      · haveI : K.Normal := hKnorm
-        exact hLπ.sup_of_normal_right hKπ
-    have hcard_sup_le : Nat.card ↥(L ⊔ K) ≤ Nat.card ↥K := hKmax.le hsup_mem
-    have hcard_K_le : Nat.card ↥K ≤ Nat.card ↥(L ⊔ K) :=
-      Subgroup.card_le_of_le le_sup_right
-    have hcard_eq : Nat.card ↥(L ⊔ K) = Nat.card ↥K :=
-      Nat.le_antisymm hcard_sup_le hcard_K_le
-    have hsup_eq : L ⊔ K = K := by
-      symm
-      exact Subgroup.eq_of_le_of_card_ge le_sup_right (by simpa using hcard_sup_le)
-    have hL_le_K : L ≤ K := by
-      intro y hy
-      have hy_sup : y ∈ L ⊔ K := Subgroup.mem_sup_left hy
-      simpa [hsup_eq] using hy_sup
-    exact hL_le_K hxL
-  have hK_le_piCore : K ≤ piCore π G := le_sSup hKmem
-  have hEq : piCore π G = K := le_antisymm hpiCore_le hK_le_piCore
-  simpa [hEq] using hKmem.2
 
 public lemma piCoreIn_isPiSubgroup (π : Set Nat.Primes) (H : Subgroup G) :
     IsPiSubgroup (G := G) π (piCoreIn π H) := by
@@ -310,7 +156,7 @@ public lemma le_section7K_of_le_centralizer_isPiSubgroup [IsMinCE G]
   let Y : Subgroup G := A ⊔ Lmap
   let M : Subgroup G := piCoreIn (subgroupPrimeSet A)ᶜ Y
   let Lsub : Subgroup Y := Lmap.subgroupOf Y
-  letI : IsSimpleGroup G := IsMinCE.simple
+  let : IsSimpleGroup G := IsMinCE.simple
   have hLmap_le_C : Lmap ≤ C := by
     intro x hx
     rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
@@ -361,12 +207,12 @@ public lemma le_section7K_of_le_centralizer_isPiSubgroup [IsMinCE G]
     exact sup_le hA_le_normLmap Lmap.le_normalizer
   have hLsub_norm : (Lmap.subgroupOf Y).Normal := by
     exact Subgroup.normal_subgroupOf_of_le_normalizer (H := Y) (N := Lmap) hY_le_normLmap
-  letI : Lsub.Normal := by
+  let : Lsub.Normal := by
     simpa [Lsub] using hLsub_norm
   let q : Y →* (Y ⧸ Lsub) := QuotientGroup.mk' Lsub
   have hAY_norm : (A.subgroupOf Y).Normal := by
     exact Subgroup.normal_subgroupOf_of_le_normalizer (H := Y) (N := A) hY_le_normA
-  letI : (A.subgroupOf Y).Normal := hAY_norm
+  let : (A.subgroupOf Y).Normal := hAY_norm
   have hsub_sup : A.subgroupOf Y ⊔ Lmap.subgroupOf Y = ⊤ := by
     calc
       A.subgroupOf Y ⊔ Lmap.subgroupOf Y = (A ⊔ Lmap).subgroupOf Y := by
@@ -511,9 +357,9 @@ public lemma isInvariant_subgroupOf_of_le_normalizer
     (hAH : A ≤ Subgroup.normalizer (H : Set G))
     (hAK : A ≤ Subgroup.normalizer (K : Set G))
     (_hKH : K ≤ H) :
-    haveI : Subgroup.Normalizes A H := ⟨hAH⟩
+    have : Subgroup.Normalizes A H := ⟨hAH⟩
     IsInvariant (↥A) (↥H) (K.subgroupOf H) := by
-  haveI : Subgroup.Normalizes A H := ⟨hAH⟩
+  have : Subgroup.Normalizes A H := ⟨hAH⟩
   refine ⟨?_⟩
   intro a x
   change ((x : H) : G) ∈ K ↔ ((a : G) * ((x : H) : G) * (a : G)⁻¹) ∈ K
@@ -528,7 +374,7 @@ public lemma IsHallSubgroup.isPiSubgroup {π : Set Nat.Primes} {H : Subgroup G}
 public lemma isPGroup_of_isPiSubgroup_singleton {H : Subgroup G} {q : Nat.Primes}
     (hH : IsPiSubgroup (G := G) ({q} : Set Nat.Primes) H) :
     IsPGroup q.val H := by
-  letI : Fact q.val.Prime := ⟨q.2⟩
+  let : Fact q.val.Prime := ⟨q.2⟩
   rw [IsPGroup.iff_card]
   have hcard_ne_zero : Nat.card H ≠ 0 := Nat.card_pos.ne'
   refine ⟨(Nat.card H).primeFactorsList.length, ?_⟩
@@ -542,8 +388,8 @@ public lemma isPGroup_of_isPiSubgroup_singleton {H : Subgroup G} {q : Nat.Primes
 public lemma normalizerCondition_of_isPiSubgroup_singleton {H : Subgroup G} {q : Nat.Primes}
     (hH : IsPiSubgroup (G := G) ({q} : Set Nat.Primes) H) :
     NormalizerCondition ↥H := by
-  letI : Fact (Nat.Prime q.val) := ⟨q.2⟩
-  haveI : Group.IsNilpotent ↥H := by
+  let : Fact (Nat.Prime q.val) := ⟨q.2⟩
+  have : Group.IsNilpotent ↥H := by
     exact IsPGroup.isNilpotent (p := q.val) (G := ↥H)
       (h := isPGroup_of_isPiSubgroup_singleton hH)
   exact Group.normalizerCondition_of_isNilpotent (G := ↥H)
@@ -551,7 +397,7 @@ public lemma normalizerCondition_of_isPiSubgroup_singleton {H : Subgroup G} {q :
 public lemma isPiSubgroup_singleton_of_isPGroup {H : Subgroup G} {q : Nat.Primes}
     (hH : IsPGroup q.val H) :
     IsPiSubgroup (G := G) ({q} : Set Nat.Primes) H := by
-  letI : Fact q.val.Prime := ⟨q.2⟩
+  let : Fact q.val.Prime := ⟨q.2⟩
   intro p hp
   obtain ⟨n, hncard⟩ := hH.exists_card_eq
   have hpdvdq : p.val ∣ q.val := p.2.dvd_of_dvd_pow (by simpa [hncard] using hp)
@@ -726,7 +572,7 @@ public lemma inf_le_piCoreIn_of_hypothesis
   simpa [hgen_eq] using hHQgen
 
 public lemma solvable_of_proper_subgroup [IsMinCE G] {H : Subgroup G} (hHproper : H ≠ ⊤) :
-    IsSolvable H :=
+    Group.IsSolvable H :=
   IsMinCE.proper_subgroups_solvable H (lt_top_iff_ne_top.mpr hHproper)
 
 end

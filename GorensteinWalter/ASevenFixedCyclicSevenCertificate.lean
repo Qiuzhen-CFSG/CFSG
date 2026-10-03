@@ -7,6 +7,7 @@ namespace GorensteinWalter
 
 set_option maxRecDepth 1000000 in
 set_option maxHeartbeats 2000000 in
+-- Exhaustive evaluation over the concrete permutation certificate needs this heartbeat budget.
 public theorem a7_fixed_cyclic_seven_certificate :
     ∀ x : ASevenCertificateGroup,
       (x ≠ 1 ∧ x ^ 7 = 1 ∧
@@ -26,7 +27,7 @@ public theorem a7_fixed_cyclic_seven_certificate :
         group
       _ = a7t * x ^ (i : Nat) * a7t⁻¹ := by rw [hi]
       _ = (a7t * x * a7t⁻¹) ^ (i : Nat) := by
-        simpa using (map_pow (MulAut.conj a7t) x (i : Nat))
+        simp
       _ = (x ^ (i : Nat)) ^ (i : Nat) := by rw [hi]
   have hmod : 1 ≡ (i : Nat) * (i : Nat) [MOD 7] := by
     have h := (pow_eq_pow_iff_modEq
@@ -66,7 +67,7 @@ public theorem a7_fixed_cyclic_seven_certificate :
     have hconjPow : a7t * x ^ k * a7t⁻¹ = x ^ (6 * k) := by
       calc
         a7t * x ^ k * a7t⁻¹ = (a7t * x * a7t⁻¹) ^ k := by
-          simpa using (map_pow (MulAut.conj a7t) x k)
+          simp
         _ = (x ^ 6) ^ k := by simpa [hi6] using congrArg (fun z => z ^ k) hi
         _ = x ^ (6 * k) := by rw [pow_mul]
     have hk6 : (sigma ^ (6 * k)) 4 = 5 := by
@@ -79,7 +80,9 @@ public theorem a7_fixed_cyclic_seven_certificate :
       rw [← hsigmaOrder, ← pow_eq_pow_iff_modEq]
       exact hpows
     have hdivInt : (7 : ℤ) ∣ (5 : ℤ) * k := by
-      convert hkmod.dvd using 1 <;> push_cast <;> ring
+      convert hkmod.dvd using 1
+      all_goals push_cast
+      all_goals ring
     have hdivNat : 7 ∣ 5 * k := by exact_mod_cast hdivInt
     have h7dvd : 7 ∣ k := by
       rcases Nat.prime_seven.dvd_mul.mp hdivNat with hbad | hk'
@@ -88,7 +91,6 @@ public theorem a7_fixed_cyclic_seven_certificate :
     have hsigmaK : sigma ^ k = 1 := by
       rw [← orderOf_dvd_iff_pow_eq_one, hsigmaOrder]
       exact h7dvd
-    have hfalse : (4 : Fin 7) = 5 := by simpa [hsigmaK] using hk
-    exact (by decide : (4 : Fin 7) ≠ 5) hfalse
+    simp [hsigmaK] at hk
 
 end GorensteinWalter

@@ -11,6 +11,7 @@ import GorensteinWalter.Section2.PreambleHSU
 import GorensteinWalter.Section2.PreambleInvolutions
 import GorensteinWalter.Section2.Reflection
 
+
 /-!
 # The Brauer--Suzuki--Wall hypotheses from the forbidden configuration
 
@@ -560,3 +561,4 @@ public noncomputable def forbiddenConfiguration_brauerSuzukiWallHypotheses
 end
 
 end GorensteinWalter
+

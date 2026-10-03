@@ -6,7 +6,8 @@ import FeitThompson.PCore.CentralizerControl
 import FeitThompson.Fitting.Core
 import FeitThompson.ChiefFactors.Proposition12
 import FeitThompson.BGsection1.proposition_1_10
-import FeitThompson.SubgroupConj
+import Theory.GroupTheory.SubgroupConjugation
+
 
 /-!
 # Section 10, Proposition 10.2(d--e): Fitting infrastructure
@@ -30,7 +31,7 @@ public theorem proposition102_nilpotent_internalDirectProduct_pCore_pPrimeCore
     (p : ℕ) (hp : Nat.Prime p) (hnil : Group.IsNilpotent Q) :
     Section2.IsInternalDirectProduct (⊤ : Subgroup Q)
       (pCore p Q) (pPrimeCore p Q) := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hsup : pCore p Q ⊔ pPrimeCore p Q = (⊤ : Subgroup Q) :=
     top_unique (nilpotent_top_le_pCore_sup_pPrimeCore hnil)
   have hcop : Nat.Coprime (Nat.card (pCore p Q))
@@ -39,7 +40,7 @@ public theorem proposition102_nilpotent_internalDirectProduct_pCore_pPrimeCore
     rw [hn]
     exact (pPrimeCore_coprime_card (G := Q) (p := p)).pow_left n
   have hinf : pCore p Q ⊓ pPrimeCore p Q = ⊥ :=
-    Subgroup.inf_eq_bot_of_coprime hcop
+    (Subgroup.disjoint_of_coprime_natCard hcop).eq_bot
   refine
     { left_le := le_top
       right_le := le_top
@@ -117,8 +118,8 @@ public theorem proposition102_normal_sylow_eq_pCore
     {r : ℕ} (hr : r.Prime) (P : Sylow r G)
     (hPnormal : (P : Subgroup G).Normal) :
     pCore r G = (P : Subgroup G) := by
-  letI : Fact r.Prime := ⟨hr⟩
-  letI : Unique (Sylow r G) := Sylow.unique_of_normal P hPnormal
+  let : Fact r.Prime := ⟨hr⟩
+  let : Unique (Sylow r G) := Sylow.unique_of_normal P hPnormal
   apply le_antisymm
   · obtain ⟨Q, hcoreQ⟩ :=
       (pCore_isPGroup (p := r) (G := G)).exists_le_sylow
@@ -138,7 +139,7 @@ public theorem proposition102_fitting_internalDirectProduct_of_normal_sylow
       Section2.IsInternalDirectProduct (fittingSubgroupOf V) R Q ∧
       Q = (pPrimeCore r (fittingSubgroupOf V)).map
         (fittingSubgroupOf V).subtype := by
-  letI : Fact r.Prime := ⟨hr⟩
+  let : Fact r.Prime := ⟨hr⟩
   let F : Subgroup X := fittingSubgroupOf V
   have hRnil : Group.IsNilpotent R := by
     exact IsPGroup.isNilpotent (by
@@ -148,7 +149,7 @@ public theorem proposition102_fitting_internalDirectProduct_of_normal_sylow
         exact S.isPGroup'.map V.subtype
       exact hSp)
   have hRnilV : Group.IsNilpotent (R.subgroupOf V) := by
-    exact nilpotent_of_mulEquiv (_h := hRnil)
+    exact Group.nilpotent_of_mulEquiv (_h := hRnil)
       (Subgroup.subgroupOfEquivOfLe hRV).symm
   have hRF : R ≤ F := by
     have hRFsubV : R.subgroupOf V ≤ fittingSubgroup V :=
@@ -193,7 +194,7 @@ public theorem proposition102_commutator_eq_bot_of_coprime_centralizer
     (hQR : ⁅Q, R⁆ = ⊥)
     (hQCR : Q ≤ Subgroup.centralizer (subgroupCentralizerIn S R : Set X)) :
     ⁅Q, S⁆ = ⊥ := by
-  letI : Subgroup.Normalizes Q S := ⟨hQnormS⟩
+  let : Subgroup.Normalizes Q S := ⟨hQnormS⟩
   have hnil : Group.IsNilpotent S := IsPGroup.isNilpotent hSr
   have hR_le_CQ : R ≤ subgroupCentralizerIn S Q := by
     have hQ_le_CR : Q ≤ Subgroup.centralizer (R : Set X) :=

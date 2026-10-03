@@ -5,6 +5,7 @@ public import BenderSuzuki.SE.Proposition84Sylow
 public import FeitThompson.BGsection8.theorem_8_1
 import FeitThompson.FinalTheorem
 
+
 /-!
 # Section 10, Lemma 10.4
 
@@ -60,7 +61,7 @@ private theorem lemma45_factor_for_lemma44
       (((pPrimeCore p.val (normalizerIn W U)).map
         (normalizerIn W U).subtype : Subgroup X) : Set X) *
         (normalizerIn E U : Set X) := by
-  letI : Fact p.val.Prime := ⟨p.property⟩
+  let : Fact p.val.Prime := ⟨p.property⟩
   let N : Subgroup X := normalizerIn W U
   let C : Subgroup X := W ⊓ Subgroup.centralizer (U : Set X)
   let A : Subgroup X := piCoreIn (subgroupPrimeSet E)ᶜ C
@@ -116,7 +117,7 @@ public theorem ii1Lemma45_alternativeA
               (W ⊓ Subgroup.centralizer (U : Set X)) : Set X) *
             (normalizerIn E U : Set X)) :
     Lemma94AlternativeA W E hEW p.val := by
-  letI : Fact p.val.Prime := ⟨p.property⟩
+  let : Fact p.val.Prime := ⟨p.property⟩
   apply ii1Lemma44Ambient (W := W) (E := E) hEW
   intro P U hUP hshape
   have hPne : (P : Subgroup E) ≠ ⊥ :=
@@ -154,7 +155,7 @@ public theorem ii1Lemma45_hall
     change q.val ∣ Nat.card E
     simpa [natCard_subgroupOf_eq E W hEW] using hqcard
   · intro p hpE hpindex
-    letI : Fact p.val.Prime := ⟨p.property⟩
+    let : Fact p.val.Prime := ⟨p.property⟩
     obtain ⟨Q, hQE, _hfusion⟩ :=
       ii1Lemma45_alternativeA W E hEW p hpE h4C
     have hQle : (Q : Subgroup W) ≤ E.subgroupOf W := hQE
@@ -216,7 +217,7 @@ private theorem lemma45_normalComplement_lift
     exact inf_le_right
   have hKnormal : Kloc.Normal := by
     simpa [Kloc] using hcomp₀.normal_in_M
-  letI : Kloc.Normal := hKnormal
+  let : Kloc.Normal := hKnormal
   have hcompLoc : Kloc.IsComplement' E₀loc := by
     have hdisj : Disjoint Kloc E₀loc := by
       rw [Subgroup.disjoint_def]
@@ -298,11 +299,11 @@ public theorem ii1Lemma45NormalComplement
             _ = ⊥ := by rw [hbot, Subgroup.map_bot]
         have hEWsolv : Group.IsSolvable EW := by
           let eEW : EW ≃* E := Subgroup.subgroupOfEquivOfLe hEW
-          letI : Group.IsSolvable E := hEsolv
+          let : Group.IsSolvable E := hEsolv
           exact Group.isSolvable_of_isSolvable_injective
             (f := eEW.toMonoidHom) eEW.injective
-        letI : Group.IsSolvable EW := hEWsolv
-        letI : Nontrivial EW :=
+        let : Group.IsSolvable EW := hEWsolv
+        let : Nontrivial EW :=
           (Subgroup.nontrivial_iff_ne_bot EW).2 hEWne
         have hcommLt : derivedSubgroup EW < ⊤ :=
           Group.IsSolvable.commutator_lt_top_of_nontrivial (G := EW)
@@ -320,7 +321,7 @@ public theorem ii1Lemma45NormalComplement
           simpa [EW, natCard_subgroupOf_eq E W hEW] using hpEW
         obtain ⟨P, hPE, hfusion⟩ :=
           ii1Lemma45_alternativeA W E hEW p' hpE h4C
-        letI : Fact p.Prime := ⟨hp⟩
+        let : Fact p.Prime := ⟨hp⟩
         have hres :=
           hallPResidual_factorization_of_dvd_abelianization_of_controlsFusionIn
             EW P hPE hfusion hpAb
@@ -372,7 +373,7 @@ public theorem ii1Lemma45NormalComplement
           rw [← hcard]
           exact natCard_lt_of_subgroup_lt hE₀lt
         have hE₀solv : Group.IsSolvable E₀ := by
-          letI : Group.IsSolvable E := hEsolv
+          let : Group.IsSolvable E := hEsolv
           exact Group.isSolvable_of_isSolvable_injective
             (f := Subgroup.inclusion hE₀E)
             (Subgroup.inclusion_injective hE₀E)
@@ -512,30 +513,6 @@ public theorem normalizerIn_normalizerIn_eq_normalizerIn_sup
   · intro x hx
     exact ⟨⟨hx.1, hSupB hx.2⟩, hSupA hx.2⟩
 
-private theorem lemma104_natCard_sup_eq_mul_of_disjoint_of_le_normalizer
-    {G : Type u} [Group G] (A B : Subgroup G)
-    (hnorm : B ≤ Subgroup.normalizer (A : Set G))
-    (hdisj : Disjoint A B) :
-    Nat.card (A ⊔ B : Subgroup G) = Nat.card A * Nat.card B := by
-  let toSup : A × B → ↥(A ⊔ B) := fun z =>
-    ⟨(z.1 : G) * (z.2 : G),
-      Subgroup.mul_mem_sup z.1.property z.2.property⟩
-  have hinj : Function.Injective toSup := by
-    intro x y hxy
-    apply Subgroup.mul_injective_of_disjoint hdisj
-    exact congrArg Subtype.val hxy
-  have hsurj : Function.Surjective toSup := by
-    intro x
-    have hx : (x : G) ∈ (A : Set G) * (B : Set G) := by
-      rw [← Subgroup.coe_mul_of_right_le_normalizer_left A B hnorm]
-      exact x.property
-    rcases hx with ⟨a, ha, b, hb, hab⟩
-    exact ⟨(⟨a, ha⟩, ⟨b, hb⟩), Subtype.ext hab⟩
-  calc
-    Nat.card (A ⊔ B : Subgroup G) = Nat.card (A × B) :=
-      Nat.card_congr (Equiv.ofBijective toSup ⟨hinj, hsurj⟩).symm
-    _ = Nat.card A * Nat.card B := Nat.card_prod A B
-
 private theorem lemma104_sylow_left_of_commuting_prime_sup
     {G : Type u} [Group G] [Finite G]
     {p q : ℕ} (hp : Nat.Prime p) (hq : Nat.Prime q) (hqp : q ≠ p)
@@ -544,8 +521,8 @@ private theorem lemma104_sylow_left_of_commuting_prime_sup
     (hPnormU : P ≤ Subgroup.normalizer (U : Set G)) :
     theorem4bIsSylowSubgroupOf q U (U ⊔ P) := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
-  letI : Fact q.Prime := ⟨hq⟩
+  let : Fact p.Prime := ⟨hp⟩
+  let : Fact q.Prime := ⟨hq⟩
   let Y : Subgroup G := U ⊔ P
   have hUY : U ≤ Y := le_sup_left
   let UY : Subgroup Y := U.subgroupOf Y
@@ -553,11 +530,10 @@ private theorem lemma104_sylow_left_of_commuting_prime_sup
     hUq.of_equiv (Subgroup.subgroupOfEquivOfLe hUY).symm
   have hcop : Nat.Coprime (Nat.card U) (Nat.card P) :=
     IsPGroup.coprime_card_of_ne q p hqp U P hUq hPp
-  have hdisj : Disjoint U P := by
-    rw [disjoint_iff]
-    exact Subgroup.inf_eq_bot_of_coprime hcop
+  have hdisj : Disjoint U P :=
+    Subgroup.disjoint_of_coprime_natCard hcop
   have hcardY : Nat.card Y = Nat.card U * Nat.card P := by
-    exact lemma104_natCard_sup_eq_mul_of_disjoint_of_le_normalizer U P
+    exact PFchapter1section1.natCard_sup_eq_mul_of_disjoint_of_le_normalizer U P
       hPnormU hdisj
   have hcardUY : Nat.card UY = Nat.card U := by
     exact natCard_subgroupOf_eq U Y hUY
@@ -598,8 +574,8 @@ public theorem lemma104_normalizer_sup_eq
     (hPsylD : theorem4bIsSylowSubgroupOf p P D) :
     normalizerIn (normalizerIn M P) U = normalizerIn M (U ⊔ P) := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
-  letI : Fact q.Prime := ⟨hq⟩
+  let : Fact p.Prime := ⟨hp⟩
+  let : Fact q.Prime := ⟨hq⟩
   let Y : Subgroup X := U ⊔ P
   have hPD : P ≤ D := lemma104_theorem4bIsSylowSubgroupOf_le hPsylD
   have hPY : P ≤ Y := le_sup_right
@@ -628,7 +604,7 @@ public theorem lemma104_normalizer_sup_eq
   have hPYnormal : (PY : Subgroup Y).Normal := by
     rw [hPYeq]
     exact hPnormalY
-  letI : (PY : Subgroup Y).Characteristic :=
+  let : (PY : Subgroup Y).Characteristic :=
     Sylow.characteristic_of_normal PY hPYnormal
   have hUsylY : theorem4bIsSylowSubgroupOf q U Y := by
     simpa [Y] using lemma104_sylow_left_of_commuting_prime_sup
@@ -647,7 +623,7 @@ public theorem lemma104_normalizer_sup_eq
   have hUYnormal : (UY : Subgroup Y).Normal := by
     rw [hUYeq]
     exact hUnormalY
-  letI : (UY : Subgroup Y).Characteristic :=
+  let : (UY : Subgroup Y).Characteristic :=
     Sylow.characteristic_of_normal UY hUYnormal
   apply le_antisymm
   · intro x hx
@@ -701,8 +677,8 @@ private theorem lemma104_normal_sylow_eq_pCore
     {p : ℕ} (hp : Nat.Prime p) (P : Sylow p G)
     (hPnormal : (P : Subgroup G).Normal) :
     pCore p G = (P : Subgroup G) := by
-  letI : Fact p.Prime := ⟨hp⟩
-  letI : Unique (Sylow p G) := Sylow.unique_of_normal P hPnormal
+  let : Fact p.Prime := ⟨hp⟩
+  let : Unique (Sylow p G) := Sylow.unique_of_normal P hPnormal
   apply le_antisymm
   · obtain ⟨Q, hcoreQ⟩ :=
       (pCore_isPGroup (p := p) (G := G)).exists_le_sylow
@@ -732,9 +708,8 @@ public theorem proposition84_factor_eq_pCore_mul
     obtain ⟨n, hn⟩ := hS.isPGroup_two.exists_card_eq
     rw [hn]
     exact hRodd.coprime_two_left.pow_left n
-  have hSdisjR : Disjoint S R := by
-    rw [disjoint_iff]
-    exact Subgroup.inf_eq_bot_of_coprime hScopR
+  have hSdisjR : Disjoint S R :=
+    Subgroup.disjoint_of_coprime_natCard hScopR
   have hNcard : Nat.card N = Nat.card S * Nat.card R := by
     exact lemma104_natCard_eq_mul_of_eq_set_mul_of_disjoint
       (by simpa [N, R, normalizerIn] using hS.normalizerIn_eq_mul) hSdisjR
@@ -812,7 +787,7 @@ public theorem lemma104_hasNontrivialPeterfalviNormalizer
         4 = 2 ^ 2 := by norm_num
         _ ≤ 2 ^ d.choice.p := Nat.pow_le_pow_right (by omega) hpTwo
     omega
-  letI : Nontrivial d.choice.initial.J :=
+  let : Nontrivial d.choice.initial.J :=
     (Subgroup.nontrivial_iff_ne_bot d.choice.initial.J).2 hJne
   obtain ⟨j, hjne⟩ := exists_ne (1 : d.choice.initial.J)
   have hjA : (j : X) ∈
@@ -831,6 +806,8 @@ public theorem lemma104_hasNontrivialPeterfalviNormalizer
   apply Subtype.ext
   exact hjOne
 
+-- `hq` and `hUq` are retained as part of this public source-facing interface.
+set_option linter.unusedVariables false in
 /-- Proposition 8.4 applied to `U ⊔ P` gives the first factorization in
 source `(10E)`. -/
 public theorem lemma104_first_factor
@@ -968,7 +945,7 @@ public theorem Lemma101Conclusion.prime_ne_selected_of_mem_C
     inf_le_left
   have hqdivA : q.val ∣ Nat.card d.choice.initial.A1 :=
     hqdivC.trans (Subgroup.card_dvd_of_le hCA)
-  letI : Fact d.choice.p.Prime := ⟨d.choice.p_prime⟩
+  let : Fact d.choice.p.Prime := ⟨d.choice.p_prime⟩
   have hcardA : Nat.card d.choice.initial.A1 =
       Nat.card (pPrimeCore d.choice.p (peterfalviV D t)) := by
     rw [d.A1_eq_pPrimeCore,
@@ -981,6 +958,8 @@ public theorem Lemma101Conclusion.prime_ne_selected_of_mem_C
     d.choice.p_prime.coprime_iff_not_dvd.mp hpCopA
   exact hpnot (by simpa [hqp] using hqdivA)
 
+-- `hU_C` is retained as part of this public source-facing interface.
+set_option linter.unusedVariables false in
 /- In a commuting product `C P`, the normalizer of `U ≤ C` splits as
 `P N_C(U)`.  This is the algebraic second half of `(10E)`. -/
 public theorem normalizer_sup_eq_P_mul_C
@@ -1096,7 +1075,7 @@ public theorem isPiSubgroup_compl_of_isPGroup_of_not_mem
     (hqπ : q ∉ π) (hQq : IsPGroup q.val Q) :
     IsPiSubgroup (G := G) πᶜ Q := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   intro r hr
   rw [Set.mem_compl_iff]
   obtain ⟨n, hcard⟩ := hQq.exists_card_eq
@@ -1210,9 +1189,7 @@ public theorem lemma104_10E
   have hPNDP : P ≤ normalizerIn D P :=
     fun x hx => ⟨hPD hx, Subgroup.le_normalizer hx⟩
   have hC_P : C ≤ Subgroup.centralizer (P : Set X) := by
-    simpa [C, P, lemma104C] using
-      (inf_le_right : lemma104C d ≤
-        Subgroup.centralizer (d.choice.P : Set X))
+    simp [C, P, lemma104C]
   have hNDset : (normalizerIn D P : Set X) =
       (C : Set X) * (P : Set X) := by
     simpa [D, P, C, lemma104C] using d.normalizer_factorization.2.1
@@ -1318,8 +1295,8 @@ public theorem lemma104_10E
           hc.2⟩
       exact (normalizerIn N U).mul_mem hkNorm hcNorm
   refine ⟨hfactor, ?_⟩
-  letI : Fact d.choice.p.Prime := ⟨d.choice.p_prime⟩
-  letI : IsMulCommutative P :=
+  let : Fact d.choice.p.Prime := ⟨d.choice.p_prime⟩
+  let : IsMulCommutative P :=
     (isCyclic_of_prime_card
       (by simpa [P] using d.P_card)).isMulCommutative
   intro x hx
@@ -1404,7 +1381,7 @@ public theorem Lemma101Conclusion.not_sylow_M_of_C_ne_bot_of_hall
   have hqmem : q' ∈ subgroupPrimeSet C := by
     change q ∣ Nat.card C
     exact hqC
-  letI : Fact q.Prime := ⟨hqprime⟩
+  let : Fact q.Prime := ⟨hqprime⟩
   let CN : Subgroup N := C.subgroupOf N
   let PC : Sylow q CN :=
     Classical.choice (Sylow.nonempty (p := q) (G := CN))

@@ -5,6 +5,7 @@ public import BenderSuzuki.SE.II1Section4
 import BenderSuzuki.SE.IG1114
 import BenderSuzuki.SE.Section10Proposition102Support
 
+
 /-!
 # Section 10, Lemma 10.6: Hall-prime argument
 
@@ -28,8 +29,8 @@ public theorem lemma106_prime_not_dvd_pred_of_dvd_two_pow_sub_one
     (hrpow : r ∣ 2 ^ p - 1) :
     ¬ r ∣ p - 1 := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
-  letI : Fact r.Prime := ⟨hr⟩
+  let : Fact p.Prime := ⟨hp⟩
+  let : Fact r.Prime := ⟨hr⟩
   have htwo_ne_zero : (2 : ZMod r) ≠ 0 := by
     intro hzero
     have hrdvd2 : r ∣ 2 :=
@@ -89,15 +90,15 @@ public theorem lemma106_exists_P_invariant_sylow_A
     theorem4bIsSylowSubgroupOf r R A ∧
       R ≤ A ∧ P ≤ Subgroup.normalizer (R : Set X)
   have hp : p.Prime := by simpa [p] using d.choice.p_prime
-  letI : Fact p.Prime := ⟨hp⟩
-  letI : Fact r.Prime := ⟨hr⟩
+  let : Fact p.Prime := ⟨hp⟩
+  let : Fact r.Prime := ⟨hr⟩
   have hPp : IsPGroup p P := by
     obtain ⟨PD, hPDmap⟩ := d.P_sylow_D
     have hPp0 : IsPGroup d.choice.p d.choice.P := by
       rw [hPDmap]
       exact PD.isPGroup'.map D.subtype
     simpa [p, P] using hPp0
-  letI : Fact (IsPGroup p P) := ⟨hPp⟩
+  let : Fact (IsPGroup p P) := ⟨hPp⟩
   have hAV : A ≤ V := by
     dsimp [A, V]
     rw [d.choice.initial.A1_eq]
@@ -106,8 +107,8 @@ public theorem lemma106_exists_P_invariant_sylow_A
     exact d.choice.P_le_V.trans
       ((Subgroup.normal_subgroupOf_iff_le_normalizer hAV).mp
         d.choice.initial.A1_normal_V)
-  letI : Subgroup.Normalizes P A := ⟨hPnormA⟩
-  letI : MulDistribMulAction P A :=
+  let : Subgroup.Normalizes P A := ⟨hPnormA⟩
+  let : MulDistribMulAction P A :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer P A hPnormA
   have hpAcop : Nat.Coprime p (Nat.card A) := by
     have hAeq : A = (pPrimeCore p V).map V.subtype := by
@@ -148,12 +149,12 @@ public theorem lemma106_kset_card_modEq_centralizer
       Nat.card {x : X // x ∈ peterfalviKSet D t ∧
         x ∈ Subgroup.centralizer (R : Set X)} [MOD r] := by
   classical
-  letI : Fact r.Prime := ⟨hr⟩
+  let : Fact r.Prime := ⟨hr⟩
   let I := {x : X // x ∈ peterfalviKSet D t}
   let conjI : R → I → I := fun a x =>
     ⟨(a : X) * (x : X) * (a : X)⁻¹,
       peterfalviKSet_conj_mem_of_mem_V (hRV a.property) x.property⟩
-  letI : MulAction R I :=
+  let : MulAction R I :=
     { smul := conjI
       one_smul := by
         intro x
@@ -227,8 +228,8 @@ public theorem lemma106_prime_mem_pi_of_dvd_C
   let C : Subgroup X := A ⊓ Subgroup.centralizer (P : Set X)
   let K : Subgroup X := Subgroup.closure (peterfalviKSet D t)
   have hp : p.Prime := by simpa [p] using d.choice.p_prime
-  letI : Fact p.Prime := ⟨hp⟩
-  letI : Fact r.val.Prime := ⟨r.property⟩
+  let : Fact p.Prime := ⟨hp⟩
+  let : Fact r.val.Prime := ⟨r.property⟩
   have hA_V : A ≤ V := by
     dsimp [A, V]
     rw [d.choice.initial.A1_eq]
@@ -371,8 +372,8 @@ public theorem lemma106_invariant_subgroup_le_C
   let K : Subgroup X := Subgroup.closure (peterfalviKSet D t)
   let N : Subgroup X := normalizerIn D P
   have hp : p.Prime := by simpa [p] using d.choice.p_prime
-  letI : Fact p.Prime := ⟨hp⟩
-  letI : Fact q.val.Prime := ⟨q.property⟩
+  let : Fact p.Prime := ⟨hp⟩
+  let : Fact q.val.Prime := ⟨q.property⟩
   have hA_V : A ≤ V := by
     dsimp [A, V]
     rw [d.choice.initial.A1_eq]
@@ -421,7 +422,8 @@ public theorem lemma106_invariant_subgroup_le_C
   have hKcopN : Nat.Coprime (Nat.card K) (Nat.card N) := by
     rw [hNcard]
     exact hKcopC.mul_right hKcopP
-  have hKNbot : K ⊓ N = ⊥ := Subgroup.inf_eq_bot_of_coprime hKcopN
+  have hKNbot : K ⊓ N = ⊥ :=
+    (Subgroup.disjoint_of_coprime_natCard hKcopN).eq_bot
   have hCKP : subgroupCentralizerIn K P = ⊥ := by
     rw [Subgroup.eq_bot_iff_forall]
     intro x hx
@@ -529,10 +531,10 @@ public theorem lemma106_sylow_of_normal_factor
     (hrK : ¬ r ∣ Nat.card K) :
     theorem4bIsSylowSubgroupOf r R N := by
   classical
-  letI : Fact r.Prime := ⟨hr⟩
+  let : Fact r.Prime := ⟨hr⟩
   let KN : Subgroup N := K.subgroupOf N
   let AN : Subgroup N := A.subgroupOf N
-  letI : KN.Normal := by simpa [KN] using hKnormal
+  let : KN.Normal := by simpa [KN] using hKnormal
   have hAidx_dvd : AN.index ∣ Nat.card KN := by
     exact lemma106_index_dvd_card_of_sup_eq_top_normal
       (by simpa [KN, AN] using hKA)
@@ -569,7 +571,6 @@ public theorem lemma106_sylow_of_normal_factor
     hRp.of_equiv (Subgroup.subgroupOfEquivOfLe hRleN).symm
   let RN : Sylow r N := hRNp.toSylow hRidx
   refine ⟨RN, ?_⟩
-  change R = (RN : Subgroup N).map N.subtype
   rw [show (RN : Subgroup N) = R.subgroupOf N by
     exact IsPGroup.toSylow_coe hRNp hRidx]
   rw [Subgroup.subgroupOf_map_subtype, inf_eq_left.mpr hRleN]
@@ -588,10 +589,10 @@ public theorem lemma106_sylow_of_normal_subgroup_sup
     (hrU : ¬ r ∣ Nat.card U) :
     theorem4bIsSylowSubgroupOf r R N := by
   classical
-  letI : Fact r.Prime := ⟨hr⟩
+  let : Fact r.Prime := ⟨hr⟩
   let KN : Subgroup N := K.subgroupOf N
   let UN : Subgroup N := U.subgroupOf N
-  letI : KN.Normal := by simpa [KN] using hKnormal
+  let : KN.Normal := by simpa [KN] using hKnormal
   have hKidx_dvd : KN.index ∣ Nat.card UN := by
     have hidx : KN.index = (KN ⊓ UN).relIndex UN := by
       calc
@@ -637,7 +638,6 @@ public theorem lemma106_sylow_of_normal_subgroup_sup
     hRp.of_equiv (Subgroup.subgroupOfEquivOfLe hRleN).symm
   let RN : Sylow r N := hRNp.toSylow hRidx
   refine ⟨RN, ?_⟩
-  change R = (RN : Subgroup N).map N.subtype
   rw [show (RN : Subgroup N) = R.subgroupOf N by
     exact IsPGroup.toSylow_coe hRNp hRidx]
   rw [Subgroup.subgroupOf_map_subtype, inf_eq_left.mpr hRleN]
@@ -775,7 +775,7 @@ public theorem lemma106_C_isHall
     apply hCpi q
     simpa [natCard_subgroupOf_eq C D hC_D] using hq
   · intro q hqPi hqIndex
-    letI : Fact q.val.Prime := ⟨q.property⟩
+    let : Fact q.val.Prime := ⟨q.property⟩
     obtain ⟨R, hRsylD, hR_A, hPnormR⟩ :=
       lemma106_exists_P_invariant_sylow_D d hDodd ht hDnorm q hqPi
     obtain ⟨RD, hRDmap⟩ := hRsylD

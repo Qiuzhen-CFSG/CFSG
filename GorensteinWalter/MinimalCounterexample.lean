@@ -15,6 +15,7 @@ public import GorensteinWalter.LinearThree
 public import GorensteinWalter.MinimalNormalKleinFour
 public import GorensteinWalter.PGroupExtension
 
+
 universe u
 
 namespace GorensteinWalter
@@ -248,7 +249,7 @@ public theorem minimalCounterexample_isSimple
         have hHH : IsIsoToPSL2OddExists H' ∨ Nonempty (H' ≃* alternatingGroup (Fin 7)) :=
           gw_prop9_minimalNormal_dGroup_iso_PSL2_or_A7 hmin H' hH'normal hH'ne hH'min hHd hHD
         have hCodd : Nat.Coprime 2 (Nat.card (↥(Subgroup.centralizer (H' : Set G)))) :=
-          gw_prop9_centralizer_odd_of_trivial_center_dihedralSylow hmin H' hH'normal hH'min hH'ne hZ hHd
+          gw_prop9_centralizer_odd_of_trivial_center_dihedralSylow hmin H' hH'normal hZ hHd
         have hCH : Subgroup.centralizer (H' : Set G) = ⊥ :=
           gw_prop9_centralizer_of_normal_odd_order_eq_bot hmin H' hH'normal hCodd
         have hDG' : IsDGroup G :=
@@ -270,7 +271,7 @@ public theorem minimalCounterexample_isSimple
         have hHH : IsIsoToPSL2OddExists H' ∨ Nonempty (H' ≃* alternatingGroup (Fin 7)) :=
           gw_prop9_minimalNormal_dGroup_iso_PSL2_or_A7 hmin H' hH'normal hH'ne hH'min hHd hHD
         have hCodd : Nat.Coprime 2 (Nat.card (↥(Subgroup.centralizer (H' : Set G)))) :=
-          gw_prop9_centralizer_odd_of_trivial_center_dihedralSylow hmin H' hH'normal hH'min hH'ne hZ hHd
+          gw_prop9_centralizer_odd_of_trivial_center_dihedralSylow hmin H' hH'normal hZ hHd
         have hCH : Subgroup.centralizer (H' : Set G) = ⊥ :=
           gw_prop9_centralizer_of_normal_odd_order_eq_bot hmin H' hH'normal hCodd
         have hDG' : IsDGroup G :=
@@ -354,7 +355,7 @@ public theorem exists_centralizerSetup
       Nat.card (↥R) = orderOf a := Nat.card_zpowers a
       _ = orderOf (DihedralGroup.r 1) := by
         have heq := e.orderOf_eq a
-        simpa [a] using heq
+        simp [a]
       _ = 2 ^ m := DihedralGroup.orderOf_r_one
   have hcardS0 : Nat.card (↥S0) = 2 ^ m := by
     exact

@@ -31,7 +31,7 @@ private theorem exists_two_distinct_nontrivial_of_card_four
     {A : Type*} [Group A] [Finite A] (hcard : Nat.card A = 4) :
     ∃ a b : A, a ≠ 1 ∧ b ≠ 1 ∧ a ≠ b := by
   classical
-  letI : Fintype A := Fintype.ofFinite A
+  let : Fintype A := Fintype.ofFinite A
   have hcardF : Fintype.card A = 4 := by
     simpa [Nat.card_eq_fintype_card] using hcard
   have htwo_lt : 2 < Fintype.card A := by omega
@@ -254,3 +254,4 @@ public theorem IsStronglyEmbedded.theorem4a_baseStabilizer_transitive_of_section
       hX hrank hT2 hinduction)
 
 end BenderSuzuki
+

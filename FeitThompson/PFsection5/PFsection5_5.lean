@@ -298,7 +298,7 @@ private theorem isVirtualCharacter_of_signedIrreducible_pf55
     {G : Type*} [Group G] [Finite G]
     {χ : Section1.ClassFunction G}
     (hχ : Section3.IsSignedIrreducibleCharacter χ) :
-    Theory.Character.IsVirtualCharacter χ := by
+    IsVirtualCharacter χ := by
   rcases hχ with ⟨ε, hε, μ, hμ, rfl⟩
   rcases hε with rfl | rfl
   · simpa using Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup hμ
@@ -346,7 +346,7 @@ public theorem theorem_5_5_core_on_pair
       simp [Section1.basisVector, hsr]
     · intro hrFalse
       exact (hrFalse (Finset.mem_univ _)).elim
-  have hT1Xvirt : Theory.Character.IsVirtualCharacter (T1 (X : Section1.ClassFunction L)) := by
+  have hT1Xvirt : IsVirtualCharacter (T1 (X : Section1.ClassFunction L)) := by
     exact hT1virt _ hpairX
   let a : Section1.CoeffVector (R X) := fun r =>
     Classical.choose <|

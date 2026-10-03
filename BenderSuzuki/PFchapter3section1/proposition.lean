@@ -12,9 +12,10 @@ import BenderSuzuki.External.Huppert.V.Semidirect
 import FeitThompson.BGsection3.lemma_3_3
 import BenderSuzuki.PFAppendixIII.theorem
 import BenderSuzuki.PFAppendixIII.lemma_2
-import FeitThompson.GroupAction.CoprimeHall
+import Theory.GroupAction.CoprimeHall
 import FeitThompson.Wielandt.FixedPointProduct
 public import BenderSuzuki.PFchapter3section1.Basic
+
 
 namespace BenderSuzuki
 namespace PFchapter3section1
@@ -22,7 +23,7 @@ namespace PFchapter3section1
 open PFchapter1section1 PFAppendixIII External.Higman
 open PFchapter1section2
 open PFchapter1section3
-open MatrixGroups
+open _root_.BenderSuzuki.MatrixGroups
 open scoped LinearAlgebra.Projectivization Pointwise
 
 universe u v
@@ -204,14 +205,14 @@ private theorem cubic_line_root_card
     QuotientGroup.mk' (Subgroup.center S)
   let Plane : Subgroup S := T.comap qmap
   let q := Nat.card (Subgroup.center S)
-  letI : MulDistribMulAction K (S ⧸ Subgroup.center S) := quotientAction
+  let : MulDistribMulAction K (S ⧸ Subgroup.center S) := quotientAction
   have hPlaneInv : IsInvariant K S Plane := by
     refine ⟨?_⟩
     intro k x
     change qmap x ∈ T ↔ qmap (k • x) ∈ T
     rw [← hquotientAction k x]
     exact hTinv k (qmap x)
-  letI : IsInvariant K S Plane := hPlaneInv
+  let : IsInvariant K S Plane := hPlaneInv
   have hPlaneCard : Nat.card Plane = q ^ 2 := by
     have hcardQuotPlane :
         Nat.card (Plane ⧸ qmap.ker.subgroupOf Plane) = Nat.card T := by
@@ -251,9 +252,9 @@ private theorem cubic_line_root_card
     exact (Nat.card_congr centerToPlane).symm
   let NoncentralPlane := {x : Plane // (x : S) ∉ Subgroup.center S}
   have hNoncentralCard : Nat.card NoncentralPlane = q ^ 2 - q := by
-    letI : Fintype Plane := Fintype.ofFinite Plane
-    letI : Fintype CenterPlane := Fintype.ofFinite CenterPlane
-    letI : Fintype NoncentralPlane := Fintype.ofFinite NoncentralPlane
+    let : Fintype Plane := Fintype.ofFinite Plane
+    let : Fintype CenterPlane := Fintype.ofFinite CenterPlane
+    let : Fintype NoncentralPlane := Fintype.ofFinite NoncentralPlane
     have hsplit := Fintype.card_subtype_compl
       (fun x : Plane => (x : S) ∈ Subgroup.center S)
     rw [Fintype.card_eq_nat_card, Fintype.card_eq_nat_card,
@@ -388,9 +389,9 @@ private theorem cubic_full_root_card
         right_inv := by intro z; rfl }
     exact (Nat.card_congr e).symm
   have hNoncentralCard : Nat.card NoncentralS = q ^ 3 - q := by
-    letI : Fintype S := Fintype.ofFinite S
-    letI : Fintype CenterS := Fintype.ofFinite CenterS
-    letI : Fintype NoncentralS := Fintype.ofFinite NoncentralS
+    let : Fintype S := Fintype.ofFinite S
+    let : Fintype CenterS := Fintype.ofFinite CenterS
+    let : Fintype NoncentralS := Fintype.ofFinite NoncentralS
     have hsplit := Fintype.card_subtype_compl
       (fun x : S => x ∈ Subgroup.center S)
     rw [Fintype.card_eq_nat_card, Fintype.card_eq_nat_card,
@@ -598,9 +599,9 @@ private theorem cubic_linear_contradiction
         left_inv := by intro x; rfl
         right_inv := by intro z; rfl }
     have hZSharpCard : Nat.card ZSharp = q - 1 := by
-      letI : Fintype Z := Fintype.ofFinite Z
-      letI : Fintype {z : Z // (z : S) = 1} := Fintype.ofFinite _
-      letI : Fintype ZSharp := Fintype.ofFinite ZSharp
+      let : Fintype Z := Fintype.ofFinite Z
+      let : Fintype {z : Z // (z : S) = 1} := Fintype.ofFinite _
+      let : Fintype ZSharp := Fintype.ofFinite ZSharp
       have hsplit := Fintype.card_subtype_compl
         (fun z : Z => (z : S) = 1)
       have honeCard : Nat.card {z : Z // (z : S) = 1} = 1 := by
@@ -634,7 +635,7 @@ private theorem cubic_linear_contradiction
     exact hcV.2
   have hPnormS : P ≤ Subgroup.normalizer (S : Set G) :=
     hPV.trans (hVleD.trans hDnormS)
-  letI : Subgroup.Normalizes P S := ⟨hPnormS⟩
+  let : Subgroup.Normalizes P S := ⟨hPnormS⟩
   let Root : SubMulAction P S :=
     { carrier := {r : S | r ^ 2 = sS}
       smul_mem' := by
@@ -667,7 +668,7 @@ private theorem cubic_linear_contradiction
     calc
       Nat.card Root = Nat.card {x : S // x ^ 2 = sS} := Nat.card_congr hEquiv
       _ = q * (q + 1) := by simpa [q] using hcard
-  letI : Fact (Nat.Prime p) := ⟨hp⟩
+  let : Fact (Nat.Prime p) := ⟨hp⟩
   have hPpgroup : IsPGroup p P :=
     IsPGroup.of_card (n := 1) (by simpa using hPcard)
   have hpDvdD : p ∣ Nat.card D := by
@@ -708,8 +709,8 @@ private theorem cubic_linear_contradiction
       refine ⟨hrCentralizer, ?_⟩
       rw [← hSQ]
       exact (r : S).property
-    letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-    letI : IsElementaryAbelian 2 CX := hlinearCX
+    let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+    let : IsElementaryAbelian 2 CX := hlinearCX
     let rCX : CX := ⟨((r : S) : G), hrCX⟩
     have hrSqSub : rCX ^ 2 = 1 :=
       Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
@@ -751,12 +752,12 @@ private theorem cubic_linear_contradiction
       let kcD : D := ⟨c * k * c⁻¹, hch.1.1.K_le_D hconjK⟩
       have hmem := hKnormalD.conj_mem kcD hconjK cD⁻¹
       simpa [cD, kcD, Subgroup.mem_subgroupOf, mul_assoc] using hmem
-  letI : Subgroup.Normalizes P K := ⟨hPnormK⟩
+  let : Subgroup.Normalizes P K := ⟨hPnormK⟩
   have hKcomm : IsMulCommutative K := hKcyclic.isMulCommutative
   let Cfix : Subgroup K := fixedPointSubgroup P K
   let Ccomm : Subgroup K := commutatorAction (A := P) (G := K)
   have hKsolvable : Group.IsSolvable K := by
-    letI : IsMulCommutative K := hKcomm
+    let : IsMulCommutative K := hKcomm
     infer_instance
   have hcompl : IsCompl Cfix Ccomm := by
     simpa [Cfix, Ccomm] using
@@ -797,8 +798,8 @@ private theorem cubic_linear_contradiction
   have hCcommInv : IsInvariant P K Ccomm := by
     simpa [Ccomm] using
       (commutatorAction_isInvariant (G := K) (A := P))
-  letI : IsInvariant P K Ccomm := hCcommInv
-  letI : MulDistribMulAction P Ccomm := inferInstance
+  let : IsInvariant P K Ccomm := hCcommInv
+  let : MulDistribMulAction P Ccomm := inferInstance
   have hPcardPrime : Nat.Prime (Nat.card P) := by
     simpa [hPcard] using hp
   have hCcommRegular : ActsRegularly P Ccomm := by
@@ -820,9 +821,9 @@ private theorem cubic_linear_contradiction
       exact hcInf
     have hcOne : (c : K) = 1 := by simpa using hcBot
     exact Subtype.ext hcOne
-  letI : Nontrivial Ccomm :=
+  let : Nontrivial Ccomm :=
     (Subgroup.nontrivial_iff_ne_bot Ccomm).2 hCcommNe
-  letI : Nontrivial P :=
+  let : Nontrivial P :=
     (Subgroup.nontrivial_iff_ne_bot P).2 hPne
   let phi : P →* MulAut Ccomm := MulDistribMulAction.toMulAut P Ccomm
   let SD := Ccomm ⋊[phi] P
@@ -837,23 +838,23 @@ private theorem cubic_linear_contradiction
     subst n
     norm_num at hqPow
     omega
-  letI : IsInvariant K S Z := center_isInvariant
+  let : IsInvariant K S Z := center_isInvariant
   let defaultKAction : MulDistribMulAction K E :=
     quotientMulDistribMulAction (A := K) (G := S) Z
       (inferInstance : IsInvariant K S Z)
-  letI : MulDistribMulAction K E := defaultKAction
+  let : MulDistribMulAction K E := defaultKAction
   have hKfixedFree :
       ∀ k : K, k ≠ 1 → ∀ x : E,
         @SMul.smul K E defaultKAction.toSMul k x = x → x = 1 := by
     intro k hk x hkx
     by_contra hxOne
     let A : Subgroup K := Subgroup.zpowers k
-    letI : MulDistribMulAction A S := inferInstance
-    letI : IsInvariant A S Z := center_isInvariant
+    let : MulDistribMulAction A S := inferInstance
+    let : IsInvariant A S Z := center_isInvariant
     let quotientActionA : MulDistribMulAction A E :=
       quotientMulDistribMulAction (A := A) (G := S) Z
         (inferInstance : IsInvariant A S Z)
-    letI : MulDistribMulAction A E := quotientActionA
+    let : MulDistribMulAction A E := quotientActionA
     have hgenAction :
         (⟨k, Subgroup.mem_zpowers k⟩ : A) • x = x := by
       obtain ⟨y, rfl⟩ := QuotientGroup.mk'_surjective Z x
@@ -879,12 +880,12 @@ private theorem cubic_linear_contradiction
       rcases hScardPow with ⟨m, hm⟩
       rw [hm]
       exact hAodd.coprime_two_right.pow_right m
-    letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-    letI : Group.IsNilpotent S := hSpgroup.isNilpotent
+    let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+    let : Group.IsNilpotent S := hSpgroup.isNilpotent
     have hSsolvable : Group.IsSolvable S := by infer_instance
     have hfixedEq :=
-      fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
-        (G := S) (A := A) hSsolvable hcoprime (∅ : Set Nat.Primes)
+      fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
+        (G := S) (A := A) hSsolvable hcoprime
         Z (inferInstance : IsInvariant A S Z)
     have hxMap : x ∈ (fixedPointSubgroup A S).map
         (QuotientGroup.mk' Z) := by
@@ -935,12 +936,12 @@ private theorem cubic_linear_contradiction
     have hkOne : k = 1 :=
       (hKregular.2 sS hsSInv sS hsSInv).unique hks.symm (by simp)
     exact hk hkOne
-  letI : Subgroup.Normalizes D S := ⟨hDnormS⟩
-  letI : IsInvariant D S Z := center_isInvariant
+  let : Subgroup.Normalizes D S := ⟨hDnormS⟩
+  let : IsInvariant D S Z := center_isInvariant
   let defaultDAction : MulDistribMulAction D E :=
     quotientMulDistribMulAction (A := D) (G := S) Z
       (inferInstance : IsInvariant D S Z)
-  letI : MulDistribMulAction D E := defaultDAction
+  let : MulDistribMulAction D E := defaultDAction
   let cToD : Ccomm →* D :=
     { toFun := fun c =>
         ⟨((c : Ccomm) : K), hch.1.1.K_le_D (c : K).property⟩
@@ -961,15 +962,15 @@ private theorem cubic_linear_contradiction
       P K a (c : K)
   let sdToD : SD →* D :=
     SemidirectProduct.lift cToD pToD hsemiCompat
-  letI : MulDistribMulAction SD E :=
+  let : MulDistribMulAction SD E :=
     MulDistribMulAction.compHom E sdToD
   have hEdata := higmanTheorem_center_quotient_orders_and_exponent hSuzuki
   have hEcomm : IsMulCommutative E := by
     simpa [E, Z] using hEdata.1
   have hEpow : ∀ x : E, x ^ 2 = 1 := by
     simpa [E, Z] using hEdata.2.1
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-  letI : IsElementaryAbelian 2 E :=
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : IsElementaryAbelian 2 E :=
     { toIsMulCommutative := hEcomm
       exponent_dvd_p :=
         Monoid.exponent_dvd_iff_forall_pow_eq_one.mpr hEpow }
@@ -1023,7 +1024,7 @@ private theorem cubic_linear_contradiction
       refine ⟨hxCentralizer, ?_⟩
       rw [← hSQ]
       exact (x : S).property
-    letI : IsElementaryAbelian 2 CX := hlinearCX
+    let : IsElementaryAbelian 2 CX := hlinearCX
     let xCX : CX := ⟨((x : S) : G), hxCX⟩
     have hxSqSub : xCX ^ 2 = 1 :=
       Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
@@ -1040,11 +1041,11 @@ private theorem cubic_linear_contradiction
     have hxQ0S : (x : S) ∈ Q0S := hxQ0
     rw [hQ0SCenter] at hxQ0S
     exact hxQ0S
-  letI : IsInvariant P S Z := center_isInvariant
+  let : IsInvariant P S Z := center_isInvariant
   let defaultPAction : MulDistribMulAction P E :=
     quotientMulDistribMulAction (A := P) (G := S) Z
       (inferInstance : IsInvariant P S Z)
-  letI : MulDistribMulAction P E := defaultPAction
+  let : MulDistribMulAction P E := defaultPAction
   have hScardPow : ∃ m : ℕ, Nat.card S = 2 ^ m := by
     rcases hSuzuki.1 with ⟨m, hm⟩
     exact ⟨m, by simpa using hm⟩
@@ -1052,11 +1053,11 @@ private theorem cubic_linear_contradiction
     rcases hScardPow with ⟨m, hm⟩
     rw [hPcard, hm]
     exact hpOdd.coprime_two_right.pow_right m
-  letI : Group.IsNilpotent S := hSpgroup.isNilpotent
+  let : Group.IsNilpotent S := hSpgroup.isNilpotent
   have hSsolvable : Group.IsSolvable S := by infer_instance
   have hfixedEq :=
-    fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
-      (G := S) (A := P) hSsolvable hPScoprime (∅ : Set Nat.Primes)
+    fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
+      (G := S) (A := P) hSsolvable hPScoprime
       Z (inferInstance : IsInvariant P S Z)
   have hfixedMapBot : (fixedPointSubgroup P S).map
       (QuotientGroup.mk' Z) = ⊥ := by
@@ -1068,9 +1069,10 @@ private theorem cubic_linear_contradiction
       (QuotientGroup.eq_one_iff x).mpr hxZ
     simp [hxOne]
   have hPfixedE : fixedPointSubgroup P E = ⊥ := by
+    change FixedPoints.subgroup P E = ⊥
     rw [hfixedEq]
     exact hfixedMapBot
-  letI : MulDistribMulAction KSD E :=
+  let : MulDistribMulAction KSD E :=
     MulDistribMulAction.compHom E KSD.subtype
   have hKSDfixedE : fixedPointSubgroup KSD E = ⊥ := by
     rw [Subgroup.eq_bot_iff_forall]
@@ -1115,7 +1117,7 @@ private theorem cubic_linear_contradiction
       exact Subtype.ext hcOne
     have hxOne : x = 1 := hKfixedFree (c : K) hcKne x hcFix
     simp [hxOne]
-  letI : MulDistribMulAction RSD E :=
+  let : MulDistribMulAction RSD E :=
     MulDistribMulAction.compHom E RSD.subtype
   have hRSDfixedE : fixedPointSubgroup RSD E = ⊥ := by
     rw [Subgroup.eq_bot_iff_forall]
@@ -1169,15 +1171,15 @@ private theorem cubic_linear_contradiction
       exact hcenterOne
     · rw [hEcard]
       exact one_lt_pow' hcenterOne (by norm_num)
-  letI : Nontrivial E :=
+  let : Nontrivial E :=
     Finite.one_lt_card_iff_nontrivial.mp hEcardGt
-  letI : Finite SD :=
+  let : Finite SD :=
     Finite.of_equiv (Ccomm × P)
       (SemidirectProduct.equivProd (φ := phi)).symm
-  letI : Semiring (ZMod 2) := (ZMod.commRing 2).toSemiring
-  letI : CommGroup E := IsMulCommutative.instCommGroup
+  let : Semiring (ZMod 2) := (ZMod.commRing 2).toSemiring
+  let : CommGroup E := IsMulCommutative.instCommGroup
   let rho :=
-    Theory.Representation.ofElementaryAbelianAction (A := SD) (G := E) (p := 2)
+    Representation.ofElementaryAbelianAction (A := SD) (G := E) (p := 2)
   have hKSDNotKer : ¬ KSD ≤ rho.ker := by
     intro hKSDker
     have hKSDcent : KSD ≤ rho.centralizerIn KSD := by
@@ -1236,7 +1238,7 @@ private theorem psu_sylow_normalizer_center_witness
         Commute g (z : ProjectiveSpecialUnitaryMatrixGroup J) := by
   classical
   let G0 := ProjectiveSpecialUnitaryMatrixGroup J
-  letI : Fintype E := Fintype.ofFinite E
+  let : Fintype E := Fintype.ofFinite E
   let projSU : J.specialSubgroup → G0 := fun x =>
     ⟨Matrix.ProjGenLinGroup.mk x, Subgroup.mem_map_of_mem
       Matrix.ProjGenLinGroup.mk x.property⟩
@@ -1246,7 +1248,7 @@ private theorem psu_sylow_normalizer_center_witness
     refine ⟨⟨x, hx⟩, ?_⟩
     apply Subtype.ext
     exact hxy
-  letI : Finite G0 := Finite.of_surjective projSU hprojSUsurjective
+  let : Finite G0 := Finite.of_surjective projSU hprojSUsurjective
   rcases External.huppert_II_10_12 J q hEcard hfixedCard hJstandard with
     ⟨_hOmegaCard, _rho, _pinf, _hrhoInjective, _hnatural,
       _hUcard, hroot, _htwoTransitive, hGcard, _hthreeFixed⟩
@@ -1443,13 +1445,13 @@ private theorem psu_sylow_normalizer_center_witness
       simpa [mul_comm] using Nat.sq_sub_sq q 1]
     exact dvd_mul_left (q + 1) (q - 1)
   have hNormRootsCard : Nat.card (rootsOfUnity (q + 1) E) = q + 1 := by
-    letI : IsCyclic Eˣ := inferInstance
+    let : IsCyclic Eˣ := inferInstance
     rw [rootsOfUnity_eq_ker, IsCyclic.card_powMonoidHom_ker,
       hcardUnits, Nat.gcd_eq_right hqOneDvd]
   have hThreeLt : 3 < Nat.card (rootsOfUnity (q + 1) E) := by
     rw [hNormRootsCard]
     omega
-  letI : IsCyclic (rootsOfUnity (q + 1) E) := inferInstance
+  let : IsCyclic (rootsOfUnity (q + 1) E) := inferInstance
   obtain ⟨k, hkThree⟩ :=
     exists_pow_ne_one_of_isCyclic (G := rootsOfUnity (q + 1) E)
       (by decide : (3 : ℕ) ≠ 0) hThreeLt
@@ -1640,8 +1642,8 @@ private theorem semilinear_map_isInvariant
     (hT : @IsXInvariantSubgroup K E _ _ kAction T) :
     @IsXInvariantSubgroup K E _ _ kAction
       (T.map ((@MulDistribMulAction.toMonoidEnd P E _ _ pAction) c)) := by
-  letI : MulDistribMulAction K E := kAction
-  letI : MulDistribMulAction P E := pAction
+  let : MulDistribMulAction K E := kAction
+  let : MulDistribMulAction P E := pAction
   have hpreserve : ∀ k : K, ∀ x : E,
       x ∈ T.map ((@MulDistribMulAction.toMonoidEnd P E _ _ pAction) c) →
         k • x ∈ T.map ((@MulDistribMulAction.toMonoidEnd P E _ _ pAction) c) := by
@@ -1744,8 +1746,8 @@ private theorem cubic_fixed_root
   classical
   let Z := Subgroup.center S
   let E := S ⧸ Z
-  letI : MulDistribMulAction K E := kAction
-  letI : MulDistribMulAction P E := pAction
+  let : MulDistribMulAction K E := kAction
+  let : MulDistribMulAction P E := pAction
   let Plane : Subgroup S := T.comap (QuotientGroup.mk' Z)
   have hPlaneInv : IsInvariant P S Plane := by
     refine ⟨?_⟩
@@ -1755,7 +1757,7 @@ private theorem cubic_fixed_root
     have hmem := hTPinv c (QuotientGroup.mk' Z x)
     rw [hPquotient c x] at hmem
     exact hmem
-  letI : IsInvariant P S Plane := hPlaneInv
+  let : IsInvariant P S Plane := hPlaneInv
   let Root : SubMulAction P Plane :=
     { carrier := {r : Plane | (r : S) ^ 2 = s}
       smul_mem' := by
@@ -1786,7 +1788,7 @@ private theorem cubic_fixed_root
   have hpNotDvdRoot : ¬ p ∣ Nat.card Root := by
     rw [hRootCard]
     exact hpNotDvdCenter
-  letI : Fact (Nat.Prime p) := ⟨hp⟩
+  let : Fact (Nat.Prime p) := ⟨hp⟩
   have hPpgroup : IsPGroup p P :=
     IsPGroup.of_card (n := 1) (by simpa using hPcard)
   rcases hPpgroup.nonempty_fixed_point_of_prime_not_dvd_card
@@ -1922,8 +1924,8 @@ private theorem invariant_line_through_equivariant_summands
     (huv : u * v = rbar) :
     ∃ X : Subgroup E,
       IsXInvariantSubgroup K X ∧ Nat.card X = q ∧ rbar ∈ X := by
-  letI : U.Normal := subgroup_normal_of_isMulCommutative hEcomm U
-  letI : Vline.Normal := subgroup_normal_of_isMulCommutative hEcomm Vline
+  let : U.Normal := subgroup_normal_of_isMulCommutative hEcomm U
+  let : Vline.Normal := subgroup_normal_of_isMulCommutative hEcomm Vline
   let uU : U := ⟨u, huU⟩
   let vV : Vline := ⟨v, hvV⟩
   by_cases huOne : u = 1
@@ -2223,9 +2225,9 @@ private theorem cubic_order_five_contradiction
         left_inv := by intro x; rfl
         right_inv := by intro z; rfl }
     have hZSharpCard : Nat.card ZSharp = q - 1 := by
-      letI : Fintype Z := Fintype.ofFinite Z
-      letI : Fintype {z : Z // (z : S) = 1} := Fintype.ofFinite _
-      letI : Fintype ZSharp := Fintype.ofFinite ZSharp
+      let : Fintype Z := Fintype.ofFinite Z
+      let : Fintype {z : Z // (z : S) = 1} := Fintype.ofFinite _
+      let : Fintype ZSharp := Fintype.ofFinite ZSharp
       have hsplit := Fintype.card_subtype_compl
         (fun z : Z => (z : S) = 1)
       have honeCard : Nat.card {z : Z // (z : S) = 1} = 1 := by
@@ -2250,7 +2252,7 @@ private theorem cubic_order_five_contradiction
       hSuzuki hKcyclic hKfaithful hKregular hcardCube with
     ⟨quotientAction, U, Vline, hquotientAction,
       hUinv, hVinv, hUcard, hVcard, hUVinf, hUVsup⟩
-  letI : IsInvariant K S Z := center_isInvariant
+  let : IsInvariant K S Z := center_isInvariant
   let defaultKAction : MulDistribMulAction K E :=
     quotientMulDistribMulAction (A := K) (G := S) Z
       (inferInstance : IsInvariant K S Z)
@@ -2264,15 +2266,15 @@ private theorem cubic_order_five_contradiction
       _ = @SMul.smul K E defaultKAction.toSMul k (QuotientGroup.mk' Z y) := by
         rfl
   subst quotientAction
-  letI : MulDistribMulAction K E := defaultKAction
+  let : MulDistribMulAction K E := defaultKAction
   have hPnormS : P ≤ Subgroup.normalizer (S : Set G) :=
     hPV.trans (hVleD.trans hDnormS)
-  letI : Subgroup.Normalizes P S := ⟨hPnormS⟩
-  letI : IsInvariant P S Z := center_isInvariant
+  let : Subgroup.Normalizes P S := ⟨hPnormS⟩
+  let : IsInvariant P S Z := center_isInvariant
   let defaultPAction : MulDistribMulAction P E :=
     quotientMulDistribMulAction (A := P) (G := S) Z
       (inferInstance : IsInvariant P S Z)
-  letI : MulDistribMulAction P E := defaultPAction
+  let : MulDistribMulAction P E := defaultPAction
   have hVeq : V = D ⊓ Subgroup.centralizer ({s} : Set G) := by
     calc
       V = peterfalviV D t := hVdef
@@ -2291,12 +2293,12 @@ private theorem cubic_order_five_contradiction
     intro k hk x hkx
     by_contra hxOne
     let A : Subgroup K := Subgroup.zpowers k
-    letI : MulDistribMulAction A S := inferInstance
-    letI : IsInvariant A S Z := center_isInvariant
+    let : MulDistribMulAction A S := inferInstance
+    let : IsInvariant A S Z := center_isInvariant
     let quotientActionA : MulDistribMulAction A E :=
       quotientMulDistribMulAction (A := A) (G := S) Z
         (inferInstance : IsInvariant A S Z)
-    letI : MulDistribMulAction A E := quotientActionA
+    let : MulDistribMulAction A E := quotientActionA
     have hgenAction :
         (⟨k, Subgroup.mem_zpowers k⟩ : A) • x = x := by
       obtain ⟨y, rfl⟩ := QuotientGroup.mk'_surjective Z x
@@ -2323,12 +2325,12 @@ private theorem cubic_order_five_contradiction
       rcases hScardPow with ⟨m, hm⟩
       rw [hm]
       exact hAodd.coprime_two_right.pow_right m
-    letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-    letI : Group.IsNilpotent S := hSpgroup.isNilpotent
+    let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+    let : Group.IsNilpotent S := hSpgroup.isNilpotent
     have hSsolvable : Group.IsSolvable S := by infer_instance
     have hfixedEq :=
-      fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
-        (G := S) (A := A) hSsolvable hcoprime (∅ : Set Nat.Primes)
+      fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
+        (G := S) (A := A) hSsolvable hcoprime
         Z (inferInstance : IsInvariant A S Z)
     have hxMap : x ∈ (fixedPointSubgroup A S).map
         (QuotientGroup.mk' Z) := by
@@ -2387,7 +2389,7 @@ private theorem cubic_order_five_contradiction
     have hEdata := higmanTheorem_center_quotient_orders_and_exponent hSuzuki
     have hEcomm : IsMulCommutative E := by simpa [E, Z] using hEdata.1
     have hEpow : ∀ x : E, x ^ 2 = 1 := by simpa [E, Z] using hEdata.2.1
-    letI : IsElementaryAbelian 2 E :=
+    let : IsElementaryAbelian 2 E :=
       { toIsMulCommutative := hEcomm
         exponent_dvd_p :=
           Monoid.exponent_dvd_iff_forall_pow_eq_one.mpr hEpow }
@@ -2577,8 +2579,8 @@ private theorem cubic_order_five_contradiction
       have hVcardq : Nat.card Vline = q := by
         change Nat.card Vline = Nat.card (Subgroup.center S)
         exact hVcard
-      letI : U.Normal := subgroup_normal_of_isMulCommutative hEcomm U
-      letI : Vline.Normal := subgroup_normal_of_isMulCommutative hEcomm Vline
+      let : U.Normal := subgroup_normal_of_isMulCommutative hEcomm U
+      let : Vline.Normal := subgroup_normal_of_isMulCommutative hEcomm Vline
       have hrbarSup : rbar ∈ U ⊔ Vline := by
         rw [hUVsup]
         exact Subgroup.mem_top rbar
@@ -2698,10 +2700,10 @@ private theorem cubic_order_five_contradiction
         let KD : Subgroup D := K.subgroupOf D
         let PD : Subgroup D := P.subgroupOf D
         let A : Subgroup D := KD ⊔ PD
-        letI : KD.Normal := hKnormalD
-        letI : Subgroup.Normalizes D S := ⟨hDnormS⟩
-        letI : IsInvariant D S Z := center_isInvariant
-        letI : MulDistribMulAction D E :=
+        let : KD.Normal := hKnormalD
+        let : Subgroup.Normalizes D S := ⟨hDnormS⟩
+        let : IsInvariant D S Z := center_isInvariant
+        let : MulDistribMulAction D E :=
           quotientMulDistribMulAction (A := D) (G := S) Z
             (inferInstance : IsInvariant D S Z)
         have hDActionK : ∀ k : KD, ∀ x : E,
@@ -2757,21 +2759,21 @@ private theorem cubic_order_five_contradiction
           · intro hax
             have hback := hpreserve a⁻¹ (a • x) hax
             simpa [smul_smul] using hback
-        letI : IsInvariant A E X := hAinvX
+        let : IsInvariant A E X := hAinvX
         have hAcardDvd : Nat.card A ∣ Nat.card D :=
           Subgroup.card_subgroup_dvd_card A
         have hAodd : Odd (Nat.card A) :=
           hA1.D_odd.of_dvd_nat hAcardDvd
-        letI : Semiring (ZMod 2) := (ZMod.commRing 2).toSemiring
-        letI : CommGroup E := IsMulCommutative.instCommGroup
+        let : Semiring (ZMod 2) := (ZMod.commRing 2).toSemiring
+        let : CommGroup E := IsMulCommutative.instCommGroup
         let ρ :=
-          Theory.Representation.ofElementaryAbelianAction (A := A) (G := E) (p := 2)
+          Representation.ofElementaryAbelianAction (A := A) (G := E) (p := 2)
         let instAdd : AddCommGroup ρ.asModule :=
           Representation.instAddCommGroupAsModule ρ
-        letI : AddCommGroup ρ.asModule := instAdd
+        let : AddCommGroup ρ.asModule := instAdd
         let instMod : Module (MonoidAlgebra (ZMod 2) A) ρ.asModule :=
           Representation.instModuleMonoidAlgebraAsModule ρ
-        letI : Module (MonoidAlgebra (ZMod 2) A) ρ.asModule := instMod
+        let : Module (MonoidAlgebra (ZMod 2) A) ρ.asModule := instMod
         let eta : Subgroup E ≃o Submodule (ZMod 2) (Additive E) :=
           Subgroup.toAddSubgroup.trans (AddSubgroup.toZModSubmodule (n := 2))
         have hXinvariant : eta X ∈ ρ.invtSubmodule := by
@@ -2784,8 +2786,8 @@ private theorem cubic_order_five_contradiction
             (IsInvariant.invariant (A := A) (G := E) (H := X)
               a (Additive.toMul x)).mp hxX
         let Xpack : ρ.invtSubmodule := ⟨eta X, hXinvariant⟩
-        haveI : Fintype A := Fintype.ofFinite A
-        haveI : NeZero (Fintype.card A : ZMod 2) := by
+        have : Fintype A := Fintype.ofFinite A
+        have : NeZero (Fintype.card A : ZMod 2) := by
           constructor
           intro hzero
           have hEven : 2 ∣ Fintype.card A :=
@@ -2849,7 +2851,7 @@ private theorem cubic_order_five_contradiction
           exact (OrderIso.isCompl_iff (f := eta) (x := X) (y := Y)).mpr
             hcomplSub
         have hYcard : Nat.card Y = q := by
-          letI : X.Normal := subgroup_normal_of_isMulCommutative hEcomm X
+          let : X.Normal := subgroup_normal_of_isMulCommutative hEcomm X
           have hXYcompl' : X.IsComplement' Y := by
             refine Subgroup.isComplement'_of_disjoint_and_mul_eq_univ
               hXYcompl.disjoint ?_
@@ -2861,7 +2863,7 @@ private theorem cubic_order_five_contradiction
             rcases Subgroup.mem_sup_of_normal_left.mp hz with
               ⟨x, hx, y, hy, rfl⟩
             exact Set.mem_mul.mpr ⟨x, hx, y, hy, rfl⟩
-          have hmul := hXYcompl'.card_mul
+          have hmul := hXYcompl'.card_mul_card
           rw [hXcard, hEcard, pow_two] at hmul
           exact Nat.mul_left_cancel (by omega) hmul
         have hYinvK : IsXInvariantSubgroup K Y := by
@@ -2938,7 +2940,7 @@ private theorem cubic_order_five_contradiction
           have hTleV : T ≤ Vline := by rw [← heq]; exact inf_le_right
           exact hTV (Subgroup.eq_of_le_of_card_ge hTleV (by
             rw [hTcard, hVcard]))
-        letI : T.Normal := subgroup_normal_of_isMulCommutative hEcomm T
+        let : T.Normal := subgroup_normal_of_isMulCommutative hEcomm T
         have hUTcomp : U.IsComplement' T :=
           Subgroup.isComplement'_of_card_mul_and_disjoint
             (by rw [hUcard, hTcard, hEcard, pow_two])
@@ -2956,8 +2958,8 @@ private theorem cubic_order_five_contradiction
                 Vline ⊓ T = T ⊓ Vline := inf_comm Vline T
                 _ = ⊥ := hTVinf)
         have hTInvariant : IsInvariant K E T := ⟨hTinv⟩
-        letI : IsInvariant K E T := hTInvariant
-        letI : MulDistribMulAction K (E ⧸ T) :=
+        let : IsInvariant K E T := hTInvariant
+        let : MulDistribMulAction K (E ⧸ T) :=
           quotientMulDistribMulAction (A := K) (G := E) T hTInvariant
         let e : U ≃* Vline :=
           hUTcomp.QuotientMulEquiv.symm.trans hVTcomp.QuotientMulEquiv
@@ -3215,7 +3217,7 @@ public theorem proposition
     let p := (Nat.card U).minFac
     have hp : Nat.Prime p :=
       Nat.minFac_prime (U.one_lt_card_iff_ne_bot.mpr hU).ne'
-    letI : Fact (Nat.Prime p) := ⟨hp⟩
+    let : Fact (Nat.Prime p) := ⟨hp⟩
     obtain ⟨x, hx⟩ :=
       exists_prime_orderOf_dvd_card' p (Nat.minFac_dvd (Nat.card U))
     refine ⟨Subgroup.zpowers (x : G), p,
@@ -3244,7 +3246,7 @@ public theorem proposition
     have hxOne : x = 1 :=
       (faithfulSMul_iff.mp hch.1.1.hA.A2) x hfix
     simp [hxOne]
-  letI : (Q.subgroupOf H).Normal := hch.1.1.hA.A1.Q_normal_in_H
+  let : (Q.subgroupOf H).Normal := hch.1.1.hA.A1.Q_normal_in_H
   have hHnormQ : H ≤ Subgroup.normalizer (Q : Set G) :=
     Subgroup.le_normalizer_of_normal_subgroupOf hch.1.1.hA.A1.Q_le_H
   have hDnormS : D ≤ Subgroup.normalizer (S : Set G) := by
@@ -3252,7 +3254,7 @@ public theorem proposition
     exact hch.1.1.hA.A1.D_le_H.trans hHnormQ
   have hKnormS : K ≤ Subgroup.normalizer (S : Set G) :=
     hch.1.1.K_le_D.trans hDnormS
-  letI : Subgroup.Normalizes K S := ⟨hKnormS⟩
+  let : Subgroup.Normalizes K S := ⟨hKnormS⟩
   have hKcyclic : IsCyclic K :=
     (PFchapter1section2.proposition_2
       H D Q K V W Q0 S Q1 t hch.1.1).1
@@ -3484,8 +3486,8 @@ public theorem proposition
             _hfixedCard, _hmodel, _horder, hCX, _hcard⟩
         exact False.elim ((by simpa [CX] using hCX : IsSuzukiTwoGroup CX).2.1 hCXcomm)
     have hcentralizer_le_Q0 : CX ≤ Q0 := by
-      letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-      letI : IsElementaryAbelian 2 CX := hfirst.2
+      let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+      let : IsElementaryAbelian 2 CX := hfirst.2
       intro x hxCX
       have hxSqSub : (⟨x, hxCX⟩ : CX) ^ 2 = 1 :=
         Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
@@ -3509,7 +3511,7 @@ public theorem proposition
       obtain ⟨T, hS⟩ := hch.1.1.S_sylow_in_Q
       rw [hS]
       exact T.isPGroup'.map Q.subtype
-    letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+    let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
     let aS : S := ⟨a, haS⟩
     obtain ⟨m, haOrder⟩ := IsPGroup.iff_orderOf.mp hSpgroup aS
     have haOrderNeOne : orderOf aS ≠ 1 := by
@@ -3564,7 +3566,7 @@ public theorem proposition
           z hzH hzInvolution s).1 ⟨hch.1.2.1, hch.1.2.2.1⟩ with
       ⟨k, hkSet, hkSquare⟩
     have hkK : k ∈ K := (hch.1.1.K_def k).mpr hkSet
-    letI : (Q.subgroupOf H).Normal := hch.1.1.hA.A1.Q_normal_in_H
+    let : (Q.subgroupOf H).Normal := hch.1.1.hA.A1.Q_normal_in_H
     have hHnormQ : H ≤ Subgroup.normalizer (Q : Set G) :=
       Subgroup.le_normalizer_of_normal_subgroupOf hch.1.1.hA.A1.Q_le_H
     have hDnormS : D ≤ Subgroup.normalizer (S : Set G) := by
@@ -3596,8 +3598,8 @@ public theorem proposition
     have hQ0Square : ∀ q : Q0, q ^ 2 = 1 :=
       (PFchapter1section2.proposition_1_c
         H D Q K V W Q0 S Q1 t hch.1.1).2.2
-    letI : IsMulCommutative S := hcomm
-    letI : CommGroup S := IsMulCommutative.instCommGroup
+    let : IsMulCommutative S := hcomm
+    let : CommGroup S := IsMulCommutative.instCommGroup
     have hVeq :
         V = D ⊓ Subgroup.centralizer ({s} : Set G) := by
       calc
@@ -3610,7 +3612,7 @@ public theorem proposition
       exact inf_le_right
     have hPnormS : P ≤ Subgroup.normalizer (S : Set G) :=
       hPV.trans (hVleD.trans hDnormS)
-    letI : Subgroup.Normalizes P S := ⟨hPnormS⟩
+    let : Subgroup.Normalizes P S := ⟨hPnormS⟩
     let Root : SubMulAction P S :=
       { carrier := {r : S | r ^ 2 = sSub}
         smul_mem' := by
@@ -3680,7 +3682,7 @@ public theorem proposition
       rcases (Nat.dvd_prime Nat.prime_two).mp hpTwo with hpOne | hpTwo
       · exact hp.ne_one hpOne
       · exact hpNeTwo hpTwo
-    letI : Fact (Nat.Prime p) := ⟨hp⟩
+    let : Fact (Nat.Prime p) := ⟨hp⟩
     have hPpgroup : IsPGroup p P :=
       IsPGroup.of_card (n := 1) (by simpa using hPcard)
     rcases hPpgroup.nonempty_fixed_point_of_prime_not_dvd_card
@@ -3742,7 +3744,7 @@ public theorem proposition
           H D Q K V W Q0 S Q1 t hch.1.1 with hcomm | hSuzuki
       · exact False.elim (htypeANotCommutative S htypeA hcomm)
       · exact hSuzuki
-    letI : (Q.subgroupOf H).Normal := hch.1.1.hA.A1.Q_normal_in_H
+    let : (Q.subgroupOf H).Normal := hch.1.1.hA.A1.Q_normal_in_H
     have hHnormQ : H ≤ Subgroup.normalizer (Q : Set G) :=
       Subgroup.le_normalizer_of_normal_subgroupOf hch.1.1.hA.A1.Q_le_H
     have hDnormS : D ≤ Subgroup.normalizer (S : Set G) := by
@@ -3750,7 +3752,7 @@ public theorem proposition
       exact hch.1.1.hA.A1.D_le_H.trans hHnormQ
     have hKnormS : K ≤ Subgroup.normalizer (S : Set G) :=
       hch.1.1.K_le_D.trans hDnormS
-    letI : Subgroup.Normalizes K S := ⟨hKnormS⟩
+    let : Subgroup.Normalizes K S := ⟨hKnormS⟩
     have hKcyclic : IsCyclic K :=
       (PFchapter1section2.proposition_2
         H D Q K V W Q0 S Q1 t hch.1.1).1
@@ -4084,7 +4086,7 @@ public theorem proposition
       constructor
       · intro P p hPV' hp hPcard
         have hPnormS : P ≤ Subgroup.normalizer (S : Set G) := by
-          letI : (Q.subgroupOf H).Normal := hch.1.1.hA.A1.Q_normal_in_H
+          let : (Q.subgroupOf H).Normal := hch.1.1.hA.A1.Q_normal_in_H
           have hHnormQ : H ≤ Subgroup.normalizer (Q : Set G) :=
             Subgroup.le_normalizer_of_normal_subgroupOf hch.1.1.hA.A1.Q_le_H
           have hDnormS : D ≤ Subgroup.normalizer (S : Set G) := by
@@ -4102,7 +4104,7 @@ public theorem proposition
           have hcV := hPV' hc
           rw [hVeq] at hcV
           exact hcV.2
-        letI : Subgroup.Normalizes P S := ⟨hPnormS⟩
+        let : Subgroup.Normalizes P S := ⟨hPnormS⟩
         let Root : SubMulAction P S :=
           { carrier := {r : S | r ^ 2 = sSub}
             smul_mem' := by
@@ -4169,7 +4171,7 @@ public theorem proposition
           rcases (Nat.dvd_prime Nat.prime_two).mp hpTwo with hpOne | hpTwo
           · exact hp.ne_one hpOne
           · exact hpNeTwo hpTwo
-        letI : Fact (Nat.Prime p) := ⟨hp⟩
+        let : Fact (Nat.Prime p) := ⟨hp⟩
         have hPpgroup : IsPGroup p P :=
           IsPGroup.of_card (n := 1) (by simpa using hPcard)
         rcases hPpgroup.nonempty_fixed_point_of_prime_not_dvd_card
@@ -4265,7 +4267,7 @@ public theorem proposition
         ⟨r, hrFixed, hrSquare⟩
       have hPnormS : P ≤ Subgroup.normalizer (S : Set G) :=
         hPV'.trans (hVleD.trans hDnormS)
-      letI : Subgroup.Normalizes P S := ⟨hPnormS⟩
+      let : Subgroup.Normalizes P S := ⟨hPnormS⟩
       have hPcommK : ∀ c : P, ∀ k : K,
           ((c : G) * (k : G)) = (k : G) * (c : G) := by
         intro c k
@@ -4306,8 +4308,8 @@ public theorem proposition
         simp only [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe]
         rw [hcComm]
         simp
-      letI : IsInvariant P S (Subgroup.center S) := center_isInvariant
-      letI : MulDistribMulAction P (S ⧸ Subgroup.center S) :=
+      let : IsInvariant P S (Subgroup.center S) := center_isInvariant
+      let : MulDistribMulAction P (S ⧸ Subgroup.center S) :=
         quotientMulDistribMulAction (A := P) (G := S)
           (Subgroup.center S) (inferInstance : IsInvariant P S (Subgroup.center S))
       let rS : S := ⟨r, hrFixed.2⟩
@@ -4392,8 +4394,8 @@ public theorem proposition
       have hSpgroup : IsPGroup 2 S := by
         rcases hSuzuki.1 with ⟨m, hm⟩
         exact IsPGroup.of_card (by simpa using hm)
-      letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-      letI : Group.IsNilpotent S := hSpgroup.isNilpotent
+      let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+      let : Group.IsNilpotent S := hSpgroup.isNilpotent
       have hSsolvable : Group.IsSolvable S := by infer_instance
       have hpDvdD : p ∣ Nat.card D := by
         rw [← hPcard]
@@ -4405,10 +4407,11 @@ public theorem proposition
         rw [hPcard, hmS]
         exact hpOdd.coprime_two_right.pow_right m
       have hfixedQuotientMap :=
-        fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
-          (G := S) (A := P) hSsolvable hcoprime (∅ : Set Nat.Primes)
+        fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
+          (G := S) (A := P) hSsolvable hcoprime
           (Subgroup.center S)
           (inferInstance : IsInvariant P S (Subgroup.center S))
+      change FixedPoints.subgroup P (S ⧸ Subgroup.center S) = ⊤ at hfixedQuotientTop
       rw [hfixedQuotientTop] at hfixedQuotientMap
       have hfixedTop : fixedPointSubgroup P S = ⊤ := by
         rw [eq_top_iff]
@@ -4507,8 +4510,8 @@ public theorem proposition
         ⟨r, hrFixed, hrSquare⟩
       have hrCX : r ∈ CX := by
         exact ⟨hrFixed.1, by rw [← hSQ]; exact hrFixed.2⟩
-      letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-      letI : IsElementaryAbelian 2 CX := hCXElementary
+      let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+      let : IsElementaryAbelian 2 CX := hCXElementary
       have hrSqSub : (⟨r, hrCX⟩ : CX) ^ 2 = 1 :=
         Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
           (IsElementaryAbelian.exponent_dvd_p 2 CX) ⟨r, hrCX⟩
@@ -4550,16 +4553,16 @@ public theorem proposition
               ⟨hch.1.1.hA.A1.Q_le_H (by rw [← hSQ]; exact x.property), hxInvG⟩
       have hPnormS : P ≤ Subgroup.normalizer (S : Set G) :=
         hPV.trans (hVleD.trans hDnormS)
-      letI : Subgroup.Normalizes P S := ⟨hPnormS⟩
-      letI : IsInvariant P S (Subgroup.center S) := center_isInvariant
-      letI : MulDistribMulAction P (S ⧸ Subgroup.center S) :=
+      let : Subgroup.Normalizes P S := ⟨hPnormS⟩
+      let : IsInvariant P S (Subgroup.center S) := center_isInvariant
+      let : MulDistribMulAction P (S ⧸ Subgroup.center S) :=
         quotientMulDistribMulAction (A := P) (G := S)
           (Subgroup.center S) (inferInstance : IsInvariant P S (Subgroup.center S))
       have hSpgroup : IsPGroup 2 S := by
         rcases hSuzuki.1 with ⟨m, hm⟩
         exact IsPGroup.of_card (by simpa using hm)
-      letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-      letI : Group.IsNilpotent S := hSpgroup.isNilpotent
+      let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+      let : Group.IsNilpotent S := hSpgroup.isNilpotent
       have hSsolvable : Group.IsSolvable S := by infer_instance
       have hpDvdD : p ∣ Nat.card D := by
         rw [← hPcard]
@@ -4623,7 +4626,7 @@ public theorem proposition
       have hFixCenterCard :
           Nat.card (fixedPointSubgroup P (Subgroup.center S)) = ell := by
         have hMapCenter :=
-          fixedPointSubgroup_map_subtype_eq_inf
+          fixedPoints_subgroup_map_subtype_eq_inf
             (A := P) (G := S) (Subgroup.center S)
         calc
           Nat.card (fixedPointSubgroup P (Subgroup.center S)) =
@@ -4642,8 +4645,8 @@ public theorem proposition
               (Subgroup.subgroupOfEquivOfLe hCQ0leS).toEquiv
           _ = ell := hellCard.symm
       have hFixedQuotientEq :=
-        fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
-          (G := S) (A := P) hSsolvable hcoprime (∅ : Set Nat.Primes)
+        fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
+          (G := S) (A := P) hSsolvable hcoprime
           (Subgroup.center S)
           (inferInstance : IsInvariant P S (Subgroup.center S))
       have hLiftFixed :
@@ -5051,7 +5054,7 @@ public theorem proposition
       rintro rfl
       rcases hthetaNontrivial with ⟨x, hx⟩
       exact hx rfl
-    letI : Fact (Nat.Prime 5) := ⟨Nat.prime_five⟩
+    let : Fact (Nat.Prime 5) := ⟨Nat.prime_five⟩
     have hthetaOrder : orderOf theta = 5 :=
       orderOf_eq_prime hthetaPowFive hthetaNeOne
     have hpowNe {i j : ℕ} (hi : i < 5) (hj : j < 5) (hij : i ≠ j) :
@@ -5069,8 +5072,8 @@ public theorem proposition
     have hthetaNeOne : theta ≠ 1 := by
       simpa using
         (hpowNe (i := 1) (j := 0) (by omega) (by omega) (by omega))
-    letI : Fintype F := Fintype.ofFinite F
-    letI : Algebra (ZMod 2) F := ZMod.algebra F 2
+    let : Fintype F := Fintype.ofFinite F
+    let : Algebra (ZMod 2) F := ZMod.algebra F 2
     obtain ⟨autBasis, hAutBasis⟩ :=
       lemma2a_fieldAutomorphisms_basis_linearMaps F
     have hcenterMapSurjective : Function.Surjective centerMap := by
@@ -5246,15 +5249,15 @@ public theorem proposition
           _hQ0card, _hrhoMul, _hrhoAutInl, _hrhoAutInr, _hrhoD,
           _hmodelQ, _hmodelK, _hmodelV, _hkAction, hvAction⟩
       let F : Type := GaloisField 2 fieldN
-      letI : Field F := inferInstance
-      letI : Finite F := inferInstance
-      letI : (W.subgroupOf V).Normal := hWnormalV
+      let : Field F := inferInstance
+      let : Finite F := inferInstance
+      let : (W.subgroupOf V).Normal := hWnormalV
       let pToV : P →* V := Subgroup.inclusion hPV
       let rhoP : P →* (F ≃+* F) :=
         A.subtype.comp
           (vmodWAut.toMonoidHom.comp
             ((QuotientGroup.mk' (W.subgroupOf V)).comp pToV))
-      letI : MulSemiringAction P F := MulSemiringAction.compHom F rhoP
+      let : MulSemiringAction P F := MulSemiringAction.compHom F rhoP
       let vV : V := ⟨v, hv.1⟩
       have hvFixes :
           ∀ x : FixedPoints.subfield P F,
@@ -5434,7 +5437,7 @@ public theorem proposition
         hch.2.centralizers_two_rank P hPV hPprime
       let L : Subgroup G := Subgroup.centralizer (P : Set G)
       let ΩP : Type v := {ω : Ω // ω ∈ fixedPointsOfSubgroup G Ω P}
-      letI : MulAction L ΩP := fixedPointCentralizerAction G Ω P
+      let : MulAction L ΩP := fixedPointCentralizerAction G Ω P
       let HP : Subgroup L := H.comap L.subtype
       let DP : Subgroup L := D.comap L.subtype
       let QP : Subgroup L := Q.comap L.subtype
@@ -5472,8 +5475,8 @@ public theorem proposition
         · rcases hunitary with
             ⟨E, hEfield, hEfinite, J, hJstandard, hEcard,
               hfixedCard, hFmodel, _horder, hCXsuzuki, hCXcard⟩
-          letI : Field E := hEfield
-          letI : Finite E := hEfinite
+          let : Field E := hEfield
+          let : Finite E := hEfinite
           rcases hFmodel with ⟨eF⟩
           have hCXp : IsPGroup 2 CX :=
             External.Higman.isPGroup_of_isSuzukiTwoGroup
@@ -5612,8 +5615,8 @@ public theorem proposition
           have hZFodd : Odd (Nat.card (Subgroup.center F)) := by
             rw [← hZFGcard]
             exact hZFGodd
-          letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-          letI : Fact (IsPGroup 2 (↥CFX)) :=
+          let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+          let : Fact (IsPGroup 2 (↥CFX)) :=
             ⟨hCXp.of_equiv eCXCFX⟩
           have hnormEq :
               Subgroup.normalizer P0 =
@@ -5674,7 +5677,7 @@ public theorem proposition
             exact hgLnorm
           let QPH : Subgroup HP := QP.subgroupOf HP
           let DPH : Subgroup HP := DP.subgroupOf HP
-          letI : QPH.Normal := hA1P.Q_normal_in_H
+          let : QPH.Normal := hA1P.Q_normal_in_H
           let gH : HP := ⟨gL, hgHP⟩
           have hgSup : gH ∈ QPH ⊔ DPH := by
             have hsup : QPH ⊔ DPH = ⊤ := by

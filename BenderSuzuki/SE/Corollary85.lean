@@ -4,6 +4,7 @@ public import BenderSuzuki.SE.Corollary85Field
 import BenderSuzuki.PFchapter1section1.lemma_b
 import BenderSuzuki.SE.Proposition84Residual
 
+
 /-!
 # Corollary 8.5
 
@@ -258,7 +259,7 @@ public theorem corollary85Conclusion_of_data
     exact hFC.trans (centralizer_le_normalizer Y)
   have hFnormal : (F.subgroupOf N).Normal := by
     simpa [F, N] using centralizerTwoPrimeResidual_normal_in_normalizer Y
-  letI : (F.subgroupOf N).Normal := hFnormal
+  let : (F.subgroupOf N).Normal := hFnormal
   have hNnormF : N ≤ Subgroup.normalizer (F : Set X) :=
     Subgroup.le_normalizer_of_normal_subgroupOf hFleN
   have hP_N : P ≤ N := by
@@ -420,7 +421,7 @@ public theorem Proposition84Statement.corollary85_II4
   let Q : Subgroup N := S.subgroupOf N
   let OmegaY := {omega : conjugateCosetSpace M //
     omega ∈ fixedPointsOfSubgroup X (conjugateCosetSpace M) Y}
-  letI : MulAction N OmegaY :=
+  let : MulAction N OmegaY :=
     normalizerFixedPointAction X (conjugateCosetSpace M) Y
   have hA1 : HypothesisA1 N OmegaY H D Q tn := by
     simpa [N, D0, H0, D1, tn, H, D, Q, OmegaY] using
@@ -430,7 +431,7 @@ public theorem Proposition84Statement.corollary85_II4
   have hQp : IsPGroup 2 Q := by
     exact hSp.of_equiv
       (Subgroup.subgroupOfEquivOfLe (hSle.trans inf_le_right)).symm
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hQnil : Group.IsNilpotent Q := IsPGroup.isNilpotent hQp
   obtain ⟨Q0, hQ0Q, hQ0def, hQ0comm, hQ0sq⟩ :=
     proposition_1_c_exists_Q0_of_hypothesisA1 H D Q tn hA1 hQnil

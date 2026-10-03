@@ -1,9 +1,10 @@
 module
 
 public import FeitThompson.BGsection13.corollary_13_2
-import FeitThompson.HallSubgroups.Conjugacy
+public import Theory.GroupTheory.Hall.Conjugacy
 import Mathlib.Data.Finset.NatDivisors
 import Mathlib.GroupTheory.Schreier
+
 
 open scoped Pointwise
 
@@ -116,10 +117,10 @@ public theorem section13_le_normalizer_of_le_cyclic_normal
     (hE₃norm : section10NormalIn E₃ E) :
     E ≤ Subgroup.normalizer (X : Set G) := by
   classical
-  haveI : IsCyclic E₃ := hE₃cyc
+  have : IsCyclic E₃ := hE₃cyc
   have hXchar : (X.subgroupOf E₃).Characteristic :=
     section12_subgroup_characteristic_of_cyclic (X.subgroupOf E₃)
-  haveI : (X.subgroupOf E₃).Characteristic := hXchar
+  have : (X.subgroupOf E₃).Characteristic := hXchar
   have hnormE₃_le_normX :
       Subgroup.normalizer (E₃ : Set G) ≤
         Subgroup.normalizer ((X.subgroupOf E₃).map E₃.subtype : Set G) :=

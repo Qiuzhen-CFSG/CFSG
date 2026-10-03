@@ -5,6 +5,7 @@ public import GorensteinWalter.Section3.FirstCaseKleinCentralizer
 public import GorensteinWalter.CosetInvolutionCount
 import Mathlib.Tactic
 
+
 noncomputable section
 
 open scoped Pointwise

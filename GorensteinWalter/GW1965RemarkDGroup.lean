@@ -5,6 +5,7 @@ public import GorensteinWalter.GWLemma21Trichotomy
 public import GorensteinWalter.NormalPComplementQuotientPGroup
 public import GorensteinWalter.QuotientTwoGroupNotNormalizerContainsCPrime
 
+
 /-!
 # The D-group characterization in the remark after Proposition 9
 

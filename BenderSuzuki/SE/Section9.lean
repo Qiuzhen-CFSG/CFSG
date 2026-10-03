@@ -4,6 +4,7 @@ public import BenderSuzuki.SE.Proposition84
 public import Mathlib.Algebra.Group.Subgroup.Ker
 import FeitThompson.FinalTheorem
 
+
 /-!
 # Section 9: minimal normal supplements
 
@@ -81,7 +82,7 @@ public theorem two_subgroup_le_of_odd
     S ≤ W := by
   let WM : Subgroup M := W.subgroupOf M
   let DM : Subgroup M := D.subgroupOf M
-  haveI : WM.Normal := by
+  have : WM.Normal := by
     simpa [WM] using hW.normal_in_M
   let q : M →* M ⧸ WM := QuotientGroup.mk' WM
   have hsupM : WM ⊔ DM = ⊤ := by
@@ -95,7 +96,7 @@ public theorem two_subgroup_le_of_odd
       _ = ⊤ := Subgroup.subgroupOf_self M
   have hWMmap : WM.map q = ⊥ := by
     apply (Subgroup.map_eq_bot_iff (H := WM) (f := q)).2
-    simpa [q] using (show WM ≤ WM from le_rfl)
+    simp [q]
   have hDMmap : DM.map q = ⊤ := by
     have htopmap : (⊤ : Subgroup M).map q = ⊤ := by
       rw [← MonoidHom.range_eq_map]
@@ -317,7 +318,7 @@ public theorem minimalNormalSupplement_inf_right_solvable
     {X : Type u} [Group X] [Finite X]
     {M W : Subgroup X} {t : X}
     (hM : IsStronglyEmbedded M) (htM : t ∉ M) :
-    IsSolvable
+    Group.IsSolvable
       (W ⊓ (M ⊓ rightConjugate M t) : Subgroup X) := by
   exact odd_order_theorem _
     (hM.minimalNormalSupplement_inf_right_card_odd htM)

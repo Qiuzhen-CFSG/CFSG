@@ -7,6 +7,8 @@ public import GorensteinWalter.Classification
 
 An equivalence of commutative coefficient rings induces equivalences of the
 corresponding special/general linear groups and hence of `PSL₂` and `PGL₂`.
+The special-linear equivalence is also the coefficient-field transport for
+the actual special-unitary-two identification in ABG II.2 Lemma 1(vi).
 -/
 
 noncomputable section
@@ -15,7 +17,7 @@ namespace GorensteinWalter
 
 universe u v
 
-private def sl2RingEquiv
+public def sl2RingEquiv
     {R : Type u} {S : Type v} [CommRing R] [CommRing S]
     (e : R ≃+* S) :
     Matrix.SpecialLinearGroup (Fin 2) R ≃*
@@ -31,6 +33,13 @@ private def sl2RingEquiv
     simp [f, g]
   · ext x i j
     simp [f, g]
+
+/-- The special-linear coefficient equivalence acts entrywise. -/
+@[simp] public theorem sl2RingEquiv_apply_entry
+    {R S : Type*} [CommRing R] [CommRing S] (e : R ≃+* S)
+    (x : Matrix.SpecialLinearGroup (Fin 2) R) (i j : Fin 2) :
+    (sl2RingEquiv e x).val i j = e (x.val i j) := by
+  rfl
 
 /-- `PSL₂` is invariant under equivalence of its coefficient rings. -/
 public def psl2RingEquiv

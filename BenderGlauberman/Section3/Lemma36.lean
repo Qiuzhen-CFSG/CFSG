@@ -15,6 +15,7 @@ import Mathlib.Algebra.DirectSum.LinearMap
 import Mathlib.LinearAlgebra.Trace
 public import GorensteinWalter.Defs
 
+
 /-!
 # Bender--Glauberman: Section 3 — Lemma 3.6
 
@@ -32,9 +33,8 @@ open scoped Pointwise
 namespace BenderGlauberman
 
 open GorensteinWalter
-open Theory.Character
 
--- Local instances matching `Theory.Character`'s subgroup-sum convention; see
+-- Local instances matching `Character`'s subgroup-sum convention; see
 -- `BenderGlauberman/ClassFunction.lean`.
 attribute [local instance] Fintype.ofFinite
 attribute [local instance] Classical.propDecidable
@@ -149,6 +149,7 @@ private lemma r0_centralizes_K (c : Hyp11 G) [Hyp11KData c] {k : G} (hk : k ∈ 
     _ = (k⁻¹)⁻¹ := by rw [h1]
     _ = k := by simp
 
+omit [Fintype G] in
 /-- An element centralized by `r` is centralized by every power of `r`. -/
 private lemma centralizes_zpowers_of_centralized_local {r a : G}
     (h : r * a * r⁻¹ = a) :
@@ -353,6 +354,7 @@ public lemma K2_le_U (c : Hyp11 G) [Hyp11KData c] : c.K2 ≤ c.U :=
 private lemma U_le_H_local (c : Hyp11 G) [Hyp11KData c] : c.U ≤ c.H :=
   SetLike.le_def.1 (Subgroup.map_subtype_le (H := c.H) (pPrimeCore 2 c.H))
 
+omit [Fintype G] in
 /-- Conjugating a power by an element that inverts the base inverts the power. -/
 private lemma inverted_power {t x : G} (h : t * x * t⁻¹ = x⁻¹) (n : ℤ) :
     t * x ^ n * t⁻¹ = (x ^ n)⁻¹ := by
@@ -360,7 +362,7 @@ private lemma inverted_power {t x : G} (h : t * x * t⁻¹ = x⁻¹) (n : ℤ) :
     rw [map_zpow]
   calc
     t * x ^ n * t⁻¹ = (MulAut.conj t) (x ^ n) := by
-      simpa [MulAut.conj_apply] using hc.symm
+      simp [MulAut.conj_apply]
     _ = (MulAut.conj t) x ^ n := hc
     _ = (x⁻¹) ^ n := by
       change (t * x * t⁻¹) ^ n = (x⁻¹) ^ n
@@ -512,7 +514,7 @@ private lemma irr_linear_of_comm {K : Type u} [Group K] [Fintype K]
       simp
     have hn : n = 1 := hfinN.symm.trans hfin
     subst n
-    simpa [Representation.character] using (LinearMap.trace_one ℂ (Fin 1 → ℂ))
+    simp [Representation.character]
 
 /-- The inverse (complex-conjugate) of a linear character of an abelian group. -/
 @[reducible] private noncomputable def irrInv {K : Type u} [Group K] [Fintype K]
@@ -575,7 +577,7 @@ private lemma restrict_alpha_inv_eq (c : Hyp11 G) [Hyp11KData c] {x : G}
 /-- Conjugation action of `U` on `K`. -/
 @[reducible] private noncomputable instance KU_action (c : Hyp11 G) [Hyp11KData c] :
     MulDistribMulAction (↥c.U) (↥(KU c)) :=
-  letI : (KU c).Normal := KU_normal c
+  let : (KU c).Normal := KU_normal c
   MulDistribMulAction.compHom (↥(KU c)) (MulAut.conjNormal (G := ↥c.U) (H := KU c))
 
 /-- Conjugation action of `U` on the irreducible characters of `K`. -/
@@ -609,7 +611,7 @@ private lemma KU_orbit_odd (c : Hyp11 G) [Hyp11KData c] (β : IrrBG19 (↥(KU c)
   exact Nat.coprime_two_left.mp hcopOrbit
 
 /-- The character of an arbitrary finite-dimensional complex representation is
-a `Theory.Character.IsCharacter`. -/
+a `IsCharacter`. -/
 private lemma isCharacter_of_representation {K : Type u} [Group K] [Fintype K]
     {M : Type v} [AddCommGroup M] [Module ℂ M] [FiniteDimensional ℂ M]
     (σ : Representation ℂ K M) : IsCharacter σ.character := by
@@ -630,15 +632,14 @@ private lemma isCharacter_of_representation {K : Type u} [Group K] [Fintype K]
   change LinearMap.trace ℂ M (σ k) =
     LinearMap.trace ℂ (Fin (Module.finrank ℂ M) → ℂ) (τ k)
   rw [show τ k = e.conj (σ k) by rfl]
-  simpa using (LinearMap.trace_conj' (R := ℂ) (M := M)
-    (N := Fin (Module.finrank ℂ M) → ℂ) (σ k) e).symm
+  simp
 
 /-- An irreducible finite-dimensional complex representation of an abelian
 group gives an `IrrBG19` character (always linear). -/
 private noncomputable def charOfIrrRep {K : Type u} [CommGroup K] [Fintype K]
     {M : Type v} [AddCommGroup M] [Module ℂ M] [FiniteDimensional ℂ M]
     (σ : Representation ℂ K M) (hσ : σ.IsIrreducible) : IrrBG19 K := by
-  letI : Representation.IsIrreducible σ := hσ
+  let : Representation.IsIrreducible σ := hσ
   have hchar : IsCharacter σ.character := isCharacter_of_representation σ
   have hnorm : scalarProductInv K σ.character σ.character = 1 := by
     have hnon : Nonempty (σ.Equiv σ) := ⟨Representation.Equiv.refl σ⟩
@@ -652,31 +653,31 @@ private lemma clifford_restrict_char_sum {H : Subgroup G} [H.Normal]
     (W : Subrepresentation (ρ.comp H.subtype)) (hW : W.toRepresentation.IsIrreducible) :
     ∃ (n : ℕ) (g : Fin n → G),
       DirectSum.IsInternal
-        (fun i : Fin n => (Theory.Representation.conjugateSubrepresentation ρ H W (g i)).toSubmodule) ∧
+        (fun i : Fin n => (Representation.conjugateSubrepresentation ρ H W (g i)).toSubmodule) ∧
       (∀ i : Fin n,
-        (Theory.Representation.conjugateSubrepresentation ρ H W (g i)).toRepresentation.IsIrreducible) ∧
+        (Representation.conjugateSubrepresentation ρ H W (g i)).toRepresentation.IsIrreducible) ∧
       (∀ i : Fin n,
         Nonempty
-          ((Theory.Representation.conjugateSubrepresentation ρ H W (g i)).toRepresentation ≃ₗ
-            Theory.Representation.conjugateRep W.toRepresentation (g i))) ∧
+          ((Representation.conjugateSubrepresentation ρ H W (g i)).toRepresentation ≃ₗ
+            Representation.conjugateRep W.toRepresentation (g i))) ∧
       ∀ k : H, ρ.character (k : G) =
         ∑ i : Fin n,
-          ((Theory.Representation.conjugateSubrepresentation ρ H W (g i)).toRepresentation).character k := by
+          ((Representation.conjugateSubrepresentation ρ H W (g i)).toRepresentation).character k := by
   classical
-  rcases Theory.Representation.isaacs_theorem_6_5 ρ H hρ W hW with ⟨n, g, hsum, hirr, hequiv, heq⟩
+  rcases Representation.isaacs_theorem_6_5 ρ H hρ W hW with ⟨n, g, hsum, hirr, hequiv, heq⟩
   let _ := @heq (Fin 0 → ℂ) (by infer_instance) (by infer_instance)
   have hsum' : DirectSum.IsInternal
-      (fun i : Fin n => (Theory.Representation.conjugateSubrepresentation ρ H W (g i)).toSubmodule) := by
+      (fun i : Fin n => (Representation.conjugateSubrepresentation ρ H W (g i)).toSubmodule) := by
     change DirectSum.IsInternal
-      (fun i : Fin n => (Theory.Representation.conjugateSubrepresentation ρ H W (g i)).asSubmodule) at hsum
+      (fun i : Fin n => (Representation.conjugateSubrepresentation ρ H W (g i)).asSubmodule) at hsum
     exact hsum
   refine ⟨n, g, hsum', hirr, hequiv, ?_⟩
   intro k
   let N : Fin n → Submodule ℂ V := fun i =>
-    (Theory.Representation.conjugateSubrepresentation ρ H W (g i)).toSubmodule
+    (Representation.conjugateSubrepresentation ρ H W (g i)).toSubmodule
   have hf : ∀ i : Fin n, Set.MapsTo (ρ (k : G)) (N i) (N i) := by
     intro i x hx
-    exact (Theory.Representation.conjugateSubrepresentation ρ H W (g i)).apply_mem_toSubmodule k hx
+    exact (Representation.conjugateSubrepresentation ρ H W (g i)).apply_mem_toSubmodule k hx
   have htr := LinearMap.trace_eq_sum_trace_restrict (R := ℂ) (M := V) (N := N) hsum' (f := ρ (k : G)) hf
   change LinearMap.trace ℂ V (ρ (k : G)) =
     ∑ i : Fin n, LinearMap.trace ℂ (N i) ((ρ (k : G)).restrict (hf i))
@@ -708,30 +709,30 @@ private lemma constituents_conjugate (c : Hyp11 G) [Hyp11KData c] (α : Irr (↥
   let : MulAction (↥c.U) (IrrBG19 (↥(KU c))) := KU_irr_action c
   have hchar' : ∀ k : ↥(KU c), α.1 (k : ↥c.U) =
       ∑ i : Fin n0,
-        ((Theory.Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation).character k := by
+        ((Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation).character k := by
     intro k
     rw [hαeq]
     exact hchar k
   have hfun : (fun k : ↥(KU c) => α.1 (k : ↥c.U)) =
       ∑ i : Fin n0,
-        ((Theory.Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation).character := by
+        ((Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation).character := by
     funext k
     simpa using hchar' k
   have hsummand_orbit (i : Fin n0) :
       charOfIrrRep
-        ((Theory.Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i) ∈
+        ((Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i) ∈
         MulAction.orbit (↥c.U) β0 := by
     have hχi : charOfIrrRep
-        ((Theory.Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i) =
+        ((Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i) =
         (((g i : ↥c.U)⁻¹) • β0) := by
       apply Subtype.ext
       ext k
       have he := Classical.choice (hequiv i)
-      have heRep := Theory.Representation.RepEquiv.toRepresentationEquiv he
+      have heRep := Representation.RepEquiv.toRepresentationEquiv he
       have hchars := Representation.char_iso heRep
       have hchar_smul : (((g i : ↥c.U)⁻¹) • β0).1 =
           fun u : ↥(KU c) => β0.1 ((((g i : ↥c.U)⁻¹)⁻¹) • u) := rfl
-      simp only [charOfIrrRep, hchar_smul, inv_inv, KU_action]
+      simp only [charOfIrrRep, hchar_smul, inv_inv]
       rw [hchars]
       rfl
     rw [hχi]
@@ -741,31 +742,31 @@ private lemma constituents_conjugate (c : Hyp11 G) [Hyp11KData c] (α : Irr (↥
       γ ∈ MulAction.orbit (↥c.U) β0 := by
     have hsp_sum : scalarProduct (↥(KU c)) (fun k : ↥(KU c) => α.1 (k : ↥c.U)) γ.1 =
         ∑ i : Fin n0, scalarProduct (↥(KU c))
-          ((Theory.Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation).character γ.1 := by
+          ((Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation).character γ.1 := by
       rw [hfun, scalarProduct_sum_left]
     have hcoeff (i : Fin n0) :
         scalarProduct (↥(KU c))
-          ((Theory.Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation).character γ.1 =
+          ((Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation).character γ.1 =
           if (charOfIrrRep
-            ((Theory.Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i)).1 = γ.1
+            ((Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i)).1 = γ.1
           then 1 else 0 := by
-      have hχ : ((Theory.Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation).character =
+      have hχ : ((Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation).character =
           (charOfIrrRep
-            ((Theory.Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i)).1 := rfl
+            ((Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i)).1 := rfl
       rw [hχ]
       exact scalarProduct_irr_ite
         (charOfIrrRep
-          ((Theory.Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i)).2 γ.2
+          ((Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i)).2 γ.2
     have hex : ∃ i : Fin n0, (charOfIrrRep
-        ((Theory.Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i)).1 = γ.1 := by
+        ((Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i)).1 = γ.1 := by
       by_contra hnone
-      push_neg at hnone
+      push Not at hnone
       have hsp0 : scalarProduct (↥(KU c)) (fun k : ↥(KU c) => α.1 (k : ↥c.U)) γ.1 = 0 := by
         rw [hsp_sum]
         refine Finset.sum_eq_zero ?_
         intro i hi
         have hne' : (charOfIrrRep
-            ((Theory.Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i)).1 ≠ γ.1 := by
+            ((Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i)).1 ≠ γ.1 := by
           intro h
           exact hnone i h
         rw [hcoeff i]
@@ -773,10 +774,10 @@ private lemma constituents_conjugate (c : Hyp11 G) [Hyp11KData c] (α : Irr (↥
       exact hγ hsp0
     rcases hex with ⟨i, hi⟩
     have hmem : charOfIrrRep
-        ((Theory.Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i) ∈
+        ((Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i) ∈
         MulAction.orbit (↥c.U) β0 := hsummand_orbit i
     have hiSub : charOfIrrRep
-        ((Theory.Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i) = γ :=
+        ((Representation.conjugateSubrepresentation ρ (KU c) W (g i)).toRepresentation) (hirr i) = γ :=
       Subtype.ext hi
     rwa [hiSub] at hmem
   intro γ hγ
@@ -878,12 +879,12 @@ private theorem finite_order_eq_one_of_trace_eq_finrank
       LinearMap.trace ℂ V f =
         ∑ μ : f.Eigenvalues, (μ : ℂ) * (m μ : ℂ) := by
     simpa [m] using
-      (Theory.Representation.trace_pow_eq_sum_eigenvalues (f := f) (n := n) (k := 1) hn hpow)
+      (Representation.trace_pow_eq_sum_eigenvalues (f := f) (n := n) (k := 1) hn hpow)
   have htrace_zero :
       (Module.finrank ℂ V : ℂ) =
         ∑ μ : f.Eigenvalues, (m μ : ℂ) := by
     have h0 :=
-      Theory.Representation.trace_pow_eq_sum_eigenvalues (f := f) (n := n) (k := 0) hn hpow
+      Representation.trace_pow_eq_sum_eigenvalues (f := f) (n := n) (k := 0) hn hpow
     simpa [m, LinearMap.trace_id] using h0
   have hsum_complex :
       ∑ μ : f.Eigenvalues, (μ : ℂ) * (m μ : ℂ) =
@@ -900,7 +901,7 @@ private theorem finite_order_eq_one_of_trace_eq_finrank
         (μ : ℂ).re * m μ ≤ (1 : ℝ) * m μ := by
     intro μ hμ
     have hμpow : (μ : ℂ) ^ n = 1 :=
-      Theory.Representation.eigenvalue_pow_eq_one_of_pow_eq_one hpow μ.property
+      Representation.eigenvalue_pow_eq_one_of_pow_eq_one hpow μ.property
     have hnorm : ‖(μ : ℂ)‖ = 1 := by
       have hpowAbs : ‖(μ : ℂ)‖ ^ n = (1 : ℝ) := by
         simpa [hμpow] using (norm_pow (μ : ℂ) n).symm
@@ -938,7 +939,7 @@ private theorem finite_order_eq_one_of_trace_eq_finrank
       have h := heq_each μ
       nlinarith
     have hμpow : (μ : ℂ) ^ n = 1 :=
-      Theory.Representation.eigenvalue_pow_eq_one_of_pow_eq_one hpow μ.property
+      Representation.eigenvalue_pow_eq_one_of_pow_eq_one hpow μ.property
     have hnorm : ‖(μ : ℂ)‖ = 1 := by
       have hpowAbs : ‖(μ : ℂ)‖ ^ n = (1 : ℝ) := by
         simpa [hμpow] using (norm_pow (μ : ℂ) n).symm
@@ -959,9 +960,9 @@ private theorem finite_order_eq_one_of_trace_eq_finrank
   have htop :
       f.eigenspace (1 : ℂ) = ⊤ := by
     have hsemi : f.IsSemisimple :=
-      Theory.Representation.end_isSemisimple_of_pow_eq_one f hn hpow
+      Representation.end_isSemisimple_of_pow_eq_one f hn hpow
     have hiSup :=
-      Theory.Representation.eigenspace_iSup_eq_top_over_eigenvalues (f := f) hsemi
+      Representation.eigenspace_iSup_eq_top_over_eigenvalues (f := f) hsemi
     apply top_unique
     rw [← hiSup]
     refine iSup_le ?_
@@ -1105,7 +1106,7 @@ private lemma exists_odd_multiplicity_restrict_char (c : Hyp11 G) [Hyp11KData c]
       _ = φ 1 := rfl
       _ = ∑ ν : IrrBG19 (↥K0), (m ν : ℂ) * (d ν : ℂ) := hsum1
   by_contra hnone
-  push_neg at hnone
+  push Not at hnone
   have hEvenProd : ∀ ν : IrrBG19 (↥K0), Even (m ν * d ν) := by
     intro ν
     have hEvenM : Even (m ν) := by
@@ -1346,9 +1347,6 @@ private lemma orbit_conjChar_subset_local (c : Hyp11 G) [Hyp11KData c] (h12 : Hy
   rcases (Finset.mem_image.mp hμ) with ⟨l, hl, rfl⟩
   refine Finset.mem_image.mpr ⟨conjLambda_local c h12 l, Finset.mem_univ _, ?_⟩
   ext x
-  change (LambdaChar (conjLambda_local c h12 l).1 * ν) x =
-    (conjChar c.H0 (s_normalizes_H0 c h12) (LambdaChar l.1 *
-      conjChar c.H0 (s_normalizes_H0 c h12) ν)) x
   simp [conjChar, conjLambda_local, LambdaChar]
   have hx : (conjMonoidHom c.H0 c.s (s_normalizes_H0 c h12) x : ↥c.H0) =
       ⟨c.s * (x : G) * c.s⁻¹, s_normalizes_H0 c h12 x⟩ := rfl
@@ -1370,8 +1368,6 @@ private lemma orbit_subset_conjChar_local (c : Hyp11 G) [Hyp11KData c] (h12 : Hy
   rcases (Finset.mem_image.mp hμ) with ⟨l, hl, rfl⟩
   refine Finset.mem_image.mpr ⟨conjLambda_local c h12 l, Finset.mem_univ _, ?_⟩
   ext x
-  change (LambdaChar (conjLambda_local c h12 l).1 * conjChar c.H0 (s_normalizes_H0 c h12) ν) x =
-    (conjChar c.H0 (s_normalizes_H0 c h12) (LambdaChar l.1 * ν)) x
   simp [conjChar, conjLambda_local, LambdaChar]
 
 /-- Conjugation by `s` maps orbits to orbits. -/
@@ -1640,7 +1636,7 @@ private lemma mult_minus_tilde_sum_congr (c : Hyp11 G) [Hyp11KData c] (h12 : Hyp
 
 /-- The sum of the values of the irreducible characters in the fiber of a
 representative is the orbit sum of that representative. -/
-private lemma orbit_sum_fiber_eq_orbitSum_local (c : Hyp11 G) [Hyp11KData c] (h12 : Hyp12 c)
+private lemma orbit_sum_fiber_eq_orbitSum_local (c : Hyp11 G) [Hyp11KData c]
     {ι : Type u} [Fintype ι] (rep : ι → ClassFunction (↥c.H0))
     (hrep_irr : ∀ i : ι, IsIrreducibleCharacter (rep i))
     (hrep : ∀ ν : {ν : ClassFunction (↥c.H0) // IsIrreducibleCharacter ν},
@@ -1676,7 +1672,7 @@ private lemma orbit_sum_fiber_eq_orbitSum_local (c : Hyp11 G) [Hyp11KData c] (h1
 /-- Regrouping the coefficients of the orbit representatives: the sum over
 `ν` of `a(i(ν))·ν(x)` equals the sum over the representatives `i` of
 `a i` times the orbit sum `r(Λ rep i)(x)`. -/
-private lemma rep_coeff_sum_eq_orbit_sums_local (c : Hyp11 G) [Hyp11KData c] (h12 : Hyp12 c)
+private lemma rep_coeff_sum_eq_orbit_sums_local (c : Hyp11 G) [Hyp11KData c]
     {ι : Type u} [Fintype ι] (rep : ι → ClassFunction (↥c.H0))
     (hrep_irr : ∀ i : ι, IsIrreducibleCharacter (rep i))
     (hrep : ∀ ν : {ν : ClassFunction (↥c.H0) // IsIrreducibleCharacter ν},
@@ -1708,7 +1704,7 @@ private lemma rep_coeff_sum_eq_orbit_sums_local (c : Hyp11 G) [Hyp11KData c] (h1
     _ = a i * (∑ ν ∈ Finset.univ.filter (fun ν : Irr (↥c.H0) => Classical.choose (hrep ν) = i), ν.1 x) := by
           rw [Finset.mul_sum]
     _ = a i * orbitSum c.H0 c.U (rep i) x := by
-          rw [orbit_sum_fiber_eq_orbitSum_local c h12 rep hrep_irr hrep i x]
+          rw [orbit_sum_fiber_eq_orbitSum_local c rep hrep_irr hrep i x]
 
 /-- An `S0`-orbit is determined by any one of its members. -/
 private lemma s0Orbit_eq_of_mem_local (c : Hyp11 G) [Hyp11KData c] {α β : Irr (↥c.U)}
@@ -1756,11 +1752,11 @@ private lemma restrictU_conjChar_local (c : Hyp11 G) [Hyp11KData c] (h12 : Hyp12
       conjChar c.U (fun x : ↥c.U => S_normalizes_U c c.s c.s_mem_S x.1 x.2)
         (restrictU c h12 ν) := by
   funext u
-  simp [restrictU, conjChar, conjMonoidHom, conjIrrS]
+  simp [restrictU, conjChar, conjMonoidHom]
 
 /-- Conjugating the `S0`-orbit sum of `α` by `s` gives the `S0`-orbit sum
 of `α^s`. -/
-private lemma s0Orbit_conjIrrS_local (c : Hyp11 G) [Hyp11KData c] (hSC : Section3Hyp c)
+private lemma s0Orbit_conjIrrS_local (c : Hyp11 G) [Hyp11KData c]
     (α : Irr (↥c.U)) :
     conjChar c.U (fun x : ↥c.U => S_normalizes_U c c.s c.s_mem_S x.1 x.2)
         (∑ β ∈ s0Orbit c α, β.1) =
@@ -1825,7 +1821,7 @@ private lemma s0Orbit_conjIrrS_local (c : Hyp11 G) [Hyp11KData c] (hSC : Section
 
 set_option maxHeartbeats 1000000 in
 /-- `(χ|_{H0},ν)` is an integer for `χ ∈ ±Irr(G)`. -/
-private lemma restrict_scalarProduct_int_local (c : Hyp11 G) [Hyp11KData c] (h12 : Hyp12 c)
+private lemma restrict_scalarProduct_int_local (c : Hyp11 G) [Hyp11KData c]
     {χ : ClassFunction G} (hχ : IsPMIrr G χ)
     (rep : ClassFunction (↥c.H0)) (hrep : IsIrreducibleCharacter rep) :
     ∃ a : ℤ, scalarProduct (↥c.H0) (fun y : ↥c.H0 => χ (y : G)) rep = (a : ℂ) := by
@@ -1837,7 +1833,7 @@ private lemma restrict_scalarProduct_int_local (c : Hyp11 G) [Hyp11KData c] (h12
   have hrev : star (scalarProduct (↥c.H0) rep (fun y : ↥c.H0 => χ (y : G))) =
       scalarProduct (↥c.H0) (fun y : ↥c.H0 => χ (y : G)) rep := by
     unfold scalarProduct
-    simp [map_sum, map_mul, map_star, mul_comm, mul_left_comm, mul_assoc]
+    simp [mul_comm]
   rw [← hrev, ha]
   simp
 
@@ -1887,8 +1883,7 @@ private lemma mult_minus_tilde_mul_card_even (c : Hyp11 G) [Hyp11KData c] (h12 :
     d (repIrr p.1) * ((orbit c.H0 c.U (rep p.1)).card : ℂ)
   have hβirr : ∀ p : I, IsIrreducibleCharacter (β p) := fun p => (p.2 : Irr (↥c.U)).2
   have hβdist : Pairwise fun p q : I => β p ≠ β q := by
-    intro p q hpq
-    intro hEq
+    intro p q hpq hEq
     cases p with
     | mk i β0 =>
       cases q with
@@ -1899,7 +1894,7 @@ private lemma mult_minus_tilde_mul_card_even (c : Hyp11 G) [Hyp11KData c] (h12 :
         have hmemP : (β0 : Irr (↥c.U)) ∈ s0Orbit c (α_i i) := β0.2
         have hmemQ : (γ0 : Irr (↥c.U)) ∈ s0Orbit c (α_i j) := γ0.2
         have hmemQ' : (β0 : Irr (↥c.U)) ∈ s0Orbit c (α_i j) := by
-          simpa [hEqIrr] using hmemQ
+          simp [hEqIrr]
         have hOrb : s0Orbit c (α_i i) = s0Orbit c (α_i j) :=
           (s0Orbit_eq_of_mem_local c hmemP).symm.trans (s0Orbit_eq_of_mem_local c hmemQ')
         have hOAlpha : orbitOfAlpha c h12 hSC (α_i i) = orbitOfAlpha c h12 hSC (α_i j) := by
@@ -1928,7 +1923,7 @@ private lemma mult_minus_tilde_mul_card_even (c : Hyp11 G) [Hyp11KData c] (h12 :
     have hd_int : IsIntegral ℤ (d (repIrr p.1)) := by
       have ha : IsIntegral ℤ
           (scalarProduct (↥c.H0) (fun y : ↥c.H0 => χ (y : G)) (rep p.1)) := by
-        rcases restrict_scalarProduct_int_local c h12 hχ (rep p.1) (hrep_irr p.1) with ⟨a, ha⟩
+        rcases restrict_scalarProduct_int_local c hχ (rep p.1) (hrep_irr p.1) with ⟨a, ha⟩
         rw [ha]
         exact isIntegral_intCast a
       have he : IsIntegral ℤ (scalarProduct G χ (tildeNu c h12 (repIrr p.1))) := by
@@ -2012,7 +2007,7 @@ private lemma mult_minus_tilde_mul_card_even (c : Hyp11 G) [Hyp11KData c] (h12 :
                         rw [horbit i]
                         ring
         _ = ∑ ν : Irr (↥c.H0), d ν * ν.1 uH0 := by
-              have hmain := rep_coeff_sum_eq_orbit_sums_local c h12 rep hrep_irr hrep
+              have hmain := rep_coeff_sum_eq_orbit_sums_local c rep hrep_irr hrep
                 (fun i : ι => d (repIrr i)) uH0
               rw [← hmain]
               refine Finset.sum_congr rfl ?_
@@ -2081,7 +2076,7 @@ private lemma finset_pair_eq_of_card_two_local {α : Type u} [DecidableEq α]
     · exact hb
     · exact hx
   have hcard3 : ({a, b, x} : Finset α).card = 3 := by
-    simp [hab, hxne_a, hxne_b, hxne_a.symm, hxne_b.symm]
+    simp [hab, hxne_a.symm, hxne_b.symm]
   have hle : 3 ≤ s.card := by
     calc
       3 = ({a, b, x} : Finset α).card := hcard3.symm
@@ -2133,12 +2128,12 @@ private lemma signed_irr_eq_smul_of_pairing_ne_local {G : Type u} [Group G] [Fin
     rcases hχeq with hχeq | hχeq
     · have h' : scalarProduct G χ ψ = 0 := by
         rw [hχeq]
-        simpa [scalarProduct_irr_ite hψ₀ hψ, h]
+        simp [scalarProduct_irr_ite hψ₀ hψ, h]
       exact hne h'
     · have h' : scalarProduct G χ ψ = 0 := by
         rw [hχeq]
         rw [scalarProduct_neg_left]
-        simpa [scalarProduct_irr_ite hψ₀ hψ, h]
+        simp [scalarProduct_irr_ite hψ₀ hψ, h]
       exact hne h'
   rcases hχeq with hχeq | hχeq
   · have h1 : scalarProduct G χ ψ = 1 := by
@@ -2343,7 +2338,7 @@ private lemma orbit_card_is_pow_two_local (c : Hyp11 G) [Hyp11KData c] (h12 : Hy
   exact ⟨k, hk⟩
 
 /-- `(χ|_{H0},ν)` is a natural number for `χ ∈ Irr(G)`. -/
-private lemma restrict_mult_nat (c : Hyp11 G) [Hyp11KData c] (h12 : Hyp12 c) (χ : Irr G)
+private lemma restrict_mult_nat (c : Hyp11 G) [Hyp11KData c] (χ : Irr G)
     (ν : Irr (↥c.H0)) : ∃ r : ℕ,
       (r : ℂ) = scalarProduct (↥c.H0) (fun y : ↥c.H0 => χ.1 (y : G)) ν.1 := by
   classical
@@ -2393,7 +2388,7 @@ private lemma orbit_subset_BOf_zero_mult_false (c : Hyp11 G) [Hyp11KData c] (h12
       exact hLsubB (f μ) μ.2
     calc
       L.card = Fintype.card {μ : ClassFunction (↥c.H0) // μ ∈ L} := by
-            simpa using (Fintype.card_coe L).symm
+            simp
       _ ≤ Fintype.card (BOf c h12 χ.1) := by
             refine Fintype.card_le_of_injective (f := fun μ : {μ // μ ∈ L} => ⟨f μ, hmem μ⟩) ?_
             intro x y hEq
@@ -2464,7 +2459,7 @@ private lemma orbit_subset_BOf_zero_mult_false (c : Hyp11 G) [Hyp11KData c] (h12
         apply hμ0ν
         apply Subtype.ext
         exact hEq.symm
-      have hdisj : Theory.Character.Disjoint (tildeNu c h12 μ0) (tildeNu c h12 ν) :=
+      have hdisj : ClassFunction.Disjoint (tildeNu c h12 μ0) (tildeNu c h12 ν) :=
         tildeNu_disjoint c h12 (μ := μ0) (ν := ν) hμ0L hνμ0 hνs_ne_μ0
       have hχν : scalarProduct G χ.1 (tildeNu c h12 ν) ≠ 0 :=
         (BOf_mem_iff c h12 χ.1 ν).1 hνB
@@ -2482,7 +2477,7 @@ private lemma orbit_subset_BOf_zero_mult_false (c : Hyp11 G) [Hyp11KData c] (h12
         simpa [νs, L] using hmem)
       have hνssne : conjChar c.H0 (s_normalizes_H0 c h12) νs.1 ≠ νs.1 := by
         have hνs_coe : νs.1 = conjChar c.H0 (s_normalizes_H0 c h12) ν.1 := by
-          simpa [νs, conjIrr_coe]
+          simp [νs, conjIrr_coe]
         rw [hνs_coe]
         change conjChar c.H0 (s_normalizes_H0 c h12)
           (conjChar c.H0 (s_normalizes_H0 c h12) ν.1) ≠
@@ -2491,7 +2486,7 @@ private lemma orbit_subset_BOf_zero_mult_false (c : Hyp11 G) [Hyp11KData c] (h12
         exact fun h => hfix h.symm
       have hνscard : (orbit c.H0 c.U νs.1).card = 2 := by
         have hνs_coe : νs.1 = conjChar c.H0 (s_normalizes_H0 c h12) ν.1 := by
-          simpa [νs, conjIrr_coe]
+          simp [νs, conjIrr_coe]
         rw [hνs_coe]
         rw [orbit_conjChar_eq_local c h12 ν]
         rw [Finset.card_image_of_injOn]
@@ -2524,7 +2519,7 @@ private lemma orbit_subset_BOf_zero_mult_false (c : Hyp11 G) [Hyp11KData c] (h12
         have hchi := chi_eq_smul_tildeNu_local c h12 hχpm hνssne hνsB
         have h' := congrFun hchi c.t
         have heeq : scalarProduct G χ.1 (tildeNu c h12 νs) = ee := by
-          simpa [ee, νs, tildeNu_invariance c h12 ν]
+          simp [ee, νs, tildeNu_invariance c h12 ν]
         simpa [ee, smul_eq_mul, heeq, hnst] using h'
       have hνst : νs.1 (tH0 c) = -ν.1 (tH0 c) := by
         have hval : (conjChar c.H0 (s_normalizes_H0 c h12) ν.1) (tH0 c) =
@@ -2580,7 +2575,7 @@ private lemma exists_positive_multiplicity_in_orbit (c : Hyp11 G) [Hyp11KData c]
         μ ∈ BOf c h12 χ.1
     · exfalso
       exact orbit_subset_BOf_zero_mult_false c h12 hSC χ hνB hνs hLsubB haν0
-    · push_neg at hLsubB
+    · push Not at hLsubB
       rcases hLsubB with ⟨μ, hμL, hμBnot⟩
       have heμ : e μ = 0 := by
         by_contra hne
@@ -2595,7 +2590,7 @@ private lemma exists_positive_multiplicity_in_orbit (c : Hyp11 G) [Hyp11KData c]
           simpa [a, e, heμ, haν0, he1] using h'
         have haμ_ne : a μ ≠ 0 := by
           intro h0
-          rcases restrict_mult_nat c h12 χ μ with ⟨r, hr⟩
+          rcases restrict_mult_nat c χ μ with ⟨r, hr⟩
           have hc : (r : ℂ) = (-1 : ℂ) := by
             rw [hr]
             simpa [a] using haμ
@@ -2611,7 +2606,7 @@ private lemma exists_positive_multiplicity_in_orbit (c : Hyp11 G) [Hyp11KData c]
           simpa [a, e, heμ, haν0, hem1] using h'
         have haμ_ne : a μ ≠ 0 := by
           intro h0
-          rcases restrict_mult_nat c h12 χ μ with ⟨r, hr⟩
+          rcases restrict_mult_nat c χ μ with ⟨r, hr⟩
           have hc : (r : ℂ) = (1 : ℂ) := by
             rw [hr]
             simpa [a] using haμ
@@ -2625,7 +2620,7 @@ private lemma exists_positive_multiplicity_in_orbit (c : Hyp11 G) [Hyp11KData c]
 
 /-- If every constituent of `χ|_{H0}` with nonzero multiplicity had
 `K ≤ ker`, then `χ` would be constant on `K`, contradicting `hK`. -/
-private lemma exists_constituent_not_in_kernel (c : Hyp11 G) [Hyp11KData c] (h12 : Hyp12 c)
+private lemma exists_constituent_not_in_kernel (c : Hyp11 G) [Hyp11KData c]
     (χ : Irr G) (hK : ¬ c.K ≤ charKernel (isCharacter_of_isIrreducibleCharacter χ.2)) :
     ∃ μ : Irr (↥c.H0),
       scalarProduct (↥c.H0) (fun y : ↥c.H0 => χ.1 (y : G)) μ.1 ≠ 0 ∧
@@ -2676,7 +2671,7 @@ private lemma exists_constituent_not_in_kernel (c : Hyp11 G) [Hyp11KData c] (h12
 
 /-- The sum of degrees over the `Irr(H0)` members of a `Λ`-orbit equals the
 orbit sum of degrees. -/
-private lemma sum_irr_orbit_degree_eq (c : Hyp11 G) [Hyp11KData c] (h12 : Hyp12 c)
+private lemma sum_irr_orbit_degree_eq (c : Hyp11 G) [Hyp11KData c]
     (μ : Irr (↥c.H0)) :
     (∑ ν ∈ Finset.univ.filter (fun ν : Irr (↥c.H0) =>
         ν.1 ∈ orbit c.H0 c.U μ.1), ν.1 1) =
@@ -2724,7 +2719,7 @@ private lemma orbit_conjIrr_eq_orbitOfAlpha (c : Hyp11 G) [Hyp11KData c] (h12 : 
             S_normalizes_U c c.s c.s_mem_S x.1 x.2) (∑ β ∈ s0Orbit c α, β.1) := by
             rw [(orbitOfAlpha_spec c h12 hSC α).2 ξ (by simpa [← hOrbit] using hξ)]
       _ = ∑ β ∈ s0Orbit c (conjIrrS c c.s_mem_S α), β.1 :=
-            s0Orbit_conjIrrS_local c hSC α
+            s0Orbit_conjIrrS_local c α
 
 /-- If the orbit of `ν` is `s`-invariant, so is the orbit of `ν^s`. -/
 private lemma orbit_sInvariant_of_conj_orbit (c : Hyp11 G) [Hyp11KData c] (h12 : Hyp12 c)
@@ -2863,7 +2858,7 @@ public theorem lemma_3_6 (c : Hyp11 G) [Hyp11KData c] (h12 : Hyp12 c) (hSC : Sec
       (isGeneralizedCharacter_of_isPMIrr_local (Or.inl χ.2))
   have hχcls : IsClassFunction χ.1 :=
     isCharacter_isClassFunction (isCharacter_of_isIrreducibleCharacter χ.2)
-  rcases exists_constituent_not_in_kernel c h12 χ hK with ⟨μ, hμne, hKμ⟩
+  rcases exists_constituent_not_in_kernel c χ hK with ⟨μ, hμne, hKμ⟩
   rcases orbit_is_orbitOfAlpha c h12 hSC μ with ⟨α, hOrbit⟩
   have hKα : ¬ c.K ≤ (charKernel (isCharacter_of_isIrreducibleCharacter α.2)).map
       (Subgroup.subtype c.U) := by
@@ -2885,7 +2880,7 @@ public theorem lemma_3_6 (c : Hyp11 G) [Hyp11KData c] (h12 : Hyp12 c) (hSC : Sec
   let μs : Irr (↥c.H0) := conjIrr c h12 μ
   let αs : Irr (↥c.U) := conjIrrS c c.s_mem_S α
   have hμs_coe : μs.1 = conjChar c.H0 (s_normalizes_H0 c h12) μ.1 := by
-    simpa [μs, conjIrr_coe]
+    simp [μs, conjIrr_coe]
   have hOrbit2 : orbit c.H0 c.U μs.1 = orbitOfAlpha c h12 hSC αs := by
     simpa [μs, αs] using orbit_conjIrr_eq_orbitOfAlpha c h12 hSC α μ hOrbit
   have hOrbit_ne : orbit c.H0 c.U μs.1 ≠ orbit c.H0 c.U μ.1 := by
@@ -2963,7 +2958,7 @@ public theorem lemma_3_6 (c : Hyp11 G) [Hyp11KData c] (h12 : Hyp12 c) (hSC : Sec
       have hc := hInv1 ξ hξ'
       simpa [hOrbit] using hc
     exact hNotInv1 hfixed
-  rcases restrict_mult_nat c h12 χ μ with ⟨r0, hr0⟩
+  rcases restrict_mult_nat c χ μ with ⟨r0, hr0⟩
   have hr0_ne : r0 ≠ 0 := by
     intro h
     apply hμne
@@ -3023,7 +3018,7 @@ public theorem lemma_3_6 (c : Hyp11 G) [Hyp11KData c] (h12 : Hyp12 c) (hSC : Sec
       rw [orbit_eq_of_mem' c hξOrbit]
       exact orbit_self_mem c.H0 c.U ν0.1
     exact hOrbit2_notB ν0 (by simpa [hOrbEq] using hν0_in_ξ) hν0B
-  rcases restrict_mult_nat c h12 χ ξ with ⟨rξ, hrξ⟩
+  rcases restrict_mult_nat c χ ξ with ⟨rξ, hrξ⟩
   have hrξ_ne : rξ ≠ 0 := by
     intro h
     apply hξne
@@ -3055,7 +3050,7 @@ public theorem lemma_3_6 (c : Hyp11 G) [Hyp11KData c] (h12 : Hyp12 c) (hSC : Sec
             rw [hfν]
       _ = (r0 : ℂ) * (∑ ν ∈ L1, ν.1 1) := by rw [← Finset.mul_sum]
       _ = (r0 : ℂ) * (∑ μ0 ∈ orbit c.H0 c.U μ.1, μ0 1) := by
-            rw [sum_irr_orbit_degree_eq c h12 μ]
+            rw [sum_irr_orbit_degree_eq c μ]
   have hsumL2 : (∑ ν ∈ L2, f ν) =
       (r0 : ℂ) * (∑ μ0 ∈ orbit c.H0 c.U μs.1, μ0 1) := by
     calc
@@ -3068,7 +3063,7 @@ public theorem lemma_3_6 (c : Hyp11 G) [Hyp11KData c] (h12 : Hyp12 c) (hSC : Sec
             rw [hfν]
       _ = (r0 : ℂ) * (∑ ν ∈ L2, ν.1 1) := by rw [← Finset.mul_sum]
       _ = (r0 : ℂ) * (∑ μ0 ∈ orbit c.H0 c.U μs.1, μ0 1) := by
-            rw [sum_irr_orbit_degree_eq c h12 μs]
+            rw [sum_irr_orbit_degree_eq c μs]
   have hsplit1 : (∑ ν : Irr (↥c.H0), f ν) =
       (∑ ν ∈ L1, f ν) +
         (∑ ν ∈ Finset.univ.filter (fun ν : Irr (↥c.H0) =>
@@ -3102,7 +3097,7 @@ public theorem lemma_3_6 (c : Hyp11 G) [Hyp11KData c] (h12 : Hyp12 c) (hSC : Sec
         ν.1 ∉ orbit c.H0 c.U μ.1)).filter
           (fun ν : Irr (↥c.H0) => ν.1 ∉ orbit c.H0 c.U μs.1) = Rest := by
       ext ν
-      simp [Rest, and_assoc, and_left_comm, and_comm]
+      simp [Rest]
     rw [hL2eq, hRestEq]
   have hsum_decomp : (∑ ν : Irr (↥c.H0), f ν) =
       (∑ ν ∈ L1, f ν) + (∑ ν ∈ L2, f ν) + (∑ ν ∈ Rest, f ν) := by
@@ -3137,7 +3132,7 @@ public theorem lemma_3_6 (c : Hyp11 G) [Hyp11KData c] (h12 : Hyp12 c) (hSC : Sec
     ring
   have hRest_nonneg : ∀ ν : Irr (↥c.H0), ν ∈ Rest → 0 ≤ (f ν).re := by
     intro ν hν
-    rcases restrict_mult_nat c h12 χ ν with ⟨r, hr⟩
+    rcases restrict_mult_nat c χ ν with ⟨r, hr⟩
     have hf : (f ν).re = (r : ℝ) * (ν.1 1).re := by
       unfold f
       have hEq : a ν = (r : ℂ) := by simpa [a] using hr.symm

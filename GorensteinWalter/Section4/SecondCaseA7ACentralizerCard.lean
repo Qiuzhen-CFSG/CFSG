@@ -12,6 +12,7 @@ import GorensteinWalter.KleinFourExceptionTransport
 import GorensteinWalter.Section2.Lemma27QuotientIndex
 import Mathlib.Tactic
 
+
 /-! # The centralizer bound used in the A7 even-coset count -/
 
 noncomputable section

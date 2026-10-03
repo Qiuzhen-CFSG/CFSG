@@ -7,6 +7,7 @@ import BenderSuzuki.PFchapter2.claim_1
 import BenderSuzuki.PFchapter1section3.lemma_3
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
 
+
 namespace BenderSuzuki
 namespace PFchapter2
 
@@ -152,9 +153,9 @@ private theorem chapter2_claim12_hallWielandt_of_upperCentralSeries
     (P : Sylow p G) (H : Subgroup G)
     (hH : H = Subgroup.normalizer ((P : Subgroup G) : Set G))
     (hupper : (⊤ : Subgroup P) ≤ Subgroup.upperCentralSeries P (p - 1)) :
-    letI : (External.hallPResidual p G).Normal :=
+    let : (External.hallPResidual p G).Normal :=
       External.hallPResidual_normal p G
-    letI : (External.hallPResidual p H).Normal :=
+    let : (External.hallPResidual p H).Normal :=
       External.hallPResidual_normal p H
     Nonempty ((G ⧸ External.hallPResidual p G) ≃*
       (H ⧸ External.hallPResidual p H)) := by
@@ -1831,6 +1832,145 @@ private theorem chapter2_claim12_construct_local_index_subgroup
     Nat.card (H12 ⧸ M) = M.index := (Subgroup.index_eq_card M).symm
     _ = p := hMindex
 
+/-- In an abelian group, an involution inverts an invariant subgroup disjoint
+from its fixed points: `u * (a • u)` lies in both subgroups. -/
+private theorem chapter2_claim12_inverted_of_disjoint_fixed
+    {A U : Type*} [Group A] [Group U] [IsMulCommutative U]
+    [MulDistribMulAction A U] (F J : Subgroup U) (a : A)
+    (ha : a * a = 1) (hdis : Disjoint F J)
+    (hJ : ∀ u : U, u ∈ J → a • u ∈ J)
+    (hF : ∀ u : U, a • u = u → u ∈ F)
+    {u : U} (hu : u ∈ J) : a • u = u⁻¹ := by
+  let v : U := u * (a • u)
+  have hvJ : v ∈ J := J.mul_mem hu (hJ u hu)
+  have hvFix : a • v = v := by
+    simp only [v, smul_mul', smul_smul, ha, one_smul]
+    exact mul_comm' _ _
+  have hvOne : v = 1 :=
+    Subgroup.mem_bot.mp ((Subgroup.disjoint_def.mp hdis) (hF v hvFix) hvJ)
+  exact eq_inv_of_mul_eq_one_right hvOne
+
+/-- The same product argument applies to a fixed-point-free involution of an
+abelian group, with no subgroup or quotient constructions in the proof. -/
+private theorem chapter2_claim12_inverted_of_no_fixed_points
+    {A U : Type*} [Group A] [Group U] [IsMulCommutative U]
+    [MulDistribMulAction A U] (a : A) (ha : a * a = 1)
+    (hfix : ∀ u : U, a • u = u → u = 1) (u : U) : a • u = u⁻¹ := by
+  let v : U := u * (a • u)
+  have hvFix : a • v = v := by
+    simp only [v, smul_mul', smul_smul, ha, one_smul]
+    exact mul_comm' _ _
+  exact eq_inv_of_mul_eq_one_right (hfix v hvFix)
+
+/-- In the case `m = 1`, the centralizer decomposition gives the normalizer
+order. The subgroup of order `p²` is normal in the Sylow subgroup of order
+`p³`, which is in turn the unique Sylow subgroup of that normalizer.
+This action-free boundary keeps the cardinality calculation independent of
+the quotient actions used in the local index construction below. -/
+private theorem chapter2_claim12_sylow_normalizer_data
+    {G : Type*} [Group G] [Finite G] (p : ℕ) [Fact (Nat.Prime p)]
+    (R CQ C : Subgroup G) (R1 : Sylow p G)
+    (hR_le_C : R ≤ C) (hCQ_le_C : CQ ≤ C)
+    (hC_le_NR : C ≤ Subgroup.normalizer (R : Set G))
+    (hCdecomp : ∀ g : G, g ∈ C →
+      ∃ r q : G, r ∈ R ∧ q ∈ CQ ∧ g = r * q)
+    (hRcardTwo : Nat.card R = p ^ 2) (hCQcard : Nat.card CQ = p - 1)
+    (hNRcardFactor : Nat.card (Subgroup.normalizer (R : Set G)) = p * Nat.card C)
+    (hR_le_R1 : R ≤ (R1 : Subgroup G)) (hR1card : Nat.card R1 = p ^ 3) :
+    Nat.card (Subgroup.normalizer (R : Set G)) = p ^ 3 * (p - 1) ∧
+      (R1 : Subgroup G) ≤ Subgroup.normalizer (R : Set G) ∧
+      Subgroup.normalizer (R : Set G) ≤
+        Subgroup.normalizer ((R1 : Subgroup G) : Set G) := by
+  classical
+  let NR := Subgroup.normalizer (R : Set G)
+  let H12 := Subgroup.normalizer ((R1 : Subgroup G) : Set G)
+  have hp2 : 2 ≤ p := (Fact.out : Nat.Prime p).two_le
+  have hpPredPos : 0 < p - 1 := by omega
+  have hpPredLt : p - 1 < p := by omega
+  have hR_disj_CQ : Disjoint R CQ := by
+    let I : Subgroup G := R ⊓ CQ
+    have hIdvdR : Nat.card I ∣ p ^ 2 := by
+      rw [← hRcardTwo]
+      exact Subgroup.card_dvd_of_le inf_le_left
+    have hIdvdCQ : Nat.card I ∣ p - 1 := by
+      rw [← hCQcard]
+      exact Subgroup.card_dvd_of_le inf_le_right
+    have hpNotDvdPred : ¬ p ∣ p - 1 :=
+      Nat.not_dvd_of_pos_of_lt hpPredPos hpPredLt
+    have hcop : Nat.Coprime (p ^ 2) (p - 1) :=
+      Nat.Coprime.pow_left 2
+        ((Fact.out : Nat.Prime p).coprime_iff_not_dvd.mpr hpNotDvdPred)
+    have hIcard : Nat.card I = 1 :=
+      Nat.eq_one_of_dvd_coprimes hcop hIdvdR hIdvdCQ
+    rw [disjoint_iff]
+    exact Subgroup.card_eq_one.mp hIcard
+  have hCQ_le_NR : CQ ≤ NR := hCQ_le_C.trans hC_le_NR
+  have hsupC : R ⊔ CQ = C := by
+    apply le_antisymm (sup_le hR_le_C hCQ_le_C)
+    intro g hgC
+    rcases hCdecomp g hgC with ⟨r, q, hrR, hqCQ, rfl⟩
+    exact Subgroup.mul_mem_sup hrR hqCQ
+  have hCcard : Nat.card C = p ^ 2 * (p - 1) := by
+    calc
+      Nat.card C = Nat.card (R ⊔ CQ : Subgroup G) := by rw [hsupC]
+      _ = Nat.card R * Nat.card CQ :=
+        chapter2_claim12_natCard_sup_eq_mul_of_disjoint_of_le_normalizer
+          R CQ hCQ_le_NR hR_disj_CQ
+      _ = p ^ 2 * (p - 1) := by rw [hRcardTwo, hCQcard]
+  have hNRcard : Nat.card NR = p ^ 3 * (p - 1) := by
+    calc
+      Nat.card NR = p * Nat.card C := hNRcardFactor
+      _ = p * (p ^ 2 * (p - 1)) := by rw [hCcard]
+      _ = p ^ 3 * (p - 1) := by ring
+  let RR1 : Subgroup R1 := R.subgroupOf (R1 : Subgroup G)
+  have hRR1card : Nat.card RR1 = p ^ 2 := by
+    calc
+      Nat.card RR1 = Nat.card R :=
+        Nat.card_congr (Subgroup.subgroupOfEquivOfLe hR_le_R1).toEquiv
+      _ = p ^ 2 := hRcardTwo
+  have hRR1index : RR1.index = p := by
+    apply Nat.eq_of_mul_eq_mul_left (pow_pos (Fact.out : Nat.Prime p).pos 2)
+    calc
+      p ^ 2 * RR1.index = Nat.card RR1 * RR1.index := by rw [hRR1card]
+      _ = Nat.card R1 := RR1.card_mul_index
+      _ = p ^ 3 := hR1card
+      _ = p ^ 2 * p := by rw [pow_succ]
+  have hRR1normal : RR1.Normal :=
+    chapter2_claim12_normal_of_index_eq_prime_of_isPGroup
+      R1.isPGroup' RR1 hRR1index
+  have hR1_le_NR : (R1 : Subgroup G) ≤ NR := by
+    exact (Subgroup.normal_subgroupOf_iff_le_normalizer hR_le_R1).mp hRR1normal
+  let R1N : Subgroup NR := (R1 : Subgroup G).subgroupOf NR
+  have hR1Ncard : Nat.card R1N = p ^ 3 := by
+    calc
+      Nat.card R1N = Nat.card R1 :=
+        Nat.card_congr (Subgroup.subgroupOfEquivOfLe hR1_le_NR).toEquiv
+      _ = p ^ 3 := hR1card
+  have hR1Nindex : R1N.index = p - 1 := by
+    apply Nat.eq_of_mul_eq_mul_left (pow_pos (Fact.out : Nat.Prime p).pos 3)
+    calc
+      p ^ 3 * R1N.index = Nat.card R1N * R1N.index := by rw [hR1Ncard]
+      _ = Nat.card NR := R1N.card_mul_index
+      _ = p ^ 3 * (p - 1) := hNRcard
+  have hpNotDvdPred : ¬ p ∣ p - 1 :=
+    Nat.not_dvd_of_pos_of_lt (by omega) (by omega)
+  have hR1Np : IsPGroup p R1N := IsPGroup.of_card hR1Ncard
+  let R1Syl : Sylow p NR := hR1Np.toSylow (by simpa [hR1Nindex] using hpNotDvdPred)
+  have hSylowCard : Nat.card (Sylow p NR) = 1 := by
+    have hdiv : Nat.card (Sylow p NR) ∣ p - 1 := by
+      simpa [R1Syl, hR1Nindex] using R1Syl.card_dvd_index
+    have hle : Nat.card (Sylow p NR) ≤ p - 1 :=
+      Nat.le_of_dvd hpPredPos hdiv
+    have hlt : Nat.card (Sylow p NR) < p := hle.trans_lt hpPredLt
+    exact (card_sylow_modEq_one p NR).eq_of_lt_of_lt hlt (Fact.out : Nat.Prime p).one_lt
+  let : Subsingleton (Sylow p NR) := (Nat.card_eq_one_iff_unique.mp hSylowCard).1
+  have hR1Nnormal : R1N.Normal := by
+    simpa [R1Syl] using Sylow.normal_of_subsingleton R1Syl
+  have hNR_le_H12 : NR ≤ H12 := by
+    change NR ≤ Subgroup.normalizer ((R1 : Subgroup G) : Set G)
+    exact (Subgroup.normal_subgroupOf_iff_le_normalizer hR1_le_NR).mp hR1Nnormal
+  exact ⟨hNRcard, hR1_le_NR, hNR_le_H12⟩
+
 set_option backward.isDefEq.respectTransparency false in
 /-- After the Sylow subgroup and Hall--Wielandt quotient are fixed, construct
 the local normal subgroup of index `p`. -/
@@ -1909,9 +2049,6 @@ private theorem chapter2_claim12_local_index_after_sylow
   let C : Subgroup G := Subgroup.centralizer (P : Set G)
   let NR : Subgroup G := Subgroup.normalizer (R : Set G)
   let CQ : Subgroup G := Q ⊓ Subgroup.centralizer (P : Set G)
-  have hp2 : 2 ≤ p := hch.B1.p_prime.two_le
-  have hpPredPos : 0 < p - 1 := by omega
-  have hpPredLt : p - 1 < p := by omega
   rcases hCaseOneMOne hm1 with
     ⟨hsCQ, hCQCommS, hSigmaBot, hCdecomp⟩
   have hP_le_C : P ≤ C := by
@@ -1948,90 +2085,12 @@ private theorem chapter2_claim12_local_index_after_sylow
     omega
   have hRcardTwo : Nat.card R = p ^ 2 := by
     simpa [hm1] using hCaseOne.2.1
-  have hR_disj_CQ : Disjoint R CQ := by
-    let I : Subgroup G := R ⊓ CQ
-    have hIdvdR : Nat.card I ∣ p ^ 2 := by
-      rw [← hRcardTwo]
-      exact Subgroup.card_dvd_of_le inf_le_left
-    have hIdvdCQ : Nat.card I ∣ p - 1 := by
-      rw [← hCQcard]
-      exact Subgroup.card_dvd_of_le inf_le_right
-    have hpNotDvdPred : ¬ p ∣ p - 1 :=
-      Nat.not_dvd_of_pos_of_lt hpPredPos hpPredLt
-    have hcop : Nat.Coprime (p ^ 2) (p - 1) :=
-      Nat.Coprime.pow_left 2
-        (hch.B1.p_prime.coprime_iff_not_dvd.mpr hpNotDvdPred)
-    have hIcard : Nat.card I = 1 :=
-      Nat.eq_one_of_dvd_coprimes hcop hIdvdR hIdvdCQ
-    rw [disjoint_iff]
-    exact Subgroup.card_eq_one.mp hIcard
-  have hCQ_le_C : CQ ≤ C := by exact inf_le_right
-  have hCQ_le_NR : CQ ≤ NR := hCQ_le_C.trans hC_le_NR
-  have hsupC : R ⊔ CQ = C := by
-    apply le_antisymm (sup_le hR_le_C hCQ_le_C)
-    intro g hgC
-    rcases hCdecomp g (by simpa [C] using hgC) with ⟨r, q, hrR, hqCQ, rfl⟩
-    exact Subgroup.mul_mem_sup hrR hqCQ
-  have hCcard : Nat.card C = p ^ 2 * (p - 1) := by
-    calc
-      Nat.card C = Nat.card (R ⊔ CQ : Subgroup G) := by rw [hsupC]
-      _ = Nat.card R * Nat.card CQ :=
-        chapter2_claim12_natCard_sup_eq_mul_of_disjoint_of_le_normalizer
-          R CQ hCQ_le_NR hR_disj_CQ
-      _ = p ^ 2 * (p - 1) := by rw [hRcardTwo, hCQcard]
-  have hNRcard : Nat.card NR = p ^ 3 * (p - 1) := by
-    calc
-      Nat.card NR = p ^ m * Nat.card C := by
-        simpa [NR, C] using hNRcardFactor
-      _ = p ^ 1 * (p ^ 2 * (p - 1)) := by rw [hm1, hCcard]
-      _ = p ^ 3 * (p - 1) := by ring
+  have hCQ_le_NR : CQ ≤ NR := inf_le_right.trans hC_le_NR
+  obtain ⟨hNRcard, hR1_le_NR, hNR_le_H12⟩ :=
+    chapter2_claim12_sylow_normalizer_data p R CQ C R1
+      hR_le_C inf_le_right hC_le_NR hCdecomp hRcardTwo hCQcard
+      (by simpa only [hm1, pow_one] using hNRcardFactor) hR_le_R1 hR1card
   let RR1 : Subgroup R1 := R.subgroupOf (R1 : Subgroup G)
-  have hRR1card : Nat.card RR1 = p ^ 2 := by
-    calc
-      Nat.card RR1 = Nat.card R :=
-        Nat.card_congr (Subgroup.subgroupOfEquivOfLe hR_le_R1).toEquiv
-      _ = p ^ 2 := hRcardTwo
-  have hRR1index : RR1.index = p := by
-    apply Nat.eq_of_mul_eq_mul_left (pow_pos hch.B1.p_prime.pos 2)
-    calc
-      p ^ 2 * RR1.index = Nat.card RR1 * RR1.index := by rw [hRR1card]
-      _ = Nat.card R1 := RR1.card_mul_index
-      _ = p ^ 3 := hR1card
-      _ = p ^ 2 * p := by rw [pow_succ]
-  have hRR1normal : RR1.Normal :=
-    chapter2_claim12_normal_of_index_eq_prime_of_isPGroup
-      R1.isPGroup' RR1 hRR1index
-  have hR1_le_NR : (R1 : Subgroup G) ≤ NR := by
-    exact (Subgroup.normal_subgroupOf_iff_le_normalizer hR_le_R1).mp hRR1normal
-  let R1N : Subgroup NR := (R1 : Subgroup G).subgroupOf NR
-  have hR1Ncard : Nat.card R1N = p ^ 3 := by
-    calc
-      Nat.card R1N = Nat.card R1 :=
-        Nat.card_congr (Subgroup.subgroupOfEquivOfLe hR1_le_NR).toEquiv
-      _ = p ^ 3 := hR1card
-  have hR1Nindex : R1N.index = p - 1 := by
-    apply Nat.eq_of_mul_eq_mul_left (pow_pos hch.B1.p_prime.pos 3)
-    calc
-      p ^ 3 * R1N.index = Nat.card R1N * R1N.index := by rw [hR1Ncard]
-      _ = Nat.card NR := R1N.card_mul_index
-      _ = p ^ 3 * (p - 1) := hNRcard
-  have hpNotDvdPred : ¬ p ∣ p - 1 :=
-    Nat.not_dvd_of_pos_of_lt (by omega) (by omega)
-  have hR1Np : IsPGroup p R1N := IsPGroup.of_card hR1Ncard
-  let R1Syl : Sylow p NR := hR1Np.toSylow (by simpa [hR1Nindex] using hpNotDvdPred)
-  have hSylowCard : Nat.card (Sylow p NR) = 1 := by
-    have hdiv : Nat.card (Sylow p NR) ∣ p - 1 := by
-      simpa [R1Syl, hR1Nindex] using R1Syl.card_dvd_index
-    have hle : Nat.card (Sylow p NR) ≤ p - 1 :=
-      Nat.le_of_dvd hpPredPos hdiv
-    have hlt : Nat.card (Sylow p NR) < p := hle.trans_lt hpPredLt
-    exact (card_sylow_modEq_one p NR).eq_of_lt_of_lt hlt hch.B1.p_prime.one_lt
-  let : Subsingleton (Sylow p NR) := (Nat.card_eq_one_iff_unique.mp hSylowCard).1
-  have hR1Nnormal : R1N.Normal := by
-    simpa [R1Syl] using Sylow.normal_of_subsingleton R1Syl
-  have hNR_le_H12 : NR ≤ H12 := by
-    change NR ≤ Subgroup.normalizer ((R1 : Subgroup G) : Set G)
-    exact (Subgroup.normal_subgroupOf_iff_le_normalizer hR1_le_NR).mp hR1Nnormal
   have hT_le_R1 : T ≤ (R1 : Subgroup G) :=
     (show T ≤ R from hR.1.symm ▸ le_sup_left).trans hR_le_R1
   have hR1_le_normalizer_T :
@@ -2540,22 +2599,14 @@ private theorem chapter2_claim12_local_index_after_sylow
       (N := TR1) Jcomm hqU_compat
   let : IsInvariant A R1 T1R := hT1RinvA
   have hJcomm_inverted {u : U} (hu : u ∈ Jcomm) : sA • u = u⁻¹ := by
-    let v : U := u * (sA • u)
-    have hvJ : v ∈ Jcomm := by
-      exact Jcomm.mul_mem hu ((IsInvariant.invariant sA u).mp hu)
-    have hvFixedGen : sA • v = v := by
-      simp only [v, smul_mul', smul_smul, hsA_sq, one_smul]
-      exact mul_comm' _ _
-    have hvF : v ∈ Ffix := by
-      change ∀ a : A, a • v = v
-      intro a
-      apply smul_eq_self_of_mem_zpowers (y := sA) ?_ hvFixedGen
-      rcases Subgroup.mem_zpowers_iff.mp a.property with ⟨n, hn⟩
-      exact Subgroup.mem_zpowers_iff.mpr ⟨n, Subtype.ext hn⟩
-    have hvBot : v ∈ (⊥ : Subgroup U) :=
-      (Subgroup.disjoint_def.mp hFJcompl.disjoint) hvF hvJ
-    have hvOne : v = 1 := Subgroup.mem_bot.mp hvBot
-    exact eq_inv_of_mul_eq_one_right hvOne
+    apply chapter2_claim12_inverted_of_disjoint_fixed Ffix Jcomm sA hsA_sq
+      hFJcompl.disjoint (fun u hu => (IsInvariant.invariant sA u).mp hu) ?_ hu
+    intro v hvFixedGen
+    change ∀ a : A, a • v = v
+    intro a
+    apply smul_eq_self_of_mem_zpowers (y := sA) ?_ hvFixedGen
+    rcases Subgroup.mem_zpowers_iff.mp a.property with ⟨n, hn⟩
+    exact Subgroup.mem_zpowers_iff.mpr ⟨n, Subtype.ext hn⟩
   have hs_fixed_T1R_eq_one {x : T1R} (hxfix : sA • x = x) : x = 1 := by
     have hqxJ : qU (x : R1) ∈ Jcomm := x.property
     have hqxFix : sA • qU (x : R1) = qU (x : R1) := by
@@ -2597,14 +2648,10 @@ private theorem chapter2_claim12_local_index_after_sylow
       (⊤ : Subgroup T1R) htopOdd (show x ∈ (⊤ : Subgroup T1R) by trivial))
       ⟨hxOne, hxSq⟩
   have hT1R_inverted (x : T1R) : sA • x = x⁻¹ := by
-    let v : T1R := x * (sA • x)
-    have hvfix : sA • v = v := by
-      let : IsMulCommutative T1R :=
-        IsPGroup.isMulCommutative_of_card_eq_prime_sq hT1Rcard
-      simp only [v, smul_mul', smul_smul, hsA_sq, one_smul]
-      exact mul_comm' _ _
-    have hvOne : v = 1 := hs_fixed_T1R_eq_one hvfix
-    exact eq_inv_of_mul_eq_one_right hvOne
+    let : IsMulCommutative T1R :=
+      IsPGroup.isMulCommutative_of_card_eq_prime_sq hT1Rcard
+    exact chapter2_claim12_inverted_of_no_fixed_points sA hsA_sq
+      (fun _ hxfix => hs_fixed_T1R_eq_one hxfix) x
   have hT1_inverted : ∀ x : G, x ∈ T1 →
       rightConjugateElem x s = x⁻¹ := by
     intro x hxT1
@@ -2950,9 +2997,9 @@ private theorem chapter2_claim12_case_10_1_local_hall_index_source_interface
     (hcase10_1 :
       ¬ p ∣ Nat.card Sigma ∧ (∃ k u : ℕ, p ^ (m + 2) = p ^ k ∧ Nat.card G = p ^ (m + 2) * u ∧ ¬ p ∣ u)) :
     ∃ H12 : Subgroup G,
-      letI : (External.hallPResidual p G).Normal :=
+      let : (External.hallPResidual p G).Normal :=
         External.hallPResidual_normal p G
-      letI : (External.hallPResidual p H12).Normal :=
+      let : (External.hallPResidual p H12).Normal :=
         External.hallPResidual_normal p H12
       Nonempty ((G ⧸ External.hallPResidual p G) ≃*
         (H12 ⧸ External.hallPResidual p H12)) ∧
@@ -2968,9 +3015,9 @@ private theorem chapter2_claim12_case_10_1_local_hall_index_source_interface
       ∃ R1 : Sylow p G,
         m = 1 ∧ R ≤ (R1 : Subgroup G) ∧ Nat.card R1 = p ^ 3 ∧
           let H12 : Subgroup G := Subgroup.normalizer ((R1 : Subgroup G) : Set G)
-          letI : (External.hallPResidual p G).Normal :=
+          let : (External.hallPResidual p G).Normal :=
             External.hallPResidual_normal p G
-          letI : (External.hallPResidual p H12).Normal :=
+          let : (External.hallPResidual p H12).Normal :=
             External.hallPResidual_normal p H12
           Nonempty ((G ⧸ External.hallPResidual p G) ≃*
             (H12 ⧸ External.hallPResidual p H12)) := by
@@ -3243,3 +3290,4 @@ public theorem claim_12
 
 end PFchapter2
 end BenderSuzuki
+

@@ -27,6 +27,7 @@ public import BenderGlauberman.TheoremC
 import all BenderGlauberman.Defs
 import FeitThompson.FinalTheorem
 
+
 noncomputable section
 
 namespace GorensteinWalter
@@ -102,7 +103,7 @@ public theorem firstCase_cyclic_K2_abelian_normal
 /-- The first-case subgroup `A = B₁ ∩ K₂` is abelian. -/
 public theorem firstCase_cyclic_A_abelian
     {G : Type u} [Group G] [Finite G]
-    (hmin : IsMinimalCounterexample G)
+    (_hmin : IsMinimalCounterexample G)
     (c : CentralizerSetup G)
     (d : FirstCaseBGData c)
     [hK : BenderGlauberman.Hyp11KData d.bg] :
@@ -124,7 +125,7 @@ public theorem firstCase_cyclic_A_abelian
 `K₂`). -/
 public theorem firstCase_cyclic_K_abelian
     {G : Type u} [Group G] [Finite G]
-    (hmin : IsMinimalCounterexample G)
+    (_hmin : IsMinimalCounterexample G)
     (c : CentralizerSetup G)
     (d : FirstCaseBGData c)
     [hK : BenderGlauberman.Hyp11KData d.bg] :
@@ -146,7 +147,7 @@ public theorem firstCase_cyclic_K_abelian
 /-- In the first case, `B = C_U(S)` normalizes `K = K₁ ∩ K₂`. -/
 public theorem firstCase_cyclic_B_normalizes_K
     {G : Type u} [Group G] [Finite G]
-    (hmin : IsMinimalCounterexample G)
+    (_hmin : IsMinimalCounterexample G)
     (c : CentralizerSetup G)
     (d : FirstCaseBGData c)
     [hK : BenderGlauberman.Hyp11KData d.bg] :
@@ -171,7 +172,7 @@ public theorem firstCase_cyclic_B_normalizes_K
 /-- The intersection `B ∩ K` is trivial in the first case. -/
 public theorem firstCase_cyclic_B_inter_K_eq_bot
     {G : Type u} [Group G] [Finite G]
-    (hmin : IsMinimalCounterexample G)
+    (_hmin : IsMinimalCounterexample G)
     (c : CentralizerSetup G)
     (d : FirstCaseBGData c)
     [hK : BenderGlauberman.Hyp11KData d.bg] :
@@ -247,7 +248,7 @@ private theorem firstCase_cyclic_mem_BK_product
 `b ∈ B` and `k ∈ K`. -/
 public theorem firstCase_cyclic_BK_product
     {G : Type u} [Group G] [Finite G]
-    (hmin : IsMinimalCounterexample G)
+    (_hmin : IsMinimalCounterexample G)
     (c : CentralizerSetup G)
     (d : FirstCaseBGData c)
     [hK : BenderGlauberman.Hyp11KData d.bg] {x : G}
@@ -267,7 +268,7 @@ public theorem firstCase_cyclic_BK_product
 /-- The intersection `(B₁ ∩ K₂) ∩ (B ⊔ K)` is trivial in the first case. -/
 public theorem firstCase_cyclic_A_inter_BK_eq_bot
     {G : Type u} [Group G] [Finite G]
-    (hmin : IsMinimalCounterexample G)
+    (_hmin : IsMinimalCounterexample G)
     (c : CentralizerSetup G)
     (d : FirstCaseBGData c)
     [hK : BenderGlauberman.Hyp11KData d.bg] :
@@ -431,7 +432,7 @@ public theorem firstCase_cyclic_K_card_coprime_H_index
 the first-case decomposition `U = F(U)·B` is the Theorem-C product. -/
 private theorem firstCase_cyclic_U_eq_A_sup_BK_of_a7model
     {G : Type u} [Group G] [Finite G]
-    (hmin : IsMinimalCounterexample G)
+    (_hmin : IsMinimalCounterexample G)
     (c : CentralizerSetup G)
     (d : FirstCaseBGData c)
     [hK : BenderGlauberman.Hyp11KData d.bg]
@@ -450,7 +451,7 @@ private theorem firstCase_cyclic_U_eq_A_sup_BK_of_a7model
           (fittingSubgroup d.bg.U).subtype).map d.bg.U.subtype :=
     fittingSubgroupOf_eq_qCore_sup_pPrimeCore_map d.bg.U 3
   rw [hU0, hfit]
-  simp [hAeq, hKeq, sup_assoc, sup_comm, sup_left_comm]
+  simp [hAeq, hKeq, sup_comm, sup_left_comm]
 
 /-- Given the A₇-model identities and the centrality of `O₃(U)` in
 `B·O₃′(F(U))`, the commutator input of Theorem C is trivial. -/
@@ -594,7 +595,7 @@ public theorem firstCase_cyclic_theoremC_inputs_of_a7model
 /-- The intersection `(B₁ ∩ K₂) ∩ B` is trivial in the first case. -/
 public theorem firstCase_cyclic_A_inter_B_eq_bot
     {G : Type u} [Group G] [Finite G]
-    (hmin : IsMinimalCounterexample G)
+    (_hmin : IsMinimalCounterexample G)
     (c : CentralizerSetup G)
     (d : FirstCaseBGData c)
     [hK : BenderGlauberman.Hyp11KData d.bg] :
@@ -794,7 +795,7 @@ public theorem firstCase_cyclic_component_isDGroup
     intro htop
     have hMtop : M = ⊤ := le_antisymm (le_top) (by
       intro x hx
-      exact hE.1 (by simpa [htop] using hx))
+      exact hE.1 (by simp [htop]))
     exact hMmax.1 hMtop
   have hD : IsDGroup (↥E) := properSubgroups_areDGroups hmin E hEproper
   exact ⟨M, E, hMmax, hE, hD⟩
@@ -914,7 +915,7 @@ public theorem firstCase_cyclic_componentLayer_isDGroup
     have hle : componentLayerOf M ≤ M := (componentLayerOf_isNormalIn M).1
     have hMtop : M = ⊤ := le_antisymm le_top (by
       intro x hx
-      exact hle (by simpa [htop] using hx))
+      exact hle (by simp [htop]))
     exact hMmax.1 hMtop
   exact ⟨M, hMmax, properSubgroups_areDGroups hmin (componentLayerOf M) hproper⟩
 
@@ -950,7 +951,7 @@ public theorem firstCase_cyclic_componentLayer_model
 
 public theorem firstCase_cyclic_componentLayer_ker_le_oddCore
     {G : Type u} [Group G] [Finite G]
-    (L E0 : Subgroup G) (hE0L : E0 ≤ L)
+    (L E0 : Subgroup G) (_hE0L : E0 ≤ L)
     (hOmap_norm : ∀ e : G, e ∈ E0 →
       ∀ x : G, x ∈ (pPrimeCore 2 (↥L)).map L.subtype →
         e * x * e⁻¹ ∈ (pPrimeCore 2 (↥L)).map L.subtype) :
@@ -1016,7 +1017,7 @@ public theorem firstCase_cyclic_componentLayer_notTwo
     have hle : L ≤ M := (componentLayerOf_isNormalIn M).1
     have hMtop : M = ⊤ := le_antisymm le_top (by
       intro x hx
-      exact hle (by simpa [htop] using hx))
+      exact hle (by simp [htop]))
     exact hMmax.1 hMtop
   have hD_layer : IsDGroup (↥L) := properSubgroups_areDGroups hmin L hproper
   rcases hD_layer with ⟨_hSylow, htwo⟩ | ⟨_hSylow, hA7⟩ |
@@ -1114,7 +1115,7 @@ public theorem firstCase_cyclic_componentLayer_model_noTwo
     have hle : L ≤ M := (componentLayerOf_isNormalIn M).1
     have hMtop : M = ⊤ := le_antisymm le_top (by
       intro x hx
-      exact hle (by simpa [htop] using hx))
+      exact hle (by simp [htop]))
     exact hMmax.1 hMtop
   have hD : IsDGroup (↥L) := properSubgroups_areDGroups hmin L hproper
   rcases hD with ⟨_hSylow, htwo⟩ | ⟨_hSylow, hA7⟩ |
@@ -1527,7 +1528,7 @@ public theorem firstCase_cyclic_m_quotient_a7_of_layer_a7
 /-- The odd core of the component layer is central in the layer. -/
 public theorem firstCase_cyclic_layer_oddCore_le_center
     {G : Type u} [Group G] [Finite G]
-    {M : Subgroup G} (hMmax : IsCoatom M) :
+    {M : Subgroup G} (_hMmax : IsCoatom M) :
     (pPrimeCore 2 (↥(componentLayerOf M))).map
         (componentLayerOf M).subtype ≤
       (Subgroup.center (↥(componentLayerOf M))).map
@@ -1587,7 +1588,7 @@ public theorem firstCase_cyclic_layer_oddCore_le_center
   refine Subgroup.mem_map.mpr ⟨o, ?_, rfl⟩
   rw [Subgroup.mem_center_iff]
   intro y
-  have hyE : (y : G) ∈ E := by simpa [E] using y.2
+  have hyE : (y : G) ∈ E := by simp [E]
   have hycent := (Subgroup.mem_centralizer_iff.mp
     (hE_cent hyE)) o
     (Subgroup.mem_map.mpr ⟨o, ho, rfl⟩)
@@ -1603,7 +1604,7 @@ private theorem firstCase_cyclic_layer_oddCore_meets_inverted_no
     (fd : FirstCaseFourData c od.d)
     {M X : Subgroup G} (hMmax : IsCoatom M)
     (hV2 : fd.V2 ≤ componentLayerOf M)
-    (hXleL : X ≤ componentLayerOf M) (hXne : X ≠ ⊥)
+    (_hXleL : X ≤ componentLayerOf M) (hXne : X ≠ ⊥)
     (hXp : IsPGroup od.p X)
     (hXinv : BenderGlauberman.IsInvertedBy od.d.bg.t2 X)
     (hXleO : X ≤ (pPrimeCore 2 (↥(componentLayerOf M))).map
@@ -1647,7 +1648,7 @@ public theorem firstCase_cyclic_layer_inverted_inf_oddCore_eq_bot
     (fd : FirstCaseFourData c od.d)
     {M X : Subgroup G} (hMmax : IsCoatom M)
     (hV2 : fd.V2 ≤ componentLayerOf M)
-    (hXleL : X ≤ componentLayerOf M) (hXne : X ≠ ⊥)
+    (hXleL : X ≤ componentLayerOf M) (_hXne : X ≠ ⊥)
     (hXp : IsPGroup od.p X)
     (hXinv : BenderGlauberman.IsInvertedBy od.d.bg.t2 X) :
     X ⊓ ((pPrimeCore 2 (↥(componentLayerOf M))).map
@@ -1728,10 +1729,10 @@ public theorem firstCase_cyclic_layer_inverted_quotient_ne_bot
 necessarily `3`. -/
 public theorem firstCase_cyclic_oriented_prime_eq_three_of_aSeven_layer
     {G : Type u} [Group G] [Finite G]
-    (hmin : IsMinimalCounterexample G)
+    (_hmin : IsMinimalCounterexample G)
     (c : CentralizerSetup G)
-    (hfirst : FirstCase c)
-    (hcyclic : twoCoreOf c.Hhat ≤ c.S0)
+    (_hfirst : FirstCase c)
+    (_hcyclic : twoCoreOf c.Hhat ≤ c.S0)
     (od : FirstCaseOrientedPrimeData c)
     (fd : FirstCaseFourData c od.d)
     (M X : Subgroup G) (hMmax : IsCoatom M)
@@ -1925,7 +1926,7 @@ public theorem firstCase_cyclic_B_odd
     {G : Type u} [Group G] [Finite G]
     (c : CentralizerSetup G)
     (od : FirstCaseOrientedPrimeData c)
-    (hU : od.d.bg.U = fittingSubgroupOf od.d.bg.U ⊔ od.d.bg.B) :
+    (_hU : od.d.bg.U = fittingSubgroupOf od.d.bg.U ⊔ od.d.bg.B) :
     Odd (Nat.card (↥od.d.bg.B)) := by
   have hUodd : Nat.Coprime 2 (Nat.card c.U) := by
     change Nat.Coprime 2
@@ -1999,7 +2000,7 @@ public theorem firstCase_cyclic_B_inter_M_le_oddCore_of_a7model
     (od : FirstCaseOrientedPrimeData c)
     (hU : od.d.bg.U = fittingSubgroupOf od.d.bg.U ⊔ od.d.bg.B)
     (M : Subgroup G)
-    (hSM : (c.S : Subgroup G) ≤ M)
+    (_hSM : (c.S : Subgroup G) ≤ M)
     (e : Nonempty (M ⧸ pPrimeCore 2 M ≃* alternatingGroup (Fin 7)))
     (Sbar : Sylow 2 (alternatingGroup (Fin 7)))
     (hSbar : ((c.S : Subgroup G).subgroupOf M).map
@@ -2031,7 +2032,7 @@ public theorem firstCase_cyclic_B_inter_M_le_oddCore_of_a7model
       Subgroup.centralizer ((c.S : Subgroup G) : Set G) := by
     have h := (B_eq_centralizer_U od.d.bg)
     rw [h]
-    simpa [od.d.S_eq] using inf_le_right
+    simp [od.d.S_eq]
   have hB0centS : B0 ≤ Subgroup.centralizer (S0 : Set M) := by
     intro b hb
     rw [Subgroup.mem_centralizer_iff]
@@ -2258,7 +2259,7 @@ public theorem firstCase_cyclic_layer_inverted_and_DGroup_of_od
       have hle : componentLayerOf M ≤ M := (componentLayerOf_isNormalIn M).1
       have hMtop : M = ⊤ := le_antisymm le_top (by
         intro x hx
-        exact hle (by simpa [htop] using hx))
+        exact hle (by simp [htop]))
       exact hMmax.1 hMtop)
   exact ⟨hU, fd, Q, M, X, hMmax, hMN, hSM, hV2, hXleE, hXne,
     hXcyc, hXp, hXleP, hXinv, hXleC, hD⟩

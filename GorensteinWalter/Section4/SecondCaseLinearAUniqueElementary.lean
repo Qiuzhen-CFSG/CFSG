@@ -5,6 +5,7 @@ public import GorensteinWalter.Section4.SecondCaseLinearEquationElevenData
 public import GorensteinWalter.Section4.SecondCaseLinearOmegaFixedPart
 import Mathlib.Tactic
 
+
 /-!
 # The elementary order-`p²` subgroup in `F ⊔ K₀`
 

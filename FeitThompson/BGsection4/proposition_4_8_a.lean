@@ -1,6 +1,7 @@
 module
 
 public import FeitThompson.BGsection4.gorenstein_5_4_15
+
 /-! # Proposition 4.8(a) from BG Section 4 -/
 
 section Main
@@ -12,7 +13,7 @@ public theorem proposition_4_8_a {R : Type*} [Group R] [Finite R] {p : ℕ} [Fac
     Nat.card R ≤ p ^ 3 := by
   classical
   obtain ⟨A, hAnorm, hAcomm, hAmax⟩ := exists_maximal_normal_abelian_subgroup_local' (G := R)
-  letI : A.Normal := hAnorm
+  let : A.Normal := hAnorm
   have hAcent_le : Subgroup.centralizer (A : Set R) ≤ A :=
     maximal_normal_abelian_selfCentralizing_local (G := R) (p := p) A hAnorm hAcomm hAmax
   have hA_le_cent : A ≤ Subgroup.centralizer (A : Set R) :=

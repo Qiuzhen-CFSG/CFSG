@@ -4,6 +4,7 @@ public import GorensteinWalter.Section4.SecondCaseA7AmbientModel
 import Mathlib.GroupTheory.IndexNormal
 import Mathlib.Tactic
 
+
 /-!
 # A maximal A₇-quotient subgroup cannot have index at most seven
 

@@ -1,6 +1,6 @@
 module
 
-public import FeitThompson.GroupAction.Lemmas
+public import Theory.GroupAction.Lemmas
 public import Mathlib.GroupTheory.Index
 import Mathlib.Tactic
 

@@ -5,6 +5,7 @@ public import FeitThompson.BGsection4.theorem_4_20_a
 import Mathlib.GroupTheory.Schreier
 import Mathlib.GroupTheory.Subgroup.Centralizer
 
+
 open scoped Pointwise commutatorElement
 
 /-!
@@ -713,7 +714,8 @@ private theorem section9_centerIn_ne_bot_of_isPGroup_ne_bot
     have hzCenterIn : ((z : S) : G) ∈ centerIn (G := G) S := by
       simpa [centerIn_eq_map_center_local] using hzMap
     have hzBot : ((z : S) : G) ∈ (⊥ : Subgroup G) := by
-      simpa [hcenterIn_bot] using hzCenterIn
+      rw [← hcenterIn_bot]
+      exact hzCenterIn
     have hz_one : ((z : S) : G) = 1 := by simpa using hzBot
     exact Subtype.ext hz_one
   · intro hz
@@ -994,7 +996,7 @@ omit [Finite G] [IsMinCE G] in
 private theorem section9_t91_primeRank_le_natCard
     {p : ℕ} (R : Type*) [Group R] [Finite R] :
     primeRank p R ≤ Nat.card R := by
-  rw [primeRank]
+  rw [primeRank_eq_sSup_generatorRank]
   refine csSup_le ?_ ?_
   · exact ⟨0, ⊥, IsPGroup.of_bot (p := p) (G := R), inferInstance, Nat.zero_le _⟩
   · intro n hn
@@ -1027,7 +1029,7 @@ public theorem section9_t91_exists_pSubgroup_three_le_generatorRank_of_three_le_
     {n : ℕ | ∃ A : Subgroup R, IsPGroup q A ∧ IsMulCommutative A ∧
       n ≤ generatorRank A}
   have hqrank' : 2 < sSup T := by
-    simpa [primeRank, T] using hqrank
+    simpa [primeRank_eq_sSup_generatorRank, T] using hqrank
   have hTbdd : BddAbove T := by
     refine ⟨Nat.card R, ?_⟩
     intro n hn
@@ -1308,7 +1310,7 @@ private theorem section9_t91_primeRank_at_least_three_of_generatorRank_subgroup
   have hgen_eq : generatorRank A' = generatorRank A := by
     rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
     exact Group.rank_congr (Subgroup.subgroupOfEquivOfLe (H := A) (K := K) hAK)
-  rw [primeRank]
+  rw [primeRank_eq_sSup_generatorRank]
   refine le_csSup ?_ ?_
   · refine ⟨Nat.card K, ?_⟩
     intro n hn

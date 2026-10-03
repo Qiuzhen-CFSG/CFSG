@@ -4,6 +4,7 @@ public import GorensteinWalter.Defs
 public import GorensteinWalter.PGL2Center
 public import GorensteinWalter.PSL2Center
 
+
 /-!
 # Section 2 preamble equality `H = S U`
 

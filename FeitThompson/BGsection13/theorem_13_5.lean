@@ -1,9 +1,10 @@
 module
 
 public import FeitThompson.BGsection13.theorem_13_4
-import FeitThompson.HallSubgroups.Conjugacy
+public import Theory.GroupTheory.Hall.Conjugacy
 import Mathlib.Data.Finset.NatDivisors
 import Mathlib.GroupTheory.Schreier
+
 
 open scoped Pointwise
 
@@ -53,7 +54,7 @@ public theorem section13_exists_prime_order_subgroup_le_ambient_sylow
     ∃ R : Subgroup G,
       R ≤ section10AmbientSylowSubgroup A S ∧ Nat.card R = q.val := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   obtain ⟨n, hncard⟩ := S.isPGroup'.exists_card_eq
   have hn_ne_zero : n ≠ 0 := by
     intro hn0
@@ -90,7 +91,7 @@ private theorem section13_E1_sylow_as_E_sylow
       section10AmbientSylowSubgroup E T = section10AmbientSylowSubgroup E₁ S ∧
         IsCyclic (T : Subgroup E) := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   rcases hE with ⟨_hcomp, hE₁₂, hE₁, _hE₂, _hE₃⟩
   rcases section12_E1_hall_in_E (G := G) hE₁₂ hE₁ with ⟨hE₁E, hHallE₁E⟩
   let f : E₁ →* E := E₁.subtype.codRestrict E (fun x => hE₁E x.property)
@@ -126,7 +127,7 @@ private theorem section13_E1_sylow_as_E_sylow
       exact (hHallE₁E.p_in_pi_of_p_dvd_index q (by simpa [hrange_eq] using hqrange)) hqτ1
   let T : Sylow q.val E := hKp.toSylow hK_not_index
   have hTcyc : IsCyclic (T : Subgroup E) := by
-    haveI : IsCyclic E₁ := hE₁cyc
+    have : IsCyclic E₁ := hE₁cyc
     have hScyc : IsCyclic (S : Subgroup E₁) := inferInstance
     have hKcyc : IsCyclic K :=
       (Subgroup.equivMapOfInjective (f := f) (S : Subgroup E₁) hf_inj).isCyclic.1 hScyc
@@ -163,7 +164,7 @@ private theorem section13_E1_sylow_component_centralizes
     section10AmbientSylowSubgroup E₁ S ≤
       Subgroup.centralizer (subgroupCentralizerIn (section10Msigma M) P : Set G) := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   rcases hE with ⟨hcomp, hE₁₂, hE₁, hE₂, hE₃⟩
   rcases section12_E1_hall_in_E (G := G) hE₁₂ hE₁ with ⟨hE₁E, _hHallE₁E⟩
   have hEdata : section12EData M E E₁₂ E₁ E₂ E₃ :=
@@ -184,7 +185,7 @@ private theorem section13_E1_sylow_component_centralizes
   have hR_le_E₁ : R ≤ E₁ :=
     hR_le_S.trans (section13_ambient_sylow_le_base (G := G) E₁ S)
   have hR_cent_P : R ≤ Subgroup.centralizer (P : Set G) := by
-    haveI : IsCyclic E₁ := hE₁cyc
+    have : IsCyclic E₁ := hE₁cyc
     intro x hxR
     rw [Subgroup.mem_centralizer_iff]
     intro y hyP

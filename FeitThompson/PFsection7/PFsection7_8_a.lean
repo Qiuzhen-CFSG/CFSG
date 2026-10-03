@@ -166,7 +166,7 @@ public theorem theorem_7_8_exists_distinct_member
   have hχ_one : χ 1 = 0 := by
     exact (Section1.supportedOn_iff.mp hχsupport) 1 (by simp [Section5.puncturedSet])
   have hζ_one_ne : ζ 1 ≠ 0 := by
-    haveI : (H.subgroupOf L).FiniteIndex := inferInstance
+    have : (H.subgroupOf L).FiniteIndex := inferInstance
     have hrel : H.relIndex L ≠ 0 := by
       simpa [Subgroup.relIndex] using
         (Subgroup.FiniteIndex.index_ne_zero (H := H.subgroupOf L))
@@ -204,7 +204,7 @@ public theorem theorem_7_8_degree_zero_combo_mem_integerSpanOn
   rcases (hpunctured φ).mp hφ with ⟨θ, hθ, _hθne, hφeq⟩
   rcases hθ with ⟨m, ρ, hρ, hθeq⟩
   have hm_ne : m ≠ 0 := by
-    letI : Representation.IsIrreducible ρ := hρ
+    let : Representation.IsIrreducible ρ := hρ
     have hnon : Nontrivial (Fin m → ℂ) :=
       Subrepresentation.irreducible_module_nontrivial ρ
     intro hm
@@ -271,7 +271,7 @@ public theorem theorem_7_8_member_cfNormSq_ne_zero
   rcases theorem_7_8_degree_zero_combo_mem_integerSpanOn h78 hφ with
     ⟨m, hm_ne, hdeg, _hcombo⟩
   have hrel_ne : (H.relIndex L : ℂ) ≠ 0 := by
-    haveI : (H.subgroupOf L).FiniteIndex := inferInstance
+    have : (H.subgroupOf L).FiniteIndex := inferInstance
     have hrel : H.relIndex L ≠ 0 := by
       simpa [Subgroup.relIndex] using
         (Subgroup.FiniteIndex.index_ne_zero (H := H.subgroupOf L))
@@ -337,7 +337,7 @@ public theorem theorem_7_8_combo_CFOn
     (hdeg : Section1.degree φ = (H.relIndex L : ℂ) * (m : ℂ)) :
     Section2.CFOn L A (φ - (m : ℂ) • ζ) := by
   rcases h76 with ⟨_hHL76, hHnorm, _h71, hAeq, _hT⟩
-  haveI : (H.subgroupOf L).Normal := hHnorm
+  have : (H.subgroupOf L).Normal := hHnorm
   rcases h78 with ⟨_hHL, _hST, hpunctured, _hcoherent, _hν, hζS, _hζ, hdegζ⟩
   rcases (hpunctured φ).mp hφ with ⟨θφ, _hθφ, _hθφne, hφeq⟩
   rcases (hpunctured ζ).mp hζS with ⟨θζ, _hθζ, _hθζne, hζeq⟩
@@ -468,7 +468,7 @@ public theorem theorem_7_8_scalarProduct_distinct_members
     (hφ : φ ∈ S) (hψ : ψ ∈ S) (hneq : φ ≠ ψ) :
     Section1.scalarProduct L φ ψ = 0 := by
   rcases h76 with ⟨_hHL76, hHnorm, _h71, _hAeq, _hT⟩
-  haveI : (H.subgroupOf L).Normal := hHnorm
+  have : (H.subgroupOf L).Normal := hHnorm
   rcases h78 with ⟨_hHL, _hST, hpunctured, _hcoherent, _hν, _hζS, _hζ, _hdeg⟩
   rcases (hpunctured φ).mp hφ with ⟨θφ, hθφ, _hθφne, hφeq⟩
   rcases (hpunctured ψ).mp hψ with ⟨θψ, hθψ, _hθψne, hψeq⟩
@@ -501,7 +501,7 @@ public theorem theorem_7_8_weightedSum_scalarProduct_of_mem
     χ 1 / (e : ℂ)
   let χS : S := ⟨χ, hχ⟩
   have heC : (e : ℂ) ≠ 0 := by
-    haveI : (H.subgroupOf L).FiniteIndex := inferInstance
+    have : (H.subgroupOf L).FiniteIndex := inferInstance
     have hrel : H.relIndex L ≠ 0 := by
       simpa [Subgroup.relIndex] using
         (Subgroup.FiniteIndex.index_ne_zero (H := H.subgroupOf L))
@@ -570,7 +570,7 @@ private theorem theorem_7_8_nu_zeta_signed
     Section3.IsSignedIrreducibleCharacter (ν ζ) := by
   have h78orig := h78
   rcases h78 with ⟨_hHL, _hST, _hpunctured, _hcoherent, hν, hζS, _hζ, _hdeg⟩
-  have hvirt : Theory.Character.IsVirtualCharacter (ν ζ) :=
+  have hvirt : IsVirtualCharacter (ν ζ) :=
     hν.2.1 ζ (Section5.integerSpan_of_mem S hζS)
   exact Section5.signed_irreducible_of_virtual_norm_one_pf59 hvirt
     (theorem_7_8_nu_zeta_norm h78orig)
@@ -726,7 +726,7 @@ public theorem theorem_7_8_principalInduced_punctured_member_scalar
     (hφ : φ ∈ S) :
     Section1.scalarProduct L (principalInducedCharacter L H) φ = 0 := by
   classical
-  haveI : (H.subgroupOf L).Normal := hHnorm
+  have : (H.subgroupOf L).Normal := hHnorm
   rcases (hpunctured φ).mp hφ with ⟨θ, hθ, hθne, hφeq⟩
   rcases hθ with ⟨n, ρθ, hρθ, hθeq⟩
   rcases (Section3.principalCharacter_isIrreducibleCharacterOnGroup
@@ -796,7 +796,7 @@ public theorem theorem_7_8_principalInduced_self_scalar
     (hHnorm : (H.subgroupOf L).Normal) :
     Section1.scalarProduct L (principalInducedCharacter L H)
       (principalInducedCharacter L H) = (H.relIndex L : ℂ) := by
-  haveI : (H.subgroupOf L).Normal := hHnorm
+  have : (H.subgroupOf L).Normal := hHnorm
   rcases (Section3.principalCharacter_isIrreducibleCharacterOnGroup
       (G := H.subgroupOf L)) with ⟨n, ρ, hρirr, hρchar⟩
   have hself := Section1.proposition_1_5_b_rep_orbit_relIndex_canonical
@@ -835,7 +835,7 @@ private theorem theorem_7_8_betaInput_CFOn
     (h78 : theorem_7_8_hypothesis L H T S τ ν ζ) :
     Section2.CFOn L A (theorem_7_8_betaInput L H ζ) := by
   rcases h76 with ⟨_hHL76, hHnorm, _h71, hAeq, _hT⟩
-  haveI : (H.subgroupOf L).Normal := hHnorm
+  have : (H.subgroupOf L).Normal := hHnorm
   rcases h78 with ⟨_hHL, _hST, hpunctured, _hcoherent, _hν, hζS, _hζ, hdegζ⟩
   rcases (hpunctured ζ).mp hζS with ⟨θζ, _hθζ, _hθζne, hζeq⟩
   have hprincipalClass : Section1.IsClassFunction (principalInducedCharacter L H) := by
@@ -979,18 +979,18 @@ public theorem theorem_7_8_beta_virtual
     (h76 : hypothesis_7_6_statement A L H K T)
     (hτ : agreesWithDadeTransform A L K τ)
     (h78 : theorem_7_8_hypothesis L H T S τ ν ζ) :
-    Theory.Character.IsVirtualCharacter (theorem_7_8_beta L H τ ζ) := by
+    IsVirtualCharacter (theorem_7_8_beta L H τ ζ) := by
   let βL : Section1.ClassFunction L := theorem_7_8_betaInput L H ζ
   have hCFOn : Section2.CFOn L A βL := theorem_7_8_betaInput_CFOn h76 h78
   rcases h76 with ⟨_hHL76, _hHnorm, h71, _hAeq, _hT⟩
   rcases hτ with ⟨hAL, hτ_eq⟩
   rcases h78 with ⟨_hHL, _hST, _hpunctured, _hcoherent, _hν, _hζS, hζ, _hdegζ⟩
   have hprincipalVirt :
-      Theory.Character.IsVirtualCharacter (principalInducedCharacter L H) := by
+      IsVirtualCharacter (principalInducedCharacter L H) := by
     unfold principalInducedCharacter
     exact Section2.inducedCF_isVirtualCharacter_of_virtualCharacter
       (H.subgroupOf L) Section3.isVirtualCharacter_principalCharacter
-  have hβLvirt : Theory.Character.IsVirtualCharacter βL := by
+  have hβLvirt : IsVirtualCharacter βL := by
     exact Section3.isVirtualCharacter_sub hprincipalVirt
       (Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup hζ)
   have hβLvirtOn : Section2.virtualCharacterOn L A βL := ⟨hβLvirt, hCFOn.2⟩
@@ -998,9 +998,9 @@ public theorem theorem_7_8_beta_virtual
     hτ_eq βL hCFOn
   have hDadeVirt :=
     (Section2.theorem_2_6 A L K h71 hAL).2 βL hβLvirtOn
-  change Theory.Character.IsVirtualCharacter
+  change IsVirtualCharacter
     (Section2.dadeTransform K hAL βL) at hDadeVirt
-  change Theory.Character.IsVirtualCharacter (τ βL)
+  change IsVirtualCharacter (τ βL)
   rw [hτβ]
   exact hDadeVirt
 
@@ -1087,7 +1087,7 @@ public theorem theorem_7_8_beta_norm
   have hβCFOn : Section2.CFOn L A βL := theorem_7_8_betaInput_CFOn h76 h78
   rcases hτ with ⟨hAL, hτ_eq⟩
   rcases h76 with ⟨_hHL76, hHnorm, h71, _hAeq, _hT⟩
-  haveI : (H.subgroupOf L).Normal := hHnorm
+  have : (H.subgroupOf L).Normal := hHnorm
   have h78orig := h78
   rcases h78 with ⟨_hHL, _hST, _hpunctured, _hcoherent, _hν, hζS, _hζ, _hdegζ⟩
   have hτβ : τ βL = Section2.dadeTransform K hAL βL :=
@@ -1153,7 +1153,7 @@ public theorem theorem_7_8_beta_zeta_coeff_int
         (a : ℂ) - 1 := by
   have hβvirt := theorem_7_8_beta_virtual h76 hτ h78
   rcases h78 with ⟨_hHL, _hST, _hpunctured, _hcoherent, hν, hζS, _hζ, _hdegζ⟩
-  have hνζvirt : Theory.Character.IsVirtualCharacter (ν ζ) :=
+  have hνζvirt : IsVirtualCharacter (ν ζ) :=
     hν.2.1 ζ (Section5.integerSpan_of_mem S hζS)
   rcases Section3.scalarProduct_isVirtualCharacter_eq_int hβvirt hνζvirt with
     ⟨z, hz⟩
@@ -1210,7 +1210,7 @@ public theorem theorem_7_8_beta_scalarProduct_of_mem
         _ = (m : ℂ) + (m : ℂ) * ((a : ℂ) - 1) := by rw [hcombo_expand]
         _ = (a : ℂ) * (m : ℂ) := by ring
     have heC : (H.relIndex L : ℂ) ≠ 0 := by
-      haveI : (H.subgroupOf L).FiniteIndex := inferInstance
+      have : (H.subgroupOf L).FiniteIndex := inferInstance
       have hrel : H.relIndex L ≠ 0 := by
         simpa [Subgroup.relIndex] using
           (Subgroup.FiniteIndex.index_ne_zero (H := H.subgroupOf L))
@@ -1305,7 +1305,7 @@ public theorem theorem_7_8_a
   have hprincipal : orthogonalToImage S ν p :=
     theorem_7_8_principal_orthogonal_to_image h76 hτ h78orig
   have heC : (H.relIndex L : ℂ) ≠ 0 := by
-    haveI : (H.subgroupOf L).FiniteIndex := inferInstance
+    have : (H.subgroupOf L).FiniteIndex := inferInstance
     have hrel : H.relIndex L ≠ 0 := by
       simpa [Subgroup.relIndex] using
         (Subgroup.FiniteIndex.index_ne_zero (H := H.subgroupOf L))

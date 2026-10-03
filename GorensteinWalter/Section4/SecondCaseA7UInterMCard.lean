@@ -4,6 +4,7 @@ public import GorensteinWalter.Section4.SecondCaseA7AmbientModel
 public import GorensteinWalter.ASevenInvolutionCentralizerOddPart
 import Mathlib.Tactic
 
+
 /-!
 # Section 4: the odd intersection in the A₇ quotient
 

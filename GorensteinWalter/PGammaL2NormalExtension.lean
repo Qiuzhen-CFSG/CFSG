@@ -2,6 +2,7 @@ module
 
 public import GorensteinWalter.PGammaL2DihedralProjection
 
+
 /-!
 # Normal PSL₂ extensions inside `PΓL₂`
 

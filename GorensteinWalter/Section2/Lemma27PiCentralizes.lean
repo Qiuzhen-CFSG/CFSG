@@ -9,6 +9,7 @@ import FeitThompson.PCore.PCore
 import FeitThompson.BGsection5.theorem_5_5_a
 import Mathlib.Tactic
 
+
 /-!
 # The `t`-centralization of `F_π(M)` for Lemma 2.7
 

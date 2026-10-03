@@ -14,6 +14,7 @@ import GorensteinWalter.DGroupQuotientNotTwoGroup
 import GorensteinWalter.LinearThreeQuotientInversion
 import all BenderGlauberman.Defs
 
+
 noncomputable section
 
 open scoped Pointwise
@@ -293,17 +294,17 @@ private theorem firstCase_P_inf_P2_eq_bot
 /-- `P₀ = P ∩ M` is nontrivial for the maximal `M ⊇ N_G(P₂)`. -/
 public theorem firstCase_P0_ne_bot
     {G : Type u} [Group G] [Finite G]
-    (hmin : IsMinimalCounterexample G)
+    (_hmin : IsMinimalCounterexample G)
     (c : CentralizerSetup G)
     (od : FirstCaseOrientedPrimeData c)
-    (hfirst : FirstCase c)
-    (hHhat : c.Hhat = c.H)
+    (_hfirst : FirstCase c)
+    (_hHhat : c.Hhat = c.H)
     (hU : od.d.bg.U = fittingSubgroupOf od.d.bg.U ⊔ od.d.bg.B)
     (Q : Sylow od.p ↥od.d.bg.B)
-    (M : Subgroup G) (hMmax : IsCoatom M)
+    (M : Subgroup G) (_hMmax : IsCoatom M)
     (hMN : Subgroup.normalizer
       (sylowCarrier (firstCase_P2_sylow c od hU Q) : Set G) ≤ M)
-    (hSM : (c.S : Subgroup G) ≤ M) :
+    (_hSM : (c.S : Subgroup G) ≤ M) :
     qCoreOf od.d.bg.U od.p ⊓ M ≠ ⊥ := by
   classical
   let : Fintype G := Fintype.ofFinite G
@@ -316,7 +317,7 @@ public theorem firstCase_P0_ne_bot
   have hPne : P ≠ ⊥ := by
     intro hPbot
     have hq : qCoreOf c.U od.p = P := by
-      simpa [P, hUeq] using (qCoreOf_eq_of_subgroup_eq hUeq od.p)
+      simp [P, hUeq]
     exact od.primeCore_ne_bot (by simpa [hq] using hPbot)
   have hPp : IsPGroup od.p P := qCoreOf_isPGroup od.d.bg.U od.p
   have hP2p : IsPGroup od.p P2G := by
@@ -449,7 +450,7 @@ public theorem firstCase_normalizer_P2_proper
         exact BenderGlauberman.mem_U_of_mem_B_s4 od.d.bg hb
       exact hP2leB.trans hBleU
     have htU_bg : c.t ∈ od.d.bg.U := by
-      have htP2 : c.t ∈ P2 := by simpa [hP2top]
+      have htP2 : c.t ∈ P2 := by simp [hP2top]
       exact hP2leU htP2
     have hUeq : c.U = od.d.bg.U := firstCase_U_eq_bg_U c od.d
     have htU : c.t ∈ c.U := by simpa [hUeq] using htU_bg
@@ -534,7 +535,7 @@ public theorem firstCase_V2_intersects_layer_or_twoCore
     (Q : Sylow od.p ↥od.d.bg.B)
     (fd : FirstCaseFourData c od.d)
     (M : Subgroup G) (hMmax : IsCoatom M)
-    (hMN : Subgroup.normalizer
+    (_hMN : Subgroup.normalizer
       (sylowCarrier (firstCase_P2_sylow c od hU Q) : Set G) ≤ M)
     (hSM : (c.S : Subgroup G) ≤ M) :
     fd.V2 ⊓ twoCoreOf M ≠ ⊥ ∨
@@ -918,18 +919,18 @@ public theorem firstCase_V2_inf_twoCore_eq_bot_of_twoGroupQuotient
 trivial, so the Klein-four `V₂` avoids it. -/
 public theorem firstCase_V2_inf_twoCore_eq_bot_of_quotient_ASeven
     {G : Type u} [Group G] [Finite G]
-    (hmin : IsMinimalCounterexample G)
+    (_hmin : IsMinimalCounterexample G)
     (c : CentralizerSetup G)
     (od : FirstCaseOrientedPrimeData c)
-    (hfirst : FirstCase c)
-    (hHhat : c.Hhat = c.H)
+    (_hfirst : FirstCase c)
+    (_hHhat : c.Hhat = c.H)
     (hU : od.d.bg.U = fittingSubgroupOf od.d.bg.U ⊔ od.d.bg.B)
     (Q : Sylow od.p ↥od.d.bg.B)
     (fd : FirstCaseFourData c od.d)
-    (M : Subgroup G) (hMmax : IsCoatom M)
-    (hMN : Subgroup.normalizer
+    (M : Subgroup G) (_hMmax : IsCoatom M)
+    (_hMN : Subgroup.normalizer
       (sylowCarrier (firstCase_P2_sylow c od hU Q) : Set G) ≤ M)
-    (hSM : (c.S : Subgroup G) ≤ M)
+    (_hSM : (c.S : Subgroup G) ≤ M)
     (hA7 : Nonempty
       ((↥M ⧸ pPrimeCore 2 ↥M) ≃* alternatingGroup (Fin 7))) :
     fd.V2 ⊓ twoCoreOf M = ⊥ := by
@@ -946,18 +947,18 @@ public theorem firstCase_V2_inf_twoCore_eq_bot_of_quotient_ASeven
 `2`-core is trivial, so `V₂` avoids it. -/
 public theorem firstCase_V2_inf_twoCore_eq_bot_of_quotient_linear_large
     {G : Type u} [Group G] [Finite G]
-    (hmin : IsMinimalCounterexample G)
+    (_hmin : IsMinimalCounterexample G)
     (c : CentralizerSetup G)
     (od : FirstCaseOrientedPrimeData c)
-    (hfirst : FirstCase c)
-    (hHhat : c.Hhat = c.H)
+    (_hfirst : FirstCase c)
+    (_hHhat : c.Hhat = c.H)
     (hU : od.d.bg.U = fittingSubgroupOf od.d.bg.U ⊔ od.d.bg.B)
     (Q : Sylow od.p ↥od.d.bg.B)
     (fd : FirstCaseFourData c od.d)
-    (M : Subgroup G) (hMmax : IsCoatom M)
-    (hMN : Subgroup.normalizer
+    (M : Subgroup G) (_hMmax : IsCoatom M)
+    (_hMN : Subgroup.normalizer
       (sylowCarrier (firstCase_P2_sylow c od hU Q) : Set G) ≤ M)
-    (hSM : (c.S : Subgroup G) ≤ M)
+    (_hSM : (c.S : Subgroup G) ≤ M)
     (K : Type u) [Field K] [Finite K]
     (hK : IsOddPrimePower (Nat.card K)) (hcard : 3 < Nat.card K)
     (L : Subgroup ((↥M) ⧸ pPrimeCore 2 (↥M)))

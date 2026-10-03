@@ -7,7 +7,7 @@ public import Mathlib.LinearAlgebra.Projectivization.Action
 namespace BenderSuzuki
 namespace PFchapter1section3
 
-open PFchapter1section1 PFAppendixIII MatrixGroups
+open PFchapter1section1 PFAppendixIII _root_.BenderSuzuki.MatrixGroups
 open scoped LinearAlgebra.Projectivization
 
 universe u v w

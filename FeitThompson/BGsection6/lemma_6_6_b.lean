@@ -2,6 +2,7 @@ module
 
 public import FeitThompson.BGsection6.lemma_6_6_a
 
+
 open scoped MatrixGroups Pointwise TensorProduct
 
 /-! # Lemma 6.6(b) from BG Section 6 -/

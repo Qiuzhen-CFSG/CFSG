@@ -1,7 +1,9 @@
 module
 
 public import FeitThompson.PCore.Defs
-public import FeitThompson.SubgroupConj
+public import FeitThompson.BGsection1.lemma_1_21
+public import Theory.GroupTheory.SubgroupConjugation
+
 open Subgroup
 
 section PLengthOne

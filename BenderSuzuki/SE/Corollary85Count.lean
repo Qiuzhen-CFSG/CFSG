@@ -5,6 +5,7 @@ public import BenderSuzuki.SE.Permutation
 import BenderSuzuki.SE.Proposition84Residual
 import BenderSuzuki.PFchapter1section1.proposition_3
 
+
 namespace BenderSuzuki
 
 open PFAppendixIII PFchapter1section1
@@ -71,7 +72,7 @@ public theorem normalizer_fixedPoint_hypothesisA1
   let A : Type u :=
     {omega : conjugateCosetSpace M //
       omega ∈ fixedPointsOfSubgroup X (conjugateCosetSpace M) Y}
-  letI : MulAction N A :=
+  let : MulAction N A :=
     normalizerFixedPointAction X (conjugateCosetSpace M) Y
   change HypothesisA1 N A H D Q tn
   have htwoN : MulAction.IsMultiplyPretransitive N A 2 := by
@@ -268,7 +269,7 @@ private theorem normalizer_fixedPoint_rankOne_count
   let A : Type u :=
     {omega : conjugateCosetSpace M //
       omega ∈ fixedPointsOfSubgroup X (conjugateCosetSpace M) Y}
-  letI : MulAction N A :=
+  let : MulAction N A :=
     normalizerFixedPointAction X (conjugateCosetSpace M) Y
   have htwoN : MulAction.IsMultiplyPretransitive N A 2 := by
     rw [MulAction.is_two_pretransitive_iff]
@@ -572,3 +573,4 @@ public theorem Proposition84Statement.normalizerIn_involutions_card_eq
   exact hcount.symm.trans hJcount.symm
 
 end BenderSuzuki
+

@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section3.FirstCaseKleinReflectionExists
 import Mathlib.Tactic
 
+
 /-!
 # Uniformity across the reflections outside `O₂(Ĥ)`
 -/

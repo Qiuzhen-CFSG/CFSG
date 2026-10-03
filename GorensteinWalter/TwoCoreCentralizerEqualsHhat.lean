@@ -5,6 +5,7 @@ public import GorensteinWalter.Section2.FittingOddCoreEquality
 public import GorensteinWalter.Section2.PreambleHSU
 import Mathlib.Tactic
 
+
 /-!
 # Equality of the two-cores of H and Hhat
 -/

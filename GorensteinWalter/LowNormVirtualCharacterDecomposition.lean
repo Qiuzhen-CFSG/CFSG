@@ -23,7 +23,7 @@ public theorem low_norm_virtual_character_decomposition
     {G : Type u} [Group G] [Finite G]
     (zeta : Section1.ClassFunction G) (r : ℕ)
     (hr : r = 2 ∨ r = 3)
-    (hzetaVirtual : Theory.Character.IsVirtualCharacter zeta)
+    (hzetaVirtual : IsVirtualCharacter zeta)
     (hzetaPrincipal :
       Section1.scalarProduct G zeta (Section1.principalCharacter G) = 1)
     (hzetaNorm :
@@ -38,7 +38,7 @@ public theorem low_norm_virtual_character_decomposition
         Section1.weightedFamilySum epsilon chi := by
   classical
   let : Fintype (Fin r) := Fintype.ofFinite (Fin r)
-  rcases Theory.Character.irreducible_characters_form_basis (G := G) with
+  rcases irreducible_characters_form_basis (G := G) with
     ⟨ι, hι, xi, hxi, b, hb⟩
   let : Fintype ι := hι
   let : DecidableEq ι := Classical.decEq ι
@@ -49,7 +49,7 @@ public theorem low_norm_virtual_character_decomposition
     intro i
     exact Section3.ofConjClassFunction_isIrreducibleCharacterOnGroup
       (hxi.1 i)
-  have hmuVirtual : ∀ i, Theory.Character.IsVirtualCharacter (mu i) := by
+  have hmuVirtual : ∀ i, IsVirtualCharacter (mu i) := by
     intro i
     exact Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup
       (hmuIrreducible i)

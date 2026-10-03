@@ -23,9 +23,9 @@ variable {G : Type*} [Group G] [Finite G] [IsMinCE G]
 public theorem section10_not_isCyclic_min_ce :
     ¬ IsCyclic G := by
   intro hcyc
-  letI : IsCyclic G := hcyc
-  letI : CommGroup G := IsCyclic.commGroup
-  exact IsMinCE.not_solvable (G := G) (isSolvable_of_comm (fun a b : G => mul_comm a b))
+  let : IsCyclic G := hcyc
+  let : CommGroup G := IsCyclic.commGroup
+  exact IsMinCE.not_solvable (G := G) (Group.isSolvable_of_comm (fun a b : G => mul_comm a b))
 
 private theorem section10_maximalSubgroup_ne_bot
     {M : Subgroup G} (hM : M ∈ section9MaximalSubgroups G) :
@@ -102,8 +102,8 @@ public theorem section10_exists_sigma_prime_of_malpha_eq_bot
     ∃ q : Nat.Primes, q ∈ section10SigmaPrimes M ∧ q.val ∣ Nat.card M := by
   classical
   have hMne : M ≠ ⊥ := section10_maximalSubgroup_ne_bot hM
-  haveI : Nontrivial M := (Subgroup.nontrivial_iff_ne_bot M).2 hMne
-  have hMsolv : IsSolvable M :=
+  have : Nontrivial M := (Subgroup.nontrivial_iff_ne_bot M).2 hMne
+  have hMsolv : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
   have hModd : Odd (Nat.card M) :=
     odd_of_card_dvd IsMinCE.odd_order (Subgroup.card_subgroup_dvd_card M)
@@ -155,7 +155,7 @@ public theorem section10_exists_sigma_prime_of_malpha_eq_bot
     have hmin : k ≤ k - 1 := Nat.find_min' hBad_exists hBad_pred
     omega
   rcases hfac i with ⟨hle, hprime, S0, _hnormal_lower, hnonempty⟩
-  haveI : Fact (Nat.Prime (primes i)) := hprime
+  have : Fact (Nat.Prime (primes i)) := hprime
   let U : Subgroup M := series i.castSucc
   let L : Subgroup U := (series i.succ).subgroupOf U
   have hL_bot : L = ⊥ := by
@@ -179,11 +179,11 @@ public theorem section10_exists_sigma_prime_of_malpha_eq_bot
   let S : Sylow (primes i) M := Sylow.ofCard U hU_card
   have hSnormal : (S : Subgroup M).Normal := by
     have hUnormal : U.Normal := by
-      letI : U.Characteristic := by
+      let : U.Characteristic := by
         simpa [U] using hchar i.castSucc
       infer_instance
     simpa [S, U] using hUnormal
-  haveI : (S : Subgroup M).Normal := hSnormal
+  have : (S : Subgroup M).Normal := hSnormal
   have hSne : (S : Subgroup M) ≠ ⊥ :=
     by simpa [S, U] using hcast_ne_bot
   let q : Nat.Primes := ⟨primes i, Fact.out⟩
@@ -257,7 +257,7 @@ public theorem section10_exists_pSubgroup_two_le_generatorRank_of_two_le_groupRa
     {n : ℕ | ∃ A : Subgroup R, IsPGroup q A ∧ IsMulCommutative A ∧
       n ≤ generatorRank A}
   have hqrank' : 1 < sSup T := by
-    simpa [primeRank, T] using hqrank
+    simpa [primeRank_eq_sSup_generatorRank, T] using hqrank
   have hTbdd : BddAbove T := by
     refine ⟨Nat.card R, ?_⟩
     intro n hn

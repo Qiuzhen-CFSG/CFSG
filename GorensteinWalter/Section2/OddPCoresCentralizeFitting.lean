@@ -1,6 +1,7 @@
 module
 
 public import GorensteinWalter.Section2.Bender1970_18
+import FeitThompson.Fitting.Centralizer
 
 /-!
 # Odd prime cores centralize the Fitting subgroup when the two-core is trivial

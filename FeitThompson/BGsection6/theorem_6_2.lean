@@ -2,7 +2,8 @@ module
 
 public import FeitThompson.BGsection6.theorem_6_1
 import Theory.Representation.ElementaryAbelianAction
-import FeitThompson.SubgroupConj
+import Theory.GroupTheory.SubgroupConjugation
+
 
 open scoped MatrixGroups Pointwise TensorProduct commutatorElement
 
@@ -14,11 +15,11 @@ private theorem chief_conj_range_pCore_eq_bot_local
     (hUq_elem :
       let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
       let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
-      letI : Uq.Normal := cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V)
+      let : Uq.Normal := cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V)
       IsElementaryAbelian p (↥Uq)) :
     let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
     let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
-    letI : Uq.Normal := cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V)
+    let : Uq.Normal := cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V)
     let φ : (G ⧸ cf.V) →* MulAut Uq := MulAut.conjNormal (H := Uq)
     pCore p φ.range = ⊥ := by
   classical
@@ -182,11 +183,11 @@ private theorem odd_order_pstable_le_centralizerOfChiefFactor
     rw [← Nat.card_congr (QuotientGroup.quotientKerEquivRange φ).toEquiv]
     exact hker_odd
   let ρ : Representation (ZMod p) φ.range (Additive Uq) :=
-    Theory.Representation.ofElementaryAbelianAction (A := φ.range) (G := Uq) (p := p)
+    Representation.ofElementaryAbelianAction (A := φ.range) (G := Uq) (p := p)
   have hρ_faithful : Function.Injective ρ := by
     have hρker_bot : ρ.ker = ⊥ := by
-      rw [Theory.Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup]
-      rw [fixingSubgroupOf_univ_eq_ker_toMulAut]
+      rw [Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup]
+      rw [fixingSubgroup_univ_eq_ker_toMulAut]
       exact (MonoidHom.ker_eq_bot_iff (φ.range.subtype)).2 φ.range.subtype_injective
     exact (MonoidHom.ker_eq_bot_iff ρ).1 hρker_bot
   have hpodd : Odd p := (Fact.out : Nat.Prime p).odd_of_ne_two hp2
@@ -215,7 +216,7 @@ private theorem odd_order_pstable_le_centralizerOfChiefFactor
     exact ⟨m, hm⟩
   have hdev (u : Uq) :
       (ρ z - 1) (Additive.ofMul u) = Additive.ofMul ((z • u) / u) := by
-    rw [LinearMap.sub_apply, Theory.Representation.ofElementaryAbelianAction_apply_ofMul]
+    rw [LinearMap.sub_apply, Representation.ofElementaryAbelianAction_apply_ofMul]
     change Additive.ofMul (z • u) - Additive.ofMul u = Additive.ofMul ((z • u) / u)
     rw [sub_eq_add_neg]
     simp [div_eq_mul_inv]
@@ -770,4 +771,5 @@ public theorem theorem_6_2
   have hcomap_normal :
       (Subgroup.comap q
         (thompsonCenter (G := G ⧸ M) (Pbar : Subgroup (G ⧸ M)))).Normal := inferInstance
-  simpa [Z, M, thompsonCenter] using hcomap_eq ▸ hcomap_normal
+  have hnormal_ZM : (Z ⊔ M).Normal := hcomap_eq ▸ hcomap_normal
+  simpa [Z, M, thompsonCenter] using hnormal_ZM

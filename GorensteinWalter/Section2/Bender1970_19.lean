@@ -396,7 +396,7 @@ private theorem componentLayerOf_eq_bot_of_extension
         (by intro x; exact ⟨⟨x, trivial⟩, rfl⟩)
     rwa [Subgroup.map_subgroupOf_eq_of_le (le_top : L ≤ (⊤ : Subgroup G))] at h'
   have hLsubN : (L.subgroupOf N).IsSubnormal :=
-    isSubnormal_subgroupOf_of_subnormal_of_le hLleN hLsn
+    isSubnormal_subgroupOf_of_subnormal_of_le hLsn
   have hLcompN : IsComponentOf L N := ⟨hLleN, hLsubN, hL.2.2⟩
   have hLleLayer : L ≤ componentLayerOf N :=
     le_sSup (s := {E : Subgroup G | IsComponentOf E N}) hLcompN
@@ -682,8 +682,7 @@ public theorem bender1970_1_9_centralizer_pGroup
   have hP : ∀ d : ℕ, P d := by
     intro d
     refine Nat.strong_induction_on d ?_
-    intro d ih
-    intro U V hVU hUp hVp hC hd
+    intro d ih U V hVU hUp hVp hC hd
     let W : Subgroup G := U ⊓ Subgroup.normalizer (V : Set G)
     have hVW : V ≤ W := by
       intro v hv

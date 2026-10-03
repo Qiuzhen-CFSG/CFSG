@@ -7,6 +7,7 @@ public import GorensteinWalter.Suzuki.HhatQuotientS4
 public import GorensteinWalter.LinearThreeQuotientInversion
 import Mathlib.Tactic
 
+
 noncomputable section
 
 open scoped Pointwise

@@ -10,6 +10,7 @@ and its `PSL₂`/`PGL₂`-isomorphism vocabulary, moved DOWN from the
 `GorensteinWalter.GW1965` wrapper so that the per-theorem GW1965-cleanup
 modules can state their theorems without importing the wrapper (no landing
 import cycle).
+
 -/
 
 noncomputable section
@@ -76,3 +77,4 @@ isolation. -/
           IsIsoToPGL2OddExists (G := G ⧸ pPrimeCore 2 G) L)
 
 end GorensteinWalter
+

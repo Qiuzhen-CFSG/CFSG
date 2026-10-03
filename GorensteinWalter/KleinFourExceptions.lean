@@ -17,13 +17,14 @@ public theorem no_involution_centralizes_noninvolution_alternatingGroup_four :
     ∀ a v : alternatingGroup (Fin 4),
       a ≠ 1 → a * a ≠ 1 → v * v = 1 → v * a = a * v → v = 1 := by
   classical
-  native_decide
+  decide
 
+set_option maxRecDepth 100000 in
 /-- In `A₅`, no nonidentity involution centralizes a non-involution. -/
 public theorem no_involution_centralizes_noninvolution_alternatingGroup_five :
     ∀ a v : alternatingGroup (Fin 5),
       a ≠ 1 → a * a ≠ 1 → v * v = 1 → v * a = a * v → v = 1 := by
   classical
-  native_decide
+  decide
 
 end GorensteinWalter

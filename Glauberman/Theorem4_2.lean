@@ -3,6 +3,7 @@ module
 public import Glauberman.Theorem3_2
 public import Glauberman.Theorem4_1
 
+
 /-!
 # Glauberman, "A Characteristic Subgroup of a p-Stable Group" — §4, Theorem 4.2
 

@@ -58,7 +58,7 @@ private theorem cyclic_unique_involution {A : Type u} [Group A] [Finite A]
   have h1x : (1 : A) ≠ x := fun h => hx1 h.symm
   have h1y : (1 : A) ≠ y := fun h => hy1 h.symm
   have hbad : 3 ≤ 2 := by
-    simpa [S, h1x, h1y, hx1, hy1, hxy] using hcard
+    simp [S, h1x, h1y, hxy] at hcard
   omega
 
 /-- A power (natural exponent) of an involution is trivial or the
@@ -101,7 +101,7 @@ private theorem cyclic_subgroup_containing_involution_le_torus
     {G : Type u} [Group G] [Finite G]
     {t : G} (ht : IsInvolution t)
     (T : Subgroup G) (s : G)
-    (hTcyc : IsCyclic T) (htT : t ∈ T)
+    (htT : t ∈ T)
     (hsI : IsInvolution s) (hs_not_T : s ∉ T)
     (hinvT : ∀ x : G, x ∈ T → s * x * s⁻¹ = x⁻¹)
     (hC : Subgroup.centralizer ({t} : Set G) = T ⊔ Subgroup.zpowers s)
@@ -110,7 +110,7 @@ private theorem cyclic_subgroup_containing_involution_le_torus
     (htX : t ∈ X) :
     X ≤ T := by
   exact cyclic_subgroup_containing_involution_le_reflected_torus
-    ht T s hTcyc htT hsI hs_not_T hinvT hC hXcyc hXcent htX
+    ht T s htT hsI hs_not_T hinvT hC hXcyc hXcent htX
 
 /-- The join of the torus and a reflection has twice the torus order. -/
 private theorem join_card_of_inverting_reflection {G : Type u} [Group G] [Finite G]
@@ -285,7 +285,7 @@ private theorem psl2_reflected_join_of_reflected
     exact Subgroup.map_equiv_normalizer_eq R e
   have hUsup_map : (U ⊔ Subgroup.zpowers w).map e.toMonoidHom =
       T ⊔ Subgroup.zpowers s := by
-    simpa [T, s, e, Subgroup.map_sup, MonoidHom.map_zpowers, MulAut.conj_apply]
+    simp [T, s, e, Subgroup.map_sup, MonoidHom.map_zpowers, MulAut.conj_apply]
   have hNt : Subgroup.normalizer (Zt : Set (PSL2 K)) = T ⊔ Subgroup.zpowers s := by
     calc
       Subgroup.normalizer (Zt : Set (PSL2 K)) =
@@ -315,11 +315,11 @@ private theorem psl2_reflected_join_of_reflected
         rcases ha ⟨t, htT⟩ with ⟨m, hm⟩
         have hab : (⟨x, hx⟩ : T) * (⟨t, htT⟩ : T) = (⟨t, htT⟩ : T) * (⟨x, hx⟩ : T) := by
           calc
-            (⟨x, hx⟩ : T) * (⟨t, htT⟩ : T) = a ^ n * a ^ m := by simpa [hn, hm]
+            (⟨x, hx⟩ : T) * (⟨t, htT⟩ : T) = a ^ n * a ^ m := by simp [hn, hm]
             _ = a ^ (n + m) := by rw [zpow_add]
             _ = a ^ (m + n) := by rw [add_comm]
             _ = a ^ m * a ^ n := by rw [zpow_add]
-            _ = (⟨t, htT⟩ : T) * (⟨x, hx⟩ : T) := by simpa [← hm, ← hn]
+            _ = (⟨t, htT⟩ : T) * (⟨x, hx⟩ : T) := by simp [← hm, ← hn]
         simpa using congrArg Subtype.val hab
       · rw [Subgroup.zpowers_le]
         rw [Subgroup.mem_centralizer_singleton_iff]
@@ -411,19 +411,14 @@ public theorem secondCase_psl2_S0_le_quotient_torus
       exact (by
         simpa [tP] using congrArg (e.symm : PSL2 K → Q) h1)
     · simpa using congrArg e htQ.2
-  obtain ⟨T0, s0, hT0cyc, htP_T0, hs0I, hs0_not_T0, hinvT0, hC0⟩ :=
+  obtain ⟨T0, s0, _, htP_T0, hs0I, hs0_not_T0, hinvT0, hC0⟩ :=
     psl2_reflected_join (K := K) torus.primePower htP
   -- transport the reflected pair to `Q`
   let T0Q : Subgroup Q := T0.map e.symm.toMonoidHom
   let s0Q : Q := e.symm s0
-  have hT0Qcyc : IsCyclic T0Q := by
-    let eT : T0 ≃* T0Q := Subgroup.equivMapOfInjective T0
-      e.symm.toMonoidHom e.symm.injective
-    exact (MulEquiv.isCyclic eT).mp hT0cyc
   have htQ_T0Q : tQ ∈ T0Q := by
     have htP' : tP ∈ T0 := htP_T0
     exact Subgroup.mem_map.mpr ⟨tP, htP', by
-      change e.symm.toMonoidHom tP = tQ
       simp [tP]⟩
   have hs0Q_I : IsInvolution s0Q := by
     constructor
@@ -482,7 +477,6 @@ public theorem secondCase_psl2_S0_le_quotient_torus
           rw [← map_mul, ← map_mul]
           exact congrArg e hcomm
         exact Subgroup.mem_map.mpr ⟨e y, hx, by
-          change e.symm.toMonoidHom (e y) = y
           simp⟩
     calc
       Subgroup.centralizer ({tQ} : Set Q) =
@@ -537,16 +531,16 @@ public theorem secondCase_psl2_S0_le_quotient_torus
         (⟨tQ, torus.T_contains_t⟩ : torus.T) * (⟨x, hx⟩ : torus.T) := by
       calc
         (⟨x, hx⟩ : torus.T) * (⟨tQ, torus.T_contains_t⟩ : torus.T) =
-            a ^ n * a ^ m := by simpa [hn, hm]
+            a ^ n * a ^ m := by simp [hn, hm]
         _ = a ^ (n + m) := by rw [zpow_add]
         _ = a ^ (m + n) := by rw [add_comm]
         _ = a ^ m * a ^ n := by rw [zpow_add]
         _ = (⟨tQ, torus.T_contains_t⟩ : torus.T) * (⟨x, hx⟩ : torus.T) := by
-          simpa [← hm, ← hn]
+          simp [← hm, ← hn]
     simpa using congrArg Subtype.val hab
   have hT_le_T0Q : torus.T ≤ T0Q :=
     cyclic_subgroup_containing_involution_le_reflected_torus (G := Q) htQ T0Q s0Q
-      hT0Qcyc htQ_T0Q hs0Q_I hs0Q_not_T0Q hinvT0Q hC0Q
+      htQ_T0Q hs0Q_I hs0Q_not_T0Q hinvT0Q hC0Q
       torus.T_cyclic hT_cent torus.T_contains_t
   -- the reflection inverts torus.T and lies outside it
   have hs0Q_invT : ∀ x : Q, x ∈ torus.T → s0Q * x * s0Q⁻¹ = x⁻¹ := by
@@ -580,7 +574,7 @@ public theorem secondCase_psl2_S0_le_quotient_torus
   -- the cyclic containment with the pair (torus.T, s0Q)
   have hX_le_T : X ≤ torus.T :=
     cyclic_subgroup_containing_involution_le_reflected_torus (G := Q) htQ torus.T s0Q
-      torus.T_cyclic torus.T_contains_t hs0Q_I hs0Q_not_T hs0Q_invT hC_T
+      torus.T_contains_t hs0Q_I hs0Q_not_T hs0Q_invT hC_T
       hXcyc hXcent htQ_X
   exact hX_le_T
 

@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Defs
 public import GorensteinWalter.Section1
 
+
 /-!
 # An odd-core inversion helper
 

@@ -5,6 +5,7 @@ public import BenderSuzuki.SE.Theorem4
 import BenderSuzuki.SE.InvolutionCore
 import FeitThompson.BGsection11.lemma_11_1_a
 
+
 /-!
 # Theorem 4(b), Proposition 6.3 induction boundary
 
@@ -27,14 +28,14 @@ private theorem sq_eq_one_mem_normal_sylow_two
     (P : Sylow 2 G) (hPnormal : (P : Subgroup G).Normal)
     {x : G} (hx : x ^ 2 = 1) : x ∈ (P : Subgroup G) := by
   by_cases hxone : x = 1
-  · simpa [hxone] using (P : Subgroup G).one_mem
-  · letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  · simp [hxone]
+  · let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
     have horder : orderOf x = 2 := orderOf_eq_prime hx hxone
     have hzp : IsPGroup 2 (Subgroup.zpowers x) := by
       apply IsPGroup.of_card (p := 2) (G := Subgroup.zpowers x) (n := 1)
-      simpa [Nat.card_zpowers, horder]
+      simp [Nat.card_zpowers, horder]
     obtain ⟨Q, hzpQ⟩ := hzp.exists_le_sylow
-    letI : Unique (Sylow 2 G) := Sylow.unique_of_normal P hPnormal
+    let : Unique (Sylow 2 G) := Sylow.unique_of_normal P hPnormal
     have hQP : Q = P := Subsingleton.elim _ _
     rw [hQP] at hzpQ
     exact hzpQ (Subgroup.mem_zpowers x)
@@ -72,7 +73,7 @@ public theorem theorem4bProposition63_II4b_image_isPGroup
       (twoPrimeCore C).map e.toMonoidHom = twoPrimeCore L := by
     simpa [twoPrimeCore] using
       (pPrimeCore_map_iso (p := 2) e)
-  letI : ((twoPrimeCore C).map e.toMonoidHom).Normal :=
+  let : ((twoPrimeCore C).map e.toMonoidHom).Normal :=
     Subgroup.Normal.map (inferInstance : (twoPrimeCore C).Normal)
       e.toMonoidHom e.surjective
   let q0 : (C ⧸ twoPrimeCore C) ≃*
@@ -168,7 +169,7 @@ public theorem theorem4bProposition63_II4b_image_isPGroup
     have hxP : xB ∈ (P : Subgroup B) :=
       sq_eq_one_mem_normal_sylow_two P hPnormal hxSq
     exact Subgroup.mem_map.mpr ⟨xB, hxP, rfl⟩
-  · simpa [f, PB] using PB.one_mem
+  · simp [f, PB]
   · intro x y _hx _hy hxPB hyPB
     simpa using PB.mul_mem hxPB hyPB
   · intro x _hx hxPB

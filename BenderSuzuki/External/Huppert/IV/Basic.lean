@@ -2,10 +2,11 @@ module
 
 public import BenderSuzuki.External.Huppert.IV.ComplementTransfer
 public import Mathlib.GroupTheory.SpecificGroups.Quaternion
-import FeitThompson.Frattini.Core
+public import Theory.Frattini.PGroup
 import FeitThompson.BGsection4.lemma_4_5_a
 import FeitThompson.BGsection7.theorem_7_2
 import FeitThompson.BGsection9.corollary_9_2
+
 
 /-!
 # Huppert IV basic group-theoretic helpers

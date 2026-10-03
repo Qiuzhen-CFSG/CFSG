@@ -28,7 +28,6 @@ public theorem normal_complement_of_semidirect_cyclic_normalizer
     (N C X : Subgroup H)
     (hNnormal : N.Normal)
     (hCcyc : IsCyclic C)
-    (hdisj : Disjoint N C)
     (hjoin : N ⊔ C = ⊤)
     (hXleC : X ≤ C)
     (hNnorm : ∀ n : H, n ∈ N → n ∈ Subgroup.normalizer (X : Set H) → n = 1) :

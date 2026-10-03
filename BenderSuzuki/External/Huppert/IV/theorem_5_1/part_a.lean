@@ -2,6 +2,7 @@ module
 public import BenderSuzuki.External.Huppert.IV.theorem_5_1.NormalizerGrowth
 public import BenderSuzuki.External.Huppert.IV.theorem_5_2.Core
 
+
 /-!
 # Huppert IV.5.1(a)
 
@@ -163,7 +164,7 @@ private theorem hkt_burnside_iv51_normalizer_Dsub_quotient_not_qgroup_source
   intro hquot
   let N : Subgroup Q := Subgroup.normalizer (Dsub : Set Q)
   let C : Subgroup N := (Subgroup.centralizer (Dsub : Set Q)).subgroupOf N
-  haveI : C.Normal := by
+  have : C.Normal := by
     simpa [C, N] using
       (inferInstance :
         ((Subgroup.centralizer (Dsub : Set Q)).subgroupOf
@@ -266,8 +267,8 @@ private theorem hkt_burnside_iv51_witness_of_normalizer_growth
     hkt_exists_qprime_divisor_card_of_not_isPGroup q Γ hnot
   let N : Subgroup Q := Subgroup.normalizer (Dsub : Set Q)
   let C : Subgroup N := (Subgroup.centralizer (Dsub : Set Q)).subgroupOf N
-  haveI : Fact r.Prime := ⟨hr⟩
-  haveI : C.Normal := by
+  have : Fact r.Prime := ⟨hr⟩
+  have : C.Normal := by
     simpa [C, N] using
       (inferInstance :
         ((Subgroup.centralizer (Dsub : Set Q)).subgroupOf

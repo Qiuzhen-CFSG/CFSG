@@ -1,6 +1,8 @@
 module
 
 public import FeitThompson.ChiefFactors.Core
+public import Theory.GroupAction.Invariant
+
 
 open scoped commutatorElement
 
@@ -317,7 +319,7 @@ theorem isNilpotent_map_of_isNilpotent {H : Type*} [Group H] (f : G →* H) (N :
 
 /-- For a chief factor `cf = (V ◁ U)`, the image `U/V` in the quotient `G/V` is a minimal nontrivial normal subgroup. -/
 public theorem chiefFactor_quotient_minimal (cf : ChiefFactor G) :
-    letI : cf.V.Normal := cf.isChief.normal_K
+    let : cf.V.Normal := cf.isChief.normal_K
     let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
     let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
     Uq.Normal ∧ Uq ≠ ⊥ ∧
@@ -380,10 +382,10 @@ public theorem chiefFactor_quotient_minimal (cf : ChiefFactor G) :
 
 /-- The quotient `U/V` attached to a chief factor is a minimal normal subgroup of `G/V`. -/
 public theorem chiefFactor_quotient_isMinimalNormal (cf : ChiefFactor G) :
-    letI : cf.V.Normal := cf.isChief.normal_K
+    let : cf.V.Normal := cf.isChief.normal_K
     let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
     let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
-    letI : Uq.Normal := cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V)
+    let : Uq.Normal := cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V)
     IsMinimalNormal Uq := by
   classical
   let _ : cf.V.Normal := cf.isChief.normal_K
@@ -406,10 +408,10 @@ variable [Finite G]
 /-- In a finite solvable group, every chief factor quotient is elementary abelian. -/
 public theorem chiefFactor_quotient_exists_isElementaryAbelian (hsolv : Group.IsSolvable G)
     (cf : ChiefFactor G) :
-    letI : cf.V.Normal := cf.isChief.normal_K
+    let : cf.V.Normal := cf.isChief.normal_K
     let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
     let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
-    letI : Uq.Normal := cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V)
+    let : Uq.Normal := cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V)
     ∃ p : ℕ, p.Prime ∧ IsElementaryAbelian p (↥Uq) := by
   classical
   let _ : cf.V.Normal := cf.isChief.normal_K

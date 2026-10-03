@@ -3,6 +3,7 @@ module
 public import BenderGlauberman.Section2.Basic
 public import BenderGlauberman.Section2.Coherence
 
+
 /-!
 # Bender--Glauberman: Lemma 2.4
 
@@ -19,9 +20,8 @@ open scoped Pointwise
 namespace BenderGlauberman
 
 open GorensteinWalter
-open Theory.Character
 
--- Local instances matching `Theory.Character`'s subgroup-sum convention; see
+-- Local instances matching `Character`'s subgroup-sum convention; see
 -- `BenderGlauberman/ClassFunction.lean`.
 attribute [local instance] Fintype.ofFinite
 attribute [local instance] Classical.propDecidable

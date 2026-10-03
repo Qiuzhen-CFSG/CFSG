@@ -1,9 +1,10 @@
 module
 
 public import FeitThompson.BGsection13.lemma_13_7
-import FeitThompson.HallSubgroups.Conjugacy
+public import Theory.GroupTheory.Hall.Conjugacy
 import Mathlib.Data.Finset.NatDivisors
 import Mathlib.GroupTheory.Schreier
+
 
 open scoped Pointwise
 
@@ -1228,35 +1229,6 @@ private theorem section13_lemma_13_8_hall_beta_fitting_pcore_conjugate_of_left_p
   exact ⟨g, by simpa [X, Hamb, C] using hX_le_Mg⟩
 
 omit [IsMinCE G] in
-private theorem section13_pSubgroup_le_pCore_of_nilpotent_for_hall
-    {p : ℕ} [Fact p.Prime] {R : Type*} [Group R] [Finite R]
-    [Group.IsNilpotent R] {B : Subgroup R} (hBp : IsPGroup p B) :
-    B ≤ pCore p R := by
-  obtain ⟨S, hB_le_S⟩ := IsPGroup.exists_le_sylow (G := R) (p := p) hBp
-  have hS_normal : (S : Subgroup R).Normal :=
-    Group.IsNilpotent.sylow_normal (p := p) inferInstance S
-  exact hB_le_S.trans (le_sSup ⟨hS_normal, S.isPGroup'⟩)
-
-omit [IsMinCE G] in
-private theorem section13_pCore_ne_bot_of_dvd_card_nilpotent_for_hall
-    {R : Type*} [Group R] [Finite R] [Group.IsNilpotent R]
-    {q : ℕ} [Fact q.Prime] (hq : q ∣ Nat.card R) :
-    pCore q R ≠ ⊥ := by
-  classical
-  let S : Sylow q R := Classical.choice inferInstance
-  have hS_le : (S : Subgroup R) ≤ pCore q R :=
-    section13_pSubgroup_le_pCore_of_nilpotent_for_hall (p := q) (R := R) S.isPGroup'
-  have hqS : q ∣ Nat.card (S : Subgroup R) :=
-    Sylow.dvd_card_of_dvd_card S hq
-  intro hbot
-  have hSbot : (S : Subgroup R) = ⊥ :=
-    le_bot_iff.mp (hS_le.trans (le_of_eq hbot))
-  have hcardS : Nat.card (S : Subgroup R) = 1 := by
-    simp [hSbot]
-  rw [hcardS] at hqS
-  exact (Fact.out : Nat.Prime q).not_dvd_one hqS
-
-omit [IsMinCE G] in
 private theorem section13_pCore_ne_bot_of_dvd_fitting_for_hall
     {R : Type*} [Group R] [Finite R] {q : Nat.Primes}
     (hq : q.val ∣ Nat.card (fittingSubgroup R)) :
@@ -1265,8 +1237,8 @@ private theorem section13_pCore_ne_bot_of_dvd_fitting_for_hall
   let _ : Fact q.val.Prime := ⟨q.property⟩
   let F : Subgroup R := fittingSubgroup R
   have hFcore_ne : pCore q.val F ≠ ⊥ :=
-    section13_pCore_ne_bot_of_dvd_card_nilpotent_for_hall
-      (R := F) (q := q.val) (by simpa [F] using hq)
+    section10_pCore_ne_bot_of_dvd_card_nilpotent
+      (H := F) (q := q.val) (by simpa [F] using hq)
   let X : Subgroup R := (pCore q.val F).map F.subtype
   have hX_ne : X ≠ ⊥ := by
     intro hXbot
@@ -1791,7 +1763,7 @@ private theorem section13_fixedPointSubgroup_quotient_eq_map_of_solvable_kernel_
     refine ⟨x, ?_, ?_⟩
     · simpa [fixedPointSubgroup] using hxfix
     · simp [x]
-  · exact fixedPointSubgroup_map_mk'_le_fixedPointSubgroup_quotient
+  · exact fixedPoints_subgroup_map_mk'_le_fixedPoints_subgroup_quotient
       (A := A) (G := L) K hKinv
 
 private theorem section13_lemma_13_8_fixed_point_prime_order_lift_to_normalizer_Q_divisor
@@ -2313,16 +2285,6 @@ private theorem section13_isPiSubgroup_map
   intro p hp
   exact hH p (hp.trans (Subgroup.card_map_dvd (H := H) f))
 
-omit [Finite G] [IsMinCE G] in
-private theorem section13_pSubgroup_le_pCore_of_nilpotent
-    {R : Type*} [Group R] [Finite R] [Group.IsNilpotent R]
-    {p : ℕ} [Fact p.Prime] {B : Subgroup R} (hBp : IsPGroup p B) :
-    B ≤ pCore p R := by
-  obtain ⟨S, hB_le_S⟩ := IsPGroup.exists_le_sylow (G := R) (p := p) hBp
-  have hS_normal : (S : Subgroup R).Normal :=
-    Group.IsNilpotent.sylow_normal (p := p) inferInstance S
-  exact hB_le_S.trans (le_sSup ⟨hS_normal, S.isPGroup'⟩)
-
 private theorem section13_lemma_13_8_commutator_malpha_inf_le_mstar_malpha
     {M Mstar Q : Subgroup G} {q : Nat.Primes}
     (hM : M ∈ section9MaximalSubgroups G)
@@ -2389,7 +2351,7 @@ private theorem section13_lemma_13_8_commutator_malpha_inf_le_mstar_malpha
   have hQbarD_le_pcore : QbarD ≤ PbarSub := by
     let _ : Group.IsNilpotent Dbar := hDbar_nil
     simpa [PbarSub] using
-      section13_pSubgroup_le_pCore_of_nilpotent
+      section12_pSubgroup_le_pCore_of_nilpotent_pre
         (R := Dbar) (p := q.val) (B := QbarD) hQbarD_p
   let Pbar : Subgroup (Mstar ⧸ α) := PbarSub.map Dbar.subtype
   have hPbar_norm : Pbar.Normal := by
@@ -2803,3 +2765,4 @@ public theorem lemma_13_8
             hCoreRight)
 
 end Section13
+

@@ -1,9 +1,10 @@
 module
 
 public import FeitThompson.BGsection13.lemma_13_1
-import FeitThompson.HallSubgroups.Conjugacy
+public import Theory.GroupTheory.Hall.Conjugacy
 import Mathlib.Data.Finset.NatDivisors
 import Mathlib.GroupTheory.Schreier
+
 
 open scoped Pointwise
 
@@ -139,7 +140,7 @@ omit [IsMinCE G] in
 private theorem section13_primeRank_le_card
     {R : Type*} [Group R] [Finite R] (q : ℕ) :
     primeRank q R ≤ Nat.card R := by
-  rw [primeRank]
+  rw [primeRank_eq_sSup_generatorRank]
   refine csSup_le ?_ ?_
   · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := R), inferInstance, Nat.zero_le _⟩
   · intro n hn
@@ -162,7 +163,7 @@ private theorem section13_generatorRank_le_groupRank_of_subgroup
     rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
     exact Group.rank_congr (Subgroup.subgroupOfEquivOfLe (H := A) (K := K) hAK)
   have hqrankK : generatorRank A ≤ primeRank q K := by
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     refine le_csSup ?_ ?_
     · refine ⟨Nat.card K, ?_⟩
       intro n hn
@@ -183,7 +184,7 @@ private theorem section13_primeRank_le_groupRank_sylow
     primeRank p.val R ≤ groupRank (S : Subgroup R) := by
   classical
   let _ : Fact p.val.Prime := ⟨p.property⟩
-  rw [primeRank]
+  rw [primeRank_eq_sSup_generatorRank]
   refine csSup_le ?_ ?_
   · exact ⟨0, ⊥, IsPGroup.of_bot (p := p.val) (G := R), inferInstance, Nat.zero_le _⟩
   · intro n hn

@@ -4,13 +4,17 @@ public import FeitThompson.BGsection3.Defs
 import Mathlib.GroupTheory.Rank
 import Mathlib.GroupTheory.SpecificGroups.Cyclic
 import Mathlib.GroupTheory.Frattini
-import FeitThompson.ElementaryAbelian
+import Theory.ElementaryAbelian.VectorSpace
+
 
 open scoped IsMulCommutative Subgroup
 
-/-- The minimal number of generators of a group. -/
+/-- The minimal number of generators of a group.
+
+For finite groups this agrees with Mathlib's `Group.rank`; new generic code
+should use `Group.rank` directly. -/
 @[expose] public noncomputable def generatorRank (G : Type*) [Group G] : ℕ :=
-  sInf { n : ℕ | ∃ s : Fin n → G, Subgroup.closure (Set.range s) = ⊤ }
+  sInf {n : ℕ | ∃ s : Fin n → G, Subgroup.closure (Set.range s) = ⊤}
 
 /-- A group is metacyclic if it has a cyclic normal subgroup with cyclic quotient. -/
 @[expose] public def IsMetacyclic (G : Type*) [Group G] : Prop :=
@@ -20,7 +24,7 @@ public theorem generatorRank_eq_group_rank
     (G : Type*) [Group G] [Finite G] :
     generatorRank G = Group.rank G := by
   classical
-  let T : Set ℕ := { n : ℕ | ∃ t : Fin n → G, Subgroup.closure (Set.range t) = ⊤ }
+  let T : Set ℕ := {n : ℕ | ∃ t : Fin n → G, Subgroup.closure (Set.range t) = ⊤}
   have hT_nonempty : T.Nonempty := by
     obtain ⟨S, hS_card, hS_top⟩ := Group.rank_spec G
     refine ⟨Group.rank G, ?_⟩
@@ -51,14 +55,13 @@ public theorem generatorRank_eq_group_rank
         refine ⟨S.equivFin ⟨g, hg⟩, ?_⟩
         simp
     simpa [hrange] using hS_top
-  · rcases (Nat.sInf_mem hT_nonempty) with ⟨t, ht_top⟩
+  · rcases Nat.sInf_mem hT_nonempty with ⟨t, ht_top⟩
     let U : Finset G := Finset.univ.image t
     have hU_top : Subgroup.closure (U : Set G) = ⊤ := by
       simpa [U, Finset.coe_image, Finset.coe_univ, Set.image_univ] using ht_top
     have hU_card : U.card ≤ generatorRank G := by
-      simpa [generatorRank, T] using (Finset.card_image_le (f := t) (s := Finset.univ))
+      simpa [generatorRank, T] using Finset.card_image_le (f := t) (s := Finset.univ)
     exact (Group.rank_le hU_top).trans hU_card
-
 
 set_option maxHeartbeats 800000 in
 public theorem generatorRank_le_finrank_of_elementaryAbelian
@@ -114,7 +117,7 @@ public theorem elementaryAbelian_finrank_le_generatorRank
   have hnonempty :
       {n : ℕ | ∃ s : Fin n → G, Subgroup.closure (Set.range s) = ⊤}.Nonempty := by
     refine ⟨Nat.card G, ?_⟩
-    letI : Fintype G := Fintype.ofFinite G
+    let : Fintype G := Fintype.ofFinite G
     let e : Fin (Nat.card G) ≃ G :=
       (finCongr (Nat.card_eq_fintype_card (α := G))).trans (Fintype.equivFin G).symm
     refine ⟨fun i => e i, ?_⟩
@@ -462,5 +465,5 @@ public theorem quotient_isCyclic_of_sup_cyclic_right
       QuotientGroup.mk' R₁ z = 1 * QuotientGroup.mk' R₁ z := by simp
       _ = QuotientGroup.mk' R₁ y * QuotientGroup.mk' R₁ z := by rw [hy_one]
       _ = QuotientGroup.mk' R₁ (y * z) := by simp
-  letI : IsCyclic R₂ := hR₂cyc
+  let : IsCyclic R₂ := hR₂cyc
   exact isCyclic_of_surjective q hq_surj

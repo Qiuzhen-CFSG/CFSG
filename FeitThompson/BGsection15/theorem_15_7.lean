@@ -2,9 +2,11 @@ module
 
 public import FeitThompson.BGsection15.corollary_15_6
 import FeitThompson.PCore.CentralizerControl
-import FeitThompson.HallSubgroups.Conjugacy
+public import Theory.GroupTheory.Hall.Conjugacy
 import Mathlib.Algebra.Group.Subgroup.Order
 import Mathlib.GroupTheory.Schreier
+open Representation
+
 
 open scoped Pointwise commutatorElement
 
@@ -107,7 +109,7 @@ private theorem section15_maximal_normalizer_eq_self_of_mem_ne_one
   · have hnorm_proper : Subgroup.normalizer (M : Set G) ≠ ⊤ := by
       intro hnorm_top
       have hMnormal : M.Normal := Subgroup.normalizer_eq_top_iff.mp hnorm_top
-      letI : IsSimpleGroup G := IsMinCE.simple
+      let _ : IsSimpleGroup G := IsMinCE.simple
       rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal M hMnormal with hMbot | hMtop
       · have hxbot : x ∈ (⊥ : Subgroup G) := by
           simpa [hMbot] using hxM
@@ -153,7 +155,7 @@ private theorem section15_initial_pCoreIn_not_cyclic_of_X_prime
     have hZ_le_F : Z ≤ F := Subgroup.zpowers_le.2 haF
     have hZp : IsPGroup p.val Z :=
       section15_isPGroup_of_prime_card (G := G) (A := Z) (q := p) hcard.symm
-    haveI : Group.IsNilpotent F := by
+    have _ : Group.IsNilpotent F := by
       simpa [F] using section8FittingSubgroup_isNilpotent M
     have hZ_le_coreF :
         Z ≤ piCoreIn ({p} : Set Nat.Primes) F :=
@@ -177,12 +179,12 @@ private theorem section15_initial_pCoreIn_not_cyclic_of_X_prime
     have hM_le_normP : M ≤ Subgroup.normalizer (P : Set G) := by
       have hPnormM : (P.subgroupOf M).Normal := by
         simpa [P] using (section15_pCoreIn_normalIn p M).2
-      letI : (P.subgroupOf M).Normal := hPnormM
+      let _ : (P.subgroupOf M).Normal := hPnormM
       exact Subgroup.le_normalizer_of_normal_subgroupOf hP_le_M
     have hM_le_normZ : M ≤ Subgroup.normalizer (Z : Set G) := by
       let Zsub : Subgroup P := Z.subgroupOf P
-      haveI : IsCyclic P := by simpa [P] using hPcyc
-      haveI : Zsub.Characteristic :=
+      have _ : IsCyclic P := by simpa [P] using hPcyc
+      have _ : Zsub.Characteristic :=
         section12_subgroup_characteristic_of_cyclic (H := P) Zsub
       have hnormP_le_normZsub :
           Subgroup.normalizer (P : Set G) ≤
@@ -253,8 +255,7 @@ private theorem section15_initial_pCoreIn_le_sigma_compl_fitting_core_of_not_sig
     {M : Subgroup G} {p : Nat.Primes}
     (hpσ : p ∉ section10SigmaPrimes M) :
     section15PCoreIn p M ≤ section15SigmaComplementFittingCore M := by
-  classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have _ : Fact p.val.Prime := ⟨p.property⟩
   let P : Subgroup G := section15PCoreIn p M
   let F : Subgroup G := section8FittingSubgroup M
   have hPF : P ≤ F := by
@@ -278,7 +279,7 @@ private theorem section15_initial_pCoreIn_le_sigma_compl_fitting_core_of_not_sig
       simpa [P] using section15_pCoreIn_le p M
     have hPnormM : (P.subgroupOf M).Normal := by
       simpa [P] using (section15_pCoreIn_normalIn p M).2
-    letI : (P.subgroupOf M).Normal := hPnormM
+    let _ : (P.subgroupOf M).Normal := hPnormM
     exact Subgroup.le_normalizer_of_normal_subgroupOf hPM
   have hF_norm_P : F ≤ Subgroup.normalizer (P : Set G) := by
     exact (section8FittingSubgroup_le M).trans hM_norm_P
@@ -310,7 +311,7 @@ private theorem section15_initial_prime_mem_sigma_of_fitting_intersection
   have hYcyc : IsCyclic (section15SigmaComplementFittingCore M) :=
     (corollary_15_5_a (G := G) (M := M) (MF := MF) hM hMF).2.1
   have hPcyc : IsCyclic (section15PCoreIn p M) := by
-    letI : IsCyclic (section15SigmaComplementFittingCore M) := hYcyc
+    let _ : IsCyclic (section15SigmaComplementFittingCore M) := hYcyc
     exact Subgroup.isCyclic_of_le hpCore_le_Y
   exact
     section15_initial_pCoreIn_not_cyclic_of_X_prime
@@ -345,7 +346,7 @@ private theorem section15_initial_X_le_msigma_of_sigma
     exact hXσ p (by simpa [Xloc, hcard] using hpXloc)
   have hMsolv : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
-  haveI : ((section10Msigma M).subgroupOf M).Normal := by
+  have _ : ((section10Msigma M).subgroupOf M).Normal := by
     simpa [section15_msigma_subgroupOf_eq] using (section15_msigma_normalIn (M := M)).2
   have hHall :
       IsHallSubgroup (section10SigmaPrimes M)
@@ -387,7 +388,7 @@ private theorem section15_initial_X_msigma_cyclic_beta_compl
     (E := E) (E₁₂ := E₁₂) (E₁ := E₁) (E₂ := E₂) (E₃ := E₃)
     hM hE).2.2 g hg
   have hXcyc : IsCyclic ↥X := by
-    letI : IsCyclic ↥(section10Msigma M ⊓ M.conjBy g) := h12g.1
+    let _ : IsCyclic ↥(section10Msigma M ⊓ M.conjBy g) := h12g.1
     exact Subgroup.isCyclic_of_le hXle_inter
   have hXβc : IsPiSubgroup (section10BetaPrimes M)ᶜ X :=
     IsPiSubgroup.of_le hXle_inter h12g.2.1
@@ -528,7 +529,7 @@ private theorem section15_initial_prime_not_beta_of_MF
       exact IsPGroup.map (p := p.val) (H := (P : Subgroup M))
         P.isPGroup' M.subtype
     have hP_le_MFsub : (P : Subgroup M) ≤ MF.subgroupOf M := by
-      haveI : (MF.subgroupOf M).Normal := hMFnormM
+      have _ : (MF.subgroupOf M).Normal := hMFnormM
       exact section15_sylow_le_normal_hall_of_mem hMFHall hpMF P
     have hPG_le_MF : PG ≤ MF := by
       intro x hx
@@ -781,7 +782,7 @@ private theorem section15_fitting_prime_mem_sigma_or_tau2_of_MF_eq_msigma
     simpa [Ysub, Y, F, section15SigmaComplementFittingCore] using
       (piCore_map_subtype_subgroupOf (G := G)
         (π := (section10SigmaPrimes M)ᶜ) (H := section8FittingSubgroup M))
-  haveI : Ysub.Normal := by
+  have _ : Ysub.Normal := by
     rw [hYsub_eq]
     infer_instance
   have hSubSup_eq : (S ⊔ Y).subgroupOf F = Ssub ⊔ Ysub := by
@@ -953,7 +954,7 @@ private theorem section15_theorem15_7_d_conclusions
     simpa [hinf_bot] using hxinf
   have hcomp : section12ComplementIn E E₁ E₂ :=
     ⟨hE1E, hE2E, hEsup, hE1E2_disj⟩
-  haveI : (E₂.subgroupOf E).Normal := hE2norm.2
+  have _ : (E₂.subgroupOf E).Normal := hE2norm.2
   have hcomp' : (E₁.subgroupOf E).IsComplement' (E₂.subgroupOf E) :=
     section15_normal_complementIn_isComplement' hcomp hE2norm
   have hquot : section15QuotientMulEquiv E E₂ E₁ := by
@@ -1016,22 +1017,22 @@ public theorem section15_msigma_eq_ambientDerived_of_familyP1
     have hMP : M ∈ section14MFamilyP G := hP1.1
     have hZcyc : IsCyclic (section14Z M K) :=
       (theorem_14_7_d (G := G) (M := M) (K := K) hMP hK).2.1
-    letI : IsCyclic (section14Z M K) := hZcyc
+    let _ : IsCyclic (section14Z M K) := hZcyc
     exact Subgroup.isCyclic_of_le (show K ≤ section14Z M K by
       change K ≤ K ⊔ section14KStar M K
       exact le_sup_left)
   have hKloc_comm : IsMulCommutative Kloc := by
-    letI : IsCyclic K := hKcyc
+    let _ : IsCyclic K := hKcyc
     refine ⟨⟨fun x y => Subtype.ext ?_⟩⟩
     apply Subtype.ext
     exact setLike_mul_comm
       (s := K) x.property y.property
-  haveI : Sloc.Normal := by
+  have _ : Sloc.Normal := by
     simpa [S, Sloc] using hSnormM.2
   let eQ : M ⧸ Sloc ≃* Kloc := hcomp'.QuotientMulEquiv
   have hquot_comm : IsMulCommutative (M ⧸ Sloc) := by
-    letI : IsMulCommutative Kloc := hKloc_comm
-    letI : CommGroup Kloc := IsMulCommutative.instCommGroup
+    let _ : IsMulCommutative Kloc := hKloc_comm
+    let _ : CommGroup Kloc := IsMulCommutative.instCommGroup
     refine ⟨⟨fun x y => ?_⟩⟩
     apply eQ.injective
     simpa [map_mul] using (mul_comm (eQ x) (eQ y))
@@ -1138,7 +1139,7 @@ private theorem section15_theorem15_7_rank_MF_eq_two_of_abelian
   have hX₁q : IsPGroup q.val X₁ :=
     section15_isPGroup_of_prime_card (G := G) (A := X₁) (q := q) hX₁card.symm
   have hX₁leMF : X₁ ≤ MF := hX₁leX.trans hXleMF
-  letI : IsMulCommutative MF := hMFcomm
+  let _ : IsMulCommutative MF := hMFcomm
   let C : Subgroup G := subgroupCentralizerIn MF X₁
   have hC_le_MF : C ≤ MF := by
     intro x hx
@@ -1276,45 +1277,6 @@ private theorem section15_theorem15_7_abelian_alternative
     section15_theorem15_7_rank_MF_eq_two_of_abelian
       hM hMF hnotTI hg hX hXne hE hMFcomm⟩
 
-omit [IsMinCE G] in
-public theorem section15_isMulCommutative_of_mulEquiv
-    {A B : Type*} [Group A] [Group B] (e : A ≃* B)
-    (hB : IsMulCommutative B) :
-    IsMulCommutative A := by
-  classical
-  refine ⟨⟨fun x y => ?_⟩⟩
-  letI : IsMulCommutative B := hB
-  letI : CommGroup B := IsMulCommutative.instCommGroup
-  apply e.injective
-  calc
-    e (x * y) = e x * e y := e.map_mul x y
-    _ = e y * e x := mul_comm (e x) (e y)
-    _ = e (y * x) := (e.map_mul y x).symm
-
-omit [IsMinCE G] in
-private theorem section15_isMulCommutative_of_nilpotent_of_sylow
-    {K : Type*} [Group K] [Finite K]
-    (hnil : Group.IsNilpotent K)
-    (hSyl : ∀ (p : ℕ) [Fact p.Prime] (P : Sylow p K),
-      IsMulCommutative (P : Subgroup K)) :
-    IsMulCommutative K := by
-  classical
-  let e : (∀ p : (Nat.card K).primeFactors, ∀ P : Sylow p.val K, P) ≃* K :=
-    Sylow.directProductOfNormal (G := K) (fun {p} [hp : Fact p.Prime] (P : Sylow p K) =>
-      Group.IsNilpotent.sylow_normal hnil p P)
-  refine ⟨⟨fun x y => ?_⟩⟩
-  let x' := e.symm x
-  let y' := e.symm y
-  have hxy' : x' * y' = y' * x' := by
-    funext p P
-    haveI : Fact p.val.Prime := ⟨Nat.prime_of_mem_primeFactors p.property⟩
-    have hcomm : IsMulCommutative (P : Subgroup K) := hSyl p.val P
-    exact Subtype.ext <|
-      setLike_mul_comm (s := (P : Subgroup K))
-        (x' p P).property (y' p P).property
-  have hxy := congrArg e hxy'
-  simpa [x', y'] using hxy
-
 /-- The source's local `E1X_facts`: for every prime-order subgroup
 `X₁≤X`, the centralizer in the nonabelian branch is non-unique, has rank at
 most two, and is abelian. -/
@@ -1436,10 +1398,10 @@ private theorem section15_theorem15_7_prime_order_centralizer_facts
   have hCcomm : IsMulCommutative C := by
     let Csub : Subgroup MF := C.subgroupOf MF
     have hCsub_nil : Group.IsNilpotent Csub := by
-      letI : Group.IsNilpotent MF := hMFnil
+      let _ : Group.IsNilpotent MF := hMFnil
       infer_instance
     have hCsub_comm : IsMulCommutative Csub := by
-      apply section15_isMulCommutative_of_nilpotent_of_sylow hCsub_nil
+      apply section12_isMulCommutative_of_nilpotent_of_sylow hCsub_nil
       intro r _hr P
       by_contra hPnoncomm
       let φ : Csub →* G := MF.subtype.comp Csub.subtype
@@ -1449,7 +1411,7 @@ private theorem section15_theorem15_7_prime_order_centralizer_facts
       have hPambNoncomm : ¬ IsMulCommutative Pamb := by
         intro hPambcomm
         have hPcomm : IsMulCommutative (P : Subgroup Csub) := by
-          letI : IsMulCommutative Pamb := hPambcomm
+          let _ : IsMulCommutative Pamb := hPambcomm
           refine ⟨⟨fun x y => ?_⟩⟩
           have hxPamb : φ x ∈ Pamb := ⟨x, x.property, rfl⟩
           have hyPamb : φ y ∈ Pamb := ⟨y, y.property, rfl⟩
@@ -1474,109 +1436,10 @@ private theorem section15_theorem15_7_prime_order_centralizer_facts
         change (((u : Csub) : MF) : G) ∈ C
         exact Subgroup.mem_subgroupOf.mp u.property
       exact hCnotUnique (section9_unique_of_le hPamb_le_C hCproper hPunique)
-    exact section15_isMulCommutative_of_mulEquiv
+    exact section12_isMulCommutative_of_mulEquiv
       (e := (Subgroup.subgroupOfEquivOfLe (H := C) (K := MF) hC_le_MF).symm)
       hCsub_comm
   exact ⟨hCnotUnique, hC_rank_le_two, hCcomm⟩
-
-omit [IsMinCE G] in
-private theorem section15_pCore_commute_of_ne
-    {R : Type*} [Group R] {p q : ℕ} [Fact p.Prime] [Fact q.Prime]
-    (hpq : p ≠ q) :
-    ∀ x ∈ pCore p R, ∀ y ∈ pCore q R, x * y = y * x := by
-  intro x hx y hy
-  have hdisj : Disjoint (pCore p R) (pCore q R) :=
-    IsPGroup.disjoint_of_ne p q hpq (pCore p R) (pCore q R)
-      pCore_isPGroup pCore_isPGroup
-  have hmem_comm : ⁅x, y⁆ ∈ ⁅pCore p R, pCore q R⁆ :=
-    Subgroup.commutator_mem_commutator hx hy
-  have hle : ⁅pCore p R, pCore q R⁆ ≤ pCore p R ⊓ pCore q R :=
-    Subgroup.commutator_le_inf (H₁ := pCore p R) (H₂ := pCore q R)
-  have hmem_inf : ⁅x, y⁆ ∈ pCore p R ⊓ pCore q R := hle hmem_comm
-  have hinf_eq : (pCore p R ⊓ pCore q R : Subgroup R) = ⊥ := hdisj.eq_bot
-  rw [hinf_eq] at hmem_inf
-  have h1 : ⁅x, y⁆ = (1 : R) := by simpa using hmem_inf
-  rwa [commutatorElement_eq_one_iff_mul_comm] at h1
-
-omit [IsMinCE G] in
-private theorem section15_nilpotent_sylow_le_centralizer_of_pSubgroup_ne
-    {R : Type*} [Group R] [Finite R] [Group.IsNilpotent R]
-    {p q : Nat.Primes} (hpq : p ≠ q) (P : Sylow p.val R)
-    {Q : Subgroup R} (hQq : IsPGroup q.val Q) :
-    (P : Subgroup R) ≤ Subgroup.centralizer (Q : Set R) := by
-  haveI : Fact p.val.Prime := ⟨p.property⟩
-  haveI : Fact q.val.Prime := ⟨q.property⟩
-  have hpq_val : p.val ≠ q.val := by
-    intro hpq_val
-    exact hpq (Subtype.ext hpq_val)
-  have hP_le_core : (P : Subgroup R) ≤ pCore p.val R := by
-    have hPnormal : (P : Subgroup R).Normal :=
-      Group.IsNilpotent.sylow_normal (p := p.val) inferInstance P
-    exact le_sSup ⟨hPnormal, P.isPGroup'⟩
-  have hQ_le_core : Q ≤ pCore q.val R := by
-    obtain ⟨Q₀, hQ_le_Q₀⟩ := IsPGroup.exists_le_sylow (G := R) (p := q.val) hQq
-    have hQ₀normal : (Q₀ : Subgroup R).Normal :=
-      Group.IsNilpotent.sylow_normal (p := q.val) inferInstance Q₀
-    exact hQ_le_Q₀.trans (le_sSup ⟨hQ₀normal, Q₀.isPGroup'⟩)
-  intro x hxP
-  rw [Subgroup.mem_centralizer_iff]
-  intro y hyQ
-  exact (section15_pCore_commute_of_ne hpq_val x (hP_le_core hxP) y (hQ_le_core hyQ)).symm
-
-omit [IsMinCE G] in
-private theorem section15_pSubgroup_le_centralizer_of_nilpotent_overgroup
-    {L X P : Subgroup G} {p q : Nat.Primes} (hpq : p ≠ q)
-    (hLnil : Group.IsNilpotent L) (hPL : P ≤ L) (hXL : X ≤ L)
-    (hPp : IsPGroup p.val P) (hXq : IsPGroup q.val X) :
-    P ≤ Subgroup.centralizer (X : Set G) := by
-  classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
-  let Psub : Subgroup L := P.subgroupOf L
-  let Xsub : Subgroup L := X.subgroupOf L
-  have hPsubp : IsPGroup p.val Psub :=
-    hPp.of_equiv (Subgroup.subgroupOfEquivOfLe (H := P) (K := L) hPL).symm
-  have hXsubq : IsPGroup q.val Xsub :=
-    hXq.of_equiv (Subgroup.subgroupOfEquivOfLe (H := X) (K := L) hXL).symm
-  obtain ⟨PL, hPsub_le_PL⟩ :=
-    IsPGroup.exists_le_sylow (G := L) (p := p.val) hPsubp
-  letI : Group.IsNilpotent L := hLnil
-  have hPL_cent_Xsub : (PL : Subgroup L) ≤ Subgroup.centralizer (Xsub : Set L) :=
-    section15_nilpotent_sylow_le_centralizer_of_pSubgroup_ne
-      (R := L) hpq PL hXsubq
-  intro y hyP
-  rw [Subgroup.mem_centralizer_iff]
-  intro x hxX
-  let yL : L := ⟨y, hPL hyP⟩
-  let xL : L := ⟨x, hXL hxX⟩
-  have hyPsub : yL ∈ Psub := hyP
-  have hxXsub : xL ∈ Xsub := hxX
-  have hcommL :=
-    Subgroup.mem_centralizer_iff.mp (hPL_cent_Xsub (hPsub_le_PL hyPsub)) xL hxXsub
-  exact congrArg Subtype.val hcommL
-
-omit [IsMinCE G] in
-private theorem section15_pSubgroup_le_pCoreIn_of_nilpotent
-    {H X : Subgroup G} {p : Nat.Primes}
-    (hHnil : Group.IsNilpotent H) (hXH : X ≤ H) (hXp : IsPGroup p.val X) :
-    X ≤ section15PCoreIn p H := by
-  classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
-  let Xsub : Subgroup H := X.subgroupOf H
-  have hXsubp : IsPGroup p.val Xsub :=
-    hXp.of_equiv (Subgroup.subgroupOfEquivOfLe (H := X) (K := H) hXH).symm
-  obtain ⟨S, hXsub_le_S⟩ :=
-    IsPGroup.exists_le_sylow (G := H) (p := p.val) hXsubp
-  letI : Group.IsNilpotent H := hHnil
-  have hSnormal : (S : Subgroup H).Normal :=
-    Group.IsNilpotent.sylow_normal (p := p.val) hHnil S
-  have hS_le_core : (S : Subgroup H) ≤ pCore p.val H :=
-    le_sSup ⟨hSnormal, S.isPGroup'⟩
-  intro x hx
-  let xH : H := ⟨x, hXH hx⟩
-  have hxXsub : xH ∈ Xsub := hx
-  have hxcore : xH ∈ pCore p.val H := hS_le_core (hXsub_le_S hxXsub)
-  change x ∈ (pCore p.val H).map H.subtype
-  exact Subgroup.mem_map.mpr ⟨xH, hxcore, rfl⟩
 
 omit [Finite G] [IsMinCE G] in
 private theorem section15_omegaOneCenter_le
@@ -1637,7 +1500,7 @@ private theorem section15_isMulCommutative_sup_of_le_centralizer
           y = a⁻¹ * y' * a := by simp [y', mul_assoc]
           _ = y' := hconj
       simpa [hy_eq] using hy'Y
-  haveI : YD.Normal := by
+  have _ : YD.Normal := by
     simpa [D, YD] using
       (Subgroup.normal_subgroupOf_sup_of_le_normalizer
         (H := A) (N := Y) hA_norm_Y)
@@ -1718,22 +1581,20 @@ private theorem section15_theorem15_7_pCore_noncomm_of_primeOrder_centralizer
     section15_isPGroup_of_prime_card (G := G) (A := X₁) (q := p) hX₁card.symm
   intro hPcomm
   apply hMFnoncomm
-  apply section15_isMulCommutative_of_nilpotent_of_sylow hMFnil
+  apply section12_isMulCommutative_of_nilpotent_of_sylow hMFnil
   intro r _hr S
   by_cases hrp : r = p.val
   · subst r
-    haveI : Fact p.val.Prime := ⟨p.property⟩
+    have _ : Fact p.val.Prime := ⟨p.property⟩
     refine ⟨⟨fun x y => ?_⟩⟩
-    have hSnormal : (S : Subgroup MF).Normal :=
-      Group.IsNilpotent.sylow_normal (p := p.val) hMFnil S
-    have hS_le_core : (S : Subgroup MF) ≤ pCore p.val MF :=
-      le_sSup ⟨hSnormal, S.isPGroup'⟩
     have hxP : (((x : S) : MF) : G) ∈ section15PCoreIn p MF := by
       change (((x : S) : MF) : G) ∈ (pCore p.val MF).map MF.subtype
-      exact Subgroup.mem_map.mpr ⟨(x : MF), hS_le_core x.property, rfl⟩
+      exact Subgroup.mem_map.mpr ⟨(x : MF),
+        section12_pSubgroup_le_pCore_of_nilpotent_pre S.isPGroup' x.property, rfl⟩
     have hyP : (((y : S) : MF) : G) ∈ section15PCoreIn p MF := by
       change (((y : S) : MF) : G) ∈ (pCore p.val MF).map MF.subtype
-      exact Subgroup.mem_map.mpr ⟨(y : MF), hS_le_core y.property, rfl⟩
+      exact Subgroup.mem_map.mpr ⟨(y : MF),
+        section12_pSubgroup_le_pCore_of_nilpotent_pre S.isPGroup' y.property, rfl⟩
     have hxyG :
         (((x * y : S) : MF) : G) = (((y * x : S) : MF) : G) :=
       setLike_mul_comm
@@ -1749,11 +1610,16 @@ private theorem section15_theorem15_7_pCore_noncomm_of_primeOrder_centralizer
     have hX₁subp : IsPGroup p.val X₁sub :=
       hX₁p.of_equiv
         (Subgroup.subgroupOfEquivOfLe (H := X₁) (K := MF) hX₁leMF).symm
-    letI : Group.IsNilpotent MF := hMFnil
+    let _ : Group.IsNilpotent MF := hMFnil
+    have htop_nil : Group.IsNilpotent (⊤ : Subgroup MF) := by
+      let e : MF ≃* (⊤ : Subgroup MF) :=
+        (Subgroup.topEquiv : (⊤ : Subgroup MF) ≃* MF).symm
+      exact Group.nilpotent_of_mulEquiv (G := MF) (G' := (⊤ : Subgroup MF)) e
     have hScentX₁ : (S : Subgroup MF) ≤ Subgroup.centralizer (X₁sub : Set MF) := by
       simpa [rp] using
-        section15_nilpotent_sylow_le_centralizer_of_pSubgroup_ne
-          (R := MF) (p := rp) (q := p) hrp' S hX₁subp
+        section10_pSubgroup_le_centralizer_of_nilpotent_overgroup
+          (G := MF) (L := (⊤ : Subgroup MF)) (P := (S : Subgroup MF)) (X := X₁sub)
+          (p := rp) (q := p) hrp' htop_nil le_top le_top S.isPGroup' hX₁subp
     refine ⟨⟨fun x y => ?_⟩⟩
     let C : Subgroup G := subgroupCentralizerIn MF X₁
     have hxC : (((x : S) : MF) : G) ∈ C := by
@@ -1776,7 +1642,7 @@ private theorem section15_theorem15_7_pCore_noncomm_of_primeOrder_centralizer
           zMF * (y : MF) = (y : MF) * zMF :=
         Subgroup.mem_centralizer_iff.mp (hScentX₁ y.property) zMF hzX₁
       exact congrArg Subtype.val hcommMF
-    haveI : IsMulCommutative C := by
+    have _ : IsMulCommutative C := by
       simpa [C] using hfacts.2.2
     have hxyG :
         (((x * y : S) : MF) : G) = (((y * x : S) : MF) : G) :=
@@ -1833,7 +1699,7 @@ private theorem section15_theorem15_7_X_eq_primeOrder_and_centralizer_split_of_n
           hX₂prime.2.symm
       have hP_le_cent_X₂ :
           section15PCoreIn p MF ≤ Subgroup.centralizer (X₂ : Set G) :=
-        section15_pSubgroup_le_centralizer_of_nilpotent_overgroup
+        section10_pSubgroup_le_centralizer_of_nilpotent_overgroup
           (G := G) (L := MF) (X := X₂) (P := section15PCoreIn p MF)
           (p := p) (q := q) (by intro hpq; exact hqne hpq.symm)
           hMFnil (section15_pCoreIn_le p MF) hX₂leMF
@@ -1849,7 +1715,7 @@ private theorem section15_theorem15_7_X_eq_primeOrder_and_centralizer_split_of_n
         intro y hyP
         exact ⟨section15_pCoreIn_le p MF hyP, hP_le_cent_X₂ hyP⟩
       have hPcomm : IsMulCommutative (section15PCoreIn p MF) := by
-        haveI : IsMulCommutative C₂ := by
+        have _ : IsMulCommutative C₂ := by
           simpa [C₂] using hfacts₂.2.2
         refine ⟨⟨fun a b => ?_⟩⟩
         have hcommG :
@@ -1877,7 +1743,7 @@ private theorem section15_theorem15_7_X_eq_primeOrder_and_centralizer_split_of_n
         simpa [Z₀] using section15_omegaOneCenter_le_centralizer (G := G) (p := p) P hyZ₀
       exact (Subgroup.mem_centralizer_iff.mp hy_cent_P x hxP).symm
     have hPcomm : IsMulCommutative P := by
-      haveI : IsMulCommutative (subgroupCentralizerIn MF X₁) := by
+      have _ : IsMulCommutative (subgroupCentralizerIn MF X₁) := by
         simpa using hfacts.2.2
       refine ⟨⟨fun a b => ?_⟩⟩
       have hcommG :
@@ -1905,14 +1771,14 @@ private theorem section15_theorem15_7_X_eq_primeOrder_and_centralizer_split_of_n
   have hX₁B : X₁ ∈ section10PrimeOrderSubgroupsIn p B := by
     exact ⟨by simp [B], hX₁card⟩
   have hBmax : B ∈ section10RankTwoMaximalElementaryAbelianSubgroups p G := by
-    haveI : Fact p.val.Prime := ⟨p.property⟩
+    have _ : Fact p.val.Prime := ⟨p.property⟩
     let C : Subgroup G := subgroupCentralizerIn MF X₁
     have hCnotUnique : C ∉ section9UniqueSubgroups G := by
       simpa [C] using hfacts.1
     have hCrank : groupRank C ≤ 2 := by
       simpa [C] using hfacts.2.1
     have hX₁elem : IsElementaryAbelian p.val X₁ := by
-      haveI : IsCyclic X₁ := isCyclic_of_prime_card (p := p.val) hX₁card
+      have _ : IsCyclic X₁ := isCyclic_of_prime_card (p := p.val) hX₁card
       exact section15_isElementaryAbelian_of_prime_card_isCyclic
         (p := p.val) (H := X₁) hX₁card
     have hZ₀elem : IsElementaryAbelian p.val Z₀ := by
@@ -1927,8 +1793,8 @@ private theorem section15_theorem15_7_X_eq_primeOrder_and_centralizer_split_of_n
           section15_omegaOneCenter_le_centralizer (G := G) (p := p) P hz
       exact Subgroup.mem_centralizer_iff.mp hz_cent_P x (hX₁leP hxX₁)
     have hBelem : IsElementaryAbelian p.val B := by
-      letI : IsElementaryAbelian p.val X₁ := hX₁elem
-      letI : IsElementaryAbelian p.val Z₀ := hZ₀elem
+      let _ : IsElementaryAbelian p.val X₁ := hX₁elem
+      let _ : IsElementaryAbelian p.val Z₀ := hZ₀elem
       simpa [B] using
         section15_isElementaryAbelian_sup_of_le_centralizer
           (G := G) (p := p.val) (E := X₁) (D := Z₀) hZ₀leCentX₁
@@ -1941,7 +1807,7 @@ private theorem section15_theorem15_7_X_eq_primeOrder_and_centralizer_split_of_n
                 intro x hxX₁
                 rw [Subgroup.mem_centralizer_iff]
                 intro y hyX₁
-                haveI : IsElementaryAbelian p.val X₁ := hX₁elem
+                have _ : IsElementaryAbelian p.val X₁ := hX₁elem
                 exact
                   setLike_mul_comm
                     (s := X₁) hyX₁ hxX₁)
@@ -1958,7 +1824,7 @@ private theorem section15_theorem15_7_X_eq_primeOrder_and_centralizer_split_of_n
       exact hX₁nebot <| le_bot_iff.mp <| by
         intro x hx
         simpa [hPbot] using hX₁leP hx
-    haveI : Nontrivial P := (Subgroup.nontrivial_iff_ne_bot P).2 hPnebot
+    have _ : Nontrivial P := (Subgroup.nontrivial_iff_ne_bot P).2 hPnebot
     have hZ₀nebot : Z₀ ≠ ⊥ := by
       simpa [Z₀] using
         section15_omegaOneCenter_ne_bot_of_nontrivial_pSubgroup
@@ -1983,7 +1849,7 @@ private theorem section15_theorem15_7_X_eq_primeOrder_and_centralizer_split_of_n
     have hp_lt_cardB : p.val < Nat.card B := by
       simpa [hX₁card] using natCard_lt_of_subgroup_lt hX₁ltB
     have hBp : IsPGroup p.val B := by
-      letI : IsElementaryAbelian p.val B := hBelem
+      let _ : IsElementaryAbelian p.val B := hBelem
       exact IsElementaryAbelian.isPGroup p.val B
     have hBcard_lower : p.val ^ 2 ≤ Nat.card B := by
       rcases hBp.exists_card_eq with ⟨n, hn⟩
@@ -2002,7 +1868,7 @@ private theorem section15_theorem15_7_X_eq_primeOrder_and_centralizer_split_of_n
         hBp.of_equiv
           (Subgroup.subgroupOfEquivOfLe (H := B) (K := C) hB_le_C).symm
       have hBsubcomm : IsMulCommutative Bsub := by
-        letI : IsMulCommutative B := hBelem.toIsMulCommutative
+        let _ : IsMulCommutative B := hBelem.toIsMulCommutative
         exact Subgroup.subgroupOf_isMulCommutative (H := B) (K := C)
       have hgen_eq : generatorRank Bsub = generatorRank B := by
         rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
@@ -2022,8 +1888,8 @@ private theorem section15_theorem15_7_X_eq_primeOrder_and_centralizer_split_of_n
       exact hgen_le_prime'.trans hprime_le_rankC
     have hBgen_le_two : generatorRank B ≤ 2 := hBgen_le_rankC.trans hCrank
     have hBcard_upper : Nat.card B ≤ p.val ^ 2 := by
-      letI : IsElementaryAbelian p.val B := hBelem
-      letI : CommGroup B := IsMulCommutative.instCommGroup
+      let _ : IsElementaryAbelian p.val B := hBelem
+      let _ : CommGroup B := IsMulCommutative.instCommGroup
       have hcard_dvd : Nat.card B ∣ p.val ^ Group.rank B := by
         simpa using card_dvd_exponent_pow_rank' (G := B) (n := p.val) (fun b =>
           Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
@@ -2058,8 +1924,8 @@ private theorem section15_theorem15_7_X_eq_primeOrder_and_centralizer_split_of_n
       hpG hBmax hPp (by simpa [P] using hPnoncomm) hBleP hX₁B
       (by simpa [Z₀, P] using hX₁neZ₀)
   have hXcomm : IsMulCommutative X := by
-    letI : IsCyclic X := hred.2.2.2
-    letI : CommGroup X := IsCyclic.commGroup
+    let _ : IsCyclic X := hred.2.2.2
+    let _ : CommGroup X := IsCyclic.commGroup
     infer_instance
   have hXleCP : X ≤ subgroupCentralizerIn P B := by
     intro x hxX
@@ -2145,8 +2011,8 @@ private theorem section15_theorem15_7_X_eq_primeOrder_and_centralizer_split_of_n
       setLike_mul_comm
         (s := X) (hX₁leX a.property) (hX₁leX b.property)
   have hZcomm : IsMulCommutative Z := by
-    letI : IsCyclic Z := hZcyc
-    letI : CommGroup Z := IsCyclic.commGroup
+    let _ : IsCyclic Z := hZcyc
+    let _ : CommGroup Z := IsCyclic.commGroup
     infer_instance
   have hDcomm : IsMulCommutative (X₁ ⊔ Z : Subgroup G) :=
     section15_isMulCommutative_sup_of_le_centralizer
@@ -2159,9 +2025,9 @@ private theorem section15_theorem15_7_X_eq_primeOrder_and_centralizer_split_of_n
     let D : Subgroup G := X₁ ⊔ Z
     let X₁D : Subgroup D := X₁.subgroupOf D
     let ZD : Subgroup D := Z.subgroupOf D
-    haveI : IsMulCommutative D := by simpa [D] using hDcomm
-    letI : CommGroup D := IsMulCommutative.instCommGroup
-    haveI : X₁D.Normal := by
+    have _ : IsMulCommutative D := by simpa [D] using hDcomm
+    let _ : CommGroup D := IsMulCommutative.instCommGroup
+    have _ : X₁D.Normal := by
       infer_instance
     have hX₁D_ZD_top : X₁D ⊔ ZD = ⊤ := by
       calc
@@ -2310,14 +2176,14 @@ private theorem section15_theorem15_7_pPrimeCore_cyclic_of_primeOrder_centralize
   have hLleMF : L ≤ MF := by
     simpa [L] using section15_pPrimeCore_le (G := G) (p := p) MF
   have hLnil : Group.IsNilpotent L := by
-    haveI : Group.IsNilpotent MF := hMFnil
+    have _ : Group.IsNilpotent MF := hMFnil
     let LMF : Subgroup MF := L.subgroupOf MF
     have hLMFnil : Group.IsNilpotent LMF := inferInstance
     exact
       (Group.isNilpotent_congr
         (Subgroup.subgroupOfEquivOfLe (H := L) (K := MF) hLleMF)).1 hLMFnil
   have hLrank : 2 ≤ groupRank L := by
-    haveI : Group.IsNilpotent L := hLnil
+    have _ : Group.IsNilpotent L := hLnil
     exact
       section15_groupRank_at_least_two_of_not_isCyclic L
         (by simpa [L] using hPPrimeNoncyc)
@@ -2428,7 +2294,7 @@ private theorem section15QuotientExponentDvd_of_complement_exponent_dvd
   have hHnorm' : section10NormalIn H M := ⟨hHMnorm, hHnormal⟩
   have hcomp' : (U.subgroupOf M).IsComplement' (H.subgroupOf M) :=
     section15_normal_complementIn_isComplement' hcomp_symm hHnorm'
-  haveI : (H.subgroupOf M).Normal := hHnormal
+  have _ : (H.subgroupOf M).Normal := hHnormal
   let eQ : M ⧸ H.subgroupOf M ≃* U.subgroupOf M := hcomp'.QuotientMulEquiv
   have hUsub_exp : Monoid.exponent (U.subgroupOf M) = Monoid.exponent U := by
     simpa using Monoid.exponent_eq_of_mulEquiv (Subgroup.subgroupOfEquivOfLe hUM)
@@ -2457,7 +2323,7 @@ private theorem section15QuotientCardDvd_of_complement_card_dvd
   have hHnorm' : section10NormalIn H M := ⟨hHMnorm, hHnormal⟩
   have hcomp' : (U.subgroupOf M).IsComplement' (H.subgroupOf M) :=
     section15_normal_complementIn_isComplement' hcomp_symm hHnorm'
-  haveI : (H.subgroupOf M).Normal := hHnormal
+  have _ : (H.subgroupOf M).Normal := hHnormal
   let eQ : M ⧸ H.subgroupOf M ≃* U.subgroupOf M := hcomp'.QuotientMulEquiv
   have hUsub_card : Nat.card (U.subgroupOf M) = Nat.card U :=
     Nat.card_congr (Subgroup.subgroupOfEquivOfLe hUM).toEquiv
@@ -2481,7 +2347,7 @@ private theorem section15_exponent_dvd_prime_sub_one_of_regular_conj_action
       ∀ a : G, a ∈ A → a ≠ 1 → elementCentralizerIn Z a = ⊥) :
     Monoid.exponent A ∣ q.val - 1 := by
   classical
-  letI : MulDistribMulAction A Z :=
+  let _ : MulDistribMulAction A Z :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer (G := G) A Z hAnormZ
   let φ : A →* MulAut Z := MulDistribMulAction.toMulAut A Z
   have hZne : Z ≠ ⊥ := by
@@ -2523,7 +2389,7 @@ private theorem section15_exponent_dvd_prime_sub_one_of_regular_conj_action
   have hAut_exp_dvd_card : Monoid.exponent (MulAut Z) ∣ Nat.card (MulAut Z) :=
     Group.exponent_dvd_nat_card
   have hAut_card : Nat.card (MulAut Z) = q.val - 1 := by
-    letI : IsCyclic Z := hZcyc
+    let _ : IsCyclic Z := hZcyc
     rw [IsCyclic.card_mulAut, hZcard, Nat.totient_prime q.property]
   exact hA_exp_dvd_Aut.trans (by simpa [hAut_card] using hAut_exp_dvd_card)
 
@@ -2564,10 +2430,10 @@ private theorem section15_omega1Z_characteristic
   let ZR : Subgroup R := Subgroup.center R
   let Ωc : Subgroup ZR := omega₁ (G := ZR) (p := p)
   have hZchar : ZR.Characteristic := Subgroup.centerCharacteristic
-  letI : ZR.Characteristic := hZchar
+  let _ : ZR.Characteristic := hZchar
   have hΩchar : Ωc.Characteristic := by
     simpa [Ωc] using omega₁_characteristic (G := ZR) (p := p)
-  letI : Ωc.Characteristic := hΩchar
+  let _ : Ωc.Characteristic := hΩchar
   simpa [Ω₁Z, ZR, Ωc] using
     characteristic_map_subtype_of_characteristic (G := R) ZR Ωc
 
@@ -2594,44 +2460,15 @@ private theorem section15_normalizer_le_normalizer_map_subtype_of_characteristic
     simp [gH, mul_assoc, Subgroup.normalizerMonoidHom_apply_apply_coe]⟩
 
 omit [IsMinCE G] in
-private theorem section15_pSubgroup_le_pCore_of_nilpotent
-    {p : ℕ} [Fact p.Prime] {R : Type*} [Group R] [Finite R]
-    [Group.IsNilpotent R] {B : Subgroup R} (hBp : IsPGroup p B) :
-    B ≤ pCore p R := by
-  obtain ⟨S, hB_le_S⟩ := IsPGroup.exists_le_sylow (G := R) (p := p) hBp
-  have hS_normal : (S : Subgroup R).Normal :=
-    Group.IsNilpotent.sylow_normal (p := p) inferInstance S
-  exact hB_le_S.trans (le_sSup ⟨hS_normal, S.isPGroup'⟩)
-
-omit [IsMinCE G] in
-private theorem section15_pCore_ne_bot_of_dvd_card_nilpotent
-    {H : Type*} [Group H] [Finite H] [Group.IsNilpotent H]
-    {q : ℕ} [Fact q.Prime] (hq : q ∣ Nat.card H) :
-    pCore q H ≠ ⊥ := by
-  classical
-  let S : Sylow q H := Classical.choice inferInstance
-  have hS_le : (S : Subgroup H) ≤ pCore q H :=
-    section15_pSubgroup_le_pCore_of_nilpotent (p := q) (R := H) S.isPGroup'
-  have hqS : q ∣ Nat.card (S : Subgroup H) :=
-    Sylow.dvd_card_of_dvd_card S hq
-  intro hbot
-  have hSbot : (S : Subgroup H) = ⊥ :=
-    le_bot_iff.mp (hS_le.trans (le_of_eq hbot))
-  have hcardS : Nat.card (S : Subgroup H) = 1 := by
-    simp [hSbot]
-  rw [hcardS] at hqS
-  exact (Fact.out : Nat.Prime q).not_dvd_one hqS
-
-omit [IsMinCE G] in
 private theorem section15_pCoreIn_ne_bot_of_mem_primeSet_nilpotent
     {H : Subgroup G} {q : Nat.Primes}
     (hHnil : Group.IsNilpotent H) (hqH : q ∈ subgroupPrimeSet H) :
     section15PCoreIn q H ≠ ⊥ := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
-  letI : Group.IsNilpotent H := hHnil
+  have _ : Fact q.val.Prime := ⟨q.property⟩
+  let _ : Group.IsNilpotent H := hHnil
   have hcore_ne : pCore q.val H ≠ ⊥ :=
-    section15_pCore_ne_bot_of_dvd_card_nilpotent
+    section10_pCore_ne_bot_of_dvd_card_nilpotent
       (H := H) (q := q.val) (by simpa [subgroupPrimeSet] using hqH)
   simpa [section15PCoreIn] using
     section15_map_subtype_ne_bot_of_ne_bot (G := G) (M := H) hcore_ne
@@ -2641,8 +2478,8 @@ private theorem section15_pCoreIn_le_pPrimeCore_of_ne
     {H : Subgroup G} {p q : Nat.Primes} (hqp : q ≠ p) :
     section15PCoreIn q H ≤ section10PPrimeCore p H := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have _ : Fact p.val.Prime := ⟨p.property⟩
+  have _ : Fact q.val.Prime := ⟨q.property⟩
   have hqval_ne_pval : q.val ≠ p.val := by
     intro hval
     exact hqp (Subtype.ext hval)
@@ -2697,7 +2534,7 @@ private theorem section15_omega1Z_eq_omega1_of_isCyclic
     {R : Type*} [Group R] [IsCyclic R] {p : ℕ} :
     Ω₁Z p R = omega₁ (G := R) (p := p) := by
   classical
-  letI : CommGroup R := IsCyclic.commGroup
+  let _ : CommGroup R := IsCyclic.commGroup
   have hcenter : Subgroup.center R = ⊤ := CommGroup.center_eq_top
   apply le_antisymm
   · simpa [Ω₁Z] using
@@ -2786,9 +2623,9 @@ private theorem section15_omegaOneCenter_card_eq_prime_of_cyclic_pSubgroup
     (hHp : IsPGroup q.val H) (hHcyc : IsCyclic H) (hHne : H ≠ ⊥) :
     Nat.card (section10OmegaOneCenter q H) = q.val := by
   classical
-  haveI : Fact (IsPGroup q.val H) := ⟨hHp⟩
-  haveI : Nontrivial H := (Subgroup.nontrivial_iff_ne_bot H).2 hHne
-  letI : IsCyclic H := hHcyc
+  have _ : Fact (IsPGroup q.val H) := ⟨hHp⟩
+  have _ : Nontrivial H := (Subgroup.nontrivial_iff_ne_bot H).2 hHne
+  let _ : IsCyclic H := hHcyc
   have hcard :
       Nat.card (section10OmegaOneCenter q H) =
         Nat.card (omega₁ (G := H) (p := q.val)) := by
@@ -2853,7 +2690,7 @@ private theorem section15_omegaOneCenter_normalized_by_complement_of_frobeniusJo
     R ≤ Subgroup.normalizer
       (section10OmegaOneCenter q (section15PCoreIn q K) : Set G) := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have _ : Fact q.val.Prime := ⟨q.property⟩
   let S : Subgroup G := K ⊔ R
   have hR_norm_K : R ≤ Subgroup.normalizer (K : Set G) := by
     refine subgroup_le_normalizer_of_conj_mem K R ?_
@@ -2867,7 +2704,7 @@ private theorem section15_omegaOneCenter_normalized_by_complement_of_frobeniusJo
     simpa [rS, xS, S, mul_assoc, Subgroup.mem_subgroupOf] using hconj
   have hPchar : (pCore q.val K).Characteristic :=
     section15_pCore_characteristic (R := K) (p := q.val)
-  letI : (pCore q.val K).Characteristic := hPchar
+  let _ : (pCore q.val K).Characteristic := hPchar
   have hnorm_pcore :
       Subgroup.normalizer (K : Set G) ≤
         Subgroup.normalizer (section15PCoreIn q K : Set G) := by
@@ -2877,7 +2714,7 @@ private theorem section15_omegaOneCenter_normalized_by_complement_of_frobeniusJo
     simpa [section15PCoreIn] using hnorm
   have hΩchar : (Ω₁Z q.val (section15PCoreIn q K)).Characteristic :=
     section15_omega1Z_characteristic q.val (section15PCoreIn q K)
-  letI : (Ω₁Z q.val (section15PCoreIn q K)).Characteristic := hΩchar
+  let _ : (Ω₁Z q.val (section15PCoreIn q K)).Characteristic := hΩchar
   have hnorm_Ω :
       Subgroup.normalizer (section15PCoreIn q K : Set G) ≤
         Subgroup.normalizer
@@ -2896,10 +2733,10 @@ private theorem section15_omegaOneCenter_normalized_by_normalizer
     A ≤ Subgroup.normalizer
       (section10OmegaOneCenter q (section15PCoreIn q H) : Set G) := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have _ : Fact q.val.Prime := ⟨q.property⟩
   have hPchar : (pCore q.val H).Characteristic :=
     section15_pCore_characteristic (R := H) (p := q.val)
-  letI : (pCore q.val H).Characteristic := hPchar
+  let _ : (pCore q.val H).Characteristic := hPchar
   have hnorm_pcore :
       Subgroup.normalizer (H : Set G) ≤
         Subgroup.normalizer (section15PCoreIn q H : Set G) := by
@@ -2909,7 +2746,7 @@ private theorem section15_omegaOneCenter_normalized_by_normalizer
     simpa [section15PCoreIn] using hnorm
   have hΩchar : (Ω₁Z q.val (section15PCoreIn q H)).Characteristic :=
     section15_omega1Z_characteristic q.val (section15PCoreIn q H)
-  letI : (Ω₁Z q.val (section15PCoreIn q H)).Characteristic := hΩchar
+  let _ : (Ω₁Z q.val (section15PCoreIn q H)).Characteristic := hΩchar
   have hnorm_Ω :
       Subgroup.normalizer (section15PCoreIn q H : Set G) ≤
         Subgroup.normalizer
@@ -2928,7 +2765,7 @@ private theorem section15_ambientDerived_le_pCoreIn_of_nilpotent_pPrimeCore_cycl
     (hPPrimeCyclic : IsCyclic (section10PPrimeCore p H)) :
     ambientDerivedSubgroup H ≤ section15PCoreIn p H := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have _ : Fact p.val.Prime := ⟨p.property⟩
   let P : Subgroup H := pCore p.val H
   let L : Subgroup H := pPrimeCore p.val H
   let qH : H →* H ⧸ P := QuotientGroup.mk' P
@@ -2945,7 +2782,7 @@ private theorem section15_ambientDerived_le_pCoreIn_of_nilpotent_pPrimeCore_cycl
       rw [hL_map_eq]
       exact hPPrimeCyclic
     exact e.isCyclic.2 hmap_cyc
-  letI : Group.IsNilpotent H := hHnil
+  let _ : Group.IsNilpotent H := hHnil
   have hfit_top : fittingSubgroup H = ⊤ :=
     fitting_eq_top_of_nilpotent (G := H)
   have htop_le_PL : (⊤ : Subgroup H) ≤ P ⊔ L := by
@@ -2964,10 +2801,10 @@ private theorem section15_ambientDerived_le_pCoreIn_of_nilpotent_pPrimeCore_cycl
     rw [← habx]
     simp [qH, P, haP]
   have hquot_cyc : IsCyclic (H ⧸ P) := by
-    letI : IsCyclic L := hLcyc
+    let _ : IsCyclic L := hLcyc
     exact isCyclic_of_surjective φ hφ_surj
   have hquot_comm : IsMulCommutative (H ⧸ P) := by
-    letI : CommGroup (H ⧸ P) := hquot_cyc.commGroup
+    let _ : CommGroup (H ⧸ P) := hquot_cyc.commGroup
     exact ⟨inferInstance⟩
   have hder_le_P : derivedSubgroup H ≤ P := by
     have hcomm_le : _root_.commutator H ≤ P :=
@@ -3066,7 +2903,7 @@ private theorem section15_complementToMsigma_ne_bot
     have hMsigma_bot : section10Msigma M = ⊥ :=
       le_bot_iff.mp (by simpa [hMbot] using hMsigma_le_M)
     exact (theorem_10_2_e (M := M) hM) hMsigma_bot
-  haveI : Nontrivial M := (Subgroup.nontrivial_iff_ne_bot (H := M)).2 hM_ne_bot
+  have : Nontrivial M := (Subgroup.nontrivial_iff_ne_bot (H := M)).2 hM_ne_bot
   have hsolvM : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
   have hcomm_lt : commutator M < (⊤ : Subgroup M) :=
@@ -3117,7 +2954,7 @@ private theorem section15_theorem15_7_source_p_omegaOneCenter_card
         simpa [Z₀] using section15_omegaOneCenter_le_centralizer (G := G) (p := p) P hyZ₀
       exact (Subgroup.mem_centralizer_iff.mp hy_cent_P x hxP).symm
     have hPcomm : IsMulCommutative P := by
-      haveI : IsMulCommutative (subgroupCentralizerIn MF X) := by
+      have : IsMulCommutative (subgroupCentralizerIn MF X) := by
         simpa using hfacts.2.2
       refine ⟨⟨fun a b => ?_⟩⟩
       have hcommG :
@@ -3146,14 +2983,14 @@ private theorem section15_theorem15_7_source_p_omegaOneCenter_card
   have hXB : X ∈ section10PrimeOrderSubgroupsIn p B := by
     exact ⟨by simp [B], hpX.symm⟩
   have hBmax : B ∈ section10RankTwoMaximalElementaryAbelianSubgroups p G := by
-    haveI : Fact p.val.Prime := ⟨p.property⟩
+    have : Fact p.val.Prime := ⟨p.property⟩
     let C : Subgroup G := subgroupCentralizerIn MF X
     have hCnotUnique : C ∉ section9UniqueSubgroups G := by
       simpa [C] using hfacts.1
     have hCrank : groupRank C ≤ 2 := by
       simpa [C] using hfacts.2.1
     have hXelem : IsElementaryAbelian p.val X := by
-      haveI : IsCyclic X := isCyclic_of_prime_card (p := p.val) hpX.symm
+      have : IsCyclic X := isCyclic_of_prime_card (p := p.val) hpX.symm
       exact section15_isElementaryAbelian_of_prime_card_isCyclic
         (p := p.val) (H := X) hpX.symm
     have hZ₀elem : IsElementaryAbelian p.val Z₀ := by
@@ -3168,8 +3005,8 @@ private theorem section15_theorem15_7_source_p_omegaOneCenter_card
           section15_omegaOneCenter_le_centralizer (G := G) (p := p) P hz
       exact Subgroup.mem_centralizer_iff.mp hz_cent_P x (hXleP' hxX)
     have hBelem : IsElementaryAbelian p.val B := by
-      letI : IsElementaryAbelian p.val X := hXelem
-      letI : IsElementaryAbelian p.val Z₀ := hZ₀elem
+      let : IsElementaryAbelian p.val X := hXelem
+      let : IsElementaryAbelian p.val Z₀ := hZ₀elem
       simpa [B] using
         section15_isElementaryAbelian_sup_of_le_centralizer
           (G := G) (p := p.val) (E := X) (D := Z₀) hZ₀leCentX
@@ -3182,7 +3019,7 @@ private theorem section15_theorem15_7_source_p_omegaOneCenter_card
                 intro x hxX
                 rw [Subgroup.mem_centralizer_iff]
                 intro y hyX
-                haveI : IsElementaryAbelian p.val X := hXelem
+                have : IsElementaryAbelian p.val X := hXelem
                 exact
                   setLike_mul_comm
                     (s := X) hyX hxX)
@@ -3195,7 +3032,7 @@ private theorem section15_theorem15_7_source_p_omegaOneCenter_card
       exact hXne <| le_bot_iff.mp <| by
         intro x hx
         simpa [hPbot] using hXleP' hx
-    haveI : Nontrivial P := (Subgroup.nontrivial_iff_ne_bot P).2 hPnebot
+    have : Nontrivial P := (Subgroup.nontrivial_iff_ne_bot P).2 hPnebot
     have hZ₀nebot : Z₀ ≠ ⊥ := by
       simpa [Z₀] using
         section15_omegaOneCenter_ne_bot_of_nontrivial_pSubgroup
@@ -3220,7 +3057,7 @@ private theorem section15_theorem15_7_source_p_omegaOneCenter_card
     have hp_lt_cardB : p.val < Nat.card B := by
       simpa [hpX] using natCard_lt_of_subgroup_lt hXltB
     have hBp : IsPGroup p.val B := by
-      letI : IsElementaryAbelian p.val B := hBelem
+      let : IsElementaryAbelian p.val B := hBelem
       exact IsElementaryAbelian.isPGroup p.val B
     have hBcard_lower : p.val ^ 2 ≤ Nat.card B := by
       rcases hBp.exists_card_eq with ⟨n, hn⟩
@@ -3239,7 +3076,7 @@ private theorem section15_theorem15_7_source_p_omegaOneCenter_card
         hBp.of_equiv
           (Subgroup.subgroupOfEquivOfLe (H := B) (K := C) hB_le_C).symm
       have hBsubcomm : IsMulCommutative Bsub := by
-        letI : IsMulCommutative B := hBelem.toIsMulCommutative
+        let : IsMulCommutative B := hBelem.toIsMulCommutative
         exact Subgroup.subgroupOf_isMulCommutative (H := B) (K := C)
       have hgen_eq : generatorRank Bsub = generatorRank B := by
         rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
@@ -3259,8 +3096,8 @@ private theorem section15_theorem15_7_source_p_omegaOneCenter_card
       exact hgen_le_prime'.trans hprime_le_rankC
     have hBgen_le_two : generatorRank B ≤ 2 := hBgen_le_rankC.trans hCrank
     have hBcard_upper : Nat.card B ≤ p.val ^ 2 := by
-      letI : IsElementaryAbelian p.val B := hBelem
-      letI : CommGroup B := IsMulCommutative.instCommGroup
+      let : IsElementaryAbelian p.val B := hBelem
+      let : CommGroup B := IsMulCommutative.instCommGroup
       have hcard_dvd : Nat.card B ∣ p.val ^ Group.rank B := by
         simpa using card_dvd_exponent_pow_rank' (G := B) (n := p.val) (fun b =>
           Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
@@ -3345,7 +3182,7 @@ private theorem section15_theorem15_7_source_p_rankTwoMaximal_pCore
         simpa [Z₀] using section15_omegaOneCenter_le_centralizer (G := G) (p := p) P hyZ₀
       exact (Subgroup.mem_centralizer_iff.mp hy_cent_P x hxP).symm
     have hPcomm : IsMulCommutative P := by
-      haveI : IsMulCommutative (subgroupCentralizerIn MF X) := by
+      have : IsMulCommutative (subgroupCentralizerIn MF X) := by
         simpa using hfacts.2.2
       refine ⟨⟨fun a b => ?_⟩⟩
       have hcommG :
@@ -3369,12 +3206,12 @@ private theorem section15_theorem15_7_source_p_rankTwoMaximal_pCore
   have hBleP : B ≤ P := by
     simpa [B] using sup_le hXleP' hZ₀leP
   have hBmax : B ∈ section10RankTwoMaximalElementaryAbelianSubgroups p G := by
-    haveI : Fact p.val.Prime := ⟨p.property⟩
+    have : Fact p.val.Prime := ⟨p.property⟩
     let C : Subgroup G := subgroupCentralizerIn MF X
     have hCnotUnique : C ∉ section9UniqueSubgroups G := by
       simpa [C] using hfacts.1
     have hXelem : IsElementaryAbelian p.val X := by
-      haveI : IsCyclic X := isCyclic_of_prime_card (p := p.val) hpX.symm
+      have : IsCyclic X := isCyclic_of_prime_card (p := p.val) hpX.symm
       exact section15_isElementaryAbelian_of_prime_card_isCyclic
         (p := p.val) (H := X) hpX.symm
     have hZ₀elem : IsElementaryAbelian p.val Z₀ := by
@@ -3389,8 +3226,8 @@ private theorem section15_theorem15_7_source_p_rankTwoMaximal_pCore
           section15_omegaOneCenter_le_centralizer (G := G) (p := p) P hz
       exact Subgroup.mem_centralizer_iff.mp hz_cent_P x (hXleP' hxX)
     have hBelem : IsElementaryAbelian p.val B := by
-      letI : IsElementaryAbelian p.val X := hXelem
-      letI : IsElementaryAbelian p.val Z₀ := hZ₀elem
+      let : IsElementaryAbelian p.val X := hXelem
+      let : IsElementaryAbelian p.val Z₀ := hZ₀elem
       simpa [B] using
         section15_isElementaryAbelian_sup_of_le_centralizer
           (G := G) (p := p.val) (E := X) (D := Z₀) hZ₀leCentX
@@ -3403,7 +3240,7 @@ private theorem section15_theorem15_7_source_p_rankTwoMaximal_pCore
                 intro x hxX
                 rw [Subgroup.mem_centralizer_iff]
                 intro y hyX
-                haveI : IsElementaryAbelian p.val X := hXelem
+                have : IsElementaryAbelian p.val X := hXelem
                 exact
                   setLike_mul_comm
                     (s := X) hyX hxX)
@@ -3420,8 +3257,8 @@ private theorem section15_theorem15_7_source_p_rankTwoMaximal_pCore
     have hBcard : Nat.card B = p.val ^ 2 := by
       have hX_norm : (X.subgroupOf B).Normal := by
         have hBcomm : IsMulCommutative B := hBelem.toIsMulCommutative
-        letI : IsMulCommutative B := hBcomm
-        letI : CommGroup B := IsMulCommutative.instCommGroup
+        let : IsMulCommutative B := hBcomm
+        let : CommGroup B := IsMulCommutative.instCommGroup
         infer_instance
       have hcomp :
           (X.subgroupOf B).IsComplement' (Z₀.subgroupOf B) := by
@@ -3437,7 +3274,7 @@ private theorem section15_theorem15_7_source_p_rankTwoMaximal_pCore
           intro z
           let XB : Subgroup B := X.subgroupOf B
           let ZB : Subgroup B := Z₀.subgroupOf B
-          haveI : XB.Normal := by simpa [XB] using hX_norm
+          have : XB.Normal := by simpa [XB] using hX_norm
           have hsup_top : XB ⊔ ZB = ⊤ := by
             simpa [XB, ZB, B] using
               (Subgroup.subgroupOf_sup (A := X) (A' := Z₀) (B := B)
@@ -3447,7 +3284,7 @@ private theorem section15_theorem15_7_source_p_rankTwoMaximal_pCore
               (x := z) (s := XB) (t := ZB)).1 hz with
             ⟨x, hxX, y, hyZ, hxy⟩
           exact ⟨x, hxX, y, hyZ, hxy⟩
-      have hmul := hcomp.card_mul
+      have hmul := hcomp.card_mul_card
       rw [natCard_subgroupOf_eq X B (by simp [B]),
         natCard_subgroupOf_eq Z₀ B (by simp [B]),
         hpX.symm, hZ₀card] at hmul
@@ -3542,7 +3379,7 @@ private theorem section15_theorem15_7_F_exponent_divisibility
         simpa [Zq] using
           section15_omegaOneCenter_card_eq_prime_of_cyclic_pSubgroup
             (G := G) (H := Pq) (q := q) hPq_p hPq_cyclic hPq_ne
-    haveI : Fact q.val.Prime := ⟨q.property⟩
+    have : Fact q.val.Prime := ⟨q.property⟩
     have hZq_cyclic : IsCyclic Zq :=
       isCyclic_of_prime_card (p := q.val) hZq_card
     have hZq_le_MF : Zq ≤ MF := by
@@ -3624,7 +3461,7 @@ private theorem section15_theorem15_7_P1_kstar_route_of_not_exponent_divisibilit
   have hKstar_p : IsPGroup p.val Kstar :=
     IsPGroup.to_le (H := Kstar) (K := P) hPp hKstar_le_P
   have hKstar_card_p : Nat.card Kstar = p.val := by
-    haveI : Fact p.val.Prime := ⟨p.property⟩
+    have : Fact p.val.Prime := ⟨p.property⟩
     rcases section15_familyP1_kstar_card_prime
         (G := G) (M := M) (K := K) hM hP1 hK with
       ⟨r, hr⟩
@@ -3696,7 +3533,7 @@ private theorem section15_theorem15_7_P1_kstar_route_of_not_exponent_divisibilit
         simpa [Zq] using
           section15_omegaOneCenter_card_eq_prime_of_cyclic_pSubgroup
             (G := G) (H := Pq) (q := q) hPq_p hPq_cyclic hPq_ne
-    haveI : Fact q.val.Prime := ⟨q.property⟩
+    have : Fact q.val.Prime := ⟨q.property⟩
     have hZq_cyclic : IsCyclic Zq :=
       isCyclic_of_prime_card (p := q.val) hZq_card
     by_cases hZq_eq_Kstar : Zq = Kstar
@@ -3799,7 +3636,7 @@ private theorem section15_theorem15_7_P1_center_pCore_eq_kstar_of_omega_eq
   let P : Subgroup G := section15PCoreIn p MF
   let Z : Subgroup G := centerIn P
   let Kstar : Subgroup G := section14KStar M K
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   rcases hMF.1 with ⟨hMFleM, hMFnormM, _hMFnil, _hMFHall⟩
   have hred := section15_theorem15_7_initial_reduction
     hM hMF hnotTI hg hX hXne hE
@@ -3819,7 +3656,7 @@ private theorem section15_theorem15_7_P1_center_pCore_eq_kstar_of_omega_eq
   have hK_norm_P : K ≤ Subgroup.normalizer (P : Set G) := by
     have hPchar : (pCore p.val MF).Characteristic :=
       section15_pCore_characteristic (R := MF) (p := p.val)
-    letI : (pCore p.val MF).Characteristic := hPchar
+    let : (pCore p.val MF).Characteristic := hPchar
     have hnorm :
         Subgroup.normalizer (MF : Set G) ≤ Subgroup.normalizer (P : Set G) := by
       simpa [P, section15PCoreIn] using
@@ -3828,7 +3665,7 @@ private theorem section15_theorem15_7_P1_center_pCore_eq_kstar_of_omega_eq
     exact hK_norm_MF.trans hnorm
   have hK_norm_Z : K ≤ Subgroup.normalizer (Z : Set G) := by
     have hZchar : (Subgroup.center P).Characteristic := Subgroup.centerCharacteristic
-    letI : (Subgroup.center P).Characteristic := hZchar
+    let : (Subgroup.center P).Characteristic := hZchar
     have hnorm_center :
         Subgroup.normalizer (P : Set G) ≤
           Subgroup.normalizer ((centerIn P : Subgroup G) : Set G) := by
@@ -3870,7 +3707,7 @@ private theorem section15_theorem15_7_P1_center_pCore_eq_kstar_of_omega_eq
     have hp_dvd_G : p.val ∣ Nat.card G :=
       hp_dvd_M.trans (Subgroup.card_subgroup_dvd_card M)
     exact Odd.ne_two_of_dvd_nat IsMinCE.odd_order hp_dvd_G
-  haveI : Subgroup.Normalizes K Z := ⟨hK_norm_Z⟩
+  have : Subgroup.Normalizes K Z := ⟨hK_norm_Z⟩
   have hΩ_triv :
       ActsTriviallyOnSubgroup (A := K) (G := Z)
         (omega₁ (G := Z) (p := p.val)) := by
@@ -3923,7 +3760,7 @@ private theorem section15_theorem15_7_P1_center_pCore_eq_kstar_of_omega_eq
     intro a z hz
     exact hΩ_le_fixed hz a
   have hZ_triv : ActsTrivially (A := K) (G := Z) := by
-    haveI : Fact (IsPGroup p.val Z) := ⟨hZp⟩
+    have : Fact (IsPGroup p.val Z) := ⟨hZp⟩
     exact theorem_1_11 (G := Z) (A := K) (p := p.val) hpodd hK_coprime_Z hΩ_triv
   have hZ_le_Kstar : Z ≤ Kstar := by
     intro y hyZ
@@ -3968,7 +3805,7 @@ private theorem section15_theorem15_7_P1_pCore_rank_le_two_of_center_eq_kstar
   have hRank_notP : ¬ groupRank P ≤ 2 := by
     simpa [P] using hRank_not
   have hRank3 : 3 ≤ groupRank P := by omega
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   have hpodd : p.val ≠ 2 := by
     have hp_dvd_M : p.val ∣ Nat.card M := by
       simpa [subgroupPrimeSet] using hpσβ.1.1
@@ -4001,14 +3838,14 @@ private theorem section15_theorem15_7_P1_pCore_rank_le_two_of_center_eq_kstar
   have hK_norm_P : K ≤ Subgroup.normalizer (P : Set G) := by
     have hPchar : (pCore p.val MF).Characteristic :=
       section15_pCore_characteristic (R := MF) (p := p.val)
-    letI : (pCore p.val MF).Characteristic := hPchar
+    let : (pCore p.val MF).Characteristic := hPchar
     have hnorm :
         Subgroup.normalizer (MF : Set G) ≤ Subgroup.normalizer (P : Set G) := by
       simpa [P, section15PCoreIn] using
         section15_normalizer_le_normalizer_map_subtype_of_characteristic
           (G := G) MF (pCore p.val MF)
     exact hK_norm_MF.trans hnorm
-  haveI : Subgroup.Normalizes K P := ⟨hK_norm_P⟩
+  have : Subgroup.Normalizes K P := ⟨hK_norm_P⟩
   let ρ : K →* MulAut P := MulDistribMulAction.toMulAut K P
   let Kstar : Subgroup G := section14KStar M K
   have hprime : section14ActsInPrimeManner K (section10Msigma M) := by
@@ -4047,7 +3884,9 @@ private theorem section15_theorem15_7_P1_pCore_rank_le_two_of_center_eq_kstar
             ⟨hx_msigma, hx_cent_k⟩
           simpa [hcent_eq] using hxcent
         have hP_le_center : P ≤ centerIn P := by
-          simpa [P, Kstar, hCenter_eq] using hP_le_Kstar
+          change section15PCoreIn p MF ≤ centerIn (section15PCoreIn p MF)
+          rw [hCenter_eq]
+          simpa [P, Kstar] using hP_le_Kstar
         have hPcomm : IsMulCommutative P := by
           refine ⟨⟨fun x y => ?_⟩⟩
           have hxcenter : ((x : P) : G) ∈ centerIn P := hP_le_center x.property
@@ -4060,7 +3899,7 @@ private theorem section15_theorem15_7_P1_pCore_rank_le_two_of_center_eq_kstar
   have hKcyc : IsCyclic K := by
     have hZcyc : IsCyclic (section14Z M K) :=
       (theorem_14_7_d (G := G) (M := M) (K := K) hP1.1 hK).2.1
-    letI : IsCyclic (section14Z M K) := hZcyc
+    let : IsCyclic (section14Z M K) := hZcyc
     exact Subgroup.isCyclic_of_le (show K ≤ section14Z M K by
       change K ≤ K ⊔ section14KStar M K
       exact le_sup_left)
@@ -4083,19 +3922,19 @@ private theorem section15_theorem15_7_P1_pCore_rank_le_two_of_center_eq_kstar
     odd_of_card_dvd IsMinCE.odd_order (Subgroup.card_subgroup_dvd_card K)
   have hAodd : Odd (Nat.card A) := by
     exact odd_of_card_dvd hKodd (by simpa [A, ρ] using Subgroup.card_range_dvd ρ)
-  haveI : Group.IsSolvable K := by
+  have : Group.IsSolvable K := by
     let KM : Subgroup M := K.subgroupOf M
     have hsolvM : Group.IsSolvable M :=
       IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
-    haveI : Group.IsSolvable M := hsolvM
+    have : Group.IsSolvable M := hsolvM
     have hKM_solv : Group.IsSolvable KM := by infer_instance
     let eK : KM ≃* K := Subgroup.subgroupOfEquivOfLe (H := K) (K := M) hK.1
     exact Group.isSolvable_of_surjective (f := eK.toMonoidHom) eK.surjective
-  haveI : Group.IsSolvable A := by
+  have : Group.IsSolvable A := by
     change Group.IsSolvable ρ.range
     exact Group.isSolvable_of_surjective (f := ρ.rangeRestrict) ρ.rangeRestrict_surjective
   have hAcyc : IsCyclic A := by
-    haveI : IsCyclic K := hKcyc
+    have : IsCyclic K := hKcyc
     exact isCyclic_of_surjective ρ.rangeRestrict ρ.rangeRestrict_surjective
   have hρrange_inj : Function.Injective ρ.rangeRestrict := by
     intro x y hxy
@@ -4104,7 +3943,7 @@ private theorem section15_theorem15_7_P1_pCore_rank_le_two_of_center_eq_kstar
     MulEquiv.ofBijective ρ.rangeRestrict ⟨hρrange_inj, ρ.rangeRestrict_surjective⟩
   have hAcard_eq_K : Nat.card A = Nat.card K := by
     simpa [eρ] using (Nat.card_congr eρ.toEquiv).symm
-  haveI : IsCyclic A := hAcyc
+  have : IsCyclic A := hAcyc
   obtain ⟨a, ha_gen⟩ := IsCyclic.exists_monoid_generator (α := A)
   have horderA : orderOf a = Nat.card A := by
     apply orderOf_eq_card_of_forall_mem_zpowers
@@ -4134,7 +3973,7 @@ private theorem section15_theorem15_7_P1_pCore_global_sylow_of_msigma
     (hpσ : p ∈ section10SigmaPrimes M) :
     ∃ S : Sylow p.val G, (S : Subgroup G) = section15PCoreIn p MF := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let P : Subgroup G := section15PCoreIn p MF
   have hP_le_MF : P ≤ MF := by
     simpa [P] using section15_pCoreIn_le p MF
@@ -4204,7 +4043,7 @@ private theorem section15_theorem15_7_P1_pCore_card_exponent_of_rank_le_two_cent
       Monoid.exponent (section15PCoreIn p MF) = p.val := by
   classical
   let P : Subgroup G := section15PCoreIn p MF
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   have hred := section15_theorem15_7_initial_reduction
     hM hMF hnotTI hg hX hXne hE
   have hMF_eq_msigma : MF = section10Msigma M := hred.2.1
@@ -4225,11 +4064,11 @@ private theorem section15_theorem15_7_P1_pCore_card_exponent_of_rank_le_two_cent
   · rcases hshape with
       ⟨P₁, P₂, hP₁card, hP₁noncomm, hP₁exp, hP₂cyc, hcentral, hΩcenter⟩
     have hP₁p : IsPGroup p.val P₁ := S.isPGroup'.to_subgroup P₁
-    letI : Fact (IsPGroup p.val P₁) := ⟨hP₁p⟩
+    let : Fact (IsPGroup p.val P₁) := ⟨hP₁p⟩
     have hP₁extra : IsExtraspecial p.val P₁ :=
       isExtraspecial_of_noncommutative_card_p3_exponent_p
         (K := P₁) (p := p.val) hP₁card hP₁exp hP₁noncomm
-    letI : IsExtraspecial p.val P₁ := hP₁extra
+    let : IsExtraspecial p.val P₁ := hP₁extra
     have hder_center :
         (derivedSubgroup P₁).map P₁.subtype =
           (Subgroup.center P₁).map P₁.subtype :=
@@ -4238,7 +4077,7 @@ private theorem section15_theorem15_7_P1_pCore_card_exponent_of_rank_le_two_cent
     have hΩder :
         (omega₁ (G := P₂) (p := p.val)).map P₂.subtype =
           (derivedSubgroup P₁).map P₁.subtype := by
-      letI : IsCyclic P₂ := hP₂cyc
+      let : IsCyclic P₂ := hP₂cyc
       calc
         (omega₁ (G := P₂) (p := p.val)).map P₂.subtype =
             (Ω₁Z p.val P₂).map P₂.subtype := by
@@ -4265,8 +4104,8 @@ private theorem section15_theorem15_7_P1_pCore_card_exponent_of_rank_le_two_cent
       have hP₂_le_cent_P₁ : P₂ ≤ Subgroup.centralizer (P₁ : Set (S : Subgroup G)) :=
         (Subgroup.commutator_eq_bot_iff_le_centralizer (H₁ := P₂) (H₂ := P₁)).1
           (by simpa [Subgroup.commutator_comm] using hcomm12)
-      letI : IsCyclic P₂ := hP₂cyc
-      letI : CommGroup P₂ := IsCyclic.commGroup
+      let : IsCyclic P₂ := hP₂cyc
+      let : CommGroup P₂ := IsCyclic.commGroup
       intro y hy
       rw [Subgroup.mem_center_iff]
       intro x
@@ -4425,7 +4264,7 @@ private theorem section15_theorem15_7_P1_kappa_card_dvd_p_add_one_of_kstar_route
     Nat.card K ∣ p.val + 1 := by
   classical
   let P : Subgroup G := section15PCoreIn p MF
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   have hred := section15_theorem15_7_initial_reduction
     hM hMF hnotTI hg hX hXne hE
   have hP_le_MF : P ≤ MF := by
@@ -4458,13 +4297,13 @@ private theorem section15_theorem15_7_P1_kappa_card_dvd_p_add_one_of_kstar_route
     simpa [P] using hPcardExp.2
   have hPp : IsPGroup p.val P := by
     simpa [P] using section15_pCoreIn_isPGroup p MF
-  letI : Fact (IsPGroup p.val P) := ⟨hPp⟩
+  let : Fact (IsPGroup p.val P) := ⟨hPp⟩
   have hPextra : IsExtraspecial p.val P := by
     exact
       isExtraspecial_of_noncommutative_card_p3_exponent_p
         (K := P) (p := p.val) (by simpa [P] using hpCore_card)
         hPexp (by simpa [P] using hpNoncomm)
-  letI : IsExtraspecial p.val P := hPextra
+  let : IsExtraspecial p.val P := hPextra
   have hK_norm_MF : K ≤ Subgroup.normalizer (MF : Set G) := by
     rcases hMF.1 with ⟨hMFleM, hMFnormM, _hMFnil, _hMFHall⟩
     have hM_norm_MF : M ≤ Subgroup.normalizer (MF : Set G) :=
@@ -4473,14 +4312,14 @@ private theorem section15_theorem15_7_P1_kappa_card_dvd_p_add_one_of_kstar_route
   have hK_norm_P : K ≤ Subgroup.normalizer (P : Set G) := by
     have hPchar : (pCore p.val MF).Characteristic :=
       section15_pCore_characteristic (R := MF) (p := p.val)
-    letI : (pCore p.val MF).Characteristic := hPchar
+    let : (pCore p.val MF).Characteristic := hPchar
     have hnorm :
         Subgroup.normalizer (MF : Set G) ≤ Subgroup.normalizer (P : Set G) := by
       simpa [P, section15PCoreIn] using
         section15_normalizer_le_normalizer_map_subtype_of_characteristic
           (G := G) MF (pCore p.val MF)
     exact hK_norm_MF.trans hnorm
-  haveI : Subgroup.Normalizes K P := ⟨hK_norm_P⟩
+  have : Subgroup.Normalizes K P := ⟨hK_norm_P⟩
   let φ : K →* MulAut P := MulDistribMulAction.toMulAut K P
   have hprime : section14ActsInPrimeManner K (section10Msigma M) := by
     rcases proposition_14_2_a (G := G) (M := M) (K := K) hP1.1 hK with
@@ -4489,7 +4328,7 @@ private theorem section15_theorem15_7_P1_kappa_card_dvd_p_add_one_of_kstar_route
   have hKcyc : IsCyclic K := by
     have hZcyc : IsCyclic (section14Z M K) :=
       (theorem_14_7_d (G := G) (M := M) (K := K) hP1.1 hK).2.1
-    letI : IsCyclic (section14Z M K) := hZcyc
+    let : IsCyclic (section14Z M K) := hZcyc
     exact Subgroup.isCyclic_of_le (show K ≤ section14Z M K by
       change K ≤ K ⊔ section14KStar M K
       exact le_sup_left)
@@ -4530,7 +4369,10 @@ private theorem section15_theorem15_7_P1_kappa_card_dvd_p_add_one_of_kstar_route
         have hmul := congrArg (fun t : G => t * (x : G)) hyconj
         simpa [mul_assoc] using hmul.symm
       have hycenterIn : (y : G) ∈ centerIn P := by
-        simpa [P, hCenter_eq, hcent_x] using hycent
+        change (y : G) ∈ centerIn (section15PCoreIn p MF)
+        rw [hCenter_eq]
+        rw [← hcent_x]
+        exact hycent
       have hycenterMap : (y : G) ∈ (Subgroup.center P).map P.subtype := by
         simpa [centerIn_eq_map_center_local] using hycenterIn
       rcases hycenterMap with ⟨z, hz, hz_eq⟩
@@ -4542,7 +4384,11 @@ private theorem section15_theorem15_7_P1_kappa_card_dvd_p_add_one_of_kstar_route
         rw [centerIn_eq_map_center_local]
         exact ⟨y, hy, rfl⟩
       have hycent : (y : G) ∈ elementCentralizerIn (section10Msigma M) (x : G) := by
-        simpa [P, hCenter_eq, hcent_x] using hycenterIn
+        have hyKstar : (y : G) ∈ section14KStar M K := by
+          change (y : G) ∈ centerIn (section15PCoreIn p MF) at hycenterIn
+          rw [hCenter_eq] at hycenterIn
+          exact hycenterIn
+        exact hcent_x.symm ▸ hyKstar
       have hmul : (y : G) * (x : G) = (x : G) * (y : G) :=
         Subgroup.mem_centralizer_singleton_iff.mp hycent.2
       have hyconj : (x : G) * (y : G) * (x : G)⁻¹ = y := by
@@ -4551,7 +4397,7 @@ private theorem section15_theorem15_7_P1_kappa_card_dvd_p_add_one_of_kstar_route
             rw [hmul.symm]
           _ = y := by simp [mul_assoc]
       simpa [φ, Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe, hK_norm_P] using hyconj
-  haveI : IsCyclic K := hKcyc
+  have : IsCyclic K := hKcyc
   have hcard_shape : Nat.card P = p.val ^ (2 * 1 + 1) := by
     simpa [P] using hpCore_card
   have h25 :
@@ -4909,9 +4755,9 @@ public theorem theorem_15_7_source_prime_centralizer_split
     change x ∈ Subgroup.centralizer (X : Set G)
     rw [Subgroup.mem_centralizer_iff]
     intro y hy
-    haveI : Fact p.val.Prime := ⟨p.property⟩
-    letI : IsCyclic X := isCyclic_of_prime_card (p := p.val) hpX.symm
-    letI : CommGroup X := IsCyclic.commGroup
+    have : Fact p.val.Prime := ⟨p.property⟩
+    let : IsCyclic X := isCyclic_of_prime_card (p := p.val) hpX.symm
+    let : CommGroup X := IsCyclic.commGroup
     exact setLike_mul_comm (s := X) hy hx
   have hcentralizer_le_sup : subgroupCentralizerIn P X ≤ X ⊔ Z := by
     intro y hy

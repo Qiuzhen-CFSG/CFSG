@@ -4,6 +4,7 @@ public import GorensteinWalter.Section3.FirstCaseKleinData
 public import GorensteinWalter.Section2.Basic
 import Mathlib.Tactic
 
+
 /-!
 # Order bookkeeping for the Klein-four first case
 
@@ -123,7 +124,7 @@ public theorem firstCase_Hhat_card_eq_three_mul_H
   let V : Subgroup (↥c.Hhat) := pCore 2 c.Hhat
   let O : Subgroup (↥c.Hhat) := pPrimeCore 2 c.Hhat
   let K : Subgroup (↥c.Hhat) := V ⊔ O
-  have hVcard : Nat.card V = 4 := by simpa [V] using hklein.card_four
+  have hVcard : Nat.card V = 4 := by simp [V]
   have hOcop : Nat.Coprime 2 (Nat.card O) := by
     simpa [O] using pPrimeCore_coprime_card (p := 2) (G := c.Hhat)
   have hVcop : Nat.Coprime (Nat.card V) (Nat.card O) := by

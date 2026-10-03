@@ -8,6 +8,7 @@ import Theory.Representation.ElementaryAbelianAction
 import FeitThompson.GroupAction.CentralizerCondition
 import Mathlib.GroupTheory.Complement
 
+
 /-!
 # Higman's classification theorem: Type-B scalar action coordinates
 -/
@@ -39,15 +40,15 @@ public theorem scalar_coordinates_of_fixed_point_free_cyclic_action
         (eE (k • x)).toAdd =
           (eK k : BinaryGaloisField n) * (eE x).toAdd := by
   classical
-  letI : IsMulCommutative E := hEcomm
-  letI : CommGroup E := IsMulCommutative.instCommGroup
+  let : IsMulCommutative E := hEcomm
+  let : CommGroup E := IsMulCommutative.instCommGroup
   have hq_gt : 1 < q := by
     have hpos : 0 < Nat.card K := Nat.card_pos
     omega
-  letI : Nontrivial E :=
+  let : Nontrivial E :=
     Finite.one_lt_card_iff_nontrivial.mp (by simpa [hEcard] using hq_gt)
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-  letI : IsElementaryAbelian 2 E := by
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : IsElementaryAbelian 2 E := by
     refine
       { toIsMulCommutative := inferInstance
         exponent_dvd_p :=
@@ -55,7 +56,7 @@ public theorem scalar_coordinates_of_fixed_point_free_cyclic_action
     exact hEsq
   obtain ⟨g, hg⟩ := IsCyclic.exists_generator (α := K)
   let rho :=
-    Theory.Representation.ofElementaryAbelianAction (A := K) (G := E) (p := 2)
+    Representation.ofElementaryAbelianAction (A := K) (G := E) (p := 2)
   let rhoEquiv : K →* (Additive E ≃ₗ[ZMod 2] Additive E) :=
     (LinearMap.GeneralLinearGroup.generalLinearEquiv
       (ZMod 2) (Additive E)).toMonoidHom.comp rho.asGroupHom
@@ -63,7 +64,7 @@ public theorem scalar_coordinates_of_fixed_point_free_cyclic_action
   have hrho_val (k : K) (v : Additive E) :
       rhoEquiv k v = Additive.ofMul (k • v.toMul) := by
     change rho k v = Additive.ofMul (k • v.toMul)
-    exact Theory.Representation.ofElementaryAbelianAction_apply k v
+    exact Representation.ofElementaryAbelianAction_apply k v
   have hT_val (v : Additive E) :
       T v = Additive.ofMul (g • v.toMul) := by
     exact hrho_val g v
@@ -342,9 +343,9 @@ public theorem quotient_scalar_coordinates_from_isomorphic_summands
           ((eK k : BinaryGaloisField n) * (eQ x).toAdd.1,
             (eK k : BinaryGaloisField n) * (eQ x).toAdd.2) := by
   classical
-  letI : IsMulCommutative E := hEcomm
-  letI : CommGroup E := IsMulCommutative.instCommGroup
-  letI : IsInvariant K E U := ⟨hUinv⟩
+  let : IsMulCommutative E := hEcomm
+  let : CommGroup E := IsMulCommutative.instCommGroup
+  let : IsInvariant K E U := ⟨hUinv⟩
   have hUcomm : IsMulCommutative U := inferInstance
   have hUsq : ∀ u : U, u ^ 2 = 1 := by
     intro u
@@ -359,7 +360,7 @@ public theorem quotient_scalar_coordinates_from_isomorphic_summands
       hUcomm hUsq hKcyclic hUfixedFree q hKcard hUcard with
     ⟨n, hn, eK, eU, hFcard, heU_action⟩
   let F := BinaryGaloisField n
-  letI : IsInvariant K E V := ⟨hVinv⟩
+  let : IsInvariant K E V := ⟨hVinv⟩
   let eV : V ≃* Multiplicative F := e.symm.trans eU
   have he_subtype (k : K) (u : U) : e (k • u) = k • e u := by
     apply Subtype.ext
@@ -372,7 +373,7 @@ public theorem quotient_scalar_coordinates_from_isomorphic_summands
       (eV (k • v)).toAdd =
         ((eK k : F) * (eV v).toAdd) := by
     simpa [eV, he_symm_subtype] using heU_action k (e.symm v)
-  letI : U.Normal := Subgroup.normal_of_isMulCommutative U
+  let : U.Normal := Subgroup.normal_of_isMulCommutative U
   have hUVdisjoint : Disjoint U V := disjoint_iff.mpr hUVinf
   have hUVmul : (U : Set E) * (V : Set E) = Set.univ := by
     rw [Set.eq_univ_iff_forall]
@@ -445,9 +446,9 @@ public theorem theorem1_isomorphic_summands_scalar_coordinates
               theta (eK k : BinaryGaloisField n) * z)) :
                 Subgroup.center P) : P) := by
   classical
-  letI : Finite P := finite_of_isSuzukiTwoGroup hP
-  letI : FaithfulSMul K P := hKfaithful
-  letI : Finite K := Finite.of_injective
+  let : Finite P := finite_of_isSuzukiTwoGroup hP
+  let : FaithfulSMul K P := hKfaithful
+  let : Finite K := Finite.of_injective
     (MulDistribMulAction.toMulAut K P) (by
       intro k l hkl
       apply FaithfulSMul.eq_of_smul_eq_smul (α := P)
@@ -480,7 +481,7 @@ public theorem theorem1_isomorphic_summands_scalar_coordinates
           Nat.card {z : Subgroup.center P // z ≠ 1} :=
         Nat.card_congr involEquiv
       _ = Nat.card (Subgroup.center P) - 1 := by
-        letI : Fintype (Subgroup.center P) := Fintype.ofFinite _
+        let : Fintype (Subgroup.center P) := Fintype.ofFinite _
         rw [Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
         simp
       _ = q - 1 := rfl
@@ -506,7 +507,7 @@ public theorem theorem1_isomorphic_summands_scalar_coordinates
   obtain ⟨hQAction, U, V, hU, hV, eUV, hQAction_mk,
       hUcard, hVcard, hUVinf, hUVsup, heUV⟩ :=
     hIso
-  letI : MulDistribMulAction K (P ⧸ Subgroup.center P) := hQAction
+  let : MulDistribMulAction K (P ⧸ Subgroup.center P) := hQAction
   have hQfixedFree : ∀ k : K, k ≠ 1 →
       ∀ x : P ⧸ Subgroup.center P,
         @SMul.smul K (P ⧸ Subgroup.center P)
@@ -569,7 +570,7 @@ public theorem theorem1_isomorphic_summands_scalar_coordinates
       hQdata.1 hQdata.2.1 hKcyclic hQfixedFree q hKcard
       U V hU hV hUcard hVcard hUVinf hUVsup eUV heUV with
     ⟨n, hn, eKQ, eQ, hFcard, hQscalar⟩
-  letI : IsInvariant K P (Subgroup.center P) := center_isInvariant
+  let : IsInvariant K P (Subgroup.center P) := center_isInvariant
   have hCenterFixedFree : ∀ k : K, k ≠ 1 →
       ∀ z : Subgroup.center P, k • z = z → z = 1 := by
     intro k hk z hfix

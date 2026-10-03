@@ -7,6 +7,7 @@ import BenderSuzuki.PFchapter2.claim_7
 import BenderSuzuki.PFchapter2.claim_10
 import BenderSuzuki.PFchapter2.claim_9
 
+
 namespace BenderSuzuki
 namespace PFchapter2
 
@@ -117,28 +118,6 @@ public theorem claim_11_sylow_of_subgroupOf_sylow_of_normalizer_le
           exact hxQH
         exact hxNotPQ hxP }
   exact ⟨PG, rfl⟩
-
-private theorem claim_11_natCard_sup_eq_mul_of_disjoint_of_le_normalizer
-    {G : Type*} [Group G] (A B : Subgroup G)
-    (hnorm : B ≤ Subgroup.normalizer (A : Set G)) (hdisj : Disjoint A B) :
-    Nat.card (A ⊔ B : Subgroup G) = Nat.card A * Nat.card B := by
-  let toSup : A × B → ↥(A ⊔ B) := fun z =>
-    ⟨(z.1 : G) * (z.2 : G), Subgroup.mul_mem_sup z.1.property z.2.property⟩
-  have hinj : Function.Injective toSup := by
-    intro x y hxy
-    apply Subgroup.mul_injective_of_disjoint hdisj
-    exact congrArg Subtype.val hxy
-  have hsurj : Function.Surjective toSup := by
-    intro x
-    have hx : (x : G) ∈ (A : Set G) * (B : Set G) := by
-      rw [← Subgroup.coe_mul_of_right_le_normalizer_left A B hnorm]
-      exact x.property
-    rcases hx with ⟨a, ha, b, hb, hab⟩
-    exact ⟨(⟨a, ha⟩, ⟨b, hb⟩), Subtype.ext hab⟩
-  calc
-    Nat.card (A ⊔ B : Subgroup G) = Nat.card (A × B) :=
-      Nat.card_congr (Equiv.ofBijective toSup ⟨hinj, hsurj⟩).symm
-    _ = Nat.card A * Nat.card B := Nat.card_prod A B
 
 private theorem claim_11_rightConjugateElem_mul
     {G : Type*} [Group G] (x y c : G) :
@@ -2316,7 +2295,7 @@ public theorem claim_11
       have hXcard : Nat.card X = 3 ^ 4 := by
         calc
           Nat.card X = Nat.card R * Nat.card Sigma :=
-            claim_11_natCard_sup_eq_mul_of_disjoint_of_le_normalizer
+            PFchapter1section1.natCard_sup_eq_mul_of_disjoint_of_le_normalizer
               R Sigma hSigma_norm_R hR_disj_Sigma
           _ = 3 ^ (m + 1) * 3 := by
             rw [hRcardPow, hp3]
@@ -3063,7 +3042,7 @@ public theorem claim_11
     have hXcard : Nat.card (R ⊔ Sigma : Subgroup G) = 3 ^ 4 := by
       calc
         Nat.card (R ⊔ Sigma : Subgroup G) = Nat.card R * Nat.card Sigma :=
-          claim_11_natCard_sup_eq_mul_of_disjoint_of_le_normalizer
+          PFchapter1section1.natCard_sup_eq_mul_of_disjoint_of_le_normalizer
             R Sigma hSigma_norm_R hR_disj_Sigma
         _ = 3 ^ (m + 1) * 3 := by
           rw [hRcardPow, hp3]

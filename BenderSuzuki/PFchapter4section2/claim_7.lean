@@ -17,7 +17,7 @@ expose that coordinate rearrangement as local data.
 -/
 private theorem claim_7_reduces_to_claim_6_obligation
     {G Ω : Type*} [Group G] [Finite G] [MulAction G Ω] [Finite Ω]
-    (H D Q K V W Q0 S Q1 : Subgroup G) (t s : G) (f g h : G → G)
+    (H D Q K V W Q0 S Q1 : Subgroup G) (t s : G) (f : G → G)
     (hsection3 : ((_root_.BenderSuzuki.PFchapter1section1.HypothesisA G Ω H D Q t ∧
   K ≤ D ∧
     (∀ x : G, x ∈ K ↔ x ∈ D ∧ _root_.BenderSuzuki.PFAppendixIII.rightConjugateElem x t = x⁻¹) ∧
@@ -35,17 +35,7 @@ private theorem claim_7_reduces_to_claim_6_obligation
                             S ⊔ Q1 = Q) ∧
   s ∈ H ∧ _root_.BenderSuzuki.PFAppendixIII.IsInvolution s ∧
     ∃ r : G, r ∈ Q ∧ t * s * t = r⁻¹ * t * r))
-    (hC1 : HypothesisC1 G V) (hC2 : HypothesisC2 G S W t s)
-    (htwo_transitive : MulAction.IsMultiplyPretransitive G Ω 2)
-    (hpoint_stabilizer : ∃ x : Ω, H = MulAction.stabilizer G x)
-    (ht_involution : IsInvolution t) (ht_not_mem_H : t ∉ H)
-    (hD_eq : D = H ⊓ rightConjugate H t)
-    (hQ_normal_in_H : (Q.subgroupOf H).Normal)
-    (hQ_disjoint_D : Disjoint Q D) (hQ_sup_D : Q ⊔ D = H)
-    (hf_mem : ∀ x : G, x ∈ Q → x ≠ 1 → f x ∈ Q ∧ f x ≠ 1)
-    (hg_mem : ∀ x : G, x ∈ Q → x ≠ 1 → g x ∈ Q ∧ g x ≠ 1)
-    (hh_mem : ∀ x : G, x ∈ Q → x ≠ 1 → h x ∈ D)
-    (hcanonical_eq : ∀ x : G, x ∈ Q → x ≠ 1 → t * x * t = g x * h x * t * f x) :
+    (hD_eq : D = H ⊓ rightConjugate H t) :
     ∀ omega omega' x₁ x₂ y₁ y₂ a₁ a₂ : G,
       omega ∈ Q → omega ∉ Q0 → omega' ∈ Q → omega' ∉ Q0 →
       x₁ ∈ Q0 → x₂ ∈ Q0 → y₁ ∈ Q0 → y₂ ∈ Q0 →
@@ -167,7 +157,8 @@ public theorem claim_7
   intro omega omega' x₁ x₂ y₁ y₂ a₁ a₂ homega homega0 homega' homega'0
     hx₁ hx₂ hy₁ hy₂ ha₁ ha₂ hxne hf₁ hf₂ hcos
   have hcos' : ∃ k : G, k ∈ K ∧ a₂ = a₁ * k := hcos
-  rcases claim_7_reduces_to_claim_6_obligation H D Q K V W Q0 S Q1 t s f g h hsection3 hC1 hC2 htwo_transitive hpoint_stabilizer ht_involution ht_not_mem_H hD_eq hQ_normal_in_H hQ_disjoint_D hQ_sup_D hf_mem hg_mem hh_mem hcanonical_eq
+  rcases claim_7_reduces_to_claim_6_obligation
+      H D Q K V W Q0 S Q1 t s f hsection3 hD_eq
       omega omega' x₁ x₂ y₁ y₂ a₁ a₂
       homega homega0 homega' homega'0 hx₁ hx₂ hy₁ hy₂ ha₁ ha₂ hxne hf₁ hf₂ hcos' with
     ⟨x, y, a, hx, hy, hx1, haD, haK, hfxy⟩
@@ -184,4 +175,3 @@ public theorem claim_7
 
 end PFchapter4section2
 end BenderSuzuki
-

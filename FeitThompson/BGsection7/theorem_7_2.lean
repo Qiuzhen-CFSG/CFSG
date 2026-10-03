@@ -1,7 +1,8 @@
 module
 
 public import FeitThompson.BGsection7.lemma_7_1
-import FeitThompson.SubgroupConj
+import Theory.GroupTheory.SubgroupConjugation
+
 /-! # Theorem 7.2 from BG Section 7 -/
 
 open scoped Pointwise
@@ -13,7 +14,7 @@ variable {G : Type*} [Group G] [Finite G]
 public theorem generatorRank_le_card_local {H : Type*} [Group H] [Finite H] :
     generatorRank H ≤ Nat.card H := by
   classical
-  letI : Fintype H := Fintype.ofFinite H
+  let : Fintype H := Fintype.ofFinite H
   let e : Fin (Nat.card H) ≃ H :=
     (finCongr (Nat.card_eq_fintype_card (α := H))).trans (Fintype.equivFin H).symm
   unfold generatorRank
@@ -35,14 +36,14 @@ private theorem primeRank_le_card {R : Type*} [Group R] [Finite R] (q : ℕ) :
   by_cases hS : S.Nonempty
   · have hsSup_mem : sSup S ∈ S := Nat.sSup_mem hS hSbdd
     rcases hsSup_mem with ⟨A, _hAq, _hAcomm, hsSup_le⟩
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     exact le_trans hsSup_le (le_trans (generatorRank_le_card_local (H := A)) (Subgroup.card_le_card_group A))
   · have hSempty : S = ∅ := Set.not_nonempty_iff_eq_empty.mp hS
     have hSet :
         {n : ℕ | ∃ A : Subgroup R, IsPGroup q A ∧ IsMulCommutative A ∧ n ≤ generatorRank A} =
           ∅ := by
       simpa [S] using hSempty
-    rw [primeRank, hSet]
+    rw [primeRank_eq_sSup_generatorRank, hSet]
     simp
 
 private theorem exists_pSubgroup_three_le_generatorRank_of_two_lt_groupRank
@@ -68,7 +69,7 @@ private theorem exists_pSubgroup_three_le_generatorRank_of_two_lt_groupRank
   let T : Set ℕ :=
     {n : ℕ | ∃ B : Subgroup R, IsPGroup q B ∧ IsMulCommutative B ∧ n ≤ generatorRank B}
   have hqrank' : 2 < sSup T := by
-    simpa [primeRank, T] using hqrank
+    simpa [primeRank_eq_sSup_generatorRank, T] using hqrank
   have hTbdd : BddAbove T := by
     refine ⟨Nat.card R, ?_⟩
     intro n hn
@@ -217,7 +218,7 @@ public theorem prime_mem_subgroupPrimeSet_of_nontrivial_center_pSubgroup
     {A : Subgroup G} {p : Nat.Primes} {B : Subgroup (Subgroup.center A)}
     (hBp : IsPGroup p.val B) (hB_ne_bot : B ≠ ⊥) :
     p ∈ subgroupPrimeSet A := by
-  letI : Fact p.val.Prime := ⟨p.2⟩
+  let : Fact p.val.Prime := ⟨p.2⟩
   obtain ⟨n, hncard⟩ := hBp.exists_card_eq
   have hBcard_ne_one : Nat.card B ≠ 1 := by
     intro hcard
@@ -293,15 +294,15 @@ public theorem theorem_7_2
       rw [hQ₂bot] at hQ₁_eq_Q₂
       exact hQ₁_eq_Q₂
     exact hQ₁bot hQ₁eq
-  letI : Nontrivial ↥Q₁ := Q₁.nontrivial_iff_ne_bot.mpr hQ₁bot
-  letI : Nontrivial ↥Q₂ := Q₂.nontrivial_iff_ne_bot.mpr hQ₂bot
+  let : Nontrivial ↥Q₁ := Q₁.nontrivial_iff_ne_bot.mpr hQ₁bot
+  let : Nontrivial ↥Q₂ := Q₂.nontrivial_iff_ne_bot.mpr hQ₂bot
   have hcenterRank' : 2 < groupRank (Subgroup.center A) := lt_of_lt_of_le (by decide : 2 < 3) hcenterRank
   obtain ⟨p, B, hBp, hBcomm, hBrank⟩ :=
     exists_pSubgroup_three_le_generatorRank_of_two_lt_groupRank
       (R := Subgroup.center A) hcenterRank'
-  letI : Fact p.val.Prime := ⟨p.2⟩
-  letI : CommGroup B := IsMulCommutative.instCommGroup
-  letI : Fact (IsPGroup p.val B) := ⟨hBp⟩
+  let : Fact p.val.Prime := ⟨p.2⟩
+  let : CommGroup B := IsMulCommutative.instCommGroup
+  let : Fact (IsPGroup p.val B) := ⟨hBp⟩
   have hB_noncyc : ¬ IsCyclic B := not_isCyclic_of_three_le_generatorRank hBrank
   have hB_ne_bot : B ≠ ⊥ := by
     intro hBbot
@@ -317,7 +318,7 @@ public theorem theorem_7_2
     intro hpq
     apply hp_ne_q
     exact Subtype.ext hpq
-  letI : Fact q.val.Prime := ⟨q.2⟩
+  let : Fact q.val.Prime := ⟨q.2⟩
   have hQ₁q : IsPGroup q.val Q₁ := isPGroup_of_isPiSubgroup_singleton hQ₁fam.2.1
   have hQ₂q : IsPGroup q.val Q₂ := isPGroup_of_isPiSubgroup_singleton hQ₂fam.2.1
   obtain ⟨n₁, hQ₁card⟩ := hQ₁q.exists_card_eq
@@ -327,8 +328,8 @@ public theorem theorem_7_2
       rw [hQ₁card]
       simpa using Nat.coprime_pow_primes 1 n₁ p.2 q.2 hpval_ne_qval
   let ιBA : B →* A := (Subgroup.center A).subtype.comp B.subtype
-  haveI : Subgroup.Normalizes A Q₁ := ⟨hQ₁fam.2.2⟩
-  letI : MulDistribMulAction (↥B) (↥Q₁) := MulDistribMulAction.compHom (↥Q₁) ιBA
+  have : Subgroup.Normalizes A Q₁ := ⟨hQ₁fam.2.2⟩
+  let : MulDistribMulAction (↥B) (↥Q₁) := MulDistribMulAction.compHom (↥Q₁) ιBA
   have hBQ₁fix_top :
       (⨆ (Y : Subgroup B) (_ : IsCyclic (B ⧸ Y)), fixedPointSubgroup (↥Y) ↥Q₁) = ⊤ := by
     simpa using proposition_1_16_b (G := ↥Q₁) (A := B) p.val hcopBQ₁ hB_noncyc
@@ -336,12 +337,12 @@ public theorem theorem_7_2
     exists_cyclicQuotient_fixedPoint_nonbot (A := B) (G := ↥Q₁) hBQ₁fix_top
   have hC_noncyc : ¬ IsCyclic C :=
     not_isCyclic_of_three_le_generatorRank_of_cyclic_quotient hBrank hCcyc
-  letI : CommGroup C := IsMulCommutative.instCommGroup
+  let : CommGroup C := IsMulCommutative.instCommGroup
   have hCp : IsPGroup p.val C := hBp.to_subgroup C
-  letI : Fact (IsPGroup p.val C) := ⟨hCp⟩
+  let : Fact (IsPGroup p.val C) := ⟨hCp⟩
   let ιCA : C →* A := ιBA.comp C.subtype
-  haveI : Subgroup.Normalizes A Q₂ := ⟨hQ₂fam.2.2⟩
-  letI : MulDistribMulAction (↥C) (↥Q₂) := MulDistribMulAction.compHom (↥Q₂) ιCA
+  have : Subgroup.Normalizes A Q₂ := ⟨hQ₂fam.2.2⟩
+  let : MulDistribMulAction (↥C) (↥Q₂) := MulDistribMulAction.compHom (↥Q₂) ιCA
   have hcopCQ₂ : Nat.Coprime p.val (Nat.card Q₂) :=
     by
       rw [hQ₂card]

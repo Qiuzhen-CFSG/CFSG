@@ -306,7 +306,7 @@ three-dimensional `F₂` coordinate model. -/
     (V : Subgroup X) (hV : V.Normal)
     (coord : V ≃* II1Hering31AbelianV) :
     X →* MulAut II1Hering31AbelianV := by
-  letI : V.Normal := hV
+  let : V.Normal := hV
   exact (ii1Hering31AbelianTransportAut coord).comp
     (MulAut.conjNormal (H := V))
 
@@ -318,7 +318,7 @@ public theorem ii1Hering31AbelianCoordinateAction_apply
     ii1Hering31AbelianCoordinateAction V hV coord x (coord v) =
       coord ⟨x * (v : X) * x⁻¹, by
         exact hV.conj_mem (v : X) v.property x⟩ := by
-  letI : V.Normal := hV
+  let : V.Normal := hV
   dsimp [ii1Hering31AbelianCoordinateAction,
     ii1Hering31AbelianTransportAut]
   rw [coord.symm_apply_apply]
@@ -385,8 +385,8 @@ public theorem II1Hering31AbelianExtensionData.Q_homocyclic
     (d : II1Hering31AbelianExtensionData X) :
     ∃ e : ℕ, 0 < e ∧ Nonempty
       (d.Q ≃* Multiplicative (Fin 3 → ZMod (2 ^ e))) := by
-  letI : d.Q.Normal := d.Q_normal
-  letI : MulDistribMulAction X d.Q :=
+  let : d.Q.Normal := d.Q_normal
+  let : MulDistribMulAction X d.Q :=
     MulDistribMulAction.compHom d.Q (MulAut.conjNormal (H := d.Q))
   have htrans : ∀ q : d.Q, q ∈ involutions d.Q →
       ∀ r : d.Q, r ∈ involutions d.Q → ∃ x : X, r = x • q := by
@@ -426,11 +426,11 @@ squaring. -/
 public theorem II1Hering31AbelianExtensionData.V_subgroupOf_eq_sq_ker
     {X : Type u} [Group X] [Finite X]
     (d : II1Hering31AbelianExtensionData X) :
-    letI : IsMulCommutative d.Q := d.Q_commutative
+    let : IsMulCommutative d.Q := d.Q_commutative
     letI : CommGroup d.Q := IsMulCommutative.instCommGroup
     d.V.subgroupOf d.Q = (powMonoidHom 2 : d.Q →* d.Q).ker := by
-  letI : IsMulCommutative d.Q := d.Q_commutative
-  letI : CommGroup d.Q := IsMulCommutative.instCommGroup
+  let : IsMulCommutative d.Q := d.Q_commutative
+  let : CommGroup d.Q := IsMulCommutative.instCommGroup
   ext q
   exact d.V_twoTorsion q
 
@@ -487,11 +487,11 @@ public noncomputable def
     {e : ℕ} (he : 0 < e)
     (f : d.Q ≃* Multiplicative (Fin 3 → ZMod (2 ^ e)))
     (hQV : d.Q ≠ d.V) :
-    letI : IsMulCommutative d.Q := d.Q_commutative
+    let : IsMulCommutative d.Q := d.Q_commutative
     letI : CommGroup d.Q := IsMulCommutative.instCommGroup
     let VQ : Subgroup d.Q := d.V.subgroupOf d.Q
     (powMonoidHom 2 : (d.Q ⧸ VQ) →* (d.Q ⧸ VQ)).ker ≃* d.V := by
-  letI : IsMulCommutative d.Q := d.Q_commutative
+  let : IsMulCommutative d.Q := d.Q_commutative
   letI : CommGroup d.Q := IsMulCommutative.instCommGroup
   let VQ : Subgroup d.Q := d.V.subgroupOf d.Q
   let sq : d.Q →* d.Q := powMonoidHom 2
@@ -552,11 +552,11 @@ coordinates are obtained by squaring representatives in `Q / V`. -/
 public noncomputable def II1Hering31AbelianExtensionData.quotient
     {X : Type u} [Group X] [Finite X]
     (d : II1Hering31AbelianExtensionData X) (hQV : d.Q ≠ d.V) :
-    letI : d.V.Normal := d.V_normal
+    let : d.V.Normal := d.V_normal
     II1Hering31AbelianExtensionData (X ⧸ d.V) := by
   classical
-  letI : d.V.Normal := d.V_normal
-  letI : IsMulCommutative d.Q := d.Q_commutative
+  let : d.V.Normal := d.V_normal
+  let : IsMulCommutative d.Q := d.Q_commutative
   letI : CommGroup d.Q := IsMulCommutative.instCommGroup
   let qX : X →* X ⧸ d.V := QuotientGroup.mk' d.V
   let qQ : d.Q →* X ⧸ d.V := qX.comp d.Q.subtype
@@ -584,14 +584,14 @@ public noncomputable def II1Hering31AbelianExtensionData.quotient
       (b : X ⧸ d.V) * (a : X ⧸ d.V)
     rw [← ha0, ← hb0]
     exact congrArg qQ (mul_comm a0 b0)
-  letI : IsMulCommutative Qbar := hQbarComm
+  let : IsMulCommutative Qbar := hQbarComm
   letI : CommGroup Qbar := IsMulCommutative.instCommGroup
   have hQbarP : IsPGroup 2 Qbar :=
     (d.Q_isPGroup.to_quotient (d.V.subgroupOf d.Q)).of_equiv eQ
   let Wbar : Subgroup Qbar := (powMonoidHom 2 : Qbar →* Qbar).ker
   let Vbar : Subgroup (X ⧸ d.V) := Wbar.map Qbar.subtype
-  letI : Qbar.Normal := hQbarNormal
-  letI : Wbar.Characteristic := by
+  let : Qbar.Normal := hQbarNormal
+  let : Wbar.Characteristic := by
     simpa [Wbar] using
       Wielandt.powMonoidHom_ker_characteristic (H := Qbar) 2
   have hVbarNormal : Vbar.Normal := by
@@ -816,7 +816,7 @@ public noncomputable def II1Hering31AbelianExtensionData.quotient
 public theorem II1Hering31AbelianExtensionData.quotient_Q
     {X : Type u} [Group X] [Finite X]
     (d : II1Hering31AbelianExtensionData X) (hQV : d.Q ≠ d.V) :
-    letI : d.V.Normal := d.V_normal
+    let : d.V.Normal := d.V_normal
     (d.quotient hQV).Q =
       ((QuotientGroup.mk' d.V).comp d.Q.subtype).range := by
   rfl
@@ -825,9 +825,9 @@ public theorem II1Hering31AbelianExtensionData.quotient_Q
 public theorem II1Hering31AbelianExtensionData.mem_quotient_Q_mk_iff
     {X : Type u} [Group X] [Finite X]
     (d : II1Hering31AbelianExtensionData X) (hQV : d.Q ≠ d.V) (x : X) :
-    letI : d.V.Normal := d.V_normal
+    let : d.V.Normal := d.V_normal
     QuotientGroup.mk' d.V x ∈ (d.quotient hQV).Q ↔ x ∈ d.Q := by
-  letI : d.V.Normal := d.V_normal
+  let : d.V.Normal := d.V_normal
   rw [d.quotient_Q hQV]
   constructor
   · rintro ⟨q, hq⟩
@@ -876,7 +876,7 @@ public theorem
         exact d.Q.one_mem
       exact hxQ (hall x ⟨hxne, hx2⟩)
     exact ⟨x, hxQ, hx2V, hx2ne⟩
-  · letI : d.V.Normal := d.V_normal
+  · let : d.V.Normal := d.V_normal
     let dbar : II1Hering31AbelianExtensionData (X ⧸ d.V) := d.quotient hQV
     have hVneBot : d.V ≠ ⊥ := by
       intro hV
@@ -968,12 +968,13 @@ public theorem ii1Hering31_square_not_mem_abelianNorm
     (hQcomm : IsMulCommutative Q)
     (hall : ∀ y : X, IsInvolution y → y ∈ Q)
     {x : X} (hxQ : x ∉ Q) (hx2 : x ^ 2 ∈ Q) :
-    letI : IsMulCommutative Q := hQcomm
+    let : IsMulCommutative Q := hQcomm
     letI : CommGroup Q := IsMulCommutative.instCommGroup
     ⟨x ^ 2, hx2⟩ ∉
       (ii1Hering31AbelianNorm (MulAut.conjNormal (H := Q) x)).range := by
-  letI : IsMulCommutative Q := hQcomm
-  letI : CommGroup Q := IsMulCommutative.instCommGroup
+  dsimp only
+  let : IsMulCommutative Q := hQcomm
+  let : CommGroup Q := IsMulCommutative.instCommGroup
   let alpha : MulAut Q := MulAut.conjNormal (H := Q) x
   intro hsquare
   rcases hsquare with ⟨q, hq⟩
@@ -1029,9 +1030,9 @@ private theorem
         ∃ y : Y, IsInvolution y ∧ y ∉ dY.Q) :
     ∃ s : X, s ∉ d.Q ∧ d.action s = ii1Hering31AbelianS ∧
       s ^ 2 = (d.V_coord.symm ii1Hering31AbelianV1 : d.V) := by
-  letI : d.Q.Normal := d.Q_normal
-  letI : IsMulCommutative d.Q := d.Q_commutative
-  letI : CommGroup d.Q := IsMulCommutative.instCommGroup
+  let : d.Q.Normal := d.Q_normal
+  let : IsMulCommutative d.Q := d.Q_commutative
+  let : CommGroup d.Q := IsMulCommutative.instCommGroup
   obtain ⟨s0, hs0Action⟩ := d.action_surjective ii1Hering31AbelianS
   have hs0Q : s0 ∉ d.Q := by
     intro hs0Q
@@ -1181,7 +1182,7 @@ private theorem II1Hering31AbelianExtensionData.layer_coordinates_unique
     {n1 n2 n3 : ℕ} (hn1 : n1 < 2 ^ m) (hn2 : n2 < 2 ^ m)
     (hn3 : n3 < 2 ^ m) (hrel : c1 ^ n1 * c2 ^ n2 * c3 ^ n3 = 1) :
     n1 = 0 ∧ n2 = 0 ∧ n3 = 0 := by
-  letI : IsMulCommutative d.Q := d.Q_commutative
+  let : IsMulCommutative d.Q := d.Q_commutative
   have hdiv : ∀ l ≤ m,
       2 ^ l ∣ n1 ∧ 2 ^ l ∣ n2 ∧ 2 ^ l ∣ n3 := by
     intro l hl
@@ -1375,7 +1376,7 @@ private noncomputable def ii1Hering31LayerCoordHom
     (hc1 : c1 ^ 2 ^ m = 1) (hc2 : c2 ^ 2 ^ m = 1)
     (hc3 : c3 ^ 2 ^ m = 1) :
     Multiplicative (Fin 3 → ZMod (2 ^ m)) →* Q := by
-  letI : IsMulCommutative Q := hcomm
+  let : IsMulCommutative Q := hcomm
   let f1 := (ii1Hering31CyclicZModHom (2 ^ m) c1 hc1).comp
     (ii1Hering31CoordProj (2 ^ m) 0)
   let f2 := (ii1Hering31CyclicZModHom (2 ^ m) c2 hc2).comp
@@ -1420,7 +1421,7 @@ private theorem II1Hering31AbelianExtensionData.layerCoordHom_injective
     Function.Injective
       (ii1Hering31LayerCoordHom d.Q_commutative m c1 c2 c3
         hc1 hc2 hc3) := by
-  letI : IsMulCommutative d.Q := d.Q_commutative
+  let : IsMulCommutative d.Q := d.Q_commutative
   intro x y hxy
   let z := x * y⁻¹
   have hzMap : ii1Hering31LayerCoordHom d.Q_commutative m c1 c2 c3
@@ -1460,13 +1461,13 @@ private theorem
         d.V_le_Q (d.V_coord.symm ii1Hering31AbelianV3).property⟩)
     (hc1 : c1 ^ 2 ^ m = 1) (hc2 : c2 ^ 2 ^ m = 1)
     (hc3 : c3 ^ 2 ^ m = 1) (hc1Order : orderOf c1 = 2 ^ m) :
-    letI : IsMulCommutative d.Q := d.Q_commutative
+    let : IsMulCommutative d.Q := d.Q_commutative
     letI : CommGroup d.Q := IsMulCommutative.instCommGroup
     (ii1Hering31LayerCoordHom d.Q_commutative m c1 c2 c3
       hc1 hc2 hc3).range =
       (powMonoidHom (2 ^ m) : d.Q →* d.Q).ker := by
-  letI : IsMulCommutative d.Q := d.Q_commutative
-  letI : CommGroup d.Q := IsMulCommutative.instCommGroup
+  let : IsMulCommutative d.Q := d.Q_commutative
+  let : CommGroup d.Q := IsMulCommutative.instCommGroup
   let coord := ii1Hering31LayerCoordHom d.Q_commutative m c1 c2 c3
     hc1 hc2 hc3
   have hcoordInj : Function.Injective coord :=
@@ -1694,9 +1695,9 @@ private theorem
       ∀ dY : II1Hering31AbelianExtensionData Y,
         ∃ y : Y, IsInvolution y ∧ y ∉ dY.Q) :
     Nonempty (II1Hering31PeterfalviInitialData d) := by
-  letI : d.Q.Normal := d.Q_normal
-  letI : IsMulCommutative d.Q := d.Q_commutative
-  letI : CommGroup d.Q := IsMulCommutative.instCommGroup
+  let : d.Q.Normal := d.Q_normal
+  let : IsMulCommutative d.Q := d.Q_commutative
+  let : CommGroup d.Q := IsMulCommutative.instCommGroup
   obtain ⟨s, hsQ, hsAction, hs2⟩ :=
     d.exists_normalized_S_lift_of_induction hall ih
   obtain ⟨t, htAction⟩ := d.action_surjective ii1Hering31AbelianT
@@ -1733,7 +1734,7 @@ private theorem
       rw [hb]
       exact d.Q.one_mem
     exact hbQ (hall b ⟨hbne, hb2⟩)
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   obtain ⟨m, hmOrder⟩ := (IsPGroup.iff_orderOf.mp d.Q_isPGroup) c1
   have hmPos : 0 < m := by
     by_contra hm
@@ -1864,9 +1865,9 @@ private theorem II1Hering31PeterfalviInitialData.c1_conj_s_t
     (hall : ∀ y : X, IsInvolution y → y ∈ d.Q) :
     z.s * (z.c1 : X) * z.s⁻¹ = (z.c1⁻¹ : d.Q) ∧
       z.t * (z.c1 : X) * z.t⁻¹ = (z.c1⁻¹ : d.Q) := by
-  letI : d.Q.Normal := d.Q_normal
-  letI : IsMulCommutative d.Q := d.Q_commutative
-  letI : CommGroup d.Q := IsMulCommutative.instCommGroup
+  let : d.Q.Normal := d.Q_normal
+  let : IsMulCommutative d.Q := d.Q_commutative
+  let : CommGroup d.Q := IsMulCommutative.instCommGroup
   let alpha : MulAut d.Q := MulAut.conjNormal (H := d.Q) z.s
   let beta : MulAut d.Q := MulAut.conjNormal (H := d.Q) z.t
   have hs2Q : z.s ^ 2 ∈ d.Q := by
@@ -1936,7 +1937,7 @@ private theorem II1Hering31PeterfalviInitialData.c1_conj_s_t
       _ = w := rfl
   have hwOne : w = 1 := by
     by_contra hw
-    letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+    let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
     obtain ⟨r, hrOrder⟩ := (IsPGroup.iff_orderOf.mp d.Q_isPGroup) w
     have hrPos : 0 < r := by
       by_contra hr
@@ -2072,9 +2073,9 @@ private theorem
     (d : II1Hering31AbelianExtensionData X)
     (z : II1Hering31PeterfalviInitialData d) :
     Nonempty (II1Hering31PeterfalviLayerData d z) := by
-  letI : d.Q.Normal := d.Q_normal
-  letI : IsMulCommutative d.Q := d.Q_commutative
-  letI : CommGroup d.Q := IsMulCommutative.instCommGroup
+  let : d.Q.Normal := d.Q_normal
+  let : IsMulCommutative d.Q := d.Q_commutative
+  let : CommGroup d.Q := IsMulCommutative.instCommGroup
   let v1 : d.V := d.V_coord.symm ii1Hering31AbelianV1
   let v2 : d.V := d.V_coord.symm ii1Hering31AbelianV2
   let v3 : d.V := d.V_coord.symm ii1Hering31AbelianV3
@@ -2436,15 +2437,15 @@ private theorem
     (d : II1Hering31AbelianExtensionData X)
     {x y : X} (hxQ : x ∉ d.Q) (hx2Q : x ^ 2 ∈ d.Q)
     (hyQ : y ∉ d.Q) (hy2Q : y ^ 2 ∈ d.Q) :
-    letI : d.Q.Normal := d.Q_normal
-    letI : IsMulCommutative d.Q := d.Q_commutative
+    let : d.Q.Normal := d.Q_normal
+    let : IsMulCommutative d.Q := d.Q_commutative
     letI : CommGroup d.Q := IsMulCommutative.instCommGroup
     ∃ delta : MulAut d.Q, ∀ q : d.Q,
       delta (MulAut.conjNormal (H := d.Q) x q) =
         MulAut.conjNormal (H := d.Q) y (delta q) := by
-  letI : d.Q.Normal := d.Q_normal
-  letI : IsMulCommutative d.Q := d.Q_commutative
-  letI : CommGroup d.Q := IsMulCommutative.instCommGroup
+  let : d.Q.Normal := d.Q_normal
+  let : IsMulCommutative d.Q := d.Q_commutative
+  let : CommGroup d.Q := IsMulCommutative.instCommGroup
   obtain ⟨g, hg⟩ := d.quotient_involutions_conjugate hxQ hx2Q hyQ hy2Q
   let r : d.Q := ⟨g⁻¹ * x * g * y⁻¹, hg⟩
   have hxy : g⁻¹ * x * g = (r : X) * y := by
@@ -2496,7 +2497,7 @@ private theorem ii1Hering31_cyclic_subgroup_in_cyclic_times_two
   have hvFin : IsOfFinOrder v := by
     rw [isOfFinOrder_iff_pow_eq_one]
     exact ⟨2, by norm_num, hvSq⟩
-  letI : (Subgroup.zpowers c).Normal := inferInstance
+  let : (Subgroup.zpowers c).Normal := inferInstance
   rcases (Subgroup.mem_sup_of_normal_left (s := Subgroup.zpowers c)
     (t := Subgroup.zpowers v)).mp hrMem with ⟨a, ha, b, hb, hab⟩
   let ic : Fin (orderOf c) :=
@@ -2649,8 +2650,8 @@ private theorem ii1Hering31_peterfalvi_step7
           c3 ^ (x.toAdd 2).val = q)
     (hc2s : z.s * (c2 : X) * z.s⁻¹ = (c2 : X))
     (hc3s : z.s * (c3 : X) * z.s⁻¹ = ((c2 * c3⁻¹ : d.Q) : X)) :
-    letI : d.Q.Normal := d.Q_normal
-    letI : IsMulCommutative d.Q := d.Q_commutative
+    let : d.Q.Normal := d.Q_normal
+    let : IsMulCommutative d.Q := d.Q_commutative
     letI : CommGroup d.Q := IsMulCommutative.instCommGroup
     let beta : MulAut d.Q := MulAut.conjNormal (H := d.Q) z.b
     let v2Q : d.Q :=
@@ -2660,9 +2661,9 @@ private theorem ii1Hering31_peterfalvi_step7
         Subgroup.zpowers z.c1 ⊔ Subgroup.zpowers v2Q ∧
       ii1Hering31LayerNormSubgroup z.m beta =
         Subgroup.zpowers (z.c1 * v2Q) := by
-  letI : d.Q.Normal := d.Q_normal
-  letI : IsMulCommutative d.Q := d.Q_commutative
-  letI : CommGroup d.Q := IsMulCommutative.instCommGroup
+  let : d.Q.Normal := d.Q_normal
+  let : IsMulCommutative d.Q := d.Q_commutative
+  let : CommGroup d.Q := IsMulCommutative.instCommGroup
   let alpha : MulAut d.Q := MulAut.conjNormal (H := d.Q) z.s
   let beta : MulAut d.Q := MulAut.conjNormal (H := d.Q) z.b
   let v1 : d.V := d.V_coord.symm ii1Hering31AbelianV1
@@ -2889,7 +2890,7 @@ private theorem ii1Hering31_layer_coordinate_parities_of_top_v1
       ⟨((d.V_coord.symm ii1Hering31AbelianV1 : d.V) : X),
         d.V_le_Q (d.V_coord.symm ii1Hering31AbelianV1).property⟩) :
     Odd n1 ∧ 2 ∣ n2 ∧ 2 ∣ n3 := by
-  letI : IsMulCommutative d.Q := d.Q_commutative
+  let : IsMulCommutative d.Q := d.Q_commutative
   let v1 : d.V := d.V_coord.symm ii1Hering31AbelianV1
   let v2 : d.V := d.V_coord.symm ii1Hering31AbelianV2
   let v3 : d.V := d.V_coord.symm ii1Hering31AbelianV3
@@ -2969,8 +2970,8 @@ private structure II1Hering31PeterfalviStep8Data
   d0_eq : d0 = c1 * c2 ^ (2 * k2) * c3 ^ (2 * k3)
   d0_conj_t : z.t * (d0 : X) * z.t⁻¹ = (d0 : X)
   b_norm_eq :
-    letI : d.Q.Normal := d.Q_normal
-    letI : IsMulCommutative d.Q := d.Q_commutative
+    let : d.Q.Normal := d.Q_normal
+    let : IsMulCommutative d.Q := d.Q_commutative
     letI : CommGroup d.Q := IsMulCommutative.instCommGroup
     let beta : MulAut d.Q := MulAut.conjNormal (H := d.Q) z.b
     ii1Hering31LayerNormSubgroup z.m beta =
@@ -3000,9 +3001,9 @@ private theorem ii1Hering31_peterfalvi_step8
     (hc2s : z.s * (c2 : X) * z.s⁻¹ = (c2 : X))
     (hc3s : z.s * (c3 : X) * z.s⁻¹ = ((c2 * c3⁻¹ : d.Q) : X)) :
     Nonempty (II1Hering31PeterfalviStep8Data d z c2 c3) := by
-  letI : d.Q.Normal := d.Q_normal
-  letI : IsMulCommutative d.Q := d.Q_commutative
-  letI : CommGroup d.Q := IsMulCommutative.instCommGroup
+  let : d.Q.Normal := d.Q_normal
+  let : IsMulCommutative d.Q := d.Q_commutative
+  let : CommGroup d.Q := IsMulCommutative.instCommGroup
   let alpha : MulAut d.Q := MulAut.conjNormal (H := d.Q) z.s
   let tau : MulAut d.Q := MulAut.conjNormal (H := d.Q) z.t
   let beta : MulAut d.Q := MulAut.conjNormal (H := d.Q) z.b
@@ -3350,8 +3351,8 @@ private theorem ii1Hering31_peterfalvi_s_coord_intertwine
     (w : II1Hering31PeterfalviStep8Data d z c2 c3)
     (hc2Pow : c2 ^ 2 ^ z.m = 1) (hc3Pow : c3 ^ 2 ^ z.m = 1)
     (x : Fin 3 → ZMod (2 ^ z.m)) :
-    letI : d.Q.Normal := d.Q_normal
-    letI : IsMulCommutative d.Q := d.Q_commutative
+    let : d.Q.Normal := d.Q_normal
+    let : IsMulCommutative d.Q := d.Q_commutative
     letI : CommGroup d.Q := IsMulCommutative.instCommGroup
     let alpha : MulAut d.Q := MulAut.conjNormal (H := d.Q) z.s
     alpha (ii1Hering31LayerCoordHom d.Q_commutative z.m w.c1 c2 c3
@@ -3359,9 +3360,9 @@ private theorem ii1Hering31_peterfalvi_s_coord_intertwine
       ii1Hering31LayerCoordHom d.Q_commutative z.m w.c1 c2 c3
         w.c1_pow_eq hc2Pow hc3Pow
         (Multiplicative.ofAdd (ii1Hering31PeterfalviSCoord x)) := by
-  letI : d.Q.Normal := d.Q_normal
-  letI : IsMulCommutative d.Q := d.Q_commutative
-  letI : CommGroup d.Q := IsMulCommutative.instCommGroup
+  let : d.Q.Normal := d.Q_normal
+  let : IsMulCommutative d.Q := d.Q_commutative
+  let : CommGroup d.Q := IsMulCommutative.instCommGroup
   let alpha : MulAut d.Q := MulAut.conjNormal (H := d.Q) z.s
   have ha1 : alpha w.c1 = w.c1⁻¹ := by
     apply d.Q.subtype_injective
@@ -3386,7 +3387,7 @@ private theorem ii1Hering31_mul_reorder_nine {Q : Type*} [Group Q] [IsMulCommuta
     (a b c d e f g h i : Q) :
     a * b * c * d * (e * f) * g * h * i =
       a * c * g * (b * d * h) * (e * (i * f)) := by
-  letI : CommGroup Q := IsMulCommutative.instCommGroup
+  let : CommGroup Q := IsMulCommutative.instCommGroup
   apply Additive.ofMul.injective
   change (Additive.ofMul a + Additive.ofMul b + Additive.ofMul c +
       Additive.ofMul d + (Additive.ofMul e + Additive.ofMul f) +
@@ -3402,11 +3403,11 @@ private theorem ii1Hering31_peterfalvi_d_coord_apply
     (z : II1Hering31PeterfalviInitialData d) (c2 c3 : d.Q)
     (w : II1Hering31PeterfalviStep8Data d z c2 c3)
     (hc2Pow : c2 ^ 2 ^ z.m = 1) (hc3Pow : c3 ^ 2 ^ z.m = 1) :
-    letI : IsMulCommutative d.Q := d.Q_commutative
+    let : IsMulCommutative d.Q := d.Q_commutative
     ii1Hering31LayerCoordHom d.Q_commutative z.m w.c1 c2 c3
       w.c1_pow_eq hc2Pow hc3Pow
       (Multiplicative.ofAdd (ii1Hering31PeterfalviDCoord w.k2 w.k3)) = w.d0 := by
-  letI : IsMulCommutative d.Q := d.Q_commutative
+  let : IsMulCommutative d.Q := d.Q_commutative
   rw [ii1Hering31LayerCoordHom_apply]
   change w.c1 ^ (1 : ZMod (2 ^ z.m)).val *
       c2 ^ ((((2 * w.k2 : ℕ) : ZMod (2 ^ z.m))).val) *
@@ -3428,8 +3429,8 @@ private theorem ii1Hering31_peterfalvi_t_coord_intertwine
     (w : II1Hering31PeterfalviStep8Data d z c2 c3)
     (hc2Pow : c2 ^ 2 ^ z.m = 1) (hc3Pow : c3 ^ 2 ^ z.m = 1)
     (x : Fin 3 → ZMod (2 ^ z.m)) :
-    letI : d.Q.Normal := d.Q_normal
-    letI : IsMulCommutative d.Q := d.Q_commutative
+    let : d.Q.Normal := d.Q_normal
+    let : IsMulCommutative d.Q := d.Q_commutative
     letI : CommGroup d.Q := IsMulCommutative.instCommGroup
     let tau : MulAut d.Q := MulAut.conjNormal (H := d.Q) z.t
     tau (ii1Hering31LayerCoordHom d.Q_commutative z.m w.c1 c2 c3
@@ -3438,9 +3439,9 @@ private theorem ii1Hering31_peterfalvi_t_coord_intertwine
         w.c1_pow_eq hc2Pow hc3Pow
         (Multiplicative.ofAdd
           (ii1Hering31PeterfalviTCoord w.k w.k2 w.k3 x)) := by
-  letI : d.Q.Normal := d.Q_normal
-  letI : IsMulCommutative d.Q := d.Q_commutative
-  letI : CommGroup d.Q := IsMulCommutative.instCommGroup
+  let : d.Q.Normal := d.Q_normal
+  let : IsMulCommutative d.Q := d.Q_commutative
+  let : CommGroup d.Q := IsMulCommutative.instCommGroup
   let tau : MulAut d.Q := MulAut.conjNormal (H := d.Q) z.t
   have ht1 : tau w.c1 = w.c1⁻¹ := by
     apply d.Q.subtype_injective
@@ -3517,8 +3518,8 @@ private theorem ii1Hering31_peterfalvi_b_coord_intertwine
     (w : II1Hering31PeterfalviStep8Data d z c2 c3)
     (hc2Pow : c2 ^ 2 ^ z.m = 1) (hc3Pow : c3 ^ 2 ^ z.m = 1)
     (x : Fin 3 → ZMod (2 ^ z.m)) :
-    letI : d.Q.Normal := d.Q_normal
-    letI : IsMulCommutative d.Q := d.Q_commutative
+    let : d.Q.Normal := d.Q_normal
+    let : IsMulCommutative d.Q := d.Q_commutative
     letI : CommGroup d.Q := IsMulCommutative.instCommGroup
     let beta : MulAut d.Q := MulAut.conjNormal (H := d.Q) z.b
     beta (ii1Hering31LayerCoordHom d.Q_commutative z.m w.c1 c2 c3
@@ -3527,9 +3528,9 @@ private theorem ii1Hering31_peterfalvi_b_coord_intertwine
         w.c1_pow_eq hc2Pow hc3Pow
         (Multiplicative.ofAdd
           (ii1Hering31PeterfalviBCoord w.k w.k2 w.k3 x)) := by
-  letI : d.Q.Normal := d.Q_normal
-  letI : IsMulCommutative d.Q := d.Q_commutative
-  letI : CommGroup d.Q := IsMulCommutative.instCommGroup
+  let : d.Q.Normal := d.Q_normal
+  let : IsMulCommutative d.Q := d.Q_commutative
+  let : CommGroup d.Q := IsMulCommutative.instCommGroup
   let alpha : MulAut d.Q := MulAut.conjNormal (H := d.Q) z.s
   let tau : MulAut d.Q := MulAut.conjNormal (H := d.Q) z.t
   let beta : MulAut d.Q := MulAut.conjNormal (H := d.Q) z.b
@@ -3584,9 +3585,9 @@ private theorem ii1Hering31_peterfalvi_b_norm_coordinate_relation
     (x : Fin 3 → ZMod (2 ^ z.m)) :
     let y := fun i => ii1Hering31PeterfalviBCoord w.k w.k2 w.k3 x i + x i
     y 1 = ((2 ^ (z.m - 1) : ℕ) : ZMod (2 ^ z.m)) * y 0 := by
-  letI : d.Q.Normal := d.Q_normal
-  letI : IsMulCommutative d.Q := d.Q_commutative
-  letI : CommGroup d.Q := IsMulCommutative.instCommGroup
+  let : d.Q.Normal := d.Q_normal
+  let : IsMulCommutative d.Q := d.Q_commutative
+  let : CommGroup d.Q := IsMulCommutative.instCommGroup
   let beta : MulAut d.Q := MulAut.conjNormal (H := d.Q) z.b
   let coord := ii1Hering31LayerCoordHom d.Q_commutative z.m w.c1 c2 c3
     w.c1_pow_eq hc2Pow hc3Pow
@@ -3694,9 +3695,9 @@ private theorem ii1Hering31_peterfalvi_91
     (w.k2 : ZMod (2 ^ (z.m - 1))) +
         (w.k : ZMod (2 ^ (z.m - 1))) *
           (w.k3 : ZMod (2 ^ (z.m - 1))) - 1 = 0 := by
-  letI : d.Q.Normal := d.Q_normal
-  letI : IsMulCommutative d.Q := d.Q_commutative
-  letI : CommGroup d.Q := IsMulCommutative.instCommGroup
+  let : d.Q.Normal := d.Q_normal
+  let : IsMulCommutative d.Q := d.Q_commutative
+  let : CommGroup d.Q := IsMulCommutative.instCommGroup
   let tau : MulAut d.Q := MulAut.conjNormal (H := d.Q) z.t
   let coord := ii1Hering31LayerCoordHom d.Q_commutative z.m w.c1 c2 c3
     w.c1_pow_eq hc2Pow hc3Pow

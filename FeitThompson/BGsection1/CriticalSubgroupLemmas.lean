@@ -3,6 +3,9 @@ module
 public import FeitThompson.BGsection1.Defs
 import Mathlib.Data.Nat.Choose.Dvd
 
+public import Theory.GroupAction.Defs
+
+
 open scoped Pointwise commutatorElement
 
 section CriticalSubgroupLemmas
@@ -67,7 +70,7 @@ public theorem nilpotencyClassLe_two_of_commutator_le_centerIn
       (Subgroup.lowerCentralSeries_succ_eq_bot (⊤ : Subgroup (↥H)) (n := 1) hL1_le_center)
   have hnil : Group.IsNilpotent (↥H) :=
     (Subgroup.nilpotent_iff_lowerCentralSeries (G := ↥H)).2 ⟨2, hL2_bot⟩
-  letI : Group.IsNilpotent (↥H) := hnil
+  let : Group.IsNilpotent (↥H) := hnil
   have hclass : Group.nilpotencyClass (↥H) ≤ 2 :=
     (Subgroup.lowerCentralSeries_eq_bot_iff_nilpotencyClass_le (G := ↥H)).1 hL2_bot
   unfold NilpotencyClassLe
@@ -115,10 +118,10 @@ public theorem isPGroup_of_prime_order_eq_p [Finite G]
     intro q hq hqd
     have hqd_card : q ∣ Nat.card (Subgroup.zpowers x) := by
       simpa [Nat.card_zpowers] using hqd
-    letI : Fintype (Subgroup.zpowers x) := Fintype.ofFinite (Subgroup.zpowers x)
+    let : Fintype (Subgroup.zpowers x) := Fintype.ofFinite (Subgroup.zpowers x)
     have hqd_card' : q ∣ Fintype.card (Subgroup.zpowers x) := by
       simpa [Nat.card_eq_fintype_card] using hqd_card
-    letI : Fact q.Prime := ⟨hq⟩
+    let : Fact q.Prime := ⟨hq⟩
     obtain ⟨y, hy⟩ :=
       _root_.exists_prime_orderOf_dvd_card (G := Subgroup.zpowers x) q hqd_card'
     have hy' : Nat.Prime (orderOf (y : H)) := by

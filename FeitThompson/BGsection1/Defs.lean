@@ -1,5 +1,7 @@
 module
 
+public import Theory.GroupAction.NormalComplement
+
 public import Mathlib.Algebra.Group.Defs
 public import Mathlib.Algebra.Group.Subgroup.Defs
 public import Mathlib.Data.Bracket
@@ -32,52 +34,36 @@ import Mathlib.Tactic.TypeStar
 public import FeitThompson.ChiefFactors.Core
 public import FeitThompson.ChiefFactors.BaerCore
 public import FeitThompson.ChiefFactors.Proposition12
-import FeitThompson.Burnside.NormalComplement
-import FeitThompson.Commutator.ActionTriviality
-import FeitThompson.Frattini.CoprimeAction
-import FeitThompson.Commutator.CyclicSylow
-import FeitThompson.Commutator.Core
-import FeitThompson.ElementaryAbelian
+import Theory.GroupAction.NormalComplement
+import Theory.GroupTheory.Commutator.ActionTriviality
+import Theory.Frattini.CoprimeAction
+import Theory.GroupTheory.Commutator.CyclicSylow
+import Theory.GroupTheory.Commutator.Basic
+import Theory.ElementaryAbelian.VectorSpace
 import FeitThompson.Fitting.Centralizer
 import FeitThompson.Fitting.Core
 import FeitThompson.Fitting.Faithful
 public import FeitThompson.Frattini.Core
-public import FeitThompson.GroupAction.Defs
-public import FeitThompson.GroupAction.Invariant
-public import FeitThompson.GroupAction.Lemmas
-public import FeitThompson.GroupAction.Quotient
-public import FeitThompson.HallSubgroups.Core
-public import FeitThompson.HallSubgroups.Complements
-public import FeitThompson.HallSubgroups.Existence
-public import FeitThompson.HallSubgroups.Conjugacy
-public import FeitThompson.PGroup.Omega
-import FeitThompson.PGroup.NormalSubgroups
+public import Theory.GroupAction.Defs
+public import Theory.GroupAction.Invariant
+public import Theory.GroupAction.Lemmas
+public import Theory.GroupAction.Quotient
+public import Theory.GroupTheory.Hall.Basic
+public import Theory.GroupTheory.Hall.Complements
+public import Theory.GroupTheory.Hall.Existence
+public import Theory.GroupTheory.Hall.Conjugacy
+public import Theory.GroupTheory.PGroup.Omega
+public import Theory.GroupTheory.PGroup.NormalSubgroups
+public import Theory.GroupTheory.PiCore
 public import Theory.Representation.CompleteReducibility
 public import Theory.Representation.Maschke
+
 
 open scoped Pointwise
 
 /-
 TODO(tianjiao): Clean up LLM generated translations.
 -/
-
-
-/- # Elementary Properties of Solvable Groups -/
-
-/-- A `π`-group (all prime divisors of its order lie in `π`). -/
-public def IsPiGroup (π : Set Nat.Primes) (G : Type*) [Group G] : Prop :=
-  IsPiSubgroup π (⊤ : Subgroup G)
-
-public lemma IsPiGroup_iff (π : Set Nat.Primes) (G : Type*) [Group G] [Finite G] :
-    IsPiGroup π G ↔ ∀ p : Nat.Primes, p.val ∣ Nat.card G → p ∈ π := by
-  let _ := (inferInstance : Finite G)
-  unfold IsPiGroup IsPiSubgroup
-  simp
-
-/-- The `π`-core `𝒪_π(G)`: the supremum of all normal `π`-subgroups of `G`. -/
-@[expose]
-public def piCore (π : Set Nat.Primes) (G : Type*) [Group G] : Subgroup G :=
-  sSup {K : Subgroup G | K.Normal ∧ IsPiSubgroup (G := G) π K}
 
 
 section BackgroundDefs
@@ -130,11 +116,6 @@ public instance Op_p'pp'_normal (p : ℕ) (G : Type*) [Group G] : (Op_p'pp' p G)
   classical
   dsimp [Op_p'pp']
   infer_instance
-
-/-- `G` has a normal `p`-complement: a normal subgroup of `p'`-order with `p`-group quotient. -/
-@[expose]
-public def HasNormalPComplement (p : ℕ) (G : Type*) [Group G] : Prop :=
-  ∃ (N : Subgroup G) (_ : N.Normal), Nat.Coprime p (Nat.card N) ∧ IsPGroup p (G ⧸ N)
 
 /-- Nilpotency class at most `n`, phrased via the upper central series. -/
 @[expose]

@@ -5,6 +5,7 @@ import GorensteinWalter.Section1
 import GorensteinWalter.Section2.PreambleHSU
 import GorensteinWalter.Section2.Reflection
 
+
 /-!
 # Elementary endpoints for Lemma 2.8
 

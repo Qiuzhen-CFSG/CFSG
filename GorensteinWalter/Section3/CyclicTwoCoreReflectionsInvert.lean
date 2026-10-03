@@ -8,6 +8,7 @@ public import GorensteinWalter.Section3.CyclicTwoCoreLayerASeven
 public import BenderGlauberman.DihedralStructure
 import Mathlib.Tactic
 
+
 /-!
 # Cyclic first case: both reflections invert every nontrivial `q`-core, `q ≠ 3`
 

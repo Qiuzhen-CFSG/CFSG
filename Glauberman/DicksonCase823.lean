@@ -3,6 +3,7 @@ module
 public import Glauberman.DicksonCounting
 public import Glauberman.DicksonSmallAlternating
 
+
 /-!
 # Dickson case II.8.23
 -/

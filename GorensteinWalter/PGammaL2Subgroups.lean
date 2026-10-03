@@ -12,7 +12,10 @@ the projection range.
 
 Consequently, if `A` contains the canonical `PSL₂` layer and its field image
 has odd order, this kernel is a normal odd-index subgroup of `A` isomorphic to
-either `PSL₂` or `PGL₂`.  This is the formal endpoint needed after the two
+either `PSL₂` or `PGL₂`. The model theorem identifies the actual kernel;
+it does not require odd field image, which is used only for its index and
+the later pure-field complement. This also supplies the linear branch of
+ABG II.3 Proposition 4. This is the formal endpoint needed after the two
 remaining hard inputs in Gorenstein--Walter Lemma 3.3(vi): automorphism
 recognition and oddness of the field-automorphism image.
 -/
@@ -184,24 +187,21 @@ public theorem pGammaL2_psl_range_relIndex_pgl_eq_two
   rw [Subgroup.relIndex_top_right]
   exact pgl2_psl2Range_index_eq_two K hK
 
-/-- A subgroup of `PΓL₂(K)` containing the canonical PSL₂ layer and having
-odd field-automorphism image has a normal odd-index subgroup isomorphic to
-`PSL₂(K)` or `PGL₂(K)`. -/
-public theorem pGammaL2_linear_kernel_normal_odd_index_iso_psl_or_pgl
+/-- The actual linear kernel of a subgroup containing PSL₂ is PSL₂ or PGL₂. -/
+public theorem pGammaL2_linear_kernel_model
     (K : Type u) [Field K] [Finite K]
     (hK : IsOddPrimePower (Nat.card K))
     (A : Subgroup (PGammaL2 K))
-    (hPSL : pGammaL2PSLRange K ≤ A)
-    (hodd : Odd (Nat.card (pGammaL2FieldProjection K A).range)) :
-    ∃ L : Subgroup A, L.Normal ∧ Odd L.index ∧
-      (Nonempty (L ≃* PSL2 K) ∨ Nonempty (L ≃* PGL2 K)) := by
+    (hPSL : pGammaL2PSLRange K ≤ A) :
+    Nonempty (pGammaL2LinearKernel K A ≃* PSL2 K) ∨
+      Nonempty (pGammaL2LinearKernel K A ≃* PGL2 K) := by
   let L : Subgroup A := pGammaL2LinearKernel K A
   let M : Subgroup (PGammaL2 K) := L.map A.subtype
   have hHM : pGammaL2PSLRange K ≤ M := by
     intro x hx
     have hxA : x ∈ A := hPSL hx
     refine ⟨⟨x, hxA⟩, ?_, rfl⟩
-    change pGammaL2FieldProjection K A ⟨x, hxA⟩ = 1
+    apply (mem_pGammaL2LinearKernel_iff K A ⟨x, hxA⟩).mpr
     rcases hx with ⟨y, rfl⟩
     simp [pGammaL2FieldProjection]
   have hMP : M ≤ pGammaL2PGLRange K := by
@@ -209,7 +209,7 @@ public theorem pGammaL2_linear_kernel_normal_odd_index_iso_psl_or_pgl
     change (a : PGammaL2 K) ∈ pGammaL2PGLRange K
     rw [pGammaL2PGLRange, SemidirectProduct.range_inl_eq_ker_rightHom]
     change SemidirectProduct.rightHom (a : PGammaL2 K) = 1
-    exact ha
+    exact (mem_pGammaL2LinearKernel_iff K A a).mp ha
   have hrel :
       (pGammaL2PSLRange K).relIndex (pGammaL2PGLRange K) = 2 :=
     pGammaL2_psl_range_relIndex_pgl_eq_two K hK
@@ -235,10 +235,7 @@ public theorem pGammaL2_linear_kernel_normal_odd_index_iso_psl_or_pgl
       apply le_antisymm
       · exact hMP
       · exact Subgroup.relIndex_eq_one.mp hright
-  have hLnormal : L.Normal := inferInstance
-  have hLodd : Odd L.index := pGammaL2LinearKernel_index_odd K A hodd
   let eL : L ≃* M := L.equivMapOfInjective A.subtype A.subtype_injective
-  refine ⟨L, hLnormal, hLodd, ?_⟩
   rcases hM with hMpsl | hMpgl
   · left
     rw [hMpsl] at eL
@@ -246,6 +243,18 @@ public theorem pGammaL2_linear_kernel_normal_odd_index_iso_psl_or_pgl
   · right
     rw [hMpgl] at eL
     exact ⟨eL.trans (pGammaL2PGLRangeEquiv K).symm⟩
+
+/-- The actual projective-linear kernel gives the normal odd-index linear model. -/
+public theorem pGammaL2_linear_kernel_normal_odd_index_iso_psl_or_pgl
+    (K : Type u) [Field K] [Finite K]
+    (hK : IsOddPrimePower (Nat.card K))
+    (A : Subgroup (PGammaL2 K))
+    (hPSL : pGammaL2PSLRange K ≤ A)
+    (hodd : Odd (Nat.card (pGammaL2FieldProjection K A).range)) :
+    ∃ L : Subgroup A, L.Normal ∧ Odd L.index ∧
+      (Nonempty (L ≃* PSL2 K) ∨ Nonempty (L ≃* PGL2 K)) := by
+  exact ⟨pGammaL2LinearKernel K A, inferInstance,
+    pGammaL2LinearKernel_index_odd K A hodd, pGammaL2_linear_kernel_model K hK A hPSL⟩
 
 /-- Pull the projective-linear kernel package back through a faithful
 embedding into `PΓL₂(K)`. -/

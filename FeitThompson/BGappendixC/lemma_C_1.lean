@@ -2,6 +2,7 @@ module
 
 public import FeitThompson.BGappendixC.Basic
 
+
 open scoped Pointwise commutatorElement
 
 noncomputable section
@@ -4991,3 +4992,4 @@ public theorem appendixC_lemma_C_1
 
 
 end
+

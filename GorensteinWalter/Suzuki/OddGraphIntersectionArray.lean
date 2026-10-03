@@ -254,8 +254,6 @@ private def rootFour_incidence_equiv
     (hmin : IsMinimalCounterexample G)
     (c : CentralizerSetup G) (hfirst : FirstCase c)
     {V W : UConjugates c}
-    (hV : V ∈ firstCaseRootLayerFour hmin c hfirst)
-    (hW : W ∈ firstCaseRootLayerFour hmin c hfirst)
     (h : c.Hhat) (hVW : (h : G) • V = W) :
     {X : lineNeighborSet c // (commutingGraph c).Adj X.1 V} ≃
       {X : lineNeighborSet c // (commutingGraph c).Adj X.1 W} := by
@@ -353,7 +351,7 @@ public theorem firstCase_rootLayerFour_rootNeighbor_card_one
     obtain ⟨h, hVW⟩ := firstCaseRootLayerFour_transitive hmin c hfirst d
       (V := W0.1) (W := W'.1) W0.2 W'.2
     let e := rootFour_incidence_equiv hmin c hfirst
-      (V := W0.1) (W := W'.1) W0.2 W'.2 h hVW
+      (V := W0.1) (W := W'.1) h hVW
     exact (Nat.card_congr e).symm
   have hIeq' : Nat.card I = 12 * k := by
     rw [hIcardB]

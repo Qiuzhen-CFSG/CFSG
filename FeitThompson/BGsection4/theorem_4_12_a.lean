@@ -7,6 +7,7 @@ public import FeitThompson.BGsection4.lemma_4_5_b
 public import FeitThompson.BGsection4.lemma_4_10
 public import Theory.Representation.ElementaryAbelianAction
 
+
 open scoped FixedPoints IsMulCommutative commutatorElement
 
 /-! # Infrastructure for Theorem 4.12(a) from BG Section 4 -/
@@ -198,7 +199,7 @@ public theorem exists_isCompl_isInvariant_of_elementaryAbelian_coprime
   let : CommGroup G := IsMulCommutative.instCommGroup
   let : AddCommGroup (Additive G) := Additive.addCommGroup
   let ρ : Representation (ZMod p) A (Additive G) :=
-    Theory.Representation.ofElementaryAbelianAction (A := A) (G := G) (p := p)
+    Representation.ofElementaryAbelianAction (A := A) (G := G) (p := p)
   let instAdd : AddCommGroup ρ.asModule := Representation.instAddCommGroupAsModule ρ
   let : AddCommGroup ρ.asModule := instAdd
   let instMod : Module (MonoidAlgebra (ZMod p) A) ρ.asModule :=

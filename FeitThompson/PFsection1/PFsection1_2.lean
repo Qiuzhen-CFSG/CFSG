@@ -112,7 +112,7 @@ lemma subgroup_mul_character_sum_eq_card_mul_character
     have hmem :
         (((b⁻¹ * a : H) : G)) ∈ H ⊓ Subgroup.centralizer ({g} : Set G) := by
       refine ⟨(b⁻¹ * a : H).2, ?_⟩
-      show (((b⁻¹ * a : H) : G)) ∈ Subgroup.centralizer ({g} : Set G)
+      change (((b⁻¹ * a : H) : G)) ∈ Subgroup.centralizer ({g} : Set G)
       rw [Subgroup.mem_centralizer_iff]
       intro y hy
       rcases Set.mem_singleton_iff.mp hy with rfl
@@ -158,7 +158,7 @@ public theorem proposition_1_2
     (hg : H ⊓ Subgroup.centralizer ({g} : Set G) = ⊥) :
     ρ.character g = 0 := by
   classical
-  letI : Fintype ↥H := Fintype.ofFinite ↥H
+  let : Fintype ↥H := Fintype.ofFinite ↥H
   have hInv : Representation.invariants (ρ.comp H.subtype) = ⊥ :=
     invariants_eq_bot_of_nontrivial ρ H hHker
   have hnorm : Representation.norm (ρ.comp H.subtype) = 0 :=

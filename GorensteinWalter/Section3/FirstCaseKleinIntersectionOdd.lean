@@ -6,6 +6,7 @@ public import GorensteinWalter.Section3.FirstCaseDihedralThreeCore
 public import GorensteinWalter.Section3.FirstCaseKleinRestrictionFive
 public import GorensteinWalter.InvolutionNormalizerInfConjugate
 import Mathlib.Tactic
+
 noncomputable section
 open scoped Pointwise
 namespace GorensteinWalter
@@ -101,7 +102,7 @@ public theorem firstCase_klein_intersection_odd_of_index_six
     have hxI : IsInvolution (x : G) := by
       refine ⟨?_, ?_⟩
       · intro hx1
-        have : orderOf (x : G) = 1 := by simpa [hx1]
+        have : orderOf (x : G) = 1 := by simp [hx1]
         omega
       · rw [← hxordG]
         exact pow_orderOf_eq_one (x : G)
@@ -165,7 +166,7 @@ public theorem firstCase_klein_intersection_odd_of_index_six
       · exact hVnormH.2 d (hDle hd) w ((show W ≤ V from inf_le_right) hw)
     have hVp : IsPGroup 2 V := by
       apply IsPGroup.of_card (n := 2)
-      simpa [hVklein.card_four]
+      simp
     have hWp : IsPGroup 2 (W.subgroupOf D) := by
       intro w0
       obtain ⟨k, hk⟩ := hVp ⟨(w0 : G), (show W ≤ V from inf_le_right) w0.2⟩

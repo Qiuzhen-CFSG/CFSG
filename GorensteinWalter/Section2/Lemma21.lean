@@ -8,6 +8,7 @@ import GorensteinWalter.Section2.Hyp11Bridge
 import GorensteinWalter.Section2.PreambleHSU
 import GorensteinWalter.Section2.PreambleInvolutions
 
+
 /-!
 # Lemma 2.1: the maximal involution centralizer has two involution classes
 

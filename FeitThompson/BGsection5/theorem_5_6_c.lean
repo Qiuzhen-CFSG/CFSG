@@ -2,7 +2,7 @@ module
 
 public import FeitThompson.BGsection5.theorem_5_6_a
 import FeitThompson.PCore.PCore
-import FeitThompson.PGroup.NormalSubgroups
+public import Theory.GroupTheory.PGroup.NormalSubgroups
 import Mathlib.Algebra.CharP.LinearMaps
 import Mathlib.LinearAlgebra.Eigenspace.Triangularizable
 import Mathlib.LinearAlgebra.Eigenspace.Zero
@@ -17,14 +17,15 @@ import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
 import Mathlib.RingTheory.SimpleModule.Isotypic
 import Mathlib.RingTheory.ZMod.Torsion
 import FeitThompson.BGsection1.CriticalSubgroupLemmas
-import FeitThompson.Burnside.NormalComplement
-import FeitThompson.Extraspecial
-import FeitThompson.LinearAlgebra.BlockElementaryMap
+import Theory.GroupAction.NormalComplement
+import Theory.ElementaryAbelian.Extraspecial
+import Theory.Representation.BlockElementaryMap
 import Theory.Representation.ConjugateRep
-import FeitThompson.BGsection2.EndFieldRep
+import Theory.Representation.EndFieldRep
 import Theory.Representation.TwoDimensionalOddOrder
 import Mathlib.GroupTheory.Schreier
 public import FeitThompson.BGsection4.theorem_4_18_c
+
 
 /-! # Shared infrastructure for Theorem 5.6(c) and 5.6(e) -/
 

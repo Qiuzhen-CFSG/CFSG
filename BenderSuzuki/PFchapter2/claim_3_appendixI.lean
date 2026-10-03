@@ -1,6 +1,8 @@
 module
 
 public import BenderSuzuki.PFAppendixI.proposition_2
+open Representation
+
 
 noncomputable section
 
@@ -36,23 +38,23 @@ public theorem claim3_appendixI_scalar_adapter_KP
         Function.Injective scalarR ∧
           Subring.closure (Set.range fun k : K => (scalarR k : Fr)) = ⊤ ∧
             ∀ (a : P) (k : K) (x : Additive N),
-              (Theory.Representation.ofElementaryAbelianAction
+              (Representation.ofElementaryAbelianAction
                   (A := L) (G := N) (p := r)) (a : L)
                     ((scalarR k : Fr).1 x) =
                 (scalarR ((act a) k) : Fr).1
-                  ((Theory.Representation.ofElementaryAbelianAction
+                  ((Representation.ofElementaryAbelianAction
                     (A := L) (G := N) (p := r)) (a : L) x) := by
   classical
   let T : Subgroup K := ⊤
   let rhoT := AppendixIRepresentationOfT (p := r) (E := N) T
-  letI : FiniteDimensional (ZMod r) (Additive N) := Module.Finite.of_finite
-  letI : Field (AppendixIEndT (p := r) (E := N) T) := endField_field rhoT
-  letI : Finite (AppendixIEndT (p := r) (E := N) T) := endField_finite rhoT
-  letI : Module (AppendixIEndT (p := r) (E := N) T) (Additive N) :=
+  let : FiniteDimensional (ZMod r) (Additive N) := Module.Finite.of_finite
+  let : Field (AppendixIEndT (p := r) (E := N) T) := endField_field rhoT
+  let : Finite (AppendixIEndT (p := r) (E := N) T) := endField_finite rhoT
+  let : Module (AppendixIEndT (p := r) (E := N) T) (Additive N) :=
     endFieldModule rhoT
   let Fr := AppendixIFpT (p := r) (E := N) T
-  letI : Field Fr := (Finite.isField_of_domain Fr).toField
-  letI : Module Fr (Additive N) :=
+  let : Field Fr := (Finite.isField_of_domain Fr).toField
+  let : Module Fr (Additive N) :=
     Module.compHom (Additive N) Fr.val.toRingHom
   have hcardN : Nat.card N = r ^ p := by
     have hcard := Module.natCard_eq_pow_finrank
@@ -65,9 +67,9 @@ public theorem claim3_appendixI_scalar_adapter_KP
     obtain ⟨fieldInst, hfield⟩ :=
       peterfalvi_appendixI_proposition_2_a
         (p := r) (n := p) (U := K) (E := N) T hcardN
-    letI : Field Fr := fieldInst
+    let : Field Fr := fieldInst
     obtain ⟨moduleInst, hFrCard, _hFrFinrank, _hFrSmul⟩ := hfield
-    letI : Module Fr (Additive N) := moduleInst
+    let : Module Fr (Additive N) := moduleInst
     exact hFrCard
   let tauF : T →* Fr :=
     { toFun := fun t =>
@@ -87,7 +89,7 @@ public theorem claim3_appendixI_scalar_adapter_KP
   have hK_smul (k : K) (x : N) : k • x = (k : L) • x := rfl
   have hscalar_apply (k : K) (x : Additive N) :
       (scalarR k : Fr) • x =
-        (Theory.Representation.ofElementaryAbelianAction
+        (Representation.ofElementaryAbelianAction
           (A := L) (G := N) (p := r)) (k : L) x := by
     change (scalarR k : Fr).1 x = _
     simp [scalarR, scalarTop, toTop, tauF, T, AppendixITActionEnd_apply]
@@ -103,14 +105,14 @@ public theorem claim3_appendixI_scalar_adapter_KP
         (scalarR b : Fr) • (Additive.ofMul x : Additive N) at h
     rw [hscalar_apply, hscalar_apply] at h
     apply Additive.ofMul.injective
-    simpa only [Theory.Representation.ofElementaryAbelianAction_apply_ofMul,
+    simpa only [Representation.ofElementaryAbelianAction_apply_ofMul,
       hK_smul] using h
   have hscalar_end (k : K) :
       (scalarR k : Fr).1 =
         AppendixITActionEnd (p := r) (E := N) T (toTop k) := by
     ext x
     have h : (scalarR k : Fr).1 x =
-        (Theory.Representation.ofElementaryAbelianAction
+        (Representation.ofElementaryAbelianAction
           (A := L) (G := N) (p := r)) (k : L) x :=
       hscalar_apply k x
     simpa [AppendixITActionEnd_apply, toTop, T, hK_smul] using h
@@ -153,13 +155,13 @@ public theorem claim3_appendixI_scalar_adapter_KP
     · intro x y hx hy hxmem hymem
       exact (Subring.closure scalarSet).mul_mem hxmem hymem
   have hcompat (a : P) (k : K) (x : Additive N) :
-      (Theory.Representation.ofElementaryAbelianAction
+      (Representation.ofElementaryAbelianAction
           (A := L) (G := N) (p := r)) (a : L) ((scalarR k : Fr).1 x) =
         (scalarR ((act a) k) : Fr).1
-          ((Theory.Representation.ofElementaryAbelianAction
+          ((Representation.ofElementaryAbelianAction
             (A := L) (G := N) (p := r)) (a : L) x) := by
     let rho : Representation (ZMod r) L (Additive N) :=
-      Theory.Representation.ofElementaryAbelianAction (A := L) (G := N) (p := r)
+      Representation.ofElementaryAbelianAction (A := L) (G := N) (p := r)
     change
       rho (a : L) ((scalarR k : Fr) • x) =
         (scalarR ((act a) k) : Fr) • rho (a : L) x
@@ -355,10 +357,10 @@ public theorem claim3_appendixI_sigma_adapter_KP
     (hscalarSet_closure :
       Subring.closure (Set.range fun k : K => (scalarR k : Fr)) = ⊤)
     (hscalar_conj : ∀ (a : P) (k : K) (x : Additive N),
-      (Theory.Representation.ofElementaryAbelianAction
+      (Representation.ofElementaryAbelianAction
           (A := L) (G := N) (p := r)) (a : L) ((scalarR k : Fr) • x) =
         (scalarR ((act a) k) : Fr) •
-          (Theory.Representation.ofElementaryAbelianAction
+          (Representation.ofElementaryAbelianAction
             (A := L) (G := N) (p := r)) (a : L) x) :
     ∃ sigmaR : P →* (Fr ≃+* Fr),
       ∀ (a : P) (k : K),
@@ -377,8 +379,8 @@ public theorem claim3_appendixI_sigma_adapter_KP
     intro a b hab
     apply claim3_smul_left_injective sAdd hsAdd
     exact hab
-  letI : Fintype Fr := Fintype.ofFinite Fr
-  letI : Fintype (Additive N) := Fintype.ofFinite (Additive N)
+  let : Fintype Fr := Fintype.ofFinite Fr
+  let : Fintype (Additive N) := Fintype.ofFinite (Additive N)
   have htoN_card : Fintype.card Fr = Fintype.card (Additive N) := by
     simpa only [Nat.card_eq_fintype_card] using hcard
   have htoN_bijective : Function.Bijective toN :=
@@ -461,7 +463,7 @@ public theorem claim3_appendixI_sigma_adapter_KP
     rw [hu_add_apply]
     apply Additive.ofMul.injective
     simpa [hu_add_apply, hP_smul,
-      Theory.Representation.ofElementaryAbelianAction_apply_ofMul] using
+      Representation.ofElementaryAbelianAction_apply_ofMul] using
       hscalar_conj a k (Additive.ofMul ((x : Q0) : N))
   let sQ0 : Q0 := ⟨s, Subgroup.mem_top s⟩
   have hsQ0 : (sQ0 : N) ≠ 1 := by simpa [sQ0] using hs
@@ -471,10 +473,10 @@ public theorem claim3_appendixI_sigma_adapter_KP
       Q0 q0_add u_add sQ0 hsQ0 hper with
     ⟨sigmaR, hsemilinear⟩
   have hsemilinear_action (a : P) (lambda : Fr) (x : Additive N) :
-      (Theory.Representation.ofElementaryAbelianAction
+      (Representation.ofElementaryAbelianAction
           (A := L) (G := N) (p := r)) (a : L) (lambda • x) =
         sigmaR a lambda •
-          (Theory.Representation.ofElementaryAbelianAction
+          (Representation.ofElementaryAbelianAction
             (A := L) (G := N) (p := r)) (a : L) x := by
     let xQ0 : Q0 :=
       ⟨Additive.toMul x, Subgroup.mem_top (Additive.toMul x)⟩
@@ -482,16 +484,16 @@ public theorem claim3_appendixI_sigma_adapter_KP
     rw [hq0_scalar, hq0_scalar] at h
     have hN := congrArg (fun y : Q0 => Additive.ofMul ((y : Q0) : N)) h
     simpa [xQ0, hu_add_apply, hP_smul,
-      Theory.Representation.ofElementaryAbelianAction_apply] using hN
+      Representation.ofElementaryAbelianAction_apply] using hN
   refine ⟨sigmaR, ?_⟩
   intro a k
   have hsImage :
-      (Theory.Representation.ofElementaryAbelianAction
+      (Representation.ofElementaryAbelianAction
         (A := L) (G := N) (p := r)) (a : L) sAdd ≠ 0 := by
     intro hzero
     apply hsAdd
     apply (Representation.apply_bijective
-      (Theory.Representation.ofElementaryAbelianAction
+      (Representation.ofElementaryAbelianAction
         (A := L) (G := N) (p := r)) (a : L)).1
     simpa using hzero
   have hcoeff :
@@ -499,14 +501,14 @@ public theorem claim3_appendixI_sigma_adapter_KP
     apply claim3_smul_left_injective _ hsImage
     calc
       sigmaR a (scalarR k : Fr) •
-          (Theory.Representation.ofElementaryAbelianAction
+          (Representation.ofElementaryAbelianAction
             (A := L) (G := N) (p := r)) (a : L) sAdd =
-        (Theory.Representation.ofElementaryAbelianAction
+        (Representation.ofElementaryAbelianAction
             (A := L) (G := N) (p := r)) (a : L)
           ((scalarR k : Fr) • sAdd) :=
             (hsemilinear_action a (scalarR k : Fr) sAdd).symm
       _ = (scalarR ((act a) k) : Fr) •
-          (Theory.Representation.ofElementaryAbelianAction
+          (Representation.ofElementaryAbelianAction
             (A := L) (G := N) (p := r)) (a : L) sAdd :=
         hscalar_conj a k sAdd
   apply Units.ext

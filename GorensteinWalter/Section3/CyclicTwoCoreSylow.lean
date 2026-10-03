@@ -6,10 +6,11 @@ public import Mathlib.Data.Finite.Defs
 public import BenderGlauberman.Section4.Basic
 public import BenderGlauberman.Defs
 import all BenderGlauberman.Defs
-import all FeitThompson.SubgroupConjAction
+import all Theory.GroupAction.SubgroupConjugation
 public import GorensteinWalter.Section2.ControlCore
 public import GorensteinWalter.Section2.Bender1970_18
 public import GorensteinWalter.Section3.CyclicTwoCoreFitting
+
 
 noncomputable section
 
@@ -676,7 +677,7 @@ public noncomputable def centralizerIn_sylow_of_pCore
     apply (Subgroup.subgroupOf_eq_top).2
     intro x hx
     simpa [hPsupD] using hx
-  letI : Pc.Normal := hPc_norm
+  let : Pc.Normal := hPc_norm
   exact sylowOf_normal_pCore_sup p Pc hPc_p Dc QDc hCD
 
 /-- Version of `centralizerIn_sylow_of_B` with the `p`-freeness of
@@ -852,3 +853,4 @@ public theorem centralizerIn_sylow_of_pCore_carrier
   rw [hPmap, hQDc_map]
 
 end GorensteinWalter
+

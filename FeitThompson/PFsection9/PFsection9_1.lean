@@ -4,6 +4,7 @@ import FeitThompson.BGsection3.Remaining
 import FeitThompson.Wielandt
 public import FeitThompson.PFsection9.Basic
 
+
 noncomputable section
 
 open scoped BigOperators IsMulCommutative
@@ -91,10 +92,10 @@ private theorem frobeniusActionData_nat_card_eq_mul_sec9
     rw [← hcomp.2.2.1]
     exact Subgroup.subgroupOf_eq_top.2 le_rfl
   have hcompSub : (U.subgroupOf UE).IsComplement' (E.subgroupOf UE) := by
-    letI : (U.subgroupOf UE).Normal := hUnorm
+    let : (U.subgroupOf UE).Normal := hUnorm
     exact isComplement'_of_disjoint_sup_eq_top_of_normal
       (U.subgroupOf UE) (E.subgroupOf UE) hdisjSub hsupTop
-  have hmul := hcompSub.card_mul
+  have hmul := hcompSub.card_mul_card
   simpa [natCard_subgroupOf_eq U UE hcomp.1,
     natCard_subgroupOf_eq E UE hcomp.2.1] using hmul.symm
 
@@ -122,7 +123,7 @@ private theorem frobeniusActionData_conjugate_complement_product_eq_power_sec9
       theorem_9_1_conjugate_complement_product_sec9 U E H =
         Nat.card (subgroupCentralizerIn H E) ^ (Nat.card E * Nat.card U) := by
   intro h91
-  letI : Fintype U := Fintype.ofFinite U
+  let : Fintype U := Fintype.ofFinite U
   dsimp [theorem_9_1_conjugate_complement_product_sec9]
   rcases h91 with ⟨hcomp, _hfrob, hUE_norm_H, _hH_solv, _hcop⟩
   have hterm : ∀ u : U,
@@ -153,10 +154,10 @@ private theorem fixedPointSubgroup_card_eq_subgroupCentralizerIn_sec9
     {G : Type u} [Group G] [Finite G]
     (H R : Subgroup G)
     (hRnormH : R ≤ Subgroup.normalizer (H : Set G)) :
-    letI : Subgroup.Normalizes R H := ⟨hRnormH⟩
+    let : Subgroup.Normalizes R H := ⟨hRnormH⟩
     Nat.card (fixedPointSubgroup (↥R) H) =
       Nat.card (subgroupCentralizerIn H R) := by
-  letI : Subgroup.Normalizes R H := ⟨hRnormH⟩
+  let : Subgroup.Normalizes R H := ⟨hRnormH⟩
   have hfix : fixedPointSubgroup (↥R) H =
       (subgroupCentralizerIn H R).subgroupOf H := by
     simpa using fixedPointSubgroup_subgroup_conj_eq_subgroupCentralizerIn H R hRnormH
@@ -174,7 +175,7 @@ private noncomputable def theorem_9_1_fixedPoint_conjugate_complement_product_se
     (hEnormH : ∀ u : U, E.conjBy (u : G) ≤ Subgroup.normalizer (H : Set G)) : ℕ :=
   letI : Fintype U := Fintype.ofFinite U
   ∏ u : U,
-    letI : Subgroup.Normalizes (E.conjBy (u : G)) H := ⟨hEnormH u⟩
+    let : Subgroup.Normalizes (E.conjBy (u : G)) H := ⟨hEnormH u⟩
     Nat.card (fixedPointSubgroup (↥(E.conjBy (u : G))) H) ^
       Nat.card (E.conjBy (u : G))
 
@@ -184,7 +185,7 @@ private theorem theorem_9_1_fixedPoint_conjugate_complement_product_eq_centraliz
     (hEnormH : ∀ u : U, E.conjBy (u : G) ≤ Subgroup.normalizer (H : Set G)) :
     theorem_9_1_fixedPoint_conjugate_complement_product_sec9 U E H hEnormH =
       theorem_9_1_conjugate_complement_product_sec9 U E H := by
-  letI : Fintype U := Fintype.ofFinite U
+  let : Fintype U := Fintype.ofFinite U
   dsimp [theorem_9_1_fixedPoint_conjugate_complement_product_sec9,
     theorem_9_1_conjugate_complement_product_sec9]
   apply Finset.prod_congr rfl
@@ -211,12 +212,12 @@ private theorem theorem_9_1_fixedPoint_conjugate_complement_product_eq_action_pr
     (U E H : Subgroup G)
     (hEnormH : ∀ u : U, E.conjBy (u : G) ≤ Subgroup.normalizer (H : Set G)) :
     let hEact : ∀ u : U, MulDistribMulAction (↥(E.conjBy (u : G))) H := fun u => by
-      letI : Subgroup.Normalizes (E.conjBy (u : G)) H := ⟨hEnormH u⟩
+      let : Subgroup.Normalizes (E.conjBy (u : G)) H := ⟨hEnormH u⟩
       infer_instance
     theorem_9_1_fixedPoint_conjugate_complement_product_sec9 U E H hEnormH =
       theorem_9_1_fixedPoint_conjugate_action_product_sec9 U E hEact := by
   classical
-  letI : Fintype U := Fintype.ofFinite U
+  let : Fintype U := Fintype.ofFinite U
   dsimp [theorem_9_1_fixedPoint_conjugate_complement_product_sec9,
     theorem_9_1_fixedPoint_conjugate_action_product_sec9]
 
@@ -240,11 +241,11 @@ public theorem theorem_9_1_ofElementaryAbelianAction_irreducible_of_minimal_inva
     (hminv : ∀ N : Subgroup M, N.Normal → IsInvariant A M N → N ≠ ⊥ → N = ⊤) :
     letI : CommGroup M := IsMulCommutative.instCommGroup
     Representation.IsIrreducible
-      (Theory.Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p) :
+      (Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p) :
         Representation (ZMod p) A (Additive M)) := by
-  letI : CommGroup M := IsMulCommutative.instCommGroup
+  let : CommGroup M := IsMulCommutative.instCommGroup
   let ρ : Representation (ZMod p) A (Additive M) :=
-    Theory.Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p)
+    Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p)
   refine
     { toNontrivial := inferInstance
       eq_bot_or_eq_top := ?_ }
@@ -257,7 +258,7 @@ public theorem theorem_9_1_ofElementaryAbelianAction_irreducible_of_minimal_inva
         change Additive.ofMul x ∈ S.toSubmodule at hx
         exact hx
       have hx'' := S.apply_mem_toSubmodule a hx'
-      simpa [ρ, Theory.Representation.ofElementaryAbelianAction_apply_ofMul] using hx''
+      simpa [ρ, Representation.ofElementaryAbelianAction_apply_ofMul] using hx''
     refine { invariant := ?_ }
     intro a x
     constructor
@@ -279,13 +280,13 @@ public theorem theorem_9_1_ofElementaryAbelianAction_irreducible_of_minimal_inva
     · intro hx
       have hx' : x ∈ (⊥ : Submodule (ZMod p) (Additive M)) := by
         let Z : Subrepresentation
-            (Theory.Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p) :
+            (Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p) :
               Representation (ZMod p) A (Additive M)) :=
           { toSubmodule := ⊥
             apply_mem_toSubmodule := by simp }
         have hxZ : x ∈ Z :=
           (show (⊥ : Subrepresentation
-            (Theory.Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p) :
+            (Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p) :
               Representation (ZMod p) A (Additive M))) ≤ Z from bot_le) hx
         exact hxZ
       simpa using hx'
@@ -310,7 +311,7 @@ private theorem theorem_9_1_wielandt_fixedPoint_product_identity_action_source_b
     (hEact : ∀ u : U, MulDistribMulAction (↥(E.conjBy (u : G))) M)
     (hcomp : section12ComplementIn UE U E)
     (hfrob : section12FrobeniusJoinWithKernel U E)
-    (hsolvM : IsSolvable M)
+    (hsolvM : Group.IsSolvable M)
     (hcop : Nat.Coprime (Nat.card M) (Nat.card UE))
     (hUcompat : ∀ (u : U) (m : M),
       u • m = (⟨(u : G), hcomp.1 u.2⟩ : UE) • m)
@@ -346,18 +347,18 @@ private theorem theorem_9_1_wielandt_fixedPoint_product_identity_source_bridge_s
     (hUE_norm_H : UE ≤ Subgroup.normalizer (H : Set G))
     (hU_norm_H : U ≤ Subgroup.normalizer (H : Set G))
     (hEnormH : ∀ u : U, E.conjBy (u : G) ≤ Subgroup.normalizer (H : Set G)) :
-    letI : Subgroup.Normalizes UE H := ⟨hUE_norm_H⟩
-    letI : Subgroup.Normalizes U H := ⟨hU_norm_H⟩
+    let : Subgroup.Normalizes UE H := ⟨hUE_norm_H⟩
+    let : Subgroup.Normalizes U H := ⟨hU_norm_H⟩
     Nat.card (fixedPointSubgroup (↥UE) H) ^ Nat.card UE *
         Nat.card H ^ Nat.card U =
       theorem_9_1_fixedPoint_conjugate_complement_product_sec9 U E H hEnormH *
         Nat.card (fixedPointSubgroup (↥U) H) ^ Nat.card U := by
   classical
   rcases h91 with ⟨hcomp, hfrob, _hUE_norm_H', hsolvH, hcopHUE⟩
-  letI : Subgroup.Normalizes UE H := ⟨hUE_norm_H⟩
-  letI : Subgroup.Normalizes U H := ⟨hU_norm_H⟩
+  let : Subgroup.Normalizes UE H := ⟨hUE_norm_H⟩
+  let : Subgroup.Normalizes U H := ⟨hU_norm_H⟩
   let hEact : ∀ u : U, MulDistribMulAction (↥(E.conjBy (u : G))) H := fun u => by
-    letI : Subgroup.Normalizes (E.conjBy (u : G)) H := ⟨hEnormH u⟩
+    let : Subgroup.Normalizes (E.conjBy (u : G)) H := ⟨hEnormH u⟩
     infer_instance
   have hUcompat : ∀ (u : U) (h : H),
       u • h = (⟨(u : G), hcomp.1 u.2⟩ : UE) • h := by
@@ -404,8 +405,8 @@ private theorem theorem_9_1_wielandt_conjugate_product_identity_source_bridge_se
   have hfixed :=
     theorem_9_1_wielandt_fixedPoint_product_identity_source_bridge_sec9
       UE U E H h91_all hUE_norm_H hU_norm_H hEnormH
-  letI : Subgroup.Normalizes UE H := ⟨hUE_norm_H⟩
-  letI : Subgroup.Normalizes U H := ⟨hU_norm_H⟩
+  let : Subgroup.Normalizes UE H := ⟨hUE_norm_H⟩
+  let : Subgroup.Normalizes U H := ⟨hU_norm_H⟩
   have hUEcard :=
     fixedPointSubgroup_card_eq_subgroupCentralizerIn_sec9 H UE hUE_norm_H
   have hUcard :=
@@ -413,6 +414,7 @@ private theorem theorem_9_1_wielandt_conjugate_product_identity_source_bridge_se
   have hprod :=
     theorem_9_1_fixedPoint_conjugate_complement_product_eq_centralizer_product_sec9
       U E H hEnormH
+  dsimp only at hfixed hUEcard hUcard
   rw [hUEcard, hUcard, hprod] at hfixed
   exact hfixed
 

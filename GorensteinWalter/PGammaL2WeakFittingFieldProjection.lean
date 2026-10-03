@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.PGammaL2Subgroups
 public import GorensteinWalter.PGammaL2DihedralProjection
 public import GorensteinWalter.NormalPComplementCard
+public import GorensteinWalter.Defs
 import GorensteinWalter.FieldAutomorphismTorusPrimeFreePart
 import FeitThompson.Fitting.Core
 import FeitThompson.PCore.PCore
@@ -11,6 +12,7 @@ import Mathlib.GroupTheory.Nilpotent
 import Mathlib.GroupTheory.Commutator.Basic
 import Mathlib.GroupTheory.PGroup
 import Mathlib.Tactic
+
 
 /-!
 # The weak semilinear endpoint: trivial field projection from the inner involution centralizer
@@ -105,16 +107,6 @@ private theorem fittingSubgroupOf_isNormalIn_local
     rw [hfk]
     simp
     exact hfk
-
-/-- The Fitting subgroup of a subgroup is nilpotent (as an ambient
-subgroup). -/
-private theorem fittingSubgroupOf_isNilpotent_local
-    {G : Type u} [Group G] [Finite G] (H : Subgroup G) :
-    Group.IsNilpotent (↥(fittingSubgroupOf H)) := by
-  change Group.IsNilpotent (↥((fittingSubgroup (↥H)).map H.subtype))
-  have : Group.IsNilpotent (fittingSubgroup (↥H)) := by infer_instance
-  exact Group.nilpotent_of_mulEquiv
-    (Subgroup.equivMapOfInjective (fittingSubgroup (↥H)) H.subtype H.subtype_injective)
 
 /-- The `p`-core and the `p'`-core of a finite group commute elementwise. -/
 private theorem pCore_commute_pPrimeCore
@@ -346,7 +338,7 @@ public theorem pGammaL2_weak_normal_nilpotent_odd_fieldProjection_trivial
         exact SemidirectProduct.ext
           (congrArg Prod.fst hxy) (congrArg Prod.snd hxy))
   let F : Subgroup (PGammaL2 K) := fittingSubgroupOf A
-  have hFnil : Group.IsNilpotent (↥F) := fittingSubgroupOf_isNilpotent_local A
+  have hFnil : Group.IsNilpotent (↥F) := fittingSubgroupOf_isNilpotent A
   have hFnormA : IsNormalIn F A := fittingSubgroupOf_isNormalIn_local A
   have hFleA : F ≤ A := hFnormA.1
   -- `N ≤ F(A)`

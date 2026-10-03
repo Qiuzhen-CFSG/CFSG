@@ -1,7 +1,7 @@
 module
 
 public import FeitThompson.BGsection6.lemma_6_3_a_2
-import FeitThompson.SubgroupConj
+import Theory.GroupTheory.SubgroupConjugation
 
 open scoped MatrixGroups Pointwise TensorProduct
 

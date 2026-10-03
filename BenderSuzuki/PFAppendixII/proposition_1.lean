@@ -1,5 +1,6 @@
 module
 
+public import Theory.GroupTheory.QuaternionSylowCentrality
 public import BenderSuzuki.RightNearField
 public import BenderSuzuki.PFchapter2.Basic
 public import BenderSuzuki.PFchapter1section1.proposition_1_c
@@ -11,6 +12,7 @@ import BenderSuzuki.PFchapter1section1.proposition_4_b
 import FeitThompson.FinalTheorem
 public import Mathlib.FieldTheory.Finite.GaloisField
 import Mathlib.Algebra.GroupWithZero.TransferInstance
+
 
 /-!
 # Peterfalvi Appendix II, Proposition 1
@@ -46,7 +48,7 @@ public theorem unique_order_two_subgroup_of_not_twoRank
     ∃ U : Subgroup G, Nat.card U = 2 ∧
       ∀ V : Subgroup G, Nat.card V = 2 → V = U := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hcenter_nontrivial : Nontrivial (Subgroup.center G) := hGp.center_nontrivial
   have hcenter_p : IsPGroup 2 (Subgroup.center G) :=
     hGp.to_subgroup (Subgroup.center G)
@@ -68,14 +70,14 @@ public theorem unique_order_two_subgroup_of_not_twoRank
     have hconj : g * z * g⁻¹ = z := by rw [hcomm]; group
     rw [hconj]
     exact hz
-  letI : Z.Normal := hZ_normal
+  let : Z.Normal := hZ_normal
   refine ⟨Z, hZ_card, ?_⟩
   intro V hV_card
   by_contra hV_ne_Z
   have hdis : Disjoint V Z := by
     rw [disjoint_iff]
     let I : Subgroup V := (V ⊓ Z).subgroupOf V
-    haveI : Fact (Nat.Prime (Nat.card V)) := ⟨by simpa [hV_card] using Nat.prime_two⟩
+    have : Fact (Nat.Prime (Nat.card V)) := ⟨by simpa [hV_card] using Nat.prime_two⟩
     rcases Subgroup.eq_bot_or_eq_top_of_prime_card I with hIbot | hItop
     · calc
         V ⊓ Z = I.map V.subtype :=
@@ -140,7 +142,7 @@ public theorem unique_order_two_subgroup_of_not_twoRank
   have hcompl : VE.IsComplement' ZE :=
     (Subgroup.isComplement_iff_bijective VE ZE).mpr hmul_bij
   have hE_card : Nat.card E = 4 := by
-    have hc := hcompl.card_mul
+    have hc := hcompl.card_mul_card
     rw [natCard_subgroupOf_eq V E hV_le_E,
       natCard_subgroupOf_eq Z E hZ_le_E, hV_card, hZ_card] at hc
     simpa using hc.symm
@@ -149,8 +151,8 @@ public theorem unique_order_two_subgroup_of_not_twoRank
   intro e
   have he_mem : (e : G) ∈ V ⊔ Z := e.2
   rcases (Subgroup.mem_sup_of_normal_right.mp he_mem) with ⟨v, hv, z, hz, hvz⟩
-  letI : Fintype V := Fintype.ofFinite V
-  letI : Fintype Z := Fintype.ofFinite Z
+  let : Fintype V := Fintype.ofFinite V
+  let : Fintype Z := Fintype.ofFinite Z
   have hv_sq : v ^ 2 = 1 := by
     have hp := pow_card_eq_one (x := (⟨v, hv⟩ : V))
     have hpG : v ^ Fintype.card V = (1 : G) :=
@@ -178,13 +180,13 @@ private theorem proposition_1_sylow_two_cyclic_or_generalizedQuaternion
       (IsCyclic P ∨
         ∃ n : ℕ, 3 ≤ n ∧ Nonempty (P ≃* QuaternionGroup (2 ^ (n - 2)))) := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   obtain ⟨P, hP_le_Q⟩ := PFchapter1section1.proposition_1_c H D Q t hA1
   have htwo_dvd_Q : 2 ∣ Nat.card Q := even_iff_two_dvd.mp hA1.Q_even
   have htwo_dvd_G : 2 ∣ Nat.card G :=
     htwo_dvd_Q.trans (Subgroup.card_subgroup_dvd_card Q)
   have hP_ne_bot : (P : Subgroup G) ≠ ⊥ := P.ne_bot_of_dvd_card htwo_dvd_G
-  letI : Nontrivial P := (Subgroup.nontrivial_iff_ne_bot (P : Subgroup G)).mpr hP_ne_bot
+  let : Nontrivial P := (Subgroup.nontrivial_iff_ne_bot (P : Subgroup G)).mpr hP_ne_bot
   have h2rankP : ¬ TwoRankAtLeastTwo P := by
     intro hP
     exact h2rank (twoRankAtLeastTwo_of_subgroup (P : Subgroup G) hP)
@@ -211,11 +213,11 @@ private theorem proposition_1_factorization_of_cyclic_sylow_two
     rw [Nat.card_zpowers, huOrder, pow_one]
   obtain ⟨S, hzuS⟩ := hzuP.exists_le_sylow
   have huS : u ∈ (S : Subgroup G) := hzuS (Subgroup.mem_zpowers u)
-  letI : IsCyclic P := hPcyc
+  let : IsCyclic P := hPcyc
   have hScyc : IsCyclic S :=
     isCyclic_of_surjective (P.equiv S) (P.equiv S).surjective
-  letI : IsCyclic S := hScyc
-  haveI : IsMulCommutative S := hScyc.isMulCommutative
+  let : IsCyclic S := hScyc
+  have : IsMulCommutative S := hScyc.isMulCommutative
   have hScentral : (S : Subgroup G) ≤ Subgroup.centralizer ({u} : Set G) := by
     intro x hx
     rw [Subgroup.mem_centralizer_iff]
@@ -451,64 +453,7 @@ private lemma appendixII_quotient_involution_central
     (u : G) (huI : IsInvolution u) :
     QuotientGroup.mk' (pPrimeCore 2 G) u ∈
       Subgroup.center (G ⧸ pPrimeCore 2 G) := by
-  classical
-  let N : Subgroup G := pPrimeCore 2 G
-  let q : G →* G ⧸ N := QuotientGroup.mk' N
-  have hcenterEven :
-      2 ∣ Nat.card (Subgroup.center (G ⧸ N)) := by
-    simpa [N] using
-      External.Suzuki.VI.suzuki_chapter6_section2_2_example3 P hn hP
-  obtain ⟨Qbar, hQbar⟩ := appendixII_quotient_sylow P hP
-  have huniqueQbar :=
-    appendixII_sylow_involution_unique Qbar hQbar
-  obtain ⟨z, hzorder⟩ :=
-    exists_prime_orderOf_dvd_card'
-      (G := Subgroup.center (G ⧸ N)) 2 hcenterEven
-  have hzorderAmbient : orderOf (z : G ⧸ N) = 2 := by
-    rw [Subgroup.orderOf_coe]
-    exact hzorder
-  have hzI : IsInvolution (z : G ⧸ N) := by
-    have hz := orderOf_eq_prime_iff.mp hzorderAmbient
-    exact ⟨hz.2, by simpa [pow_two] using hz.1⟩
-  have huP : IsPGroup 2 (Subgroup.zpowers u) :=
-    appendixII_isPGroup_zpowers_of_involution huI
-  have hqinj :
-      Function.Injective
-        (q.comp (Subgroup.zpowers u).subtype) := by
-    simpa [q, N] using
-      quotient_pPrimeCore_subgroupMap_injective
-        (G := G) (p := 2) (H := Subgroup.zpowers u) huP
-  let uz : Subgroup.zpowers u := ⟨u, Subgroup.mem_zpowers u⟩
-  have huzOrder : orderOf uz = 2 := by
-    rw [← Subgroup.orderOf_coe uz]
-    simpa [uz] using orderOf_eq_prime huI.sq_eq_one huI.ne_one
-  have hquOrder : orderOf (q u) = 2 := by
-    have horder :=
-      orderOf_injective
-        (q.comp (Subgroup.zpowers u).subtype) hqinj uz
-    simpa [uz] using horder.trans huzOrder
-  have hquI : IsInvolution (q u) := by
-    have h := orderOf_eq_prime_iff.mp hquOrder
-    exact ⟨h.2, by simpa [pow_two] using h.1⟩
-  have hcomm : Commute (z : G ⧸ N) (q u) := by
-    rw [commute_iff_eq]
-    exact (Subgroup.mem_center_iff.mp z.2 (q u)).symm
-  have hzu : (z : G ⧸ N) = q u :=
-    appendixII_commuting_involutions_eq Qbar huniqueQbar hzI hquI hcomm
-  rw [← hzu]
-  exact z.2
-
-/-- An involution is central modulo the `2'`-core when a Sylow `2`-subgroup is
-generalized quaternion. This is the quotient-centrality consequence of
-Peterfalvi's Appendix II argument. -/
-public theorem appendixII_quotient_involution_central_public
-    {G : Type u} [Group G] [Finite G]
-    (P : Sylow 2 G) {n : ℕ} (hn : 3 ≤ n)
-    (hP : Nonempty (P ≃* QuaternionGroup (2 ^ (n - 2))))
-    (u : G) (huI : IsInvolution u) :
-    QuotientGroup.mk' (pPrimeCore 2 G) u ∈
-      Subgroup.center (G ⧸ pPrimeCore 2 G) := by
-  exact appendixII_quotient_involution_central P hn hP u huI
+  exact appendixII_quotient_involution_central_public P hn hP u huI
 
 private lemma appendixII_factorization_of_quotient_involution_central
     {G : Type u} [Group G] [Finite G] (u : G) (huI : IsInvolution u)
@@ -517,20 +462,20 @@ private lemma appendixII_factorization_of_quotient_involution_central
         Subgroup.center (G ⧸ pPrimeCore 2 G)) :
     pPrimeCore 2 G ⊔ Subgroup.centralizer ({u} : Set G) = ⊤ := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   let N : Subgroup G := pPrimeCore 2 G
   let q : G →* G ⧸ N := QuotientGroup.mk' N
   let T : Subgroup G := Subgroup.zpowers u
   have hNnormal : N.Normal := by
     dsimp [N]
     exact pPrimeCore_normal
-  letI : N.Normal := hNnormal
+  let : N.Normal := hNnormal
   have huOrder : orderOf u = 2 :=
     orderOf_eq_prime huI.sq_eq_one huI.ne_one
   have hTp : IsPGroup 2 T := by
     refine IsPGroup.of_card (p := 2) (G := T) (n := 1) ?_
     simp [T, Nat.card_zpowers, huOrder]
-  letI : Fact (IsPGroup 2 T) := ⟨hTp⟩
+  let : Fact (IsPGroup 2 T) := ⟨hTp⟩
   have hcop : Nat.Coprime 2 (Nat.card N) := by
     simpa [N] using (pPrimeCore_coprime_card (G := G) (p := 2))
   have hcent_eq :
@@ -573,7 +518,7 @@ public theorem pPrimeCore_sup_centralizer_eq_top_of_not_twoRank
     {u : G} (hu : IsInvolution u) :
     pPrimeCore 2 G ⊔ Subgroup.centralizer ({u} : Set G) = ⊤ := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hT : IsPGroup 2 (Subgroup.zpowers u) :=
     appendixII_isPGroup_zpowers_of_involution hu
   obtain ⟨P, hTP⟩ := hT.exists_le_sylow
@@ -582,7 +527,7 @@ public theorem pPrimeCore_sup_centralizer_eq_top_of_not_twoRank
     intro hPbot
     apply hu.ne_one
     exact Subgroup.mem_bot.mp (by simpa [hPbot] using huP)
-  letI : Nontrivial P :=
+  let : Nontrivial P :=
     ⟨⟨⟨u, huP⟩, 1, by
       intro h
       exact hu.ne_one (congrArg Subtype.val h)⟩⟩
@@ -621,8 +566,8 @@ private theorem proposition_1_exists_regular_elementaryAbelian_normal_of_solvabl
   classical
   obtain ⟨F, hFnorm, hF_le_N, hF_ne_bot, hFmin⟩ :=
     exists_minimal_normal_le (G := G) N hNnormal hN_ne_bot
-  letI : F.Normal := hFnorm
-  letI : IsMinimalNormal F := {
+  let : F.Normal := hFnorm
+  let : IsMinimalNormal F := {
     minimal := by
       intro K hKnormal hKle
       by_cases hKbot : K = ⊥
@@ -631,17 +576,17 @@ private theorem proposition_1_exists_regular_elementaryAbelian_normal_of_solvabl
   }
   let FN : Subgroup N := F.subgroupOf N
   let eFN : FN ≃* F := Subgroup.subgroupOfEquivOfLe hF_le_N
-  letI : Group.IsSolvable N := hNsolv
+  let : Group.IsSolvable N := hNsolv
   have hFNsolv : Group.IsSolvable FN := inferInstance
-  letI : Group.IsSolvable FN := hFNsolv
+  let : Group.IsSolvable FN := hFNsolv
   have hFsolv : Group.IsSolvable F :=
     Group.isSolvable_of_surjective (f := eFN.toMonoidHom) eFN.surjective
-  letI : Group.IsSolvable F := hFsolv
+  let : Group.IsSolvable F := hFsolv
   obtain ⟨p, hp, hFelem⟩ := minimalNormal_solvable_exists_isElementaryAbelian F
-  letI : IsElementaryAbelian p F := hFelem
-  letI : MulAction.IsPreprimitive G Ω :=
+  let : IsElementaryAbelian p F := hFelem
+  let : MulAction.IsPreprimitive G Ω :=
     MulAction.isPreprimitive_of_is_two_pretransitive hA1.two_transitive
-  letI : MulAction.IsQuasiPreprimitive G Ω :=
+  let : MulAction.IsQuasiPreprimitive G Ω :=
     MulAction.IsPreprimitive.isQuasiPreprimitive
   have hfixed_ne_univ : MulAction.fixedPoints F Ω ≠ Set.univ := by
     intro hfixed
@@ -661,7 +606,7 @@ private theorem proposition_1_exists_regular_elementaryAbelian_normal_of_solvabl
     exact Subgroup.mem_bot.mpr hf_one
   have hFtrans : MulAction.IsPretransitive F Ω :=
     MulAction.IsQuasiPreprimitive.isPretransitive_of_normal hfixed_ne_univ
-  letI : MulAction.IsPretransitive F Ω := hFtrans
+  let : MulAction.IsPretransitive F Ω := hFtrans
   have hFregular : ∀ ω : Ω, MulAction.stabilizer F ω = ⊥ := by
     intro ω
     rw [eq_bot_iff]
@@ -882,13 +827,13 @@ public theorem proposition_1
   obtain ⟨F, p, hFnorm, hp, hFelem, hF_ne_bot, hFtrans, hFregular, hFdisH, hFsupH⟩ :=
     proposition_1_exists_regular_elementaryAbelian_normal H D Q t hA1 h2rank
   classical
-  letI : F.Normal := hFnorm
-  letI : IsElementaryAbelian p F := hFelem
-  letI : IsMulCommutative F := hFelem.toIsMulCommutative
-  letI : CommGroup F :=
+  let : F.Normal := hFnorm
+  let : IsElementaryAbelian p F := hFelem
+  let : IsMulCommutative F := hFelem.toIsMulCommutative
+  let : CommGroup F :=
     { mul_comm := hFelem.toIsMulCommutative.is_comm.comm }
-  letI : Nontrivial F := (Subgroup.nontrivial_iff_ne_bot F).2 hF_ne_bot
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Nontrivial F := (Subgroup.nontrivial_iff_ne_bot F).2 hF_ne_bot
+  let : Fact p.Prime := ⟨hp⟩
   obtain ⟨base, hHbase⟩ := hA1.point_stabilizer
   subst H
   let beta : Ω := t⁻¹ • base
@@ -913,15 +858,15 @@ public theorem proposition_1
   have hqEquiv_apply (q : Q) :
       (qEquiv q : Ω) = (q : G)⁻¹ • beta := by
     rfl
-  letI : MulAction.IsPretransitive F Ω := hFtrans
-  letI : IsCancelSMul F Ω :=
+  let : MulAction.IsPretransitive F Ω := hFtrans
+  let : IsCancelSMul F Ω :=
     isCancelSMul_iff_stabilizer_eq_bot.mpr hFregular
   let orbitEquiv : F ≃ Ω :=
     Equiv.ofBijective (fun f : F => f • base)
       ⟨fun _ _ => IsCancelSMul.right_cancel _ _ base,
         MulAction.surjective_smul F base⟩
   let addCoord : Ω ≃ Additive F := orbitEquiv.symm.trans Additive.ofMul
-  letI : AddCommGroup Ω := addCoord.addCommGroup
+  let : AddCommGroup Ω := addCoord.addCommGroup
   have hzero_eq_base : (0 : Ω) = base := by
     calc
       (0 : Ω) = addCoord.symm (0 : Additive F) := rfl
@@ -940,13 +885,13 @@ public theorem proposition_1
       ((Equiv.optionCongr qEquiv) (none : Option Q))
     rw [Equiv.optionCongr_apply]
     rfl
-  letI : One Ω := mulCoord.one
-  letI : Mul Ω := mulCoord.mul
-  letI : Inv Ω := mulCoord.Inv
-  letI : Div Ω := mulCoord.div
-  letI : Pow Ω ℕ := mulCoord.pow ℕ
-  letI : Pow Ω ℤ := mulCoord.pow ℤ
-  letI : GroupWithZero Ω := mulCoord.injective.groupWithZero mulCoord hmulCoord_zero
+  let : One Ω := mulCoord.one
+  let : Mul Ω := mulCoord.mul
+  let : Inv Ω := mulCoord.Inv
+  let : Div Ω := mulCoord.div
+  let : Pow Ω ℕ := mulCoord.pow ℕ
+  let : Pow Ω ℤ := mulCoord.pow ℤ
+  let : GroupWithZero Ω := mulCoord.injective.groupWithZero mulCoord hmulCoord_zero
     (by simp [Equiv.one_def])
     (by intro x y; simp [Equiv.mul_def])
     (by intro x; simp [Equiv.inv_def])
@@ -1039,7 +984,7 @@ public theorem proposition_1
           rw [hc_eq, hmul_right, hmul_right, hmul_right]
           exact hsmul_add q a b
     }
-  letI : RightNearField Ω := hNF
+  let : RightNearField Ω := hNF
   let addLift : Ω → G := fun a => (orbitEquiv.symm a : G)
   let mulEquiv : Ω ≃* WithZero Q := mulCoord.mulEquiv
   let unitCoord : Ωˣ ≃* Q :=
@@ -1328,7 +1273,7 @@ public theorem proposition_1
         Q.subgroupOf (MulAction.stabilizer G base)
       let DH : Subgroup (MulAction.stabilizer G base) :=
         D.subgroupOf (MulAction.stabilizer G base)
-      letI : QH.Normal := hA1.Q_normal_in_H
+      let : QH.Normal := hA1.Q_normal_in_H
       have hQHDH : QH ⊔ DH = ⊤ := by
         rw [← Subgroup.subgroupOf_sup hA1.Q_le_H hA1.D_le_H, hA1.Q_sup_D]
         exact Subgroup.subgroupOf_self _
@@ -1370,7 +1315,7 @@ public theorem proposition_1
       exact congrArg (fun z : Q => (z : G)) hq_one
     · exact hxneg
   have hunique_H_involution : ∃! h : MulAction.stabilizer G base, IsInvolution (h : G) := by
-    haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+    have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
     obtain ⟨q, hqOrder⟩ :=
       exists_prime_orderOf_dvd_card' (G := Q) 2 hA1.Q_even.two_dvd
     have hqI : IsInvolution (q : G) := by
@@ -1414,7 +1359,7 @@ public theorem proposition_1
   have haddOrder_one : addOrderOf (1 : Ω) = p :=
     addOrderOf_eq_prime (hp_smul_zero 1) one_ne_zero
   have hneg_one_ne_one : (-1 : Ω) ≠ 1 := by
-    haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+    have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
     obtain ⟨q, hqOrder⟩ :=
       exists_prime_orderOf_dvd_card' (G := Q) 2 hA1.Q_even.two_dvd
     have hqI : IsInvolution (q : G) := by

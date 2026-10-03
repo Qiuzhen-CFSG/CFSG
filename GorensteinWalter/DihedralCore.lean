@@ -74,12 +74,14 @@ public lemma sr_not_mem_zpowers_r_one {n : ℕ} (i : ZMod n) :
     rw [← hk, DihedralGroup.r_one_zpow]
   have h1 : DihedralGroup.sr i * (DihedralGroup.r (k : ZMod n))⁻¹ = 1 := by
     rw [hsr, mul_inv_cancel]
-  have h2 : DihedralGroup.sr i * (DihedralGroup.r (k : ZMod n))⁻¹ = DihedralGroup.sr (i - (k : ZMod n)) := by
+  have h2 : DihedralGroup.sr i * (DihedralGroup.r (k : ZMod n))⁻¹ =
+      DihedralGroup.sr (i - (k : ZMod n)) := by
     rw [DihedralGroup.inv_r, DihedralGroup.sr_mul_r]
     congr 1
     rw [sub_eq_add_neg]
   have h3 : DihedralGroup.sr (i - (k : ZMod n)) = 1 := by rw [← h2, h1]
-  have hord : orderOf (DihedralGroup.sr (i - (k : ZMod n))) = 2 := DihedralGroup.orderOf_sr (i - (k : ZMod n))
+  have hord : orderOf (DihedralGroup.sr (i - (k : ZMod n))) = 2 :=
+    DihedralGroup.orderOf_sr (i - (k : ZMod n))
   have hone : orderOf (1 : DihedralGroup n) = 1 := orderOf_one
   have : 2 = 1 := by rw [← hord, h3, hone]
   norm_num at this
@@ -153,7 +155,8 @@ public lemma mem_eq_one_of_card_one {m : ℕ} (H : Subgroup (DihedralGroup (2 ^ 
     rwa [Nat.card_eq_fintype_card] at hcard1
   rcases (Fintype.card_eq_one_iff).mp hc1 with ⟨z₀, hz₀⟩
   have hz' : (⟨z, hz⟩ : ↥(H ⊓ Subgroup.zpowers (DihedralGroup.r 1))) = z₀ := hz₀ ⟨z, hz⟩
-  have h1' : (⟨1, Subgroup.one_mem _⟩ : ↥(H ⊓ Subgroup.zpowers (DihedralGroup.r 1))) = z₀ := hz₀ ⟨1, Subgroup.one_mem _⟩
+  have h1' : (⟨1, Subgroup.one_mem _⟩ : ↥(H ⊓ Subgroup.zpowers (DihedralGroup.r 1))) =
+      z₀ := hz₀ ⟨1, Subgroup.one_mem _⟩
   have heq : (⟨z, hz⟩ : ↥(H ⊓ Subgroup.zpowers (DihedralGroup.r 1))) = ⟨1, Subgroup.one_mem _⟩ := by
     rw [hz', h1']
   exact congrArg Subtype.val heq
@@ -207,7 +210,8 @@ public theorem mem_dihedralIndexTwoSubgroup_iff
   let : (Subgroup.zpowers (DihedralGroup.r (2 : ZMod (2 ^ m)))).Normal := zpowers_r_two_normal
   constructor
   · intro hx
-    rcases (Subgroup.mem_sup_of_normal_left (s := Subgroup.zpowers (DihedralGroup.r (2 : ZMod (2 ^ m))))
+    rcases (Subgroup.mem_sup_of_normal_left
+        (s := Subgroup.zpowers (DihedralGroup.r (2 : ZMod (2 ^ m))))
         (t := Subgroup.zpowers (DihedralGroup.sr j)) (x := x)).mp hx with ⟨a, ha, b, hb, habx⟩
     rcases (Subgroup.mem_zpowers_iff.mp ha) with ⟨k₁, hk₁⟩
     rcases (Subgroup.mem_zpowers_iff.mp hb) with ⟨k₂, hk₂⟩
@@ -220,7 +224,8 @@ public theorem mem_dihedralIndexTwoSubgroup_iff
       refine ⟨k₁, ?_⟩
       calc
         x = a * b := habx.symm
-        _ = (DihedralGroup.r (2 : ZMod (2 ^ m))) ^ k₁ * (DihedralGroup.sr j) ^ k₂ := by rw [← hk₁, ← hk₂]
+        _ = (DihedralGroup.r (2 : ZMod (2 ^ m))) ^ k₁ *
+            (DihedralGroup.sr j) ^ k₂ := by rw [← hk₁, ← hk₂]
         _ = (DihedralGroup.r (2 : ZMod (2 ^ m))) ^ k₁ * 1 := by
               rw [hk2, hk₂₀, zpow_zero]
         _ = DihedralGroup.r ((2 : ZMod (2 ^ m)) * (k₁ : ZMod (2 ^ m))) := by
@@ -230,7 +235,8 @@ public theorem mem_dihedralIndexTwoSubgroup_iff
       refine ⟨-k₁, ?_⟩
       calc
         x = a * b := habx.symm
-        _ = (DihedralGroup.r (2 : ZMod (2 ^ m))) ^ k₁ * (DihedralGroup.sr j) ^ k₂ := by rw [← hk₁, ← hk₂]
+        _ = (DihedralGroup.r (2 : ZMod (2 ^ m))) ^ k₁ *
+            (DihedralGroup.sr j) ^ k₂ := by rw [← hk₁, ← hk₂]
         _ = (DihedralGroup.r (2 : ZMod (2 ^ m))) ^ k₁ * DihedralGroup.sr j := by
               rw [hk2, hk₂₁, zpow_one]
         _ = DihedralGroup.sr (j - (2 : ZMod (2 ^ m)) * (k₁ : ZMod (2 ^ m))) := by
@@ -245,7 +251,8 @@ public theorem mem_dihedralIndexTwoSubgroup_iff
           dihedralIndexTwoSubgroup m j)
         (Subgroup.mem_zpowers_iff.mpr ⟨k, by rw [DihedralGroup.r_zpow]⟩)
     · rw [hk]
-      exact (Subgroup.mem_sup_of_normal_left (s := Subgroup.zpowers (DihedralGroup.r (2 : ZMod (2 ^ m))))
+      exact (Subgroup.mem_sup_of_normal_left
+        (s := Subgroup.zpowers (DihedralGroup.r (2 : ZMod (2 ^ m))))
         (t := Subgroup.zpowers (DihedralGroup.sr j))).mpr
         ⟨DihedralGroup.r ((2 : ZMod (2 ^ m)) * (-(k : ZMod (2 ^ m)))),
           Subgroup.mem_zpowers_iff.mpr ⟨-k, by rw [DihedralGroup.r_zpow]; simp⟩,
@@ -306,12 +313,14 @@ private lemma normal_dihedral_of_not_le_rotation {m : ℕ} (hm : 1 ≤ m)
     have hRcard : Nat.card (↥R) = 2 ^ m := by
       calc
         Nat.card (↥R) = Fintype.card (↥R) := Nat.card_eq_fintype_card
-        _ = orderOf (DihedralGroup.r 1 : DihedralGroup (2 ^ m)) := Fintype.card_zpowers (x := DihedralGroup.r 1)
+        _ = orderOf (DihedralGroup.r 1 : DihedralGroup (2 ^ m)) :=
+          Fintype.card_zpowers (x := DihedralGroup.r 1)
         _ = 2 ^ m := DihedralGroup.orderOf_r_one
     have hAdvd : Nat.card (↥A) ∣ 2 ^ m := by
       have hle : Nat.card (↥A) ∣ Nat.card (↥R) := Subgroup.card_dvd_of_le inf_le_right
       rwa [hRcard] at hle
-    have hR2card : Nat.card (↥(Subgroup.zpowers (DihedralGroup.r (2 : ZMod (2 ^ m))))) = 2 ^ (m - 1) := by
+    have hR2card :
+        Nat.card (↥(Subgroup.zpowers (DihedralGroup.r (2 : ZMod (2 ^ m))))) = 2 ^ (m - 1) := by
       have hord : orderOf (DihedralGroup.r (2 : ZMod (2 ^ m))) = 2 ^ (m - 1) := by
         rw [DihedralGroup.orderOf_r]
         have hval : (2 : ZMod (2 ^ m)).val = 2 % 2 ^ m := ZMod.val_natCast (2 ^ m) 2
@@ -335,7 +344,8 @@ private lemma normal_dihedral_of_not_le_rotation {m : ℕ} (hm : 1 ≤ m)
           rw [hgcd, hdiv, Nat.mul_div_right _ (by norm_num : 0 < 2)]
       calc
         Nat.card (↥(Subgroup.zpowers (DihedralGroup.r (2 : ZMod (2 ^ m))))) =
-            Fintype.card (↥(Subgroup.zpowers (DihedralGroup.r (2 : ZMod (2 ^ m))))) := Nat.card_eq_fintype_card
+            Fintype.card (↥(Subgroup.zpowers (DihedralGroup.r (2 : ZMod (2 ^ m))))) :=
+          Nat.card_eq_fintype_card
         _ = orderOf (DihedralGroup.r (2 : ZMod (2 ^ m))) :=
               Fintype.card_zpowers (x := DihedralGroup.r (2 : ZMod (2 ^ m)))
         _ = 2 ^ (m - 1) := hord
@@ -344,7 +354,8 @@ private lemma normal_dihedral_of_not_le_rotation {m : ℕ} (hm : 1 ≤ m)
       exact Subgroup.mem_inf.mpr ⟨(Subgroup.zpowers_le).mpr hr2 hx,
         (Subgroup.zpowers_le).mpr (r_mem_zpowers_r_one 2) hx⟩
     have hAlow : 2 ^ (m - 1) ≤ Nat.card (↥A) := by
-      have hle : Nat.card (↥(Subgroup.zpowers (DihedralGroup.r (2 : ZMod (2 ^ m))))) ≤ Nat.card (↥A) :=
+      have hle : Nat.card (↥(Subgroup.zpowers (DihedralGroup.r (2 : ZMod (2 ^ m))))) ≤
+          Nat.card (↥A) :=
         Subgroup.card_le_of_le hR2le
       rwa [hR2card] at hle
     -- |A| = 2^(m-1) or |A| = 2^m
@@ -629,8 +640,10 @@ public theorem centralizer_dihedralIndexTwo_v4
       · rw [hi, hi0, DihedralGroup.r_zero]
         exact Subgroup.one_mem _
       · rw [hi, hi2]
-        simpa [dihedralIndexTwoSubgroup] using ((le_sup_left : Subgroup.zpowers (DihedralGroup.r (2 : ZMod 4)) ≤
-            dihedralIndexTwoSubgroup 2 j) (Subgroup.mem_zpowers (DihedralGroup.r (2 : ZMod 4))))
+        simpa [dihedralIndexTwoSubgroup] using
+          ((le_sup_left : Subgroup.zpowers (DihedralGroup.r (2 : ZMod 4)) ≤
+              dihedralIndexTwoSubgroup 2 j)
+            (Subgroup.mem_zpowers (DihedralGroup.r (2 : ZMod 4))))
     · -- x = sr i: commutation with sr j gives i = j or i = j + 2
       have hc_srj : DihedralGroup.sr j * x = x * DihedralGroup.sr j :=
         (Subgroup.mem_centralizer_iff.mp hx) (DihedralGroup.sr j)
@@ -643,7 +656,8 @@ public theorem centralizer_dihedralIndexTwo_v4
         calc
           (j - i) + (j - i) = (j - i) + (i - j) := by rw [hieq]
           _ = 0 := by abel
-      rcases (zmod_two_mul_eq_zero_iff (m := 2) (by norm_num : 2 ≤ 2) (j - i)).mp htwo with hji0 | hji2
+      rcases (zmod_two_mul_eq_zero_iff (m := 2) (by norm_num : 2 ≤ 2) (j - i)).mp htwo with
+        hji0 | hji2
       · -- i = j
         have hi' : i = j := (sub_eq_zero.mp hji0).symm
         rw [hi, hi']
@@ -666,7 +680,9 @@ public theorem centralizer_dihedralIndexTwo_v4
                   exact ZMod.natCast_self 4
                 exact neg_eq_iff_add_eq_zero.mpr h4]
         rw [hi, hi']
-        exact (mem_dihedralIndexTwoSubgroup_iff (by norm_num : 1 ≤ 2) j (DihedralGroup.sr (j + 2))).mpr
+        exact
+          (mem_dihedralIndexTwoSubgroup_iff (by norm_num : 1 ≤ 2) j
+            (DihedralGroup.sr (j + 2))).mpr
           (Or.inr ⟨1, by simp⟩)
   · -- D ≤ C(D): the two generators centralize the generating set
     have h_r2_srj : DihedralGroup.r (2 : ZMod 4) * DihedralGroup.sr j =
@@ -679,7 +695,8 @@ public theorem centralizer_dihedralIndexTwo_v4
           exact ZMod.natCast_self 4
         exact neg_eq_iff_add_eq_zero.mpr h4]
     have hDclosure : dihedralIndexTwoSubgroup 2 j =
-        Subgroup.closure ({DihedralGroup.r (2 : ZMod 4), DihedralGroup.sr j} : Set (DihedralGroup 4)) := by
+        Subgroup.closure
+          ({DihedralGroup.r (2 : ZMod 4), DihedralGroup.sr j} : Set (DihedralGroup 4)) := by
       rw [dihedralIndexTwoSubgroup]
       calc
         Subgroup.zpowers (DihedralGroup.r (2 : ZMod 4)) ⊔
@@ -689,7 +706,8 @@ public theorem centralizer_dihedralIndexTwo_v4
               rw [Subgroup.zpowers_eq_closure, Subgroup.zpowers_eq_closure]
         _ = Subgroup.closure ({DihedralGroup.r (2 : ZMod 4)} ∪ {DihedralGroup.sr j}) := by
               rw [Subgroup.closure_union]
-        _ = Subgroup.closure ({DihedralGroup.r (2 : ZMod 4), DihedralGroup.sr j} : Set (DihedralGroup 4)) := by
+        _ = Subgroup.closure
+            ({DihedralGroup.r (2 : ZMod 4), DihedralGroup.sr j} : Set (DihedralGroup 4)) := by
               congr 1
     rw [hDclosure, Subgroup.centralizer_closure]
     rw [Subgroup.closure_le]
@@ -773,13 +791,18 @@ public theorem centralizer_dihedralIndexTwo_large
         calc
           -(2 ^ (m - 1) : ZMod (2 ^ m))
               = -(2 ^ (m - 1) : ZMod (2 ^ m)) + 0 := by rw [add_zero]
-          _ = -(2 ^ (m - 1) : ZMod (2 ^ m)) + ((2 ^ (m - 1) : ZMod (2 ^ m)) + (2 ^ (m - 1) : ZMod (2 ^ m))) := by rw [← hxadd]
+          _ = -(2 ^ (m - 1) : ZMod (2 ^ m)) +
+              ((2 ^ (m - 1) : ZMod (2 ^ m)) + (2 ^ (m - 1) : ZMod (2 ^ m))) := by
+            rw [← hxadd]
           _ = (2 ^ (m - 1) : ZMod (2 ^ m)) := by abel
       calc
-        j - (2 ^ (m - 1) : ZMod (2 ^ m)) = j + -(2 ^ (m - 1) : ZMod (2 ^ m)) := by rw [sub_eq_add_neg]
+        j - (2 ^ (m - 1) : ZMod (2 ^ m)) =
+            j + -(2 ^ (m - 1) : ZMod (2 ^ m)) := by rw [sub_eq_add_neg]
         _ = j + (2 ^ (m - 1) : ZMod (2 ^ m)) := by rw [hxneg]
     have hgen : DihedralGroup.r (2 ^ (m - 1) : ZMod (2 ^ m)) ∈
-        Subgroup.centralizer ({DihedralGroup.r (2 : ZMod (2 ^ m)), DihedralGroup.sr j} : Set (DihedralGroup (2 ^ m))) := by
+        Subgroup.centralizer
+          ({DihedralGroup.r (2 : ZMod (2 ^ m)), DihedralGroup.sr j} :
+            Set (DihedralGroup (2 ^ m))) := by
       rw [Subgroup.mem_centralizer_iff]
       intro y hy
       rcases (Set.mem_insert_iff.mp hy) with rfl | hy
@@ -787,7 +810,9 @@ public theorem centralizer_dihedralIndexTwo_large
       · rw [Set.mem_singleton_iff.mp hy]
         exact hxsj.symm
     have hDclosure : dihedralIndexTwoSubgroup m j =
-        Subgroup.closure ({DihedralGroup.r (2 : ZMod (2 ^ m)), DihedralGroup.sr j} : Set (DihedralGroup (2 ^ m))) := by
+        Subgroup.closure
+          ({DihedralGroup.r (2 : ZMod (2 ^ m)), DihedralGroup.sr j} :
+            Set (DihedralGroup (2 ^ m))) := by
       rw [dihedralIndexTwoSubgroup]
       calc
         Subgroup.zpowers (DihedralGroup.r (2 : ZMod (2 ^ m))) ⊔
@@ -797,7 +822,9 @@ public theorem centralizer_dihedralIndexTwo_large
               rw [Subgroup.zpowers_eq_closure, Subgroup.zpowers_eq_closure]
         _ = Subgroup.closure ({DihedralGroup.r (2 : ZMod (2 ^ m))} ∪ {DihedralGroup.sr j}) := by
               rw [Subgroup.closure_union]
-        _ = Subgroup.closure ({DihedralGroup.r (2 : ZMod (2 ^ m)), DihedralGroup.sr j} : Set (DihedralGroup (2 ^ m))) := by
+        _ = Subgroup.closure
+            ({DihedralGroup.r (2 : ZMod (2 ^ m)), DihedralGroup.sr j} :
+              Set (DihedralGroup (2 ^ m))) := by
               congr 1
     rw [hDclosure, Subgroup.centralizer_closure]
     exact (Subgroup.zpowers_le).mpr hgen

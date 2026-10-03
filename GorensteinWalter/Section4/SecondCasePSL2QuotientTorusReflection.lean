@@ -63,14 +63,10 @@ public theorem secondCase_psl2_quotient_torus_reflection
       apply htQ.1
       simpa [tP] using congrArg (e.symm : PSL2 K → Q) h1
     · simpa using congrArg e htQ.2
-  obtain ⟨T0, s0, hT0cyc, htP_T0, hs0I, hs0_not_T0, hinvT0, hC0⟩ :=
+  obtain ⟨T0, s0, _, htP_T0, hs0I, hs0_not_T0, hinvT0, hC0⟩ :=
     psl2_reflected_join (K := K) torus.primePower htP
   let T0Q : Subgroup Q := T0.map e.symm.toMonoidHom
   let s0Q : Q := e.symm s0
-  have hT0Qcyc : IsCyclic T0Q := by
-    let eT : T0 ≃* T0Q := Subgroup.equivMapOfInjective T0
-      e.symm.toMonoidHom e.symm.injective
-    exact (MulEquiv.isCyclic eT).mp hT0cyc
   have htQ_T0Q : tQ ∈ T0Q := by
     exact Subgroup.mem_map.mpr ⟨tP, htP_T0, by
       simp [tP]⟩
@@ -160,7 +156,7 @@ public theorem secondCase_psl2_quotient_torus_reflection
     simpa using congrArg Subtype.val hab
   have hT_le_T0Q : torus.T ≤ T0Q :=
     cyclic_subgroup_containing_involution_le_reflected_torus
-      (G := Q) htQ T0Q s0Q hT0Qcyc htQ_T0Q hs0Q_I
+      (G := Q) htQ T0Q s0Q htQ_T0Q hs0Q_I
       hs0Q_not_T0Q hinvT0Q hC0Q torus.T_cyclic hT_cent
       torus.T_contains_t
   have hs0Q_invT : ∀ x : Q, x ∈ torus.T → s0Q * x * s0Q⁻¹ = x⁻¹ := by

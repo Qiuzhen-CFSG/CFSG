@@ -2,6 +2,7 @@ module
 
 public import FeitThompson.BGsection1.proposition_1_5
 
+
 open scoped Pointwise
 
 public section

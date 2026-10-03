@@ -4,6 +4,7 @@ public import GorensteinWalter.Section3.FirstCaseKleinData
 public import GorensteinWalter.Section1
 import Mathlib.Tactic
 
+
 /-!
 # Nontrivial inverted Hall subgroups in the Klein-four branch
 

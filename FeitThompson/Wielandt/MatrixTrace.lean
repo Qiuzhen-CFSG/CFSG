@@ -3,6 +3,7 @@ module
 public import FeitThompson.BGsection3.Remaining
 public import FeitThompson.LinearAlgebra.MatrixBlocks
 
+
 /-!
 # Matrix trace infrastructure for Wielandt fixed-point arguments
 
@@ -27,7 +28,7 @@ Wielandt's theorem. -/
   letI : MulDistribMulAction A V :=
     MulDistribMulAction.compHom V A.subtype
   Module.finrank (ZMod p)
-    ↥((Theory.Representation.ofElementaryAbelianAction
+    ↥((Representation.ofElementaryAbelianAction
         (A := A) (G := V) (p := p)).fixedSubspace
       (⊤ : Subgroup A))
 
@@ -127,10 +128,10 @@ public theorem ReindexedBlockTraceData.trace_sum
     (D : ReindexedBlockTraceData (G := G) (κ := κ) A q M r) :
     Matrix.trace (∑ a : A, M (a : G)) = (r * Nat.card A : ZMod q) := by
   classical
-  letI : Fintype D.leftIndex := D.instFintypeLeftIndex
-  letI : Fintype D.rightIndex := D.instFintypeRightIndex
-  letI : DecidableEq D.leftIndex := D.instDecidableEqLeftIndex
-  letI : DecidableEq D.rightIndex := D.instDecidableEqRightIndex
+  let : Fintype D.leftIndex := D.instFintypeLeftIndex
+  let : Fintype D.rightIndex := D.instFintypeRightIndex
+  let : DecidableEq D.leftIndex := D.instDecidableEqLeftIndex
+  let : DecidableEq D.rightIndex := D.instDecidableEqRightIndex
   calc
     Matrix.trace (∑ a : A, M (a : G)) =
         (Fintype.card D.rightIndex : ZMod q) * (Nat.card A : ZMod q) :=
@@ -189,7 +190,7 @@ public theorem MatrixTraceModel.exists_matrix_trace_model
           Matrix.trace (∑ a : A i, M' (a : G)) =
             (r i * Nat.card (A i) : ZMod q) := by
   classical
-  letI : Fintype D.matrixIndex := D.instFintypeMatrixIndex
+  let : Fintype D.matrixIndex := D.instFintypeMatrixIndex
   exact ⟨D.matrixIndex, inferInstance, D.matrixLift, D.trace_sum⟩
 
 
@@ -373,5 +374,3 @@ public theorem CommonMatrixLiftBlockData.exists_matrix_trace_model
               Nat.card (A i) : ZMod (p ^ e)) := by
   classical
   exact MatrixTraceModel.exists_matrix_trace_model (D.toMatrixTraceModel A)
-
-

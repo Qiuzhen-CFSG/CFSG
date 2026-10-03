@@ -5,6 +5,7 @@ public import FeitThompson.BGsection4.lemma_4_7
 public import FeitThompson.BGsection4.lemma_4_13
 public import FeitThompson.BGsection4.theorem_4_16
 
+
 /-! # Theorem 5.5(c.2) from BG Section 5 -/
 
 private theorem commutatorAction_eq_bot_of_actsTrivially_local
@@ -18,5 +19,4 @@ private theorem commutatorAction_eq_bot_of_actsTrivially_local
   simp [ActsTrivially] at htriv
   rw [htriv a g]
   simp
-
 

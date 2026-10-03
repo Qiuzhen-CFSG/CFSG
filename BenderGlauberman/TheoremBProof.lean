@@ -7,6 +7,7 @@ public import FeitThompson.BGsection1.PLengthLemmas
 import Mathlib.GroupTheory.Perm.Cycle.Type
 import Mathlib.Tactic.IntervalCases
 
+
 /-!
 # Proof of Bender--Glauberman Theorem B
 
@@ -26,7 +27,6 @@ open scoped Pointwise
 namespace BenderGlauberman
 
 open GorensteinWalter
-open Theory.Character
 
 attribute [local instance] Fintype.ofFinite
 attribute [local instance] Classical.propDecidable
@@ -35,6 +35,7 @@ universe u
 
 variable {G : Type u} [Group G] [Finite G]
 
+omit [Finite G] in
 /-- `O(H.subgroupOf X) = O(H).subgroupOf X` when `H ≤ X`. -/
 private lemma oddCoreOf_subgroupOf_eq (H X : Subgroup G) (hH : H ≤ X) :
     oddCoreOf (H.subgroupOf X) = (oddCoreOf H).subgroupOf X := by
@@ -76,9 +77,10 @@ private lemma U_le_H (c : Hyp11 G) : c.U ≤ c.H := by
   intro x hx
   simpa [Hyp11.U] using (Subgroup.map_subtype_le (pPrimeCore 2 c.H) hx)
 
+omit [Finite G] in
 /-- The centralizer of `t` inside a subgroup agrees with `H.subgroupOf G1`. -/
 private lemma centralizer_subgroupOf_eq {t : G} {H G1 : Subgroup G}
-    (ht : t ∈ G1) (hH : H ≤ G1) (hHc : H = Subgroup.centralizer ({t} : Set G)) :
+    (ht : t ∈ G1) (hHc : H = Subgroup.centralizer ({t} : Set G)) :
     H.subgroupOf G1 = Subgroup.centralizer ({⟨t, ht⟩} : Set (↥G1)) := by
   ext x
   constructor
@@ -96,6 +98,7 @@ private lemma centralizer_subgroupOf_eq {t : G} {H G1 : Subgroup G}
     apply (Subgroup.mem_centralizer_singleton_iff (g := t) (k := (x : G))).mpr
     simpa [mul_assoc] using congrArg Subtype.val hx
 
+omit [Finite G] in
 /-- The relative centralizer of an element in a subgroup containing it. -/
 private lemma centralizerIn_subgroupOf_eq (H G1 : Subgroup G)
     (t : G) (ht : t ∈ G1) :
@@ -237,7 +240,7 @@ private noncomputable def hyp11_of_subgroup (c : Hyp11 G) (G1 : Subgroup G)
         simpa [mul_assoc] using congrArg Subtype.val hn
     H := H1
     H_eq_centralizer := by
-      exact centralizer_subgroupOf_eq (H := c.H) (G1 := G1) htG1 hHG1 c.H_eq_centralizer
+      exact centralizer_subgroupOf_eq (H := c.H) (G1 := G1) htG1 c.H_eq_centralizer
     H_eq_US := by
       have hU : oddCoreOf H1 = (oddCoreOf c.H).subgroupOf G1 := by
         exact oddCoreOf_subgroupOf_eq c.H G1 hHG1
@@ -435,7 +438,7 @@ private lemma se_S_le_G1 (c : Hyp11 G) (G1 : Subgroup G) (e : SEContext c G1) :
 
 /-- An element of `S` fixes the coset `G1·g` iff it lies in the conjugate
 `G1^g`. -/
-private lemma se_stabilizer_mem_iff (c : Hyp11 G) (G1 : Subgroup G) (e : SEContext c G1)
+private lemma se_stabilizer_mem_iff (c : Hyp11 G) (G1 : Subgroup G)
     (g : G) (s : ↥(c.S : Subgroup G)) :
     s ∈ MulAction.stabilizer (c.S : Subgroup G) (QuotientGroup.mk g : G ⧸ G1) ↔
       (s : G) ∈ G1.map (MulAut.conj g).toMonoidHom := by
@@ -496,7 +499,7 @@ private lemma se_stabilizer_bot (c : Hyp11 G) (G1 : Subgroup G) (e : SEContext c
   constructor
   · intro hs
     have hsG : (s : G) ∈ G1.map (MulAut.conj g).toMonoidHom :=
-      (se_stabilizer_mem_iff c G1 e g s).mp hs
+      (se_stabilizer_mem_iff c G1 g s).mp hs
     have hsSG : (s : G) ∈ (c.S : Subgroup G) ⊓ G1.map (MulAut.conj g).toMonoidHom :=
       ⟨s.2, hsG⟩
     have hbot : (c.S : Subgroup G) ⊓ G1.map (MulAut.conj g).toMonoidHom = ⊥ :=
@@ -567,7 +570,7 @@ private lemma se_index_eq_five (c : Hyp11 G) (G1 : Subgroup G) (e : SEContext c 
         change (s • x).1 = x.1
         exact congrArg Subtype.val hsX
       have hsG1 : (s : G) ∈ G1.map (MulAut.conj g).toMonoidHom :=
-        (se_stabilizer_mem_iff c G1 e g s).mp (MulAction.mem_stabilizer_iff.mpr (by
+        (se_stabilizer_mem_iff c G1 g s).mp (MulAction.mem_stabilizer_iff.mpr (by
           change (s : G) • (QuotientGroup.mk g : Ω) = QuotientGroup.mk g
           simpa [hxg] using hsΩ))
       have hsSG : (s : G) ∈ (c.S : Subgroup G) ⊓ G1.map (MulAut.conj g).toMonoidHom :=
@@ -744,7 +747,7 @@ private lemma se_S_transitive_compl (c : Hyp11 G) (G1 : Subgroup G) (e : SEConte
     rw [← Nat.card_eq_fintype_card, se_card_compl c G1 e]
   have hbij : Function.Bijective f := by
     rw [Fintype.bijective_iff_injective_and_card]
-    exact ⟨hf_inj, by simpa [hcardS, hcardX]⟩
+    exact ⟨hf_inj, by simp [hcardS, hcardX]⟩
   let y' : X' := ⟨y, hy⟩
   rcases hbij.2 y' with ⟨u, hu⟩
   exact ⟨u, congrArg Subtype.val hu⟩
@@ -887,7 +890,7 @@ private lemma se_VS_card (c : Hyp11 G) (G1 : Subgroup G) (e : SEContext c G1) :
       rw [Subgroup.mem_map] at h
       rcases h with ⟨s, hsS, rfl⟩
       rw [Subgroup.mem_map]
-      exact ⟨⟨s, hsS⟩, Subgroup.mem_top _, by simpa [φS]⟩
+      exact ⟨⟨s, hsS⟩, Subgroup.mem_top _, by simp [φS]⟩
   rw [← hmap, Subgroup.card_map_of_injective hφS]
   rw [Subgroup.card_top]
   exact (se_index_eq_five c G1 e).2
@@ -932,7 +935,7 @@ private lemma se_VS_free (c : Hyp11 G) (G1 : Subgroup G) (e : SEContext c G1) :
     change (sS : G) • (QuotientGroup.mk g : G ⧸ G1) = QuotientGroup.mk g
     simpa [sS, hqg] using hfixq
   have hsG1 : (s : G) ∈ G1.map (MulAut.conj g).toMonoidHom :=
-    (se_stabilizer_mem_iff c G1 e g sS).mp hstab
+    (se_stabilizer_mem_iff c G1 g sS).mp hstab
   have hsSG : (s : G) ∈ (c.S : Subgroup G) ⊓ G1.map (MulAut.conj g).toMonoidHom :=
     ⟨hsS, hsG1⟩
   have hbot : (c.S : Subgroup G) ⊓ G1.map (MulAut.conj g).toMonoidHom = ⊥ :=
@@ -956,7 +959,7 @@ private lemma se_VS_transitive_compl (c : Hyp11 G) (G1 : Subgroup G) (e : SECont
     exact hu
 
 /-- The image of `S` lies inside the permutation image of `G`. -/
-private lemma se_VS_le_range (c : Hyp11 G) (G1 : Subgroup G) (e : SEContext c G1) :
+private lemma se_VS_le_range (c : Hyp11 G) (G1 : Subgroup G) :
     seVS c G1 ≤ (seφ G1).range := by
   intro σ hσ
   dsimp [seVS] at hσ
@@ -974,10 +977,11 @@ private lemma se_VS_exp_two (c : Hyp11 G) (G1 : Subgroup G) (e : SEContext c G1)
   rw [← hvs]
   rw [← map_pow]
   have hs2 : (s : G) ^ 2 = 1 := se_S_exp_two c G1 e ⟨s, hsS⟩
-  simpa [hs2] using (map_one (seφ G1))
+  simp [hs2]
 
+omit [Finite G] in
 /-- The permutation image of `G` is transitive on the cosets of `G1`. -/
-private lemma se_range_transitive (c : Hyp11 G) (G1 : Subgroup G) (e : SEContext c G1)
+private lemma se_range_transitive (G1 : Subgroup G)
     (x : G ⧸ G1) :
     ∃ σ : (seφ G1).range,
       (σ : Equiv.Perm (G ⧸ G1)) • (QuotientGroup.mk (1 : G) : G ⧸ G1) = x := by
@@ -1018,8 +1022,8 @@ private lemma se_range_two_pretransitive (c : Hyp11 G) (G1 : Subgroup G)
   intro a b c' d' hab hcd
   let Ω := G ⧸ G1
   let q0 : Ω := QuotientGroup.mk (1 : G)
-  obtain ⟨u, hu⟩ := se_range_transitive c G1 e a
-  obtain ⟨v, hv⟩ := se_range_transitive c G1 e c'
+  obtain ⟨u, hu⟩ := se_range_transitive G1 a
+  obtain ⟨v, hv⟩ := se_range_transitive G1 c'
   have ha' : u⁻¹ • b ≠ q0 := by
     intro h
     apply hab
@@ -1042,7 +1046,7 @@ private lemma se_range_two_pretransitive (c : Hyp11 G) (G1 : Subgroup G)
         have huq : u⁻¹ • a = q0 := by
           rw [MulAction.subgroup_smul_def]
           rw [← hu]
-          simpa [q0]
+          simp [q0]
         calc
           v • (w • (u⁻¹ • a)) = v • (w • q0) := by rw [huq]
           _ = v • q0 := by
@@ -1076,7 +1080,7 @@ private def fin5C : Equiv.Perm (Fin 5) :=
 /-- An involution of `Perm (Fin 5)` fixing `0` and with no other fixed point
 is one of the three double transpositions. -/
 private lemma fin5_doubleTransposition_of_involution_fix_zero {v : Equiv.Perm (Fin 5)}
-    (hv0 : v (0 : Fin 5) = 0) (hvsq : v ^ 2 = 1) (hvne : v ≠ 1)
+    (hv0 : v (0 : Fin 5) = 0) (hvsq : v ^ 2 = 1)
     (hvfix : ∀ i : Fin 5, i ≠ 0 → v i ≠ i) :
     v = fin5A ∨ v = fin5B ∨ v = fin5C := by
   have hvv (x : Fin 5) : v (v x) = x := by
@@ -1241,7 +1245,7 @@ private lemma fin5_threeCycle_of_V4 (V : Subgroup (Equiv.Perm (Fin 5)))
   have hvclass : (v : Equiv.Perm (Fin 5)) = fin5A ∨ (v : Equiv.Perm (Fin 5)) = fin5B ∨
       (v : Equiv.Perm (Fin 5)) = fin5C := by
     exact fin5_doubleTransposition_of_involution_fix_zero (hfix0 v)
-      (congrArg Subtype.val (hexp v)) (by simpa using hvne1)
+      (congrArg Subtype.val (hexp v))
       (fun i hi => hfree v hvne1 i hi)
   rcases hvclass with hvA | hvB | hvC
   · have hA : (fin5A : Equiv.Perm (Fin 5)) ∈ cl := Subgroup.subset_closure (by
@@ -1254,7 +1258,7 @@ private lemma fin5_threeCycle_of_V4 (V : Subgroup (Equiv.Perm (Fin 5)))
     exact fin5_wordB_mem cl hρ hB
   · have hthird : ∃ w : V, w ≠ 1 ∧ w ≠ v := by
       by_contra h
-      push_neg at h
+      push Not at h
       let f : V → Fin 2 := fun w => if w = 1 then 0 else 1
       have hf : Function.Injective f := by
         intro a b hab
@@ -1275,7 +1279,7 @@ private lemma fin5_threeCycle_of_V4 (V : Subgroup (Equiv.Perm (Fin 5)))
     have hwclass : (w : Equiv.Perm (Fin 5)) = fin5A ∨ (w : Equiv.Perm (Fin 5)) = fin5B ∨
         (w : Equiv.Perm (Fin 5)) = fin5C := by
       exact fin5_doubleTransposition_of_involution_fix_zero (hfix0 w)
-        (congrArg Subtype.val (hexp w)) (by simpa using hw1)
+        (congrArg Subtype.val (hexp w))
         (fun i hi => hfree w hw1 i hi)
     rcases hwclass with hwA | hwB | hwC
     · have hA : (fin5A : Equiv.Perm (Fin 5)) ∈ cl := Subgroup.subset_closure (by
@@ -1289,7 +1293,7 @@ private lemma fin5_threeCycle_of_V4 (V : Subgroup (Equiv.Perm (Fin 5)))
     · exfalso
       apply hwv
       apply Subtype.ext
-      simpa [hwC, hvC]
+      simp [hwC, hvC]
 
 /-- Conjugation by an equivalence preserves the support size of a permutation. -/
 private lemma permCongr_support_card {α β : Type*} [Fintype α] [Fintype β]
@@ -1371,7 +1375,7 @@ private lemma se_stabilizer_perm_card (c : Hyp11 G) (G1 : Subgroup G) (e : SECon
     · intro hfix
       have hsub : ((σ.support : Set Ω) : Set Ω) ⊆ {x : Ω | x ≠ q0} := by
         intro x hx
-        rw [Set.mem_setOf_eq]
+        rw [Set.mem_ofPred_eq]
         intro hxq
         rw [hxq] at hx
         exact ((Equiv.Perm.mem_support.mp hx) hfix)
@@ -1455,7 +1459,7 @@ private lemma se_orbit_equiv (c : Hyp11 G) (G1 : Subgroup G) (e : SEContext c G1
             congr 1
             rw [← hdsum, pow_add]
           _ = (σ : Equiv.Perm Ω) ^ i.val • ((σ : Equiv.Perm Ω) ^ d • q0) := by
-            simp [smul_smul]
+            simp
       have hfixd : (σ : Equiv.Perm Ω) ^ d • q0 = q0 := by
         have hh' : ((σ : Equiv.Perm Ω) ^ i.val) ((σ : Equiv.Perm Ω) ^ d • q0) =
             ((σ : Equiv.Perm Ω) ^ i.val) q0 := by
@@ -1464,7 +1468,7 @@ private lemma se_orbit_equiv (c : Hyp11 G) (G1 : Subgroup G) (e : SEContext c G1
       -- `σ^d` lies in the image and has order five
       let τ : (seφ G1).range := σ ^ d
       have hτmem : (τ : Equiv.Perm Ω) = (σ : Equiv.Perm Ω) ^ d := by
-        simp [τ, Subgroup.coe_pow]
+        simp [τ]
       have hfixτ : (τ : Equiv.Perm Ω) • q0 = q0 := by
         rw [hτmem]
         exact hfixd
@@ -1536,7 +1540,7 @@ private lemma se_orbit_equiv (c : Hyp11 G) (G1 : Subgroup G) (e : SEContext c G1
     have hstep_app : (σ : Equiv.Perm Ω) (f i) = f (finRotate 5 i) := by
       simpa [Equiv.Perm.smul_def] using hstep
     rw [hstep_app]
-    simpa using (Equiv.symm_apply_apply (Equiv.ofBijective f hbij) (finRotate 5 i))
+    simp
 
 /-- The permutation image of `G` contains a three-cycle. -/
 private lemma se_threeCycle_mem (c : Hyp11 G) (G1 : Subgroup G) (e : SEContext c G1) :
@@ -1624,7 +1628,7 @@ private lemma se_threeCycle_mem (c : Hyp11 G) (G1 : Subgroup G) (e : SEContext c
     rw [Subgroup.mem_map] at hw ⊢
     rcases hw with ⟨v, hvV, hvw⟩
     change E.permCongr v = w at hvw
-    exact ⟨v, se_VS_le_range c G1 e hvV, hvw⟩
+    exact ⟨v, se_VS_le_range c G1 hvV, hvw⟩
   have hcl : Subgroup.closure (({finRotate 5} : Set (Equiv.Perm (Fin 5))) ∪ W) ≤
       (seφ G1).range.map E.permCongrHom.toMonoidHom := by
     rw [Subgroup.closure_le]

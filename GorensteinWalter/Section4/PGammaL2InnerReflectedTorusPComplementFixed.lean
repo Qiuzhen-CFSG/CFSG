@@ -191,7 +191,7 @@ public theorem pGammaL2_inner_reflected_torus_pComplement_fixed
         simpa [sS, MulAut.conj_apply] using hg⟩
     have hXleS : X ≤ S :=
       cyclic_subgroup_containing_involution_le_reflected_torus
-        hsI S wS hScyc hsS
+        hsI S wS hsS
         (by constructor
             · intro h1
               apply hwSnot
@@ -297,7 +297,7 @@ public theorem pGammaL2_inner_reflected_torus_pComplement_fixed
         simpa [MulAut.conj_apply] using hg⟩
     have hXleN : X ≤ SN :=
       cyclic_subgroup_containing_involution_le_reflected_torus
-        hsNI SN wN hNcyc hsN
+        hsNI SN wN hsN
         (by constructor
             · intro h1
               apply hwNnot

@@ -6,6 +6,7 @@ public import GorensteinWalter.FittingNormalizerGrowth
 public import GorensteinWalter.Section4.SecondCaseHNotLeM
 import Mathlib.Tactic
 
+
 /-! # The Fitting intersection is not cyclic  (source: refs/bender-dihedral-sylow.tex L685–693) -/
 
 noncomputable section

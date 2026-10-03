@@ -3,6 +3,7 @@ public import FeitThompson.BGsection3.Defs
 
 public import FeitThompson.GeneratorRank
 public import FeitThompson.BGsection4.theorem_4_18_c
+
 /-! # Theorem 4.18(e) from BG Section 4 -/
 
 universe u
@@ -12,7 +13,7 @@ section Main
 open scoped FixedPoints
 
 public theorem theorem_4_18_e {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p.Prime]
-    (hsolv : IsSolvable G) (hodd : Odd (Nat.card G)) (hp_mem : p ∣ Nat.card G)
+    (hsolv : Group.IsSolvable G) (hodd : Odd (Nat.card G)) (hp_mem : p ∣ Nat.card G)
     (hrank : primeRank p G ≤ 2) :
     Nat.Coprime p (Nat.card (G ⧸ Op_p'p p G)) ∧ IsMulCommutative (G ⧸ Op_p'p p G) := by
   let D : Subgroup G := derivedSubgroup G
@@ -99,8 +100,8 @@ public theorem theorem_4_18_e {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p
     exact hmap_bot
   have hQnot_dvd : ¬ p ∣ Nat.card (G ⧸ Op_p'p p G) := by
     intro hp_dvd_Q
-    letI : IsMulCommutative (G ⧸ Op_p'p p G) := hQcomm
-    letI : CommGroup (G ⧸ Op_p'p p G) := IsMulCommutative.instCommGroup
+    let : IsMulCommutative (G ⧸ Op_p'p p G) := hQcomm
+    let : CommGroup (G ⧸ Op_p'p p G) := IsMulCommutative.instCommGroup
     let S : Sylow p (G ⧸ Op_p'p p G) :=
       Classical.choice (inferInstance : Nonempty (Sylow p (G ⧸ Op_p'p p G)))
     have hS_le_core : (S : Subgroup (G ⧸ Op_p'p p G)) ≤ pCore p (G ⧸ Op_p'p p G) := by

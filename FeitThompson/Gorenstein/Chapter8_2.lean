@@ -3,9 +3,10 @@ module
 public import FeitThompson.BGsection1.lemma_1_22
 public import FeitThompson.BGsection3.Infrastructure
 public import FeitThompson.PCore.CentralizerControl
-public import FeitThompson.PGroup.NormalSubgroups
-public import FeitThompson.Commutator.Core
+public import Theory.GroupTheory.PGroup.NormalSubgroups
+public import Theory.GroupTheory.Commutator.Basic
 public import Mathlib.GroupTheory.Subgroup.Centralizer
+
 
 /-!
 # Gorenstein, Chapter 8, Section 2
@@ -562,7 +563,7 @@ public def PStableGroup' : Prop :=
             ⁅⁅Q, A⁆, A⁆ = ⊥ →
               let N : Subgroup G := Subgroup.normalizer (Q : Set G)
               let C : Subgroup G := Subgroup.centralizer (Q : Set G)
-              letI : (C.subgroupOf N).Normal := by
+              let : (C.subgroupOf N).Normal := by
                 have hCN : C ≤ N := by
                   simpa using (centralizer_le_normalizer (G := G) Q)
                 exact

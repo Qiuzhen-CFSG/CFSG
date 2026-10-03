@@ -6,6 +6,7 @@ public import GorensteinWalter.Section2.Lemma27IndexTwo
 public import GorensteinWalter.Section2.Lemma27DGroupIndexParity
 import Mathlib.Tactic
 
+
 /-!
 # The `t ∈ O²(M)` trichotomy branch for Lemma 2.7
 
@@ -81,7 +82,7 @@ public theorem t_mem_N_map_of_mem_twoResidualOf_of_DGroup
       index_not_dvd_four_of_normal_card_div_four_of_isDGroup_not_twoQuotient
         (A := ↥M) hDM hnotQ hN h4
     exact t_mem_N_of_mem_twoResidualOf_of_index_two_part M htM c.t_involution
-      hO2 hN h4 hNidx
+      hO2 hN hNidx
   · rcases hcase3 with ⟨_hN4, hNPC⟩
     have htOdd : c.t ∈ oddCoreOf M :=
       (twoResidualOf_le_oddCoreOf_of_normalPComplement M hNPC) hO2

@@ -5,6 +5,7 @@ public import Mathlib.GroupTheory.SemidirectProduct
 public import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
 public import Mathlib.Algebra.Group.Equiv.TypeTags
 
+
 /-!
 # Glauberman, "A Characteristic Subgroup of a p-Stable Group" — Definitions 2.1–2.3
 
@@ -71,7 +72,7 @@ isomorphic to a subquotient of `G`"; a subquotient is a factor group `H/K` with
 @[expose]
 public def Involved (H G : Type*) [Group H] [Group G] : Prop :=
   ∃ K : Subgroup G, ∃ N : Subgroup K, ∃ hN : N.Normal,
-    letI : N.Normal := hN
+    let : N.Normal := hN
     Nonempty (K ⧸ N ≃* H)
 
 /-! ## `p`-stability and `p`-constraint (paper §2, Definitions 2.1–2.3) -/

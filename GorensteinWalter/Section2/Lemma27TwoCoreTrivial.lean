@@ -11,6 +11,7 @@ public import GorensteinWalter.MinimalCounterexample
 import GorensteinWalter.Section2.Lemma22
 import Mathlib.Tactic
 
+
 /-!
 # `O₂(M) = 1` for Lemma 2.7
 

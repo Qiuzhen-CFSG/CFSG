@@ -2,6 +2,7 @@ module
 
 public import Glauberman.Lemma7_2
 
+
 /-!
 # Isomorphism invariance of p-stability
 
@@ -121,4 +122,3 @@ public theorem pStable_iso {p : ℕ} [Fact p.Prime] {G G' : Type*} [Group G] [Gr
   · exact pStable_iso_forward e.symm
 
 end Glauberman
-

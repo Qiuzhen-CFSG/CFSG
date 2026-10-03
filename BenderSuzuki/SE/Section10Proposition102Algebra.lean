@@ -1,7 +1,7 @@
 module
 
 public import BenderSuzuki.SE.Section10Lemma106Final
-public import FeitThompson.Commutator.Core
+public import Theory.GroupTheory.Commutator.Basic
 import Mathlib.GroupTheory.IsPerfect
 
 /-!
@@ -171,11 +171,11 @@ public theorem derived_eq_commutator_of_solvable_sup
   have hperfect : Group.IsPerfect (H ⧸ C.subgroupOf H) := by
     refine ⟨?_⟩
     simpa [derivedSubgroup] using hderQ
-  letI : Group.IsPerfect (H ⧸ C.subgroupOf H) := hperfect
+  let : Group.IsPerfect (H ⧸ C.subgroupOf H) := hperfect
   have hsubsingle : Subsingleton (H ⧸ C.subgroupOf H) := by
     apply not_nontrivial_iff_subsingleton.mp
     intro hnon
-    letI : Nontrivial (H ⧸ C.subgroupOf H) := hnon
+    let : Nontrivial (H ⧸ C.subgroupOf H) := hnon
     exact Group.IsPerfect.not_isSolvable (H ⧸ C.subgroupOf H) inferInstance
   have hCsub_top : C.subgroupOf H = ⊤ := by
     apply top_unique
@@ -218,7 +218,7 @@ public theorem map_derivedSubgroup_eq_commutator_of_solvable_mul
       ((derivedSubgroup E).map E.subtype : Set X) * (P : Set X)) :
     (derivedSubgroup E).map E.subtype = ⁅E, P⁆ := by
   let Psub : Subgroup E := P.subgroupOf E
-  letI : Group.IsSolvable E := hEsolv
+  let : Group.IsSolvable E := hEsolv
   have hPsubcomm : IsMulCommutative Psub := by
     refine ⟨⟨?_⟩⟩
     intro x y

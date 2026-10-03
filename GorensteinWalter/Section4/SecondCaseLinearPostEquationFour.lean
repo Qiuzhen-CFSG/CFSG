@@ -17,8 +17,9 @@ public import GorensteinWalter.TwoSubgroupCentralizingULeTwoCore
 import GorensteinWalter.CentralizerSetupFittingNormal
 import FeitThompson.ChiefFactors.Proposition12
 import FeitThompson.GroupAction.CentralizerCondition
-import FeitThompson.SubgroupConj
+import Theory.GroupTheory.SubgroupConjugation
 import Mathlib.Tactic
+
 
 /-!
 # Section 4: the equations-(5)--(7) package after equation (4)
@@ -464,7 +465,7 @@ private theorem fitting_twoCore_inter_centralizes_U
   have hUodd : Odd (Nat.card c.U) := by
     change Odd (Nat.card (oddCoreOf c.H))
     exact odd_card_oddCoreOf c.H
-  have hUsolv : IsSolvable c.U := odd_order_theorem c.U hUodd
+  have hUsolv : Group.IsSolvable c.U := odd_order_theorem c.U hUodd
   have hself : c.U ⊓ Subgroup.centralizer (c.FU : Set G) ≤ c.FU := by
     change c.U ⊓ Subgroup.centralizer
         (((fittingSubgroup c.U).map c.U.subtype : Subgroup G) : Set G) ≤

@@ -9,6 +9,7 @@ public import GorensteinWalter.Section2.Lemma27IndexTwo
 public import GorensteinWalter.Section2.Reflection
 import Mathlib.Tactic
 
+
 /-!
 # The PSL₂ equation-(4) endpoint
 

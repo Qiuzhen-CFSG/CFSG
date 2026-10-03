@@ -20,7 +20,7 @@ noncomputable section
 
 namespace BenderSuzuki
 
-open MatrixGroups PFAppendixIII PFchapter1section1
+open _root_.BenderSuzuki.MatrixGroups PFAppendixIII PFchapter1section1
 open scoped LinearAlgebra.Projectivization
 
 universe u v
@@ -94,12 +94,12 @@ public theorem exists_sylow_map_eq_of_normalizer_le
   intro Q hQp hP0Q
   have hQ_le_P0 : Q ≤ P0sub := by
     let K : Subgroup Q := P0sub.subgroupOf Q
-    haveI : Fact (IsPGroup p Q) := ⟨hQp⟩
+    have : Fact (IsPGroup p Q) := ⟨hQp⟩
     have hQnil : Group.IsNilpotent Q :=
       IsPGroup.isNilpotent (p := p) (G := Q) hQp
     have hnc : NormalizerCondition Q := by
-      letI : Group.IsNilpotent Q := hQnil
-      exact normalizerCondition_of_isNilpotent (G := Q)
+      let : Group.IsNilpotent Q := hQnil
+      exact Group.normalizerCondition_of_isNilpotent (G := Q)
     have hnormalizerK_le : Subgroup.normalizer (K : Set Q) ≤ K := by
       intro x hxnormalizer
       have hxnormalizerP0 :
@@ -169,7 +169,7 @@ public theorem exists_sylow_map_eq_of_normal_complement
     simpa [Rsub, Hsub, hsup] using
       (Subgroup.subgroupOf_sup
         (A := R) (A' := H) (B := U) hR_le hH_le).symm
-  letI : Rsub.Normal :=
+  let : Rsub.Normal :=
     Subgroup.normal_subgroupOf_of_le_normalizer hU_le_normalizer
   have hcomplement : Rsub.IsComplement' Hsub := by
     refine Subgroup.isComplement'_of_disjoint_and_mul_eq_univ
@@ -232,7 +232,7 @@ public theorem isTwoPretransitive_compHom_of_surjective
     (htwo : MulAction.IsMultiplyPretransitive Q Omega 2) :
     letI : MulAction G Omega := MulAction.compHom Omega f
     MulAction.IsMultiplyPretransitive G Omega 2 := by
-  letI : MulAction G Omega := MulAction.compHom Omega f
+  let : MulAction G Omega := MulAction.compHom Omega f
   rw [MulAction.is_two_pretransitive_iff] at htwo ⊢
   intro a b c d hab hcd
   obtain ⟨q, hqa, hqb⟩ := htwo hab hcd
@@ -248,7 +248,7 @@ public theorem stabilizer_compHom
     letI : MulAction G Omega := MulAction.compHom Omega f
     MulAction.stabilizer G alpha =
       (MulAction.stabilizer Q alpha).comap f := by
-  letI : MulAction G Omega := MulAction.compHom Omega f
+  let : MulAction G Omega := MulAction.compHom Omega f
   ext g
   simp [MulAction.mem_stabilizer_iff, MulAction.compHom_smul_def]
 
@@ -261,7 +261,7 @@ public theorem coset_isTwoPretransitive_of_surjective
     (htwo : MulAction.IsMultiplyPretransitive Q (Q ⧸ B.map f) 2) :
     MulAction.IsMultiplyPretransitive G (G ⧸ B) 2 := by
   let Omega := Q ⧸ B.map f
-  letI : MulAction G Omega := MulAction.compHom Omega f
+  let : MulAction G Omega := MulAction.compHom Omega f
   have htwo_pull : MulAction.IsMultiplyPretransitive G Omega 2 :=
     isTwoPretransitive_compHom_of_surjective f hf htwo
   have hstabilizer :
@@ -299,7 +299,7 @@ public theorem isTwoTransitiveOn_orbit_of_coset
     (htwo : MulAction.IsMultiplyPretransitive F
       (F ⧸ pointStabilizerIn F alpha) 2) :
     IsTwoTransitiveOn F {omega : Omega | InOrbit F alpha omega} := by
-  letI : MulAction F Omega := MulAction.compHom Omega F.subtype
+  let : MulAction F Omega := MulAction.compHom Omega F.subtype
   have hstabilizer :
       MulAction.stabilizer F alpha = pointStabilizerIn F alpha := by
     rfl
@@ -523,7 +523,7 @@ public theorem regularOn_compHom_of_map_mulEquiv
     (hreg : IsRegularOn P0 A) :
     letI : MulAction G Omega := MulAction.compHom Omega e.toMonoidHom
     IsRegularOn P A := by
-  letI : MulAction G Omega := MulAction.compHom Omega e.toMonoidHom
+  let : MulAction G Omega := MulAction.compHom Omega e.toMonoidHom
   intro a b ha hb
   obtain ⟨r0, hr0, huniq0⟩ := hreg ha hb
   have hr0map : (r0 : Q) ∈ P.map e.toMonoidHom := by
@@ -710,7 +710,7 @@ public theorem exists_normal_sylow_regularOn_cosets_of_mulEquiv
       (P : Subgroup B).Normal ∧
       IsRegularOn ((P : Subgroup B).map B.subtype)
         {q : G ⧸ B | q ≠ QuotientGroup.mk 1} := by
-  letI : MulAction G Omega := MulAction.compHom Omega e.toMonoidHom
+  let : MulAction G Omega := MulAction.compHom Omega e.toMonoidHom
   let P0G : Sylow 2 G :=
     P0.mapSurjective (f := e.symm.toMonoidHom) e.symm.surjective
   have hPmap : (P0G : Subgroup G).map e.toMonoidHom =
@@ -759,7 +759,7 @@ private theorem borel_card_pgl2
     Nat.card (Matrix.ProjGenLinGroup (Fin 2) K) =
       Nat.card K * (Nat.card K ^ 2 - 1) := by
   classical
-  letI : Fintype K := Fintype.ofFinite K
+  let : Fintype K := Fintype.ofFinite K
   let GL2 := GL (Fin 2) K
   let PGL2 := Matrix.ProjGenLinGroup (Fin 2) K
   let centerGL := Subgroup.center GL2
@@ -848,8 +848,8 @@ public theorem pgl_sylow_normalizer_action
     (∀ a b c d : Omega, a ≠ b → c ≠ d →
       ∃ g : G, rho g a = c ∧ rho g b = d)
   classical
-  letI : Fintype K := Fintype.ofFinite K
-  letI : Finite G :=
+  let : Fintype K := Fintype.ofFinite K
+  let : Finite G :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
   have hn0 : n ≠ 0 := by omega
@@ -874,8 +874,8 @@ public theorem pgl_sylow_normalizer_action
     intro z
     rw [hiota_apply]
     rw [hrho_apply _ _ _ rfl, hrhoPSL_apply]
-  letI : MulAction G Omega := MulAction.compHom Omega rho
-  letI : FaithfulSMul G Omega :=
+  let : MulAction G Omega := MulAction.compHom Omega rho
+  let : FaithfulSMul G Omega :=
     faithfulSMul_iff.mpr (by
       intro g hg
       apply hrho
@@ -918,7 +918,7 @@ public theorem pgl_sylow_normalizer_action
   have hKgt : 3 < Nat.card K := by omega
   rcases hlarge hKgt with
     ⟨_hsimple, _hnoncommutative, hno_regular⟩
-  letI : Fintype Omega := Fintype.ofFinite Omega
+  let : Fintype Omega := Fintype.ofFinite Omega
   have hdegree : Fintype.card Omega = q + 1 := by
     rw [← Nat.card_eq_fintype_card, hOmegaCard, hKcard]
   have hdegree_gt_one : 1 < Fintype.card Omega := by
@@ -952,12 +952,12 @@ public theorem pgl_sylow_normalizer_action
   let H := MulAction.stabilizer G pinf
   let R : Subgroup G := F.map H.subtype
   let X := SubMulAction.ofStabilizer G pinf
-  letI : MulAction.IsPretransitive G Omega :=
+  let : MulAction.IsPretransitive G Omega :=
     MulAction.isPretransitive_of_is_two_pretransitive
   have hstab_multi : MulAction.IsMultiplyPretransitive H X 1 :=
     (SubMulAction.ofStabilizer.isMultiplyPretransitive
       (G := G) (a := pinf)).mp htwo
-  letI : MulAction.IsPretransitive H X :=
+  let : MulAction.IsPretransitive H X :=
     (MulAction.is_one_pretransitive_iff (G := H) (α := X)).mp hstab_multi
   have hFregular : ∀ x y : X, ∃! f : F, (f : H) • x = y :=
     External.huppert_blackburn_XI_regular_of_isComplement_stabilizer
@@ -1069,8 +1069,8 @@ public theorem psl_charTwo_equiv_pgl
     (PSL2MatrixGroup K ≃*
       Matrix.ProjGenLinGroup (Fin 2) K)
   classical
-  letI : Fintype K := Fintype.ofFinite K
-  letI : Finite (Matrix.ProjGenLinGroup (Fin 2) K) :=
+  let : Fintype K := Fintype.ofFinite K
+  let : Finite (Matrix.ProjGenLinGroup (Fin 2) K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
   have hKcard : Nat.card K = 2 ^ n := by
@@ -1108,7 +1108,7 @@ public theorem IsBorelSubgroup.psl_coset_isTwoPretransitive
   let K := BinaryGaloisField n
   let Omega := ℙ K (Fin 2 → K)
   let Q := Matrix.ProjGenLinGroup (Fin 2) K
-  letI : Finite Q :=
+  let : Finite Q :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
   let e : PSL2BinaryMatrixGroup n ≃* Q :=
@@ -1118,7 +1118,7 @@ public theorem IsBorelSubgroup.psl_coset_isTwoPretransitive
     hB.map_mulEquiv e
   rcases pgl_sylow_normalizer_action n hn with
     ⟨rho, pinf, S, _hrho_apply, hnormalizer, _hregular, htwo⟩
-  letI : MulAction Q Omega := MulAction.compHom Omega rho
+  let : MulAction Q Omega := MulAction.compHom Omega rho
   have hnormalizer' :
       Subgroup.normalizer ((S : Subgroup Q) : Set Q) =
         MulAction.stabilizer Q pinf := by
@@ -1198,7 +1198,7 @@ public theorem psu_root_normalizer_action
       _hR_disjoint_H, _hR_sup_H, _hH_cyclic, hRcard,
       _hcommutator_center, _hcommutator_card, _hHcard,
       hRregular, _hcoordR, _hHcoord, _hHcoord_surjective⟩
-  letI : MulAction G Omega := MulAction.compHom Omega rho
+  let : MulAction G Omega := MulAction.compHom Omega rho
   have hR_ne : R ≠ ⊥ := by
     intro hRbot
     have hRcard_one : Nat.card R = 1 := by
@@ -1278,11 +1278,11 @@ public theorem psu_sylow_normalizer_action
       hR_disjoint_H, hR_sup_H, _hH_cyclic, hRcard,
       _hcommutator_center, _hcommutator_card, hHcard,
       hRregular, _hcoordR, _hHcoord, _hHcoord_surjective⟩
-  letI : Fintype K := Fintype.ofFinite K
-  letI : Finite (Matrix.ProjGenLinGroup (Fin 3) K) :=
+  let : Fintype K := Fintype.ofFinite K
+  let : Finite (Matrix.ProjGenLinGroup (Fin 3) K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
-  letI : Finite (ProjectiveSpecialUnitaryMatrixGroup J) :=
+  let : Finite (ProjectiveSpecialUnitaryMatrixGroup J) :=
     Finite.of_injective
       (fun x : ProjectiveSpecialUnitaryMatrixGroup J =>
         (x : Matrix.ProjGenLinGroup (Fin 3) K)) Subtype.coe_injective
@@ -1318,7 +1318,7 @@ public theorem psu_sylow_normalizer_action
     exists_sylow_map_eq_of_normal_complement
       hR_le_U hH_le_U hU_le_normalizer_R
       hR_disjoint_H hR_sup_H hRp hHnot
-  letI : MulAction G Omega := MulAction.compHom Omega rho
+  let : MulAction G Omega := MulAction.compHom Omega rho
   have hR_ne : R ≠ ⊥ := by
     intro hRbot
     have hRcard_one : Nat.card R = 1 := by rw [hRbot]; simp
@@ -1349,7 +1349,6 @@ public theorem psu_sylow_normalizer_action
     exists_sylow_map_eq_of_normalizer_le PU hnormalizer_le
   have hSR : (S : Subgroup G) = R := hSmap.trans hPU
   have hScard : Nat.card S = q ^ 3 := by
-    change Nat.card (S : Subgroup G) = q ^ 3
     rw [hSR]
     exact hRcard
   have hSnormalizer :
@@ -1411,7 +1410,7 @@ public theorem IsBorelSubgroup.psu_coset_isTwoPretransitive
       hregular, htwo⟩
   rcases hdata with
     ⟨rho, pinf, S, _hrho, _hScard, hnormalizer, _hregular, htwo⟩
-  letI : MulAction G Omega := MulAction.compHom Omega rho
+  let : MulAction G Omega := MulAction.compHom Omega rho
   have hnormalizer' :
       Subgroup.normalizer ((S : Subgroup G) : Set G) =
         MulAction.stabilizer G pinf := by
@@ -1446,14 +1445,14 @@ public theorem IsBorelSubgroup.coset_isTwoPretransitive_of_isPSU3_model
   rcases hmodel with
     ⟨n, hn, E, hEfield, hEfinite, J, hJstandard,
       hEcard, hfixed_card, e⟩
-  letI : Field E := hEfield
-  letI : Finite E := hEfinite
+  let : Field E := hEfield
+  let : Finite E := hEfinite
   let eG : G ≃* ProjectiveSpecialUnitaryMatrixGroup J := e.some
-  letI : Fintype E := Fintype.ofFinite E
-  letI : Finite (Matrix.ProjGenLinGroup (Fin 3) E) :=
+  let : Fintype E := Fintype.ofFinite E
+  let : Finite (Matrix.ProjGenLinGroup (Fin 3) E) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
-  letI : Finite (ProjectiveSpecialUnitaryMatrixGroup J) :=
+  let : Finite (ProjectiveSpecialUnitaryMatrixGroup J) :=
     Finite.of_injective
       (fun x : ProjectiveSpecialUnitaryMatrixGroup J =>
         (x : Matrix.ProjGenLinGroup (Fin 3) E)) Subtype.coe_injective
@@ -1613,7 +1612,7 @@ public theorem suzuki_sylow_normalizer_action
   let linRep : G →* LinearMap.GeneralLinearGroup K (Fin 4 → K) :=
     Matrix.GeneralLinearGroup.toLin.toMonoidHom.comp
       (SuzukiMatrixGroup m).subtype
-  letI : MulAction G (ℙ K (Fin 4 → K)) :=
+  let : MulAction G (ℙ K (Fin 4 → K)) :=
     MulAction.compHom (ℙ K (Fin 4 → K)) linRep
   let ovoid : SubMulAction G (ℙ K (Fin 4 → K)) :=
     { carrier := O
@@ -1622,7 +1621,7 @@ public theorem suzuki_sylow_normalizer_action
         change (Matrix.GeneralLinearGroup.toLin
           (g : GL (Fin 4) K)).toLinearEquiv • z ∈ O
         exact hpres g z hz }
-  letI : MulAction G Omega := ovoid.mulAction
+  let : MulAction G Omega := ovoid.mulAction
   let rho : G →* Equiv.Perm Omega := MulAction.toPermHom G Omega
   let pinfO : Omega := ⟨pinf, Or.inl rfl⟩
   have hU_eq_stabilizer : U = MulAction.stabilizer G pinfO := by
@@ -1771,7 +1770,7 @@ public theorem IsBorelSubgroup.suzuki_coset_isTwoPretransitive
     exact suzuki_sylow_normalizer_action m hm
   rcases hdata with
     ⟨rho, pinfO, S, _hrho_apply, hnormalizer, _hregular, htwo⟩
-  letI : MulAction G Omega := MulAction.compHom Omega rho
+  let : MulAction G Omega := MulAction.compHom Omega rho
   have hnormalizer' :
       Subgroup.normalizer ((S : Subgroup G) : Set G) =
         MulAction.stabilizer G pinfO := by
@@ -1830,7 +1829,7 @@ public theorem simpleBender_borel_normalSylow_regular
     let K := BinaryGaloisField n
     let Omega := ℙ K (Fin 2 → K)
     let Q := Matrix.ProjGenLinGroup (Fin 2) K
-    letI : Finite Q :=
+    let : Finite Q :=
       Finite.of_surjective Matrix.ProjGenLinGroup.mk
         Matrix.ProjGenLinGroup.mk_surjective
     let ePGL : PSL2BinaryMatrixGroup n ≃* Q :=
@@ -1838,7 +1837,7 @@ public theorem simpleBender_borel_normalSylow_regular
     let eG : G ≃* Q := e.some.trans ePGL
     rcases pgl_sylow_normalizer_action n hn with
       ⟨rho, pinf, S, _hrho_apply, hnormalizer, hregular, _htwo⟩
-    letI : MulAction Q Omega := MulAction.compHom Omega rho
+    let : MulAction Q Omega := MulAction.compHom Omega rho
     have hnormalizer' :
         Subgroup.normalizer ((S : Subgroup Q) : Set Q) =
           MulAction.stabilizer Q pinf := by
@@ -1885,7 +1884,7 @@ public theorem simpleBender_borel_normalSylow_regular
       exact suzuki_sylow_normalizer_action m hm
     rcases hdata with
       ⟨rho, pinfO, S, _hrho_apply, hnormalizer, hregular, _htwo⟩
-    letI : MulAction Q Omega := MulAction.compHom Omega rho
+    let : MulAction Q Omega := MulAction.compHom Omega rho
     have hnormalizer' :
         Subgroup.normalizer ((S : Subgroup Q) : Set Q) =
           MulAction.stabilizer Q pinfO := by
@@ -1907,8 +1906,8 @@ public theorem simpleBender_borel_normalSylow_regular
   · rcases hPSU with
       ⟨n, hn, E, hEfield, hEfinite, J, hJstandard,
         hEcard, hfixed_card, e⟩
-    letI : Field E := hEfield
-    letI : Finite E := hEfinite
+    let : Field E := hEfield
+    let : Finite E := hEfinite
     let q := 2 ^ n
     let P := ℙ E (Fin 3 → E)
     let A : Set P :=
@@ -1917,11 +1916,11 @@ public theorem simpleBender_borel_normalSylow_regular
           dotProduct (fun i ↦ J.conj (v i)) (J.form.mulVec v) = 0}
     let Omega := {x : P // x ∈ A}
     let Q := ProjectiveSpecialUnitaryMatrixGroup J
-    letI : Fintype E := Fintype.ofFinite E
-    letI : Finite (Matrix.ProjGenLinGroup (Fin 3) E) :=
+    let : Fintype E := Fintype.ofFinite E
+    let : Finite (Matrix.ProjGenLinGroup (Fin 3) E) :=
       Finite.of_surjective Matrix.ProjGenLinGroup.mk
         Matrix.ProjGenLinGroup.mk_surjective
-    letI : Finite Q :=
+    let : Finite Q :=
       Finite.of_injective
         (fun x : Q =>
           (x : Matrix.ProjGenLinGroup (Fin 3) E)) Subtype.coe_injective
@@ -1945,7 +1944,7 @@ public theorem simpleBender_borel_normalSylow_regular
     rcases hdata with
       ⟨rho, pinf, S, _hrho, _hScard, hnormalizer,
         hregular, _htwo⟩
-    letI : MulAction Q Omega := MulAction.compHom Omega rho
+    let : MulAction Q Omega := MulAction.compHom Omega rho
     have hnormalizer' :
         Subgroup.normalizer ((S : Subgroup Q) : Set Q) =
           MulAction.stabilizer Q pinf := by

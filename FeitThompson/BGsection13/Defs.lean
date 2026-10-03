@@ -1,7 +1,7 @@
 module
 
 public import FeitThompson.BGsection12.lemma_12_19
-import FeitThompson.HallSubgroups.Conjugacy
+public import Theory.GroupTheory.Hall.Conjugacy
 import Mathlib.Data.Finset.NatDivisors
 import Mathlib.GroupTheory.Schreier
 

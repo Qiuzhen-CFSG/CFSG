@@ -16,6 +16,8 @@ action
 
 This is the inner/projective-linear layer of the eventual projective
 semilinear automorphism group.
+The canonical equivalence with the PSL2 image includes its value equation,
+used to retain the exact inner action in the field-of-order-three model.
 -/
 
 noncomputable section
@@ -38,6 +40,12 @@ public def psl2EquivToPGLRange (K : Type u) [Field K] :
           (congrArg Subtype.val hab),
       (Matrix.ProjectiveSpecialLinearGroup.toPGL
         (n := Fin 2) (R := K)).rangeRestrict_surjective⟩
+
+public theorem psl2EquivToPGLRange_val
+    (K : Type u) [Field K] (x : PSL2 K) :
+    (psl2EquivToPGLRange K x).val =
+      Matrix.ProjectiveSpecialLinearGroup.toPGL x := by
+  rfl
 
 /-- An index-two subgroup is self-centralizing when both it and the ambient
 group are centerless. -/
@@ -136,7 +144,7 @@ public def pgl2InnerAutPSL2
   let toPGL : PSL2 K →* PGL2 K :=
     Matrix.ProjectiveSpecialLinearGroup.toPGL
   let H : Subgroup (PGL2 K) := toPGL.range
-  letI : H.Normal := by
+  let : H.Normal := by
     dsimp [H, toPGL]
     rw [← pgl2_commutator_eq_psl2_range_of_card_gt_three K hK hcard]
     infer_instance

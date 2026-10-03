@@ -4,6 +4,7 @@ public import GorensteinWalter.Section3.FirstCaseKleinUniformInvolution
 public import GorensteinWalter.Section2.Lemma27FittingDecomposition
 import Mathlib.Tactic
 
+
 /-!
 # The commutator-centralization consequence in the Klein-four branch
 -/
@@ -55,8 +56,8 @@ private theorem hallSubgroup_of_isHallIn_local
 
 private theorem commutator_centralizes_subgroup_of_centralizes_inverts
     {G : Type u} [Group G] [Finite G]
-    (M F : Subgroup G) (hFM : F ≤ M) (hFnorm : IsNormalIn F M)
-    (hFNil : Group.IsNilpotent (↥F)) (t : G) (htM : t ∈ M)
+    (M F : Subgroup G) (_hFM : F ≤ M) (_hFnorm : IsNormalIn F M)
+    (hFNil : Group.IsNilpotent (↥F)) (t : G) (_htM : t ∈ M)
     (ht : IsInvolution t) (π : Set ℕ)
     (hA_norm : IsNormalIn (piCoreOf F π) M)
     (hB_norm : IsNormalIn (piCoreOf F πᶜ) M)
@@ -220,7 +221,6 @@ public theorem firstCase_klein_commutator_centralizes_fitting
     exact h
   have hUcop : Nat.Coprime 2 (Nat.card c.U) := by
     rw [h26.1]
-    change Nat.Coprime 2 (Nat.card (oddCoreOf c.Hhat))
     rw [show Nat.card (oddCoreOf c.Hhat) = Nat.card (pPrimeCore 2 c.Hhat) by
       simpa [oddCoreOf] using
         (Subgroup.card_map_of_injective (K := pPrimeCore 2 c.Hhat)

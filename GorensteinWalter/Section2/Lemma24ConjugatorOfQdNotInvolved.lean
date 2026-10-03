@@ -4,6 +4,7 @@ public import GorensteinWalter.Section2.AmbientSylowZJNormalizer
 public import GorensteinWalter.Section2.Lemma24PCoreCenter
 public import Glauberman.TheoremB
 
+
 /-!
 # The Glauberman conjugator for Gorenstein--Walter Lemma 2.4
 

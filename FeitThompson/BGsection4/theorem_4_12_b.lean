@@ -2,6 +2,7 @@ module
 
 public import FeitThompson.BGsection4.theorem_4_12_a
 
+
 /-! # Theorem 4.12(b) from BG Section 4 -/
 
 section Main

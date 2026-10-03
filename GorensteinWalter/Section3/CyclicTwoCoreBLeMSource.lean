@@ -5,6 +5,7 @@ public import GorensteinWalter.Section3.CyclicTwoCoreASevenNormalizerLayerEquali
 public import GorensteinWalter.Section3.CyclicTwoCoreASevenNormalizerControl
 import Mathlib.Tactic
 
+
 /-!
 # Section 3: `B ≤ M` in the cyclic first-case A₇ layer model — corrected source assembly
 

@@ -11,10 +11,12 @@ public import GorensteinWalter.Section2.Lemma27Infra
 public import GorensteinWalter.QuasisimpleNotTwoGroupQuotient
 public import GorensteinWalter.PGL2Cardinality
 public import GorensteinWalter.PSL2Center
+public import GorensteinWalter.PSL2NotASeven
 public import GorensteinWalter.PGL2Center
 import Mathlib.GroupTheory.Coset.Card
 import Glauberman.DicksonClassification
 import Mathlib.Tactic
+
 
 /-!
 # Section 3: A₇-layer normalizer transfer
@@ -272,55 +274,6 @@ private theorem involution_of_kleinFour {G : Type u} [Group G]
 
 /-! ## Odd `PSL₂` has no `A₇` quotient -/
 
-/-- Odd `PSL₂(K)` is never isomorphic to `A₇`. -/
-public theorem psl2_ne_a7
-    {K : Type u} [Field K] [Finite K]
-    (hK : IsOddPrimePower (Nat.card K))
-    (e : Nonempty (PSL2 K ≃* alternatingGroup (Fin 7))) : False := by
-  classical
-  rcases e with ⟨e⟩
-  let q : ℕ := Nat.card K
-  have hqpos : 0 < q := Nat.card_pos
-  have hKodd : Odd q := by
-    dsimp [q]
-    rcases hK with ⟨p, n, _hp, hpodd, _hn, hcard⟩
-    rw [hcard]
-    exact hpodd.pow
-  have hdvd2 : 2 ∣ q * (q ^ 2 - 1) := by
-    have hEven : Even (q ^ 2 - 1) := Nat.Odd.sub_odd hKodd.pow odd_one
-    exact dvd_mul_of_dvd_right hEven.two_dvd _
-  have hcardPSL : Nat.card (PSL2 K) = q * (q ^ 2 - 1) / 2 :=
-    by simpa [q] using psl2_card_formula K hK
-  have hcardA : Nat.card (alternatingGroup (Fin 7)) = 2520 := by
-    rw [nat_card_alternatingGroup]
-    norm_num
-  have hEq : q * (q ^ 2 - 1) / 2 = 2520 := by
-    rw [← hcardPSL]
-    rw [Nat.card_congr e.toEquiv, hcardA]
-  have hEq' : q * (q ^ 2 - 1) = 2 * 2520 := by
-    rw [← Nat.div_eq_iff_eq_mul_right (by norm_num) hdvd2]
-    exact hEq
-  have hEq'' : q * (q ^ 2 - 1) = 5040 := by
-    norm_num at hEq'
-    exact hEq'
-  have hqle : q ≤ 17 := by
-    by_contra hnot
-    have hge : 18 ≤ q := by omega
-    have hqsq_pos : 0 < q ^ 2 := pow_pos hqpos 2
-    have h1 : 1 ≤ q ^ 2 := Nat.succ_le_of_lt hqsq_pos
-    have hz : (q : ℤ) * ((q : ℤ) ^ 2 - 1) = 5040 := by
-      have hsq : (q : ℤ) ^ 2 = (q ^ 2 : ℕ) := by norm_num
-      rw [hsq]
-      have hcast : ((q ^ 2 : ℕ) : ℤ) - 1 = ((q ^ 2 - 1 : ℕ) : ℤ) :=
-        (Int.ofNat_sub h1).symm
-      rw [hcast]
-      exact_mod_cast hEq''
-    have hprod : (18 : ℤ) * (18 ^ 2 - 1) ≤
-        (q : ℤ) * ((q : ℤ) ^ 2 - 1) := by
-      nlinarith [sq_nonneg (q : ℤ)]
-    norm_num at hprod
-    omega
-  interval_cases q <;> norm_num at hEq''
 
 /-- Odd `PGL₂(K)` is never isomorphic to `A₇`. -/
 public theorem pgl2_ne_a7
@@ -588,7 +541,7 @@ public theorem no_a7_quotient_subgroup_of_psl2_odd
     have hz_ne : z ≠ 0 := by
       intro hz
       have hcard0 : Nat.card H = 0 := by
-        simpa [hcardH, hz]
+        simp [hcardH, hz]
       exact Nat.card_pos.ne' hcard0
     let : NeZero z := ⟨hz_ne⟩
     have hDsolv : Group.IsSolvable (DihedralGroup z) := isSolvable_of_dihedralGroup z

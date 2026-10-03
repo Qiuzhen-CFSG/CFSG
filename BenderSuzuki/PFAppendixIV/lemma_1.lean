@@ -17,7 +17,8 @@ attribute [local instance] Fintype.ofFinite
 namespace BenderSuzuki
 namespace PFAppendixIV
 
-open Section1 Section5
+open Section1 hiding ClassFunction
+open Section5
 open BenderSuzuki.External.Isaacs.VII
 
 universe u
@@ -40,8 +41,8 @@ public theorem lemma_1_a
     (htarget :
       ∀ phi : ClassFunction H,
         integerSpanOn (S₀.cons psi hpsi_not_mem) puncturedSet phi →
-          Theory.Character.IsVirtualCharacter (tau phi) ∧
-            supportedOn (tau phi) puncturedSet)
+          IsVirtualCharacter (tau phi) ∧
+            Section1.supportedOn (tau phi) puncturedSet)
     (hcoherent : IsCoherentTriple puncturedSet S₀ tau)
     (hdiv :
       ∃ d : ℕ, degree psi = (d : ℂ) * degree chi₀)
@@ -50,7 +51,7 @@ public theorem lemma_1_a
         ∑ chi : S₀, (degree (chi : ClassFunction H)).re ^ 2) :
     IsCoherentTriple puncturedSet (S₀.cons psi hpsi_not_mem) tau := by
   classical
-  letI : Fintype H := Fintype.ofFinite H
+  let : Fintype H := Fintype.ofFinite H
   have hcons : S₀.cons psi hpsi_not_mem = insert psi S₀ :=
     Finset.cons_eq_insert psi S₀ hpsi_not_mem
   rw [hcons] at hisometry htarget ⊢
@@ -70,8 +71,8 @@ public theorem lemma_1_b
     (hisometry : isCFLinearIsometryOnSpanOn S puncturedSet tau)
     (htarget :
       ∀ phi : ClassFunction H, integerSpanOn S puncturedSet phi →
-        Theory.Character.IsVirtualCharacter (tau phi) ∧
-          supportedOn (tau phi) puncturedSet)
+        IsVirtualCharacter (tau phi) ∧
+          Section1.supportedOn (tau phi) puncturedSet)
     (hequal :
       ∀ chi psi : S,
         degree (chi : ClassFunction H) = degree (psi : ClassFunction H)) :
@@ -89,8 +90,8 @@ public theorem lemma_1
     (hisometry : isCFLinearIsometryOnSpanOn S puncturedSet tau)
     (htarget :
       ∀ phi : ClassFunction H, integerSpanOn S puncturedSet phi →
-        Theory.Character.IsVirtualCharacter (tau phi) ∧
-          supportedOn (tau phi) puncturedSet)
+        IsVirtualCharacter (tau phi) ∧
+          Section1.supportedOn (tau phi) puncturedSet)
     (hcase :
       (∃ (S₀ : Finset (ClassFunction H)) (psi chi₀ : ClassFunction H),
         ∃ hpsi : psi ∉ S₀,
@@ -123,6 +124,4 @@ public theorem lemma_1
 
 end PFAppendixIV
 end BenderSuzuki
-
-
 

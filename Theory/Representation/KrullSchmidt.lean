@@ -1,8 +1,10 @@
 module
 
 public import Mathlib.LinearAlgebra.FiniteDimensional.Basic
+
 import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 import Mathlib.LinearAlgebra.Projection
+
 public import Mathlib.RingTheory.Artinian.Module
 public import Mathlib.RingTheory.LocalRing.Basic
 public import Mathlib.RingTheory.Nilpotent.Basic
@@ -14,27 +16,28 @@ This file contains the finite-dimensional module decomposition and cancellation
 facts needed for scalar-extension descent of representations.
 -/
 
+@[expose] public section
+
 noncomputable section
 
 namespace Module
 
 /-- A nonzero module is indecomposable if every complementary pair of submodules
 has a zero member. -/
-public def IsIndecomposable
-    (R M : Type*) [Ring R] [AddCommGroup M] [Module R M] : Prop :=
-  Nontrivial M ∧
-    ∀ p q : Submodule R M, IsCompl p q → p = ⊥ ∨ q = ⊥
+def IsIndecomposable (R M : Type*) [Ring R] [AddCommGroup M] [Module R M] : Prop :=
+  Nontrivial M ∧ ∀ p q : Submodule R M, IsCompl p q → p = ⊥ ∨ q = ⊥
 
 /-- The endomorphism ring of a finite-dimensional indecomposable module is local. -/
-public theorem end_isLocalRing_of_isIndecomposable
+theorem end_isLocalRing_of_isIndecomposable
     {F R M : Type*} [Field F] [Ring R] [Algebra F R]
     [AddCommGroup M] [Module F M] [Module R M] [IsScalarTower F R M]
     [FiniteDimensional F M]
-    (hM : IsIndecomposable R M) : IsLocalRing (Module.End R M) := by
-  letI : Nontrivial M := hM.1
-  letI : IsNoetherian R M :=
+    (hM : IsIndecomposable R M)
+    : IsLocalRing (Module.End R M) := by
+  let : Nontrivial M := hM.1
+  let : IsNoetherian R M :=
     isNoetherian_of_tower F (inferInstance : IsNoetherian F M)
-  letI : IsArtinian R M :=
+  let : IsArtinian R M :=
     isArtinian_of_tower F (inferInstance : IsArtinian F M)
   apply IsLocalRing.of_isUnit_or_isUnit_one_sub_self
   intro f
@@ -61,10 +64,10 @@ public theorem end_isLocalRing_of_isIndecomposable
     rw [hrange, Submodule.mem_bot] at hx
     exact hx
 
-
 lemma isUnit_or_isUnit_of_isUnit_add
     {S : Type*} [Ring S] [IsLocalRing S] [IsDedekindFiniteMonoid S]
-    {a b : S} (h : IsUnit (a + b)) : IsUnit a ∨ IsUnit b := by
+    {a b : S} (h : IsUnit (a + b))
+    : IsUnit a ∨ IsUnit b := by
   rcases h with ⟨u, hu⟩
   rw [← Units.inv_mul_eq_one, mul_add] at hu
   apply Or.imp _ _ (IsLocalRing.isUnit_or_isUnit_of_add_one hu)
@@ -73,7 +76,8 @@ lemma isUnit_or_isUnit_of_isUnit_add
 
 lemma exists_isUnit_of_isUnit_sum
     {S ι : Type*} [Ring S] [IsLocalRing S] [IsDedekindFiniteMonoid S] [Fintype ι]
-    (f : ι → S) (h : IsUnit (∑ i, f i)) : ∃ i, IsUnit (f i) := by
+    (f : ι → S) (h : IsUnit (∑ i, f i))
+    : ∃ i, IsUnit (f i) := by
   classical
   have aux : ∀ s : Finset ι, IsUnit (∑ i ∈ s, f i) →
       ∃ i ∈ s, IsUnit (f i) := by
@@ -92,7 +96,8 @@ lemma exists_isUnit_of_isUnit_sum
 lemma end_isDedekindFiniteMonoid
     {F R U : Type*} [Field F] [Ring R] [Algebra F R]
     [AddCommGroup U] [Module F U] [Module R U] [IsScalarTower F R U]
-    [FiniteDimensional F U] : IsDedekindFiniteMonoid (Module.End R U) := by
+    [FiniteDimensional F U]
+    : IsDedekindFiniteMonoid (Module.End R U) := by
   constructor
   intro a b hab
   have hab_apply (x : U) : a (b x) = x := DFunLike.congr_fun hab x
@@ -117,7 +122,8 @@ lemma linearEquiv_right_of_prod_linearEquiv_of_eq_inl
     [AddCommGroup A] [Module R A]
     [AddCommGroup B] [Module R B]
     (e : (U × A) ≃ₗ[R] (U × B))
-    (h : ∀ u : U, e (u, 0) = (u, 0)) : Nonempty (A ≃ₗ[R] B) := by
+    (h : ∀ u : U, e (u, 0) = (u, 0))
+    : Nonempty (A ≃ₗ[R] B) := by
   let p : A →ₗ[R] B :=
     (LinearMap.snd R U B).comp
       (e.toLinearMap.comp (LinearMap.inr R U A))
@@ -147,9 +153,8 @@ lemma linearEquiv_cancel_of_isUnit_fst
     [AddCommGroup A] [Module R A]
     [AddCommGroup B] [Module R B]
     (e : (U × A) ≃ₗ[R] (U × B))
-    (ha : IsUnit ((LinearMap.fst R U B).comp
-      (e.toLinearMap.comp (LinearMap.inl R U A)))) :
-    Nonempty (A ≃ₗ[R] B) := by
+    (ha : IsUnit ((LinearMap.fst R U B).comp (e.toLinearMap.comp (LinearMap.inl R U A))))
+    : Nonempty (A ≃ₗ[R] B) := by
   let a : Module.End R U :=
     (LinearMap.fst R U B).comp
       (e.toLinearMap.comp (LinearMap.inl R U A))
@@ -197,12 +202,12 @@ lemma linearEquiv_cancel_of_isUnit_cross
     [AddCommGroup A] [Module R A]
     [AddCommGroup B] [Module R B]
     (e : (U × A) ≃ₗ[R] (U × B))
-    (hcross : IsUnit
-      (((LinearMap.fst R U A).comp
-        (e.symm.toLinearMap.comp (LinearMap.inr R U B))).comp
-       ((LinearMap.snd R U B).comp
-        (e.toLinearMap.comp (LinearMap.inl R U A))))) :
-    Nonempty (A ≃ₗ[R] B) := by
+    (hcross
+      : IsUnit
+          (((LinearMap.fst R U A).comp
+              (e.symm.toLinearMap.comp (LinearMap.inr R U B))).comp
+            ((LinearMap.snd R U B).comp (e.toLinearMap.comp (LinearMap.inl R U A)))))
+    : Nonempty (A ≃ₗ[R] B) := by
   let a : Module.End R U :=
     (LinearMap.fst R U B).comp
       (e.toLinearMap.comp (LinearMap.inl R U A))
@@ -297,9 +302,10 @@ lemma linearEquiv_cancel_of_end_isLocalRing
     [AddCommGroup A] [Module R A]
     [AddCommGroup B] [Module R B]
     (hlocal : IsLocalRing (Module.End R U))
-    (e : (U × A) ≃ₗ[R] (U × B)) : Nonempty (A ≃ₗ[R] B) := by
-  letI : IsLocalRing (Module.End R U) := hlocal
-  letI : IsDedekindFiniteMonoid (Module.End R U) :=
+    (e : (U × A) ≃ₗ[R] (U × B))
+    : Nonempty (A ≃ₗ[R] B) := by
+  let : IsLocalRing (Module.End R U) := hlocal
+  let : IsDedekindFiniteMonoid (Module.End R U) :=
     end_isDedekindFiniteMonoid (F := F) (R := R) (U := U)
   let a : Module.End R U :=
     (LinearMap.fst R U B).comp
@@ -318,8 +324,8 @@ lemma linearEquiv_cancel_of_end_isLocalRing
     intro u
     change (e.symm (a u, 0)).1 + (e.symm (0, c u)).1 = u
     calc
-      (e.symm (a u, 0)).1 + (e.symm (0, c u)).1 =
-          (e.symm (a u, 0) + e.symm (0, c u)).1 := rfl
+      (e.symm (a u, 0)).1 + (e.symm (0, c u)).1 = (e.symm (a u, 0) + e.symm (0, c u)).1 :=
+        rfl
       _ = (e.symm ((a u, 0) + (0, c u))).1 := by rw [e.symm.map_add]
       _ = (e.symm (a u, c u)).1 := by congr 3; simp
       _ = (e.symm (e (u, 0))).1 := by rfl
@@ -331,8 +337,8 @@ lemma linearEquiv_cancel_of_end_isLocalRing
 lemma exists_indecomposable_isCompl
     {F R M : Type*} [Field F] [Ring R] [Algebra F R]
     [AddCommGroup M] [Module F M] [Module R M] [IsScalarTower F R M]
-    [FiniteDimensional F M] [Nontrivial M] :
-    ∃ U C : Submodule R M, IsCompl U C ∧ IsIndecomposable R U := by
+    [FiniteDimensional F M] [Nontrivial M]
+    : ∃ U C : Submodule R M, IsCompl U C ∧ IsIndecomposable R U := by
   classical
   let P : ℕ → Prop := fun d =>
     ∃ U C : Submodule R M,
@@ -347,7 +353,7 @@ lemma exists_indecomposable_isCompl
     exact eTop.finrank_eq
   let d := Nat.find hP
   obtain ⟨U, C, hU0, hUC, hUd⟩ := Nat.find_spec hP
-  letI : FiniteDimensional F U :=
+  let : FiniteDimensional F U :=
     FiniteDimensional.of_injective (U.subtype.restrictScalars F) U.subtype_injective
   refine ⟨U, C, hUC, ?_⟩
   constructor
@@ -394,11 +400,11 @@ lemma exists_indecomposable_isCompl
     have hdle : d ≤ finrank F Pm := Nat.find_min' hP hPsmall
     have hpeq : finrank F p = finrank F Pm :=
       ((U.equivSubtypeMap p).restrictScalars F).finrank_eq
-    letI : FiniteDimensional F p :=
+    let : FiniteDimensional F p :=
       FiniteDimensional.of_injective (p.subtype.restrictScalars F) p.subtype_injective
-    letI : FiniteDimensional F q :=
+    let : FiniteDimensional F q :=
       FiniteDimensional.of_injective (q.subtype.restrictScalars F) q.subtype_injective
-    letI : Nontrivial q := Submodule.nontrivial_iff_ne_bot.mpr hn.2
+    let : Nontrivial q := Submodule.nontrivial_iff_ne_bot.mpr hn.2
     have hqpos : 0 < finrank F q := finrank_pos_iff.mpr inferInstance
     have hrank :=
       ((Submodule.prodEquivOfIsCompl p q hpq).restrictScalars F).finrank_eq
@@ -408,13 +414,14 @@ lemma exists_indecomposable_isCompl
     omega
 /-- `U` is a direct summand of `X`, encoded by split maps. -/
 def IsSplitSummand (R U X : Type*) [Ring R]
-    [AddCommGroup U] [Module R U] [AddCommGroup X] [Module R X] : Prop :=
+    [AddCommGroup U] [Module R U] [AddCommGroup X] [Module R X]
+    : Prop :=
   ∃ i : U →ₗ[R] X, ∃ p : X →ₗ[R] U, p.comp i = LinearMap.id
 
 lemma isSplitSummand_of_isCompl
     {R X : Type*} [Ring R] [AddCommGroup X] [Module R X]
-    {U C : Submodule R X} (h : IsCompl U C) :
-    IsSplitSummand R U X := by
+    {U C : Submodule R X} (h : IsCompl U C)
+    : IsSplitSummand R U X := by
   refine ⟨U.subtype, Submodule.projectionOnto U C h, ?_⟩
   ext u
   simp
@@ -422,8 +429,8 @@ lemma isSplitSummand_of_isCompl
 lemma IsSplitSummand.exists_linearEquiv_prod
     {R U X : Type*} [Ring R]
     [AddCommGroup U] [Module R U] [AddCommGroup X] [Module R X]
-    (h : IsSplitSummand R U X) :
-    ∃ C : Submodule R X, Nonempty ((U × C) ≃ₗ[R] X) := by
+    (h : IsSplitSummand R U X)
+    : ∃ C : Submodule R X, Nonempty ((U × C) ≃ₗ[R] X) := by
   obtain ⟨i, p, hpi⟩ := h
   have hpi_apply (u : U) : p (i u) = u :=
     DFunLike.congr_fun hpi u
@@ -468,12 +475,12 @@ lemma IsSplitSummand.of_fin_power_linearEquiv
     (hU : IsIndecomposable R U)
     (hUM : IsSplitSummand R U M)
     (hn : n ≠ 0)
-    (e : (Fin n → M) ≃ₗ[R] (Fin n → N)) :
-    IsSplitSummand R U N := by
+    (e : (Fin n → M) ≃ₗ[R] (Fin n → N))
+    : IsSplitSummand R U N := by
   classical
-  letI : IsLocalRing (Module.End R U) :=
+  let : IsLocalRing (Module.End R U) :=
     end_isLocalRing_of_isIndecomposable (F := F) (R := R) (M := U) hU
-  letI : IsDedekindFiniteMonoid (Module.End R U) :=
+  let : IsDedekindFiniteMonoid (Module.End R U) :=
     end_isDedekindFiniteMonoid (F := F) (R := R) (U := U)
   obtain ⟨i, p, hpi⟩ := hUM
   let i0 : Fin n := ⟨0, Nat.pos_of_ne_zero hn⟩
@@ -521,8 +528,8 @@ lemma linearEquiv_cancel_fin_copies_of_end_isLocalRing
     [AddCommGroup A] [Module R A]
     [AddCommGroup B] [Module R B]
     (hlocal : IsLocalRing (Module.End R U)) (n : ℕ)
-    (e : ((Fin n → U) × A) ≃ₗ[R] ((Fin n → U) × B)) :
-    Nonempty (A ≃ₗ[R] B) := by
+    (e : ((Fin n → U) × A) ≃ₗ[R] ((Fin n → U) × B))
+    : Nonempty (A ≃ₗ[R] B) := by
   induction n with
   | zero =>
       let dA : ((Fin 0 → U) × A) ≃ₗ[R] A := LinearEquiv.uniqueProd (R := R)
@@ -549,33 +556,36 @@ lemma linearEquiv_cancel_fin_copies_of_end_isLocalRing
 def piProdLinearEquiv
     {R I A B : Type*} [Ring R]
     [AddCommGroup A] [Module R A]
-    [AddCommGroup B] [Module R B] :
-    (I → A × B) ≃ₗ[R] (I → A) × (I → B) :=
-  { toFun := fun f => (fun i => (f i).1, fun i => (f i).2)
+    [AddCommGroup B] [Module R B]
+    : (I → A × B) ≃ₗ[R] (I → A) × (I → B) :=
+  {
+    toFun := fun f => (fun i => (f i).1, fun i => (f i).2)
     invFun := fun f i => (f.1 i, f.2 i)
     map_add' := by intro x y; rfl
     map_smul' := by intro r x; rfl
     left_inv := by intro x; rfl
-    right_inv := by intro x; rfl }
+    right_inv := by intro x; rfl
+  }
 
-public lemma linearEquiv_of_fin_copies_linearEquiv
+lemma linearEquiv_of_fin_copies_linearEquiv
     {F R M N : Type*} [Field F] [Ring R] [Algebra F R]
     [AddCommGroup M] [Module F M] [Module R M] [IsScalarTower F R M]
     [FiniteDimensional F M]
     [AddCommGroup N] [Module F N] [Module R N] [IsScalarTower F R N]
     [FiniteDimensional F N]
     (n : ℕ) (hn : n ≠ 0)
-    (e : (Fin n → M) ≃ₗ[R] (Fin n → N)) : Nonempty (M ≃ₗ[R] N) := by
+    (e : (Fin n → M) ≃ₗ[R] (Fin n → N))
+    : Nonempty (M ≃ₗ[R] N) := by
   induction hdim : finrank F M using Nat.strong_induction_on generalizing M N with
   | h d ih =>
       by_cases hM : Nontrivial M
-      · letI : Nontrivial M := hM
+      · let : Nontrivial M := hM
         obtain ⟨U, C, hUC, hU⟩ :=
           exists_indecomposable_isCompl (F := F) (R := R) (M := M)
-        letI : FiniteDimensional F U :=
+        let : FiniteDimensional F U :=
           FiniteDimensional.of_injective
             (U.subtype.restrictScalars F) U.subtype_injective
-        letI : FiniteDimensional F C :=
+        let : FiniteDimensional F C :=
           FiniteDimensional.of_injective
             (C.subtype.restrictScalars F) C.subtype_injective
         let eM : (U × C) ≃ₗ[R] M :=
@@ -584,7 +594,7 @@ public lemma linearEquiv_of_fin_copies_linearEquiv
           IsSplitSummand.of_fin_power_linearEquiv
             (F := F) hU (isSplitSummand_of_isCompl hUC) hn e
         obtain ⟨D, ⟨eN⟩⟩ := hUN.exists_linearEquiv_prod
-        letI : FiniteDimensional F D :=
+        let : FiniteDimensional F D :=
           FiniteDimensional.of_injective
             (D.subtype.restrictScalars F) D.subtype_injective
         let pM : (Fin n → U × C) ≃ₗ[R] (Fin n → M) :=
@@ -614,9 +624,9 @@ public lemma linearEquiv_of_fin_copies_linearEquiv
           (M := C) (N := D) eCD rfl
         exact ⟨eM.symm.trans
           (((LinearEquiv.refl R U).prodCongr eCND).trans eN)⟩
-      · letI : Subsingleton M := not_nontrivial_iff_subsingleton.mp hM
+      · let : Subsingleton M := not_nontrivial_iff_subsingleton.mp hM
         let i0 : Fin n := ⟨0, Nat.pos_of_ne_zero hn⟩
-        letI : Subsingleton N := ⟨fun x y => by
+        let : Subsingleton N := ⟨fun x y => by
           let sx := LinearMap.single R (fun _ : Fin n => N) i0 x
           let sy := LinearMap.single R (fun _ : Fin n => N) i0 y
           have hpre : e.symm sx = e.symm sy := Subsingleton.elim _ _

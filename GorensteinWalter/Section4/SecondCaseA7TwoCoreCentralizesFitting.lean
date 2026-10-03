@@ -2,9 +2,10 @@ module
 
 public import GorensteinWalter.Section4.SecondCaseA7EquationSix
 public import FeitThompson.GroupAction.CentralizerCondition
-public import FeitThompson.SubgroupConj
+public import Theory.GroupTheory.SubgroupConjugation
 public import FeitThompson.ChiefFactors.Proposition12
 import Mathlib.Tactic
+
 
 /-!
 # The equation-(7) two-core centralizes the Fitting subgroup

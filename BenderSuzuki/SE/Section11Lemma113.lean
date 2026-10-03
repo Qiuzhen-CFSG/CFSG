@@ -4,6 +4,7 @@ public import BenderSuzuki.SE.Section10Proposition102Final
 public import BenderSuzuki.SE.Section11Lemma113Arithmetic
 public import BenderSuzuki.SE.Section11Lemma113Burnside
 public import BenderSuzuki.SE.Section11Lemma113Disjoint
+import Theory.GroupAction.Lemmas
 
 /-!
 # Section 11, Lemma 11.3
@@ -62,7 +63,7 @@ public theorem lemma_11_3
   have hHW : H ≤ W := by
     exact (Subgroup.map_subtype_le (derivedSubgroup E)).trans inf_le_left
   have hHsylM : theorem4bIsSylowSubgroupOf e.r H M := by
-    letI : Fact e.r.Prime := ⟨e.r_prime⟩
+    let : Fact e.r.Prime := ⟨e.r_prime⟩
     rcases hHsylX with ⟨S, hS⟩
     have hSM : (S : Subgroup X) ≤ M := by simpa [hS] using hHM
     let T : Sylow e.r M := S.subtype hSM

@@ -7,6 +7,7 @@ public import GorensteinWalter.Defs
 public import GorensteinWalter.Section2.Theorem26
 public import GorensteinWalter.Section3.FirstCaseCyclicTwoCore
 
+
 noncomputable section
 
 namespace GorensteinWalter

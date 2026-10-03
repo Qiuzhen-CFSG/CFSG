@@ -4,6 +4,7 @@ public import FeitThompson.BGsection3.Defs
 public import FeitThompson.BGsection4.lemma_4_5_c
 public import FeitThompson.BGsection4.lemma_4_5_a
 
+
 section Main
 
 public theorem proposition_4_6 {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Prime]
@@ -11,7 +12,7 @@ public theorem proposition_4_6 {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact 
     (hSncyc : ¬ IsCyclic S) :
     ∃ A : Subgroup R, A.Normal ∧ A ≤ S ∧ Nat.card A = p ^ 2 ∧ IsElementaryAbelian p A := by
   classical
-  letI : Fact (IsPGroup p S) := ⟨(Fact.out : IsPGroup p R).to_subgroup S⟩
+  let : Fact (IsPGroup p S) := ⟨(Fact.out : IsPGroup p R).to_subgroup S⟩
   let Z2S : Subgroup S := Subgroup.upperCentralSeries S 2
   let Ω : Subgroup Z2S := omega₁ (G := ↥Z2S) (p := p)
   have hΩ_noncyc : ¬ IsCyclic Ω := (lemma_4_5_c (R := ↥S) (p := p) hpodd hSncyc).1
@@ -32,10 +33,10 @@ public theorem proposition_4_6 {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact 
     simpa [K] using z2OmegaCandidate_characteristic (G := ↥S) p
   let Kbar : Subgroup R := K.map S.subtype
   have hKbar_normal : Kbar.Normal := by
-    letI : K.Characteristic := hK_char
+    let : K.Characteristic := hK_char
     dsimp [Kbar]
     exact ConjAct.normal_of_characteristic_of_normal
-  letI : Kbar.Normal := hKbar_normal
+  let : Kbar.Normal := hKbar_normal
   have hK_card : Nat.card K = p ^ n := by
     calc
       Nat.card K = Nat.card Ω := by

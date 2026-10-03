@@ -8,6 +8,7 @@ import GorensteinWalter.KleinFourMapInjective
 import GorensteinWalter.CardSupOfDisjointNormalizer
 import Mathlib.Tactic
 
+
 /-! # Fixed points on the A7 order-thirty-six subgroup -/
 
 noncomputable section

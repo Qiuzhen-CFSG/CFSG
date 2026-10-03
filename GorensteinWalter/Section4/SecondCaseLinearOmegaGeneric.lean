@@ -8,6 +8,7 @@ import GorensteinWalter.Section2.Bender1970_18
 import FeitThompson.Fitting.Core
 import Mathlib.Tactic
 
+
 /-! # Draft: generic odd-prime omega data (to be replaced by the shared
 `SecondCaseLinearOmegaData` from `SecondCaseLinearEquationEightDefs`) -/
 

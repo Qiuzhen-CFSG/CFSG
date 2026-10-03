@@ -11,6 +11,7 @@ public import GorensteinWalter.DihedralCore
 public import GorensteinWalter.DihedralUniqueCentralInvolution
 public import GorensteinWalter.DihedralNormalSubgroup
 
+
 /-!
 # Index-two and O²(M)-branch infrastructure for Lemma 2.7
 
@@ -173,7 +174,6 @@ public theorem exists_normal_index_two_of_card_eq_two_mul_odd
   have hfix_empty : ∀ x : G, x ∉ Function.fixedPoints σ := by
     intro x hx
     have hx' : g * x = x := by
-      change g * x = x
       exact hx
     have hg1 : g = 1 :=
       mul_right_cancel (a := g) (b := x) (c := 1) (hx'.trans (one_mul x).symm)
@@ -269,7 +269,7 @@ public theorem t_mem_N_of_mem_twoResidualOf_of_index_two_part
     {G : Type u} [Group G] [Finite G]
     (M : Subgroup G) {t : G} (htM : t ∈ M) (ht : IsInvolution t)
     (hO2 : t ∈ twoResidualOf M)
-    {N : Subgroup (↥M)} (hN : N.Normal) (h4 : 4 ∣ Nat.card N)
+    {N : Subgroup (↥M)} (hN : N.Normal)
     (hNindex : ¬ 4 ∣ N.index) :
     t ∈ N.map M.subtype := by
   classical

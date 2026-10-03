@@ -6,26 +6,30 @@ public import Theory.Representation.ExtendScalars
 public import Theory.Representation.JacobsonDensity
 public import Theory.Representation.SubrepresentationLattice
 
+@[expose] public section
+
 open scoped TensorProduct
 open scoped MonoidAlgebra
 
-namespace Theory.Representation
+namespace Representation
 
 open _root_.Representation
 
 section AbsolutelyIrreducibleRep
 
-variable {F G V W : Type*} [Monoid G] [Field F] [AddCommGroup V] [Module F V] [AddCommGroup W] [Module F W] (ρ : Representation F G V) (σ : Representation F G W)
-
 /-- A representation is absolutely irreducible if it remains irreducible after extending scalars
 to an algebraic closure of the base field. -/
 @[mk_iff]
-public class IsAbsolutelyIrreducible: Prop where
+class IsAbsolutelyIrreducible
+    {F G V : Type*} [Monoid G] [Field F] [AddCommGroup V] [Module F V]
+    (ρ : Representation F G V) : Prop where
   irreducible_of_closure : IsIrreducible (extendScalars (AlgebraicClosure F) ρ)
 
 set_option backward.isDefEq.respectTransparency false in
-public theorem isAbsolutelyIrreducible_iff_surjective [FiniteDimensional F V] [IsIrreducible ρ] :
-    IsAbsolutelyIrreducible ρ ↔ Function.Surjective (algebraMap F (End ρ)) := by
+theorem isAbsolutelyIrreducible_iff_surjective
+    {F G V : Type*} [Monoid G] [Field F] [AddCommGroup V] [Module F V]
+    (ρ : Representation F G V) [FiniteDimensional F V] [IsIrreducible ρ]
+    : IsAbsolutelyIrreducible ρ ↔ Function.Surjective (algebraMap F (End ρ)) := by
   refine ⟨fun h ↦ ?_, fun h ↦ ⟨?_⟩⟩
   · let : (extendScalars (AlgebraicClosure F) ρ).IsIrreducible :=
       (isAbsolutelyIrreducible_iff ρ).mp h
@@ -39,11 +43,20 @@ public theorem isAbsolutelyIrreducible_iff_surjective [FiniteDimensional F V] [I
     rw [← extendScalars_surj_iff]
     exact jacobson_density_surjective_rep ρ h
 
-public theorem IsAbsolutelyIrreducible.irreducible_of_isAbsolutelyIrreducible [inst : IsAbsolutelyIrreducible ρ] : IsIrreducible ρ :=
-  irreducible_of_extendScalars (AlgebraicClosure F) ρ (inst := inst.irreducible_of_closure)
+theorem IsAbsolutelyIrreducible.irreducible_of_isAbsolutelyIrreducible
+    {F G V : Type*} [Monoid G] [Field F] [AddCommGroup V] [Module F V]
+    (ρ : Representation F G V)
+    [inst : IsAbsolutelyIrreducible ρ]
+    : IsIrreducible ρ :=
+  irreducible_of_extendScalars (AlgebraicClosure F) ρ
+    (inst := inst.irreducible_of_closure)
 
 set_option backward.isDefEq.respectTransparency false in
-public theorem IsAbsolutelyIrreducible.irreducible_of_extension [FiniteDimensional F V]  (F' : Type*) [Field F'] [Algebra F F'] [inst : IsAbsolutelyIrreducible ρ] : IsIrreducible (extendScalars F' ρ) := by
+theorem IsAbsolutelyIrreducible.irreducible_of_extension
+    {F G V : Type*} [Monoid G] [Field F] [AddCommGroup V] [Module F V]
+    (ρ : Representation F G V) [FiniteDimensional F V]
+    (F' : Type*) [Field F'] [Algebra F F'] [inst : IsAbsolutelyIrreducible ρ]
+    : IsIrreducible (extendScalars F' ρ) := by
   let : (extendScalars (AlgebraicClosure F) ρ).IsIrreducible := inst.irreducible_of_closure
   let : IsIrreducible ρ := irreducible_of_isAbsolutelyIrreducible ρ
   let : Nontrivial V := Subrepresentation.irreducible_module_nontrivial ρ
@@ -52,11 +65,14 @@ public theorem IsAbsolutelyIrreducible.irreducible_of_extension [FiniteDimension
   exact jacobson_density_surjective_isAlgClosed_rep (extendScalars (AlgebraicClosure F) ρ)
 
 set_option backward.isDefEq.respectTransparency false in
-public theorem IsAbsolutelyIrreducible.isAbsolutelyIrreducible_iff_extendScalars [FiniteDimensional F V]  (F' : Type*) [Field F'] [Algebra F F'] :
-    IsAbsolutelyIrreducible (extendScalars F' ρ) ↔ IsAbsolutelyIrreducible ρ := by
+theorem IsAbsolutelyIrreducible.isAbsolutelyIrreducible_iff_extendScalars
+    {F G V : Type*} [Monoid G] [Field F] [AddCommGroup V] [Module F V]
+    (ρ : Representation F G V) [FiniteDimensional F V]
+    (F' : Type*) [Field F'] [Algebra F F']
+    : IsAbsolutelyIrreducible (extendScalars F' ρ) ↔ IsAbsolutelyIrreducible ρ := by
   refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
   · rw [isAbsolutelyIrreducible_iff] at ⊢ h
-    rw [RepEquiv.irreducible_euqiv (extendScalars_comp _)] at h
+    rw [RepEquiv.irreducible_euqiv (extendScalars_comp _ ρ)] at h
     let : Nontrivial V := by
       have : Nontrivial (AlgebraicClosure F' ⊗[F] V) := Subrepresentation.irreducible_module_nontrivial (extendScalars (AlgebraicClosure F') ρ)
       contrapose! this
@@ -67,7 +83,7 @@ public theorem IsAbsolutelyIrreducible.isAbsolutelyIrreducible_iff_extendScalars
     rw [← extendScalars_surj_iff (F := F) (F' := (AlgebraicClosure F'))] at this
     exact this
   · rw [isAbsolutelyIrreducible_iff] at ⊢ h
-    rw [RepEquiv.irreducible_euqiv (extendScalars_comp _)]
+    rw [RepEquiv.irreducible_euqiv (extendScalars_comp _ ρ)]
     let : Nontrivial V := by
       have : Nontrivial (AlgebraicClosure F ⊗[F] V) := Subrepresentation.irreducible_module_nontrivial (extendScalars (AlgebraicClosure F) ρ)
       contrapose! this
@@ -78,9 +94,7 @@ public theorem IsAbsolutelyIrreducible.isAbsolutelyIrreducible_iff_extendScalars
     rw [← extendScalars_surj_iff (F := F) (F' := (AlgebraicClosure F))] at this
     exact this
 
-variable {ρ} {σ}
-
 
 end AbsolutelyIrreducibleRep
 
-end Theory.Representation
+end Representation

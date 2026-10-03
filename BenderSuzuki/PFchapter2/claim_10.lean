@@ -20,6 +20,7 @@ import Mathlib.NumberTheory.Multiplicity
 import Mathlib.Data.Nat.MaxPowDiv
 import Mathlib.Algebra.Field.MinimalAxioms
 
+
 namespace BenderSuzuki
 namespace PFchapter2
 

@@ -25,6 +25,7 @@ import GorensteinWalter.PGL2DerivedSubgroup
 import GorensteinWalter.PGL2InnerAction
 import GorensteinWalter.PGL2LowTorusFixedSylow
 public import GorensteinWalter.PGL2LowReflectedToriCard
+public import GorensteinWalter.PerfectSubnormalImageOddIndex
 import GorensteinWalter.PSL2LowOddCyclicCentralizer
 import GorensteinWalter.DihedralUniqueCentralInvolution
 import GorensteinWalter.PSL2Center
@@ -32,6 +33,9 @@ import GorensteinWalter.LinearThreeEquiv
 import GorensteinWalter.LinearRingEquiv
 import FeitThompson.FinalTheorem
 import Mathlib.LinearAlgebra.Projectivization.PSL.PSL2
+open Representation
+
+
 
 /-!
 # Theorem 2.6 (Bender, "Finite Groups with Dihedral Sylow 2-Subgroups")
@@ -454,7 +458,7 @@ private theorem quotient_centralizer_equiv_perm_three_of_kleinFour_fusion
       ext x
       simp [T]
     rw [hset, Set.ncard_sdiff_singleton_of_mem (Set.mem_univ (1 : N))]
-    simpa [hN.card_four]
+    simp
   let St : Subgroup M := MulAction.stabilizer M t
   let Ct : Subgroup M := Subgroup.centralizer ({(t : M)} : Set M)
   have hStCt : St = Ct := by
@@ -753,7 +757,7 @@ private lemma odd_order_subgroup_le_U
       intro y
       rcases QuotientGroup.mk'_surjective U' y with ⟨h, rfl⟩
       have hhSU : h ∈ S' ⊔ U' := by
-        simpa [htop'] using (Subgroup.mem_top h)
+        simp [htop']
       have hhprod : (h : ↥c.H) ∈ (S' : Set (↥c.H)) * (U' : Set (↥c.H)) := by
         rw [← Subgroup.mul_normal (H := S') (N := U')]
         exact hhSU
@@ -2696,63 +2700,6 @@ public theorem perfect_map_subgroup
   let : Group.IsPerfect E := hEperf
   exact Group.IsPerfect.ofSurjective hef
 
-/-- The image of a nontrivial perfect subnormal subgroup across a solvable
-normal kernel remains nontrivial, perfect, and subnormal.  If the quotient
-has a normal odd-index subgroup `L`, that image lies in `L`: its further
-image in the odd-order quotient by `L` is both perfect and solvable. -/
-public theorem perfect_subnormal_image_le_normal_odd_index
-    {H : Type u} [Group H] [Finite H]
-    (E : Subgroup H) (hEperf : Group.IsPerfect E) (hEne : E ≠ ⊥)
-    (hEsn : E.IsSubnormal)
-    (O : Subgroup H) [O.Normal] (hOsolv : Group.IsSolvable O)
-    (L : Subgroup (H ⧸ O)) (hLnormal : L.Normal)
-    (hLindex : Odd L.index) :
-    let q : H →* H ⧸ O := QuotientGroup.mk' O
-    let Ebar : Subgroup (H ⧸ O) := E.map q
-    Ebar ≠ ⊥ ∧ Group.IsPerfect Ebar ∧ Ebar.IsSubnormal ∧ Ebar ≤ L := by
-  dsimp
-  let q : H →* H ⧸ O := QuotientGroup.mk' O
-  let Ebar : Subgroup (H ⧸ O) := E.map q
-  have hEbarperf : Group.IsPerfect Ebar := by
-    dsimp [Ebar]
-    exact perfect_map_subgroup E q hEperf
-  have hEbarne : Ebar ≠ ⊥ := by
-    intro hbot
-    have hEleO : E ≤ O := by
-      have hker : E ≤ q.ker := (Subgroup.map_eq_bot_iff E).mp hbot
-      simpa [q, QuotientGroup.ker_mk'] using hker
-    let : Group.IsSolvable O := hOsolv
-    have : Group.IsSolvable (E.subgroupOf O) := inferInstance
-    have hEsolv : Group.IsSolvable E :=
-      isSolvable_of_mulEquiv (Subgroup.subgroupOfEquivOfLe hEleO)
-    let : Nontrivial E := (Subgroup.nontrivial_iff_ne_bot E).2 hEne
-    let : Group.IsPerfect E := hEperf
-    exact Group.IsPerfect.not_isSolvable E hEsolv
-  have hEbarsn : Ebar.IsSubnormal := by
-    dsimp [Ebar]
-    exact hEsn.map (QuotientGroup.mk'_surjective O)
-  let : L.Normal := hLnormal
-  let pi : (H ⧸ O) →* (H ⧸ O) ⧸ L := QuotientGroup.mk' L
-  let I : Subgroup ((H ⧸ O) ⧸ L) := Ebar.map pi
-  have hIperf : Group.IsPerfect I := by
-    dsimp [I]
-    exact perfect_map_subgroup Ebar pi hEbarperf
-  have hQodd : Odd (Nat.card ((H ⧸ O) ⧸ L)) := by
-    simpa only [Subgroup.index_eq_card] using hLindex
-  have hQsolv : Group.IsSolvable ((H ⧸ O) ⧸ L) :=
-    odd_order_theorem ((H ⧸ O) ⧸ L) hQodd
-  have hIbot : I = ⊥ := by
-    by_contra hIne
-    let : Group.IsSolvable ((H ⧸ O) ⧸ L) := hQsolv
-    have hIsolv : Group.IsSolvable I := inferInstance
-    let : Nontrivial I := (Subgroup.nontrivial_iff_ne_bot I).2 hIne
-    let : Group.IsPerfect I := hIperf
-    exact Group.IsPerfect.not_isSolvable I hIsolv
-  have hEbarL : Ebar ≤ L := by
-    have hker : Ebar ≤ pi.ker := (Subgroup.map_eq_bot_iff Ebar).mp hIbot
-    simpa [pi, QuotientGroup.ker_mk'] using hker
-  exact ⟨hEbarne, hEbarperf, hEbarsn, hEbarL⟩
-
 /-- Package the complete quotient-image identification for a component in a
 normal odd-index `PGL₂(K)` subgroup. -/
 public theorem perfect_subnormal_component_image_in_pgl2
@@ -3274,7 +3221,6 @@ public theorem pgl2_model_sylow_transport_distinguished_involution
   have hqPqsurj : Function.Surjective qPq := by
     intro y
     have hy : y.1 ∈ (P : Subgroup c.Hhat).map q := by
-      change y.1 ∈ (P : Subgroup c.Hhat).map q
       exact y.2
     rcases Subgroup.mem_map.mp hy with ⟨x, hxP, hxy⟩
     let xP : P := ⟨x, hxP⟩
@@ -3319,8 +3265,7 @@ public theorem pgl2_model_sylow_transport_distinguished_involution
   have htModelsq : tModel ^ 2 = 1 := by
     calc
       tModel ^ 2 = eTransport (tP ^ 2) := by
-        simpa [tModel] using
-          (eTransport.toMonoidHom.map_pow tP 2).symm
+        simp [tModel]
       _ = eTransport 1 := by
         congr 1
         apply Subtype.ext
@@ -3931,7 +3876,7 @@ public theorem exists_invariant_sylow_two_of_involutive_normalizer_t26
         rw [Subgroup.map_map]
         have hφφ : φ.symm.toMonoidHom.comp φ.toMonoidHom = MonoidHom.id B := by
           ext x
-          simpa using congrArg Subtype.val (φ.left_inv x)
+          simp
         rw [hφφ, Subgroup.map_id]
       right_inv := by
         intro T
@@ -3940,7 +3885,7 @@ public theorem exists_invariant_sylow_two_of_involutive_normalizer_t26
         rw [Subgroup.map_map]
         have hφφ : φ.toMonoidHom.comp φ.symm.toMonoidHom = MonoidHom.id B := by
           ext x
-          simpa using congrArg Subtype.val (φ.right_inv x)
+          simp
         rw [hφφ, Subgroup.map_id] }
   have hσsq : σ ^ 2 = 1 := by
     apply DFunLike.ext
@@ -4069,13 +4014,12 @@ public theorem component_branch_final_contradiction_t26
       simpa using (by rw [hh] at hQ; exact hQ)
     have hxS : ((h * ⟨x, hT0leH hx⟩ * h⁻¹ : c.Hhat) : G) ∈
         (c.S : Subgroup G) := by
-      change ((h * ⟨x, hT0leH hx⟩ * h⁻¹ : c.Hhat) : G) ∈ (c.S : Subgroup G)
       exact hxP
     change x ∈ (conjugateSubgroup (c.S : Subgroup G) g)
     rw [conjugateSubgroup, Subgroup.mem_map]
     refine ⟨((h * ⟨x, hT0leH hx⟩ * h⁻¹ : c.Hhat) : G), hxS, ?_⟩
     have hgval : (g : G) = (h : G)⁻¹ := by
-      simp [g, Subgroup.coe_inv]
+      simp [g]
     rw [hgval]
     change (h : G)⁻¹ * ((h : G) * x * (h : G)⁻¹) * ((h : G)⁻¹)⁻¹ = x
     simp
@@ -4100,7 +4044,7 @@ public theorem component_branch_final_contradiction_t26
         simp
       calc
         c.t = (g : G)⁻¹ * (g * c.t * (g : G)⁻¹) * (g : G) := by
-          simp [Subgroup.coe_inv, Subgroup.coe_mul, mul_assoc]
+          simp [mul_assoc]
         _ = 1 := hval
     · calc
         z ^ 2 = g * (c.t ^ 2) * g⁻¹ := by

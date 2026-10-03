@@ -8,6 +8,7 @@ import GorensteinWalter.InvertedElementsLeInfConjugate
 import GorensteinWalter.CosetInvolutionCount
 import Mathlib.Tactic
 
+
 /-! # Outside involution cosets with odd intersection in the A7 case -/
 
 noncomputable section

@@ -28,7 +28,7 @@ universe u
 /-- In a finite cyclic subgroup of order `2 * m` with `m` odd, the
 nonidentity involution is unique. -/
 private lemma involution_unique_of_cyclic_odd_half {G : Type u} [Group G] [Finite G]
-    (U : Subgroup G) (hUcyc : IsCyclic U) {m : ℕ} (hmOdd : Odd m)
+    (U : Subgroup G) (hUcyc : IsCyclic U) {m : ℕ}
     (hUcard : Nat.card U = 2 * m) {a b : G}
     (haU : a ∈ U) (ha2 : a * a = 1) (ha1 : a ≠ 1)
     (hbU : b ∈ U) (hb2 : b * b = 1) (hb1 : b ≠ 1) : a = b := by
@@ -132,7 +132,7 @@ public theorem pgl2_low_two_part_torus_reflection_data
         H U hHindex hUcyc ((Nat.card K + 1) / 2) hhalfOdd'
           hUtwo hUnot w hwU hwsq hwinv
     have hs_eq : s = s0 :=
-      involution_unique_of_cyclic_odd_half U hUcyc hhalfOdd' hUtwo
+      involution_unique_of_cyclic_odd_half U hUcyc hUtwo
         hsU hssq hsne hs0U hssq0 hs0ne
     have hcent' : Subgroup.centralizer ({s} : Set (PGL2 K)) =
         U ⊔ Subgroup.zpowers w := by
@@ -155,7 +155,7 @@ public theorem pgl2_low_two_part_torus_reflection_data
         H U hHindex hUcyc ((Nat.card K - 1) / 2) hhalfOdd
           hUtwo hUnot w hwU hwsq hwinv
     have hs_eq : s = s0 :=
-      involution_unique_of_cyclic_odd_half U hUcyc hhalfOdd hUtwo
+      involution_unique_of_cyclic_odd_half U hUcyc hUtwo
         hsU hssq hsne hs0U hssq0 hs0ne
     have hcent' : Subgroup.centralizer ({s} : Set (PGL2 K)) =
         U ⊔ Subgroup.zpowers w := by

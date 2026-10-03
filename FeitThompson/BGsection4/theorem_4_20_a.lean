@@ -5,6 +5,7 @@ public import FeitThompson.GeneratorRank
 public import FeitThompson.BGsection4.gorenstein_5_4_15
 public import FeitThompson.BGsection4.corollary_4_19
 
+
 /-! # Theorem 4.20(a) from BG Section 4 -/
 
 universe u

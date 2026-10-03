@@ -63,7 +63,7 @@ private theorem exists_noncentralizing_involution_normalizing_order_three
   let : Fact (Nat.Prime 3) := ⟨by norm_num⟩
   have hXNp : IsPGroup 3 XN := by
     apply IsPGroup.of_card (n := 1)
-    simpa [hXNcard]
+    simp [hXNcard]
   have hthreeNotIndex : ¬ 3 ∣ XN.index := by
     rw [hXNindex]
     norm_num
@@ -211,7 +211,7 @@ private theorem exists_order_three_generator_inverted_by_involution
   have hzpowersLe : Subgroup.zpowers x ≤ X :=
     Subgroup.zpowers_le.mpr hxX
   have hzpowersCard : Nat.card (Subgroup.zpowers x) = 3 := by
-    simpa [Nat.card_zpowers, hxOrder]
+    simp [Nat.card_zpowers, hxOrder]
   have hzpowers : Subgroup.zpowers x = X :=
     Subgroup.eq_of_le_of_card_ge hzpowersLe (by
       rw [hXcard, hzpowersCard])
@@ -469,7 +469,7 @@ private theorem exists_order_nine_selected_centralizer_case_one_data
   have hzpowersF : Subgroup.zpowers x ≤ F :=
     Subgroup.zpowers_le.mpr hxF
   have hzpowersCard : Nat.card (Subgroup.zpowers x) = 3 := by
-    simpa [Nat.card_zpowers, hxOrder]
+    simp [Nat.card_zpowers, hxOrder]
   have hthreeDvdF : 3 ∣ Nat.card F := by
     rw [← hzpowersCard]
     exact Subgroup.card_dvd_of_le hzpowersF

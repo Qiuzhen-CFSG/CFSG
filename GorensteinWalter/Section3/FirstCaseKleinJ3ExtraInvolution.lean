@@ -9,6 +9,7 @@ public import GorensteinWalter.Section3.FirstCaseOrderInfra
 public import GorensteinWalter.Section3.CyclicTwoCorePInfPg
 import Mathlib.Tactic
 
+
 noncomputable section
 
 open scoped Pointwise

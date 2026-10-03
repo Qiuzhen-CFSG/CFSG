@@ -2,9 +2,10 @@ module
 
 public import FeitThompson.BGsection15.theorem_15_2
 import FeitThompson.PCore.CentralizerControl
-import FeitThompson.HallSubgroups.Conjugacy
+public import Theory.GroupTheory.Hall.Conjugacy
 import Mathlib.Algebra.Group.Subgroup.Order
 import Mathlib.GroupTheory.Schreier
+
 
 open scoped Pointwise
 
@@ -312,7 +313,7 @@ private theorem section15_exists_sylow_overgroup_for_hall_subgroup
     (hTHall : section15HallSubgroupOf T H) :
     ∃ P : Sylow q.val S, section10AmbientSylowSubgroup S P = T := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   rcases hHallHS with ⟨hHS, hHHallS⟩
   rcases hTHall with ⟨_hTH, hTHallH⟩
   let TsubS : Subgroup S := T.subgroupOf S
@@ -408,9 +409,9 @@ private theorem section15_corollary15_3_centralizer_kappa_compl
     ⟨hXleC, hXcard⟩
   have hXleM : X ≤ M := fun y hy => (hXleC hy).1
   have hMP : M ∈ section14MFamilyP G := ⟨hM, ⟨p, hpκ⟩⟩
-  have hsolvM : IsSolvable M :=
+  have hsolvM : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.mpr hM.1)
-  letI : MulDistribMulAction Unit M := {
+  let : MulDistribMulAction Unit M := {
     smul := fun _ y => y
     one_smul := fun _ => rfl
     mul_smul := fun _ _ _ => rfl
@@ -473,7 +474,7 @@ private theorem section15_corollary15_3_centralizer_kappa_compl
   let q : Nat.Primes := ⟨q0, hq0prime⟩
   have hqH : q.val ∣ Nat.card H := by
     simpa [q] using hq0dvdH
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   let P : Sylow q.val H := Classical.choice (Sylow.nonempty (p := q.val) (G := H))
   let T : Subgroup G := section10AmbientSylowSubgroup H P
   have hTleH : T ≤ H := by
@@ -558,9 +559,9 @@ private theorem section15_corollary15_3_centralizer_factor
     have hC_le_M : C ≤ M := fun _ hx => hx.1
     exact hM.1 (top_le_iff.mp (by
       simpa [hCtop] using hC_le_M))
-  have hCsolv : IsSolvable C :=
+  have hCsolv : Group.IsSolvable C :=
     IsMinCE.proper_subgroups_solvable C (lt_top_iff_ne_top.mpr hCne_top)
-  letI : MulDistribMulAction Unit C := {
+  let : MulDistribMulAction Unit C := {
     smul := fun _ x => x
     one_smul := fun _ => rfl
     mul_smul := fun _ _ _ => rfl
@@ -606,7 +607,7 @@ private theorem section15_corollary15_3_centralizer_factor
       section15_le_normalizer_subgroupCentralizerIn
         (G := G) (N := C) (E := section10Msigma M) (A := H)
         hC_norm_sigma hC_norm_H
-  haveI : Cσloc.Normal :=
+  have : Cσloc.Normal :=
     (Subgroup.normal_subgroupOf_iff_le_normalizer hCσleC).2 hC_norm_Cσ
   have hcomp : Cσloc.IsComplement' Xloc :=
     section11_isComplement_of_isHall_compl hCσHall hXlocHall
@@ -700,7 +701,7 @@ private theorem section15_exists_conjBy_le_hall_of_isPiSubgroup
     have hcard : Nat.card Xsub = Nat.card X :=
       section12_card_subgroupOf_eq hXM
     exact hXπ q (by simpa [Xsub, hcard] using hqXsub)
-  letI : MulDistribMulAction Unit M := {
+  let : MulDistribMulAction Unit M := {
     smul := fun _ x => x
     one_smul := fun _ => rfl
     mul_smul := fun _ _ _ => rfl
@@ -710,7 +711,7 @@ private theorem section15_exists_conjBy_le_hall_of_isPiSubgroup
     refine ⟨?_⟩
     intro _ x
     simp [Xsub]
-  have hsolvM : IsSolvable M :=
+  have hsolvM : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.mpr hM.1)
   have hcop : Nat.Coprime (Nat.card Unit) (Nat.card M) := by simp
   obtain ⟨L, hLHall, _hLInv, hXsubL⟩ :=
@@ -1062,7 +1063,7 @@ private theorem section15_conjNormal_subgroupOf_map_subtype
 omit [IsMinCE G] in
 private theorem section15_hall_frattini_sup_normalizer_eq_top
     {N H : Subgroup G} [N.Normal] {π : Set Nat.Primes}
-    (hsolvN : IsSolvable N)
+    (hsolvN : Group.IsSolvable N)
     (hHN : H ≤ N)
     (hHall : IsHallSubgroup π (H.subgroupOf N)) :
     N ⊔ Subgroup.normalizer (H : Set G) = ⊤ := by
@@ -1108,7 +1109,7 @@ public theorem section15_isPiSubgroup_of_isPGroup_of_mem
     {P : Subgroup R} (hPp : IsPGroup p.val P) (hpπ : p ∈ π) :
     IsPiSubgroup (G := R) π P := by
   intro q hq
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   rcases hPp.exists_card_eq with ⟨n, hn⟩
   have hq_dvd_p : q.val ∣ p.val := q.2.dvd_of_dvd_pow (by simpa [hn] using hq)
   have hqp : q = p := Subtype.ext ((Nat.prime_dvd_prime_iff_eq q.2 p.2).mp hq_dvd_p)
@@ -1123,13 +1124,13 @@ private theorem section15_piCore_isHallSubgroup_of_nilpotent
   refine isHallSubgroup_of (G := R) π (piCore π R) ?_ ?_
   · exact piCore_isPiSubgroup π
   · intro p hpπ hp_dvd_idx
-    haveI : Fact p.val.Prime := ⟨p.2⟩
+    have : Fact p.val.Prime := ⟨p.2⟩
     let P : Sylow p.val R := Classical.choice (Sylow.nonempty (p := p.val) (G := R))
     have hPnorm : (P : Subgroup R).Normal :=
       Group.IsNilpotent.sylow_normal hnil p.val P
     have hPπ : IsPiSubgroup (G := R) π (P : Subgroup R) :=
       section15_isPiSubgroup_of_isPGroup_of_mem P.isPGroup' hpπ
-    haveI : (P : Subgroup R).Normal := hPnorm
+    have : (P : Subgroup R).Normal := hPnorm
     have hP_le_core : (P : Subgroup R) ≤ piCore π R :=
       le_piCore_of_normal_isPiSubgroup (G := R) π (P : Subgroup R) hPπ
     have hidx_dvd : (piCore π R).index ∣ (P : Subgroup R).index :=
@@ -1145,7 +1146,7 @@ public theorem section15_hall_subgroup_normal_of_nilpotent
   classical
   have hCoreHall : IsHallSubgroup π (piCore π R) :=
     section15_piCore_isHallSubgroup_of_nilpotent hnil
-  haveI : (piCore π R).Normal := by infer_instance
+  have : (piCore π R).Normal := by infer_instance
   have hEq : H = piCore π R := hCoreHall.eq_of_normal hHall
   rw [hEq]
   infer_instance
@@ -1167,7 +1168,7 @@ private theorem section15_normalIn_of_MF_eq_msigma_hall
         IsHallSubgroup (subgroupPrimeSet H)
           (piCore (subgroupPrimeSet H) (section10Msigma M)) :=
       section15_piCore_isHallSubgroup_of_nilpotent hσnil
-    haveI : (piCore (subgroupPrimeSet H) (section10Msigma M)).Normal := by
+    have : (piCore (subgroupPrimeSet H) (section10Msigma M)).Normal := by
       infer_instance
     have hEqCore :
         H.subgroupOf (section10Msigma M) =
@@ -1188,7 +1189,7 @@ private theorem section15_normalIn_of_MF_eq_msigma_hall
     · intro hx
       exact Subgroup.mem_map.mpr
         ⟨⟨x, hHleσ hx⟩, by simpa [Subgroup.mem_subgroupOf] using hx, rfl⟩
-  letI : (H.subgroupOf (section10Msigma M)).Characteristic := hHcharσ
+  let : (H.subgroupOf (section10Msigma M)).Characteristic := hHcharσ
   have hmσ : m ∈ Subgroup.normalizer ((section10Msigma M : Subgroup G) : Set G) :=
     section15_msigma_le_normalizer (M := M) hmM
   have hmH :
@@ -1288,7 +1289,7 @@ private theorem section15_sylowSubgroupIn_subgroupOf_characteristic
     (hSM : S ≤ M) :
     (Q.subgroupOf S).Characteristic := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   rcases hQ with ⟨P, hPamb⟩
   let Qloc : Subgroup S := Q.subgroupOf S
   have hQM : Q ≤ M := hQS.trans hSM
@@ -1344,7 +1345,7 @@ private theorem section15_quotient_nilpotent_of_normal_complement
   classical
   let Qloc : Subgroup S := Q.subgroupOf S
   let Dloc : Subgroup S := D.subgroupOf S
-  haveI : Qloc.Normal := by
+  have : Qloc.Normal := by
     simpa [Qloc] using hQnorm.2
   have hcomp_symm : section12ComplementIn S D Q := by
     rcases hcomp with ⟨hQS, hDS, hsup, hdisj⟩
@@ -1388,7 +1389,7 @@ private theorem section15_sup_hall_normalIn_of_quotient_piCore
   have hQnormalS : Qloc.Normal := by
     simpa [Qloc] using
       (Subgroup.normal_subgroupOf_iff_le_normalizer hQleS).2 hS_norm_Q
-  letI : Qloc.Normal := hQnormalS
+  let : Qloc.Normal := hQnormalS
   let πq : S →* S ⧸ Qloc := QuotientGroup.mk' Qloc
   let Hbar : Subgroup (S ⧸ Qloc) := Hloc.map πq
   have hHbarHall :
@@ -1427,7 +1428,7 @@ private theorem section15_sup_hall_normalIn_of_quotient_piCore
         simpa [L] using (Subgroup.map_sup Qloc Hloc S.subtype)
       _ = Q ⊔ H := by
         rw [hQmap, hHmap]
-  letI : L.Characteristic := hLchar
+  let : L.Characteristic := hLchar
   have hnorm_lift :
       Subgroup.normalizer (S : Set G) ≤
         Subgroup.normalizer (L.map S.subtype : Set G) :=
@@ -1470,7 +1471,7 @@ private theorem section15_Q_sup_H_normalIn_of_theorem15_2_context
   have hQcharS : (Q.subgroupOf S).Characteristic :=
     section15_sylowSubgroupIn_subgroupOf_characteristic
       (M := M) (S := S) (Q := Q) (q := q) hQ hQnormal hQleS hSM
-  letI : (Q.subgroupOf S).Characteristic := hQcharS
+  let : (Q.subgroupOf S).Characteristic := hQcharS
   have hquotNil : Group.IsNilpotent (S ⧸ Q.subgroupOf S) := by
     simpa [S] using
       section15_quotient_nilpotent_of_normal_complement
@@ -1511,7 +1512,7 @@ private theorem section15_Q_disjoint_H_of_nonnormal
   have hQsubσ_p : IsPGroup q.val (Q.subgroupOf (section10Msigma M)) :=
     hQp.of_equiv
       (Subgroup.subgroupOfEquivOfLe (H := Q) (K := section10Msigma M) hQσ).symm
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   have hQnormalσ : (Q.subgroupOf (section10Msigma M)).Normal := by
     have hM_norm_Q : M ≤ Subgroup.normalizer (Q : Set G) :=
       (Subgroup.normal_subgroupOf_iff_le_normalizer hQnormal.1).1 hQnormal.2
@@ -1592,7 +1593,7 @@ private theorem section15_ambient_mem_normalizer_of_subgroupOf_mem_normalizer
 omit [IsMinCE G] in
 private theorem section15_conjugacy_from_Q_frattini
     {M Q H : Subgroup G}
-    (hsolvM : IsSolvable M)
+    (hsolvM : Group.IsSolvable M)
     (hQM : Q ≤ M)
     (hHM : H ≤ M)
     (hQnormalM : (Q.subgroupOf M).Normal)
@@ -1611,7 +1612,7 @@ private theorem section15_conjugacy_from_Q_frattini
   let N : Subgroup M := (Q ⊔ H).subgroupOf M
   have hNnormal : N.Normal := by
     simpa [N] using hQHnormalM.2
-  haveI : N.Normal := hNnormal
+  have : N.Normal := hNnormal
   have hHleN : Hm ≤ N := by
     intro z hzH
     change ((z : M) : G) ∈ Q ⊔ H
@@ -1639,7 +1640,7 @@ private theorem section15_conjugacy_from_Q_frattini
       _ = N := rfl
   have hzQH : z ∈ Qm ⊔ Hm := by
     simpa [hQHloc] using hzN
-  haveI : Qm.Normal := hQnormalM
+  have : Qm.Normal := hQnormalM
   obtain ⟨q, hqQ, h, hhH, hqh⟩ :=
     (Subgroup.mem_sup_of_normal_left (s := Qm) (t := Hm) (x := z)).1 hzQH
   have hhNorm : h ∈ Subgroup.normalizer (Hm : Set M) := Subgroup.le_normalizer hhH
@@ -1753,7 +1754,7 @@ private theorem section15_corollary15_3_conjugacy_nonnormal_case
         ((H.subgroupOf M).subgroupOf (R.subgroupOf M)) :=
     section15_hallSubgroupOf_subgroupOf_overgroup
       (H := H) (R := R) (M := M) hHallHR hRM
-  have hsolvM : IsSolvable M :=
+  have hsolvM : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
   exact
     section15_conjugacy_from_Q_frattini

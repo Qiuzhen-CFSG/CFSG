@@ -2,6 +2,7 @@ module
 
 public import FeitThompson.BGsection12.proposition_12_15_d
 
+
 open scoped Pointwise
 
 /-!

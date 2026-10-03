@@ -3,9 +3,10 @@ module
 import Mathlib.GroupTheory.FixedPointFree
 import Mathlib.LinearAlgebra.Eigenspace.Basic
 import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
-import FeitThompson.Frattini.CoprimeAction
-import FeitThompson.GroupAction.CoprimeHall
+import Theory.Frattini.CoprimeAction
+import Theory.GroupAction.CoprimeHall
 public import BenderSuzuki.External.Higman.lemma_5
+
 
 /-!
 # Higman Lemma 6 and its Neumann input

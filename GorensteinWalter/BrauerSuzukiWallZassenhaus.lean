@@ -8,8 +8,9 @@ public import GorensteinWalter.LinearThree
 import GorensteinWalter.LinearThreeEquiv
 public import BenderSuzuki.External.Huppert.XI.theorem_11_16
 public import BenderSuzuki.External.Huppert.XI.example_1_3
-public import FeitThompson.SubgroupConjAction
-public import FeitThompson.SubgroupConj
+public import Theory.GroupAction.SubgroupConjugation
+public import Theory.GroupTheory.SubgroupConjugation
+
 
 /-!
 # The Zassenhaus endpoint of the Brauer--Suzuki--Wall theorem
@@ -442,8 +443,7 @@ private theorem BrauerSuzukiWallConclusion.orbit_two_transitive
       calc
         Nat.card {C : Omega // C ≠ base} = Nat.card Omega - 1 := by
           let : Fintype {C : Omega // C ≠ base} := Fintype.ofFinite _
-          simpa [Nat.card_eq_fintype_card] using
-            (Fintype.card_subtype_compl (fun C : Omega => C = base))
+          simp [Nat.card_eq_fintype_card]
         _ = h.q := by rw [h.orbit_degree]; omega
     let : Fintype h.Q := Fintype.ofFinite h.Q
     let : Fintype Away := Fintype.ofFinite Away
@@ -557,8 +557,7 @@ private theorem BrauerSuzukiWallConclusion.existsUnique_Q_smul_eq_away
     calc
       Nat.card {C : Omega // C ≠ base} = Nat.card Omega - 1 := by
         let : Fintype {C : Omega // C ≠ base} := Fintype.ofFinite _
-        simpa [Nat.card_eq_fintype_card] using
-          (Fintype.card_subtype_compl (fun C : Omega => C = base))
+        simp [Nat.card_eq_fintype_card]
       _ = h.q := by rw [h.orbit_degree]; omega
   let : Fintype h.Q := Fintype.ofFinite h.Q
   let : Fintype Away := Fintype.ofFinite Away
@@ -979,8 +978,7 @@ private theorem BrauerSuzukiWallConclusion.exists_reflection_two_point_stabilize
       calc
         Nat.card {C : Omega // C ≠ base} = Nat.card Omega - 1 := by
           let : Fintype {C : Omega // C ≠ base} := Fintype.ofFinite _
-          simpa [Nat.card_eq_fintype_card] using
-            (Fintype.card_subtype_compl (fun C : Omega => C = base))
+          simp [Nat.card_eq_fintype_card]
         _ = h.q := by rw [h.orbit_degree]; omega
     have hSindex : S.index = h.q := by
       change (MulAction.stabilizer H betaAway).index = h.q
@@ -1130,7 +1128,7 @@ private theorem BrauerSuzukiWallConclusion.at_most_two_fixed_points
     change (Subgroup.zpowers x).map
         (MulAut.conj (q : G)⁻¹).toMonoidHom = Subgroup.zpowers y
     rw [MonoidHom.map_zpowers]
-    simp [MulAut.conj_apply, y]
+    simp [y]
   have hXqne : Xq ≠ ⊥ := by
     intro hXqbot
     apply hXne
@@ -1304,8 +1302,7 @@ private theorem BrauerSuzukiWallConclusion.regularNormal_two_structure
     calc
       Nat.card {r : R // r ≠ 1} = Nat.card R - 1 := by
         let : Fintype {r : R // r ≠ 1} := Fintype.ofFinite _
-        simpa [Nat.card_eq_fintype_card] using
-          (Fintype.card_subtype_compl (fun r : R => r = 1))
+        simp [Nat.card_eq_fintype_card]
       _ = h.q := by rw [hRcard]; omega
   let : Fintype h.Q := Fintype.ofFinite h.Q
   let : Fintype Rstar := Fintype.ofFinite Rstar

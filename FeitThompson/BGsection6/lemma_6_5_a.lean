@@ -1,7 +1,8 @@
 module
 
 public import FeitThompson.BGsection6.theorem_6_4
-import FeitThompson.SubgroupConj
+import Theory.GroupTheory.SubgroupConjugation
+
 
 open scoped MatrixGroups Pointwise TensorProduct commutatorElement
 

@@ -2,6 +2,7 @@ module
 
 public import FeitThompson.PFsection9.PFsection9_8.Reducible
 
+
 noncomputable section
 
 open scoped IsMulCommutative commutatorElement
@@ -57,7 +58,7 @@ universe u v w
     let Dm : Subgroup M := (ambientDerivedSubgroup M).subgroupOf M
     let hDnormal : Dm.Normal := by
       simpa [Dm] using (section12_normalIn_ambientDerivedSubgroup (G := G) (E := M)).2
-    letI : Dm.Normal := hDnormal
+    let : Dm.Normal := hDnormal
     let H0CD : Subgroup Dm := ((H0 ⊔ C).subgroupOf M).subgroupOf Dm
     let MFD : Subgroup Dm := (MF.subgroupOf M).subgroupOf Dm
     ∃ θ : μ → Section1.ClassFunction Dm,
@@ -101,7 +102,7 @@ public theorem quotientBarUCardinality_pos_sec9
       0 < u := by
   intro hBarU
   rcases hBarU with ⟨_hCU, hnormal, hcard⟩
-  letI : (C.subgroupOf U).Normal := hnormal
+  let : (C.subgroupOf U).Normal := hnormal
   rw [← hcard]
   exact Nat.card_pos
 
@@ -147,8 +148,8 @@ public theorem freeAction_orbitQuotient_fiber_natCard_sec9
         Nat.card A := by
   classical
   intro q
-  letI : Fintype A := Fintype.ofFinite A
-  letI : Fintype κ := Fintype.ofFinite κ
+  let : Fintype A := Fintype.ofFinite A
+  let : Fintype κ := Fintype.ofFinite κ
   let f : A → {x : κ // (Quotient.mk'' x : Quotient (MulAction.orbitRel A κ)) = q} :=
     fun a => ⟨a • Quotient.out q, by
       calc
@@ -261,7 +262,7 @@ public theorem theorem_9_8_H0C_linear_candidate_count_ne_core_sec9
     odd_of_card_dvd IsMinCE.odd_order (Subgroup.card_subgroup_dvd_card U)
   have huodd : Odd u := by
     rcases hBarU with ⟨_hCU, hnormal, hbarCard⟩
-    letI : (C.subgroupOf U).Normal := hnormal
+    let : (C.subgroupOf U).Normal := hnormal
     have hquot_dvd : Nat.card (U ⧸ C.subgroupOf U) ∣ Nat.card U :=
       Subgroup.card_quotient_dvd_card (C.subgroupOf U)
     have hquot_odd : Odd (Nat.card (U ⧸ C.subgroupOf U)) :=
@@ -515,7 +516,7 @@ public theorem internalDirectProduct_sup_of_commute_inf_eq_bot_sec9
   have hKS_normal : KS.Normal := by
     simpa [KS] using
       (Subgroup.normal_subgroupOf_sup_of_le_normalizer (H := H) (N := K) hH_norm_K)
-  letI : KS.Normal := hKS_normal
+  let : KS.Normal := hKS_normal
   have hHSKS_top : HS ⊔ KS = ⊤ := by
     rw [← Subgroup.subgroupOf_sup (A := H) (A' := K) (B := H ⊔ K)
       le_sup_left le_sup_right]
@@ -955,17 +956,17 @@ public theorem kernelQuotientConjQuotientAction_sec9
     (f : G →* A) (N : Subgroup G) [N.Normal] :
     let K : Subgroup G := f.ker
     let Hsub : Subgroup K := N.subgroupOf K
-    letI : K.Normal := inferInstance
-    letI : Hsub.Normal := inferInstance
+    let : K.Normal := inferInstance
+    let : Hsub.Normal := inferInstance
     letI : MulDistribMulAction G K :=
       MulDistribMulAction.compHom K ConjAct.toConjAct.toMonoidHom
     MulAction.QuotientAction G Hsub := by
   classical
   let K : Subgroup G := f.ker
   let Hsub : Subgroup K := N.subgroupOf K
-  letI : K.Normal := inferInstance
-  letI : Hsub.Normal := inferInstance
-  letI : MulDistribMulAction G K :=
+  let : K.Normal := inferInstance
+  let : Hsub.Normal := inferInstance
+  let : MulDistribMulAction G K :=
     MulDistribMulAction.compHom K ConjAct.toConjAct.toMonoidHom
   refine ⟨?_⟩
   intro g a a' h
@@ -989,14 +990,14 @@ public theorem kernelQuotientConjQuotientAction_sec9
     (f : G →* A) (N : Subgroup G) [N.Normal] :
     let K : Subgroup G := f.ker
     let Hsub : Subgroup K := N.subgroupOf K
-    letI : K.Normal := inferInstance
-    letI : Hsub.Normal := inferInstance
+    let : K.Normal := inferInstance
+    let : Hsub.Normal := inferInstance
     MulDistribMulAction G (K ⧸ Hsub) := by
   classical
   let K : Subgroup G := f.ker
   let Hsub : Subgroup K := N.subgroupOf K
-  letI : K.Normal := inferInstance
-  letI : Hsub.Normal := inferInstance
+  let : K.Normal := inferInstance
+  let : Hsub.Normal := inferInstance
   letI : MulDistribMulAction G K :=
     MulDistribMulAction.compHom K ConjAct.toConjAct.toMonoidHom
   letI : MulAction.QuotientAction G Hsub :=
@@ -1024,14 +1025,14 @@ public theorem kernelQuotientConjQuotientAction_sec9
     (f : G →* A) (N : Subgroup G) [N.Normal] :
     let K : Subgroup G := f.ker
     let Hsub : Subgroup K := N.subgroupOf K
-    letI : K.Normal := inferInstance
-    letI : Hsub.Normal := inferInstance
+    let : K.Normal := inferInstance
+    let : Hsub.Normal := inferInstance
     G →* MulAut (K ⧸ Hsub) := by
   classical
   let K : Subgroup G := f.ker
   let Hsub : Subgroup K := N.subgroupOf K
-  letI : K.Normal := inferInstance
-  letI : Hsub.Normal := inferInstance
+  let : K.Normal := inferInstance
+  let : Hsub.Normal := inferInstance
   letI : MulDistribMulAction G (K ⧸ Hsub) :=
     kernelQuotientConjMulDistribMulAction_sec9 f N
   exact MulDistribMulAction.toMulAut G (K ⧸ Hsub)
@@ -1042,13 +1043,13 @@ public theorem kernelQuotientConjHomFromDomain_ker_le_sec9
     (hcomm :
       let K : Subgroup G := f.ker
       let Hsub : Subgroup K := N.subgroupOf K
-      letI : K.Normal := inferInstance
-      letI : Hsub.Normal := inferInstance
+      let : K.Normal := inferInstance
+      let : Hsub.Normal := inferInstance
       IsMulCommutative (K ⧸ Hsub)) :
     let K : Subgroup G := f.ker
     let Hsub : Subgroup K := N.subgroupOf K
-    letI : K.Normal := inferInstance
-    letI : Hsub.Normal := inferInstance
+    let : K.Normal := inferInstance
+    let : Hsub.Normal := inferInstance
     K ≤ (kernelQuotientConjHomFromDomain_sec9 f N).ker := by
   classical
   dsimp only
@@ -1059,16 +1060,16 @@ public theorem kernelQuotientConjHomFromDomain_ker_le_sec9
   intro x
   let K : Subgroup G := f.ker
   let Hsub : Subgroup K := N.subgroupOf K
-  letI : K.Normal := inferInstance
-  letI : Hsub.Normal := inferInstance
-  letI : MulDistribMulAction G K :=
+  let : K.Normal := inferInstance
+  let : Hsub.Normal := inferInstance
+  let : MulDistribMulAction G K :=
     MulDistribMulAction.compHom K ConjAct.toConjAct.toMonoidHom
-  letI : MulAction.QuotientAction G Hsub :=
+  let : MulAction.QuotientAction G Hsub :=
     kernelQuotientConjQuotientAction_sec9 f N
-  letI : MulDistribMulAction G (K ⧸ Hsub) :=
+  let : MulDistribMulAction G (K ⧸ Hsub) :=
     kernelQuotientConjMulDistribMulAction_sec9 f N
-  haveI : IsMulCommutative (K ⧸ Hsub) := hcomm
-  letI : CommGroup (K ⧸ Hsub) := IsMulCommutative.instCommGroup
+  have : IsMulCommutative (K ⧸ Hsub) := hcomm
+  let : CommGroup (K ⧸ Hsub) := IsMulCommutative.instCommGroup
   let kk : K := ⟨k, hk⟩
   have hconj :
       (⟨k * (x : G) * k⁻¹, (inferInstance : K.Normal).conj_mem
@@ -1092,20 +1093,20 @@ public theorem kernelQuotientConjHomFromDomain_ker_le_sec9
     (hcomm :
       let K : Subgroup G := f.ker
       let Hsub : Subgroup K := N.subgroupOf K
-      letI : K.Normal := inferInstance
-      letI : Hsub.Normal := inferInstance
+      let : K.Normal := inferInstance
+      let : Hsub.Normal := inferInstance
       IsMulCommutative (K ⧸ Hsub))
     (hf : Function.Surjective f) :
     let K : Subgroup G := f.ker
     let Hsub : Subgroup K := N.subgroupOf K
-    letI : K.Normal := inferInstance
-    letI : Hsub.Normal := inferInstance
+    let : K.Normal := inferInstance
+    let : Hsub.Normal := inferInstance
     A →* MulAut (K ⧸ Hsub) := by
   classical
   let K : Subgroup G := f.ker
   let Hsub : Subgroup K := N.subgroupOf K
-  letI : K.Normal := inferInstance
-  letI : Hsub.Normal := inferInstance
+  let : K.Normal := inferInstance
+  let : Hsub.Normal := inferInstance
   let ψ : G →* MulAut (K ⧸ Hsub) :=
     kernelQuotientConjHomFromDomain_sec9 f N
   let ψbar : G ⧸ K →* MulAut (K ⧸ Hsub) :=
@@ -1119,14 +1120,14 @@ public theorem kernelQuotientConjHomOfSurjective_apply_mk_sec9
     (hcomm :
       let K : Subgroup G := f.ker
       let Hsub : Subgroup K := N.subgroupOf K
-      letI : K.Normal := inferInstance
-      letI : Hsub.Normal := inferInstance
+      let : K.Normal := inferInstance
+      let : Hsub.Normal := inferInstance
       IsMulCommutative (K ⧸ Hsub))
     (hf : Function.Surjective f) (g : G) :
     let K : Subgroup G := f.ker
     let Hsub : Subgroup K := N.subgroupOf K
-    letI : K.Normal := inferInstance
-    letI : Hsub.Normal := inferInstance
+    let : K.Normal := inferInstance
+    let : Hsub.Normal := inferInstance
     ∀ x : K,
       kernelQuotientConjHomOfSurjective_sec9 f N hcomm hf (f g)
           (QuotientGroup.mk' Hsub x) =
@@ -1137,8 +1138,8 @@ public theorem kernelQuotientConjHomOfSurjective_apply_mk_sec9
   dsimp only
   let K : Subgroup G := f.ker
   let Hsub : Subgroup K := N.subgroupOf K
-  letI : K.Normal := inferInstance
-  letI : Hsub.Normal := inferInstance
+  let : K.Normal := inferInstance
+  let : Hsub.Normal := inferInstance
   intro x
   let ψ : G →* MulAut (K ⧸ Hsub) :=
     kernelQuotientConjHomFromDomain_sec9 f N
@@ -1167,11 +1168,11 @@ public theorem kernelQuotientConjHomOfSurjective_apply_mk_sec9
   rw [hsymm']
   change ψbar (QuotientGroup.mk' K g) (QuotientGroup.mk' Hsub x) = _
   simp [ψbar, ψ, kernelQuotientConjHomFromDomain_sec9]
-  letI : MulDistribMulAction G K :=
+  let : MulDistribMulAction G K :=
     MulDistribMulAction.compHom K ConjAct.toConjAct.toMonoidHom
-  letI : MulAction.QuotientAction G Hsub :=
+  let : MulAction.QuotientAction G Hsub :=
     kernelQuotientConjQuotientAction_sec9 f N
-  letI : MulDistribMulAction G (K ⧸ Hsub) :=
+  let : MulDistribMulAction G (K ⧸ Hsub) :=
     kernelQuotientConjMulDistribMulAction_sec9 f N
   change g • ((x : K) : K ⧸ Hsub) =
     QuotientGroup.mk' Hsub
@@ -1186,11 +1187,11 @@ public theorem nonprincipalLinearCharacter_card_eq_pred_sec9
     (p : ℕ) (hcard : Nat.card Q = p) :
     Nat.card {χ : Q →* ℂˣ // χ ≠ 1} = p - 1 := by
   classical
-  letI : CommGroup Q := IsMulCommutative.instCommGroup
-  haveI : HasEnoughRootsOfUnity ℂ (Monoid.exponent Q) :=
+  let : CommGroup Q := IsMulCommutative.instCommGroup
+  have : HasEnoughRootsOfUnity ℂ (Monoid.exponent Q) :=
     Section1.complex_hasEnoughRootsOfUnity (Monoid.exponent Q)
-  letI : Fintype (Q →* ℂˣ) := Fintype.ofFinite _
-  letI : Fintype {χ : Q →* ℂˣ // χ ≠ 1} := Fintype.ofFinite _
+  let : Fintype (Q →* ℂˣ) := Fintype.ofFinite _
+  let : Fintype {χ : Q →* ℂˣ // χ ≠ 1} := Fintype.ofFinite _
   rw [Nat.card_eq_fintype_card]
   have hcompl := Fintype.card_subtype_compl (fun χ : Q →* ℂˣ => χ = 1)
   rw [hcompl]
@@ -1223,7 +1224,7 @@ public theorem case_9_7_a_quotient_isElementaryAbelian_sec9
     {p q a : ℕ} :
     case_9_7_a_data M MF U W1 W2 H0 C p q a →
       ∃ hnormal : (H0.subgroupOf MF).Normal,
-        letI : (H0.subgroupOf MF).Normal := hnormal
+        let : (H0.subgroupOf MF).Normal := hnormal
         IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF) := by
   intro hcase
   rcases case_9_7_a_hoReductionData_sec9 hcase with ⟨hp, hp_eq, hho⟩
@@ -1588,7 +1589,7 @@ public theorem nonprincipalLinearCharacterIndexMulAction_spec_sec9
       (((nonprincipalLinearCharacterEquivFin_sec9 Q p hcard) i).1.comp
         (ρ a).symm.toMonoidHom) := by
   classical
-  letI : MulAction A (Fin (p - 1)) :=
+  let : MulAction A (Fin (p - 1)) :=
     nonprincipalLinearCharacterIndexMulAction_sec9 p hcard ρ
   let e := nonprincipalLinearCharacterEquivFin_sec9 Q p hcard
   change (e (e.symm (nonprincipalLinearCharacterDualEquiv_sec9 (ρ a) (e i)))).1 =
@@ -1607,7 +1608,7 @@ public theorem nonprincipalIndexAction_fixed_eq_one_data_sec9
   let instAction : MulAction A (Fin (p - 1)) :=
     nonprincipalLinearCharacterIndexMulAction_sec9 p hcard ρ
   refine ⟨instAction, ?_⟩
-  letI : MulAction A (Fin (p - 1)) := instAction
+  let : MulAction A (Fin (p - 1)) := instAction
   intro a i hfix
   let e := nonprincipalLinearCharacterEquivFin_sec9 Q p hcard
   have hcharfixed :
@@ -1641,7 +1642,7 @@ public theorem nonprincipalIndexAction_fixed_eq_one_data_sec9
         rcases f with ⟨down⟩
         apply ULift.ext
         funext i
-        letI : MulAction A (Fin (p - 1)) :=
+        let : MulAction A (Fin (p - 1)) :=
           nonprincipalLinearCharacterIndexMulAction_sec9 p (hHcard i) (ρ i)
         change (1 : A) • down i = down i
         rw [one_smul]
@@ -1651,7 +1652,7 @@ public theorem nonprincipalIndexAction_fixed_eq_one_data_sec9
         rcases f with ⟨down⟩
         apply ULift.ext
         funext i
-        letI : MulAction A (Fin (p - 1)) :=
+        let : MulAction A (Fin (p - 1)) :=
           nonprincipalLinearCharacterIndexMulAction_sec9 p (hHcard i) (ρ i)
         change (a * b) • down i = a • b • down i
         rw [mul_smul] }
@@ -1684,10 +1685,10 @@ public theorem rawCoordinateMulAction_component_eq_one_of_fixed_sec9
     a • f = f →
       ∀ i, ρ i a = 1 := by
   classical
-  letI : MulAction A (ULift.{u, 0} (Fin q → Fin (p - 1))) :=
+  let : MulAction A (ULift.{u, 0} (Fin q → Fin (p - 1))) :=
     rawCoordinateMulAction_sec9 p q H hHcard ρ
   intro hfix i
-  letI : MulAction A (Fin (p - 1)) :=
+  let : MulAction A (Fin (p - 1)) :=
     nonprincipalLinearCharacterIndexMulAction_sec9 p (hHcard i) (ρ i)
   let e := nonprincipalLinearCharacterEquivFin_sec9 (H i) p (hHcard i)
   have hcoord : a • f.down i = f.down i := by
@@ -1730,7 +1731,7 @@ public theorem componentProductLinearCharacter_rawCoordinateMulAction_sec9
             exact mul_comm x y)
           hHindep hHsup (fun i => ρ i a)).symm.toMonoidHom := by
   classical
-  letI : MulAction A (ULift.{u, 0} (Fin q → Fin (p - 1))) :=
+  let : MulAction A (ULift.{u, 0} (Fin q → Fin (p - 1))) :=
     rawCoordinateMulAction_sec9 p q H hHcard ρ
   let hcomm : Pairwise fun i j : Fin q =>
       ∀ x y : G, x ∈ H i → y ∈ H j → Commute x y := by
@@ -2062,7 +2063,7 @@ public theorem rawCoordinateMulAction_quotient_eq_one_of_fixed_sec9
     x • f = f →
       x = 1 := by
   classical
-  letI : MulAction (U ⧸ C.subgroupOf U)
+  let : MulAction (U ⧸ C.subgroupOf U)
       (ULift.{u, 0} (Fin q → Fin (p - 1))) :=
     rawCoordinateMulAction_sec9 p q H hHcard ρ
   intro hfix
@@ -2161,7 +2162,7 @@ public theorem rawCoordinateMulAction_stabilizer_eq_bot_sec9
     ∀ k : ULift.{u, 0} (Fin q → Fin (p - 1)),
       MulAction.stabilizer (U ⧸ C.subgroupOf U) k = ⊥ := by
   classical
-  letI : MulAction (U ⧸ C.subgroupOf U)
+  let : MulAction (U ⧸ C.subgroupOf U)
       (ULift.{u, 0} (Fin q → Fin (p - 1))) :=
     rawCoordinateMulAction_sec9 p q H hHcard ρ
   intro k

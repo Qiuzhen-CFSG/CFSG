@@ -5,6 +5,7 @@ public import GorensteinWalter.Section2.Lemma27IndexTwo
 public import GorensteinWalter.Section4.SecondCaseA7FittingCentralizes
 import Mathlib.Tactic
 
+
 noncomputable section
 
 namespace GorensteinWalter

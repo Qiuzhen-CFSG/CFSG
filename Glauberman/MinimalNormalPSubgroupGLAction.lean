@@ -4,6 +4,7 @@ public import Glauberman.MinimalNormalPSubgroupFaithfulIrreducibleAction
 public import Mathlib.Algebra.Module.Submodule.Lattice
 public import Mathlib.LinearAlgebra.GeneralLinearGroup.Basic
 
+
 /-!
 # The faithful irreducible linear action of a minimal normal p-subgroup
 -/
@@ -76,7 +77,7 @@ public theorem exists_minimalNormal_pSubgroup_GL_faithful_irreducible_action
     {p : ℕ} [Fact p.Prime] {Q : Type u} [Group Q] [Finite Q]
     (H : Subgroup Q) [H.Normal] [IsMinimalNormal H]
     (hHne : H ≠ ⊥) (hHp : IsPGroup p H) :
-    letI : IsElementaryAbelian p H :=
+    let : IsElementaryAbelian p H :=
       minimalNormal_pSubgroup_isElementaryAbelian H hHne hHp
     letI : Module (ZMod p) (Additive H) :=
       IsElementaryAbelian.isVectorSpace p
@@ -169,3 +170,4 @@ public theorem exists_minimalNormal_pSubgroup_GL_faithful_irreducible_action
       simp [w]
 
 end Glauberman
+

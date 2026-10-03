@@ -1,7 +1,7 @@
 module
 
 public import BenderSuzuki.MatrixGroups.PSL2
-public import FeitThompson.ElementaryAbelian
+public import Theory.ElementaryAbelian.VectorSpace
 public import Mathlib.FieldTheory.Finite.GaloisField
 public import Mathlib.FieldTheory.Finite.Extension
 public import Mathlib.FieldTheory.Finite.Trace
@@ -207,7 +207,6 @@ public theorem huppert_II_8_2_a_sylow_equiv_additive
                 rfl
           exact Nat.card_congr slEquivDetKer
         _ = Nat.card F * (Nat.card F ^ 2 - 1) := hker
-
     have hcard_center :
         Nat.card
             (Subgroup.center
@@ -346,7 +345,13 @@ private theorem hsplit_matrix_diag_or_antidiag
   have h01 := congrFun (congrFun heq (0 : Fin 2)) (1 : Fin 2)
   have h10 := congrFun (congrFun heq (1 : Fin 2)) (0 : Fin 2)
   have h11 := congrFun (congrFun heq (1 : Fin 2)) (1 : Fin 2)
-  simp [Matrix.mul_apply] at h00 h01 h10 h11
+  simp only [Matrix.scalar_apply, Matrix.cons_mul, Nat.succ_eq_add_one,
+    Nat.reduceAdd, Matrix.vecMul_diagonal_const, Matrix.smul_cons,
+    MulOpposite.smul_eq_mul_unop, MulOpposite.unop_op, smul_zero,
+    Matrix.smul_empty, Matrix.empty_mul, Equiv.symm_apply_apply, Fin.isValue,
+    Matrix.mul_apply, Matrix.of_apply, Matrix.cons_val', Matrix.cons_val_fin_one,
+    Matrix.cons_val_zero, Fin.sum_univ_two, Matrix.cons_val_one, zero_mul,
+    add_zero, mul_zero, zero_add] at h00 h01 h10 h11
   by_cases hA00 : (A : Matrix (Fin 2) (Fin 2) F) 0 0 = 0
   · right
     refine ⟨hA00, ?_⟩
@@ -396,7 +401,7 @@ private theorem hsplit_matrix_diag_or_antidiag
 
 
 set_option maxHeartbeats 1000000 in
-
+-- The nonsplit-torus construction needs additional finite-field heartbeats.
 private theorem h84_nonsplit_torus_data
     {F : Type u} [Field F] [Finite F] {p f : ℕ} [Fact p.Prime]
     (hFcard : Nat.card F = p ^ f) :
@@ -496,7 +501,10 @@ private theorem h84_nonsplit_torus_data
       (hw_sq : w * w = 1) (hw_not_mem : w ∉ T) :
       Nat.card (Subgroup.zpowers w) = 2 ∧
         Disjoint T (Subgroup.zpowers w) ∧
-        Nat.card (T ⊔ (Subgroup.zpowers w : Subgroup (PSL2MatrixGroup F)) : Subgroup (PSL2MatrixGroup F)) = 2 * Nat.card T := by
+        Nat.card
+            (T ⊔ (Subgroup.zpowers w : Subgroup (PSL2MatrixGroup F)) :
+              Subgroup (PSL2MatrixGroup F)) =
+          2 * Nat.card T := by
     let Z : Subgroup (PSL2MatrixGroup F) := Subgroup.zpowers w
     have hw_ne_one : w ≠ 1 := by
       intro hw_one
@@ -1809,7 +1817,7 @@ private theorem h84_nonsplit_torus_data
     rw [hA_factor]
     simp [nonsplitTorus, qSL]
 set_option maxHeartbeats 1000000 in
-
+-- The nonsplit-torus normalizer calculation needs additional field heartbeats.
 /-- Huppert II.8.4(a,b), retaining the Frobenius reflection and its inversion
 action on the standard nonsplit torus. -/
 public theorem huppert_II_8_4_nonsplit_torus_reflection_data
@@ -2036,7 +2044,10 @@ private theorem hthree_family_unique_of_same_family
       exact hUS.symm) hx₁ hx₂)).elim
   · exact hsameS x hx g₁ g₂ hx₁ hx₂
 
+-- This large matrix-and-coset construction intentionally uses broad simplification.
+set_option linter.flexible false in
 set_option maxHeartbeats 4000000 in
+-- The covering and TI uniqueness argument needs additional elaboration heartbeats.
 set_option synthInstance.maxHeartbeats 1000000 in
 set_option backward.isDefEq.respectTransparency false in
 /-- Huppert II.8.5(a), with the covering and TI uniqueness clauses tied to

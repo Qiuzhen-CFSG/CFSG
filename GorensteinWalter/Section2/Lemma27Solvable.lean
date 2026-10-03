@@ -13,6 +13,7 @@ public import GorensteinWalter.Classification
 import FeitThompson.FinalTheorem
 import Mathlib.Tactic
 
+
 /-!
 # Lemma 2.7, solvability of `M`
 
@@ -52,7 +53,7 @@ private theorem commutator_le_pPrimeCore_of_Lemma27Hypothesis
   have hCommAmb : ⁅M, Subgroup.zpowers c.t⁆ ≤ A :=
     lemma_2_7_commutator_le_piCore_compl hmin c M hM
   have hAodd : Nat.Coprime 2 (Nat.card (↥A)) :=
-    piCore_compl_odd_card_of_Lemma27Hypothesis hmin c M hM
+    piCore_compl_odd_card_of_Lemma27Hypothesis hmin c M
   have hA_le_F : A ≤ fittingSubgroupOf M :=
     piCoreOf_le (fittingSubgroupOf M) πᶜ
   have hF_le_M : fittingSubgroupOf M ≤ M :=
@@ -150,7 +151,7 @@ public theorem isSolvable_of_Lemma27Hypothesis
     (hmin : IsMinimalCounterexample G)
     (c : CentralizerSetup G) (M : Subgroup G)
     (hM : Lemma27Hypothesis c M) :
-    IsSolvable M := by
+    Group.IsSolvable M := by
   classical
   let M' : Type u := ↥M
   let : Group M' := M.toGroup
@@ -213,8 +214,8 @@ public theorem isSolvable_of_Lemma27Hypothesis
   have hQ2 : IsPGroup 2 Q :=
     quotient_two_of_central_involution_of_isDGroup hDM tb htbcenter htb2 htbne
   have hOodd : Odd (Nat.card (↥O)) := Nat.coprime_two_left.mp hOcop
-  have hOsolv : IsSolvable O := odd_order_theorem O hOodd
-  have hQsolv : IsSolvable Q := isSolvable_of_isPGroup hQ2
+  have hOsolv : Group.IsSolvable O := odd_order_theorem O hOodd
+  have hQsolv : Group.IsSolvable Q := isSolvable_of_isPGroup hQ2
   exact isSolvable_of_normal_solvable_quotient_solvable O hOsolv hQsolv
 
 end GorensteinWalter

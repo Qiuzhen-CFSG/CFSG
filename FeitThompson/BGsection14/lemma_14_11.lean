@@ -2,6 +2,7 @@ module
 
 public import FeitThompson.BGsection14.corollary_14_9
 
+
 open scoped Pointwise commutatorElement
 
 /-! # Lemma 14 11 from BG Section 14 -/
@@ -70,7 +71,7 @@ private theorem section14_isMulCommutative_sup_of_le_centralizer
           y = a⁻¹ * y' * a := by simp [y', mul_assoc]
           _ = y' := hconj
       simpa [hy_eq] using hy'Y
-  haveI : YD.Normal := by
+  have : YD.Normal := by
     simpa [D, YD] using
       (Subgroup.normal_subgroupOf_sup_of_le_normalizer
         (H := A) (N := Y) hA_norm_Y)
@@ -138,7 +139,7 @@ private theorem section14_commutator_centralizerIn_eq_bot_of_coprime
     have hkconj : p * k⁻¹ * p⁻¹ ∈ K :=
       (Subgroup.mem_normalizer_iff.mp (hPnormK hp) (k⁻¹)).1 (K.inv_mem hk)
     simpa [commutatorElement_def, mul_assoc] using K.mul_mem hk hkconj
-  haveI : Subgroup.Normalizes P K := ⟨hPnormK⟩
+  have : Subgroup.Normalizes P K := ⟨hPnormK⟩
   let Cfix : Subgroup K := fixedPointSubgroup (↥P) (↥K)
   let Ccomm : Subgroup K := commutatorAction (A := ↥P) (G := ↥K)
   have hfixed_eq :
@@ -183,7 +184,7 @@ private theorem section14_subgroupCentralizerIn_normal_of_normal
     section10NormalIn (subgroupCentralizerIn E A) E := by
   classical
   have hAE : A ≤ E := hAnorm.1
-  haveI : (A.subgroupOf E).Normal := hAnorm.2
+  have : (A.subgroupOf E).Normal := hAnorm.2
   have hC_le_E : subgroupCentralizerIn E A ≤ E := inf_le_left
   refine ⟨hC_le_E, ?_⟩
   have hCsub_eq :
@@ -224,7 +225,7 @@ public theorem section14_quotient_prime_of_primeOrder_not_le_centralizer
       (G := G) (E := E) (A := A) hAnorm
   have hQ_inf_C_bot : Q ⊓ C = ⊥ := by
     let R : Subgroup Q := (Q ⊓ C).subgroupOf Q
-    haveI : Fact (Nat.card Q).Prime := by
+    have : Fact (Nat.card Q).Prime := by
       rw [hQ.2]
       exact ⟨q.2⟩
     rcases Subgroup.eq_bot_or_eq_top_of_prime_card (G := Q) R with hRbot | hRtop
@@ -301,9 +302,9 @@ private theorem section14_lemma_14_11_not_tau2
       hM.1 hE hqτ2 hA).1
   have hAnil : Group.IsNilpotent A := by
     have hElem := (section12_rankTwo_elementary hA).2
-    letI : IsElementaryAbelian q.val A := hElem
-    letI : IsMulCommutative A := hElem.toIsMulCommutative
-    letI : CommGroup A := IsMulCommutative.instCommGroup
+    let : IsElementaryAbelian q.val A := hElem
+    let : IsMulCommutative A := hElem.toIsMulCommutative
+    let : CommGroup A := IsMulCommutative.instCommGroup
     infer_instance
   have hA_le_F : A ≤ section8FittingSubgroup E := by
     simpa [section8FittingSubgroup] using
@@ -323,7 +324,7 @@ private theorem section14_lemma_14_11_not_tau3
     (lemma_12_1_b
       (G := G) (M := M) (E := E) (E₁₂ := E₁₂)
       (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) hM.1 hE).2
-  haveI : (E₃.subgroupOf E).Normal := hE3norm.2
+  have : (E₃.subgroupOf E).Normal := hE3norm.2
   have hQsubE_p : IsPGroup q.val (Q.subgroupOf E) := by
     refine IsPGroup.of_card (p := q.val) (G := Q.subgroupOf E) (n := 1) ?_
     have hcard : Nat.card (Q.subgroupOf E) = Nat.card Q :=
@@ -345,9 +346,9 @@ private theorem section14_lemma_14_11_not_tau3
       (G := G) (M := M) (E := E) (E₁₂ := E₁₂)
       (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) hM.1 hE).2
   have hE3nil : Group.IsNilpotent E₃ := by
-    letI : IsCyclic E₃ := hE3cyc
-    letI : IsMulCommutative E₃ := IsCyclic.isMulCommutative
-    letI : CommGroup E₃ := IsMulCommutative.instCommGroup
+    let : IsCyclic E₃ := hE3cyc
+    let : IsMulCommutative E₃ := IsCyclic.isMulCommutative
+    let : CommGroup E₃ := IsMulCommutative.instCommGroup
     infer_instance
   have hE3_le_F : E₃ ≤ section8FittingSubgroup E := by
     simpa [section8FittingSubgroup] using
@@ -439,7 +440,7 @@ private theorem section14_lemma_14_11_fitting_qprime
     (hQ : Q ∈ section10PrimeOrderSubgroupsIn q E)
     (hQnotF : ¬ Q ≤ section8FittingSubgroup E) :
     q ∉ subgroupPrimeSet (section8FittingSubgroup E) := by
-  haveI : Fact q.val.Prime := ⟨q.2⟩
+  have : Fact q.val.Prime := ⟨q.2⟩
   intro hqF
   let F : Subgroup G := section8FittingSubgroup E
   let Fsub : Subgroup E := F.subgroupOf E
@@ -469,8 +470,8 @@ private theorem section14_lemma_14_11_fitting_qprime
   have hP_char : (P : Subgroup Fsub).Characteristic :=
     Sylow.characteristic_of_normal P hP_normal
   have hPmap_char : Pmap.Characteristic := by
-    letI : Fsub.Characteristic := hFsub_char
-    letI : (P : Subgroup Fsub).Characteristic := hP_char
+    let : Fsub.Characteristic := hFsub_char
+    let : (P : Subgroup Fsub).Characteristic := hP_char
     simpa [Pmap] using
       characteristic_map_subtype_of_characteristic (G := E) Fsub (P : Subgroup Fsub)
   have hPmap_p : IsPGroup q.val Pmap := by
@@ -482,7 +483,7 @@ private theorem section14_lemma_14_11_fitting_qprime
       (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) (Q := Q)
       hM hE hq hQ hQnotF S
   have hPmap_cyc : IsCyclic Pmap := by
-    letI : IsCyclic (S : Subgroup E) := hS_cyc
+    let : IsCyclic (S : Subgroup E) := hS_cyc
     have hsub_cyc : IsCyclic (Pmap.subgroupOf (S : Subgroup E)) := by
       infer_instance
     exact
@@ -493,12 +494,12 @@ private theorem section14_lemma_14_11_fitting_qprime
   have hΩlocal_char : Ωlocal.Characteristic := by
     simpa [Ωlocal] using omega₁_characteristic (G := Pmap) (p := q.val)
   have hΩE_char : ΩE.Characteristic := by
-    letI : Pmap.Characteristic := hPmap_char
-    letI : Ωlocal.Characteristic := hΩlocal_char
+    let : Pmap.Characteristic := hPmap_char
+    let : Ωlocal.Characteristic := hΩlocal_char
     simpa [ΩE, Ωlocal, section12OmegaOneSubgroup] using
       characteristic_map_subtype_of_characteristic (G := E) Pmap Ωlocal
   have hΩE_normal : ΩE.Normal := by
-    letI : ΩE.Characteristic := hΩE_char
+    let : ΩE.Characteristic := hΩE_char
     infer_instance
   have hΩE_le_Pmap : ΩE ≤ Pmap := by
     simpa [ΩE, Ωlocal, section12OmegaOneSubgroup] using Subgroup.map_subtype_le Ωlocal
@@ -522,7 +523,7 @@ private theorem section14_lemma_14_11_fitting_qprime
     refine IsPGroup.of_card (p := q.val) (G := Qsub) (n := 1) ?_
     simp [hQsub_card]
   have hsup_p : IsPGroup q.val (ΩE ⊔ Qsub : Subgroup E) := by
-    letI : ΩE.Normal := hΩE_normal
+    let : ΩE.Normal := hΩE_normal
     have hsup_p' : IsPGroup q.val (Qsub ⊔ ΩE : Subgroup E) := by
       exact IsPGroup.to_sup_of_normal_right
         (p := q.val) (H := Qsub) (K := ΩE) hQsub_p hΩE_p
@@ -585,7 +586,7 @@ private theorem section14_lemma_14_11_exists_rankTwo_nontrivial_commutator
           ⁅A, Q⁆ ≠ ⊥ ∧
             q ∈ section12QuotientPrimeSet (subgroupCentralizerIn E A) E := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.2⟩
+  have : Fact q.val.Prime := ⟨q.2⟩
   let K : Subgroup G := ⁅E, Q⁆
   let K₀ : Subgroup G := ⁅K, Q⁆
   have hQM : Q ≤ M := hQ.1.trans hE.1.2.1
@@ -633,8 +634,8 @@ private theorem section14_lemma_14_11_exists_rankTwo_nontrivial_commutator
   have hK_comm : IsMulCommutative K :=
     section14_isMulCommutative_of_le hDer_comm hK_le_der
   have hK_nil : Group.IsNilpotent K := by
-    letI : IsMulCommutative K := hK_comm
-    letI : CommGroup K := IsMulCommutative.instCommGroup
+    let : IsMulCommutative K := hK_comm
+    let : CommGroup K := IsMulCommutative.instCommGroup
     infer_instance
   have hK_le_F : K ≤ section8FittingSubgroup E := by
     simpa [section8FittingSubgroup] using
@@ -700,7 +701,7 @@ private theorem section14_lemma_14_11_exists_rankTwo_nontrivial_commutator
         (Subgroup.commutator_eq_bot_iff_le_centralizer : ⁅K, Q⁆ = ⊥ ↔
           K ≤ Subgroup.centralizer (Q : Set G)).mp hK₀bot
     have hQ_comm : IsMulCommutative Q := by
-      letI : IsCyclic Q := isCyclic_of_prime_card hQ.2
+      let : IsCyclic Q := isCyclic_of_prime_card hQ.2
       infer_instance
     have hKQ_comm : IsMulCommutative (Q ⊔ K : Subgroup G) :=
       section14_isMulCommutative_sup_of_le_centralizer
@@ -715,7 +716,7 @@ private theorem section14_lemma_14_11_exists_rankTwo_nontrivial_commutator
       let D : Subgroup G := Q ⊔ K
       let Kd : Subgroup D := K.subgroupOf D
       let Qd : Subgroup D := Q.subgroupOf D
-      haveI : Kd.Normal := by
+      have : Kd.Normal := by
         simpa [D, Kd, sup_comm] using hK_sub_norm_QK
       have htop : Kd ⊔ Qd = ⊤ := by
         calc
@@ -768,8 +769,8 @@ private theorem section14_lemma_14_11_exists_rankTwo_nontrivial_commutator
           simpa [mul_assoc] using hy'
       exact (Subgroup.normal_subgroupOf_iff_le_normalizer hQK_le_E).2 hE_norm_QK
     have hQK_nil : Group.IsNilpotent (Q ⊔ K : Subgroup G) := by
-      letI : IsMulCommutative (Q ⊔ K : Subgroup G) := hKQ_comm
-      letI : CommGroup (Q ⊔ K : Subgroup G) := IsMulCommutative.instCommGroup
+      let : IsMulCommutative (Q ⊔ K : Subgroup G) := hKQ_comm
+      let : CommGroup (Q ⊔ K : Subgroup G) := IsMulCommutative.instCommGroup
       infer_instance
     have hQK_le_F : Q ⊔ K ≤ section8FittingSubgroup E := by
       simpa [section8FittingSubgroup] using
@@ -804,8 +805,8 @@ private theorem section14_lemma_14_11_exists_rankTwo_nontrivial_commutator
   have hNX_le_M :
       Subgroup.normalizer (Subgroup.zpowers z : Set G) ≤ M := by
     let Xsub : Subgroup K₀ := (Subgroup.zpowers z).subgroupOf K₀
-    letI : IsCyclic K₀ := hK₀_cyc
-    haveI : Xsub.Characteristic :=
+    let : IsCyclic K₀ := hK₀_cyc
+    have : Xsub.Characteristic :=
       section12_subgroup_characteristic_of_cyclic (H := K₀) Xsub
     have hNK₀_le_NX :
         Subgroup.normalizer (K₀ : Set G) ≤
@@ -881,7 +882,7 @@ private theorem section14_lemma_14_11_exists_rankTwo_nontrivial_commutator
         A ≤ Subgroup.centralizer (Q : Set G)).2 hA_le_cent_Q)
   have hQ_inf_C_bot : Q ⊓ C = ⊥ := by
     let R : Subgroup Q := (Q ⊓ C).subgroupOf Q
-    haveI : Fact (Nat.card Q).Prime := by
+    have : Fact (Nat.card Q).Prime := by
       rw [hQ.2]
       exact ⟨q.2⟩
     rcases Subgroup.eq_bot_or_eq_top_of_prime_card (G := Q) R with hRbot | hRtop
@@ -997,21 +998,21 @@ public theorem lemma_14_11
     exact h12_9b g⁻¹ hg'
   have hA_ne_top : A ≠ ⊤ := by
     intro htop
-    haveI : Fact p.val.Prime := ⟨p.2⟩
+    have : Fact p.val.Prime := ⟨p.2⟩
     have hElem := (section12_rankTwo_elementary hA).2
-    haveI : IsElementaryAbelian p.val A := hElem
+    have : IsElementaryAbelian p.val A := hElem
     have hAp : IsPGroup p.val A := IsElementaryAbelian.isPGroup p.val A
     have htop_p : IsPGroup p.val (⊤ : Subgroup G) :=
       hAp.of_equiv (MulEquiv.subgroupCongr htop)
     have hGp : IsPGroup p.val G :=
       htop_p.of_equiv (Subgroup.topEquiv : (⊤ : Subgroup G) ≃* G)
-    haveI : Group.IsNilpotent G :=
+    have : Group.IsNilpotent G :=
       IsPGroup.isNilpotent (p := p.val) (G := G) (h := hGp)
     exact IsMinCE.not_solvable (G := G) (inferInstance : Group.IsSolvable G)
   have hNA_ne_top : Subgroup.normalizer (A : Set G) ≠ ⊤ := by
     intro hNtop
     have hAnormG : A.Normal := Subgroup.normalizer_eq_top_iff.mp hNtop
-    letI : IsSimpleGroup G := IsMinCE.simple
+    let : IsSimpleGroup G := IsMinCE.simple
     rcases hAnormG.eq_bot_or_eq_top with hAbot | hAtop
     · exact section12_rankTwo_ne_bot hA hAbot
     · exact hA_ne_top hAtop

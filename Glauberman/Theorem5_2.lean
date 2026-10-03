@@ -14,6 +14,7 @@ import Mathlib.GroupTheory.Commutator.Basic
 import Mathlib.GroupTheory.Subgroup.Centralizer
 import Mathlib.Tactic
 
+
 open scoped Pointwise
 
 set_option maxHeartbeats 800000
@@ -1441,7 +1442,8 @@ public theorem theorem5_2_step_IV {p : ℕ} [Fact p.Prime] {G : Type u} [Group G
         exact T.mul_mem (Subgroup.mem_sup_left hdiffP) (Subgroup.mem_sup_right hbU)
       have hprod : (c * a * c⁻¹) * (c * b * c⁻¹) ∈ T :=
         T.mul_mem (Subgroup.mem_sup_left hcaP) hcbT
-      convert hprod using 1 <;> group
+      convert hprod using 1
+      all_goals group
     have hC0_le_normalizer_T : C0 ≤ Subgroup.normalizer (T : Set G) := by
       intro c hc
       rw [Subgroup.mem_normalizer_iff]

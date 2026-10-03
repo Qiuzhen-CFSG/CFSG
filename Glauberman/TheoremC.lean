@@ -10,6 +10,7 @@ public import Glauberman.Theorem7_1
 public import FeitThompson.BGsection6.Defs
 public import Mathlib.Tactic
 
+
 /-!
 # Glauberman Theorem C (corrected statement)
 

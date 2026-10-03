@@ -7,9 +7,10 @@ public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Projective
 public import Mathlib.LinearAlgebra.Matrix.ProjectiveSpecialLinearGroup
 public import FeitThompson.PCore.PCore
 public import FeitThompson.PCore.PPrimeCore
-import FeitThompson.Burnside.NormalComplement
+import Theory.GroupAction.NormalComplement
 import FeitThompson.BGsection1.PLengthLemmas
 import FeitThompson.BGsection1.theorem_1_18
+
 
 /-!
 # The Gorenstein--Walter classification layer
@@ -278,7 +279,7 @@ private lemma generator_of_inf {m : ℕ} (H : Subgroup (DihedralGroup (2 ^ m))) 
   · change (g : DihedralGroup (2 ^ m)) ∈ H
     exact g.2.1
   · have hmap : (Subgroup.zpowers g).map (H ⊓ R).subtype = Subgroup.zpowers a := by
-      simpa [a] using MonoidHom.map_zpowers (H ⊓ R).subtype g
+      simp [a]
     have htop : (⊤ : Subgroup (↥(H ⊓ R))).map (H ⊓ R).subtype = H ⊓ R := by
       ext x
       constructor
@@ -308,7 +309,7 @@ private lemma mem_eq_one_of_card_one {m : ℕ} (H : Subgroup (DihedralGroup (2 ^
   exact congrArg Subtype.val heq
 
 -- (7) the classification
-private lemma isCyclic_or_dihedral_of_subgroup_dihedral_two_group {m : ℕ} (hm : 1 ≤ m)
+private lemma isCyclic_or_dihedral_of_subgroup_dihedral_two_group {m : ℕ}
     (H : Subgroup (DihedralGroup (2 ^ m))) :
     IsCyclic H ∨ ∃ k : ℕ, 1 ≤ k ∧ Nonempty (H ≃* DihedralGroup (2 ^ k)) := by
   let : NeZero (2 ^ m) := ⟨pow_ne_zero m (by norm_num : 2 ≠ 0)⟩
@@ -380,7 +381,7 @@ private lemma isCyclic_or_dihedral_of_subgroup_dihedral_two_group {m : ℕ} (hm 
           simpa [Subtype.ext_iff] using hrelD
         have hσ2' : (⟨DihedralGroup.sr i₀, hxH⟩ : ↥H) ^ 2 = 1 := by
           apply Subtype.ext
-          simpa [Subtype.ext_iff, pow_two] using (DihedralGroup.sr_mul_self i₀)
+          simp [pow_two]
         have hgen : ⊤ = Subgroup.zpowers (⟨a, ha⟩ : ↥H) ⊔ Subgroup.zpowers (⟨DihedralGroup.sr i₀, hxH⟩ : ↥H) := by
           have hHjoin : H = Subgroup.zpowers a ⊔ Subgroup.zpowers (DihedralGroup.sr i₀) := by
             apply le_antisymm
@@ -425,10 +426,10 @@ private lemma isCyclic_or_dihedral_of_subgroup_dihedral_two_group {m : ℕ} (hm 
 /-! Public interface for the dihedral-subgroup classification used by the
     Gorenstein--Walter Proposition-9 translation. -/
 
-public theorem subgroups_dihedral_twoGroup_cyclic_or_dihedral {m : ℕ} (hm : 1 ≤ m)
+public theorem subgroups_dihedral_twoGroup_cyclic_or_dihedral {m : ℕ}
     (H : Subgroup (DihedralGroup (2 ^ m))) :
     IsCyclic H ∨ ∃ k : ℕ, 1 ≤ k ∧ Nonempty (H ≃* DihedralGroup (2 ^ k)) := by
-  exact isCyclic_or_dihedral_of_subgroup_dihedral_two_group hm H
+  exact isCyclic_or_dihedral_of_subgroup_dihedral_two_group H
 
 -- IsCyclic transport under a MulEquiv
 private lemma isCyclic_of_mulEquiv {G : Type u} {H : Type v} [Group G] [Group H]
@@ -438,7 +439,7 @@ private lemma isCyclic_of_mulEquiv {G : Type u} {H : Type v} [Group G] [Group H]
   have hmap : (Subgroup.zpowers g).map (e.symm : H →* G) = Subgroup.zpowers (e.symm g) := MonoidHom.map_zpowers (e.symm : H →* G) g
   have htop : (⊤ : Subgroup H).map (e.symm : H →* G) = ⊤ := by
     ext x
-    simp [Subgroup.mem_map]
+    simp
   calc
     Subgroup.zpowers (e.symm g) = (Subgroup.zpowers g).map e.symm := hmap.symm
     _ = (⊤ : Subgroup H).map e.symm := by rw [hg]
@@ -462,7 +463,7 @@ private lemma sylow_cyclic_or_dihedral {G : Type u} [Group G] [Finite G]
   have eS' : S' ≃* S'.subgroupOf Q := (Subgroup.subgroupOfEquivOfLe hSleQ).symm
   have eS'' : S'.subgroupOf Q ≃* S'' := by
     simpa [S''] using (Subgroup.equivMapOfInjective (S'.subgroupOf Q) eQ.toMonoidHom eQ.injective)
-  rcases (isCyclic_or_dihedral_of_subgroup_dihedral_two_group hmge1 (H := S'')) with hcyc'' | hdih''
+  rcases (isCyclic_or_dihedral_of_subgroup_dihedral_two_group (H := S'')) with hcyc'' | hdih''
   · left
     exact isCyclic_of_mulEquiv eSM (isCyclic_of_mulEquiv eS' (isCyclic_of_mulEquiv eS'' hcyc''))
   · right
@@ -628,7 +629,7 @@ public theorem hasCyclicOrDihedralSylowTwo_quotient {G : Type u} [Group G] [Fini
     · intro x hx
       have hx1 : (x : G ⧸ N) ∈
           (Subgroup.zpowers ρ' ⊔ Subgroup.zpowers σ').map (S : Subgroup (G ⧸ N)).subtype := by
-        simpa [ρ', σ', Subgroup.map_sup, MonoidHom.map_zpowers, ← hgenamb] using x.2
+        simp [ρ', σ', Subgroup.map_sup, MonoidHom.map_zpowers, ← hgenamb]
       rcases (Subgroup.mem_map).mp hx1 with ⟨y, hy, hyx⟩
       have hyx' : y = x := Subtype.ext hyx
       exact hyx' ▸ hy
@@ -677,7 +678,7 @@ private lemma card_comap_quotient {G : Type u} [Group G] [Finite G]
     apply (Subgroup.mem_comap).mpr
     have hx1 : mk x = 1 :=
       (MonoidHom.mem_ker (f := mk)).mp ((QuotientGroup.ker_mk' (N := N)).symm ▸ hx)
-    simpa [mk, hx1] using H.one_mem
+    simp [mk, hx1]
   have : (N.subgroupOf P).Normal := by
     -- N ⊴ G ⟹ N ≤ N_G(N) ⟹ N.subgroupOf P ⊴ P
     exact Subgroup.normal_subgroupOf_of_le_normalizer (H := P) (N := N)
@@ -739,11 +740,13 @@ private lemma pPrimeCore_quotient_eq_bot_of_eq_core {G : Type u} [Group G] [Fini
   have hmap : H = P.map mk := by
     have h1' : (H.comap mk).map mk = mk.range ⊓ H := Subgroup.map_comap_eq mk H
     have htop : mk.range = ⊤ := MonoidHom.range_eq_top_of_surjective mk (QuotientGroup.mk'_surjective N)
-    simpa [P, mk, htop] using h1'.symm
+    change H = (H.comap mk).map mk
+    rw [h1', htop]
+    simp
   rw [hmap]
   exact le_bot_iff.mp ((Subgroup.map_mono hPN).trans (le_of_eq (by
     rw [Subgroup.map_eq_bot_iff]
-    simpa [mk] using le_of_eq (QuotientGroup.ker_mk' (N := N)).symm)))
+    simp [mk])))
 
 -- the transfer: if the quotient by O₂'(G) is a D-group, so is G
 private lemma isDGroup_of_isDGroup_quotient {G : Type u} [Group G] [Finite G]
@@ -1175,7 +1178,7 @@ public lemma quotient_center_embed_aut
     (Subgroup.mem_centralizer_iff.mp hx) (h : G) h.2
   rw [← hx']
   group
-  simpa
+  simp
 
 private lemma hasCyclicOrDihedral_of_hasDihedral {G : Type u} [Group G]
     (h : HasDihedralSylowTwo G) : HasCyclicOrDihedralSylowTwo G := by

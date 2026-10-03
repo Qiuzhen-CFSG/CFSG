@@ -41,38 +41,8 @@ public theorem exists_fixed_involution_centralizer_of_kleinFour_inverted
   have hVA : V ≤ Subgroup.normalizer (A : Set G) := by
     intro v hv
     exact (le_normalizer_of_isNormalIn hAnorm) (hVleM hv)
-  have hfaith : A ⊓ Subgroup.centralizer (V : Set G) = ⊥ := by
-    apply le_bot_iff.mp
-    intro x hx
-    have hxA : x ∈ A := hx.1
-    have hxV : x ∈ Subgroup.centralizer (V : Set G) := hx.2
-    have htcomm : x * t = t * x := by
-      exact ((Subgroup.mem_centralizer_iff (g := x) (s := (V : Set G))).1
-        hxV t htV).symm
-    have htinvt : t * x * t⁻¹ = x⁻¹ := hAinvt x hxA
-    have htinvt' : t * x * t⁻¹ = x := by
-      calc
-        t * x * t⁻¹ = (x * t) * t⁻¹ := by rw [htcomm]
-        _ = x * (t * t⁻¹) := by rw [mul_assoc]
-        _ = x := by simp
-    have hxinv : x = x⁻¹ := by
-      calc
-        x = t * x * t⁻¹ := htinvt'.symm
-        _ = x⁻¹ := htinvt
-    have hx2 : x ^ 2 = 1 := by
-      calc
-        x ^ 2 = x * x := by rw [pow_two]
-        _ = x * x⁻¹ := by nth_rw 2 [hxinv]
-        _ = 1 := mul_inv_cancel x
-    have hxone : x = 1 := by
-      have hx1 : (⟨x, hxA⟩ : ↥A) ^ 2 = 1 := by
-        apply Subtype.ext
-        exact hx2
-      have hone := eq_one_of_sq_eq_one_of_coprime_two (G := ↥A) hAodd hx1
-      exact congrArg Subtype.val hone
-    exact hxone
   rcases exists_ne_one_fixedPoints_of_kleinFour_action
-      (G := G) (V := V) (A := A) hV hVA hAodd hAne hfaith with
+      (G := G) (V := V) (A := A) hV hVA hAodd hAne with
     ⟨s, hsV, hsne, hsA⟩
   have hsne_t : s ≠ t := by
     intro hst

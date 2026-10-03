@@ -3,6 +3,7 @@ module
 public import Glauberman.DicksonExceptionalF9
 public import Glauberman.QdSLPCore
 
+
 /-!
 # A prime-field `SL₂(3)` subgroup in the exceptional `F₉` image
 

@@ -56,7 +56,7 @@ values in virtual characters supported on `G#`.
   isCFLinearIsometryOnSpanOn S puncturedSet T ∧
     ∀ χ : Section1.ClassFunction L,
       integerSpanOn S puncturedSet χ →
-        Theory.Character.IsVirtualCharacter (T χ) ∧
+        IsVirtualCharacter (T χ) ∧
           Section1.supportedOn (T χ) puncturedSet
 
 /-- Peterfalvi Hypothesis `(5.2)(c)`: the elements of `S` are pairwise orthogonal. -/

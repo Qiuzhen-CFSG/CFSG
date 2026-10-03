@@ -2,9 +2,10 @@ module
 
 public import FeitThompson.BGsection14.lemma_14_13
 import FeitThompson.PCore.CentralizerControl
-import FeitThompson.HallSubgroups.Conjugacy
+public import Theory.GroupTheory.Hall.Conjugacy
 import Mathlib.Algebra.Group.Subgroup.Order
 import Mathlib.GroupTheory.Schreier
+
 
 open scoped Pointwise
 
@@ -74,7 +75,7 @@ Proposition 14.2(a) package, which is only available when `κ(M)` is nonempty. -
 /-- The ambient `p`-core of a subgroup. -/
 @[expose] public def section15PCoreIn
     (p : Nat.Primes) (H : Subgroup G) : Subgroup G := by
-  letI : Fact p.val.Prime := ⟨p.property⟩
+  let : Fact p.val.Prime := ⟨p.property⟩
   exact (pCore p.val H).map H.subtype
 
 /-- Two elements are conjugate by an element of a specified subgroup. -/

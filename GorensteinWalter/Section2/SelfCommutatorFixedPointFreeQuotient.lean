@@ -3,8 +3,9 @@ module
 public import GorensteinWalter.Classification
 import GorensteinWalter.Section2.InvertingSelfCommutatorAction
 import FeitThompson.BGsection7.Defs
-import FeitThompson.SubgroupConj
+import Theory.GroupTheory.SubgroupConjugation
 import Mathlib.GroupTheory.FixedPointFree
+
 
 /-!
 # A fixed-point-free quotient action bounds the ambient commutator

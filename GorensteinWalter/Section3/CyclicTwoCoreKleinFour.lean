@@ -9,6 +9,7 @@ public import BenderGlauberman.Defs
 import BenderGlauberman.FinalTheorem
 import all BenderGlauberman.Lemma19
 
+
 noncomputable section
 
 open scoped commutatorElement
@@ -34,7 +35,7 @@ public theorem firstCase_U_eq_FU_sup_B
     obtain ⟨n, hn⟩ := bg.S.isPGroup'.exists_card_eq
     rw [hn]
     exact hUodd.pow_left n
-  have hsolv : IsSolvable bg.U :=
+  have hsolv : Group.IsSolvable bg.U :=
     odd_order_theorem bg.U (Nat.coprime_two_left.mp hUodd)
   have hdecomp :
       fixedPointSubgroup (bg.S : Subgroup G) bg.U ⊔

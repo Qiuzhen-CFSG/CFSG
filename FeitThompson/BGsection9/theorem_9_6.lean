@@ -19,7 +19,7 @@ variable {G : Type*} [Group G] [Finite G] [IsMinCE G]
 private theorem section9_generatorRank_le_natCard
     (G : Type*) [Group G] [Finite G] :
     generatorRank G ≤ Nat.card G := by
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   obtain ⟨S, hS_card, _hS_top⟩ := Group.rank_spec G
   calc
     generatorRank G = Group.rank G := generatorRank_eq_group_rank G
@@ -30,7 +30,7 @@ private theorem section9_generatorRank_le_natCard
 private theorem section9_primeRank_le_natCard
     {p : ℕ} (G : Type*) [Group G] [Finite G] :
     primeRank p G ≤ Nat.card G := by
-  rw [primeRank]
+  rw [primeRank_eq_sSup_generatorRank]
   refine csSup_le ?_ ?_
   · exact ⟨0, ⊥, IsPGroup.of_bot (p := p) (G := G), inferInstance, Nat.zero_le _⟩
   · intro n hn
@@ -47,12 +47,12 @@ private theorem section9_primeRank_at_least_three_of_generatorRank_subgroup
   have hA'p : IsPGroup q A' := by
     exact hAp.of_equiv (Subgroup.subgroupOfEquivOfLe (H := A) (K := K) hAK).symm
   have hA'comm : IsMulCommutative A' := by
-    letI : IsMulCommutative A := hAcomm
+    let : IsMulCommutative A := hAcomm
     exact Subgroup.subgroupOf_isMulCommutative (H := A) (K := K)
   have hgen_eq : generatorRank A' = generatorRank A := by
     rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
     exact Group.rank_congr (Subgroup.subgroupOfEquivOfLe (H := A) (K := K) hAK)
-  rw [primeRank]
+  rw [primeRank_eq_sSup_generatorRank]
   refine le_csSup ?_ ?_
   · refine ⟨Nat.card K, ?_⟩
     intro n hn
@@ -83,7 +83,7 @@ private theorem section9_exists_pSubgroup_three_le_generatorRank_of_three_le_gro
   let T : Set ℕ :=
     {n : ℕ | ∃ B : Subgroup R, IsPGroup q B ∧ IsMulCommutative B ∧ n ≤ generatorRank B}
   have hqrank' : 2 < sSup T := by
-    simpa [primeRank, T] using hqrank
+    simpa [primeRank_eq_sSup_generatorRank, T] using hqrank
   have hTbdd : BddAbove T := by
     refine ⟨Nat.card R, ?_⟩
     intro n hn
@@ -121,7 +121,7 @@ private theorem section9_exists_pSubgroup_two_le_generatorRank_of_two_le_groupRa
   let T : Set ℕ :=
     {n : ℕ | ∃ B : Subgroup R, IsPGroup q B ∧ IsMulCommutative B ∧ n ≤ generatorRank B}
   have hqrank' : 1 < sSup T := by
-    simpa [primeRank, T] using hqrank
+    simpa [primeRank_eq_sSup_generatorRank, T] using hqrank
   have hTbdd : BddAbove T := by
     refine ⟨Nat.card R, ?_⟩
     intro n hn
@@ -151,7 +151,7 @@ private theorem section9_prime_dvd_card_of_pSubgroup_two_le_generatorRank
   have hBnoncyc : ¬ IsCyclic B := section9_not_isCyclic_of_two_le_generatorRank hBgen
   have hBnontrivial : Nontrivial B := by
     by_contra hnt
-    letI : Subsingleton B := not_nontrivial_iff_subsingleton.mp hnt
+    let : Subsingleton B := not_nontrivial_iff_subsingleton.mp hnt
     exact hBnoncyc (isCyclic_of_subsingleton (α := B))
   obtain ⟨n, hn_pos, hBcard⟩ :=
     (IsPGroup.nontrivial_iff_card (p := p) (G := B) (hG := hBp)).mp hBnontrivial
@@ -170,7 +170,7 @@ private theorem section9_subgroup_nontrivial_of_two_le_groupRank
   have hBnoncyc : ¬ IsCyclic B := section9_not_isCyclic_of_two_le_generatorRank hBgen
   have hBnontrivial : Nontrivial B := by
     by_contra hnt
-    letI : Subsingleton B := not_nontrivial_iff_subsingleton.mp hnt
+    let : Subsingleton B := not_nontrivial_iff_subsingleton.mp hnt
     exact hBnoncyc (isCyclic_of_subsingleton (α := B))
   obtain ⟨b, hb_ne⟩ := exists_ne (1 : B)
   have hbK_ne : (b : K) ≠ 1 := by
@@ -236,7 +236,7 @@ private theorem section9_unique_of_three_le_groupRank
     section9_exists_pSubgroup_three_le_generatorRank_of_three_le_groupRank (R := K) hKrank
   let p : ℕ := p0.val
   have hp : Nat.Prime p := p0.property
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let B : Subgroup G := B0.map K.subtype
   have hB_le_K : B ≤ K := section9_map_subtype_le (K := K) B0
   have hBp : IsPGroup p B := by
@@ -244,7 +244,7 @@ private theorem section9_unique_of_three_le_groupRank
     exact IsPGroup.map hB0p K.subtype
   have hBcomm : IsMulCommutative B := by
     dsimp [B]
-    letI : IsMulCommutative B0 := hB0comm
+    let : IsMulCommutative B0 := hB0comm
     simpa using (Subgroup.map_isMulCommutative (f := K.subtype) (H := B0))
   have hBgen_eq : generatorRank B = generatorRank B0 := by
     simpa [B] using section9_generatorRank_map_subtype_eq (K := K) B0
@@ -280,7 +280,7 @@ private theorem section9_unique_of_three_le_groupRank
     exact IsPGroup.map (P.isPGroup'.to_subgroup A0) (P : Subgroup G).subtype
   have hAcomm : IsMulCommutative A := by
     dsimp [A]
-    letI : IsMulCommutative A0 := hA0comm
+    let : IsMulCommutative A0 := hA0comm
     simpa using
       (Subgroup.map_isMulCommutative (f := (P : Subgroup G).subtype) (H := A0))
   have hA0gen : 3 ≤ generatorRank A0 :=

@@ -3,6 +3,7 @@ module
 public import BenderSuzuki.SE.Section10Proposition102Final
 public import BenderSuzuki.PFchapter2.Basic
 
+
 /-!
 # Section 11, Lemma 11.4: source-independent local algebra
 
@@ -26,7 +27,7 @@ public theorem lemma114_A1_coprime_card
     {M W D E : Subgroup X} {t : X}
     (d : Lemma101Conclusion M W D E (peterfalviV D t) t) :
     Nat.Coprime d.choice.p (Nat.card d.choice.initial.A1) := by
-  letI : Fact d.choice.p.Prime := ⟨d.choice.p_prime⟩
+  let : Fact d.choice.p.Prime := ⟨d.choice.p_prime⟩
   rw [d.A1_eq_pPrimeCore]
   rw [Subgroup.card_map_of_injective
     (peterfalviV D t).subtype_injective]
@@ -134,7 +135,7 @@ public theorem lemma114_inf_centralizer_le_of_prime_complement
       _ = Nat.card PV := hcomp.index_eq_card
       _ = Nat.card P := natCard_subgroupOf_eq P V hPV
       _ = p := hPcard
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let q : V →* (V ⧸ AV) := QuotientGroup.mk' AV
   intro x hx
   by_contra hxA
@@ -182,7 +183,7 @@ public theorem lemma114_inf_centralizer_le_of_prime_complement
       exact congrArg Subtype.val
         ((Subgroup.mem_centralizer_iff.mp hz) aV haAV)
   have hCVnormal : CV.Normal := by
-    letI : AV.Normal := hAnormal
+    let : AV.Normal := hAnormal
     rw [hCVeq]
     infer_instance
   let T : Sylow p CV := default
@@ -241,7 +242,7 @@ public theorem lemma114_inf_centralizer_le_of_prime_complement
     apply hyne
     apply Subtype.ext
     exact congrArg (fun w : CP => ((w : P) : X)) hyCP
-  letI : Fact (Nat.card P).Prime := ⟨by simpa [hPcard] using hp⟩
+  let : Fact (Nat.card P).Prime := ⟨by simpa [hPcard] using hp⟩
   have hCPtop : CP = ⊤ :=
     (Subgroup.eq_bot_or_eq_top_of_prime_card CP).resolve_left hCPne
   have hPleC : P ≤ C := by

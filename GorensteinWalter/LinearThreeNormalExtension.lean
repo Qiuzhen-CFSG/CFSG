@@ -5,6 +5,7 @@ public import GorensteinWalter.LinearThree
 public import GorensteinWalter.LinearThreeEquiv
 import GorensteinWalter.PGroupExtension
 
+
 /-!
 # Normal `PSL₂(3)` extensions
 

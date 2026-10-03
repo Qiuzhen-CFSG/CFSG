@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section3.FirstCaseKleinRestrictionFive
 import Mathlib.Tactic
 
+
 /-!
 # An outside-inverted subgroup misses `VU`
 

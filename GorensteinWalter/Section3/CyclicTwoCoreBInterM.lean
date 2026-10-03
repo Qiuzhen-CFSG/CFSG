@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section3.CyclicTwoCoreOddCoreInB
 import Mathlib.Tactic
 
+
 /-!
 # The full `B ∩ M = O(M)` equality in the A₇ layer model
 

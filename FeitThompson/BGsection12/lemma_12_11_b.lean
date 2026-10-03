@@ -1,6 +1,8 @@
 module
 
+public import FeitThompson.BGsection12.lemma_12_3_a
 public import FeitThompson.BGsection12.lemma_12_11_a
+
 
 open scoped Pointwise
 
@@ -43,16 +45,6 @@ private theorem section12_pCore_characteristic
       _ ≤ (pCore p R).map φ.toMonoidHom := Subgroup.map_mono hsymm_le
 
 omit [Finite G] [IsMinCE G] in
-private theorem section12_pSubgroup_le_pCore_of_nilpotent
-    {R : Type*} [Group R] [Finite R] [Group.IsNilpotent R]
-    {p : ℕ} [Fact p.Prime] {B : Subgroup R} (hBp : IsPGroup p B) :
-    B ≤ pCore p R := by
-  obtain ⟨S, hB_le_S⟩ := IsPGroup.exists_le_sylow (G := R) (p := p) hBp
-  have hS_normal : (S : Subgroup R).Normal :=
-    Group.IsNilpotent.sylow_normal (p := p) inferInstance S
-  exact hB_le_S.trans (le_sSup ⟨hS_normal, S.isPGroup'⟩)
-
-omit [Finite G] [IsMinCE G] in
 public theorem section12_commutator_le_left_of_le_normalizer
     {K A : Subgroup G}
     (hAK : A ≤ Subgroup.normalizer (K : Set G)) :
@@ -61,7 +53,7 @@ public theorem section12_commutator_le_left_of_le_normalizer
   have hKnorm : (K.subgroupOf L).Normal := by
     simpa [L] using
       Subgroup.normal_subgroupOf_sup_of_le_normalizer (H := A) (N := K) hAK
-  haveI : (K.subgroupOf L).Normal := hKnorm
+  have : (K.subgroupOf L).Normal := hKnorm
   intro x hx
   have hxmap : x ∈ (⁅K.subgroupOf L, A.subgroupOf L⁆).map L.subtype := by
     rw [commutator_subgroupOf_map_eq L A K le_sup_left le_sup_right]
@@ -143,7 +135,7 @@ private theorem section12_isNilpotent_of_hasNormalPComplements
       intro x hx
       rw [Subgroup.mem_iInf]
       intro q
-      haveI : Fact q.val.val.Prime := ⟨q.val.property⟩
+      have : Fact q.val.val.Prime := ⟨q.val.property⟩
       have hq_not_dvd_P : ¬ q.val.val ∣ Nat.card (P : Subgroup H) := by
         intro hq_dvd
         rcases P.isPGroup'.exists_card_eq with ⟨n, hcardP⟩
@@ -176,7 +168,7 @@ private theorem section12_isNilpotent_of_hasNormalPComplements
           exact iInf_le _ iq
         have hq_core : q ∣ Nat.card (pPrimeCore q H) :=
           hq_dvd.trans (Subgroup.card_dvd_of_le hC_le_core)
-        haveI : Fact q.Prime := ⟨hqprime⟩
+        have : Fact q.Prime := ⟨hqprime⟩
         exact ((hqprime.coprime_iff_not_dvd).1
           (pPrimeCore_coprime_card (G := H) (p := q))) hq_core
     have hC_eq_P : C = (P : Subgroup H) :=
@@ -238,7 +230,7 @@ private theorem section12_derived_quotient_mbeta_hasNormalPComplement
     HasNormalPComplement p.val
       (derivedSubgroup M ⧸ (section10MbetaSubgroup M).subgroupOf (derivedSubgroup M)) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   let N : Subgroup M := section10MbetaSubgroup M
   let D : Subgroup M := derivedSubgroup M
   have hNleD : N ≤ D := by
@@ -302,7 +294,7 @@ public theorem section12_sylow_inf_normal_ne_bot_of_prime_dvd_normal
     (hpD : p ∈ subgroupPrimeSet D) :
     (S : Subgroup R) ⊓ D ≠ ⊥ := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let QD : Sylow p.val D := Classical.choice (Sylow.nonempty (p := p.val) (G := D))
   have hQD_ne_bot : (QD : Subgroup D) ≠ ⊥ :=
     Sylow.ne_bot_of_dvd_card (G := D) QD hpD
@@ -350,7 +342,7 @@ private theorem section12_sylow_le_derived_of_sigma_or_tau3
     (S : Sylow q.val M) :
     (S : Subgroup M) ≤ derivedSubgroup M := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   rcases hq with hqσ | hqτ3
   · exact section10_sigma_sylow_le_derivedSubgroup (G := G) hM hqσ S
   · rcases (by simpa [section12Tau3Primes] using hqτ3) with
@@ -427,7 +419,7 @@ public theorem lemma_12_11_b
       (G := G) (M := Mstar) (A := A) (p := p) hMstar.1 hpσstar hA_Mstar
   have hAp : IsPGroup p.val A := by
     have hElem := (section12_rankTwo_elementary hA).2
-    haveI : IsElementaryAbelian p.val A := hElem
+    have : IsElementaryAbelian p.val A := hElem
     exact IsElementaryAbelian.isPGroup p.val A
   intro q hqQuot
   by_cases hqτstar : q ∈ section12Tau1Primes Mstar ∪ section12Tau2Primes Mstar
@@ -454,7 +446,7 @@ public theorem lemma_12_11_b
         rw [← hcardE]
         exact dvd_mul_of_dvd_left hqidx _
       simpa [subgroupPrimeSet] using hq_card_E
-    haveI : Fact q.val.Prime := ⟨q.2⟩
+    have : Fact q.val.Prime := ⟨q.2⟩
     have hqMstar : q ∈ subgroupPrimeSet Mstar :=
       section8_subgroupPrimeSet_mono hE_le_Mstar hqE
     let Q : Sylow q.val E := Classical.choice (Sylow.nonempty (p := q.val) (G := E))
@@ -483,7 +475,7 @@ public theorem lemma_12_11_b
     let CsubE : Subgroup E := (subgroupCentralizerIn E A).subgroupOf E
     have hCnormE : section10NormalIn (subgroupCentralizerIn E A) E :=
       section12_subgroupCentralizerIn_normal_of_normal (G := G) (E := E) (A := A) hAnormE
-    haveI : CsubE.Normal := by
+    have : CsubE.Normal := by
       simpa [CsubE] using hCnormE.2
     let qE : E →* E ⧸ CsubE := QuotientGroup.mk' CsubE
     let QbarE : Sylow q.val (E ⧸ CsubE) :=
@@ -541,10 +533,10 @@ public theorem lemma_12_11_b
     have hα_le_D : α ≤ D := by
       exact (section12_mbetaSubgroup_le_msigmaSubgroup (G := G) hMstar.1).trans
         (theorem_10_2_c (G := G) hMstar.1).2
-    haveI : α.Normal := by
+    have : α.Normal := by
       dsimp [α]
       infer_instance
-    haveI : (α.subgroupOf D).Normal := by
+    have : (α.subgroupOf D).Normal := by
       simpa [α, D] using
         (Subgroup.Normal.subgroupOf (inferInstance : α.Normal) D)
     let qMstar : Mstar →* Mstar ⧸ α := QuotientGroup.mk' α
@@ -553,7 +545,7 @@ public theorem lemma_12_11_b
       dsimp [Dbar]
       exact Subgroup.Normal.map (H := D) inferInstance qMstar
         (QuotientGroup.mk'_surjective α)
-    haveI : Dbar.Normal := hDbar_norm
+    have : Dbar.Normal := hDbar_norm
     have hDquot_nil :
         Group.IsNilpotent (D ⧸ α.subgroupOf D) :=
       section12_derived_quotient_mbeta_nilpotent
@@ -574,11 +566,11 @@ public theorem lemma_12_11_b
     have hPbarSub_char : PbarSub.Characteristic := by
       dsimp [PbarSub]
       exact section12_pCore_characteristic (R := Dbar) (p := q.val)
-    haveI : PbarSub.Characteristic := hPbarSub_char
+    have : PbarSub.Characteristic := hPbarSub_char
     have hQbarD_le_pcore : QbarD ≤ PbarSub := by
-      haveI : Group.IsNilpotent Dbar := hDbar_nil
+      have : Group.IsNilpotent Dbar := hDbar_nil
       simpa [PbarSub] using
-        section12_pSubgroup_le_pCore_of_nilpotent
+        section12_pSubgroup_le_pCore_of_nilpotent_pre
           (R := Dbar) (p := q.val) (B := QbarD) hQbarD_q
     let Pbar : Subgroup (Mstar ⧸ α) := PbarSub.map Dbar.subtype
     have hPbar_norm : Pbar.Normal := by
@@ -618,7 +610,7 @@ public theorem lemma_12_11_b
         ⟨⟨qMstar ⟨x, hQG_le_Mstar hxQ⟩, hxDbar⟩, hxpcore, rfl⟩
     have hC_le_Mstar : C ≤ Mstar := hC_le_A.trans hA_le_Mstar
     have hC_le_N : C ≤ N := by
-      haveI : (N.subgroupOf Mstar).Normal := hNnorm
+      have : (N.subgroupOf Mstar).Normal := hNnorm
       simpa [C] using
         section12_commutator_le_right_of_normal_subgroupOf
           (G := G) (M := Mstar) (N := N) (K := A) (A := QG)
@@ -678,7 +670,7 @@ public theorem lemma_12_11_b
         simpa [qMstar, QuotientGroup.ker_mk'] using hxker
       change x ∈ (section10MbetaSubgroup Mstar).map Mstar.subtype
       exact Subgroup.mem_map.mpr ⟨xM, by simpa [α] using hxα, rfl⟩
-    haveI : Nontrivial C :=
+    have : Nontrivial C :=
       (Subgroup.nontrivial_iff_ne_bot (H := C)).2 hC_ne_bot
     have hp_dvd_C : p.val ∣ Nat.card C :=
       section12_prime_dvd_card_of_nontrivial_pSubgroup (G := G) (p := p) (B := C) hCp inferInstance

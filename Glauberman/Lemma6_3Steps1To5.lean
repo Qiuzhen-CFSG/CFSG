@@ -7,6 +7,7 @@ public import Glauberman.QuotientConjugationSquareZero
 
 import Glauberman.Lemma6_1
 
+
 /-!
 # Glauberman Lemma 6.3, Steps 1–5
 
@@ -1692,7 +1693,7 @@ private theorem exists_baer_Gstar_not_pGroup
       let hCstar : Cstar.Normal :=
         Subgroup.Normal.subgroupOf
           (Subgroup.normal_centralizer (H := H)) Gstar
-      letI : Cstar.Normal := hCstar
+      let : Cstar.Normal := hCstar
       ¬ IsPGroup p (Gstar ⧸ Cstar) ∧
         ⁅⁅H, Subgroup.zpowers xw⁆, Subgroup.zpowers xw⁆ = ⊥ := by
   classical
@@ -1781,7 +1782,7 @@ private theorem minimal_bad_witness_Gstar_eq_top
       let hCstar : Cstar.Normal :=
         Subgroup.Normal.subgroupOf
           (Subgroup.normal_centralizer (H := H)) Gstar
-      letI : Cstar.Normal := hCstar
+      let : Cstar.Normal := hCstar
       Gstar = ⊤ ∧
         ¬ IsPGroup p (Gstar ⧸ Cstar) ∧
         ⁅⁅H, Subgroup.zpowers xw⁆, Subgroup.zpowers xw⁆ = ⊥ := by
@@ -2018,8 +2019,8 @@ private theorem minimal_bad_witness_lemma6_2_data
     (hxout :
       QuotientGroup.mk' (Subgroup.centralizer (H : Set Q)) x ∉
         pCore p (Q ⧸ Subgroup.centralizer (H : Set Q))) :
-    letI : IsElementaryAbelian p H := hHelem
-    letI : IsMulCommutative H := hHelem.toIsMulCommutative
+    let : IsElementaryAbelian p H := hHelem
+    let : IsMulCommutative H := hHelem.toIsMulCommutative
     letI : Module (ZMod p) (Additive H) :=
       IsElementaryAbelian.isVectorSpace p
     ∃ (w : Q)
@@ -2136,7 +2137,7 @@ private theorem minimal_bad_group_step4_assembled
     (hmin : ∀ (A : Subgroup Q) (B : Subgroup A) [B.Normal],
       Nat.card (A ⧸ B) < Nat.card Q → pStable p (A ⧸ B)) :
     ∃ (H : Subgroup Q) (hHnormal : H.Normal) (x : Q),
-      letI : H.Normal := hHnormal
+      let : H.Normal := hHnormal
       IsPGroup p H ∧
         IsPGroup p (Subgroup.centralizer (H : Set Q)) ∧
         H ≠ ⊥ ∧ IsMinimalNormal H ∧ IsElementaryAbelian p H ∧
@@ -2191,9 +2192,9 @@ public theorem lemma6_3_steps1_to5
       Nat.card (A ⧸ B) < Nat.card Q → pStable p (A ⧸ B)) :
     ∃ (H : Subgroup Q) (hHnormal : H.Normal)
         (hHelem : IsElementaryAbelian p H) (x : Q),
-      letI : H.Normal := hHnormal
-      letI : IsElementaryAbelian p H := hHelem
-      letI : IsMulCommutative H := hHelem.toIsMulCommutative
+      let : H.Normal := hHnormal
+      let : IsElementaryAbelian p H := hHelem
+      let : IsMulCommutative H := hHelem.toIsMulCommutative
       letI : Module (ZMod p) (Additive H) :=
         IsElementaryAbelian.isVectorSpace p
       H ≠ ⊥ ∧ IsMinimalNormal H ∧ IsPGroup p H ∧
@@ -2249,3 +2250,4 @@ public theorem lemma6_3_steps1_to5
     hcomm, hxout, hdata⟩
 
 end Glauberman
+

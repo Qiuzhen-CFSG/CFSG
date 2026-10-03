@@ -5,6 +5,7 @@ public import GorensteinWalter.Section2.Theorem26
 public import GorensteinWalter.Section2.PreambleHSU
 import Mathlib.Tactic
 
+
 /-!
 # The reverse equation-(7) two-core containment
 -/

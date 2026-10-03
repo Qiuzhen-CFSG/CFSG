@@ -2,6 +2,7 @@ module
 
 public import GorensteinWalter.Section2.Bender1970_18
 
+
 /-!
 # Intersecting a `p`-subgroup with a normal nilpotent subgroup
 

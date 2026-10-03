@@ -403,8 +403,8 @@ public theorem section14_CFon_a1Set_sub_conjugate_of_puncturedInducedFamily
     Section2.CFOn L (Section8.a1Set H)
       (χ - Section1.conjugateCharacter χ) := by
   classical
-  letI : Fintype L := Fintype.ofFinite L
-  haveI : (H.subgroupOf L).Normal :=
+  let : Fintype L := Fintype.ofFinite L
+  have : (H.subgroupOf L).Normal :=
     Section12.section16MFSubgroup_subgroupOf_normal hMF
   have hχchar : Section1.IsCharacter χ := by
     rcases (hS χ).mp hχ with ⟨θ, hθirr, _hθne, rfl⟩
@@ -451,8 +451,8 @@ public theorem section14_CFon_a1Set_scaled_combo_of_puncturedInducedFamily
     (hχ : χ ∈ S) (hψ : ψ ∈ S) :
     Section2.CFOn L (Section8.a1Set H) ((ψ 1) • χ - (χ 1) • ψ) := by
   classical
-  letI : Fintype L := Fintype.ofFinite L
-  haveI : (H.subgroupOf L).Normal :=
+  let : Fintype L := Fintype.ofFinite L
+  have : (H.subgroupOf L).Normal :=
     Section12.section16MFSubgroup_subgroupOf_normal hMF
   have hχchar : Section1.IsCharacter χ := by
     rcases (hS χ).mp hχ with ⟨θ, hθirr, _hθne, rfl⟩
@@ -548,7 +548,7 @@ public theorem section14_coherentExtension_subsetSum_of_hypothesis52WithRData
     {χ : Section1.ClassFunction L} (hχ : χ ∈ S) :
     Section5.isSubsetSumOf (R ⟨χ, hχ⟩) (τ₁ χ) := by
   classical
-  letI : Fintype L := Fintype.ofFinite L
+  let : Fintype L := Fintype.ofFinite L
   rcases h52 with ⟨hsetup, h52a, h52b, h52c, h52d, h52e⟩
   let X : S := ⟨χ, hχ⟩
   have hχbar : Section1.conjugateCharacter χ ∈ S := by
@@ -624,7 +624,7 @@ public theorem section14_coherentExtension_conjugate_of_hypothesis52WithRData
     Section1.conjugateCharacter (τ₁ χ) =
       τ₁ (Section1.conjugateCharacter χ) := by
   classical
-  letI : Fintype L := Fintype.ofFinite L
+  let : Fintype L := Fintype.ofFinite L
   rcases h52 with ⟨hsetup, h52a, h52b, h52c, h52d, h52e⟩
   let X : S := ⟨χ, hχ⟩
   have hχbar : Section1.conjugateCharacter χ ∈ S := by
@@ -765,19 +765,19 @@ public theorem section14_betaInput_tau_isVirtualCharacter_typeIASet
     (hζirr : Section1.IsIrreducibleCharacterOnGroup ζ)
     (hζdeg : Section1.degree ζ = (H.relIndex L : ℂ))
     (hβ : β = Section7.theorem_7_8_betaInput L H ζ) :
-    Theory.Character.IsVirtualCharacter (τ β) := by
+    IsVirtualCharacter (τ β) := by
   classical
   have hβinputCFOn :
       Section2.CFOn L (Section12.typeIASet L H)
         (Section7.theorem_7_8_betaInput L H ζ) :=
     section14_betaInput_CFOn_typeIASet hMF hPunct hζmem hζdeg
   have hprincipalVirt :
-      Theory.Character.IsVirtualCharacter (Section7.principalInducedCharacter L H) := by
+      IsVirtualCharacter (Section7.principalInducedCharacter L H) := by
     unfold Section7.principalInducedCharacter
     exact Section2.inducedCF_isVirtualCharacter_of_virtualCharacter
       (H.subgroupOf L) Section3.isVirtualCharacter_principalCharacter
   have hβinputVirt :
-      Theory.Character.IsVirtualCharacter
+      IsVirtualCharacter
         (Section7.theorem_7_8_betaInput L H ζ) := by
     exact Section3.isVirtualCharacter_sub hprincipalVirt
       (Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup hζirr)
@@ -807,7 +807,7 @@ public theorem section14_tau1_mem_isVirtualCharacter_of_coherentExtension
     {τ τ₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
     (hExt : Section7.isCoherentExtension F τ τ₁)
     {ζ : Section1.ClassFunction L} (hζmem : ζ ∈ F) :
-    Theory.Character.IsVirtualCharacter (τ₁ ζ) :=
+    IsVirtualCharacter (τ₁ ζ) :=
   hExt.2.1 ζ (Section5.integerSpan_of_mem F hζmem)
 
 public theorem section14_tau1_principal_scalar_zero_of_theorem_7_8_a
@@ -978,24 +978,24 @@ public theorem section14_typeI_correctedDelta_context
     let Δ : Section1.ClassFunction G :=
       τ (Section7.principalInducedCharacter L H - ζ) -
         Section1.principalCharacter G + τ₁ ζ
-    Theory.Character.IsVirtualCharacter Δ ∧
+    IsVirtualCharacter Δ ∧
       Δ = Section1.conjugateCharacter Δ ∧
       Section1.scalarProduct G Δ (Section1.principalCharacter G) = 0 := by
   classical
   let Δ : Section1.ClassFunction G :=
     τ (Section7.principalInducedCharacter L H - ζ) -
       Section1.principalCharacter G + τ₁ ζ
-  change Theory.Character.IsVirtualCharacter Δ ∧
+  change IsVirtualCharacter Δ ∧
       Δ = Section1.conjugateCharacter Δ ∧
       Section1.scalarProduct G Δ (Section1.principalCharacter G) = 0
   have hβVirt :
-      Theory.Character.IsVirtualCharacter
+      IsVirtualCharacter
         (τ (Section7.principalInducedCharacter L H - ζ)) :=
     section14_betaInput_tau_isVirtualCharacter_typeIASet
       (F := F) hMF hDade hPunct hζmem hζirr hζdeg rfl
-  have hτ1Virt : Theory.Character.IsVirtualCharacter (τ₁ ζ) :=
+  have hτ1Virt : IsVirtualCharacter (τ₁ ζ) :=
     section14_tau1_mem_isVirtualCharacter_of_coherentExtension hExt hζmem
-  have hΔVirt : Theory.Character.IsVirtualCharacter Δ := by
+  have hΔVirt : IsVirtualCharacter Δ := by
     dsimp [Δ]
     exact Section3.isVirtualCharacter_add
       (Section3.isVirtualCharacter_sub hβVirt
@@ -1144,7 +1144,7 @@ public theorem section14_theorem_14_14_orthogonality_source_bridge
         _hVcard, _hSfam, _hTfam, _hDadeS, _hDadeT, _hNotation, _hDadeDiff,
         _hZeroDegree, _hConjIndex, _hConjBetaTau, hChoice,
         hMin, _hTypePTauS, _hTypePTauT⟩
-    letI : IsMinCE G := hMin
+    let : IsMinCE G := hMin
     rcases h143 with
       ⟨hLmax, _hUnorm, hHMF, hTypeI, hDadeL, hPunctL, _h52L, hExtL,
         hφmem, _hφirr, _hφdeg, _hβS, _hβT, _hβL, hDadeNotationL⟩
@@ -1301,7 +1301,7 @@ public theorem section14_theorem_14_14_family_orthogonality_source_bridge
       _hVcard, _hSfam, _hTfam, _hDadeS, _hDadeT, _hNotation, _hDadeDiff,
       _hZeroDegree, _hConjIndex, _hConjBetaTau, hChoice,
       hMin, _hTypePTauS, _hTypePTauT⟩
-  letI : IsMinCE G := hMin
+  let : IsMinCE G := hMin
   rcases h143 with
     ⟨hLmax, _hUnorm, hHMF, hTypeI, hDadeL, hPunctL, _h52L, hExtL,
       _hφmem, _hφirr, _hφdeg, _hβS, _hβT, _hβL, hDadeNotationL⟩
@@ -1416,7 +1416,7 @@ public theorem section14_theorem_14_14_pf79_delta_odd_source_bridge
       _hVcard, _hSfam, _hTfam, _hDadeS, _hDadeT, _hNotation, _hDadeDiff,
       _hZeroDegree, _hConjIndex, _hConjBetaTau, hChoice,
       hMin, _hTypePTauS, _hTypePTauT⟩
-  letI : IsMinCE G := hMin
+  let : IsMinCE G := hMin
   rcases h143 with
     ⟨hLmax, _hUnorm, hHMF, hTypeI, hDadeL, hPunctL, _h52bL, hExtL,
       hφmem, hφirr, hφdeg, _hβS, _hβT, hβL, hDadeNotationL⟩
@@ -1483,8 +1483,8 @@ public theorem section14_theorem_14_14_pf79_delta_odd_source_bridge
         τM₁ (Section1.conjugateCharacter ψ) :=
     section14_coherentExtension_conjugate_of_hypothesis52WithRData
       h52pkgM hExtM hIrrM hψmem hτMdiff_skew
-  letI : Fintype L := Fintype.ofFinite L
-  letI : Fintype M := Fintype.ofFinite M
+  let : Fintype L := Fintype.ofFinite L
+  let : Fintype M := Fintype.ofFinite M
   have hLfullNotation :
       Section7.inducedFamilyNotation (H.subgroupOf L)
         (insert (Section7.principalInducedCharacter L H) Lfam) := by
@@ -1703,10 +1703,10 @@ public theorem section14_theorem_14_14_pf79_delta_odd_source_bridge
         star (Section1.scalarProduct G (τM₁ ψ) (τL₁ φ)) = 0 := by
       simpa [hγLγM] using hswap
     simpa using congrArg star hstarzero
-  have hβMvirt : Theory.Character.IsVirtualCharacter (τM βM) :=
+  have hβMvirt : IsVirtualCharacter (τM βM) :=
     section14_betaInput_tau_isVirtualCharacter_typeIASet
       (F := Mfam) hKMF hDadeM hPunctM hψmem hψirr hψdeg hβM
-  have hγLvirt : Theory.Character.IsVirtualCharacter (τL₁ φ) :=
+  have hγLvirt : IsVirtualCharacter (τL₁ φ) :=
     section14_tau1_mem_isVirtualCharacter_of_coherentExtension hExtL hφmem
   have hβMγL_flip :
       Section1.scalarProduct G (τM βM) (τL₁ φ) =
@@ -1826,7 +1826,7 @@ public theorem section14_theorem_14_14_pf79_nonzero_source_bridge
       _hVcard, _hSfam, _hTfam, _hDadeS, _hDadeT, _hNotation, _hDadeDiff,
       _hZeroDegree, _hConjIndex, _hConjBetaTau, hChoice,
       hMin, _hTypePTauS, _hTypePTauT⟩
-  letI : IsMinCE G := hMin
+  let : IsMinCE G := hMin
   rcases h143 with
     ⟨hLmax, _hUnorm, hHMF, hTypeI, hDadeL, hPunctL, _h52L, hExtL,
       hφmem, hφirr, hφdeg, _hβS, _hβT, hβL, hDadeNotationL⟩
@@ -2234,7 +2234,7 @@ public theorem section14_typeI_core_ltr_tau1_mem_virtual
     {τ τ₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
     {ζ β : Section1.ClassFunction L}
     (hside : section14_typeI_core_ltr_sideData L H F τ τ₁ ζ β) :
-    Theory.Character.IsVirtualCharacter (τ₁ ζ) := by
+    IsVirtualCharacter (τ₁ ζ) := by
   rcases hside with
     ⟨_hHL, _hPunct, _h52, _hCoh, hExt, hζmem, _hζirr, _hζdeg,
       _hβτ, _hsetup⟩
@@ -2247,7 +2247,7 @@ public theorem section14_typeI_core_ltr_beta_tau_virtual
     {τ τ₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
     {ζ β : Section1.ClassFunction L}
     (hside : section14_typeI_core_ltr_sideData L H F τ τ₁ ζ β) :
-    Theory.Character.IsVirtualCharacter (τ β) := by
+    IsVirtualCharacter (τ β) := by
   classical
   rcases hside with
     ⟨_hHL, _hPunctSide, _h52, _hCoh, _hExt, _hζmemSide, _hζirrSide,
@@ -2256,7 +2256,7 @@ public theorem section14_typeI_core_ltr_beta_tau_virtual
   let βinput : Section1.ClassFunction L := Section7.theorem_7_8_betaInput L H ζ
   have hCFOn : Section2.CFOn L (Section12.typeIASet L H) βinput := by
     rcases h76 with ⟨_hHL76, hHnorm, _h71, hAeq, _hT⟩
-    haveI : (H.subgroupOf L).Normal := hHnorm
+    have : (H.subgroupOf L).Normal := hHnorm
     rcases h78 with
       ⟨_hHL78, _hST, hpunctured, _hcoherent, _hν, hζS, _hζ, hdegζ⟩
     rcases (hpunctured ζ).mp hζS with ⟨θζ, _hθζ, _hθζne, hζeq⟩
@@ -2318,11 +2318,11 @@ public theorem section14_typeI_core_ltr_beta_tau_virtual
   rcases h78 with ⟨_hHL78, _hST, _hpunctured, _hcoherent, _hν, _hζS,
     hζirr, _hdegζ⟩
   have hprincipalVirt :
-      Theory.Character.IsVirtualCharacter (Section7.principalInducedCharacter L H) := by
+      IsVirtualCharacter (Section7.principalInducedCharacter L H) := by
     unfold Section7.principalInducedCharacter
     exact Section2.inducedCF_isVirtualCharacter_of_virtualCharacter
       (H.subgroupOf L) Section3.isVirtualCharacter_principalCharacter
-  have hβinputVirt : Theory.Character.IsVirtualCharacter βinput := by
+  have hβinputVirt : IsVirtualCharacter βinput := by
     exact Section3.isVirtualCharacter_sub hprincipalVirt
       (Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup hζirr)
   have hβinputVirtOn :
@@ -2334,7 +2334,7 @@ public theorem section14_typeI_core_ltr_beta_tau_virtual
   have hDadeVirt :=
     (Section2.theorem_2_6 (Section12.typeIASet L H) L R h76.2.2.1 hAL).2
       βinput hβinputVirtOn
-  have hτβvirt : Theory.Character.IsVirtualCharacter (τ βinput) := by
+  have hτβvirt : IsVirtualCharacter (τ βinput) := by
     simpa [Section2.virtualCharacterOfG, hτβinput] using hDadeVirt
   simpa [βinput, Section7.theorem_7_8_beta, hβτ] using hτβvirt
 
@@ -2562,7 +2562,7 @@ public theorem section14_coherent_FTtype1_core_ltr_projection_norm_of_coefficien
     simpa [← Mfam.sum_attach] using
       Section7.theorem_7_8_b_degree_sum_identity h76M h78M
   have he_nat_pos : 0 < K.relIndex M := by
-    haveI : (K.subgroupOf M).FiniteIndex := inferInstance
+    have : (K.subgroupOf M).FiniteIndex := inferInstance
     have hrel : K.relIndex M ≠ 0 := by
       simpa [Subgroup.relIndex] using
         (Subgroup.FiniteIndex.index_ne_zero (H := K.subgroupOf M))
@@ -2715,7 +2715,7 @@ public theorem section14_coherent_FTtype1_core_ltr_beta_coeff_of_scaled_combo_ze
       Section1.scalarProduct_smul_right] at hzero
     simpa [A, C, hψ_star, hη_star, mul_comm, mul_left_comm, mul_assoc] using hzero
   have hrel_ne : (K.relIndex M : ℂ) ≠ 0 := by
-    haveI : (K.subgroupOf M).FiniteIndex := inferInstance
+    have : (K.subgroupOf M).FiniteIndex := inferInstance
     have hrel : K.relIndex M ≠ 0 := by
       simpa [Subgroup.relIndex] using
         (Subgroup.FiniteIndex.index_ne_zero (H := K.subgroupOf M))
@@ -2771,7 +2771,7 @@ public theorem section14_coherent_FTtype1_core_ltr_scaled_combo_zero_source_brid
       _hVcard, _hSfam, _hTfam, _hDadeS, _hDadeT, _hNotation, _hDadeDiff,
       _hZeroDegree, _hConjIndex, _hConjBetaTau, hChoice,
       hMin, _hTypePTauS, _hTypePTauT⟩
-  letI : IsMinCE G := hMin
+  let : IsMinCE G := hMin
   rcases h143 with
     ⟨hLmax, _hUnorm, hHMF, hTypeI, hDadeL, hPunctL, _h52L, _hExtL,
       hφmem, _hφirr, hφdeg, _hβS, _hβT, hβL, hDadeNotationL⟩
@@ -2912,7 +2912,7 @@ public theorem section14_coherent_FTtype1_core_ltr_remainder_coefficient_source_
       _hVcard, _hSfam, _hTfam, _hDadeS, _hDadeT, _hNotation, _hDadeDiff,
       _hZeroDegree, _hConjIndex, _hConjBetaTau, _hChoice,
       hMin, _hTypePTauS, _hTypePTauT⟩
-  letI : IsMinCE G := hMin
+  let : IsMinCE G := hMin
   have hLside :
       section14_typeI_core_ltr_sideData L H Lfam τL τL₁ φ βL :=
     section14_typeI_core_ltr_sideData_of_hypothesis_14_3
@@ -3030,7 +3030,7 @@ public theorem section14_coherent_FTtype1_core_ltr_scaled_combo_zero_source_brid
       _hVcard, _hSfam, _hTfam, _hDadeS, _hDadeT, _hNotation, _hDadeDiff,
       _hZeroDegree, _hConjIndex, _hConjBetaTau, hChoice,
       hMin, _hTypePTauS, _hTypePTauT⟩
-  letI : IsMinCE G := hMin
+  let : IsMinCE G := hMin
   rcases h143 with
     ⟨hLmax, _hUnorm, hHMF, hTypeI, hDadeL, hPunctL, _h52L, hExtL,
       hφmem, _hφirr, _hφdeg, _hβS, _hβT, _hβL, hDadeNotationL⟩
@@ -3255,7 +3255,7 @@ public theorem section14_coherent_FTtype1_core_ltr_source_bridge
       (Section12.typeIASet L H) L H RL LfullFam Lfam τL τL₁ φ
       h76L hDadeAgreeL h78L hhalfL a r hdecomp
   have hrel_pos : 0 < H.relIndex L := by
-    haveI : (H.subgroupOf L).FiniteIndex := inferInstance
+    have : (H.subgroupOf L).FiniteIndex := inferInstance
     have hrel : H.relIndex L ≠ 0 := by
       simpa [Subgroup.relIndex] using
         (Subgroup.FiniteIndex.index_ne_zero (H := H.subgroupOf L))
@@ -3303,7 +3303,7 @@ public theorem section14_theorem_14_14_M_branch_estimate_source_bridge
       _hVcard, _hSfam, _hTfam, _hDadeS, _hDadeT, _hNotation, _hDadeDiff,
       _hZeroDegree, _hConjIndex, _hConjBetaTau, _hChoice,
       hMin, _hTypePTauS, _hTypePTauT⟩
-  letI : IsMinCE G := hMin
+  let : IsMinCE G := hMin
   have hLside :
       section14_typeI_core_ltr_sideData L H Lfam τL τL₁ φ βL :=
     section14_typeI_core_ltr_sideData_of_hypothesis_14_3
@@ -3412,7 +3412,7 @@ public theorem section14_theorem_14_14_L_branch_estimate_source_bridge
       _hUcard, hVcard, _hSfam, _hTfam, _hDadeS, _hDadeT, _hNotation,
       _hDadeDiff, _hZeroDegree, _hConjIndex, _hConjBetaTau,
       _hChoice, hMin, _hTypePTauS, _hTypePTauT⟩
-  letI : IsMinCE G := hMin
+  let : IsMinCE G := hMin
   have hLside :
       section14_typeI_core_ltr_sideData L H Lfam τL τL₁ φ βL :=
     section14_typeI_core_ltr_sideData_of_hypothesis_14_3

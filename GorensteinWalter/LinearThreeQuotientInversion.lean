@@ -8,6 +8,7 @@ import GorensteinWalter.LinearThreeEquiv
 import FeitThompson.PCore.PCore
 import Mathlib.Tactic
 
+
 /-!
 # No involution inverts an odd subgroup in the `|K| = 3` linear quotient
 

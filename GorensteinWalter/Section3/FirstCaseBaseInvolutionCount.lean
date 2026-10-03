@@ -7,6 +7,7 @@ public import Mathlib.GroupTheory.SpecificGroups.Dihedral
 public meta import Mathlib.GroupTheory.SpecificGroups.Dihedral
 import Mathlib.Tactic
 
+
 noncomputable section
 
 open scoped Pointwise
@@ -211,7 +212,7 @@ private theorem firstCase_S_involutions_card
       · intro hx
         constructor
         · intro h
-          exact hx.1 (by simpa [h])
+          exact hx.1 (by simp [h])
         · apply eS.injective
           simpa [map_pow] using hx.2)
   have hD : Nat.card {x : DihedralGroup 4 // IsInvolution x} = 5 := by
@@ -290,7 +291,7 @@ private theorem firstCase_V_nontrivial_involutions_card
     have hsplit := Fintype.card_subtype_compl (α := V) (p := fun x : V => x = 1)
     rw [h1] at hsplit
     rw [Nat.card_eq_fintype_card (α := A), Nat.card_eq_fintype_card (α := V)]
-    simpa [A] using hsplit.symm
+    simp [A]
   have hVcard : Nat.card V = 4 := hVK.card_four
   calc
     Nat.card {x : G // IsInvolution x ∧ x ∈ twoCoreOf c.Hhat} = Nat.card B := by rfl
@@ -527,8 +528,7 @@ public theorem firstCase_klein_H_involution_count
                 apply sk.1.2.1.1
                 apply Subtype.ext
                 exact Subgroup.mem_bot.mp hsBot
-              · change ((sk.1.1 : G) * (sk.2 : G)) ^ 2 = 1
-                rw [pow_two]
+              · rw [pow_two]
                 calc
                   ((sk.1.1 : G) * (sk.2 : G)) *
                       ((sk.1.1 : G) * (sk.2 : G)) =

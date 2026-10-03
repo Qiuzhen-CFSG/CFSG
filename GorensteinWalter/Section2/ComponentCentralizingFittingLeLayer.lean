@@ -7,6 +7,7 @@ public import GorensteinWalter.Section2.Bender1970_18
 import FeitThompson.FinalTheorem
 import Mathlib.GroupTheory.SpecificGroups.Alternating.Simple
 
+
 /-!
 # Absorption of a component centralizing the Fitting subgroup
 
@@ -91,7 +92,7 @@ public theorem component_le_componentLayerOf_of_isDGroup_of_centralizes_fitting
     have hOcop : Nat.Coprime 2 (Nat.card O) := by
       simpa [O] using pPrimeCore_coprime_card (p := 2) (G := B)
     exact Nat.coprime_two_left.mp hOcop
-  have hOsolv : IsSolvable O := odd_order_theorem O hOodd
+  have hOsolv : Group.IsSolvable O := odd_order_theorem O hOodd
   let FO : Subgroup B := fittingSubgroupOf O
   have hFOnormal : FO.Normal := by
     dsimp [FO]

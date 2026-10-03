@@ -14,6 +14,7 @@ public import GorensteinWalter.Section2.Lemma27PiCoreInversion
 import GorensteinWalter.MinimalCounterexample
 import GorensteinWalter.Section2.Theorem26
 
+
 /-!
 # Lemma 2.7, first conjunct
 
@@ -99,7 +100,7 @@ public theorem lemma_2_7_commutator_le_piCore_compl
   have hCommCent : ⁅M, Subgroup.zpowers c.t⁆ ≤
       Subgroup.centralizer ((fittingSubgroupOf M : Subgroup G) : Set G) :=
     commutator_centralizes_fittingSubgroupOf_of_centralizes_inverts
-      M c.t htM c.t_involution π hAcent hBinv
+      M c.t c.t_involution π hAcent hBinv
   have hKleM : ⁅M, Subgroup.zpowers c.t⁆ ≤ M := by
     rw [Subgroup.commutator_le]
     intro m hm z hz

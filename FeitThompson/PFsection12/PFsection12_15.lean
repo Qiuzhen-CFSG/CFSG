@@ -5,7 +5,7 @@ import FeitThompson.PFsection12.PFsection12_4
 import FeitThompson.PFsection12.PFsection12_5
 import FeitThompson.PFsection12.PFsection12_10
 import FeitThompson.PFsection12.PFsection12_14
-import FeitThompson.GroupAction.MinimalNormal
+import Theory.GroupAction.MinimalNormal
 import FeitThompson.PFsection5.RealVirtualParity
 import FeitThompson.PFsection6.PFsection6_5_a
 import FeitThompson.PFsection7.PFsection7_3
@@ -244,42 +244,42 @@ private theorem theorem_12_15_supporting_typeI_not_conjugate
 private theorem theorem_12_15_subgroupRestriction_isVirtualCharacter
     {G : Type u} [Group G] [Finite G]
     (J : Subgroup G) {phi : Section1.ClassFunction G}
-    (hphi : Theory.Character.IsVirtualCharacter phi) :
-    Theory.Character.IsVirtualCharacter (Section1.subgroupRestriction J phi) := by
+    (hphi : IsVirtualCharacter phi) :
+    IsVirtualCharacter (Section1.subgroupRestriction J phi) := by
   classical
   rcases hphi with ⟨r, m, n, rho, rfl⟩
   refine ⟨r, m, n, fun i => (rho i).comp J.subtype, ?_⟩
   ext j
-  simp [Theory.Character.virtualCharacterOfRepresentations,
+  simp [virtualCharacterOfRepresentations,
     Section1.subgroupRestriction, Representation.character]
 
 private theorem theorem_12_15_virtualCharacter_value_isIntegral
     {G : Type u} [Group G] [Finite G]
     {phi : Section1.ClassFunction G}
-    (hphi : Theory.Character.IsVirtualCharacter phi) (g : G) :
+    (hphi : IsVirtualCharacter phi) (g : G) :
     IsIntegral ℤ (phi g) := by
   classical
   rcases hphi with ⟨r, m, n, rho, rfl⟩
-  unfold Theory.Character.virtualCharacterOfRepresentations
+  unfold virtualCharacterOfRepresentations
   apply IsIntegral.sum
   intro i _hi
   have hm : IsIntegral ℤ (m i : ℂ) := isIntegral_algebraMap
   exact hm.mul
-    (Theory.Character.representation_character_isIntegral (ρ := rho i) g)
+    (representation_character_isIntegral (ρ := rho i) g)
 
 private theorem theorem_12_15_value_isRational_of_constant_on_subgroup_complement
     {G : Type u} [Group G] [Finite G]
     (K K' : Subgroup G)
     (psi : Section1.ClassFunction G)
-    (hpsi : Theory.Character.IsVirtualCharacter psi)
+    (hpsi : IsVirtualCharacter psi)
     (hK'K : K' ≤ K)
     (hconst :
       ∀ a b : G, a ∈ K → a ∉ K' → b ∈ K → b ∉ K' → psi a = psi b)
     (g : G) (hgK : g ∈ K) (hgK' : g ∉ K') :
     ∃ q : ℚ, psi g = (q : ℂ) := by
   classical
-  letI : Fintype K := Fintype.ofFinite K
-  letI : Fintype K' := Fintype.ofFinite K'
+  let : Fintype K := Fintype.ofFinite K
+  let : Fintype K' := Fintype.ofFinite K'
   have hresK := theorem_12_15_subgroupRestriction_isVirtualCharacter K hpsi
   have hresK' := theorem_12_15_subgroupRestriction_isVirtualCharacter K' hpsi
   rcases Section3.scalarProduct_isVirtualCharacter_eq_int hresK
@@ -342,7 +342,7 @@ private theorem theorem_12_15_value_isRational_of_constant_on_subgroup_complemen
       (fun z : K => (z : G) ∈ K') (fun z : K => psi (z : G))
   have hcompNonempty : Nonempty {z : K // (z : G) ∉ K'} :=
     ⟨⟨⟨g, hgK⟩, hgK'⟩⟩
-  letI : Nonempty {z : K // (z : G) ∉ K'} := hcompNonempty
+  let : Nonempty {z : K // (z : G) ∉ K'} := hcompNonempty
   have hcomp : (Fintype.card {z : K // (z : G) ∉ K'} : ℂ) ≠ 0 := by
     exact_mod_cast Fintype.card_ne_zero
   have hrel :
@@ -481,7 +481,7 @@ public theorem theorem_12_15_result_source_leaf
         rw [hDM]
         exact fun hgD => hgD.2 hC
       have hRMbot : RM (g : G) = ⊥ := hRbotM (g : G) ⟨hgA0M, hgnotD⟩
-      letI : Fintype (RM (g : G)) := Fintype.ofFinite _
+      let : Fintype (RM (g : G)) := Fintype.ofFinite _
       rw [hρM.2, Section7.dadeProjection, Section2.dadeAveragingFunction]
       have hsum :
           (∑ z : RM (g : G), ψ ((g : G) * (z : G))) =
@@ -539,7 +539,7 @@ public theorem theorem_12_15_result_source_leaf
       have hRMle : RM (g : G) ≤ NF := by
         rw [hRMg]
         exact fun _ hz => hz.1
-      letI : Fintype (RM (g : G)) := Fintype.ofFinite _
+      let : Fintype (RM (g : G)) := Fintype.ofFinite _
       rw [hρM.2, Section7.dadeProjection, Section2.dadeAveragingFunction]
       have hsum :
           (∑ z : RM (g : G), ψ ((g : G) * (z : G))) =
@@ -579,7 +579,7 @@ public theorem theorem_12_15_result_source_leaf
       ψ a = ψρM aM := (hpart1 aM haK haNe).symm
       _ = ψρM bM := hconst
       _ = ψ b := hpart1 bM hbK hbNe
-  have hpsiVirt : Theory.Character.IsVirtualCharacter ψ := by
+  have hpsiVirt : IsVirtualCharacter ψ := by
     rw [_hpsi]
     exact _hExt.2.1 χ (Section5.integerSpan_of_mem S _hchiS)
   have hK'K : K' ≤ K := by
@@ -590,7 +590,7 @@ public theorem theorem_12_15_result_source_leaf
   have hrat := theorem_12_15_value_isRational_of_constant_on_subgroup_complement
     K K' ψ hpsiVirt hK'K hpart2 g hgK hgK'
   have hint := theorem_12_15_virtualCharacter_value_isIntegral hpsiVirt g
-  rcases Theory.Character.isaacs_lemma_3_2_core hint hrat with ⟨n, hn⟩
+  rcases isaacs_lemma_3_2_core hint hrat with ⟨n, hn⟩
   exact ⟨n, hn.symm⟩
 
 /-- Peterfalvi `(12.15)`.

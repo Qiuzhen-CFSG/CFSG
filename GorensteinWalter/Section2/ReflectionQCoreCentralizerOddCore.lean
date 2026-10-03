@@ -6,6 +6,7 @@ public import GorensteinWalter.Section2.PreambleHSU
 public import GorensteinWalter.Section2.PreambleInvolutions
 public import GorensteinWalter.Section2.Reflection
 
+
 /-!
 # Fixed points of an odd prime core lie in the odd core of a reflection centralizer
 

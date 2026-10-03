@@ -3,19 +3,21 @@ module
 public import Mathlib.Algebra.Group.Subgroup.Actions
 public import Mathlib.LinearAlgebra.Dimension.Free
 public import Mathlib.LinearAlgebra.Semisimple
+public import Theory.GroupAction.Defs
 public import Mathlib.RepresentationTheory.Invariants
 public import Mathlib.RepresentationTheory.Irreducible
 
 public import FeitThompson.BGsection1.lemma_1_22
 public import Theory.Representation.CyclicQuotientExtension
 public import Theory.Representation.SolvableDimension
-public import FeitThompson.LinearAlgebra.PrimitiveRootEigenspaces
+public import Theory.Representation.PrimitiveRootEigenspaces
 public import Theory.Representation.ExtraspecialFixedPoints
 public import Theory.Representation.TwoDimensionalOddOrder
 public import Mathlib.Algebra.CharP.LinearMaps
 public import Mathlib.LinearAlgebra.Eigenspace.Triangularizable
 public import Mathlib.LinearAlgebra.Eigenspace.Zero
 public import Mathlib.LinearAlgebra.Lagrange
+
 public import Mathlib.LinearAlgebra.TensorProduct.Pi
 public import Mathlib.RepresentationTheory.Character
 public import Mathlib.RepresentationTheory.Coinduced
@@ -25,13 +27,13 @@ public import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
 public import Mathlib.RingTheory.SimpleModule.Isotypic
 public import Mathlib.RingTheory.ZMod.Torsion
 public import FeitThompson.BGsection1.CriticalSubgroupLemmas
-public import FeitThompson.Burnside.NormalComplement
-public import FeitThompson.Extraspecial
-public import FeitThompson.LinearAlgebra.BlockElementaryMap
+public import Theory.GroupAction.NormalComplement
+public import Theory.ElementaryAbelian.Extraspecial
+public import Theory.Representation.BlockElementaryMap
 public import Theory.Representation.ConjugateRep
-public import FeitThompson.BGsection2.EndFieldRep
+public import Theory.Representation.EndFieldRep
 import FeitThompson.Fitting.Centralizer
-import FeitThompson.GroupAction.CoprimeHall
+import Theory.GroupAction.CoprimeHall
 import FeitThompson.PCore.CentralizerControl
 public import FeitThompson.Fitting.Faithful
 public import Theory.Representation.Maschke
@@ -39,27 +41,13 @@ public import Theory.Representation.CompleteReducibility
 public import Theory.Representation.RepEquiv
 public import Theory.Representation.kerRepresentation
 public import Theory.Representation.SubrepresentationLattice
-public import FeitThompson.SubgroupConjAction
+public import Theory.GroupAction.SubgroupConjugation
+public import Theory.GroupTheory.Centralizer
+
 
 open scoped FixedPoints TensorProduct Pointwise
 
 /-! # Statements from BG Section 3 -/
-
-namespace Subgroup
-
-/-- The conjugate of a subgroup by an element. -/
-@[expose] public def conjBy {G : Type*} [Group G] (H : Subgroup G) (g : G) : Subgroup G :=
-  H.map (MulAut.conj g).toMonoidHom
-
-end Subgroup
-
-/-- The centralizer of a subgroup `S` inside a subgroup `H`. -/
-@[expose] public def subgroupCentralizerIn {G : Type*} [Group G] (H S : Subgroup G) : Subgroup G :=
-  H ⊓ Subgroup.centralizer (S : Set G)
-
-/-- The centralizer of an element `x` inside a subgroup `H`. -/
-@[expose] public def elementCentralizerIn {G : Type*} [Group G] (H : Subgroup G) (x : G) : Subgroup G :=
-  H ⊓ Subgroup.centralizer ({x} : Set G)
 
 namespace Representation
 

@@ -2,6 +2,7 @@ module
 
 public import FeitThompson.Gorenstein.Chapter8_2
 
+
 /-!
 # Huppert--Blackburn X.1.12, Thompson--Bender
 
@@ -1912,7 +1913,7 @@ public theorem thompson_bender_conjAction_displacementSubgroupAll_le_commutatorA
      let φ : K →* MulAut P :=
         (Subgroup.normalizerMonoidHom (H := P)).comp (Subgroup.inclusion hKleNormP)
      letI : MulDistribMulAction K P := MulDistribMulAction.compHom P φ
-     letI : IsInvariant K P B := hInv
+     let : IsInvariant K P B := hInv
      TBSConjActionDisplacementSubgroupAll (G := G) p K B ≤
         (commutatorAction (A := K) (G := B)).map B.subtype) := by
   let P : Subgroup G := pCore p G
@@ -3156,3 +3157,4 @@ public theorem thompson_bender_signalizer_lemma_apply
   thompson_bender_signalizer_lemma
     (G := G) (p := p) hpodd hconstrained hA_p hcentral_order_p
     hA_le_normalizer_K hK_inf_A hx
+

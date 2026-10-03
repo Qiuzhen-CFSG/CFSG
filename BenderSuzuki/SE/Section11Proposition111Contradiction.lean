@@ -75,8 +75,8 @@ public theorem proposition111_fitting_eq_bot_of_normalizes
       rw [hPD]
       exact PD.isPGroup'.map D.subtype
     simpa [P] using hPp0
-  letI : Fact h102.exponent.r.Prime := ⟨h102.exponent.r_prime⟩
-  letI : Fact d.choice.p.Prime := ⟨d.choice.p_prime⟩
+  let : Fact h102.exponent.r.Prime := ⟨h102.exponent.r_prime⟩
+  let : Fact d.choice.p.Prime := ⟨d.choice.p_prime⟩
   have hdisj : Disjoint F P :=
     IsPGroup.disjoint_of_ne h102.exponent.r d.choice.p
       h102.exponent.r_ne_p F P hFp hPp

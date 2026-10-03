@@ -2,6 +2,7 @@ module
 
 public import GorensteinWalter.BrauerSuzukiWallCardH
 
+
 /-!
 # The index of `K` in the Brauer--Suzuki--Wall centralizer
 -/

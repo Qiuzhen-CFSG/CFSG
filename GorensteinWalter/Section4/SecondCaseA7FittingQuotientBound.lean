@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section4.SecondCaseA7UInterMCardExactUnconditional
 import Mathlib.Tactic
 
+
 /-!
 # The fitting-intersection quotient upper bound
 
