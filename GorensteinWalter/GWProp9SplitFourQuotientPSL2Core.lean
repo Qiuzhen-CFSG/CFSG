@@ -5,6 +5,7 @@ public import GorensteinWalter.Section2.ComplementConjugacy
 public import GorensteinWalter.CPrime
 import Mathlib.Tactic
 
+
 /-!
 # Split-four quotient transport: `C'(Z)` equality across `G/O₂'(G)`
 
@@ -34,7 +35,7 @@ private lemma subgroup_of_complement_of_disjoint_sup
     (hOP : O ≤ P) (hKP : K ≤ P)
     (hdisj : Disjoint O K) (hsup : O ⊔ K = P) :
     (O.subgroupOf P).IsComplement' (K.subgroupOf P) := by
-  haveI : (O.subgroupOf P).Normal :=
+  have : (O.subgroupOf P).Normal :=
     Subgroup.normal_subgroupOf_of_le_normalizer (H := P) (N := O)
       (Subgroup.le_normalizer_of_normal (H := O) (K := P))
   have hsup' : O.subgroupOf P ⊔ K.subgroupOf P = ⊤ := by
@@ -81,7 +82,7 @@ public theorem cPrime_eq_normalizer_of_quotient_pPrimeCore
     intro x hx
     apply Subgroup.mem_comap.mpr
     exact Subgroup.mem_map.mpr ⟨x, hx, rfl⟩
-  haveI : O.Normal := by dsimp [O]; infer_instance
+  have : O.Normal := by dsimp [O]; infer_instance
   let O' : Subgroup P := O.subgroupOf P
   let Z' : Subgroup P := Z.subgroupOf P
   have hOZcomp : O'.IsComplement' Z' := by
@@ -173,7 +174,7 @@ public theorem cPrime_eq_normalizer_of_quotient_pPrimeCore
     let K' : Subgroup P := K.subgroupOf P
     have hOKcomp : O'.IsComplement' K' :=
       subgroup_of_complement_of_disjoint_sup P O K hOleP hKleP hdisjOK hsupOK
-    haveI : O'.Normal := by
+    have : O'.Normal := by
       exact Subgroup.normal_subgroupOf_of_le_normalizer (H := P) (N := O)
         (Subgroup.le_normalizer_of_normal (H := O) (K := P))
     rcases SchurZassenhaus.complements_conjugate_of_coprime O' Z' K'

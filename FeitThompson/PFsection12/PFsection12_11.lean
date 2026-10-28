@@ -3,7 +3,7 @@ module
 public import FeitThompson.PFsection12.Basic
 import FeitThompson.PFsection12.PFsection12_9
 import FeitThompson.PFsection12.PFsection12_10
-import FeitThompson.GroupAction.MinimalNormal
+import Theory.GroupAction.MinimalNormal
 import FeitThompson.PFsection5.RealVirtualParity
 import FeitThompson.PFsection6.PFsection6_5_a
 import FeitThompson.PFsection7.PFsection7_3
@@ -18,6 +18,7 @@ import FeitThompson.PFsection8.SourceTypePBridge
 import FeitThompson.PFsection9.PFsection9_1
 import Mathlib.GroupTheory.Schreier
 import Mathlib.RingTheory.ZMod.UnitsCyclic
+
 
 /-!
 # Peterfalvi, Section 12: Theorem (12.11)
@@ -65,7 +66,7 @@ public theorem theorem_12_11_source_leaf
   rcases h129 with
     ⟨hP0comm, hP0rank, hL, hH, hLs, hP0Ls, hxL,
       ⟨_hp', hxOmega, hxne⟩, hCKnot, hNxM, hCnotL⟩
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hxP0 : x ∈ P0 := by
     rcases hxOmega with ⟨y, _hyOmega, hyx⟩
     have hyP0 : (y : G) ∈ P0 := y.property
@@ -135,7 +136,7 @@ public theorem theorem_12_11_source_leaf
     let ML : Subgroup L := (M ⊓ L).subgroupOf L
     have hMLpi : IsPiSubgroup (G := L) (subgroupPrimeSet H) ML := by
       intro q hqML
-      haveI : Fact q.val.Prime := ⟨q.property⟩
+      have : Fact q.val.Prime := ⟨q.property⟩
       rcases exists_prime_orderOf_dvd_card' (G := ML) q.val hqML with
         ⟨zML, hzMLorder⟩
       let z : G := zML
@@ -197,7 +198,7 @@ public theorem theorem_12_11_source_leaf
           rw [← hP0eq]
           exact Subgroup.mem_map.mpr ⟨yM, hyB, rfl⟩
         · exact le_inf hP0P hP0M
-      haveI : (pCore p H).Characteristic :=
+      have : (pCore p H).Characteristic :=
         pCore_characteristic (G := H) (p := p)
       have hLnormH : L ≤ Subgroup.normalizer (H : Set G) :=
         (Subgroup.normal_subgroupOf_iff_le_normalizer hHleL).1
@@ -233,7 +234,7 @@ public theorem theorem_12_11_source_leaf
       have hP0ne : P0 ≠ ⊥ := by
         intro hbot
         have hcyc : IsCyclic P0 := by rw [hbot]; infer_instance
-        letI : IsCyclic P0 := hcyc
+        let : IsCyclic P0 := hcyc
         have hrank : groupRank P0 ≤ 1 := groupRank_le_one_of_isCyclic P0
         omega
       have hAne : A ≠ ⊥ := by
@@ -331,8 +332,8 @@ public theorem theorem_12_11_source_leaf
           (Subgroup.normal_subgroupOf_iff_le_normalizer
             (section16MFSubgroup_le hK)).1 hKnormal
         exact hS_ML.trans (inf_le_left.trans hMnormK)
-      have hKsolv : IsSolvable K := by
-        letI : Group.IsNilpotent K := hK.1.2.2.1
+      have hKsolv : Group.IsSolvable K := by
+        let : Group.IsNilpotent K := hK.1.2.2.1
         exact IsNilpotent.to_isSolvable
       have haction : Section9.frobeniusActionData S P0 A K :=
         ⟨hcompP0A, hfrobP0A, hS_norm_K, hKsolv, hcopKS⟩
@@ -375,7 +376,7 @@ public theorem theorem_12_11_source_leaf
       have hP1elem : IsElementaryAbelian p P1 := by
         simpa [P1] using
           (theorem_12_9_omega_one_noncyclic P0 p hp hP0p hP0comm hP0rank).1
-      letI : IsElementaryAbelian p P1 := hP1elem
+      let : IsElementaryAbelian p P1 := hP1elem
       have hxpowP1 : (⟨x, by simpa [P1] using hxOmega⟩ : P1) ^ p = 1 :=
         Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
           (IsElementaryAbelian.exponent_dvd_p p P1) _
@@ -509,7 +510,7 @@ public theorem theorem_12_11_source_leaf
           rw [hCKP0]
           exact hyK
         exact hyCKP0.2
-      haveI : Nontrivial (subgroupCentralizerIn K A) :=
+      have : Nontrivial (subgroupCentralizerIn K A) :=
         (Subgroup.nontrivial_iff_ne_bot (subgroupCentralizerIn K A)).2 hCKAne
       obtain ⟨yKA, hyKAne⟩ := exists_ne (1 : subgroupCentralizerIn K A)
       let y : G := yKA
@@ -559,7 +560,7 @@ public theorem theorem_12_11_source_leaf
         simpa [hcentHz] using
           (show x ∈ Section2.centralizerIn H z from ⟨hxH, hxCentZ⟩)
       exact hxne (Subgroup.mem_bot.mp hxBot)
-    haveI : (H.subgroupOf L).Normal :=
+    have : (H.subgroupOf L).Normal :=
       section16MFSubgroup_subgroupOf_normal hH
     have hMLle : ML ≤ H.subgroupOf L :=
       section12_piSubgroup_le_normal_hall

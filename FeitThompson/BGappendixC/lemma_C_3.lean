@@ -2,6 +2,7 @@ module
 
 public import FeitThompson.BGappendixC.lemma_C_2
 
+
 open scoped Pointwise
 
 noncomputable section
@@ -1488,9 +1489,9 @@ public theorem appendixC_lemma_C_3_twisted_companion_value_of_conditionB_action
     classical
     let φ : P0img →* MulAut Q :=
       Q.normalizerMonoidHom.comp (Subgroup.inclusion hP0Q)
-    letI : MulDistribMulAction P0img Q := MulDistribMulAction.compHom Q φ
+    let : MulDistribMulAction P0img Q := MulDistribMulAction.compHom Q φ
     let C : Subgroup Q := commutatorAction (A := P0img) (G := Q)
-    haveI : IsInvariant P0img Q C := by
+    have : IsInvariant P0img Q C := by
       simpa [C] using (commutatorAction_isInvariant (G := Q) (A := P0img))
     have hyC : (⟨y, hy⟩ : Q) ∈ C := by
       simpa [P0img, φ, C] using hycomm
@@ -2220,9 +2221,9 @@ public theorem appendixC_lemma_C_3_twisted_step_data_of_conditionB
   rcases appendixCConditionB_exists_commutatorAction_y (p := p) (q := q) hB with
     ⟨G, hG, σ, hσ, Q, hQfin, hQcomm, hcop, y, hy, hP0Q,
       hfixed, hycomm, hP1U⟩
-  letI : Group G := hG
-  letI : Finite Q := hQfin
-  letI : IsMulCommutative Q := hQcomm
+  let : Group G := hG
+  let : Finite Q := hQfin
+  let : IsMulCommutative Q := hQcomm
   let P0img : Subgroup G := Subgroup.map σ (appendixCP0InH p q)
   let Uimg : Subgroup G := Subgroup.map σ (appendixCUInH p q)
   let sH : appendixCH p q :=

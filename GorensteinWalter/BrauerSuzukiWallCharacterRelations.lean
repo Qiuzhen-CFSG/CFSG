@@ -18,7 +18,6 @@ noncomputable section
 universe u
 
 open BenderGlauberman
-open Theory.Character
 
 attribute [local instance] Classical.propDecidable
 

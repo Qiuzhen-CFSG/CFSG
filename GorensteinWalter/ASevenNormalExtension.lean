@@ -1,6 +1,6 @@
 module
 
-public import Theory.AutAlternating
+public import Theory.Alternating.Aut
 public import GorensteinWalter.PGroupExtension
 
 /-!
@@ -9,6 +9,8 @@ public import GorensteinWalter.PGroupExtension
 The automorphism theorem for A₇ leaves only two possible orders for a faithful
 extension of a normal A₇: 2520 and 5040. The second possibility is excluded
 because S₇ has no dihedral Sylow 2-subgroup.
+The public order-eight permutation bound also excludes semidihedral Sylow
+geometry in an index-two extension, by applying it to the action on A₇.
 -/
 
 noncomputable section
@@ -24,7 +26,7 @@ universe u
 /-- An element of S₇ whose eighth power is one already has fourth power one.
 Cycle lengths divide eight, and every nontrivial cycle has length at most
 seven, so only lengths two and four can occur. -/
-private theorem perm_fin_seven_pow_four_eq_one_of_pow_eight_eq_one
+public theorem perm_fin_seven_pow_four_eq_one_of_pow_eight_eq_one
     (p : Equiv.Perm (Fin 7)) (hp : p ^ 8 = 1) :
     p ^ 4 = 1 := by
   apply (orderOf_dvd_iff_pow_eq_one).mp

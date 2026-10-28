@@ -1,0 +1,986 @@
+module
+
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word055
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word056
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word057
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word058
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word059
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word060
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word061
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word062
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word063
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word064
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word065
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word066
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word067
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word068
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word069
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word070
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word071
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word072
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word073
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word074
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word075
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word076
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word077
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word078
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word079
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word080
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word081
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word082
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word083
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word084
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word085
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word086
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word087
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word088
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word089
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word090
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word091
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word092
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word093
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word094
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word095
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word096
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word097
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word098
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word099
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word100
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word101
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word102
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word103
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word104
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word105
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word106
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word107
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word108
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word109
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word110
+public import Theory.SpecificGroups.Lyons.Atlas111InvolutionLocalCommutant.Kernel.Polynomial.Word111
+
+/-!
+# The finite family of local words
+
+The 111 binary-tree words are assembled as a matrix-valued finite family.
+The weighted sum candidate is checked separately, using these exact matrices.
+
+Candidate generation and source attribution: `Kernel/source/GenerateKernel.py`
+and `Kernel/source/README.md`. Every numerical assertion is checked in Lean.
+-/
+
+namespace Lyons.SimplicityCertificate.LocalCommutant.Kernel
+
+open Atlas111WordCertificate
+
+set_option Elab.async false
+
+@[expose] public def wordRows (k : Fin 111) : Fin 111 → ℕ :=
+  if k.val < 55 then
+    if k.val < 27 then
+      if k.val < 13 then
+        if k.val < 6 then
+          if k.val < 3 then
+            if k.val < 1 then
+              oneRows
+            else
+              if k.val < 2 then
+                abRows
+              else
+                Words.localBRows
+          else
+            if k.val < 4 then
+              w003Rows
+            else
+              if k.val < 5 then
+                w004Rows
+              else
+                w005Rows
+        else
+          if k.val < 9 then
+            if k.val < 7 then
+              w006Rows
+            else
+              if k.val < 8 then
+                w007Rows
+              else
+                w008Rows
+          else
+            if k.val < 11 then
+              if k.val < 10 then
+                w009Rows
+              else
+                w010Rows
+            else
+              if k.val < 12 then
+                w011Rows
+              else
+                w012Rows
+      else
+        if k.val < 20 then
+          if k.val < 16 then
+            if k.val < 14 then
+              w013Rows
+            else
+              if k.val < 15 then
+                w014Rows
+              else
+                w015Rows
+          else
+            if k.val < 18 then
+              if k.val < 17 then
+                w016Rows
+              else
+                w017Rows
+            else
+              if k.val < 19 then
+                w018Rows
+              else
+                w019Rows
+        else
+          if k.val < 23 then
+            if k.val < 21 then
+              w020Rows
+            else
+              if k.val < 22 then
+                w021Rows
+              else
+                w022Rows
+          else
+            if k.val < 25 then
+              if k.val < 24 then
+                w023Rows
+              else
+                w024Rows
+            else
+              if k.val < 26 then
+                w025Rows
+              else
+                w026Rows
+    else
+      if k.val < 41 then
+        if k.val < 34 then
+          if k.val < 30 then
+            if k.val < 28 then
+              w027Rows
+            else
+              if k.val < 29 then
+                w028Rows
+              else
+                w029Rows
+          else
+            if k.val < 32 then
+              if k.val < 31 then
+                w030Rows
+              else
+                w031Rows
+            else
+              if k.val < 33 then
+                w032Rows
+              else
+                w033Rows
+        else
+          if k.val < 37 then
+            if k.val < 35 then
+              w034Rows
+            else
+              if k.val < 36 then
+                w035Rows
+              else
+                w036Rows
+          else
+            if k.val < 39 then
+              if k.val < 38 then
+                w037Rows
+              else
+                w038Rows
+            else
+              if k.val < 40 then
+                w039Rows
+              else
+                w040Rows
+      else
+        if k.val < 48 then
+          if k.val < 44 then
+            if k.val < 42 then
+              w041Rows
+            else
+              if k.val < 43 then
+                w042Rows
+              else
+                w043Rows
+          else
+            if k.val < 46 then
+              if k.val < 45 then
+                w044Rows
+              else
+                w045Rows
+            else
+              if k.val < 47 then
+                w046Rows
+              else
+                w047Rows
+        else
+          if k.val < 51 then
+            if k.val < 49 then
+              w048Rows
+            else
+              if k.val < 50 then
+                w049Rows
+              else
+                w050Rows
+          else
+            if k.val < 53 then
+              if k.val < 52 then
+                w051Rows
+              else
+                w052Rows
+            else
+              if k.val < 54 then
+                w053Rows
+              else
+                w054Rows
+  else
+    if k.val < 83 then
+      if k.val < 69 then
+        if k.val < 62 then
+          if k.val < 58 then
+            if k.val < 56 then
+              w055Rows
+            else
+              if k.val < 57 then
+                w056Rows
+              else
+                w057Rows
+          else
+            if k.val < 60 then
+              if k.val < 59 then
+                w058Rows
+              else
+                w059Rows
+            else
+              if k.val < 61 then
+                w060Rows
+              else
+                w061Rows
+        else
+          if k.val < 65 then
+            if k.val < 63 then
+              w062Rows
+            else
+              if k.val < 64 then
+                w063Rows
+              else
+                w064Rows
+          else
+            if k.val < 67 then
+              if k.val < 66 then
+                w065Rows
+              else
+                w066Rows
+            else
+              if k.val < 68 then
+                w067Rows
+              else
+                w068Rows
+      else
+        if k.val < 76 then
+          if k.val < 72 then
+            if k.val < 70 then
+              w069Rows
+            else
+              if k.val < 71 then
+                w070Rows
+              else
+                w071Rows
+          else
+            if k.val < 74 then
+              if k.val < 73 then
+                w072Rows
+              else
+                w073Rows
+            else
+              if k.val < 75 then
+                w074Rows
+              else
+                w075Rows
+        else
+          if k.val < 79 then
+            if k.val < 77 then
+              w076Rows
+            else
+              if k.val < 78 then
+                w077Rows
+              else
+                w078Rows
+          else
+            if k.val < 81 then
+              if k.val < 80 then
+                w079Rows
+              else
+                w080Rows
+            else
+              if k.val < 82 then
+                w081Rows
+              else
+                w082Rows
+    else
+      if k.val < 97 then
+        if k.val < 90 then
+          if k.val < 86 then
+            if k.val < 84 then
+              w083Rows
+            else
+              if k.val < 85 then
+                w084Rows
+              else
+                w085Rows
+          else
+            if k.val < 88 then
+              if k.val < 87 then
+                w086Rows
+              else
+                w087Rows
+            else
+              if k.val < 89 then
+                w088Rows
+              else
+                w089Rows
+        else
+          if k.val < 93 then
+            if k.val < 91 then
+              w090Rows
+            else
+              if k.val < 92 then
+                w091Rows
+              else
+                w092Rows
+          else
+            if k.val < 95 then
+              if k.val < 94 then
+                w093Rows
+              else
+                w094Rows
+            else
+              if k.val < 96 then
+                w095Rows
+              else
+                w096Rows
+      else
+        if k.val < 104 then
+          if k.val < 100 then
+            if k.val < 98 then
+              w097Rows
+            else
+              if k.val < 99 then
+                w098Rows
+              else
+                w099Rows
+          else
+            if k.val < 102 then
+              if k.val < 101 then
+                w100Rows
+              else
+                w101Rows
+            else
+              if k.val < 103 then
+                w102Rows
+              else
+                w103Rows
+        else
+          if k.val < 107 then
+            if k.val < 105 then
+              w104Rows
+            else
+              if k.val < 106 then
+                w105Rows
+              else
+                w106Rows
+          else
+            if k.val < 109 then
+              if k.val < 108 then
+                w107Rows
+              else
+                w108Rows
+            else
+              if k.val < 110 then
+                w109Rows
+              else
+                w110Rows
+
+set_option maxRecDepth 10000 in
+public theorem word_small : ∀ k i : Fin 111, small 111 (wordRows k i) = true :=
+  (Fin.cases identity_small
+    (Fin.cases ab_small
+    (Fin.cases Words.localB_small
+    (Fin.cases w003_small
+    (Fin.cases w004_small
+    (Fin.cases w005_small
+    (Fin.cases w006_small
+    (Fin.cases w007_small
+    (Fin.cases w008_small
+    (Fin.cases w009_small
+    (Fin.cases w010_small
+    (Fin.cases w011_small
+    (Fin.cases w012_small
+    (Fin.cases w013_small
+    (Fin.cases w014_small
+    (Fin.cases w015_small
+    (Fin.cases w016_small
+    (Fin.cases w017_small
+    (Fin.cases w018_small
+    (Fin.cases w019_small
+    (Fin.cases w020_small
+    (Fin.cases w021_small
+    (Fin.cases w022_small
+    (Fin.cases w023_small
+    (Fin.cases w024_small
+    (Fin.cases w025_small
+    (Fin.cases w026_small
+    (Fin.cases w027_small
+    (Fin.cases w028_small
+    (Fin.cases w029_small
+    (Fin.cases w030_small
+    (Fin.cases w031_small
+    (Fin.cases w032_small
+    (Fin.cases w033_small
+    (Fin.cases w034_small
+    (Fin.cases w035_small
+    (Fin.cases w036_small
+    (Fin.cases w037_small
+    (Fin.cases w038_small
+    (Fin.cases w039_small
+    (Fin.cases w040_small
+    (Fin.cases w041_small
+    (Fin.cases w042_small
+    (Fin.cases w043_small
+    (Fin.cases w044_small
+    (Fin.cases w045_small
+    (Fin.cases w046_small
+    (Fin.cases w047_small
+    (Fin.cases w048_small
+    (Fin.cases w049_small
+    (Fin.cases w050_small
+    (Fin.cases w051_small
+    (Fin.cases w052_small
+    (Fin.cases w053_small
+    (Fin.cases w054_small
+    (Fin.cases w055_small
+    (Fin.cases w056_small
+    (Fin.cases w057_small
+    (Fin.cases w058_small
+    (Fin.cases w059_small
+    (Fin.cases w060_small
+    (Fin.cases w061_small
+    (Fin.cases w062_small
+    (Fin.cases w063_small
+    (Fin.cases w064_small
+    (Fin.cases w065_small
+    (Fin.cases w066_small
+    (Fin.cases w067_small
+    (Fin.cases w068_small
+    (Fin.cases w069_small
+    (Fin.cases w070_small
+    (Fin.cases w071_small
+    (Fin.cases w072_small
+    (Fin.cases w073_small
+    (Fin.cases w074_small
+    (Fin.cases w075_small
+    (Fin.cases w076_small
+    (Fin.cases w077_small
+    (Fin.cases w078_small
+    (Fin.cases w079_small
+    (Fin.cases w080_small
+    (Fin.cases w081_small
+    (Fin.cases w082_small
+    (Fin.cases w083_small
+    (Fin.cases w084_small
+    (Fin.cases w085_small
+    (Fin.cases w086_small
+    (Fin.cases w087_small
+    (Fin.cases w088_small
+    (Fin.cases w089_small
+    (Fin.cases w090_small
+    (Fin.cases w091_small
+    (Fin.cases w092_small
+    (Fin.cases w093_small
+    (Fin.cases w094_small
+    (Fin.cases w095_small
+    (Fin.cases w096_small
+    (Fin.cases w097_small
+    (Fin.cases w098_small
+    (Fin.cases w099_small
+    (Fin.cases w100_small
+    (Fin.cases w101_small
+    (Fin.cases w102_small
+    (Fin.cases w103_small
+    (Fin.cases w104_small
+    (Fin.cases w105_small
+    (Fin.cases w106_small
+    (Fin.cases w107_small
+    (Fin.cases w108_small
+    (Fin.cases w109_small
+    (Fin.cases w110_small
+    (fun i => Fin.elim0 i))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+
+set_option maxRecDepth 10000 in
+public theorem word_eq : ∀ k : Fin 111,
+    localWord abMatrix Words.localBMatrix k.val = decode (wordRows k) :=
+  (Fin.cases word000
+    (Fin.cases word001
+    (Fin.cases word002
+    (Fin.cases word003
+    (Fin.cases word004
+    (Fin.cases word005
+    (Fin.cases word006
+    (Fin.cases word007
+    (Fin.cases word008
+    (Fin.cases word009
+    (Fin.cases word010
+    (Fin.cases word011
+    (Fin.cases word012
+    (Fin.cases word013
+    (Fin.cases word014
+    (Fin.cases word015
+    (Fin.cases word016
+    (Fin.cases word017
+    (Fin.cases word018
+    (Fin.cases word019
+    (Fin.cases word020
+    (Fin.cases word021
+    (Fin.cases word022
+    (Fin.cases word023
+    (Fin.cases word024
+    (Fin.cases word025
+    (Fin.cases word026
+    (Fin.cases word027
+    (Fin.cases word028
+    (Fin.cases word029
+    (Fin.cases word030
+    (Fin.cases word031
+    (Fin.cases word032
+    (Fin.cases word033
+    (Fin.cases word034
+    (Fin.cases word035
+    (Fin.cases word036
+    (Fin.cases word037
+    (Fin.cases word038
+    (Fin.cases word039
+    (Fin.cases word040
+    (Fin.cases word041
+    (Fin.cases word042
+    (Fin.cases word043
+    (Fin.cases word044
+    (Fin.cases word045
+    (Fin.cases word046
+    (Fin.cases word047
+    (Fin.cases word048
+    (Fin.cases word049
+    (Fin.cases word050
+    (Fin.cases word051
+    (Fin.cases word052
+    (Fin.cases word053
+    (Fin.cases word054
+    (Fin.cases word055
+    (Fin.cases word056
+    (Fin.cases word057
+    (Fin.cases word058
+    (Fin.cases word059
+    (Fin.cases word060
+    (Fin.cases word061
+    (Fin.cases word062
+    (Fin.cases word063
+    (Fin.cases word064
+    (Fin.cases word065
+    (Fin.cases word066
+    (Fin.cases word067
+    (Fin.cases word068
+    (Fin.cases word069
+    (Fin.cases word070
+    (Fin.cases word071
+    (Fin.cases word072
+    (Fin.cases word073
+    (Fin.cases word074
+    (Fin.cases word075
+    (Fin.cases word076
+    (Fin.cases word077
+    (Fin.cases word078
+    (Fin.cases word079
+    (Fin.cases word080
+    (Fin.cases word081
+    (Fin.cases word082
+    (Fin.cases word083
+    (Fin.cases word084
+    (Fin.cases word085
+    (Fin.cases word086
+    (Fin.cases word087
+    (Fin.cases word088
+    (Fin.cases word089
+    (Fin.cases word090
+    (Fin.cases word091
+    (Fin.cases word092
+    (Fin.cases word093
+    (Fin.cases word094
+    (Fin.cases word095
+    (Fin.cases word096
+    (Fin.cases word097
+    (Fin.cases word098
+    (Fin.cases word099
+    (Fin.cases word100
+    (Fin.cases word101
+    (Fin.cases word102
+    (Fin.cases word103
+    (Fin.cases word104
+    (Fin.cases word105
+    (Fin.cases word106
+    (Fin.cases word107
+    (Fin.cases word108
+    (Fin.cases word109
+    (Fin.cases word110
+    (fun i => Fin.elim0 i))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+
+/-- Packed rows of the sum candidate. -/
+@[expose] public def sumRows (i : Fin 111) : ℕ :=
+  if i.val < 55 then
+    if i.val < 27 then
+      if i.val < 13 then
+        if i.val < 6 then
+          if i.val < 3 then
+            if i.val < 1 then
+              2605907144597437153100363627514511609621363854193530166373099116462952693816044602340996271418953576426824167565743725408117038120666189804345379177218742078934334129487217064745985016818698717628367221703129999503454243725042567431648323636562729077124757171662395814938505986713634768047788080628782131902288371165807035503825410422898281940507114796901086810977459144714384775000
+            else
+              if i.val < 2 then
+                2713329107307213605288190694063750610504556179423737474014578409988716492407007095967966105297435012674984622747717490602361785535772177566512960303324612294312142295002204310854798895890168575558143876419435585120948632887245631900684511250497781966473966657579222058629437453189508713909743735895471182659668059440672886439774077092310165373878760863959778365100734532260925332037502
+              else
+                10853314762337726803414948649647432671736704254422555939575929463088149329806024944854353268120165034377308331178774334924406721323777218523886205002479395774183313686797114718135492701556313883556266273327547374816902160232835605288593713046972229210399042346278636085230608312555986297961590459450106293501068432333070182429646561811100943535820240271078810110339896083068847666028125
+          else
+            if i.val < 4 then
+              1737086051661389353447233100840794569590817430373014214241317576337894265518332255636080835196234648202425323231691101765064060298827516215977714517759349657545451540673779534450761051142591399059700272344523252741573484661079537872886463435131016933667143115056692433243515744384552329536572691506692840663519552626077438876324421778790879981324835085843017442151904296936064459377
+            else
+              if i.val < 5 then
+                5426657936858522317111187481867997777813784463525972514002001723707608860870269037714244306544584267339037543191642147536168440428755882425376573042696400437254793994596127938182735214025598150229794687782446331452536646398083696277423227477633403450538559548465990174821181570686756187440833542825639462766259454032642051728568972321278812828357352238157327525553294122409912119143754
+              else
+                10853314206825831689899724763184301932894226235337723885848470386686645832915455154288481395440214433238430106892404341125849135184098788418540227651166220452661388145397029524715173818637739069081544741450427154904182395278758835237615357716046079592284007351984248596901820018391550092377385734890443124664692821332598409511749572911314102210966758921273367386313156187629730253912502
+        else
+          if i.val < 9 then
+            if i.val < 7 then
+              5430130164047882393736730042390854649909960644950673039840533661388839777373779751258051048700732361617484236344146519610689797043683500030197139269652600955454706517655522033222528982881781933044401836622794033182597917891238593502933448552707951748689004001538086936245808407557525759538805912304808561745371084265533160603590836279706588780348819689436368219324388802433044443362502
+            else
+              if i.val < 8 then
+                10855050737098895339789731530298834617807268310009813195553819928637218551233487599766890255743435851425607445347384303600231617391743046364123631689830265556440420750814088045354990694224777964773247772647511501062563572506734686829502272537293653345175573359644769883626732380614982060205265477921768409692346831893910012179530609634768741329422792230019467751848512590312988310550004
+              else
+                5429262176489477430142739992349148904214913924481712006145883116018060663927231976028431779747155093438353613169997129132786891059206142055219886453409211479813692548611617307953765854846008467545308226666039794924938805675303066473718076003230885646905992183714111252517195084419520297961781135570789947753372185188294307626699863802810684602040136947977107422779314816188903808603127
+          else
+            if i.val < 11 then
+              if i.val < 10 then
+                2715066193269993105072818448836712799430554009822816290742181648367917049242172682453521847360315248337057719176810520663683865589982694633059147222429137144766805118924299614454291094934328534393310288463786310329824030563981853629397882867349775139315604932440342213022926965151428797250309794196415815972789211181091597483547758545578741738898143154415274699571543633937866230471877
+              else
+                2715933902805676798643600792230909582705341763556072353045370645890406763316763129977888819612076033619124909158505232025475432841518069814761009861703555776056861079369957612030317732124373859913336350645908341846373021897088656150198845655121129567161127578182645194273960331721974269220669685556400695277670120482422827233975471251525989785716441993315602312217466533565643349618754
+            else
+              if i.val < 12 then
+                5430130441981693359290975521492250832643036279899087896226413966913882428539485425353585689823799417188546544398440827110433314180916504967039868934721544095360972658162094539510659739153327737316057276538262866121847750066747254452110251795548483537984779286453244163999191361575367647976481733604826790151261925904817299306716518160890371175534286063481204115670174956703277597662500
+              else
+                5429262176845147263172249161937165019106532123357572901659413362785741919335676806520324087205237437900500495875979212709430311637111580275897130439144309280588918241824538499074303052190375030469298846120921678991196185626680639959529439035594178303372526239176016410892189137563540004409238738256402981375778198350567855033232086144710313161018122762925486316092312335968048134768751
+      else
+        if i.val < 20 then
+          if i.val < 16 then
+            if i.val < 14 then
+              5430130163958972052858832434601449639401207515363850748180055787776666543293404836825899140258403069761443785788291616094732248322393983719920697111565103713308814915624704621647765565019222212490792453454027419944194480849574259538674115983407556082510785407583048140852767915436065963748445220179149804904901670340358492970029717470764902960586040414739300103974528908920288115246875
+            else
+              if i.val < 15 then
+                5427525646305352545132279074983702605141226744314127610082349765928261087173704295498623927705562569408042094534514230815491953342061896191781960564937121299806524013789971496023261048903495615507332339735054951613755148915536713277947891648146732965690312468853511849087380011814841845242930883684322978768062118145495628504649858685914665763426190103814433325899766087722808837890625
+              else
+                8143458993421427299132140335518957880848283760247810434179666591136326103270835483911208996051746211720882226762758869002903316423901527152760920625188626198714623452707655584788124711068306694248223804438417890455272274920167417926737014198105648749610949384786617886597146172681677327453125458488487043820180199080065737213725240077003022482784455959858869391613640487194152841806254
+          else
+            if i.val < 18 then
+              if i.val < 17 then
+                10856788100906347808232666287558265348770502991854889093113598400694306846565049246745909088879128100785989315481826987524219194368069355142974380130995136078851737469053633005353328803923417721357515723171527899843193187522195018898598859683440261614971977056283920043563195257424497120593720549129374347781433867022136341017737796001759343223620202323360235829024576544857086220715627
+              else
+                5429262732534891573474545950013420787915064407399000864996923659658144091523714692630190514908252879294443409048857255811268075970867657130799277744845877650350494882303304608042513773938555408286977543800455774053996576613347541312813343668059440202281484061046544156342066831234677188412018578882304495883660023465119777249736952470072313549354081985228522174296901822280883808600003
+            else
+              if i.val < 19 then
+                2715065637580248840283883404346862817733071295783630114183844093495711762076321534342752689875978528585520279404822621903823869150304655144963533754850521739550698739538726652682438187765921893047003532304818127597993606597841921511143708689089124427484921641003150489841973844014137636747610774841604238753165793750144829372261437052866634726290828982797647779807449579525115986340627
+              else
+                1737641741434114552971491163116549070419801935743011827636154443635405216588968937578898209698084671785446749485836809866799207759468652029216056020524767905287110889704324803402961011140158460520591759937648250801054396113160987519426595265079863187322652405733416876703032066357862927944289139366158413936024420016807370388252613721454800307930721572829509386793077278228769543752
+        else
+          if i.val < 23 then
+            if i.val < 21 then
+              10855050736832107378126029923052162916767467707777869832182378155230883276607684656549551798833503699389351453743007541258793638402323629893998191230027509980632894995994536521406888885923811805601843854907901339390092924392103025651202587103561816556582290943938474507602769787258205492679009766847257828082374061502087886306900306130773266454804804403977450419919565320396514892587502
+            else
+              if i.val < 22 then
+                10853314762248816435232535499803660092572199064784958283235937110614885479684791711570196469013342260863733394173082030911703127297441604692083721690848624251461808749086181071465700977753332078493786224399552324216009976354895266048138225773973064789624635195444245363874875234417268473140868898680698087410367639661906551300859146265705265557884873395323666054175236523151397705084378
+              else
+                2714197094687911692371444818151511156175958192418462787609364794282597024796218086316608459911815149978580096515971857603368946786818721611299138113742511605506138949008752259839963823234513859843168307636084466766019949266015517503481450091550768678258798072295934277821789115948335499878481700454912364150927702024697540812631698826790300259868827037564651630237699449443908691418753
+          else
+            if i.val < 25 then
+              if i.val < 24 then
+                2715065082068410629383904229132751149456240707206858073260578605846555380645954265970825396523696042470343411383718864742942254359463494617521042621185462167762104299241658309312358470032679278990753319816038544364502468650217728028741764536533575396849624298929845365187660360996625691069735578685582186873200315335937278778746168829885535620124737210574066927074455618953735390625002
+              else
+                2605351454995401622522778347296445835408180312364604871509996441618422910448406872837607170131206384133845750654490416453234102662727422223781240521671360488568894562427985340686749498335331174242337122928680420096104378896634153855664584192516611391200400680334572649538936656209191327250338337449486392315730599845470961600085005046323101927930121547678948267363310051086445321876
+            else
+              if i.val < 26 then
+                5428394745154221937709111131022677852290220302330500166304605082724095804060513087492682791463549766602648432774563974365168080847531315232510697628855582709745735265694662105394947691841286405470906388877518178350995870513765657325274750041058334769138091363617243730681163050890520331411138433945253220156456889280448888536129481993725543986091253323536420805612579286193969726568753
+              else
+                5427525646394291355536835663950213721494939341392940822827827181087416371237309407664614918802102897135833879536045610199980000095783229528535065393302792066808753141096888558405355831561612472203332313438942990036690393933611593387124961528411630284246366081896969052990054636168148438269565085502947028302920267470338249988142414832534223163851283811084176713488065004634887734378129
+    else
+      if i.val < 41 then
+        if i.val < 34 then
+          if i.val < 30 then
+            if i.val < 28 then
+              8142591561641534693755270017129044638875287757363894322693164077466818051446493857923186781598391000076954413440085623040212453625188209833342841976593581485170512718058558754385292893241708569082558243501906564518826668316981463302670326976218903509885151203522311661443927128165012818624462839316019056311907303257606339170234691478139507855167345251686610936305486262035491943365629
+            else
+              if i.val < 29 then
+                2715065081979500270297168809848631590510406258918449841075186932832385943866887325189754170365949688052287912815399950119168011136611180747183158441121417761226325765843315329535315278450297786274025930733808171985881359065475890927894793675036016002423123689134015774316680431253622227647612929039143134520758379167247560537841697721488697983387994572325405897573567927169921914062500
+              else
+                5429263010201914559156250145191389545873076414718974843237869765300772743926818456374785408740318440493537688971619487020289776839108580550922776299411981880067020662018790446448800250944748306521331990755414887052873770393531789536173750962027227493079004359709836914633748227996910894229937458687039467931701554340547914595631647935441779231034997899030267953643575906753662128909377
+          else
+            if i.val < 32 then
+              if i.val < 31 then
+                2715065081890618371638496565072740310066991701107082150765908728057478813071635803140297829494005761693351177120820003782850567357117750945426525080376913374373508383786016909702515899642219563477154268946232844996314889164960137380335696841848074603985751743689600432013834147886674572136048460592222858394843641256838360877961787762857197348760341171299623977395707071209075927743750
+              else
+                8143458715576555162191287392890271851870384639976847265133725113383795092681822477560156231850139983121406049594040811942511571971197512531399811720254825897835831373246213312966989790884103774416567589951411159828080135711894069870842328793465987352643769347944558037159297440317032046928877626952629302571573732457217648152851365823871488823678388691064383237971924841785461435556254
+            else
+              if i.val < 33 then
+                5429262454334406460617727919700990649008476562841408631631736649817917806763138329215393754155024302136045342594202904996761439826276678921612587995667595742719085577604663860689580615650591123718509161857012716854472008813457140575856195884620111638748835271042659692127286324219603934857705819984209700628377354199491816544817384857391306758958860268023754548632540702915222167971876
+              else
+                10856788378662309613402956739520638111088045815661117906470210639214911921219942576493463100713257492378570686214014277865275216947282412735707810468002733374593327084779827087688589134585848117383557665951919337168746773950681590013802196772304142209556284791355082747471902318563034049501489044073687152956748121827062643074946317414419962687003596002512076677522622943210723886725001
+        else
+          if i.val < 37 then
+            if i.val < 35 then
+              5429262732445867381832401412907992684761111874397804997310301899046482727920647230413252320507724647653249153184387122883040705861262866314454696121798600452804893217905462512523427520702956204738720659423695187333968899806123444747335022590153063367049480500306482557384833225761989551629631077055676461673301631521026666232135425719430672972938279130573873771940358579349609394543752
+            else
+              if i.val < 36 then
+                2715934180917336879048056841065193849781812598054442530052254639399621686597479983782139706728306025015698967100115670682005893041920500256064646609773704804777186637061876418402129030168541106714116854360386064874608394588955552914065896415985949380929292153804294927111854352259398743427676396187766768491576994056055076615233480458046257394710554500363750776163302659988403339853127
+              else
+                2715933902983497498602405125426142937501906049869834005930274136889933010220800373922147335835304264297872369714711554453249732648740283617815159297118575275588051361554635577508550544788798166667664658058834865485187110270741804897691704299251529280085904913767550339153882724910097608396392313199173684334686169192760379699968671825698998180745602759714111022186466455841186533212500
+          else
+            if i.val < 39 then
+              if i.val < 38 then
+                8141723296593955904857707697733079988724356081203703372596762331439508900626883794564581163097043925250255446882208410710898930552808125291678465686800823150651390596907975109570440175097379898222664235199769607766567273805443519384613122097124014668255390910024560482076159478654928942066591080274212528731108586740987392109569652558564726504107822435742073148141615688991607685550003
+              else
+                10854183027652008209150477150720077734086374425110417058711312470527405568878622566435025163924751095934980497426871648254464930676110888566898712474534109609051641874693131538569295153945660089400486933243438654629152006420707814853500793240112825909808337846784371734318261998688093679989515549176812091973200275848794983222491100311943982064701308676404778458527290225410491982428125
+            else
+              if i.val < 40 then
+                1111379488556894049542750549701355959795665721985459154040481422687179356598660170893228902185228000411914078229688459253675115575485981643197096817851191804944531105011246501320843524752911185508656090882385927722963514942130022447114583369033912168315400801641854994263862047898971968617064588963014089005804309867236995624871547519921592128700012854099624790549278289814459375
+              else
+                2713328551884314186572272909758378409145585653553758593776219588635757598511928212792673340899337445796508533615475289681011620496334003273647277844212510001862134220570353538077577795414013441648006702881933043936638717150058047125680840875902443542758289278200337219618132813785607347049542544779379337899018182370703687526483266281394099526253494048063439555700868368434906015637500
+      else
+        if i.val < 48 then
+          if i.val < 44 then
+            if i.val < 42 then
+              2716801890008468831849548044464143497978192789018528162135265757856979153581902777732570193457356337850924238605259836369286135551736740020090125168524107327942235920666141022652977366460264621316263712136409963921156004164511707788446081483648789769002154268567847405724796656776014966809980464157217716088553250245530993124689901717621064475283176875592534997851588428306610146496876
+            else
+              if i.val < 43 then
+                5430130719737541313702844941138735711056675937358427888934405926322867641640496361435098722500152235310810605430044830523380064863119917025421426949835548060487687680639914346228523881380101634726596204681165722540306700954459759652855476410191026222789536813106696413039293703467382924940025422644350464557491126674498209753574089809551476223589694747374787778248079419422180185553129
+              else
+                8139986766409859507571089916243812304494728788396116330141933114455406839900177796703251701523729591078164861246484877963441054524852575681009664261984770122659525237485901957325400396921763089486107983624645992148313841605804149689197605235073089884620060040920918613753663262424146980623422278795046856035754357825189736100527129898045733924842326612093766022008844018268585205078128
+          else
+            if i.val < 46 then
+              if i.val < 45 then
+                10854183583163817950512142756265326090496931945024095997576966846405981018668435836766306591007389165384190834207148984757304162456850327159506251845653485582138723836242062763663757260913378173394857464746870354948304640820689886962976444941537611988466949740254090145292512329941422173855627529717115989632405262824190934921591909164725046250260798252895729095328599214649322548831250
+              else
+                2713328551884371089202085624145517745682124326683976681677619718515878658183892672634956385056708967611230466014469456977501341933981502249881886878256028964922091995302789721364228163589495495746461981043097259519075233418653857916473777964072357534016625670345766406470821608649669694210905644050639309824336043209308400898882397781664466314411055236632855673091487288665893593762504
+            else
+              if i.val < 47 then
+                2715933625049743462991230010693954520134641909591478478850704430448251740492671306673186829442659136985318089658002167314318312861376074840301418152676921113529907585015670823741544737034531428646034529727286515248432707610241415202377362240885904704574579476550731283458444491460759825307498196366428099045220039932767946774930376783107225195472989209946490527363495230960845976565629
+              else
+                3473616413635407431700503908344199001290878102913668307430900524050081807824669884334095701161554827795356305792230005999668901289033000497698961856028987519178262251205161289170312630973434961223635764782806935339143262529873959325257810456834618999135905445424507665525612010500390042314534243943603224160601411313222095006214175530407989832826576360976105206647217655273466803126
+        else
+          if i.val < 51 then
+            if i.val < 49 then
+              555778711544714328447996936706656033589545080015533995721748980257274918927259790807145686882365478092422619533252085470177864934549790548076753274016409848323185742264669506171308605577008890842996768282859726130964389788973111304138956284659679556019155416668854231805392805259591598765244758785080590416613232134196035263830003352256322879743066787350110709667301269550790626
+            else
+              if i.val < 50 then
+                10855919557925071877243499561797984729732671362276546339681904824164045783630025059841893980894112236695277932766283993798545239277306314880124375085798442470543541719006961479690513139399336342837973706359835247295814659788897983149543283741170684744258584333089290169265325811028774362582196340751433737144824827597473081021681114717731612129976160030622659187067300975608917275393753
+              else
+                2714197372621608843576209305450602405714715832944626408084230222130200346058646326600518551084885024528215519007021355177230785934215494992903447856876298658875723411121431215488180796570499420042310716423044867445012692192144705040946294326812613548824400510616446148212453669391891165934822795052212428694204020519046162768034973517259402778744048845283041385120713413143219023446879
+          else
+            if i.val < 53 then
+              if i.val < 52 then
+                2605073432245698501989098285834036676580495887440231471084650549070985196660143022103238428836956411207305381045666501580995569148728088273538767842882004116249418728914747167011035571375512751657133099752077786048114506002206945554338345289613456700164982737206308774562762571374395605550755763972870244565655968621817049304830915617506738487796624866650751211680471897247353518750
+              else
+                2715933347205013591706024640163302324215343893889817910821695233763168631039035789498724676833527462249872955599594962961585889565027678033587048951647270047299176589739107286809887880593163803574055840573703791948579185893833302392275804915404768525621861787420532350738532440030317654825905660062631600717576625198827954454758814038527382382291197782166163963848725855732055673840627
+            else
+              if i.val < 54 then
+                5430131275249436445421086336448661539894113333514871474297747067746618543315070019272796403574440291279350711230735158209735977689753314941535170963793667073430240935691981465414522486773257316466035902438266871944475429633573279381772039678105812446443245596615755230324816615207731996410770572585498054887866459111789131952735461926657186587479309292149328035884537696933776884771878
+              else
+                3473616324753517862881958172058981667816548372723174491259921124063187481876687221870679930826005193678170499626606334660977006763057094741498596395086040455775244604008499331778540586239496747825846077274087753693284795752943721635494073734232391732419201925305858972199974624871378216150970842647093044859146746987383587198252004731870679413996771955917213928886950302154580078126
+  else
+    if i.val < 83 then
+      if i.val < 69 then
+        if i.val < 62 then
+          if i.val < 58 then
+            if i.val < 56 then
+              8139985655119309733771251796322572571242176420260085304349669879927258513500019943896778291712245781309864386790766127919664144733801643821057344898177437606936829907107905228360315704151396375521972541878529644703591935782863765919248904913281649028277760860293595465280666485026827628215407126078830927174936088949440667360202923614174400516151908213657861785034649968338043222656253
+            else
+              if i.val < 57 then
+                10854183583163846438250557624152039114716092921416964622651623258016466000741087886388312403421870245809654518160804597891186266065918131546282626806333694842971303507879099833005165489487306769579013996862155694368376872290696993824256230384578288019947011088147544983088451339328907641922573638723635900219633021232625803274456223945005950470670264174089006707073189914226532001962500
+              else
+                10854183305407998420107748407573297494920795681485579248941475501551571489414630567551970007954357836728387873431611735859922037631612257896385821348910682619005367958838824036542514847664134815166016808201704762270959554375681002916546733223190449944778111361603087312850384876960497689656571674287396430401474757396317549969041248071618428882625096143527816823920236229991912861328129
+          else
+            if i.val < 60 then
+              if i.val < 59 then
+                3473060812886873871404571129025352895451744728371040704062022501671825147189298373877839037090151778219804914545675237158694774441150263360715263335088586196289346661072243376363491089989503267014831079620093593749502172395892485219084885726017329461000661061875435821800128685231242019873779879412973207269108895022688414138901048416722702403547717949568323092535138130218515625002
+              else
+                555956446872528316608202274970105852491529810157697314540109296292437526340516661903268285379598326780149955331609266450116744985115293860047954071664872607333223349492644278286736523505908979672541172847052011572169024744007615138237858219373020720702597991081372037594963527113201257911122887018555129129686432280155832605655887861837057550928903992829146795570945861826171879
+            else
+              if i.val < 61 then
+                8139985932964238800646437655961294601573939988242782212944798130430010305514318597352589908922169132347862338739945358866894779221815132012114405507409514628141790706918517429851581381272743333307837646183363895155256580439239201434197355146608278741802533434896982072707026476868854376338111414458213636707693203058132600938219047311198965796719129173254741547864862680721405068368753
+              else
+                2713329663174778597346280833431107906555397199679345222178178067100529413629664902744599681736006473340922979751511811600048859941055295622855490404023976011792924426670305696663345117955493420941254488724173746527803583194227103159014056589802129947600899749844758515084813418093916226147067400641524663560639687543137029154191475177447398720379234937638584597153589725685119648446879
+        else
+          if i.val < 65 then
+            if i.val < 63 then
+              1736808295699611493506609931387805417126389198284681783962071743679454452808147854293457330982125709305098410433340410570368288559123972890050259635933295688467596897018673655433074349724628302129407197610053325818287336446455346857438505554969073292412984755917957955392366702969461489208827332919821996873298734000353515385809150602220115797991262240911976551637649726989746103127
+            else
+              if i.val < 64 then
+                8143458993421398884243655903963323724558275655370907376854161806679744948278869879063677926167333553019844565339839577877427037505156030055145374790166289551374970704804805546801770798599741525487113545900614479402363598768504158841190564443654390393189646114227598585763983579678768854100689904681416804515448072320434004726646446559543089382082470262275819556090980768203765888675004
+              else
+                2715065359735490490367597349864424375321960095535474735156627913962191111241970617527092002106806783647763786681866862713751006798428368418182112835870153489047188674481170119691780937459540068863613974094788241889007228961522290612235983690624683633530659394571687807439289313197886875113805007544780231781182636207966550861719578608376168829368624635492342361249030828475982695312500
+          else
+            if i.val < 67 then
+              if i.val < 66 then
+                5427525924061285917213981000891484709912767728831981409415567095934472380732920137402248427019785924013803005808211526614972009306681230209712881963033240593358821384979250178888470416088605143309612946684200995524566946993542321657511235801344956514371827120787941869930376581569600774914467505353803039297435635753054979437724493328953630049729384143830675384378993213462951679693750
+              else
+                8143458993243606635588099141766524749169833310496872673374589557445114059873686708133466743799178105065297605017675689515771994542090646587363237530321018165842451647801376957595970113034985320994973760299787019374708833841179854691032288738322243350689002234705659849304910761444157201172159655298683884350540892977175282378328202282825212086730670701996368746041320264434875527356251
+            else
+              if i.val < 68 then
+                8142590728462730408901990504838260519013525634178307777143037560078999592573768471266951445106081167845594370485011356054381185757736739124252161556463046025810022672033312029698747511599473431737895089676217455015686240927564673848106912958924449633114289849152006595292165704599084696876744594755806607408404904152652701437583788319841116812476678177375815727284178436088592548837500
+              else
+                5429263010024065398786857528627890824565024416350031698096816084166764452440579526588095877122069091806963457452223717224412148619564072999954618697949881136027672102695230190474348860063336805054922541015772536564330054573644934095813138366210715178356168086720431858911854360376927570919191840757827752008453964860710358478064302380448544195838400838766838205629028380298614521490627
+      else
+        if i.val < 76 then
+          if i.val < 72 then
+            if i.val < 70 then
+              5426657936769640436658443363707490752750553614789834736409984565016860765082866553219695710406397622943837147365583532527230584723180090725392576465102241769450396918971674826198771209902643554961618294517495134612192747410795368521200346565060876655945966319357428423462835000413750179440180692971125571769164243311177823023775473753253006178530193448523305059647187889003784218753126
+            else
+              if i.val < 71 then
+                3473060901768745213901090409526891241487004352907209726015376481372957112564084046475890201931294976738673267291379426847261794949169822750728180963546743405545290883745995673583203495814242241677433662961144926423575387449588802006563229907907323553632264225004447984017175307362213510774057145550573394599947788329647381189572609357064330790065920240294880935922563076080332043752
+              else
+                5427525368371683872567329920924842729898354307265459928313795600300435861161751354088337461835212203119627374420325195507109965907330098676714473959872162604348485700771328396529588454362204169057214524711805456500787480121971130652348093354135890150441111950530822943337372564189351524068538822174531497533446140002239695811212876620142786674751977926803210726941005289840789814462502
+          else
+            if i.val < 74 then
+              if i.val < 73 then
+                10855051014588097643709817410372777335508998699373908897126153894455892844430469559075234853242094180367636975970503825739217778532529126324274332588124645879453092507581355361684158502241497622680105618081937720657760559365713737115337380957385717173325996052251987037631338542836180016128195518144300580261432492715166132813879269682672641314514772314993288097323850095653625527350002
+              else
+                5430130719737541322798526399675324164299804167528419035505177647346937559877712584628631687127056978967292351597152988585539340248473000295208925292811988519224532455694097328117700051527304488826253112428136563014537544658280377278816979829955947727666715611034526314612940868019796305482037534678437536968132853655039488545518781978478766998656712861048872594257817268657775888681252
+            else
+              if i.val < 75 then
+                5428394189286742290470928655937754695555731320452006751191527675121258405391256860412629378407753271426360230314165307784029685266772380793813978417640575933241564827728072429249999915535695382337542551465474888598862184878214206553974889544577321572434700173558463813663224846308628612901164210521026521574929119094738894351512117119587099249405082446202195581284352541256042519540626
+              else
+                2713328551884285762579368640013246728905573066209809050549458291003066219601337779127428089288317627204548201820316622646242159138523271188264419932847727606270887429009568652919281297408075183861429084399758846669215292410445883016058902957283905455125304573786339107442706329631332605975528223224289146547510529180836732209172238051631182755019100483195888961199671328353942880859376
+        else
+          if i.val < 79 then
+            if i.val < 77 then
+              8139985655119309733762510620985987734866201126033005801057390504120032163143381087370725672763164609123780174226651270748789559383920239254342354333879629677877181943814779519625739956667406074104751188726983364231635091433873221565926356194531490870052294745454631968946048019532752111148520561378149280175714777131925902319162508683648225959149924424480132086318918466568115253918752
+            else
+              if i.val < 78 then
+                10856787823061561034323475030739483766012086300226132393363552837840570767596652017158456618692117328644636574837184133869879249781048408860546795454444178681436832592618687072133448514508143970531630498760458121422179289108167254827544904317636397650156286663262641649884888352185995863191611514317039025295588229396139797614303548914257865855814422317934067914033309221553894082034377
+              else
+                10855919001879771539153840411703330478264405739989002458972132927262688588992898490166212294779400112978782879162697519678542477498576296854271962564425339743726987775584878299565698733710070345395543670559719973002556805997950157509251832951164707985312990475770421859562782379618948575633306020714989567398541059680277729698282474637263322959566392000937221391362139284706207314465627
+          else
+            if i.val < 81 then
+              if i.val < 80 then
+                5428393633863842880865259402208121036203560729395041013129935265110559501021415821406130130117874603427794845880859559845386047847378400301374445247367486174050148604507971409146890849853296856453150300531840371200028397605658151996296255364073765537318335939017135408359888300094084209691626718352816703514327017902726925164943095245313086544963754676132348328247666358947845488290629
+              else
+                10854183305141153601345073518437962068596364751455568879717885725281709978903406088710520662143873610381173286794324310065263013793295402327111997513170007714256884409216202208043403308987131012961464805589982264896767104800627882252630513336789293439479181367568663872157639326513922405350925115502975309030759907355267226143589850822436163437292866795814916258681566417598815917978127
+            else
+              if i.val < 82 then
+                5430130441892697646271176086459048160295194072476959046459057491624510189138569774063132968867113679968047679532897289415090181653899813431310401842952069989084777993708512523702353969728345183222335340182901668557037219067700683541804014534070211054866841105358430527086763578553983569701290586970327485692857645493412198041809625386214875729894990996655233178174123466014953623046879
+              else
+                5426657103235166255065115308398494991580620358417581175751255818490461062746197044534341245905445140594532325148602771328110857497671221856352025757247930910869440936668063876016382125927623769337455892595785244627729445710324173247941561035450258538486530861791945677705649534628087828900001641547668566124040352056472836822298671876303724687963525763535735686309636533355743408206250
+    else
+      if i.val < 97 then
+        if i.val < 90 then
+          if i.val < 86 then
+            if i.val < 84 then
+              10855051570544516046717299068321325623389438353154656160758850476725018658332042855920853831969902454412131873527561049461965768099124710135433380788255131398545756596694559787114675376375442487283839167681276924968675474164176804441031205508337727860940401610461354985545901921095203233492499794169438405777414951260272316863411440038076564554292979814050604557271115780067443857434375
+            else
+              if i.val < 85 then
+                2604795676312335536360667959572445025987666990522817561347600335091671649117652654611649176535004239504389598599652282991808695447673917503887593900937619454125155766468400545449573090600186917707910877231853105521319784637087552642029962254839609649463791038772252730720585396154633433824181127003257721607366195194169312287126814805911172169272660511296644109302163314880371106250
+              else
+                2716802168031133190129781091203409319853933196374503640424298934145831644264986284344772575567157330928850070252625635230684822914663753438622773739472112628787220523026499023686841865202667802798020166973318251920386955188038947871950008767899552928496822935107329080963220193783561597215515960826751018217012202598930285883897327851754758426886804656447811797262169718742431669934379
+          else
+            if i.val < 88 then
+              if i.val < 87 then
+                10854183305141267388384204682342443674730222343098347077581582227676647574416163993580856088676136506428184635087934506151040937936078841043660673698842498100400978037358388951358686783406576309063075833393911091113353388651884765201867306211236867588421944730287639283386397493517544338534944416781707674425042898963967794299580944541237152812206967578248395523408429026699127197268751
+              else
+                8140854476034481993349240965629891896495229336499225584589603865115316296751718502592940767066161919477463000636607151709630430859116671417686538450693075965008567863178483895660039989511994204509119167677799539048969123867176594471972487814073232404043115019864702341737213224820455219567313921897669275423054138253156420797957982168874241761698240793577979283875785768032196074228125
+            else
+              if i.val < 89 then
+                10855051014765832989735554932432726086805208770906947945798688932196231198030550913663780971038199092848426807457733348627058455153910824618862026520315501987748691636193917124686145671535077607939858470178582430414699669421547380942947272575026570019939498894299147166994500134359290788471201285108456183771121043885846843619572600088933481480604204261197774042379111051845642109375002
+              else
+                5429262454689934073499117905734082204318018527944315901241860760930224511438750280643261633521498369447858282863755125551045480920224185433452446241759594831423489247028870166131549611357125655475575155883377013117527363580284678020330735418179719037720372404337625569672098004582113700605095757310108300535011171807460389544202533520746893972754865131946680776312016248893859902353128
+        else
+          if i.val < 93 then
+            if i.val < 91 then
+              5428394467309349800759519810232846518382984954632114658363906937047021054820895274925762858476524623099864512450434249493379384539751212647024277517404465102999048831551994446073466813284812794268798747802608109811964345428264814084279185023806211307180348336732212468856268649202750002305158453006767947660377160418990583540724695274743978430470325946544126063236035406875701904309375
+            else
+              if i.val < 92 then
+                8141722462970457604448855431179626243085243113444031956483298403578393021971398686201409726571733657055541690519030736174861563387832866017901637292060358040356614780193516836304491116607753568305699493301262107204466154942889856717634273021574215787576145382115612476554124768956750114050227771812999906152678315360170900650299027876678450077984616761767747448177077770328582763675001
+              else
+                8139986210631290201213717531600495036448413180093675610797316449701741635032830104572326357630102075859844707395299714217024919492073881416970098204462539980395081976321021654240006363489086156542804904358011529896426329402991347057040706474489718640125898271176390511026487864284641236670733244084573598532887739138355835862067686477502718479793697703541984088953585624694824257825000
+          else
+            if i.val < 95 then
+              if i.val < 94 then
+                10856788100639645218705042474543962698133652653012843046994551169746526449382962803023953021105688392717928037329564060763739209558594938193061363528799079591523173612958764449822803184054191374509678944606761589675696596280345301681665036288256088414362577754302350308045064108049997914691317849164455647329966527126005294987424476090653765711185330111732137089713476598358215332043754
+              else
+                2715065915691823548534776511098641514831694082908246707045973665755660826857725277227474705031277820060625120407604372250292688611073666073370180056667605427764514458168392516258773914416934565327566098820261431754960004486577794377864494005269640319789436260071299211314430658005962128606704300556715997976649151449737344579567658546266612333738577422906246292407624721622467060550003
+            else
+              if i.val < 96 then
+                2713328551973253006075423440509964401109465067031934641396442519093338449682735203190928192646613838691331007404176280892161250773319799995529886134677213534319930947395318141767559358377295512449281404617861424749623895234975683092895660610565772932349656756432540939233915548454972504786424706908531682852181851640172416587632753039365532619562882032937523035801016986656280517587500
+              else
+                8139985932786418073380198772607829141555703555815074641998407728353845489579074103958409700195760342439257353929603349542108420352190222047455108187474451943799164108804647510868480522212755584854125634118598199136507449028598689765630969261039731294952272605937981348378343846881201070922248238818998900871043310184035807950730104110994601874541631936210715144990012347889007578128126
+      else
+        if i.val < 104 then
+          if i.val < 100 then
+            if i.val < 98 then
+              10855919279813525602078275972699076041449586621177374006699945407701943580651207592528371218231378820323243046024297441030219705100549498170361452975551618618469853530516765997202471354803824675535991431043987740364227669376337930064149347704436735987298007227980063322897083880143606435121085470535967300605173769426394697634269966287026511537854023270512043384954334199810028095709379
+            else
+              if i.val < 99 then
+                2713329107662911916931293536063234326159877064835826344943818070046336671206452532656810788711161661152395686325089271726457025693890930557997426663469334795382868592204621271903971540564762983001080836302781948575507878349503744041235913425648481060759110205852681286955267490466292873918876477194611016228247611599809216699910234340896756594607164636585166593434289097976745644543754
+              else
+                1736808384723784923898056906936052919454301391060148548850601085600629258193319347536195489805739015647430188309175548285078578718725708061953441772581428388192540972913612961757651370609227405781677345277608565359234055757434991595726355985252894384551378972948725368804156055946971628164095663950297460782571271891922850754538359718785075354041769230670991241001188850463906253125
+          else
+            if i.val < 102 then
+              if i.val < 101 then
+                1737641741405681449819623433171478285146585261773937880977774206558354409138456837142717827010784402432294454333947411532108645829998863959206875310491846548235968961432803296505376128215890699723094845996173305278526910967692791271021510490572650030508663694586843660093236827059460810181001676060461871943340380973569474207672182557808392666110197751559098833241761112213154296876
+              else
+                8139985655119366663696843537995355407811349332917196360409297797008133420138724598190850556152641795531562482616893277087331476310219633155717566985010054198306159815581466418711691425261036346075852948584017139724712594971746724408196135463859312032984327291481498473100281066060219546270542755062867957999750997598746457883802067020947044130932401984182461103775539100265502968753128
+            else
+              if i.val < 103 then
+                10855050737098781516330002940213668790159468026979338860216704305151346337574346091396150033005392332529842490721636656696439917843111921546412438228117203365945058465855036496773226741812765313112989190108923758551782103819132104934282554342850084197469969325987837990401787722164047777277691503292466301549219480700508639648450024070382911824638461073533353567473591268253448525396876
+              else
+                10856788378484460434815981406357947945603265635316286523417887495906213136786252871553565584092362820211326735985301222393508195377837543622335761306135748081965064280004502211827155482741533931371413255671932922901257478085225834531448570982230259408217542322558087724242700832446842871205074014252162280531986116730447281734520783423483651381619141673724052464242094159507812509768752
+        else
+          if i.val < 107 then
+            if i.val < 105 then
+              1737085962807941995117537398487813363028448088559024429054980231162130262578319383460810782555129359236554530093443350235666050363629545559011076257645183110276213309351832849262196972681823608246293607159643062506727933589330462616487369885113944697078829548762785690690147080412901571498743327574085518860757060151510729697960675008572981742327723253547446802259683704406748053126
+            else
+              if i.val < 106 then
+                8140854475678897468742357737175280095023506603683235221729292639377409808922985243994422055433928055169271553881014179698127539231975696691605291987593684693264615988455473831433502303064454783851652753331001031074642757490175925467660928764713120390420372750734536317575289634460166782099463084142163283139430541683096488146981277729124655531158794108392849014493637681388977050781252
+              else
+                3473338568763288682204886387193198926810815395218991343224254950510146649955150903840962460697208814019404302164295681155370236153544352835700122146591434088293863001962575066678068239860960184708393713301566921865649007200183271389712480039599361459396565558150830156794967042132941509630503665434468394956852755379560128004170435125363167877809988965518653280102610588165322265625
+          else
+            if i.val < 109 then
+              if i.val < 108 then
+                8141722185392401862280684657107132643227582987399949893345997040168280339200116323568413859466783443546376414743073379399768452017186141981357950217167790517944687899756038209890543903768195899156793452806726264251648780761266873298159719960325837956045145920262361730272801227146890825279593998019609438232664483973726422850993239023947988943809284467903389679853804409885406503906251
+              else
+                2715933624871922763041165919051619164368230802114211220105008217746413188616006771901691901184348278757566761923766548646563605758194456254889861429667686018017216822751761762701696363220460219705904918396889998415592453604130191066105399750652158178089993426200388650462073271952922044821890088559074465238502027251182125630399189973874626220437800316887014560055920183658599892578129
+            else
+              if i.val < 110 then
+                5430131275516195955781533845455520011075092814196748299956613528453455949242258439048362876236974338267829935604822711382327553357823409992967087113809880255590877229942389268885846052672891656150279059155758532003629443927332757182212031901332061582404652560085754487030507678104058850337726689926060264992737504453913143712735813004323010325623266769724777986995876729774475136731254
+              else
+                8143459271177332210791603119035512048140135492600089067100831615403642180487252848449917269141690884723147388200497663419781813407152327570097239772664435788347461565116737112490958235748781778947137415411968212669951398442608385850255364285165051975859099637273093603775618365060730842814886068873442718728658719712718819519351265185210783431255244036009380590985529423046203642584376
+
+@[expose] public def sumMatrix : AtlasMatrix := decode sumRows
+
+set_option maxRecDepth 10000 in
+set_option maxHeartbeats 2000000 in
+private theorem sum_small_check :
+    allRows (fun i => small 111 (sumRows i)) = true := by
+  decide +kernel
+
+public theorem sum_small (i : Fin 111) : small 111 (sumRows i) = true :=
+  allRows_sound sum_small_check i
+
+end Lyons.SimplicityCertificate.LocalCommutant.Kernel

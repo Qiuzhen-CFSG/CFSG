@@ -4,8 +4,9 @@ public import BenderGlauberman.Section3.Basic
 public import BenderGlauberman.Section3.Remark31
 public import BenderGlauberman.Lemma19
 import all BenderGlauberman.Lemma19
-public import FeitThompson.SubgroupConjAction
+public import Theory.GroupAction.SubgroupConjugation
 import all BenderGlauberman.Defs
+
 
 /-!
 # Bender--Glauberman: Section 4 — shared infrastructure
@@ -27,10 +28,9 @@ open scoped Pointwise
 namespace BenderGlauberman
 
 open GorensteinWalter
-open Theory.Character
 open Sylow
 
--- Local instances matching `Theory.Character`'s subgroup-sum convention; see
+-- Local instances matching `Character`'s subgroup-sum convention; see
 -- `BenderGlauberman/ClassFunction.lean`.
 attribute [local instance] Fintype.ofFinite
 attribute [local instance] Classical.propDecidable
@@ -207,7 +207,7 @@ public lemma b_mem_fixedSubgroup_s4 (c : Hyp11 G) {b : G} (hbB : b ∈ c.B) :
     have ht1S : t1S ∉ (c.S0 : Subgroup G).subgroupOf (c.S : Subgroup G) := by
       exact fun h => c.t1_not_mem_S0 (Subgroup.mem_subgroupOf.mp h)
     have hmul : aS * t1S ∈ (c.S0 : Subgroup G).subgroupOf (c.S : Subgroup G) := by
-      exact (Subgroup.mul_mem_iff_of_index_two (S0_index c)).2 (by simpa [haS, ht1S])
+      exact (Subgroup.mul_mem_iff_of_index_two (S0_index c)).2 (by simp [haS, ht1S])
     have hrS0 : (a : G) * c.t1 ∈ (c.S0 : Subgroup G) := by
       simpa [aS, t1S, Subgroup.coe_mul] using (Subgroup.mem_subgroupOf.mp hmul)
     rcases (Subgroup.mem_zpowers_iff.mp (by simpa [c.S0_eq_zpowers] using hrS0)) with
@@ -439,8 +439,7 @@ private lemma odd_order_mem_U (c : Hyp11 G) {x : G} (hxH : x ∈ c.H)
   have hqodd : Odd (orderOf (q xH)) := by
     have hdvd : orderOf (q xH) ∣ orderOf xH := orderOf_map_dvd q xH
     have hxord : orderOf xH = orderOf x := by
-      simpa [xH] using (orderOf_injective (c.H).subtype
-        (Subgroup.subtype_injective c.H) xH)
+      simp [xH]
     exact hxodd.of_dvd_nat (by simpa [hxord] using hdvd)
   have hKcard : Nat.card (↥K) = Nat.card ↥c.U := by
     exact Nat.card_congr {
@@ -710,7 +709,7 @@ private lemma fixed_full_orbit_restrict_s4 (c : Hyp11 G) (h12 : Hyp12 c)
     intro hle
     exact (orbitOfAlpha_fixed_iff c h12 hSC α).1 hfixorb hle
   have hstab : stabilizerS c α = (c.S : Subgroup G) := by
-    rcases (stabilizerS_not_le_S0_iff c h12 hSC α).1 hnotle with h | h
+    rcases (stabilizerS_not_le_S0_iff c hSC α).1 hnotle with h | h
     · exact h.2
     · exfalso
       omega
@@ -1097,7 +1096,7 @@ would quantify over unrelated class functions outside the graph. -/
 @[expose] public def deltaAdjacent (c : Hyp11 G) (h12 : Hyp12 c)
     (δ1 δ2 : ClassFunction G) : Prop :=
   δ1 ∈ Delta c h12 ∧ δ2 ∈ Delta c h12 ∧
-    δ1 ≠ δ2 ∧ ¬ Theory.Character.Disjoint δ1 δ2
+    δ1 ≠ δ2 ∧ ¬ ClassFunction.Disjoint δ1 δ2
 
 /-- `Δ0` is a connected component of the graph `Δ` (minimal modeling of the
 paper's notion): a nonempty subset of `Δ` in which any two vertices are

@@ -4,6 +4,7 @@ public import Glauberman.Definitions
 public import GorensteinWalter.PSL2Cardinality
 public import GorensteinWalter.PSL2ProjectiveLine
 
+
 namespace Glauberman
 
 /-- The standard upper-unipotent subgroup of `SL₂(ZMod p)`, a Sylow

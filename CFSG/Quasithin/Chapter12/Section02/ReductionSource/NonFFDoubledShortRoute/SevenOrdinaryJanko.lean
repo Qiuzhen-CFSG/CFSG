@@ -1,0 +1,270 @@
+module
+public import CFSG.Quasithin.Chapter12.Section02.ReductionSource.NonFFDoubledShortRoute.SevenOrdinaryJankoOrbit
+public import CFSG.Quasithin.ChapterC.Section03.OrdinaryPlacement.InnerRadicalNormalizer
+public import CFSG.Quasithin.Chapter13.Section03.SourceCompletion.OriginalOddNormalizer.JankoLargeCenterRadical.NativeQuotients
+public import Theory.SpecificGroups.Janko4.PerfectCoverActions
+public import Theory.GroupTheory.PCoreFrattiniTransport
+public import Theory.GroupTheory.SolvableRadical.SolvableKernel
+public import Theory.GroupTheory.SimpleSectionOrder
+
+/-!
+# Excluding J₄ for the original doubled A₇ reciprocal component
+
+The actual eight-dimensional orbit injects into the center of the radical
+intersection after quotienting by the full ordinary component center. The
+native J₄ large-center radical theorem gives the complete simple normalizer
+quotient SL₅(2), M₂₄ or A₈. Inner automorphism control places its normalizer
+inside the original local subgroup, so the original residual has normal image.
+Its genuine A₇ quotient with solvable kernel excludes all three larger simple
+quotients. The possible central cover of A₇ is retained throughout.
+
+Source: Aschbacher–Smith C.2.8, C.3.3–5 and 4.4.3, printed pp.147,149–151,
+622–623, refs/quasithin.pdf; the native radical classification uses
+An–O'Brien–Wilson (2003), Section4 and Table1 and its completed native cover.
+-/
+
+public noncomputable section
+open Subgroup Theory.GroupTheory Representation Representation.BinaryOffender
+open scoped IsMulCommutative MatrixGroups
+namespace CFSG.Quasithin.Chapter12.Section02.ChosenModule
+open Chapter4 Chapter4.Section04 Chapter4.Section02.RankOneReciprocalEscape
+open ChapterB.QuasisimpleSource Chapter7.NormalizedSource
+
+private theorem seven_no_large_normal_image
+    {A P Q : Type*} [Group A] [Finite A] [Group.IsPerfect A]
+    [Group P] [Finite P] [Group Q] [Finite Q] [IsSimpleGroup Q]
+    (hlarge : 2520 < Nat.card Q)
+    (π : A →* alternatingGroup (Fin 7)) (hπ : Function.Surjective π)
+    [Group.IsSolvable π.ker]
+    (f : A →* P) [Group.IsSolvable f.ker] [f.range.Normal]
+    (e : (P ⧸ pCore 2 P) ≃* Q) : False := by
+  let q := e.toMonoidHom.comp (QuotientGroup.mk' (pCore 2 P))
+  have hq : Function.Surjective q := e.surjective.comp (QuotientGroup.mk'_surjective _)
+  have hk : q.ker = pCore 2 P := by
+    rw [MonoidHom.ker_comp_of_injective _ _ e.injective,QuotientGroup.ker_mk']
+  let : Group.IsNilpotent (pCore 2 P) := pCore_isPGroup.isNilpotent
+  let : Group.IsSolvable q.ker := hk.symm ▸ inferInstanceAs (Group.IsSolvable (pCore 2 P))
+  let g := q.comp f
+  let : Group.IsSolvable g.ker := isSolvable_comap_of_solvable_ker f q.ker
+  let : g.range.Normal := by
+    dsimp only [g]
+    rw [MonoidHom.range_comp]
+    exact Subgroup.Normal.map inferInstance q hq
+  rcases (inferInstance : g.range.Normal).eq_bot_or_eq_top with hz | ht
+  · have hg : g.ker = ⊤ := MonoidHom.ker_eq_top_iff.mpr (g.range_eq_bot_iff.mp hz)
+    let : Group.IsSolvable (⊤ : Subgroup A) := hg ▸ inferInstanceAs (Group.IsSolvable g.ker)
+    let : Group.IsSolvable A := Group.isSolvable_of_surjective
+      (f := (topEquiv : (⊤ : Subgroup A) ≃* A).toMonoidHom) topEquiv.surjective
+    exact Group.IsPerfect.not_isSolvable (alternatingGroup (Fin 7))
+      (Group.isSolvable_of_surjective hπ)
+  · let : Group.IsPerfect Q := Group.IsPerfect.ofSurjective (MonoidHom.range_eq_top.mp ht)
+    have hd := SimpleSection.card_dvd_of_solvable_representation
+      (Group.IsPerfect.not_isSolvable Q) g (MonoidHom.range_eq_top.mp ht) π
+    rw [nat_card_alternatingGroup] at hd
+    norm_num [Nat.factorial] at hd
+    exact (not_le_of_gt hlarge) (Nat.le_of_dvd (by norm_num) hd)
+
+private theorem seven_normal_image_not_janko_radical
+    {A : Type*} [Group A] [Finite A] [Group.IsPerfect A]
+    (π : A →* alternatingGroup (Fin 7)) (hπ : Function.Surjective π)
+    [Group.IsSolvable π.ker]
+    (P : Subgroup Janko4.Model) (hP : IsPRadical 2 P)
+    (hlarge : 64 ≤ Nat.card (center P))
+    (f : A →* normalizer (P : Set Janko4.Model))
+    [Group.IsSolvable f.ker] [f.range.Normal] : False := by
+  rcases Janko4.LocalStructure.LargeCenterRadicals.radical_quotient P hP hlarge with
+    he | he | he <;> obtain ⟨e⟩ := he
+  · let : IsSimpleGroup (Matrix.ProjectiveSpecialLinearGroup (Fin 5) (ZMod 2)) :=
+      Atlas.psl_simple_high_rank 5 (by decide)
+    let : IsSimpleGroup SL(5,ZMod 2) :=
+      (BinaryLinear.OuterCyclic.projectiveEquivSL (n := 5) (by decide)).symm.isSimpleGroup
+    exact seven_no_large_normal_image (by
+      rw [Representation.SL5ExteriorSquare.card_specialLinearFive]; norm_num) π hπ f e
+  · let := Sporadic.Mathieu.m24_isSimpleGroup
+    exact seven_no_large_normal_image (by rw [Sporadic.Mathieu.m24_order]; norm_num) π hπ f e
+  · let : IsSimpleGroup (alternatingGroup (Fin 8)) := alternatingGroup.isSimpleGroup (by simp)
+    exact seven_no_large_normal_image (by
+      rw [nat_card_alternatingGroup]; norm_num [Nat.factorial]) π hπ f e
+
+universe u
+variable {G : Type u} [Group G] [Finite G] {T : Sylow 2 G} {L V : Subgroup G}
+  (D : ChosenModule T L V)
+
+/-- The actual reciprocal ordinary component cannot be a cover of J₄.
+The original odd actor and witness supply every radical and centrality premise. -/
+theorem sourceOrbit_seven_witness_ordinary_not_janko
+    (h : Hypothesis1223 KnownSimple.IsKnownSimple T L) (hd : D.MarkedDoubled)
+    (hmany : 1 < (maximalTwoLocalOvergroups (T : Subgroup G)).ncard)
+    (hnon : ¬ IsFFModule D.sourceOrbitNormalizerRepresentation)
+    (σ : Representation (ZMod 2) (alternatingGroup (Fin 7)) (Fin 4 → ZMod 2))
+    (hσ : Function.Injective σ)
+    (hmodel : Nonempty (ActionEquiv (D.seedRepresentation.comp D.componentImage.subtype) σ))
+    {A J H U : Subgroup G}
+    (hA : A ≤ normalizer (L : Set G) ⊓ centralizer (D.sourceOrbit : Set G))
+    (ho : Odd (Nat.card A)) (hw : Witness L V A J H U)
+    (K : Subgroup H) (hK : IsComponent H K) :
+    ¬ Nonempty ((K ⧸ center K) ≃* Janko4.Model) := by
+  rintro ⟨e⟩
+  let j := H.subtype.comp K.subtype
+  let q := e.toMonoidHom.comp (QuotientGroup.mk' (center K))
+  let LH := (solvableResidual (L ⊓ H : Subgroup G)).map (L ⊓ H).subtype
+  let R := (J.pCoreIn 2).comap j
+  let W := D.sourceOrbit.comap j
+  let B₀ := LH.comap j
+  let P := R.map q
+  let B := B₀.map q
+  let N := normalizer (P : Set Janko4.Model)
+  have hj : Function.Injective j := H.subtype_injective.comp K.subtype_injective
+  have hjr : j.range = K.map H.subtype := by rw [MonoidHom.range_comp,range_subtype]
+  have hq : Function.Surjective q := e.surjective.comp (QuotientGroup.mk'_surjective _)
+  have hk : q.ker = center K := by
+    rw [MonoidHom.ker_comp_of_injective _ _ e.injective,QuotientGroup.ker_mk']
+  have hc := D.sourceOrbit_seven_witness_hypothesisC28_of_actor h hd σ hσ hmodel hA ho hw
+  obtain ⟨hn₀,hWJ,_,_,hfixed⟩ :=
+    D.sourceOrbit_whole_pushingUp_residual_data h hmany hnon hA ho hw
+  have hLH : LH ≤ H := hc.component_le.trans hc.local_le
+  have hLK := hc.ordinary_component_contains_original K hK
+  have hLKg : LH ≤ K.map H.subtype := by
+    intro l hl
+    exact ⟨⟨l,hLH hl⟩,hLK hl,rfl⟩
+  have hn := (normal_subgroupOf_iff_le_normalizer hc.component_le).mp
+    hw.2.2.2.2.2.2.2.2.1
+  have hspan : conjugateSpanBy LH (H ⊓ normalizer (L : Set G)) = LH :=
+    le_antisymm (conjugateSpanBy_le le_rfl hn) (le_conjugateSpanBy _ _)
+  have hWL : D.sourceOrbit ≤ LH := hspan ▸ hc.module_le
+  have hWmap : W.map j = D.sourceOrbit :=
+    map_comap_eq_self ((hWL.trans hLKg).trans_eq hjr.symm)
+  let bW : W ≃* D.sourceOrbit := (W.equivMapOfInjective j hj).trans
+    (MulEquiv.subgroupCongr hWmap)
+  have hWcard : Nat.card W = 256 := by
+    rw [Nat.card_congr bW.toEquiv]
+    have hh := Module.natCard_eq_pow_finrank (K := ZMod 2) (V := Additive D.sourceOrbit)
+    rw [Nat.card_congr Additive.toMul,Nat.card_zmod,
+      D.sourceOrbit_seven_dimension h hd σ hmodel] at hh
+    exact hh
+  have hWR : W ≤ R := comap_mono hWJ
+  have hWC : W ≤ centralizer (R : Set K) := by
+    intro w hw r hr
+    obtain ⟨z,hz,he⟩ := hc.module_le_center_radical hw
+    apply hj
+    have hh := congrArg (J.pCoreIn 2).subtype (mem_center_iff.mp hz ⟨j r,hr⟩)
+    change j r * (z : G) = (z : G) * j r at hh
+    change (z : G) = j w at he
+    simpa only [map_mul,he] using hh
+  have hqi : Function.Injective (q.comp W.subtype) := by
+    apply (MonoidHom.ker_eq_bot_iff _).mp
+    apply bot_unique
+    intro w hwk
+    have hz : (w : K) ∈ center K := hk ▸ hwk
+    have hcent : j w ∈ centralizer (LH : Set G) := by
+      intro l hl
+      let x : K := ⟨⟨l,hLH hl⟩,hLK hl⟩
+      exact congrArg j (mem_center_iff.mp hz x)
+    have he : j w = 1 := mem_bot.mp
+      (hfixed ▸
+        (show j w ∈ D.sourceOrbit ⊓ centralizer (LH : Set G) from ⟨w.property,hcent⟩))
+    exact Subtype.ext (hj (he.trans j.map_one.symm))
+  let wP : W →* P := (q.comp W.subtype).codRestrict P
+    (fun w => mem_map_of_mem q (hWR w.property))
+  have hwPc (w : W) : wP w ∈ center P := by
+    apply mem_center_iff.mpr
+    intro y
+    obtain ⟨r,hr,he⟩ := y.property
+    apply Subtype.ext
+    change (y : Janko4.Model) * q w = q w * y
+    rw [←he]
+    exact (q.map_mul r w).symm.trans ((congrArg q (hWC w.property r hr)).trans (q.map_mul w r))
+  let wZ := wP.codRestrict (center P) hwPc
+  have hwZ : Function.Injective wZ := by
+    intro a b he
+    exact hqi (congrArg (fun x : center P => ((x : P) : Janko4.Model)) he)
+  have hlarge : 64 ≤ Nat.card (center P) := by
+    have hh := Nat.card_le_card_of_injective wZ hwZ
+    rw [hWcard] at hh
+    omega
+  let := hK.2
+  have hz : center K = pCore 2 K :=
+    IsQuasisimple.center_eq_pCore (hK.1.pPrimeCore_eq_bot hc.oddCore_eq_bot K)
+  have hZR : q.ker ≤ R := by
+    rw [hk]
+    intro z hzmem
+    have hp : (z : H) ∈ pCore 2 H :=
+      (pCoreIn_le_of_subnormal 2 hK.1)
+        (mem_map_of_mem K.subtype (hz ▸ hzmem))
+    exact hc.ambient_core_le_radical (mem_map_of_mem H.subtype hp)
+  have hR := hc.ordinary_radical_intersection_isRadical K hK
+  have hPne : P ≠ ⊥ := by
+    intro he
+    have hp : Nat.card (center P) ≤ 1 := by
+      rw [he]
+      exact le_of_eq Nat.card_unique
+    omega
+  have hPr : IsPRadical 2 P :=
+    ⟨hPne,map_normalizer_core_of_p_kernel R hR.isPGroup hR.2 q hq hZR⟩
+  have hNR : normalizer (R : Set K) ≤
+      (H ⊓ normalizer (L : Set G)).comap j := by
+    apply hc.ordinary_radical_normalizer_le_local_of_inner K hK
+    intro a
+    exact Janko4.perfect_cover_conj_surjective e a
+  have hNB₀ : normalizer (R : Set K) ≤ normalizer (B₀ : Set K) :=
+    (hNR.trans (comap_mono hn)).trans (LH.le_normalizer_comap j)
+  have hNmap : (normalizer (R : Set K)).map q = N := by
+    have hh : N.comap q = normalizer (R : Set K) := by
+      rw [comap_normalizer_eq_of_surjective _ hq,comap_map_eq_self hZR]
+    rw [←hh,map_comap_eq_self_of_surjective hq]
+  have hNB : N ≤ normalizer (B : Set Janko4.Model) := by
+    rw [←hNmap]
+    exact (map_mono hNB₀).trans (B₀.le_normalizer_map q)
+  have hB₀R : B₀ ≤ normalizer (R : Set K) :=
+    (comap_mono ((le_conjugateSpanBy LH (H ⊓ normalizer (L : Set G))).trans
+      hc.span_normalizes_radical)).trans ((J.pCoreIn 2).le_normalizer_comap j)
+  have hBN : B ≤ N := (map_mono hB₀R).trans hNmap.le
+  let BN := B.subgroupOf N
+  let : BN.Normal := (normal_subgroupOf_iff_le_normalizer hBN).mpr hNB
+  let a₁ : B₀ ≃* LH.subgroupOf H := subgroupOfEquivOfLe hLK
+  let a : B₀ ≃* LH := a₁.trans (subgroupOfEquivOfLe hLH)
+  let : Group.IsPerfect LH := hspan ▸ hc.span_perfect
+  let : Group.IsPerfect B₀ := Group.IsPerfect.ofSurjective
+    (f := a.symm.toMonoidHom) a.symm.surjective
+  let f : B₀ →* N := (q.comp B₀.subtype).codRestrict N
+    (fun b => hBN (mem_map_of_mem q b.property))
+  have hfr : f.range = BN := by
+    ext b
+    constructor
+    · rintro ⟨x,rfl⟩
+      exact mem_map_of_mem q x.property
+    · rintro ⟨x,hx,he⟩
+      exact ⟨⟨x,hx⟩,Subtype.ext he⟩
+  let : f.range.Normal := hfr.symm ▸ inferInstanceAs BN.Normal
+  have hfp : IsPGroup 2 f.ker := by
+    have he : f.ker = q.ker.subgroupOf B₀ := by ext x; exact Subtype.ext_iff
+    rw [he,hk,hz]
+    exact pCore_isPGroup.comap_subtype
+  let : Group.IsNilpotent f.ker := hfp.isNilpotent
+  obtain ⟨m⟩ := hmodel
+  let eL := (D.componentCentralQuotientEquiv h.quasisimple).trans
+    ((centerQuotientCongr m.groupEquiv).trans
+      ((QuotientGroup.quotientMulEquivOfEq (alternatingGroup.center_eq_bot
+        (by norm_num : 4 ≤ Nat.card (Fin 7)))).trans QuotientGroup.quotientBot))
+  obtain ⟨c,_⟩ := hw.2.2.2.2.2.2.2.2.2.2.2.1
+  let r : B₀ →* (L ⧸ pCore 2 L) :=
+    c.toMonoidHom.comp ((QuotientGroup.mk' (pCore 2 LH)).comp a.toMonoidHom)
+  have hrk : r.ker = (pCore 2 LH).comap a.toMonoidHom := by
+    rw [MonoidHom.ker_comp_of_injective _ _ c.injective,
+      ← MonoidHom.comap_ker,QuotientGroup.ker_mk']
+  have hrp : IsPGroup 2 r.ker := hrk.symm ▸ pCore_isPGroup.comap_of_injective a.toMonoidHom a.injective
+  let : Group.IsNilpotent r.ker := hrp.isNilpotent
+  let π : B₀ →* alternatingGroup (Fin 7) := eL.toMonoidHom.comp
+    ((QuotientGroup.mk' (center (L ⧸ pCore 2 L))).comp r)
+  have hπ : Function.Surjective π := eL.surjective.comp
+    ((QuotientGroup.mk'_surjective _).comp
+      (c.surjective.comp ((QuotientGroup.mk'_surjective _).comp a.surjective)))
+  let : Group.IsSolvable π.ker := by
+    have he : π.ker = (center (L ⧸ pCore 2 L)).comap r := by
+      rw [MonoidHom.ker_comp_of_injective _ _ eL.injective,
+        ← MonoidHom.comap_ker,QuotientGroup.ker_mk']
+    rw [he]
+    exact isSolvable_comap_of_solvable_ker r _
+  exact seven_normal_image_not_janko_radical π hπ P hPr hlarge f
+
+end CFSG.Quasithin.Chapter12.Section02.ChosenModule

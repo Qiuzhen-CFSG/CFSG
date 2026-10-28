@@ -2,6 +2,7 @@ module
 
 public import BenderSuzuki.External.Huppert.IV.Basic
 
+
 /-!
 # Huppert IV.5.1 normalizer-growth core
 -/
@@ -206,7 +207,7 @@ public theorem hkt_burnside_iv51_first_growth_subgroup_of_minimal_choice
       exact (not_le_of_gt hlt) hS_le_D
   have hnc : NormalizerCondition Ssub := by
     have hnc0 : NormalizerCondition (S : Subgroup Q) := by
-      letI : Group.IsNilpotent (S : Subgroup Q) := S.isPGroup'.isNilpotent
+      let : Group.IsNilpotent (S : Subgroup Q) := S.isPGroup'.isNilpotent
       exact Group.normalizerCondition_of_isNilpotent (G := (S : Subgroup Q))
     simpa [Ssub] using hnc0
   have hD_S_lt_NS : D_S < NS := by simpa [NS] using hnc D_S hD_S_lt_top
@@ -283,7 +284,7 @@ public theorem hkt_burnside_iv51_second_growth_subgroup_of_minimal_choice
       exact (not_le_of_gt hDsub_lt_Tstar) hT_le_D
   have hnc : NormalizerCondition Tstar := by
     have hnc0 : NormalizerCondition (T : Subgroup Q) := by
-      letI : Group.IsNilpotent (T : Subgroup Q) := T.isPGroup'.isNilpotent
+      let : Group.IsNilpotent (T : Subgroup Q) := T.isPGroup'.isNilpotent
       exact Group.normalizerCondition_of_isNilpotent (G := (T : Subgroup Q))
     simpa [Tstar] using hnc0
   have hD_T_lt_NT : D_T < NT := by simpa [NT] using hnc D_T hD_T_lt_top

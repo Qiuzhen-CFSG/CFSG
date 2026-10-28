@@ -3,8 +3,9 @@ module
 public import GorensteinWalter.Section2.Bender1970_24SolvableOddP
 public import GorensteinWalter.Section2.SubnormalPSubgroupLeQCore
 public import GorensteinWalter.Section2.CentralizerZpowers
-import FeitThompson.SubgroupConj
+import Theory.GroupTheory.SubgroupConjugation
 import FeitThompson.FinalTheorem
+
 
 namespace GorensteinWalter
 
@@ -108,7 +109,7 @@ public theorem commutator_le_pCore_of_le_pPrimeCore
   have hQYindex : ¬ 2 ∣ QY.index := hQYindexOdd.not_two_dvd_nat
   let QSyl : Sylow 2 Y := hQYtwo.toSylow hQYindex
   have hQSyl_eq : (QSyl : Subgroup Y) = QY := by
-    simp [QSyl, IsPGroup.toSylow_coe hQYtwo hQYindex]
+    simp [QSyl]
   have hSylowY : ∀ S : Sylow 2 Y, IsMulCommutative (S : Subgroup Y) := by
     intro S
     have hQSylcomm : IsMulCommutative (QSyl : Subgroup Y) := by

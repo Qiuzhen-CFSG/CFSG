@@ -11,6 +11,7 @@ import Mathlib.GroupTheory.SpecificGroups.Alternating
 import Mathlib.LinearAlgebra.Projectivization.PSL.PSL2
 import Mathlib.Tactic
 
+
 /-!
 # D-group index parity for Lemma 2.7
 
@@ -34,7 +35,7 @@ divisible by four has index not divisible by four. -/
 public theorem index_two_part_le_two_of_normal_card_div_four_of_card_12_or_24
     {G : Type u} [Group G] [Finite G]
     (hGcard : Nat.card G = 12 ∨ Nat.card G = 24)
-    {M : Subgroup G} (hM : M.Normal) (h4 : 4 ∣ Nat.card M) :
+    {M : Subgroup G} (h4 : 4 ∣ Nat.card M) :
     ¬ 4 ∣ M.index := by
   intro h4idx
   have h16 : 16 ∣ Nat.card G := by
@@ -67,7 +68,6 @@ public theorem index_not_dvd_four_of_normal_card_div_four_of_A7_quotient
   have hOodd : Odd (Nat.card (↥O)) := by
     exact Nat.coprime_two_left.mp (pPrimeCore_coprime_card (p := 2) (G := A))
   have hOodd' : Odd (Nat.card (↥(q.ker))) := by
-    change Odd (Nat.card (↥(q.ker)))
     rw [show q.ker = O by
       dsimp [q]
       exact QuotientGroup.ker_mk' O]
@@ -161,7 +161,7 @@ is the whole group. -/
 public theorem index_not_dvd_four_of_normal_card_div_four_of_iso_psl2_large
     {L : Type u} [Group L] [Finite L]
     (K : Type u) [Field K] [Finite K]
-    (hK : IsOddPrimePower (Nat.card K)) (hcard : 3 < Nat.card K)
+    (hcard : 3 < Nat.card K)
     (e : L ≃* PSL2 K)
     {M : Subgroup L} (hM : M.Normal) (h4 : 4 ∣ Nat.card M) :
     ¬ 4 ∣ M.index := by
@@ -355,7 +355,7 @@ public theorem index_not_dvd_four_of_normal_card_div_four_of_isDGroup_not_twoQuo
       · rcases hPSL with ⟨eL⟩
         by_cases h3 : 3 < Nat.card K
         · exact index_not_dvd_four_of_normal_card_div_four_of_iso_psl2_large
-            (L := ↥L) K hKprime h3 eL hK0Lnormal h4K0L
+            (L := ↥L) K h3 eL hK0Lnormal h4K0L
         · have hKcard3 : Nat.card K = 3 := by
             omega
           let : Fintype K := Fintype.ofFinite K
@@ -372,7 +372,7 @@ public theorem index_not_dvd_four_of_normal_card_div_four_of_isDGroup_not_twoQuo
                 Nat.card_congr eA4.toEquiv
               _ = 12 := alternatingGroup.card_of_card_eq_four (by simp)
           exact index_two_part_le_two_of_normal_card_div_four_of_card_12_or_24
-            (G := ↥L) (Or.inl hLcard12) hK0Lnormal h4K0L
+            (G := ↥L) (Or.inl hLcard12) h4K0L
       · rcases hPGL with ⟨eL⟩
         by_cases h3 : 3 < Nat.card K
         · exact index_not_dvd_four_of_normal_card_div_four_of_iso_pgl2_large
@@ -395,7 +395,7 @@ public theorem index_not_dvd_four_of_normal_card_div_four_of_isDGroup_not_twoQuo
                 rw [Nat.card_perm]
                 norm_num [Nat.card_eq_fintype_card, Nat.factorial]
           exact index_two_part_le_two_of_normal_card_div_four_of_card_12_or_24
-            (G := ↥L) (Or.inr hLcard24) hK0Lnormal h4K0L
+            (G := ↥L) (Or.inr hLcard24) h4K0L
     have hnot4KL' : ¬ 4 ∣ ((N.map q ⊓ qL.ker).subgroupOf qL.ker).index := by
       rw [hkerL]
       simpa [K0L] using hnot4K0L

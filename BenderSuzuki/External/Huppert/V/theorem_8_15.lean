@@ -32,8 +32,8 @@ public theorem huppert_V_8_15_fixedPointFree_automorphism_subgroup_classificatio
         ∀ H : Subgroup A, Nat.card H = p₁ * p₂ → IsCyclic H) := by
   classical
   by_cases hGnt : Nontrivial G
-  · letI : Nontrivial G := hGnt
-    letI : MulDistribMulAction A G := MulDistribMulAction.compHom G A.subtype
+  · let : Nontrivial G := hGnt
+    let : MulDistribMulAction A G := MulDistribMulAction.compHom G A.subtype
     have hregular : ActsRegularly A G := by
       intro a ha
       rw [Subgroup.eq_bot_iff_forall]
@@ -89,8 +89,8 @@ public theorem huppert_V_8_15_fixedPointFree_automorphism_subgroup_classificatio
         Finite.one_lt_card_iff_nontrivial.mp (by omega)
       have hV_nontrivial : Nontrivial V :=
         Finite.one_lt_card_iff_nontrivial.mp (by omega)
-      letI : Nontrivial U := hU_nontrivial
-      letI : Nontrivial V := hV_nontrivial
+      let : Nontrivial U := hU_nontrivial
+      let : Nontrivial V := hV_nontrivial
       obtain ⟨u, hu_ne⟩ := exists_ne (1 : U)
       obtain ⟨v, hv_ne⟩ := exists_ne (1 : V)
       have hu_order : orderOf u = 2 := by
@@ -135,7 +135,7 @@ public theorem huppert_V_8_15_fixedPointFree_automorphism_subgroup_classificatio
       have hP_odd : Odd (Nat.card P) := by
         rw [hP_card]
         exact (hp.odd_of_ne_two hp_ne_two).pow
-      letI : MulDistribMulAction P G :=
+      let : MulDistribMulAction P G :=
         MulDistribMulAction.compHom G (P : Subgroup A).subtype
       have hP_regular : ActsRegularly P G :=
         hregular.subgroup (P : Subgroup A)
@@ -147,7 +147,7 @@ public theorem huppert_V_8_15_fixedPointFree_automorphism_subgroup_classificatio
     · intro P
       by_cases hP_bot : (P : Subgroup A) = ⊥
       · left
-        haveI : Subsingleton P := by
+        have : Subsingleton P := by
           constructor
           intro x y
           apply Subtype.ext
@@ -159,7 +159,7 @@ public theorem huppert_V_8_15_fixedPointFree_automorphism_subgroup_classificatio
             simpa [hP_bot] using y.2
           rw [hx, hy]
         exact isCyclic_of_subsingleton
-      · haveI : Nontrivial P :=
+      · have : Nontrivial P :=
           (Subgroup.nontrivial_iff_ne_bot (P : Subgroup A)).mpr hP_bot
         obtain ⟨U, hU_card'⟩ :=
           Sylow.exists_subgroup_card_pow_prime_of_le_card
@@ -185,12 +185,12 @@ public theorem huppert_V_8_15_fixedPointFree_automorphism_subgroup_classificatio
             P.isPGroup'.of_equiv e.some
           exact Or.inr ⟨2 ^ (n - 2), hk, hQp, e⟩
     · intro p₁ p₂ hp₁ hp₂ H hcard
-      letI : MulDistribMulAction H G :=
+      let : MulDistribMulAction H G :=
         MulDistribMulAction.compHom G H.subtype
       have hH_regular : ActsRegularly H G := hregular.subgroup H
       have heven_case (q : ℕ) (hq : q.Prime) (hq_ne_two : q ≠ 2)
           (hcard_even : Nat.card H = 2 * q) : IsCyclic H := by
-        letI : Fact q.Prime := ⟨hq⟩
+        let : Fact q.Prime := ⟨hq⟩
         have htwo_lt_q : 2 < q :=
           lt_of_le_of_ne hq.two_le (Ne.symm hq_ne_two)
         obtain ⟨P, hPcard_pow⟩ :=
@@ -212,7 +212,7 @@ public theorem huppert_V_8_15_fixedPointFree_automorphism_subgroup_classificatio
               _ = 2 := hPcard
           · exact hPcard
         have hPnormal : P.Normal := by
-          letI : P.Characteristic := hPchar
+          let : P.Characteristic := hPchar
           exact Subgroup.normal_of_characteristic P
         have hQp : IsPGroup q Q := by
           refine IsPGroup.of_card (p := q) (G := Q) (n := 1) ?_
@@ -246,7 +246,7 @@ public theorem huppert_V_8_15_fixedPointFree_automorphism_subgroup_classificatio
             (card_sylow_modEq_one q H :
               Nat.card (Sylow q H) ≡ 1 [MOD q])
           omega
-        haveI : Subsingleton (Sylow q H) :=
+        have : Subsingleton (Sylow q H) :=
           (Nat.card_eq_one_iff_unique.mp hcardSyl_eq_one).1
         have hQnormal : Q.Normal := by
           have hQsylnormal : (Qsyl : Subgroup H).Normal :=
@@ -256,7 +256,7 @@ public theorem huppert_V_8_15_fixedPointFree_automorphism_subgroup_classificatio
           simpa [hQcard, hPcard] using
             ((Nat.coprime_primes hq Nat.prime_two).2 hq_ne_two)
         have hdis : Disjoint Q P :=
-          disjoint_iff.mpr (Subgroup.inf_eq_bot_of_coprime hcop)
+          Subgroup.disjoint_of_coprime_natCard hcop
         have hcard_mul : Nat.card Q * Nat.card P = Nat.card H := by
           rw [hQcard, hPcard, hcard_even, mul_comm]
         have hcomp : Q.IsComplement' P :=
@@ -277,7 +277,7 @@ public theorem huppert_V_8_15_fixedPointFree_automorphism_subgroup_classificatio
           IsPGroup.of_card (n := 2) (by simpa [pow_two] using hcard)
         by_cases hp_two : p₁ = 2
         · subst p₁
-          haveI : Nontrivial H :=
+          have : Nontrivial H :=
             Finite.one_lt_card_iff_nontrivial.mp (by
               rw [hcard]
               norm_num)
@@ -302,7 +302,7 @@ public theorem huppert_V_8_15_fixedPointFree_automorphism_subgroup_classificatio
                 2 = 2 ^ 1 := by norm_num
                 _ ≤ 2 ^ (n - 2) :=
                   Nat.pow_le_pow_right (by decide) (by omega)
-            letI : NeZero (2 ^ (n - 2)) := ⟨by positivity⟩
+            let : NeZero (2 ^ (n - 2)) := ⟨by positivity⟩
             have hcard_e := Nat.card_congr e.some.toEquiv
             have hcardQ : Nat.card (QuaternionGroup (2 ^ (n - 2))) =
                 4 * (2 ^ (n - 2)) := by
@@ -328,10 +328,10 @@ public theorem huppert_V_8_15_fixedPointFree_automorphism_subgroup_classificatio
               exact (hp₁.odd_of_ne_two hp_two).mul (hp₂.odd_of_ne_two hq_two)
             exact regular_pq_group_cyclic_of_odd_regular_action
               hp₁ hp₂ hpq hcard hHodd hH_regular
-  · letI : Subsingleton G := not_nontrivial_iff_subsingleton.mp hGnt
-    haveI : Subsingleton (MulAut G) :=
+  · let : Subsingleton G := not_nontrivial_iff_subsingleton.mp hGnt
+    have : Subsingleton (MulAut G) :=
       ⟨fun f g => MulEquiv.ext fun x => Subsingleton.elim (f x) (g x)⟩
-    haveI : Subsingleton A := inferInstance
+    have : Subsingleton A := inferInstance
     refine ⟨?_, ?_, ?_⟩
     · intro p hpFact hp_ne_two P
       exact isCyclic_of_subsingleton
@@ -342,6 +342,5 @@ public theorem huppert_V_8_15_fixedPointFree_automorphism_subgroup_classificatio
 
 end External
 end BenderSuzuki
-
 
 

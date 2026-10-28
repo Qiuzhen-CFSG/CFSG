@@ -2,7 +2,7 @@ module
 
 public import FeitThompson.BGsection15.corollary_15_5
 import FeitThompson.PCore.CentralizerControl
-import FeitThompson.HallSubgroups.Conjugacy
+public import Theory.GroupTheory.Hall.Conjugacy
 import Mathlib.Algebra.Group.Subgroup.Order
 import Mathlib.GroupTheory.Schreier
 
@@ -25,7 +25,7 @@ private theorem section15_corollary15_6_Kstar_nontrivial_cyclic
   have hKstar_cyclic : IsCyclic (section14KStar M K) := by
     have hZcyclic : IsCyclic (section14Z M K) :=
       (theorem_14_7_d (G := G) (M := M) (K := K) hM hK).2.1
-    letI : IsCyclic (section14Z M K) := hZcyclic
+    let : IsCyclic (section14Z M K) := hZcyclic
     exact Subgroup.isCyclic_of_le (show section14KStar M K ≤ section14Z M K by
       change section14KStar M K ≤ K ⊔ section14KStar M K
       exact le_sup_right)
@@ -69,7 +69,7 @@ private theorem section15_corollary15_6_Kstar_le_secondDerived
   have hsolvM : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1.1)
   let : Group.IsSolvable M := hsolvM
-  haveI : Hloc.Normal := by
+  have : Hloc.Normal := by
     simpa [D, Hloc] using hDnormM.2
   have hHleDerived : Hloc ≤ derivedSubgroup M := by
     intro x hx
@@ -236,10 +236,10 @@ private theorem section15_corollary15_6_MF_not_cyclic
       hDnil, hDhall⟩
   have hDleMF : D ≤ MF := hMF.2 D hDnilHall
   have hDcyc : IsCyclic D := by
-    letI : IsCyclic MF := hMFcyc
+    let : IsCyclic MF := hMFcyc
     exact Subgroup.isCyclic_of_le hDleMF
   have hDcomm : IsMulCommutative D := by
-    letI : IsCyclic D := hDcyc
+    let : IsCyclic D := hDcyc
     infer_instance
   have hSecond_bot : section15SecondDerivedSubgroup M = ⊥ := by
     simpa [section15SecondDerivedSubgroup, D] using

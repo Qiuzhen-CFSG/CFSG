@@ -7,6 +7,7 @@ public import GorensteinWalter.InvertedSetCardSmall
 public import GorensteinWalter.TwoCoreNormal
 import Mathlib.Tactic
 
+
 noncomputable section
 
 open scoped Pointwise
@@ -278,7 +279,9 @@ private theorem hhat_centralizer_card_four
     have hcomp := Fintype.card_subtype_compl
       (α := C) (p := fun x : C => (x : G) = 1)
     have hBcard : Nat.card B = Nat.card C - Nat.card A := by
-      simpa [Nat.card_eq_fintype_card, A, B] using hcomp
+      rw [Fintype.card_eq_nat_card, Fintype.card_eq_nat_card,
+        Fintype.card_eq_nat_card] at hcomp
+      exact hcomp
     have hAle : Nat.card A ≤ Nat.card C := by
       simpa [Nat.card_eq_fintype_card, A] using
         (Fintype.card_subtype_le (p := fun x : C => (x : G) = 1))
@@ -315,7 +318,9 @@ private theorem hhat_centralizer_card_four
     have hcomp := Fintype.card_subtype_compl
       (α := J) (p := fun x : J => (x : G) ∈ V)
     have hJOcard : Nat.card JO = Nat.card J - Nat.card JV := by
-      simpa [Nat.card_eq_fintype_card, JV, JO] using hcomp
+      rw [Fintype.card_eq_nat_card, Fintype.card_eq_nat_card,
+        Fintype.card_eq_nat_card] at hcomp
+      exact hcomp
     have hJVle : Nat.card JV ≤ Nat.card J := by
       simpa [Nat.card_eq_fintype_card, JV] using
         (Fintype.card_subtype_le (p := fun x : J => (x : G) ∈ V))
@@ -374,7 +379,7 @@ public theorem firstCaseCosetLayer_two_orbit_card
     apply Subtype.ext
     exact ht
   have ht2 : t * t = 1 :=
-    inverted_card_two_mul_self c.Hhat hyI htI hIcard
+    inverted_card_two_mul_self c.Hhat htI hIcard
   have htInv : t⁻¹ = t := inv_eq_of_mul_eq_one_right ht2
   have hytFix : y * t * y⁻¹ = t := by
     simpa [htInv] using htI.2

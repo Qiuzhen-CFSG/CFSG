@@ -1,0 +1,1039 @@
+module
+
+public import Theory.SpecificGroups.Rudvalis.Model.OrderLevel0Part5Residual0.Words
+import Mathlib.Tactic.FinCases
+
+/-!
+# Rudvalis part-5 residual 64
+
+The prescribed transition is verified on all 4060 points by 203 twenty-point
+kernel checks, then transferred by `point64_ofSlices`. Source:
+`OrderLevel0Data` and `Part5Residual.target`; extracted from the certificate
+produced by `OrderCertificate/GenerateLevel0Part5Residual0.py`.
+-/
+
+namespace Rudvalis.OrderCertificate.ForwardReduction.Part5Residual.Residual0Checks
+set_option maxRecDepth 30000
+set_option Elab.async false
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice0 : slice 0 left64 right64 factor64 0 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice1 : slice 0 left64 right64 factor64 1 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice2 : slice 0 left64 right64 factor64 2 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice3 : slice 0 left64 right64 factor64 3 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice4 : slice 0 left64 right64 factor64 4 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice5 : slice 0 left64 right64 factor64 5 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice6 : slice 0 left64 right64 factor64 6 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice7 : slice 0 left64 right64 factor64 7 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice8 : slice 0 left64 right64 factor64 8 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice9 : slice 0 left64 right64 factor64 9 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice10 : slice 0 left64 right64 factor64 10 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice11 : slice 0 left64 right64 factor64 11 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice12 : slice 0 left64 right64 factor64 12 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice13 : slice 0 left64 right64 factor64 13 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice14 : slice 0 left64 right64 factor64 14 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice15 : slice 0 left64 right64 factor64 15 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice16 : slice 0 left64 right64 factor64 16 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice17 : slice 0 left64 right64 factor64 17 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice18 : slice 0 left64 right64 factor64 18 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice19 : slice 0 left64 right64 factor64 19 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice20 : slice 0 left64 right64 factor64 20 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice21 : slice 0 left64 right64 factor64 21 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice22 : slice 0 left64 right64 factor64 22 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice23 : slice 0 left64 right64 factor64 23 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice24 : slice 0 left64 right64 factor64 24 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice25 : slice 0 left64 right64 factor64 25 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice26 : slice 0 left64 right64 factor64 26 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice27 : slice 0 left64 right64 factor64 27 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice28 : slice 0 left64 right64 factor64 28 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice29 : slice 0 left64 right64 factor64 29 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice30 : slice 0 left64 right64 factor64 30 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice31 : slice 0 left64 right64 factor64 31 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice32 : slice 0 left64 right64 factor64 32 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice33 : slice 0 left64 right64 factor64 33 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice34 : slice 0 left64 right64 factor64 34 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice35 : slice 0 left64 right64 factor64 35 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice36 : slice 0 left64 right64 factor64 36 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice37 : slice 0 left64 right64 factor64 37 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice38 : slice 0 left64 right64 factor64 38 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice39 : slice 0 left64 right64 factor64 39 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice40 : slice 0 left64 right64 factor64 40 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice41 : slice 0 left64 right64 factor64 41 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice42 : slice 0 left64 right64 factor64 42 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice43 : slice 0 left64 right64 factor64 43 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice44 : slice 0 left64 right64 factor64 44 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice45 : slice 0 left64 right64 factor64 45 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice46 : slice 0 left64 right64 factor64 46 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice47 : slice 0 left64 right64 factor64 47 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice48 : slice 0 left64 right64 factor64 48 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice49 : slice 0 left64 right64 factor64 49 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice50 : slice 0 left64 right64 factor64 50 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice51 : slice 0 left64 right64 factor64 51 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice52 : slice 0 left64 right64 factor64 52 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice53 : slice 0 left64 right64 factor64 53 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice54 : slice 0 left64 right64 factor64 54 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice55 : slice 0 left64 right64 factor64 55 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice56 : slice 0 left64 right64 factor64 56 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice57 : slice 0 left64 right64 factor64 57 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice58 : slice 0 left64 right64 factor64 58 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice59 : slice 0 left64 right64 factor64 59 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice60 : slice 0 left64 right64 factor64 60 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice61 : slice 0 left64 right64 factor64 61 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice62 : slice 0 left64 right64 factor64 62 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice63 : slice 0 left64 right64 factor64 63 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice64 : slice 0 left64 right64 factor64 64 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice65 : slice 0 left64 right64 factor64 65 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice66 : slice 0 left64 right64 factor64 66 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice67 : slice 0 left64 right64 factor64 67 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice68 : slice 0 left64 right64 factor64 68 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice69 : slice 0 left64 right64 factor64 69 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice70 : slice 0 left64 right64 factor64 70 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice71 : slice 0 left64 right64 factor64 71 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice72 : slice 0 left64 right64 factor64 72 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice73 : slice 0 left64 right64 factor64 73 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice74 : slice 0 left64 right64 factor64 74 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice75 : slice 0 left64 right64 factor64 75 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice76 : slice 0 left64 right64 factor64 76 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice77 : slice 0 left64 right64 factor64 77 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice78 : slice 0 left64 right64 factor64 78 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice79 : slice 0 left64 right64 factor64 79 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice80 : slice 0 left64 right64 factor64 80 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice81 : slice 0 left64 right64 factor64 81 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice82 : slice 0 left64 right64 factor64 82 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice83 : slice 0 left64 right64 factor64 83 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice84 : slice 0 left64 right64 factor64 84 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice85 : slice 0 left64 right64 factor64 85 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice86 : slice 0 left64 right64 factor64 86 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice87 : slice 0 left64 right64 factor64 87 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice88 : slice 0 left64 right64 factor64 88 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice89 : slice 0 left64 right64 factor64 89 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice90 : slice 0 left64 right64 factor64 90 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice91 : slice 0 left64 right64 factor64 91 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice92 : slice 0 left64 right64 factor64 92 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice93 : slice 0 left64 right64 factor64 93 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice94 : slice 0 left64 right64 factor64 94 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice95 : slice 0 left64 right64 factor64 95 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice96 : slice 0 left64 right64 factor64 96 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice97 : slice 0 left64 right64 factor64 97 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice98 : slice 0 left64 right64 factor64 98 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice99 : slice 0 left64 right64 factor64 99 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice100 : slice 0 left64 right64 factor64 100 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice101 : slice 0 left64 right64 factor64 101 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice102 : slice 0 left64 right64 factor64 102 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice103 : slice 0 left64 right64 factor64 103 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice104 : slice 0 left64 right64 factor64 104 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice105 : slice 0 left64 right64 factor64 105 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice106 : slice 0 left64 right64 factor64 106 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice107 : slice 0 left64 right64 factor64 107 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice108 : slice 0 left64 right64 factor64 108 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice109 : slice 0 left64 right64 factor64 109 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice110 : slice 0 left64 right64 factor64 110 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice111 : slice 0 left64 right64 factor64 111 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice112 : slice 0 left64 right64 factor64 112 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice113 : slice 0 left64 right64 factor64 113 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice114 : slice 0 left64 right64 factor64 114 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice115 : slice 0 left64 right64 factor64 115 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice116 : slice 0 left64 right64 factor64 116 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice117 : slice 0 left64 right64 factor64 117 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice118 : slice 0 left64 right64 factor64 118 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice119 : slice 0 left64 right64 factor64 119 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice120 : slice 0 left64 right64 factor64 120 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice121 : slice 0 left64 right64 factor64 121 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice122 : slice 0 left64 right64 factor64 122 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice123 : slice 0 left64 right64 factor64 123 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice124 : slice 0 left64 right64 factor64 124 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice125 : slice 0 left64 right64 factor64 125 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice126 : slice 0 left64 right64 factor64 126 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice127 : slice 0 left64 right64 factor64 127 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice128 : slice 0 left64 right64 factor64 128 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice129 : slice 0 left64 right64 factor64 129 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice130 : slice 0 left64 right64 factor64 130 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice131 : slice 0 left64 right64 factor64 131 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice132 : slice 0 left64 right64 factor64 132 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice133 : slice 0 left64 right64 factor64 133 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice134 : slice 0 left64 right64 factor64 134 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice135 : slice 0 left64 right64 factor64 135 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice136 : slice 0 left64 right64 factor64 136 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice137 : slice 0 left64 right64 factor64 137 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice138 : slice 0 left64 right64 factor64 138 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice139 : slice 0 left64 right64 factor64 139 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice140 : slice 0 left64 right64 factor64 140 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice141 : slice 0 left64 right64 factor64 141 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice142 : slice 0 left64 right64 factor64 142 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice143 : slice 0 left64 right64 factor64 143 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice144 : slice 0 left64 right64 factor64 144 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice145 : slice 0 left64 right64 factor64 145 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice146 : slice 0 left64 right64 factor64 146 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice147 : slice 0 left64 right64 factor64 147 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice148 : slice 0 left64 right64 factor64 148 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice149 : slice 0 left64 right64 factor64 149 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice150 : slice 0 left64 right64 factor64 150 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice151 : slice 0 left64 right64 factor64 151 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice152 : slice 0 left64 right64 factor64 152 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice153 : slice 0 left64 right64 factor64 153 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice154 : slice 0 left64 right64 factor64 154 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice155 : slice 0 left64 right64 factor64 155 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice156 : slice 0 left64 right64 factor64 156 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice157 : slice 0 left64 right64 factor64 157 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice158 : slice 0 left64 right64 factor64 158 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice159 : slice 0 left64 right64 factor64 159 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice160 : slice 0 left64 right64 factor64 160 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice161 : slice 0 left64 right64 factor64 161 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice162 : slice 0 left64 right64 factor64 162 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice163 : slice 0 left64 right64 factor64 163 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice164 : slice 0 left64 right64 factor64 164 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice165 : slice 0 left64 right64 factor64 165 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice166 : slice 0 left64 right64 factor64 166 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice167 : slice 0 left64 right64 factor64 167 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice168 : slice 0 left64 right64 factor64 168 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice169 : slice 0 left64 right64 factor64 169 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice170 : slice 0 left64 right64 factor64 170 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice171 : slice 0 left64 right64 factor64 171 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice172 : slice 0 left64 right64 factor64 172 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice173 : slice 0 left64 right64 factor64 173 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice174 : slice 0 left64 right64 factor64 174 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice175 : slice 0 left64 right64 factor64 175 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice176 : slice 0 left64 right64 factor64 176 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice177 : slice 0 left64 right64 factor64 177 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice178 : slice 0 left64 right64 factor64 178 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice179 : slice 0 left64 right64 factor64 179 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice180 : slice 0 left64 right64 factor64 180 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice181 : slice 0 left64 right64 factor64 181 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice182 : slice 0 left64 right64 factor64 182 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice183 : slice 0 left64 right64 factor64 183 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice184 : slice 0 left64 right64 factor64 184 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice185 : slice 0 left64 right64 factor64 185 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice186 : slice 0 left64 right64 factor64 186 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice187 : slice 0 left64 right64 factor64 187 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice188 : slice 0 left64 right64 factor64 188 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice189 : slice 0 left64 right64 factor64 189 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice190 : slice 0 left64 right64 factor64 190 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice191 : slice 0 left64 right64 factor64 191 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice192 : slice 0 left64 right64 factor64 192 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice193 : slice 0 left64 right64 factor64 193 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice194 : slice 0 left64 right64 factor64 194 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice195 : slice 0 left64 right64 factor64 195 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice196 : slice 0 left64 right64 factor64 196 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice197 : slice 0 left64 right64 factor64 197 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice198 : slice 0 left64 right64 factor64 198 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice199 : slice 0 left64 right64 factor64 199 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice200 : slice 0 left64 right64 factor64 200 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice201 : slice 0 left64 right64 factor64 201 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point64slice202 : slice 0 left64 right64 factor64 202 = true := by
+  decide +kernel
+
+public theorem point64 : residualCheck 64 := by
+  apply point64_ofSlices
+  intro c
+  fin_cases c
+  · exact point64slice0
+  · exact point64slice1
+  · exact point64slice2
+  · exact point64slice3
+  · exact point64slice4
+  · exact point64slice5
+  · exact point64slice6
+  · exact point64slice7
+  · exact point64slice8
+  · exact point64slice9
+  · exact point64slice10
+  · exact point64slice11
+  · exact point64slice12
+  · exact point64slice13
+  · exact point64slice14
+  · exact point64slice15
+  · exact point64slice16
+  · exact point64slice17
+  · exact point64slice18
+  · exact point64slice19
+  · exact point64slice20
+  · exact point64slice21
+  · exact point64slice22
+  · exact point64slice23
+  · exact point64slice24
+  · exact point64slice25
+  · exact point64slice26
+  · exact point64slice27
+  · exact point64slice28
+  · exact point64slice29
+  · exact point64slice30
+  · exact point64slice31
+  · exact point64slice32
+  · exact point64slice33
+  · exact point64slice34
+  · exact point64slice35
+  · exact point64slice36
+  · exact point64slice37
+  · exact point64slice38
+  · exact point64slice39
+  · exact point64slice40
+  · exact point64slice41
+  · exact point64slice42
+  · exact point64slice43
+  · exact point64slice44
+  · exact point64slice45
+  · exact point64slice46
+  · exact point64slice47
+  · exact point64slice48
+  · exact point64slice49
+  · exact point64slice50
+  · exact point64slice51
+  · exact point64slice52
+  · exact point64slice53
+  · exact point64slice54
+  · exact point64slice55
+  · exact point64slice56
+  · exact point64slice57
+  · exact point64slice58
+  · exact point64slice59
+  · exact point64slice60
+  · exact point64slice61
+  · exact point64slice62
+  · exact point64slice63
+  · exact point64slice64
+  · exact point64slice65
+  · exact point64slice66
+  · exact point64slice67
+  · exact point64slice68
+  · exact point64slice69
+  · exact point64slice70
+  · exact point64slice71
+  · exact point64slice72
+  · exact point64slice73
+  · exact point64slice74
+  · exact point64slice75
+  · exact point64slice76
+  · exact point64slice77
+  · exact point64slice78
+  · exact point64slice79
+  · exact point64slice80
+  · exact point64slice81
+  · exact point64slice82
+  · exact point64slice83
+  · exact point64slice84
+  · exact point64slice85
+  · exact point64slice86
+  · exact point64slice87
+  · exact point64slice88
+  · exact point64slice89
+  · exact point64slice90
+  · exact point64slice91
+  · exact point64slice92
+  · exact point64slice93
+  · exact point64slice94
+  · exact point64slice95
+  · exact point64slice96
+  · exact point64slice97
+  · exact point64slice98
+  · exact point64slice99
+  · exact point64slice100
+  · exact point64slice101
+  · exact point64slice102
+  · exact point64slice103
+  · exact point64slice104
+  · exact point64slice105
+  · exact point64slice106
+  · exact point64slice107
+  · exact point64slice108
+  · exact point64slice109
+  · exact point64slice110
+  · exact point64slice111
+  · exact point64slice112
+  · exact point64slice113
+  · exact point64slice114
+  · exact point64slice115
+  · exact point64slice116
+  · exact point64slice117
+  · exact point64slice118
+  · exact point64slice119
+  · exact point64slice120
+  · exact point64slice121
+  · exact point64slice122
+  · exact point64slice123
+  · exact point64slice124
+  · exact point64slice125
+  · exact point64slice126
+  · exact point64slice127
+  · exact point64slice128
+  · exact point64slice129
+  · exact point64slice130
+  · exact point64slice131
+  · exact point64slice132
+  · exact point64slice133
+  · exact point64slice134
+  · exact point64slice135
+  · exact point64slice136
+  · exact point64slice137
+  · exact point64slice138
+  · exact point64slice139
+  · exact point64slice140
+  · exact point64slice141
+  · exact point64slice142
+  · exact point64slice143
+  · exact point64slice144
+  · exact point64slice145
+  · exact point64slice146
+  · exact point64slice147
+  · exact point64slice148
+  · exact point64slice149
+  · exact point64slice150
+  · exact point64slice151
+  · exact point64slice152
+  · exact point64slice153
+  · exact point64slice154
+  · exact point64slice155
+  · exact point64slice156
+  · exact point64slice157
+  · exact point64slice158
+  · exact point64slice159
+  · exact point64slice160
+  · exact point64slice161
+  · exact point64slice162
+  · exact point64slice163
+  · exact point64slice164
+  · exact point64slice165
+  · exact point64slice166
+  · exact point64slice167
+  · exact point64slice168
+  · exact point64slice169
+  · exact point64slice170
+  · exact point64slice171
+  · exact point64slice172
+  · exact point64slice173
+  · exact point64slice174
+  · exact point64slice175
+  · exact point64slice176
+  · exact point64slice177
+  · exact point64slice178
+  · exact point64slice179
+  · exact point64slice180
+  · exact point64slice181
+  · exact point64slice182
+  · exact point64slice183
+  · exact point64slice184
+  · exact point64slice185
+  · exact point64slice186
+  · exact point64slice187
+  · exact point64slice188
+  · exact point64slice189
+  · exact point64slice190
+  · exact point64slice191
+  · exact point64slice192
+  · exact point64slice193
+  · exact point64slice194
+  · exact point64slice195
+  · exact point64slice196
+  · exact point64slice197
+  · exact point64slice198
+  · exact point64slice199
+  · exact point64slice200
+  · exact point64slice201
+  · exact point64slice202
+
+end Rudvalis.OrderCertificate.ForwardReduction.Part5Residual.Residual0Checks

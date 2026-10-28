@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section4.SecondCaseA7UInterMCard
 import Mathlib.Tactic
 
+
 /-!
 # Section 4: the A₇ odd-intersection cardinality dichotomy
 

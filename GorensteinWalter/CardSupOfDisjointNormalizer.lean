@@ -1,7 +1,7 @@
 module
 
 public import Mathlib.Algebra.Group.Subgroup.Pointwise
-public import Mathlib.Data.Finite.Card
+public import Mathlib.SetTheory.Cardinal.NatCard
 
 /-! # Cardinality of a subgroup join under a normalizer hypothesis -/
 

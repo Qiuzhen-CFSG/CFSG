@@ -35,7 +35,6 @@ open scoped TensorProduct
 namespace BenderGlauberman
 
 open GorensteinWalter
-open Theory.Character
 
 attribute [local instance] Fintype.ofFinite
 attribute [local instance] Classical.propDecidable
@@ -234,7 +233,7 @@ public theorem fintype_card_irr_eq_conjClassesBG19 (G : Type u) [Group G] [Finty
     Fintype.card (IrrBG19 G) = Nat.card (ConjClasses G) := by
   classical
   let : Finite G := Finite.of_fintype G
-  rcases Theory.Character.card_irreducible_characters_eq_card_conjClasses (G := G) with
+  rcases card_irreducible_characters_eq_card_conjClasses (G := G) with
     ⟨ι, hι, χ, hχ, hcard⟩
   let : Fintype ι := hι
   let f : ι → IrrBG19 G := fun i =>
@@ -580,7 +579,7 @@ public theorem exists_odd_multiplicity_restrict {U : Type u} [Group U] [Fintype 
       _ = φ 1 := rfl
       _ = ∑ ν : IrrBG19 (↥B), (m ν : ℂ) * (d ν : ℂ) := hsum1
   by_contra hnone
-  push_neg at hnone
+  push Not at hnone
   have hEvenProd : ∀ ν : IrrBG19 (↥B), Even (m ν * d ν) := by
     intro ν
     have hEvenM : Even (m ν) := by
@@ -629,7 +628,6 @@ public theorem orbit_eq_of_memBG19 (H0 U : Subgroup G) [Fintype ↥(LambdaHom H0
   · intro hφ
     rcases (Finset.mem_image.mp hφ) with ⟨l', hl', hEq⟩
     refine Finset.mem_image.mpr ⟨l' * l, Finset.mem_univ _, ?_⟩
-    change LambdaChar ((l' * l : ↥(LambdaHom H0 U)).1) * ν = φ
     rw [← hEq]
     ext x
     simp [LambdaChar, mul_assoc]
@@ -637,8 +635,6 @@ public theorem orbit_eq_of_memBG19 (H0 U : Subgroup G) [Fintype ↥(LambdaHom H0
     rcases (Finset.mem_image.mp hφ) with ⟨l', hl', hEq⟩
     refine Finset.mem_image.mpr ⟨l' * l⁻¹, Finset.mem_univ _, ?_⟩
     rw [← hEq]
-    change LambdaChar ((l' * l⁻¹ : ↥(LambdaHom H0 U)).1) * (LambdaChar l.1 * ν) =
-      LambdaChar l'.1 * ν
     ext x
     simp [LambdaChar, mul_assoc]
 
@@ -1451,10 +1447,12 @@ public theorem tElm_mem_H0sub (hS2 : Nat.card S = 2) : tElm hS2 ∈ H0sub S U :=
   rw [mem_H0sub_iff]
   simp [tElm]
 
+omit [Fintype S] [Fintype U] in
 /-- `tElm` lies in `Tset`. -/
 public theorem tElm_mem_Tset (hS2 : Nat.card S = 2) : tElm hS2 ∈ Tset S U := by
   exact (mem_Tset_iff S U (tElm hS2)).2 ⟨by simp [tElm], by simp [tElm, s2_ne_one hS2]⟩
 
+omit [Fintype S] [Fintype U] in
 /-- Elements of `Tset` have even order. -/
 public theorem Tset_even_order (hS2 : Nat.card S = 2) {x : SemiProduct S U}
     (hx : x ∈ Tset S U) : 2 ∣ orderOf x := by
@@ -1530,7 +1528,7 @@ public theorem fixedSubgroup_mul_mul (S : Type u) (U : Type u) [Group S] [Group 
   have hsa : s • a = a := (mem_fixedSubgroup_iff S U a).1 ha s
   have hsb : s • b = b := (mem_fixedSubgroup_iff S U b).1 hb s
   have hsc : s • c = c := (mem_fixedSubgroup_iff S U c).1 hc s
-  simp [MulDistribMulAction.smul_mul, smul_inv', hsa, hsb, hsc]
+  simp [hsa, hsb, hsc]
 
 /-- Order is preserved under conjugation. -/
 public theorem orderOf_conj_eq {G : Type u} [Group G] (g x : G) :
@@ -1564,7 +1562,7 @@ public theorem conj_Tset_left_right (hS2 : Nat.card S = 2) (g x : SemiProduct S 
     · have hg2 : g.right = s2 hS2 := (s_eq_one_or_s2 hS2 g.right).resolve_left hg
       simp [SemidirectProduct.mul_left, SemidirectProduct.inv_left, hg2, hxr, hxlf, smul_inv', mul_assoc]
 
-omit [Fintype U] in
+omit [Fintype S] [Fintype U] in
 /-- The image of `T` under conjugation by `g` consists exactly of the elements
 with `S`-component `s2` and `U`-component in `C(g.left)`. -/
 public theorem conj_Tset_image (hS2 : Nat.card S = 2) (g : SemiProduct S U) :
@@ -1592,6 +1590,7 @@ public theorem conj_Tset_image (hS2 : Nat.card S = 2) (g : SemiProduct S U) :
     · rw [hyr]
       exact hlr.1
 
+omit [Fintype S] [Fintype U] in
 /-- If `g.left` is fixed by `S`, the conjugate of `T` by `g` is `T` itself. -/
 public theorem conj_Tset_eq_self_of_left_fixed (hS2 : Nat.card S = 2)
     {g : SemiProduct S U} (hg : g.left ∈ fixedSubgroup S U) :
@@ -1617,7 +1616,7 @@ public theorem conj_Tset_eq_self_of_left_fixed (hS2 : Nat.card S = 2)
       intro s
       have hgs : s • g.left = g.left := (mem_fixedSubgroup_iff S U g.left).1 hg s
       have hys : s • (y.left : U) = y.left := (mem_fixedSubgroup_iff S U y.left).1 hy.1 s
-      simp [MulDistribMulAction.smul_mul, smul_inv', hgs, hys]
+      simp [hgs, hys]
     have hgfix : (s2 hS2) • g.left = g.left :=
       (mem_fixedSubgroup_iff S U g.left).1 hg (s2 hS2)
     refine ⟨hyr, ⟨⟨g.left⁻¹ * (y.left : U) * g.left, hb'⟩, ?_⟩⟩
@@ -1671,7 +1670,7 @@ public theorem fixed_of_twisted_intersection (hS2 : Nat.card S = 2)
       exact mul_right_cancel h1w
     exact mul_left_cancel hc
   have hsw' : s0 • w⁻¹ = w := by
-    simpa [hsw] using (smul_inv' s0 w).symm
+    simp [hsw]
   have hstar' : (b₁ : U) * w = w⁻¹ * (b₁ : U) := by
     calc
       (b₁ : U) * w = s0 • ((b₁ : U) * w⁻¹) := by
@@ -1762,6 +1761,7 @@ public theorem fixed_of_twisted_intersection (hS2 : Nat.card S = 2)
     rw [hss]
     exact hs0u1
 
+omit [Fintype S] in
 /-- `Tset` is a TI-set when `|S| = 2` and `|U|` is odd. -/
 public theorem Tset_TI (hS2 : Nat.card S = 2) (hU2' : Nat.Coprime 2 (Nat.card U)) :
     IsTISet (Tset S U) := by
@@ -1789,6 +1789,7 @@ public theorem Tset_TI (hS2 : Nat.card S = 2) (hU2' : Nat.Coprime 2 (Nat.card U)
     · intro hy
       simp at hy
 
+omit [Fintype S] in
 /-- The normalizer of `Tset` is exactly `H0sub`. -/
 public theorem Tset_normalizer (hS2 : Nat.card S = 2)
     (hU2' : Nat.Coprime 2 (Nat.card U)) :
@@ -1947,6 +1948,7 @@ omit [Fintype S] in
 public theorem sigChar_apply_s2 (hS2 : Nat.card S = 2) : sigChar hS2 (s2 hS2) = -1 := by
   simp [sigChar, sigHom, s2_ne_one hS2]
 
+omit [Fintype S] in
 /-- `sigChar` is not the trivial character. -/
 public theorem sigChar_ne_one (hS2 : Nat.card S = 2) : sigChar hS2 ≠ (1 : ClassFunction S) := by
   intro h
@@ -2322,7 +2324,7 @@ public theorem scalarProduct_doubleSum_self {G : Type u} [Group G] [Fintype G]
           rw [hdbl]
 
 /-- The scalar product of two `h0Char`'s is `1` exactly when both factors agree. -/
-public theorem h0Char_scalar (hS2 : Nat.card S = 2) (σ σ' : IrrBG19 S)
+public theorem h0Char_scalar (σ σ' : IrrBG19 S)
     (β β' : IrrBG19 (↥(fixedSubgroup S U))) :
     scalarProduct (↥(H0sub S U)) (h0Char S U σ.1 β.1) (h0Char S U σ'.1 β'.1) =
       if σ = σ' ∧ β = β' then 1 else 0 := by
@@ -2421,10 +2423,10 @@ public theorem deltaStar_pairing (hS2 : Nat.card S = 2)
       _ = if β = β' then 2 else 0 := by
               rw [show (1 : ClassFunction S) = (oneIrr S).1 by rfl]
               rw [show sigChar hS2 = (sigIrr hS2).1 by rfl]
-              rw [h0Char_scalar hS2 (oneIrr S) (oneIrr S) β β',
-                h0Char_scalar hS2 (sigIrr hS2) (oneIrr S) β β',
-                h0Char_scalar hS2 (oneIrr S) (sigIrr hS2) β β',
-                h0Char_scalar hS2 (sigIrr hS2) (sigIrr hS2) β β']
+              rw [h0Char_scalar (oneIrr S) (oneIrr S) β β',
+                h0Char_scalar (sigIrr hS2) (oneIrr S) β β',
+                h0Char_scalar (oneIrr S) (sigIrr hS2) β β',
+                h0Char_scalar (sigIrr hS2) (sigIrr hS2) β β']
               by_cases hββ' : β = β'
               · simp [hββ', oneIrr_ne_sigIrr hS2, (oneIrr_ne_sigIrr hS2).symm]
                 norm_num
@@ -2467,7 +2469,7 @@ public theorem isCharacter_induced (H : Subgroup G) {φ : ClassFunction (↥H)}
     (hφ : IsCharacter φ) : IsCharacter (inducedClassFunction H φ) := by
   rcases hφ with ⟨n, ρ, rfl⟩
   have : FiniteDimensional ℂ (Representation.IndV H.subtype ρ) :=
-    Theory.Representation.finiteDimensional_ind H ρ
+    Representation.finiteDimensional_ind H ρ
   let σ : Representation ℂ G (Representation.IndV H.subtype ρ) :=
     Representation.ind H.subtype ρ
   refine ⟨Module.finrank ℂ (Representation.IndV H.subtype ρ), standardizeRepresentation σ, ?_⟩
@@ -2497,7 +2499,7 @@ public theorem isCharacter_induced (H : Subgroup G) {φ : ClassFunction (↥H)}
             · have hxH' : (x⁻¹) * g * (x⁻¹)⁻¹ ∈ H := by simpa using hxH
               simp [hxH]
             · simp [hxH]
-    _ = σ.character g := (Theory.Representation.induced_character_formula H ρ g).symm
+    _ = σ.character g := (Representation.induced_character_formula H ρ g).symm
     _ = (standardizeRepresentation σ).character g :=
           (standardizeRepresentation_character σ g).symm
 
@@ -2720,6 +2722,7 @@ public theorem alphaInduced_decompose (hS2 : Nat.card S = 2) (α : IrrBG19 U) (h
       alphaInduced (S := S) (U := U) α = χ₁ + χ₂ :=
   char_norm_two_decomp (alphaInduced_isCharacter α) (alphaInduced_norm hS2 α hα)
 
+omit [Fintype S] [Fintype U] in
 /-- The restriction of an irreducible character of `G` to `U` is a character. -/
 public theorem restrict_isCharacter {χ : ClassFunction (SemiProduct S U)}
     (hχ : IsIrreducibleCharacter χ) :
@@ -2731,8 +2734,8 @@ public theorem restrict_isCharacter {χ : ClassFunction (SemiProduct S U)}
 
 /-- The scalar product of `α` with a constituent of `α^G` of scalar product
 one is one. -/
-public theorem restrict_scalarProduct_alpha (hS2 : Nat.card S = 2) (α : IrrBG19 U)
-    (hα : FixedIrr S U α) {χ : ClassFunction (SemiProduct S U)}
+public theorem restrict_scalarProduct_alpha (α : IrrBG19 U)
+    {χ : ClassFunction (SemiProduct S U)}
     (hχ : IsIrreducibleCharacter χ)
     (hsp : scalarProduct (SemiProduct S U) χ (alphaInduced (S := S) (U := U) α) = 1) :
     scalarProduct U α.1 (fun u : U => χ (SemidirectProduct.inl u)) = 1 := by
@@ -2757,8 +2760,8 @@ public theorem restrict_scalarProduct_alpha (hS2 : Nat.card S = 2) (α : IrrBG19
 
 /-- A constituent of `α^G` with scalar product one and the same degree
 restricts to `α` on `U`. -/
-public theorem restrict_constituent_of_sp_one (hS2 : Nat.card S = 2) (α : IrrBG19 U)
-    (hα : FixedIrr S U α) {χ : ClassFunction (SemiProduct S U)}
+public theorem restrict_constituent_of_sp_one (α : IrrBG19 U)
+    {χ : ClassFunction (SemiProduct S U)}
     (hχ : IsIrreducibleCharacter χ)
     (hsp : scalarProduct (SemiProduct S U) χ (alphaInduced (S := S) (U := U) α) = 1)
     (hdeg : χ 1 = α.1 1) (u : U) : χ (SemidirectProduct.inl u) = α.1 u := by
@@ -2767,7 +2770,7 @@ public theorem restrict_constituent_of_sp_one (hS2 : Nat.card S = 2) (α : IrrBG
   have hψchar : IsCharacter ψ := by
     simpa [ψ] using (restrict_isCharacter (χ := χ) hχ)
   have hspα : scalarProduct U α.1 ψ = 1 := by
-    simpa [ψ] using (restrict_scalarProduct_alpha hS2 α hα hχ hsp)
+    simpa [ψ] using (restrict_scalarProduct_alpha α hχ hsp)
   have hEq : ψ = α.1 :=
     char_eq_irreducible_of_scalarProduct_one_and_degree (G := U) hψchar α.2 hspα
       (by simpa [ψ] using hdeg)
@@ -2798,11 +2801,11 @@ public theorem alphaInduced_restrict_constituent (hS2 : Nat.card S = 2) (α : Ir
     exact h'.symm
   have hle₁ := irreducible_char_degree_le_of_scalarProduct_one (G := U)
     (ψ := fun u : U => χ₁ (SemidirectProduct.inl u)) (χ := α.1)
-    (restrict_isCharacter hχ₁) α.2 (restrict_scalarProduct_alpha hS2 α hα hχ₁ hsp₁)
+    (restrict_isCharacter hχ₁) α.2 (restrict_scalarProduct_alpha α hχ₁ hsp₁)
   rcases hle₁ with ⟨r₁, d₁, hdegψ₁, hdegα₁, hle₁'⟩
   have hle₂ := irreducible_char_degree_le_of_scalarProduct_one (G := U)
     (ψ := fun u : U => χ₂ (SemidirectProduct.inl u)) (χ := α.1)
-    (restrict_isCharacter hχ₂) α.2 (restrict_scalarProduct_alpha hS2 α hα hχ₂ hsp₂)
+    (restrict_isCharacter hχ₂) α.2 (restrict_scalarProduct_alpha α hχ₂ hsp₂)
   rcases hle₂ with ⟨r₂, d₂, hdegψ₂, hdegα₂, hle₂'⟩
   have h₁ : χ₁ 1 = (r₁ : ℂ) := by simpa using hdegψ₁
   have h₂ : χ₂ 1 = (r₂ : ℂ) := by simpa using hdegψ₂
@@ -2827,7 +2830,7 @@ public theorem alphaInduced_restrict_constituent (hS2 : Nat.card S = 2) (α : Ir
     have hspχ : scalarProduct (SemiProduct S U) χ (χ₁ + χ₂) ≠ 0 := by
       simpa [hsum] using hχψ
     by_contra hnone
-    push_neg at hnone
+    push Not at hnone
     have hcalc : scalarProduct (SemiProduct S U) χ (χ₁ + χ₂) =
         (if χ = χ₁ then (1 : ℂ) else 0) + (if χ = χ₂ then (1 : ℂ) else 0) := by
       rw [scalarProduct_add_right]
@@ -2836,9 +2839,9 @@ public theorem alphaInduced_restrict_constituent (hS2 : Nat.card S = 2) (α : Ir
     simp [hnone.1, hnone.2] at hspχ
   rcases hχmem with rfl | rfl
   · intro u
-    exact restrict_constituent_of_sp_one hS2 α hα hχ₁ hsp₁ hdeg₁ u
+    exact restrict_constituent_of_sp_one α hχ₁ hsp₁ hdeg₁ u
   · intro u
-    exact restrict_constituent_of_sp_one hS2 α hα hχ₂ hsp₂ hdeg₂ u
+    exact restrict_constituent_of_sp_one α hχ₂ hsp₂ hdeg₂ u
 
 end GlaubermanCorrespondence
 
@@ -2860,11 +2863,13 @@ public noncomputable def lambdaHom (hS2 : Nat.card S = 2) : SemiProduct S U →*
 public noncomputable def lambdaChar (hS2 : Nat.card S = 2) : ClassFunction (SemiProduct S U) :=
   fun g => ((lambdaHom hS2 g : ℂˣ) : ℂ)
 
+omit [Fintype S] [Fintype U] in
 /-- The value of `lambdaChar` at an element with trivial `S`-component is `1`. -/
 public theorem lambdaChar_apply_right_one (hS2 : Nat.card S = 2) (g : SemiProduct S U)
     (hg : g.right = 1) : lambdaChar hS2 g = 1 := by
   simp [lambdaChar, lambdaHom, hg, sigHom]
 
+omit [Fintype S] [Fintype U] in
 /-- The value of `lambdaChar` at an element with nontrivial `S`-component is `-1`. -/
 public theorem lambdaChar_apply_right_ne_one (hS2 : Nat.card S = 2) (g : SemiProduct S U)
     (hg : g.right ≠ 1) : lambdaChar hS2 g = -1 := by
@@ -3252,7 +3257,7 @@ public theorem sum_S_eq_two (hS2 : Nat.card S = 2) (f : S → ℂ) :
       · simp [h]
       · simp [h]
     · intro hs
-      simpa using hs
+      simp
   rw [huniv]
   simp [Finset.sum_insert, Finset.sum_singleton, (s2_ne_one hS2).symm]
 
@@ -3269,7 +3274,7 @@ public theorem sum_irrS_eq_two (hS2 : Nat.card S = 2) (f : IrrBG19 S → ℂ) :
       · simp [h]
       · simp [h]
     · intro hs
-      simpa using hs
+      simp
   rw [huniv]
   simp [Finset.sum_insert, Finset.sum_singleton, oneIrr_ne_sigIrr hS2]
 
@@ -3432,7 +3437,7 @@ public theorem chi₂_tB_eq_neg_chi₁ (hS2 : Nat.card S = 2) (α : IrrBG19 U) (
 
 omit [Fintype U] in
 /-- The value of `1 ⊗ γ` on the `B`-part of `H0`. -/
-public theorem h0Char_one_inlB (hS2 : Nat.card S = 2) (γ : IrrBG19 (↥(fixedSubgroup S U)))
+public theorem h0Char_one_inlB (γ : IrrBG19 (↥(fixedSubgroup S U)))
     (b : ↥(fixedSubgroup S U)) :
     h0Char S U (oneIrr S).1 γ.1 (inlB S U b) = γ.1 b := by
   unfold inlB
@@ -3491,7 +3496,7 @@ public theorem coeffA_chi₂ (hS2 : Nat.card S = 2) (α : IrrBG19 U) (hα : Fixe
         star (h0Char S U (oneIrr S).1 γ.1 (inlB S U b)) =
       (alphaPair hS2 α hα).1 (inlB S U b : SemiProduct S U) *
         star (h0Char S U (sigIrr hS2).1 γ.1 (inlB S U b))
-    rw [chi₂_inlB_eq_chi₁ hS2 α hα b, h0Char_one_inlB hS2 γ b, h0Char_sig_inlB hS2 γ b]
+    rw [chi₂_inlB_eq_chi₁ hS2 α hα b, h0Char_one_inlB γ b, h0Char_sig_inlB hS2 γ b]
   · refine Finset.sum_congr rfl ?_
     intro b hb
     change (alphaPair hS2 α hα).2 (tB hS2 b : SemiProduct S U) *
@@ -3530,7 +3535,7 @@ public theorem coeffB_chi₂ (hS2 : Nat.card S = 2) (α : IrrBG19 U) (hα : Fixe
         star (h0Char S U (sigIrr hS2).1 γ.1 (inlB S U b)) =
       (alphaPair hS2 α hα).1 (inlB S U b : SemiProduct S U) *
         star (h0Char S U (oneIrr S).1 γ.1 (inlB S U b))
-    rw [chi₂_inlB_eq_chi₁ hS2 α hα b, h0Char_sig_inlB hS2 γ b, h0Char_one_inlB hS2 γ b]
+    rw [chi₂_inlB_eq_chi₁ hS2 α hα b, h0Char_sig_inlB hS2 γ b, h0Char_one_inlB γ b]
   · refine Finset.sum_congr rfl ?_
     intro b hb
     change (alphaPair hS2 α hα).2 (tB hS2 b : SemiProduct S U) *
@@ -4048,7 +4053,7 @@ public theorem betaChar_unique_signed_coeff (hS2 : Nat.card S = 2)
     Classical.choose_spec (coeffDelta_int hS2 α hα γ)
   have hstarD : ∀ γ, star ((dF γ : ℤ) : ℂ) = ((dF γ : ℤ) : ℂ) := by
     intro γ
-    simpa using (Complex.conj_ofReal (dF γ : ℤ))
+    simp
   rcases scalarProduct_bessel_family (G := SemiProduct S U)
       (v := alphaDelta hS2 α hα)
       (w := fun γ => deltaStar S U hS2 γ)
@@ -4073,7 +4078,7 @@ public theorem betaChar_unique_signed_coeff (hS2 : Nat.card S = 2)
       simp only [← hdF γ]
       rw [star_mul]
       have hstar2 : star (2 : ℂ) = (2 : ℂ) := by
-        simpa using (Complex.conj_ofNat 2)
+        simp
       rw [hstar2, hstarD γ]
       ring)
   have hb' : (2 : ℂ) - 2 * (∑ γ : IrrBG19 (↥(fixedSubgroup S U)),
@@ -4448,7 +4453,6 @@ public noncomputable def irrUSubOfU (α : IrrBG19 U) : IrrBG19 (↥(USub S U)) :
 public noncomputable def irrUOfUSub (α : IrrBG19 (↥(USub S U))) : IrrBG19 U :=
   ⟨fun u => α.1 (usubEquiv S U u),
     by
-      change IsIrreducibleCharacter (fun u : U => α.1 (usubEquiv S U u))
       exact isIrreducibleCharacter_congr (usubEquiv S U) α.2⟩
 
 omit [Fintype S] [Fintype U] in
@@ -4595,6 +4599,7 @@ order-two case. -/
 public def orderTwoAut (hS2 : Nat.card S = 2) : U ≃* U :=
   MulDistribMulAction.toMulEquiv (M := U) (G := S) (s2 hS2)
 
+omit [Fintype S] [Fintype U] in
 /-- The order-two automorphism is an involution. -/
 public theorem orderTwoAut_sq (hS2 : Nat.card S = 2) :
     (orderTwoAut (S := S) (U := U) hS2).toEquiv ^ 2 = 1 := by
@@ -4676,6 +4681,7 @@ public theorem fixedClass_iff_conj (hS2 : Nat.card S = 2)
     rw [ha, hx]
     exact h'
 
+omit [Fintype S] [Fintype U] in
 /-- A fixed point of the order-two automorphism lies in the fixed subgroup. -/
 public theorem mem_fixedSubgroup_of_orderTwoAut_fixed (hS2 : Nat.card S = 2)
     {u : U} (h : (s2 hS2) • u = u) : u ∈ fixedSubgroup S U := by
@@ -4762,6 +4768,7 @@ public theorem conjClass_odd_card (hU2' : Nat.Coprime 2 (Nat.card U))
   rw [Nat.card_eq_fintype_card]
   exact hoddO
 
+omit [Fintype S] in
 /-- A stable conjugacy class under the order-two automorphism contains a
 fixed point, i.e. an element of `B = C_U(S)`. -/
 public theorem exists_fixed_of_stable_conjClass (hS2 : Nat.card S = 2)
@@ -4893,6 +4900,7 @@ public noncomputable def conjugatorAutEquiv (hS2 : Nat.card S = 2)
     rw [← mul_smul]
     simpa [pow_two] using congrArg (fun s : S => s • a.1) (s2_sq hS2)
 
+omit [Fintype S] in
 /-- If two fixed points are conjugate in `U`, then they are conjugate in
 `B = C_U(S)`. -/
 public theorem exists_fixed_conjugator (hS2 : Nat.card S = 2)
@@ -5397,14 +5405,12 @@ public noncomputable def orderTwoLiftEquivFixed (H : Subgroup S) [H.Normal]
       intro h
       change (fun u : U => p.1.1 ((h : S) • u)) = p.1.1
       exact p.2 (h : S)
-    have h := e.left_inv ⟨p.1, αH⟩
-    simpa [αH] using congrArg Subtype.val h
+    simp
   right_inv q := by
     apply Subtype.ext
     let e : {α : IrrBG19 U // FixedIrr (↥H) U α} ≃
         IrrBG19 (↥(fixedSubgroup (↥H) U)) := orderTwoLiftEquiv H hH2 hU2'
-    have h := e.right_inv q.1
-    simpa using h
+    simp
 
 /-- The fixed subgroup of the quotient action on the fixed-point subgroup is
 the same as the fixed subgroup of the whole action. -/
@@ -5530,9 +5536,7 @@ public theorem glauberman_correspondence {S U : Type u} [Group S] [Group U]
         ∃ e : {α : IrrBG19 U' // FixedIrr S' U' α} ≃ IrrBG19 (↥(fixedSubgroup S' U')),
           ∀ α b, CongruentModTwo (α.1.1 (b : U')) ((e α).1 b)
   exact Nat.strong_induction_on (p := motive) (n := Nat.card S) (by
-  intro n ih
-  intro S' U' _ _ _ _ _
-  intro hcard hS2 hU2'
+  intro n ih S' U' _ _ _ _ _ hcard hS2 hU2'
   by_cases hn : n = 1
   · have hS1 : Nat.card S' = 1 := by rw [hcard, hn]
     let eU : {α : IrrBG19 U' // FixedIrr S' U' α} ≃ IrrBG19 U' := {

@@ -4,6 +4,7 @@ module
 public import GorensteinWalter.Section3.FirstCaseKleinJ3ExtraInvolution
 import Mathlib.Tactic
 
+
 noncomputable section
 
 namespace GorensteinWalter

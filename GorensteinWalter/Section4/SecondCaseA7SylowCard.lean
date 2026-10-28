@@ -6,6 +6,7 @@ public import GorensteinWalter.Section2.Lemma27QuotientIndex
 public import GorensteinWalter.ASevenInvariantOddPSubgroupCertificateDefs
 import Mathlib.Tactic
 
+
 noncomputable section
 
 namespace GorensteinWalter
@@ -98,7 +99,7 @@ public theorem secondCase_a7_sylow_card
   have hcardSM : Nat.card (SM : Subgroup M) = 8 := by
     rw [hformula, ← hmap, hcardSQ]
     have hqker : q.ker = O := by
-      simpa [q] using QuotientGroup.ker_mk' O
+      simp [q]
     rw [hqker, hSMker]
     simp
   exact ⟨SM, hcardSM⟩

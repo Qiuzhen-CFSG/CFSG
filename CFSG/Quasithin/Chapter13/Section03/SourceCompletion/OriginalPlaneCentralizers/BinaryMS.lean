@@ -1,0 +1,130 @@
+module
+public import CFSG.Quasithin.Chapter13.Section03.SourceCompletion.OriginalPlaneCentralizers.Inspection.LinearThreeField
+
+/-!
+# The genuine binary MS input from an escaping plane centralizer
+
+The selected Sylow subgroup of C_G(A) normalizes Q: its intersection with
+C_G(V) is exactly Q. Thus N_H(Q) has odd index in H and is proper by the
+escaping component. The original radical and characteristic conditions
+then pass to the literal join JQ through the C.2.7 source interface.
+Together with the proved intrinsic quotient J/O₂(J) ≃ SL₃(2), this
+constructs every field of BinaryMS.Input on the actual component and Q.
+
+The final original-plane application retains the extracted LocalData and
+this input. The terminal-row constructor retains the explicit original residual
+equality, discharged in Inspection.Residual. The chief-factor contradiction
+remains owned by qt-d-13316-planes; full C.1.34 classification is owned by
+qt-rank-two-ms93 and is not replaced by a numerical bound here.
+
+Source: Aschbacher--Smith 13.3.12, pp.889--890, and C.1.31--34, pp.135--137.
+-/
+
+public section
+open Subgroup Theory.GroupTheory
+open scoped IsMulCommutative MatrixGroups
+namespace CFSG.Quasithin.Chapter13.Section03.SourceCompletion.OriginalPlaneCentralizers
+variable {G : Type*} [Group G] [Finite G] {T : Sylow 2 G} {L V : Subgroup G}
+  [IsElementaryAbelian 2 V]
+
+theorem Context.plane_msOddIndexRadical (s : Context T L V) (d : MarkedPlane V)
+    (J : Subgroup G) (j : LocalData T L d J) :
+    ChapterC.MSOddIndexRadical
+      (((L ⊔ (T : Subgroup G)).pCoreIn 2).subgroupOf (centralizer (d.A : Set G))) := by
+  let Q := (L ⊔ (T : Subgroup G)).pCoreIn 2
+  let H := centralizer (d.A : Set G)
+  let M := H ⊓ normalizer (L : Set G)
+  let R := Q.subgroupOf H
+  let P := normalizer (R : Set H)
+  have hr := s.core_plane_radical d
+  have hPM : P ≤ M.subgroupOf H :=
+    (normalizer_le_characteristicNormalizerClosure_self R hr.1).trans
+      (s.plane_local_control d).2.2.1
+  obtain ⟨S,hQS,hSM⟩ := s.plane_sylow_in_normalizer d
+  let Sg := (S : Subgroup H).map H.subtype
+  have hSgM : Sg ≤ M := le_inf (map_subtype_le _) hSM
+  have he := (s.plane_twoGroup_index d Sg (S.isPGroup'.map _) hQS hSgM).1
+  have hSgN : Sg ≤ normalizer (Q : Set G) := by
+    change Sg ⊓ centralizer (V : Set G) = Q at he
+    rw [←he]
+    apply (le_inf Sg.le_normalizer ?_).trans inf_normalizer_le_normalizer_inf
+    exact (hSgM.trans (s.plane_local_control d).2.2.2).trans
+      (normalizer_le_normalizer_centralizer V)
+  have hSP : (S : Subgroup H) ≤ P := by
+    change (S : Subgroup H) ≤ normalizer (Q.subgroupOf H : Set H)
+    rw [←subgroupOf_normalizer_eq (show Q ≤ H from (s.plane_local_control d).1)]
+    intro x hx
+    exact hSgN (mem_map_of_mem H.subtype hx)
+  refine ⟨P,lt_top_iff_ne_top.mpr ?_,?_,hr.2⟩
+  · intro ht
+    apply j.input.outside
+    intro x hx
+    exact hPM (ht ▸ mem_top (⟨x,j.input.component.1 hx⟩ : H))
+  · rw [←Nat.not_even_iff_odd,even_iff_two_dvd]
+    exact fun hd => S.not_dvd_index (hd.trans (index_dvd_of_le hSP))
+
+noncomputable def Context.component_binaryMS_input (s : Context T L V)
+    (d : MarkedPlane V) (J : Subgroup G) (j : LocalData T L d J)
+    (e : (J ⧸ pCore 2 J) ≃* SL(3,ZMod 2)) :
+    ChapterC.BinaryMS.Input KnownSimple.IsKnownSimple
+      (J.subgroupOf (J ⊔ (L ⊔ T).pCoreIn 2))
+      (((L ⊔ T).pCoreIn 2).subgroupOf (J ⊔ (L ⊔ T).pCoreIn 2)) := by
+  let Q := (L ⊔ (T : Subgroup G)).pCoreIn 2
+  let D := J ⊔ Q
+  let J0 := J.subgroupOf D
+  let : J0.Normal := normal_subgroupOf_of_le_normalizer
+    (sup_le J.le_normalizer j.input.normalizes)
+  let eJ : J0 ≃* J := subgroupOfEquivOfLe (show J ≤ D from le_sup_left)
+  let eQ := QuotientGroup.congr (pCore 2 J0) (pCore 2 J) eJ (pCore_map_iso 2 eJ)
+  refine {
+    sqtk := (ChapterC.C27Source.source_join_input j.input).setup.sqtk
+    fitting := ChapterC.C27Source.source_join_fitting j.input
+    product := ?_
+    component := (ChapterC.C27Source.source_join_input j.input).component.2
+    radical := ChapterC.C27Source.msOddIndexRadical_join_from_source j.input
+      (s.plane_msOddIndexRadical d J j)
+    characteristic := ChapterC.C27Source.join_msCharacteristic_from_source j.input
+    quotientEquiv := eQ.trans e }
+  intro x
+  have hg : J0 ⊔ Q.subgroupOf D = ⊤ := by
+    rw [←subgroupOf_sup le_sup_left le_sup_right,subgroupOf_self]
+  exact mem_sup_of_normal_left.mp (hg.ge (mem_top x))
+
+end CFSG.Quasithin.Chapter13.Section03.SourceCompletion.OriginalPlaneCentralizers
+
+namespace CFSG.Quasithin.Chapter13.Section03.SourceCompletion.OriginalPlaneCentralizers
+open Subgroup Theory.GroupTheory
+open Chapter1.RadicalExclusions.ModelReduction FullSieve FullSieve.SourceInterface
+open ChapterB.QuasisimpleSource Representation.BinaryOffender
+open scoped MatrixGroups
+variable {G : Type*} [Group G] [Finite G] {T : Sylow 2 G} {L V : Subgroup G}
+  [IsElementaryAbelian 2 V]
+
+/-- All hypotheses of the binary MS theorem hold on the literal join JQ. -/
+theorem Context.component_has_binaryMS_input (s : Context T L V)
+    (d : MarkedPlane V) (J : Subgroup G) (j : LocalData T L d J) :
+    Nonempty (ChapterC.BinaryMS.Input KnownSimple.IsKnownSimple
+      (J.subgroupOf (J ⊔ (L ⊔ T).pCoreIn 2))
+      (((L ⊔ T).pCoreIn 2).subgroupOf (J ⊔ (L ⊔ T).pCoreIn 2))) := by
+  obtain ⟨e⟩ := s.binary_linearThree_core_model d J j
+  exact ⟨s.component_binaryMS_input d J j e⟩
+
+/-- The escaping original centralizer supplies a genuine binary MS configuration. -/
+theorem Context.exists_binaryMS_component (s : Context T L V) (d : MarkedPlane V)
+    (hout : ¬ centralizer (d.A : Set G) ≤ normalizer (L : Set G)) :
+    ∃ J : Subgroup G, Nonempty (LocalData T L d J) ∧
+      Nonempty (ChapterC.BinaryMS.Input KnownSimple.IsKnownSimple
+        (J.subgroupOf (J ⊔ (L ⊔ T).pCoreIn 2))
+        (((L ⊔ T).pCoreIn 2).subgroupOf (J ⊔ (L ⊔ T).pCoreIn 2))) := by
+  obtain ⟨J,⟨j⟩⟩ := s.localExtraction d hout
+  exact ⟨J,⟨j⟩,s.component_has_binaryMS_input d J j⟩
+
+/-- The terminal row now needs only identification of the original residual. -/
+theorem Context.linearThreeRow_of_residual (s : Context T L V)
+    (d : MarkedPlane V) (J : Subgroup G) (j : LocalData T L d J)
+    (hr : J = (primeToResidual 3 (centralizer (d.A : Set G))).map
+      (centralizer (d.A : Set G)).subtype) : Nonempty (LinearThreeRow T L d J) := by
+  obtain ⟨i⟩ := s.component_has_binaryMS_input d J j
+  exact ⟨⟨i,hr,s.component_marked_cubic d J j⟩⟩
+
+end CFSG.Quasithin.Chapter13.Section03.SourceCompletion.OriginalPlaneCentralizers

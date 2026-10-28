@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section3.FirstCaseKleinInvertedInfVU
 import Mathlib.Tactic
 
+
 /-!
 # The two-core cannot centralize an outside-inverted odd subgroup
 -/

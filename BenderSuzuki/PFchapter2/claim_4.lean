@@ -6,6 +6,7 @@ public import BenderSuzuki.PFchapter1section2.proposition_1_b
 public import BenderSuzuki.PFchapter1section2.proposition_2
 public import FeitThompson.Wielandt
 
+
 namespace BenderSuzuki
 namespace PFchapter2
 
@@ -645,3 +646,4 @@ public theorem claim_4
 
 end PFchapter2
 end BenderSuzuki
+

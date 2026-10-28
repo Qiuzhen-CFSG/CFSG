@@ -12,6 +12,7 @@ import GorensteinWalter.CosetInvolutionCount
 import GorensteinWalter.InvertedElementsLeInfConjugate
 import Mathlib.Tactic
 
+
 /-! # The single orbit of involutions in an even A7 coset -/
 
 noncomputable section

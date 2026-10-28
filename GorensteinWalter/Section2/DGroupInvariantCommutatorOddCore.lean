@@ -11,6 +11,7 @@ import FeitThompson.BGsection1.CentralizerLemmas
 import BenderSuzuki.SE.IG1114
 import Mathlib.Tactic
 
+
 open scoped Pointwise
 
 namespace GorensteinWalter
@@ -63,7 +64,7 @@ public theorem commutator_le_pPrimeCore_of_isDGroup
   have hOcop : Nat.Coprime 2 (Nat.card O) := by
     simpa [O] using pPrimeCore_coprime_card (p := 2) (G := X)
   have hTmap : T.map q = Tbar := by
-    simpa [T, Tbar, tbar] using MonoidHom.map_zpowers q t
+    simp [T, Tbar, tbar]
   have hcentT : Subgroup.centralizer (T : Set X) =
       Subgroup.centralizer ({t} : Set X) := by
     dsimp [T]

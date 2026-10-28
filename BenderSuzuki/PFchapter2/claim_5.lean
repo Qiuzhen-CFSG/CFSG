@@ -11,6 +11,7 @@ import BenderSuzuki.PFchapter1section2.proposition_1_b
 import Mathlib.GroupTheory.SpecificGroups.ZGroup
 import Mathlib.GroupTheory.NoncommCoprod
 
+
 namespace BenderSuzuki
 namespace PFchapter2
 
@@ -722,7 +723,7 @@ public theorem claim_5
       let QP : Subgroup C := Q.comap C.subtype
       let core : Subgroup C := pointStabilizerCore C OmegaP
       ∃ hnormal : core.Normal,
-        letI : core.Normal := hnormal
+        let : core.Normal := hnormal
         let pi : C →* C ⧸ core := QuotientGroup.mk' core
         ∃ (F : Type v) (_ : PFAppendixII.RightNearField F) (_ : Finite F)
             (_ : Nontrivial F) (_unitEquiv : nearFieldStar Q P ≃* Fˣ),
@@ -774,3 +775,4 @@ public theorem claim_5
 
 end PFchapter2
 end BenderSuzuki
+

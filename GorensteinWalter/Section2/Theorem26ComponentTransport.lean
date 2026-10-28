@@ -15,6 +15,7 @@ import Mathlib.GroupTheory.Index
 import Mathlib.Algebra.Group.Subgroup.Pointwise
 import Mathlib.Tactic
 
+
 open scoped Pointwise
 open scoped commutatorElement
 open scoped IsMulCommutative
@@ -220,11 +221,12 @@ private lemma centralizer_lift_of_odd_center
       rw [← hd0val]
       rw [Subgroup.mem_map]
       refine ⟨d0, hd0, ?_⟩
-      simpa [hfix]
+      simp [hfix]
   let c : A → Z := fun a =>
     ⟨(x : G)⁻¹ * (a : G) * (x : G) * (a : G)⁻¹, hdefect a⟩
-  have hcocycle : @IsCocycle₁ (↥A) (↥Z) _ _
-      (Subgroup.conjMulDistribMulActionOfLeNormalizer A Z hAZ) c := by
+  let : MulDistribMulAction (↥A) (↥Z) :=
+    Subgroup.conjMulDistribMulActionOfLeNormalizer A Z hAZ
+  have hcocycle : IsCocycle₁ (A := (↥A)) (N := (↥Z)) c := by
     intro a b
     apply Subtype.ext
     let : MulDistribMulAction (↥A) (↥Z) :=
@@ -235,8 +237,8 @@ private lemma centralizer_lift_of_odd_center
     simp only [Subgroup.coe_inv]
     group
   obtain ⟨z, hz⟩ :=
-    @exists_coboundary_of_cocycle_of_coprime_card (↥A) (↥Z) _ _ _ _
-      (Subgroup.conjMulDistribMulActionOfLeNormalizer A Z hAZ) c hcocycle hcop
+    exists_coboundary_of_cocycle_of_coprime_card
+      (A := (↥A)) (N := (↥Z)) c hcocycle hcop
   let sA : A := ⟨s, Subgroup.mem_zpowers s⟩
   let a : G := (x : G)⁻¹ * s * (x : G) * s⁻¹
   have hcs : a = ((sA • z : Z) : G)⁻¹ * (z : G) := by
@@ -941,7 +943,7 @@ private lemma torus_involution_mem_commutator
       change (x : PGL2 K) = 1
       exact hx1
     have hord1 : orderOf (1 : UJ) = 1 := by simp
-    have : (1 : ℕ) = 2 := by simpa [hx1', hord1] using hxord
+    have : (1 : ℕ) = 2 := by simp [hx1', hord1] at hxord
     norm_num at this
   have hxeq : xG = s := by
     exact unique_involution_of_cyclic_subgroup U hUcyc hsU hssq hsne hxU hxpow hxne
@@ -1043,7 +1045,6 @@ private lemma inner_involutions_conjugate_in_derived
   · exact (eJ.symm h : J).2
   · have hh' : (eJ.symm h : J) * xJ * (eJ.symm h : J)⁻¹ = yJ := by
       apply eJ.injective
-      change eJ ((eJ.symm h : J) * xJ * (eJ.symm h : J)⁻¹) = eJ yJ
       simpa using hh
     exact congrArg Subtype.val hh'
 
@@ -1523,7 +1524,7 @@ private theorem pgl2_low_reflected_tori_data_swap
             wk = (a : PGL2 K)⁻¹ * ((a : PGL2 K) * wk) := by group
             _ = (a : PGL2 K)⁻¹ * t2 := by
               congr 1
-              simpa [htab] using htab.symm
+              simp [htab]
         rw [hwk_t]
         exact Subgroup.mul_mem_sup (Subgroup.inv_mem U2 haU) (Subgroup.mem_zpowers t2)
     apply le_antisymm
@@ -1641,7 +1642,6 @@ private theorem pgl2_low_reflected_tori_data_swap
     intro x hx
     have hs2val : t2 * s2 = T.s := by
       dsimp [t2]
-      change T.t * s2 = T.s
       rw [hs2eq]
       calc
         T.t * (T.t * T.s) = (T.t * T.t) * T.s := by group
@@ -1666,7 +1666,7 @@ private theorem pgl2_low_reflected_tori_data_swap
   have hjoin : ((R2 ⊔ Subgroup.zpowers t2) ⊔ Rstar2) =
       ((T.R ⊔ Subgroup.zpowers T.t) ⊔ T.Rstar) := by
     dsimp [R2, Rstar2, t2]
-    simp [sup_assoc, sup_comm, sup_left_comm]
+    simp [sup_comm, sup_left_comm]
   have hfour2 : 4 ∣ Nat.card (↥((R2 ⊔ Subgroup.zpowers t2) ⊔ Rstar2)) := by
     rw [hjoin]
     exact T.four_dvd_card
@@ -2242,7 +2242,7 @@ public theorem reflected_R_image_outer_torus_t26
         (Subgroup.zpowers_le.mpr (d.isComponent.1 htE))
       simpa [TH, CEH, R] using hmap'
     exact (Subgroup.map_subtype_inj.mp
-      (by simpa [hRHmap, hcommmap]))
+      (by simp [hRHmap, hcommmap]))
   let J : Subgroup (PGL2 K) := commutator (PGL2 K)
   let s0 : PGL2 K := ld.T.g * ld.T.s * ld.T.g⁻¹
   let t0 : PGL2 K := ld.T.g * ld.T.t * ld.T.g⁻¹
@@ -2266,7 +2266,6 @@ public theorem reflected_R_image_outer_torus_t26
       exact hRH_eq.symm
     have htH_S : tH ∈ S := hTHS
       (by
-        change tH ∈ TH
         exact Subgroup.mem_subgroupOf.mpr (Subgroup.mem_zpowers c.t))
     have hf_t : f ⟨tH, htH_S⟩ = t0 := by
       dsimp [f, t0]
@@ -2482,10 +2481,10 @@ public theorem reflected_R_image_outer_torus_t26
         (Subgroup.mem_subgroupOf.mpr hceCEH : ⟨ceH, hceS⟩ ∈ CEH'), hfeq⟩
     have hC0f_le : C0.map f ≤ C1 := by
       rw [Subgroup.map_commutator]
-      exact Subgroup.commutator_mono (by simpa [C1, t0, hTHf] using le_rfl) hCEf
+      exact Subgroup.commutator_mono (by simp [t0, hTHf]) hCEf
     have hC1_le_C0f : C1 ≤ C0.map f := by
       rw [Subgroup.map_commutator]
-      exact Subgroup.commutator_mono (by simpa [C1, t0, hTHf] using le_rfl) hCEf_ge
+      exact Subgroup.commutator_mono (by simp [t0, hTHf]) hCEf_ge
     have hR0leC1 : R0 ≤ C1 := by
       intro x hx
       rcases Subgroup.mem_map.mp hx with ⟨yL, hyL, rfl⟩
@@ -2587,7 +2586,6 @@ public theorem reflected_R_image_outer_torus_t26
       have hxker : ρ x = 1 := MonoidHom.mem_ker.mp hx
       let xH : c.Hhat := ⟨(x : G), hRleH x.2⟩
       have hq1 : q xH = 1 := by
-        change q xH = (1 : c.Hhat ⧸ O)
         exact congrArg Subtype.val hxker
       have hxO : xH ∈ O :=
         (QuotientGroup.eq_one_iff (N := O) xH).mp hq1
@@ -2654,7 +2652,6 @@ public theorem reflected_R_image_outer_torus_t26
       · simp [hk]
       · rw [hk]
         rw [htin]
-        change c.t * ⁅c.t, b⁆ * c.t = (⁅c.t, b⁆)⁻¹
         simp only [commutatorElement_def]
         rw [htin]
         rw [show (c.t * b * c.t * b⁻¹)⁻¹ =

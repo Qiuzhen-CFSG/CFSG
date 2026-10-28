@@ -6,6 +6,7 @@ public import GorensteinWalter.Section2.ComponentLayerCentralizesSolvableNormali
 public import GorensteinWalter.Section2.Lemma27IndexTwo
 import Mathlib.Tactic
 
+
 /-!
 # The selected component centralizes the maximal subgroup's odd core
 -/
@@ -30,7 +31,7 @@ public theorem secondCase_component_centralizes_oddCore
     exact y.2
   have hOodd : Odd (Nat.card (↥O)) := by
     simpa [O, M] using odd_card_oddCoreOf M
-  have hOsolv : IsSolvable O := odd_order_theorem O hOodd
+  have hOsolv : Group.IsSolvable O := odd_order_theorem O hOodd
   have hOnorm : IsNormalIn O M := by
     refine ⟨hOleM, ?_⟩
     intro m hm o ho

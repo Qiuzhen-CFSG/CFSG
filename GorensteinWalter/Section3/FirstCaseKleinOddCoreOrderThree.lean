@@ -5,6 +5,7 @@ public import GorensteinWalter.Section3.FirstCaseKleinRestrictionFive
 public import GorensteinWalter.Section1
 import Mathlib.Tactic
 
+
 noncomputable section
 
 open scoped Pointwise
@@ -153,7 +154,7 @@ public theorem firstCase_klein_oddCore_inverted_order_three
   obtain ⟨i, hi⟩ : ∃ i : {x : G // x ∈ invertedElements O y},
       i ≠ (⟨1, honeO⟩ : {x : G // x ∈ invertedElements O y}) := by
     by_contra hnone
-    push_neg at hnone
+    push Not at hnone
     apply hI
     exact (Nat.card_eq_one_iff_exists).2 ⟨⟨1, honeO⟩, fun z => hnone z⟩
   let x : G := i.1
@@ -163,7 +164,7 @@ public theorem firstCase_klein_oddCore_inverted_order_three
     intro hx1
     apply hi
     apply Subtype.ext
-    simpa [x, hx1]
+    simp [x, hx1]
   have hqxne : q ⟨x, hxO⟩ ≠ 1 := by
     intro hq1
     have hfq : f i = f ⟨1, honeO⟩ := by simpa [f, hq1]

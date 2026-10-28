@@ -2,6 +2,7 @@ module
 
 public import FeitThompson.BGsection11.theorem_11_5
 
+
 /-!
 # Corollary 11.6(a)
 
@@ -18,12 +19,12 @@ public theorem corollary_11_6_a
     (h11 : section11Data M A0 A p P) :
     A = section11OmegaOne p (section10AmbientSylowSubgroup M P) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let Pamb : Subgroup G := section10AmbientSylowSubgroup M P
   have hPcomm : IsMulCommutative (P : Subgroup M) := theorem_11_5 h11 P
   have hPambcomm : IsMulCommutative Pamb := by
     simpa [Pamb] using section11_isMulCommutative_ambient_of_sylow (G := G) hPcomm
-  letI : IsMulCommutative Pamb := hPambcomm
+  let : IsMulCommutative Pamb := hPambcomm
   rcases h11.A_rank_two with ⟨_hAcard, hAelem⟩
   rcases h11.rankTwoMaximal with ⟨_hArank, _hAmax⟩
   rcases _hAmax with ⟨_hAelemMax, hAmaximal⟩
@@ -32,7 +33,7 @@ public theorem corollary_11_6_a
     let Ωsub : Subgroup Pamb := omega₁ (G := Pamb) (p := p.val)
     have hΩsub : IsElementaryAbelian p.val Ωsub :=
       section11_omega1_isElementaryAbelian_of_commutative (H := Pamb) (p := p.val)
-    letI : IsElementaryAbelian p.val Ωsub := hΩsub
+    let : IsElementaryAbelian p.val Ωsub := hΩsub
     change IsElementaryAbelian p.val (Ωsub.map Pamb.subtype)
     exact section11_isElementaryAbelian_map (G := Pamb) (p := p.val)
       (A := Ωsub) Pamb.subtype
@@ -42,7 +43,7 @@ public theorem corollary_11_6_a
       simpa [Pamb] using h11.A_le_ambient_sylow ha
     let aP : Pamb := ⟨a, haP⟩
     have hapow : a ^ p.val = 1 := by
-      letI : IsElementaryAbelian p.val A := hAelem
+      let : IsElementaryAbelian p.val A := hAelem
       exact elemPow_eq_one_of_isElementaryAbelian (p := p.val) (A := A) a ha
     have haΩ : aP ∈ omega₁ (G := Pamb) (p := p.val) := by
       rw [omega₁, omega]

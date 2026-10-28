@@ -7,6 +7,7 @@ import Glauberman.QdSLPCore
 import GorensteinWalter.PSL2Cardinality
 import Mathlib.LinearAlgebra.Pi
 
+
 /-!
 # Glauberman Lemma 6.3, Step 6: the aligned prime-field model
 

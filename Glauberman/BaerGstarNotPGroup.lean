@@ -2,6 +2,7 @@ module
 
 public import Glauberman.Lemma6_1
 
+
 /-!
 # The Baer witness subgroup in Glauberman Lemma 6.3
 -/
@@ -34,7 +35,7 @@ private theorem exists_baer_witness_and_conjugate_double_commutator
   classical
   let C : Subgroup Q := Subgroup.centralizer (H : Set Q)
   have hCnormal : C.Normal := Subgroup.normal_centralizer (H := H)
-  letI : C.Normal := hCnormal
+  let : C.Normal := hCnormal
   have hnotall : ¬ ∀ w : Q,
       IsPGroup p
         (Subgroup.closure
@@ -46,7 +47,7 @@ private theorem exists_baer_witness_and_conjugate_double_commutator
   push Not at hnotall
   rcases hnotall with ⟨w, hw⟩
   refine ⟨w, by simpa [C] using hw, ?_⟩
-  letI : H.Normal := hHnormal
+  let : H.Normal := hHnormal
   have hmap := congrArg
     (fun K : Subgroup Q => K.map (MulAut.conj w).toMonoidHom) hcomm
   simpa [Subgroup.map_commutator, MonoidHom.map_zpowers,
@@ -74,7 +75,7 @@ public theorem exists_baer_Gstar_not_pGroup
       let hCstar : Cstar.Normal :=
         Subgroup.Normal.subgroupOf
           (Subgroup.normal_centralizer (H := H)) Gstar
-      letI : Cstar.Normal := hCstar
+      let : Cstar.Normal := hCstar
       ¬ IsPGroup p (Gstar ⧸ Cstar) ∧
         ⁅⁅H, Subgroup.zpowers xw⁆, Subgroup.zpowers xw⁆ = ⊥ := by
   classical
@@ -86,10 +87,10 @@ public theorem exists_baer_Gstar_not_pGroup
   let Gstar : Subgroup Q := Subgroup.closure {x, xw} ⊔ C
   let Cstar : Subgroup Gstar := C.subgroupOf Gstar
   have hCnormal : C.Normal := Subgroup.normal_centralizer (H := H)
-  letI : C.Normal := hCnormal
+  let : C.Normal := hCnormal
   have hCstarNormal : Cstar.Normal :=
     Subgroup.Normal.subgroupOf hCnormal Gstar
-  letI : Cstar.Normal := hCstarNormal
+  let : Cstar.Normal := hCstarNormal
   change ¬ IsPGroup p (Gstar ⧸ Cstar) ∧
     ⁅⁅H, Subgroup.zpowers xw⁆, Subgroup.zpowers xw⁆ = ⊥
   refine ⟨?_, by simpa [xw] using hcommw⟩
@@ -108,7 +109,7 @@ public theorem exists_baer_Gstar_not_pGroup
       exact (MonoidHom.mem_ker (f := f)).mp hg
   have hCmap : C.map q = ⊥ := by
     apply (Subgroup.map_eq_bot_iff C).2
-    simpa [q, QuotientGroup.ker_mk']
+    simp [q, QuotientGroup.ker_mk']
   have hGstarMap : Gstar.map q =
       Subgroup.closure
         {QuotientGroup.mk' C x, QuotientGroup.mk' C xw} := by
@@ -130,7 +131,7 @@ public theorem exists_baer_Gstar_not_pGroup
         {QuotientGroup.mk' C x, QuotientGroup.mk' C xw} := by
     calc
       f.range = Gstar.map q := by
-        simpa [f, MonoidHom.range_comp, Subgroup.subtype_range]
+        simp [f, MonoidHom.range_comp]
       _ = _ := hGstarMap
   let e : Gstar ⧸ Cstar ≃*
       Subgroup.closure

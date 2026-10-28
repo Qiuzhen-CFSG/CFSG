@@ -3,6 +3,7 @@ public import BenderSuzuki.External.Huppert.IV.GrunCore
 public import BenderSuzuki.External.Huppert.IV.theorem_5_2.Core
 public import BenderSuzuki.External.Huppert.IV.theorem_5_1.part_a
 
+
 /-!
 # Huppert IV.5.4(a)
 
@@ -94,7 +95,7 @@ private theorem hkt_iv54_generated_coprime_action_trivial_from_complement
   have hx_qprime_element : IsPElement (p := r) x :=
     x_p
   rcases hcompH with ⟨K, hKnormal, hKcop, hquotp⟩
-  letI : K.Normal := hKnormal
+  let : K.Normal := hKnormal
   let AH : Subgroup H := A.subgroupOf H
   have hH_le_normalizer : H ≤ Subgroup.normalizer (A : Set Q) := by
     refine sup_le Subgroup.le_normalizer ?_
@@ -136,7 +137,7 @@ private theorem hkt_iv54_generated_coprime_action_trivial_from_complement
     exact (Subgroup.disjoint_of_coprime_natCard hcop).eq_bot
   have hcomm_bot : ⁅AH, K⁆ = ⊥ := by
     have hleft : ⁅AH, K⁆ ≤ AH := by
-      letI : AH.Normal := hAHnormal
+      let : AH.Normal := hAHnormal
       exact Subgroup.commutator_le_left (H₁ := AH) (H₂ := K)
     have hright : ⁅AH, K⁆ ≤ K := by
       exact Subgroup.commutator_le_right (H₁ := AH) (H₂ := K)
@@ -205,7 +206,7 @@ private theorem hkt_iv54_generated_top_burnside_or_normal_source
       exact top_unique (by simpa [hHtop] using hH_le_normalizer)
     have hAnormal : A.Normal :=
       Subgroup.normalizer_eq_top_iff.mp hnormalizer_top
-    letI : A.Normal := hAnormal
+    let : A.Normal := hAnormal
     let π : Q →* Q ⧸ A := QuotientGroup.mk' A
     have hmap_top : (Subgroup.zpowers x : Subgroup Q).map π = ⊤ := by
       have hmap_sup :
@@ -619,19 +620,20 @@ private theorem hkt_iv54_center_quotient_proper_subgroups_have_complement_source
     (hproper :
       ∀ H : Subgroup Q, H ≠ ⊥ → H ≠ ⊤ → q ∣ Nat.card H →
         HasNormalPComplement q H) :
-    letI : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal := hZnormal
+    let : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal := hZnormal
     ∀ H : Subgroup (Q ⧸ (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q)),
       H ≠ ⊥ → H ≠ ⊤ → q ∣ Nat.card H → HasNormalPComplement q H := by
   classical
+  dsimp only
   -- IV.5.4(a), quotient-minimality transfer source: lift a proper nontrivial
   -- subgroup of `Q/Z(S)` to `Q`, apply the ambient minimality hypothesis, and
   -- descend the normal `q`-complement back to the quotient subgroup.
   let Z : Subgroup Q := centerIn (G := Q) (S : Subgroup Q)
-  letI : Z.Normal := by
+  let : Z.Normal := by
     simpa [Z] using hZnormal
   intro Hbar hHbar_ne_bot hHbar_ne_top hqHbar
   let π : Q →* Q ⧸ Z := QuotientGroup.mk' Z
-  let Hpre : Subgroup Q := Hbar.comap π
+  let Hpre : Subgroup Q := Subgroup.comap π Hbar
   have hZ_le_Hpre : Z ≤ Hpre := by
     intro z hz
     change π z ∈ Hbar
@@ -662,7 +664,7 @@ private theorem hkt_iv54_center_quotient_proper_subgroups_have_complement_source
     exact hqHbar.trans (by simpa [hHpre_map] using hmap_dvd)
   have hcomp_pre : HasNormalPComplement q Hpre :=
     hproper Hpre hHpre_ne_bot hHpre_ne_top hqHpre
-  haveI : (Z.subgroupOf Hpre).Normal := by
+  have : (Z.subgroupOf Hpre).Normal := by
     have hnorm_top : Subgroup.normalizer (Z : Set Q) = ⊤ :=
       Subgroup.normalizer_eq_top_iff.mpr (inferInstance : Z.Normal)
     exact
@@ -681,11 +683,11 @@ private theorem hkt_iv54_center_quotient_q_dvd_card
     [hZnormal : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal]
     (hcenter_ne_sylow :
       centerIn (G := Q) (S : Subgroup Q) ≠ (S : Subgroup Q)) :
-    letI : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal := hZnormal
+    let : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal := hZnormal
     q ∣ Nat.card (Q ⧸ (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q)) := by
   classical
   let Z : Subgroup Q := centerIn (G := Q) (S : Subgroup Q)
-  letI : Z.Normal := by
+  let : Z.Normal := by
     simpa [Z] using hZnormal
   let π : Q →* Q ⧸ Z := QuotientGroup.mk' Z
   let Sbar : Subgroup (Q ⧸ Z) := (S : Subgroup Q).map π
@@ -726,7 +728,7 @@ private theorem hkt_iv54_center_quotient_hasNormalPComplement_of_quotient_comple
     HasNormalPComplement q Q := by
   classical
   let Z : Subgroup Q := centerIn (G := Q) (S : Subgroup Q)
-  haveI : Z.Normal := by simpa [Z] using hZnormal
+  have : Z.Normal := by simpa [Z] using hZnormal
   let π : Q →* Q ⧸ Z := QuotientGroup.mk' Z
   obtain ⟨Kbar, hKbar_normal, hKbar_coprime, hquot_p⟩ := hquot_comp
   let pre : Subgroup Q := Kbar.comap π
@@ -783,9 +785,9 @@ private theorem hkt_iv54_center_quotient_hasNormalPComplement_of_quotient_comple
       (Subgroup.map_comap_eq_self_of_surjective
         (f := π) (h := QuotientGroup.mk'_surjective Z) Kbar)
   have hquot_pre_p :
-      letI : pre.Normal := hpre_normal
+      let : pre.Normal := hpre_normal
       IsPGroup q (Q ⧸ pre) := by
-    haveI : pre.Normal := hpre_normal
+    have : pre.Normal := hpre_normal
     have hmid : IsPGroup q ((Q ⧸ Z) ⧸ pre.map π) := by
       let e1 : (Q ⧸ Z) ⧸ Kbar ≃* (Q ⧸ Z) ⧸ pre.map π :=
         QuotientGroup.quotientMulEquivOfEq hpre_map.symm
@@ -801,10 +803,14 @@ private theorem hkt_iv54_center_quotient_hasNormalPComplement_of_quotient_comple
         _ = (⊤ : Subgroup Q).map π := by rw [hpre_top]
         _ = ⊤ := Subgroup.map_top_of_surjective π (QuotientGroup.mk'_surjective Z)
     exact ((Fact.out : Nat.Prime q).coprime_iff_not_dvd.mp hKbar_coprime)
-      (by simpa [hKbar_top] using hq_dvd_quot)
+      (by
+        have hq_dvd_Kbar : q ∣ Nat.card Kbar := by
+          rw [hKbar_top]
+          simpa only [Subgroup.card_top] using hq_dvd_quot
+        exact hq_dvd_Kbar)
   have hpre_comp : HasNormalPComplement q pre :=
     hproper pre hpre_ne_bot hpre_ne_top hq_dvd_pre
-  letI : pre.Normal := hpre_normal
+  let : pre.Normal := hpre_normal
   exact hkt_hasNormalPComplement_of_normal_subgroup_and_pgroup_quotient
     (G := Q) (p := q) pre hquot_pre_p hpre_comp
 private theorem hkt_iv54_center_quotient_sylow_normal_lift_from_image_direct
@@ -883,9 +889,10 @@ private theorem hkt_iv54_proper_sylow_normalizer_quotient_control_false_source
           by_cases hcenter_eq_sylow :
               centerIn (G := Q) (S : Subgroup Q) = (S : Subgroup Q)
           · have hSnormal' : (S : Subgroup Q).Normal := by
-              simpa [hcenter_eq_sylow] using hZnormal
+              rw [← hcenter_eq_sylow]
+              exact hZnormal
             exact False.elim (hSnormal hSnormal')
-          · letI : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal := hZnormal
+          · let : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal := hZnormal
             by_cases hquot_comp :
                 HasNormalPComplement q
                   (Q ⧸ (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q))
@@ -902,7 +909,7 @@ private theorem hkt_iv54_proper_sylow_normalizer_quotient_control_false_source
                 exact False.elim (hSnormal hSnormal')
               · let Z : Subgroup Q := centerIn (G := Q) (S : Subgroup Q)
                 let Qbar : Type u := Q ⧸ Z
-                letI : Z.Normal := by simpa [Z] using hZnormal
+                let : Z.Normal := by simpa [Z] using hZnormal
                 let πZ : Q →* Qbar := QuotientGroup.mk' Z
                 let Sbar : Sylow q Qbar :=
                   S.mapSurjective (f := πZ) (QuotientGroup.mk'_surjective Z)
@@ -988,7 +995,8 @@ private theorem hkt_iv54_proper_sylow_normalizer_quotient_control_false_source
                                   Subgroup (Q ⧸ Z)).Normal :=
                               Subgroup.normalizer_eq_top_iff.mp
                                 (by simpa [ZNbar] using hZNbar_top)
-                            simpa [hcenterbar_eq_sylow] using hcenterbar_normal
+                            rw [← hcenterbar_eq_sylow]
+                            exact hcenterbar_normal
                           exact hSbar_not_normal (by simpa [Qbar] using hSbar'_normal)
                         · -- Remaining source: after quotienting by `Z(S)`,
                           -- the induced Sylow is still in the top
@@ -1098,25 +1106,25 @@ private theorem hkt_iv54_center_quotient_proper_sylow_normalizer_false_source
     (hcenter_ne_sylow :
       centerIn (G := Q) (S : Subgroup Q) ≠ (S : Subgroup Q))
     (hproper_bar :
-      letI : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal := hZnormal
+      let : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal := hZnormal
       ∀ H : Subgroup (Q ⧸ (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q)),
         H ≠ ⊥ → H ≠ ⊤ → q ∣ Nat.card H → HasNormalPComplement q H)
     (hquot_not :
-      letI : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal := hZnormal
+      let : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal := hZnormal
       ¬ HasNormalPComplement q
         (Q ⧸ (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q)))
     (Sbar :
-      letI : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal := hZnormal
+      let : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal := hZnormal
       Sylow q (Q ⧸ (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q)))
     (hSbar_normalizer_proper :
-      letI : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal := hZnormal
+      let : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal := hZnormal
       Subgroup.normalizer ((Sbar : Subgroup
         (Q ⧸ (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q))) : Set
           (Q ⧸ (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q))) ≠ ⊤) :
     False := by
   classical
   let Z : Subgroup Q := centerIn (G := Q) (S : Subgroup Q)
-  letI : Z.Normal := by
+  let : Z.Normal := by
     simpa [Z] using hZnormal
   let Qbar : Type u := Q ⧸ Z
   let Nbar : Subgroup Qbar := Subgroup.normalizer ((Sbar : Subgroup Qbar) : Set Qbar)
@@ -1164,21 +1172,21 @@ private theorem hkt_iv54_center_quotient_image_sylow_normal_source
     (hcenter_ne_sylow :
       centerIn (G := Q) (S : Subgroup Q) ≠ (S : Subgroup Q))
     (hproper_bar :
-      letI : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal := hZnormal
+      let : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal := hZnormal
       ∀ H : Subgroup (Q ⧸ (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q)),
         H ≠ ⊥ → H ≠ ⊤ → q ∣ Nat.card H → HasNormalPComplement q H)
     (_hq_dvd : q ∣ Nat.card Q)
     (_hpnormal : ∀ T : Sylow q Q, centerIn (G := Q) (S : Subgroup Q) ≤ (T : Subgroup Q) → centerIn (G := Q) (S : Subgroup Q) = centerIn (G := Q) (T : Subgroup Q))
     (hquot_not :
-      letI : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal := hZnormal
+      let : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal := hZnormal
       ¬ HasNormalPComplement q
         (Q ⧸ (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q))) :
-    letI : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal := hZnormal
+    let : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal := hZnormal
     ((S : Subgroup Q).map
       (QuotientGroup.mk' (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q))).Normal := by
   classical
   let Z : Subgroup Q := centerIn (G := Q) (S : Subgroup Q)
-  letI : Z.Normal := by
+  let : Z.Normal := by
     simpa [Z] using hZnormal
   let π : Q →* Q ⧸ Z := QuotientGroup.mk' Z
   let Sbar : Sylow q (Q ⧸ Z) :=
@@ -1202,15 +1210,15 @@ private theorem hkt_iv54_center_quotient_image_sylow_normal_from_minimal_counter
     (hq_dvd : q ∣ Nat.card Q)
     (hpnormal : ∀ T : Sylow q Q, centerIn (G := Q) (S : Subgroup Q) ≤ (T : Subgroup Q) → centerIn (G := Q) (S : Subgroup Q) = centerIn (G := Q) (T : Subgroup Q))
     (hquot_not :
-      letI : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal := hZnormal
+      let : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal := hZnormal
       ¬ HasNormalPComplement q
         (Q ⧸ (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q))) :
-    letI : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal := hZnormal
+    let : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal := hZnormal
     ((S : Subgroup Q).map
       (QuotientGroup.mk' (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q))).Normal := by
   classical
   have hproper_bar :
-      letI : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal := hZnormal
+      let : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal := hZnormal
       ∀ H : Subgroup (Q ⧸ (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q)),
         H ≠ ⊥ → H ≠ ⊤ → q ∣ Nat.card H → HasNormalPComplement q H :=
     hkt_iv54_center_quotient_proper_subgroups_have_complement_source
@@ -1230,10 +1238,10 @@ private theorem hkt_iv54_center_quotient_nonpnilpotent_minimal_counterexample_st
     (hq_dvd : q ∣ Nat.card Q)
     (hpnormal : ∀ T : Sylow q Q, centerIn (G := Q) (S : Subgroup Q) ≤ (T : Subgroup Q) → centerIn (G := Q) (S : Subgroup Q) = centerIn (G := Q) (T : Subgroup Q))
     (hquot_not :
-      letI : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal := hZnormal
+      let : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal := hZnormal
       ¬ HasNormalPComplement q
         (Q ⧸ (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q))) :
-    letI : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal := hZnormal
+    let : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal := hZnormal
     ((S : Subgroup Q).map
       (QuotientGroup.mk' (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q))).Normal := by
   classical
@@ -1256,11 +1264,11 @@ private theorem hkt_iv54_center_quotient_raw_preimage_of_complement
         preimage ≠ ⊤ ∧
           q ∣ Nat.card preimage ∧
             ∃ hpreimage_normal : preimage.Normal,
-              letI : preimage.Normal := hpreimage_normal
+              let : preimage.Normal := hpreimage_normal
               IsPGroup q (Q ⧸ preimage) := by
   classical
   let Z : Subgroup Q := centerIn (G := Q) (S : Subgroup Q)
-  haveI : Z.Normal := by simpa [Z] using hZnormal
+  have : Z.Normal := by simpa [Z] using hZnormal
   let π : Q →* Q ⧸ Z := QuotientGroup.mk' Z
   obtain ⟨Kbar, hKbar_normal, hKbar_coprime, hquot_p⟩ := hquot_comp
   have hZ_le_S : Z ≤ (S : Subgroup Q) := by
@@ -1314,10 +1322,10 @@ private theorem hkt_iv54_center_quotient_raw_preimage_of_complement
     exact Subgroup.map_comap_eq_self_of_surjective
       (f := π) (h := QuotientGroup.mk'_surjective Z) Kbar
   have hquot_preimage_p :
-      letI : (Kbar.comap π).Normal := hpreimage_normal
+      let : (Kbar.comap π).Normal := hpreimage_normal
       IsPGroup q (Q ⧸ Kbar.comap π) := by
     let pre : Subgroup Q := Kbar.comap π
-    haveI : pre.Normal := by simpa [pre] using hpreimage_normal
+    have : pre.Normal := by simpa [pre] using hpreimage_normal
     have hZ_le_pre : Z ≤ pre := by simpa [pre] using hZ_le_preimage
     have hpre_map : pre.map π = Kbar := by simpa [pre] using hpreimage_map
     have hmid : IsPGroup q ((Q ⧸ Z) ⧸ pre.map π) := by
@@ -1338,19 +1346,23 @@ private theorem hkt_iv54_center_quotient_raw_preimage_of_complement
       _ = (⊤ : Subgroup Q).map π := by rw [hpre_top]
       _ = ⊤ := Subgroup.map_top_of_surjective π (QuotientGroup.mk'_surjective Z)
   exact ((Fact.out : Nat.Prime q).coprime_iff_not_dvd.mp hKbar_coprime)
-    (by simpa [hKbar_top] using hq_dvd_quot)
+    (by
+      have hq_dvd_Kbar : q ∣ Nat.card Kbar := by
+        rw [hKbar_top]
+        simpa only [Subgroup.card_top] using hq_dvd_quot
+      exact hq_dvd_Kbar)
 
 private theorem hkt_iv54_center_quotient_complement_lift_from_extension
     {Q : Type u} [Group Q] [Finite Q] {q : ℕ} [Fact q.Prime]
     (_S : Sylow q Q) (preimage : Subgroup Q)
     (hpreimage_normal : preimage.Normal)
     (hquot_preimage_p :
-      letI : preimage.Normal := hpreimage_normal
+      let : preimage.Normal := hpreimage_normal
       IsPGroup q (Q ⧸ preimage))
     (hpreimage_has_complement : HasNormalPComplement q preimage) :
     HasNormalPComplement q Q := by
   classical
-  letI : preimage.Normal := hpreimage_normal
+  let : preimage.Normal := hpreimage_normal
   exact hkt_hasNormalPComplement_of_normal_subgroup_and_pgroup_quotient
     (G := Q) (p := q) preimage hquot_preimage_p hpreimage_has_complement
 
@@ -1359,7 +1371,7 @@ private theorem hkt_iv54_center_quotient_complement_lift_core
     (S : Sylow q Q) (preimage : Subgroup Q)
     (hpreimage_normal : preimage.Normal)
     (hquot_preimage_p :
-      letI : preimage.Normal := hpreimage_normal
+      let : preimage.Normal := hpreimage_normal
       IsPGroup q (Q ⧸ preimage))
     (hpreimage_has_complement : HasNormalPComplement q preimage) :
     HasNormalPComplement q Q := by
@@ -1373,7 +1385,7 @@ private theorem hkt_iv54_center_quotient_complement_lifts_from_preimage
     (S : Sylow q Q) (preimage : Subgroup Q)
     (hpreimage_normal : preimage.Normal)
     (hquot_preimage_p :
-      letI : preimage.Normal := hpreimage_normal
+      let : preimage.Normal := hpreimage_normal
       IsPGroup q (Q ⧸ preimage))
     (hpreimage_has_complement : HasNormalPComplement q preimage) :
     HasNormalPComplement q Q := by
@@ -1449,7 +1461,8 @@ private theorem hkt_iv54_center_eq_sylow_top_contradiction
   have hZnormal : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal :=
     hkt_iv54_centerIn_normal_of_normalizer_top (Q := Q) (q := q) S hZNtop
   have hSnormal : (S : Subgroup Q).Normal := by
-    simpa [hcenter_eq_sylow] using hZnormal
+    rw [← hcenter_eq_sylow]
+    exact hZnormal
   exact hS_not_normal hSnormal
 
 private theorem hkt_iv54_center_quotient_branch_hasNormalPComplement
@@ -1471,7 +1484,7 @@ private theorem hkt_iv54_center_quotient_branch_hasNormalPComplement
   classical
   have hZnormal : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal :=
     hkt_iv54_centerIn_normal_of_normalizer_top (Q := Q) (q := q) S hZNtop
-  letI : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal := hZnormal
+  let : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal := hZnormal
   by_cases hquot_comp :
       HasNormalPComplement q
         (Q ⧸ (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q))

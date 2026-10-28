@@ -16,6 +16,7 @@ import GorensteinWalter.Section2.Bender1970_18
 import GorensteinWalter.Section2.Lemma27QuotientIndex
 import Mathlib.Tactic
 
+
 /-!
 # Excluding a normal inverted subgroup in the A7 second case
 

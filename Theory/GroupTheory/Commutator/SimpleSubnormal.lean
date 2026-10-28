@@ -1,0 +1,178 @@
+module
+
+public import Mathlib.GroupTheory.IsPerfect
+public import Mathlib.GroupTheory.IsSubnormal
+public import Theory.GroupTheory.Commutator.ConjugateGeneration
+
+/-!
+# Simple subnormal subgroups and conjugate generation
+
+A nonabelian simple subnormal subgroup either lies in a subnormal subgroup or
+centralizes it. In particular, distinct simple perfect subnormal subgroups
+commute. For a normal subgroup, the assertion follows by intersecting with the
+simple subgroup. Induction on a subnormal chain propagates centralization:
+perfectness and the three-subgroup lemma turn a vanishing second commutator
+into a vanishing first commutator.
+
+Applying the normal-subgroup dichotomy to `[L,X]` inside `L ⊔ X` shows that it
+is trivial or contains `L`, hence contains every `X`-conjugate of `L`. This
+identifies it with the conjugate-generated subgroup, which is perfect and
+normal in `L ⊔ X`.
+
+Source: the ordinary-component facts used in Aschbacher–Smith,
+*The Classification of Quasithin Groups*, Proposition A.3.3(5)–(7), pp. 42–43;
+the proof there cites Aschbacher, *Finite Group Theory*, 8.9 and 31.4.
+-/
+
+@[expose] public section
+open Subgroup
+namespace Subgroup
+variable {G : Type*} [Group G]
+
+/-- A perfect subgroup centralizes a subgroup if its second commutator vanishes. -/
+theorem commutator_eq_bot_of_iterated_eq_bot (M L : Subgroup G) [Group.IsPerfect L]
+    (h : ⁅⁅M, L⁆, L⁆ = ⊥) : ⁅M, L⁆ = ⊥ := by
+  have h' : ⁅⁅L, M⁆, L⁆ = ⊥ := by rwa [commutator_comm L M]
+  have hr := commutator_commutator_eq_bot_of_rotate h' h
+  rwa [Subgroup.isPerfect_iff.mp (inferInstance : Group.IsPerfect L), commutator_comm] at hr
+
+/-- Centralization of the intersection with a subnormal overgroup propagates outward. -/
+theorem commutator_eq_bot_of_inf_subnormal (N K L : Subgroup G) [N.Normal]
+    [Group.IsPerfect L] (hK : K.IsSubnormal) (hLK : L ≤ K)
+    (h : ⁅N ⊓ K, L⁆ = ⊥) : ⁅N, L⁆ = ⊥ := by
+  induction hK with
+  | top => simpa using h
+  | step K P hKP hP hn ih =>
+    apply ih (hLK.trans hKP)
+    apply commutator_eq_bot_of_iterated_eq_bot
+    apply le_bot_iff.mp
+    calc
+      ⁅⁅N ⊓ P, L⁆, L⁆ ≤ ⁅N ⊓ K, L⁆ := by
+        apply commutator_mono _ le_rfl
+        apply le_inf
+        · exact (commutator_mono inf_le_left le_rfl).trans (commutator_le_left N L)
+        · exact (commutator_mono inf_le_right hLK).trans
+            (le_normalizer_iff_commutator_le_right.mp
+              ((normal_subgroupOf_iff_le_normalizer hKP).mp hn))
+      _ = ⊥ := h
+
+/-- A simple perfect subnormal subgroup is contained in or centralizes each normal subgroup. -/
+theorem simple_subnormal_normal_dichotomy (L N : Subgroup G)
+    [IsSimpleGroup L] [Group.IsPerfect L] (hL : L.IsSubnormal) [N.Normal] :
+    L ≤ N ∨ ⁅L, N⁆ = ⊥ := by
+  have hn : (N.subgroupOf L).Normal := inferInstance
+  rcases hn.eq_bot_or_eq_top with hb | ht
+  · right
+    rw [commutator_comm]
+    apply commutator_eq_bot_of_inf_subnormal N L L hL le_rfl
+    have hi : N ⊓ L = ⊥ := by
+      have he := congrArg (Subgroup.map L.subtype) hb
+      simpa using he
+    rw [hi, commutator_bot_left]
+  · exact Or.inl (subgroupOf_eq_top.mp ht)
+
+/-- A simple perfect subnormal subgroup is contained in or centralizes each subnormal subgroup. -/
+theorem simple_subnormal_dichotomy (L N : Subgroup G)
+    [IsSimpleGroup L] [Group.IsPerfect L] (hL : L.IsSubnormal) (hN : N.IsSubnormal) :
+    L ≤ N ∨ ⁅L, N⁆ = ⊥ := by
+  induction hN with
+  | top => exact Or.inl le_top
+  | step N K hNK hK hn ih =>
+    rcases ih with hLK | hc
+    · let := hn
+      let e := subgroupOfEquivOfLe hLK
+      let : IsSimpleGroup (L.subgroupOf K) := e.isSimpleGroup
+      let : Group.IsPerfect (L.subgroupOf K) := Group.IsPerfect.ofSurjective (f := e.symm.toMonoidHom) e.symm.surjective
+      rcases simple_subnormal_normal_dichotomy (L.subgroupOf K) (N.subgroupOf K)
+        hL.subgroupOf with hl | hc
+      · left
+        simpa [map_subgroupOf_eq_of_le hLK, map_subgroupOf_eq_of_le hNK] using
+          map_mono (f := K.subtype) hl
+      · right
+        have he := congrArg (Subgroup.map K.subtype) hc
+        simpa [map_commutator, map_subgroupOf_eq_of_le hLK,
+          map_subgroupOf_eq_of_le hNK] using he
+    · right
+      exact le_bot_iff.mp ((commutator_mono le_rfl hNK).trans hc.le)
+
+/-- Distinct simple subnormal subgroups commute when the first is perfect. -/
+theorem simple_subnormal_commute_of_ne (L K : Subgroup G)
+    [IsSimpleGroup L] [Group.IsPerfect L] [IsSimpleGroup K]
+    (hL : L.IsSubnormal) (hK : K.IsSubnormal) (hne : L ≠ K) : ⁅L, K⁆ = ⊥ := by
+  rcases simple_subnormal_dichotomy L K hL hK with hLK | hc
+  · rcases hL.subgroupOf.eq_bot_or_top_of_isSimpleGroup (inferInstance : IsSimpleGroup K)
+      with hb | ht
+    · have he := congrArg (Subgroup.map K.subtype) hb
+      have hb' : L = ⊥ := by simpa [map_subgroupOf_eq_of_le hLK] using he
+      exact ((nontrivial_iff_ne_bot L).mp inferInstance hb').elim
+    · exact (hne (le_antisymm hLK (subgroupOf_eq_top.mp ht))).elim
+  · exact hc
+
+/-- A subgroup lies in the subgroup generated by its conjugates. -/
+theorem le_iSup_conjugates (L X : Subgroup G) :
+    L ≤ ⨆ x : X, L.map (MulAut.conj (x : G)).toMonoidHom := by
+  intro l hl
+  exact (le_iSup (fun x : X => L.map (MulAut.conj (x : G)).toMonoidHom) (1 : X))
+    ⟨l, hl, by simp⟩
+
+/-- Commutators lie in the subgroup generated by the conjugates of the first factor. -/
+theorem commutator_le_iSup_conjugates (L X : Subgroup G) :
+    ⁅L, X⁆ ≤ ⨆ x : X, L.map (MulAut.conj (x : G)).toMonoidHom := by
+  exact (commutator_mono (le_iSup_conjugates L X) le_rfl).trans
+    (le_normalizer_iff_commutator_le_left.mp (le_normalizer_iSup_conjugates L X))
+
+/-- The conjugate-generated subgroup lies in the join of the two subgroups. -/
+theorem iSup_conjugates_le_sup (L X : Subgroup G) :
+    (⨆ x : X, L.map (MulAut.conj (x : G)).toMonoidHom) ≤ L ⊔ X :=
+  iSup_conjugates_le_of_le_normalizer L X (L ⊔ X) le_sup_left
+    (le_sup_right.trans (L ⊔ X).le_normalizer)
+
+/-- The conjugate-generated subgroup is normal in the join. -/
+theorem normal_iSup_conjugates_subgroupOf_sup (L X : Subgroup G) :
+    ((⨆ x : X, L.map (MulAut.conj (x : G)).toMonoidHom).subgroupOf (L ⊔ X)).Normal := by
+  apply normal_subgroupOf_of_le_normalizer
+  exact sup_le ((le_iSup_conjugates L X).trans
+    (⨆ x : X, L.map (MulAut.conj (x : G)).toMonoidHom).le_normalizer)
+    (le_normalizer_iSup_conjugates L X)
+
+/-- Conjugates of a perfect subgroup generate a perfect subgroup. -/
+theorem isPerfect_iSup_conjugates (L X : Subgroup G) [Group.IsPerfect L] :
+    Group.IsPerfect ((⨆ x : X, L.map (MulAut.conj (x : G)).toMonoidHom) : Subgroup G) := by
+  rw [isPerfect_iff]
+  apply le_antisymm (commutator_le_self _)
+  apply iSup_le
+  intro x
+  let : Group.IsPerfect (L.map (MulAut.conj (x : G)).toMonoidHom) := Group.IsPerfect.map _
+  exact (commutator_eq_self (H := L.map (MulAut.conj (x : G)).toMonoidHom)).symm.le.trans
+    (commutator_mono (le_iSup (fun x : X => L.map (MulAut.conj (x : G)).toMonoidHom) x)
+      (le_iSup (fun x : X => L.map (MulAut.conj (x : G)).toMonoidHom) x))
+
+/-- The commutator with a simple perfect subnormal subgroup is trivial or is its conjugate closure. -/
+theorem simple_subnormal_commutator_dichotomy (L X : Subgroup G)
+    [IsSimpleGroup L] [Group.IsPerfect L] (hL : L.IsSubnormal) :
+    ⁅L, X⁆ = ⊥ ∨ ⁅L, X⁆ = ⨆ x : X, L.map (MulAut.conj (x : G)).toMonoidHom := by
+  let S := L ⊔ X
+  have hLS : L ≤ S := le_sup_left
+  have hCS : ⁅L, X⁆ ≤ S := commutator_le_sup L X
+  let e := subgroupOfEquivOfLe hLS
+  let : IsSimpleGroup (L.subgroupOf S) := e.isSimpleGroup
+  let : Group.IsPerfect (L.subgroupOf S) := Group.IsPerfect.ofSurjective (f := e.symm.toMonoidHom) e.symm.surjective
+  rcases simple_subnormal_normal_dichotomy (L.subgroupOf S) (⁅L, X⁆.subgroupOf S)
+    hL.subgroupOf with hl | hc
+  · right
+    have hLC : L ≤ ⁅L, X⁆ := by
+      simpa [map_subgroupOf_eq_of_le hLS, map_subgroupOf_eq_of_le hCS] using
+        map_mono (f := S.subtype) hl
+    exact le_antisymm (commutator_le_iSup_conjugates L X)
+      (iSup_conjugates_le_of_le_normalizer L X ⁅L, X⁆ hLC
+        (normalizer_commutator_ge_right L X))
+  · left
+    have hc' : ⁅L, ⁅L, X⁆⁆ = ⊥ := by
+      have he := congrArg (Subgroup.map S.subtype) hc
+      simpa [map_commutator, map_subgroupOf_eq_of_le hLS,
+        map_subgroupOf_eq_of_le hCS] using he
+    rw [commutator_comm L ⁅L, X⁆, commutator_comm L X] at hc'
+    rw [commutator_comm]
+    exact commutator_eq_bot_of_iterated_eq_bot X L hc'
+
+end Subgroup

@@ -175,8 +175,8 @@ public theorem hallWielandt_residual_intersection
           Q.subgroupOf (P : Subgroup G) ≤
             Subgroup.upperCentralSeries (P : Subgroup G) (p - 1)) :
     (hallPResidual p H).map H.subtype = H ⊓ hallPResidual p G ∧
-      letI : (hallPResidual p G).Normal := hallPResidual_normal p G
-      letI : (hallPResidual p H).Normal := hallPResidual_normal p H
+      let : (hallPResidual p G).Normal := hallPResidual_normal p G
+      let : (hallPResidual p H).Normal := hallPResidual_normal p H
       Nonempty ((G ⧸ hallPResidual p G) ≃* (H ⧸ hallPResidual p H)) := by
   classical
   have hengel :
@@ -234,8 +234,8 @@ public theorem hallWielandt_residual_intersection
       _ = H ⊓ hallPResidual p G := by
         simp [Hcap, G₀, inf_comm]
   refine ⟨hres, ?_⟩
-  letI : (hallPResidual p G).Normal := hallPResidual_normal p G
-  letI : (hallPResidual p H).Normal := hallPResidual_normal p H
+  let : (hallPResidual p G).Normal := hallPResidual_normal p G
+  let : (hallPResidual p H).Normal := hallPResidual_normal p H
   have hP_le_H : (P : Subgroup G) ≤ H :=
     Subgroup.le_normalizer.trans hN_le_H
   have hsup : H ⊔ hallPResidual p G = ⊤ :=

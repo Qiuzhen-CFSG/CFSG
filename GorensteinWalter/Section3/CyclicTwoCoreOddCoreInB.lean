@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section3.CyclicTwoCoreASevenStructure
 import Mathlib.Tactic
 
+
 /-!
 # The odd core of the maximal overgroup lies in `B = C_U(S)`
 
@@ -313,7 +314,7 @@ public theorem firstCase_cyclic_oddCore_le_B_of_a7_layer
     rw [hcard]
     exact Nat.coprime_two_left.mp
       (pPrimeCore_coprime_card (p := 2) (G := ↥M))
-  have hOsolv : IsSolvable O := odd_order_theorem O hOodd
+  have hOsolv : Group.IsSolvable O := odd_order_theorem O hOodd
   have hOnorm : IsNormalIn O M := by
     refine ⟨hOleM, ?_⟩
     intro m hm o ho

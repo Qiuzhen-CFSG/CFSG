@@ -466,7 +466,7 @@ private theorem qdSL_not_hasCyclicOrDihedralSylowTwo
       simpa [T] using
         (Subgroup.equivMapOfInjective Rsub eS.toMonoidHom eS.injective)
     let eQT : QuaternionGroup 2 ≃* T := eφ.trans (eRS.trans eRT)
-    rcases GorensteinWalter.subgroups_dihedral_twoGroup_cyclic_or_dihedral hm T with
+    rcases GorensteinWalter.subgroups_dihedral_twoGroup_cyclic_or_dihedral T with
       hTcyc | ⟨k, hk, ⟨eTk⟩⟩
     · exact quaternionGroupTwo_not_isCyclic ((eQT.isCyclic).mpr hTcyc)
     · exact quaternionGroupTwo_not_dihedral hk ⟨eQT.trans eTk⟩
@@ -495,7 +495,7 @@ private theorem hasCyclicOrDihedralSylowTwo_subgroup
       (Subgroup.equivMapOfInjective (S'.subgroupOf (Q : Subgroup G))
         eQ.toMonoidHom eQ.injective)
   let e : S ≃* S'' := eSS'.trans (eS'Q.trans eQS'')
-  rcases GorensteinWalter.subgroups_dihedral_twoGroup_cyclic_or_dihedral hm S'' with
+  rcases GorensteinWalter.subgroups_dihedral_twoGroup_cyclic_or_dihedral S'' with
     hcyc | ⟨k, hk, ⟨ek⟩⟩
   · exact Or.inl ((e.isCyclic).mpr hcyc)
   · exact Or.inr ⟨k, hk, ⟨e.trans ek⟩⟩

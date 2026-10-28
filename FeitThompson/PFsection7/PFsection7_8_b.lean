@@ -263,7 +263,7 @@ private theorem theorem_7_8_b_induced_contribution_eq_orbit_normSq_sum
     ∑ i : Section1.conjugateOrbitIndex H thetaRep.character,
       Complex.normSq (Section1.conjugateOrbitConj H thetaRep.character i 1)
   have heR : (Subgroup.index H : ℝ) ≠ 0 := by
-    haveI : H.FiniteIndex := inferInstance
+    have : H.FiniteIndex := inferInstance
     exact_mod_cast (Subgroup.FiniteIndex.index_ne_zero (H := H))
   have hthetaChar : Section1.IsCharacter thetaRep.character := by
     exact ⟨V, inferInstance, inferInstance, inferInstance, thetaRep, rfl⟩
@@ -277,7 +277,7 @@ private theorem theorem_7_8_b_induced_contribution_eq_orbit_normSq_sum
       H thetaRep htheta_irreducible
     have hrel_ne : H.relIndex
         (Section1.inertiaSubgroup H thetaRep.character) ≠ 0 := by
-      haveI :
+      have :
           (H.subgroupOf
             (Section1.inertiaSubgroup H thetaRep.character)).FiniteIndex :=
         inferInstance
@@ -371,13 +371,13 @@ private theorem theorem_7_8_b_isBook_of_isIrreducibleOnGroup
       (Section1.uliftRepresentation_character
         (G := G) (V := Fin n → ℂ) (rho := θRep) g).symm
   · rw [hθeq]
-    exact (Theory.Character.irreducible_iff_character_norm_one (ρ := θRep)).1
+    exact (irreducible_iff_character_norm_one (ρ := θRep)).1
       hθ_irreducible
 
 private theorem theorem_7_8_b_complete_family_index_of_book
     {G : Type u} {ι : Type v} [Group G] [Finite G] [Fintype ι]
-    {χ : ι → Theory.Character.ConjClassFunction G}
-    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    {χ : ι → ConjClassFunction G}
+    (hχ : IsCompleteIrreducibleCharacterFamily χ)
     {θ : Section1.ClassFunction G}
     (hθ : Section1.IsBookIrreducibleCharacter θ) :
     ∃ i : ι, Section1.ofConjClassFunction (χ i) = θ := by
@@ -385,16 +385,16 @@ private theorem theorem_7_8_b_complete_family_index_of_book
   rcases Section1.isBookIrreducibleCharacter_representation_witness_irreducible
       θ hθ with
     ⟨V, _hadd, _hmodule, _hfiniteDimensional, θRep, hθeq, hθ_irreducible⟩
-  let θConj : Theory.Character.ConjClassFunction G :=
-    Theory.Character.characterClassFunction θRep
+  let θConj : ConjClassFunction G :=
+    characterClassFunction θRep
   have hθConj_irreducible :
-      Theory.Character.IsIrreducibleConjCharacter θConj := by
+      IsIrreducibleConjCharacter θConj := by
     constructor
     · refine ⟨Module.finrank ℂ V, Section1.standardizeRepresentation θRep, ?_⟩
       ext c
       rcases ConjClasses.exists_rep c with ⟨g, rfl⟩
       exact (Section1.standardizeRepresentation_character θRep g).symm
-    · exact (Theory.Character.irreducible_iff_character_norm_one (ρ := θRep)).1
+    · exact (irreducible_iff_character_norm_one (ρ := θRep)).1
         hθ_irreducible
   rcases hχ.2.1 θConj hθConj_irreducible with ⟨i, hi⟩
   refine ⟨i, ?_⟩
@@ -478,10 +478,10 @@ private theorem theorem_7_8_b_conjugateOrbitConj_book
   · exact ⟨V, inferInstance, inferInstance, inferInstance,
       Section1.conjugateOrbitRepresentation H θRep i, hchar⟩
   · rw [hchar]
-    exact (Theory.Character.irreducible_iff_character_norm_one
+    exact (irreducible_iff_character_norm_one
       (ρ := Section1.conjugateOrbitRepresentation H θRep i)).1
         (by
-          letI : Representation.IsIrreducible θRep := hθ_irreducible
+          let : Representation.IsIrreducible θRep := hθ_irreducible
           simpa [Section1.conjugateOrbitRepresentation] using
             Section1.irreducible_conjugateRepresentation H θRep
               (Quotient.out i))
@@ -506,8 +506,8 @@ private theorem theorem_7_8_b_book_induced_eq_of_conjugateOrbit
 private theorem theorem_7_8_b_orbit_normSq_sum_eq_complete_fiber
     {G : Type u} {ι : Type v} [Group G] [Finite G] [Fintype ι] [DecidableEq ι]
     (H : Subgroup G) [Finite H] [H.Normal]
-    {χ : ι → Theory.Character.ConjClassFunction H}
-    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    {χ : ι → ConjClassFunction H}
+    (hχ : IsCompleteIrreducibleCharacterFamily χ)
     {θ : Section1.ClassFunction H}
     (hθ : Section1.IsBookIrreducibleCharacter θ) :
     (∑ o : Section1.conjugateOrbitIndex H θ,
@@ -518,7 +518,7 @@ private theorem theorem_7_8_b_orbit_normSq_sum_eq_complete_fiber
         (fun i => Complex.normSq
           (Section1.ofConjClassFunction (χ i) (1 : H))) := by
   classical
-  letI orbitFintype : Fintype (Section1.conjugateOrbitIndex H θ) :=
+  let orbitFintype : Fintype (Section1.conjugateOrbitIndex H θ) :=
     Fintype.ofFinite _
   let idx : Section1.conjugateOrbitIndex H θ → ι := fun o =>
     Classical.choose
@@ -623,8 +623,8 @@ private theorem theorem_7_8_b_exists_complete_nonprincipal_family
     {ζ : Section1.ClassFunction L}
     (h78 : theorem_7_8_hypothesis L H T S τ ν ζ) :
     ∃ (ι : Type) (_ : Fintype ι) (_ : DecidableEq ι)
-      (χ : ι → Theory.Character.ConjClassFunction (H.subgroupOf L)) (i0 : ι),
-      Theory.Character.IsCompleteIrreducibleCharacterFamily χ ∧
+      (χ : ι → ConjClassFunction (H.subgroupOf L)) (i0 : ι),
+      IsCompleteIrreducibleCharacterFamily χ ∧
         Section1.ofConjClassFunction (χ i0) =
           Section1.principalCharacter (H.subgroupOf L) ∧
         Finset.sum (Finset.univ.erase i0)
@@ -635,11 +635,11 @@ private theorem theorem_7_8_b_exists_complete_nonprincipal_family
           Section1.inducedCF (H.subgroupOf L)
             (Section1.ofConjClassFunction (χ i)) ∈ S := by
   classical
-  rcases Theory.Character.exists_completeIrreducibleCharacterFamily_sum_degree_normSq
+  rcases exists_completeIrreducibleCharacterFamily_sum_degree_normSq
       (G := H.subgroupOf L) with
     ⟨ι, hι, χ, hχ, hsum⟩
-  letI : Fintype ι := hι
-  letI : DecidableEq ι := Classical.decEq ι
+  let : Fintype ι := hι
+  let : DecidableEq ι := Classical.decEq ι
   rcases Section1.exists_principal_index_of_completeFamily
       (G := H.subgroupOf L) (chi := χ) hχ with
     ⟨i0, hprincipal⟩
@@ -701,8 +701,8 @@ private theorem theorem_7_8_b_member_contribution_eq_complete_fiber
     {ζ : Section1.ClassFunction L}
     (hHnorm : (H.subgroupOf L).Normal)
     (h78 : theorem_7_8_hypothesis L H T S τ ν ζ)
-    {χ : ι → Theory.Character.ConjClassFunction (H.subgroupOf L)}
-    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    {χ : ι → ConjClassFunction (H.subgroupOf L)}
+    (hχ : IsCompleteIrreducibleCharacterFamily χ)
     {i0 : ι}
     (hprincipal :
       Section1.ofConjClassFunction (χ i0) =
@@ -719,11 +719,11 @@ private theorem theorem_7_8_b_member_contribution_eq_complete_fiber
           (fun i => Complex.normSq
             (Section1.ofConjClassFunction (χ i) (1 : H.subgroupOf L))) := by
   classical
-  haveI : (H.subgroupOf L).Normal := hHnorm
+  have : (H.subgroupOf L).Normal := hHnorm
   rcases h78 with ⟨_hHL, hST, hpunctured, _hcoherent, _hν, _hζS, _hζ, _hdegζ⟩
   rcases (hpunctured (X : Section1.ClassFunction L)).mp X.2 with
     ⟨θ, hθ_irreducible, _hθ_ne, hXeq⟩
-  letI orbitFintype :
+  let orbitFintype :
       Fintype (Section1.conjugateOrbitIndex (H.subgroupOf L) θ) :=
     Fintype.ofFinite _
   have hθ_book := theorem_7_8_b_isBook_of_isIrreducibleOnGroup hθ_irreducible
@@ -847,13 +847,13 @@ public theorem theorem_7_8_b_degree_sum_identity
       ((Nat.card H : ℝ) - 1) / (H.relIndex L : ℝ) := by
   classical
   rcases h76 with ⟨hHL, hHnorm, _h71, _hA, _hT⟩
-  haveI : (H.subgroupOf L).Normal := hHnorm
+  have : (H.subgroupOf L).Normal := hHnorm
   rcases theorem_7_8_b_exists_complete_nonprincipal_family
       (L := L) (H := H) (T := T) (S := S)
       (τ := τ) (ν := ν) (ζ := ζ) h78 with
     ⟨ι, hι, hdec, χ, i0, hχ, hprincipal, hsum_nonprincipal, hmem⟩
-  letI : Fintype ι := hι
-  letI : DecidableEq ι := hdec
+  let : Fintype ι := hι
+  let : DecidableEq ι := hdec
   have hζS : ζ ∈ S := by
     rcases h78 with ⟨_hHL78, _hST, _hpunctured, _hcoherent, _hν,
       hζS, _hζ, _hdegζ⟩
@@ -1079,14 +1079,14 @@ public theorem theorem_7_8_b_component_norm_of_weightedSum_norm
   have h78orig := h78
   rcases h78 with ⟨_hHL, _hST, _hpunctured, _hcoherent, _hν, hζS, _hζ, hdegζ⟩
   have heC : (e : ℂ) ≠ 0 := by
-    haveI : (H.subgroupOf L).FiniteIndex := inferInstance
+    have : (H.subgroupOf L).FiniteIndex := inferInstance
     have hrel : H.relIndex L ≠ 0 := by
       simpa [Subgroup.relIndex] using
         (Subgroup.FiniteIndex.index_ne_zero (H := H.subgroupOf L))
     exact_mod_cast hrel
   have heR : (e : ℝ) ≠ 0 := by
     exact_mod_cast (show e ≠ 0 by
-      haveI : (H.subgroupOf L).FiniteIndex := inferInstance
+      have : (H.subgroupOf L).FiniteIndex := inferInstance
       simpa [e, Subgroup.relIndex] using
         (Subgroup.FiniteIndex.index_ne_zero (H := H.subgroupOf L)))
   have hhR : (Nat.card H : ℝ) ≠ 0 := by
@@ -1341,7 +1341,7 @@ private theorem theorem_7_8_b_tail_coefficient
   rcases theorem_7_8_degree_zero_combo_mem_integerSpanOn h78orig hφ with
     ⟨mφ, hmφ_ne, hdegφ, _hφcombo⟩
   have hrel_ne : (H.relIndex L : ℂ) ≠ 0 := by
-    haveI : (H.subgroupOf L).FiniteIndex := inferInstance
+    have : (H.subgroupOf L).FiniteIndex := inferInstance
     have hrel : H.relIndex L ≠ 0 := by
       simpa [Subgroup.relIndex] using
         (Subgroup.FiniteIndex.index_ne_zero (H := H.subgroupOf L))
@@ -1444,7 +1444,7 @@ private theorem theorem_7_8_b_beta_zeta_scalar_from_decomposition
         ⟨_hHL, _hST, _hpunctured, _hcoherent, _hν, hζS, _hζirr, hdegζ⟩)
   have hζ_one_div : ζ 1 / (H.relIndex L : ℂ) = 1 := by
     have heC : (H.relIndex L : ℂ) ≠ 0 := by
-      haveI : (H.subgroupOf L).FiniteIndex := inferInstance
+      have : (H.subgroupOf L).FiniteIndex := inferInstance
       have hrel : H.relIndex L ≠ 0 := by
         simpa [Subgroup.relIndex] using
           (Subgroup.FiniteIndex.index_ne_zero (H := H.subgroupOf L))
@@ -1568,7 +1568,7 @@ private theorem theorem_7_8_b_orderedInducedFamilyEnumeration
   rcases theorem_7_8_degree_zero_combo_mem_integerSpanOn h78orig hφS with
     ⟨m, hm_ne, hdegφ, _hcombo⟩
   have hrel_ne : (H.relIndex L : ℂ) ≠ 0 := by
-    haveI : (H.subgroupOf L).FiniteIndex := inferInstance
+    have : (H.subgroupOf L).FiniteIndex := inferInstance
     have hrel : H.relIndex L ≠ 0 := by
       simpa [Subgroup.relIndex] using
         (Subgroup.FiniteIndex.index_ne_zero (H := H.subgroupOf L))
@@ -1869,12 +1869,12 @@ public theorem theorem_7_8_b_projectionData_source_bridge
   have hclass : Section1.IsClassFunction (ν ζ) := by
     rcases h78 with
       ⟨_hHL78, _hST, _hpunctured, _hcoherent, hν, hζS, _hζirr, _hdegζ⟩
-    have hvirt : Theory.Character.IsVirtualCharacter (ν ζ) :=
+    have hvirt : IsVirtualCharacter (ν ζ) :=
       hν.2.1 ζ (Section5.integerSpan_of_mem S hζS)
     rcases hvirt with ⟨r, m, n, ρ, hνζeq⟩
     rw [hνζeq]
     intro x g
-    unfold Theory.Character.virtualCharacterOfRepresentations
+    unfold virtualCharacterOfRepresentations
     refine Finset.sum_congr rfl ?_
     intro i _hi
     have hchar :
@@ -1965,7 +1965,7 @@ public theorem theorem_7_8_b_projectionData_source_bridge
   have hζ_one : ζ 1 = (H.relIndex L : ℂ) := by
     simpa [Section1.degree_apply] using hdegζ
   have heC : (H.relIndex L : ℂ) ≠ 0 := by
-    haveI : (H.subgroupOf L).FiniteIndex := inferInstance
+    have : (H.subgroupOf L).FiniteIndex := inferInstance
     have hrel : H.relIndex L ≠ 0 := by
       simpa [Subgroup.relIndex] using
         (Subgroup.FiniteIndex.index_ne_zero (H := H.subgroupOf L))
@@ -1989,7 +1989,7 @@ public theorem theorem_7_8_b
   rw [theorem_7_8_b_statement]
   intro h76 hτ h78 hproj hbound
   have he : 0 < H.relIndex L := by
-    haveI : (H.subgroupOf L).FiniteIndex := inferInstance
+    have : (H.subgroupOf L).FiniteIndex := inferInstance
     have hrel : H.relIndex L ≠ 0 := by
       simpa [Subgroup.relIndex] using
         (Subgroup.FiniteIndex.index_ne_zero (H := H.subgroupOf L))
@@ -2117,7 +2117,7 @@ public theorem theorem_7_8_b_remainder_bound
                 Section5.cfNormSq r ≤ (H.relIndex L : ℝ) - 1 := by
   intro h76 hτ h78 hbound a r hdecomp
   have he : 0 < H.relIndex L := by
-    haveI : (H.subgroupOf L).FiniteIndex := inferInstance
+    have : (H.subgroupOf L).FiniteIndex := inferInstance
     have hrel : H.relIndex L ≠ 0 := by
       simpa [Subgroup.relIndex] using
         (Subgroup.FiniteIndex.index_ne_zero (H := H.subgroupOf L))

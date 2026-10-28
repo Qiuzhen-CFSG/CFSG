@@ -1,0 +1,256 @@
+module
+public import CFSG.Quasithin.ChapterF.Section01.SourceRecognition.DGS85.CommutingNontrivial.RecognizedEscape
+public import CFSG.Quasithin.ChapterF.Section01.SourceRecognition.DGS85.CommutingNontrivial.QuotientOmegaAction
+public import Theory.Representation.RankOne.QuadraticRecognition.ElementFixedSpaces
+
+/-!
+# Uniform linear field-square estimates in the reciprocal argument
+
+For an actual binary SL₂ quotient, its Sylow omega-center is the whole
+Sylow. The proved original 8.1(h) action therefore makes the entire full
+edge Sylow quadratic on Z_lambda. Its exact quotient image agrees with
+the Sylow used for fixed-space generation; faithfulness follows from the
+existing full-action theorem, including the field-two case.
+
+If reverse core containment held, corrected 5.12 and the natural-case
+contradiction force the Sylow fixed index to be at least q². Complementary
+Sylow fixed spaces make this index identical for every nonzero subgroup
+of the quotient Sylow. Identity vector coordinates give the uniform
+bound on the original centralizer indices for every escaping subgroup
+of the original full edge Sylow, including V_beta intersect Q_alpha'.
+The final theorem applies it to the literal reduced F1.11 configuration.
+
+Source: DGS, *Groups and Graphs* (1985), 8.2 (*)--(**), pp.134--135,
+using 8.1(h), 5.10 and corrected 5.12. This establishes the linear
+numerical reduction, not the remaining general reciprocal contradiction
+or the later 8.3--8.7 conclusions.
+-/
+
+@[expose] public noncomputable section
+open Subgroup Representation Representation.BinaryOffender
+open Representation.RankOne.QuadraticRecognition
+open scoped MatrixGroups IsMulCommutative
+namespace CFSG.Quasithin.ChapterF.Source.DGS85.CommutingNontrivial
+open Subgroup.CosetGeometry.RankTwo Theory.GroupTheory.AmalgamGraph
+universe u
+variable {G : Type u} [Group G] {P : Fin 2 → Subgroup G} {B : Subgroup G}
+
+private theorem linear_omega_preimage {K : Type u} [Field K] [Finite K] [CharP K 2]
+    (L : Subgroup G) [Finite L] (R : Sylow 2 L)
+    (e : (L ⧸ pCore 2 L) ≃* SL(2,K)) :
+    quotientSylowOmegaPreimage L R = (R : Subgroup L).map L.subtype := by
+  let q := QuotientGroup.mk' (pCore 2 L)
+  let T := R.mapSurjective (f := e.toMonoidHom.comp q)
+    (e.surjective.comp (QuotientGroup.mk'_surjective _))
+  have homega : omegaCenterIn ((R : Subgroup L).map q) = (R : Subgroup L).map q := by
+    apply map_injective (f := e.toMonoidHom) e.injective
+    rw [NilesRankOneKernel.omegaCenterIn_map_injective e.toMonoidHom e.injective,map_map]
+    change omegaCenterIn (T : Subgroup SL(2,K)) = (T : Subgroup SL(2,K))
+    rw [omegaCenterIn_eq_omegaOneAmbient,sl2_omega_center_eq]
+  unfold quotientSylowOmegaPreimage
+  rw [homega,comap_map_eq_self]
+  rw [QuotientGroup.ker_mk']
+  exact pCore_isPGroup.le_sylow_of_normal R
+
+/-- For a linear quotient, original 8.1(h) makes the entire full-edge Sylow
+quadratic on the moving center, not merely its nonzero moving subgroup. -/
+theorem source_moving_linear_full_sylow_quadratic (h : LocallyRankOneTriple P B)
+    (hB : ∃ T : Sylow 2 B, (T : Subgroup B) = pCore 2 B)
+    (d : EarlierLocalTheorems (family P))
+    {a beta a' : Vertex (family P)} (hc : IsCriticalPair (family P) a a')
+    (hab : (graph (family P)).Adj a beta)
+    (hd : (graph (family P)).dist beta a' + 1 = b (family P))
+    (hb : 1 < b (family P)) (hcomm : ⁅Z (family P) a, Z (family P) a'⁆ = ⊥)
+    (models : ∀ v : Vertex (family P), IsRankOneModel (d.localGroup v ⧸ pCore 2 (d.localGroup v)))
+    (w : (graph (family P)).neighborSet a')
+    (hm : ⁅V (family P) beta 1 ⊓ Q (family P) a', Z (family P) w.val⁆ ≠ ⊥)
+    {K : Type u} [Field K] [Finite K] [CharP K 2]
+    (e : (d.localGroup w.val ⧸ pCore 2 (d.localGroup w.val)) ≃* SL(2,K)) :
+    let E := (stabilizer (family P) w.val ⊓ stabilizer (family P) a').pCoreIn 2
+    ⁅⁅Z (family P) w.val,E⁆,E⁆ = ⊥ := by
+  let := finite_endpoints h
+  let : Finite (d.localGroup w.val) := Finite.of_injective
+    (inclusion (d.local_le w.val)) (inclusion_injective _)
+  obtain ⟨R,hR⟩ := source_edge_core_local_sylow h hB d
+    (show (graph (family P)).Adj a' w.val from w.property).symm
+  have hq := (source_critical_quotient_omega_action h hB d hc hab hd hb hcomm models w hm R hR).2
+  rwa [linear_omega_preimage _ R e,hR] at hq
+
+private theorem prepared_sylow_image (P₀ L S₀ : Subgroup G) (hLP : L ≤ P₀)
+    (T : Sylow 2 P₀) (hTS : (T : Subgroup P₀).map P₀.subtype = S₀)
+    (hTL : (T : Subgroup P₀).map P₀.subtype ≤ L)
+    {D : Type*} [Group D] (q : L →* D) :
+    ((T : Subgroup P₀).subgroupOf (L.subgroupOf P₀)).map
+      (q.comp (subgroupOfEquivOfLe hLP).toMonoidHom) = (S₀.subgroupOf L).map q := by
+  rw [←map_map]
+  congr 1
+  ext l
+  constructor
+  · rintro ⟨x,hx,rfl⟩
+    exact hTS ▸ mem_map_of_mem P₀.subtype hx
+  · intro hl
+    obtain ⟨x,hx,he⟩ := hTS.symm ▸ hl
+    refine ⟨⟨x,hTL (mem_map_of_mem P₀.subtype hx)⟩,hx,?_⟩
+    exact Subtype.ext he
+
+/-- All nonzero subgroups of a quadratic Sylow have the same fixed space
+on a module generated by its Sylow fixed space with zero global fixed space. -/
+private theorem linear_uniform_fixed {K W : Type*} [Field K] [Finite K] [CharP K 2]
+    [AddCommGroup W] [Module (ZMod 2) W]
+    (ρ : Representation (ZMod 2) SL(2,K) W) (S : Sylow 2 SL(2,K))
+    (hq : IsQuadratic ρ S) (hgen : GeneratedByFixedSpace ρ S)
+    (hfix : fixedSpace ρ ⊤ = ⊥) (A : Subgroup SL(2,K)) (hAS : A ≤ S) (hne : A ≠ ⊥) :
+    fixedSpace ρ A = fixedSpace ρ S := by
+  obtain ⟨g,hg⟩ := SetLike.exists_not_mem_of_ne_top (normalizer (S : Set SL(2,K)))
+    (Matrix.SpecialLinearGroup.sylow_normalizer_ne_top S)
+  have hST : S ≠ g • S := fun h => hg (Sylow.smul_eq_iff_mem_normalizer.mp h.symm)
+  have hcompl := sl2_sylow_fixed_isCompl ρ S (g • S) hST hq hgen hfix
+  have hu := (SL2SylowFixedRecognition.fixedSpaceHypotheses_of_isCompl ρ S (g • S) hcompl).uniform
+  obtain ⟨a,ha,ha1⟩ := A.bot_or_exists_ne_one.resolve_left hne
+  exact le_antisymm ((fixedSpace_antitone ρ (zpowers_le.mpr ha)).trans
+    (hu a (hAS ha) ha1).le) (fixedSpace_antitone ρ hAS)
+
+/-- The uniform field-square bound (8.2)(**) at the moving linear vertex.
+It applies to every subgroup of the literal full-edge Sylow escaping Q.
+The module, full-Sylow quadraticity, faithful action and corrected generation
+are all constructed, including the SL₂(2) endpoint. -/
+theorem source_moving_linear_field_square_bound (h : LocallyRankOneTriple P B)
+    (hB : ∃ T : Sylow 2 B, (T : Subgroup B) = pCore 2 B)
+    (d : EarlierLocalTheorems (family P))
+    {a beta a' : Vertex (family P)} (hc : IsCriticalPair (family P) a a')
+    (hab : (graph (family P)).Adj a beta)
+    (hd : (graph (family P)).dist beta a' + 1 = b (family P))
+    (hb : 1 < b (family P)) (hcomm : ⁅Z (family P) a, Z (family P) a'⁆ = ⊥)
+    (models : ∀ v : Vertex (family P), IsRankOneModel (d.localGroup v ⧸ pCore 2 (d.localGroup v)))
+    (hreverse : V (family P) a' 1 ≤ Q (family P) beta)
+    (w : (graph (family P)).neighborSet a')
+    (hm : ⁅V (family P) beta 1 ⊓ Q (family P) a', Z (family P) w.val⁆ ≠ ⊥)
+    {K : Type u} [Field K] [Finite K] [CharP K 2]
+    {n : ℕ} (hn : 0 < n) (hK : Nat.card K = 2^n)
+    (e : (d.localGroup w.val ⧸ pCore 2 (d.localGroup w.val)) ≃* SL(2,K))
+    (A : Subgroup G)
+    (hAE : A ≤ (stabilizer (family P) w.val ⊓ stabilizer (family P) a').pCoreIn 2)
+    (hAQ : ¬ A ≤ Q (family P) w.val) :
+    Nat.card K ^ 2 ≤ (centralizer (A : Set G)).relIndex (Z (family P) w.val) := by
+  let := finite_endpoints h
+  let := CommutingOneProfile.source_center_elementary h w.val
+  let := source_center_nontrivial h w.val
+  let F := family P
+  let L := d.localGroup w.val
+  let Z₀ := Z F w.val
+  let E := (stabilizer F w.val ⊓ stabilizer F a').pCoreIn 2
+  let q := e.toMonoidHom.comp (QuotientGroup.mk' (pCore 2 L))
+  let : Finite L := Finite.of_injective (inclusion (d.local_le w.val)) (inclusion_injective _)
+  let : Finite Z₀ := Finite.of_injective (inclusion (Z_le_stabilizer F w.val)) (inclusion_injective _)
+  obtain ⟨hz,_,_,_,T,R,hTR,_⟩ := source_moving_actor h d hc hab hd hb hcomm w hm
+  have hTE : (T : Subgroup (stabilizer F w.val)).map (stabilizer F w.val).subtype = E :=
+    sylow_image_eq_edge_core _ _ inf_le_left
+      (source_edge_core_sylow h hB (show (graph F).Adj a' w.val from w.property).symm) T
+      (le_inf (map_subtype_le _) (hTR ▸ map_subtype_le _))
+  have hEL : E ≤ L := by rw [←hTE]; exact d.sylow_le w.val T
+  have hAL : A ≤ L := hAE.trans hEL
+  obtain ⟨ρ,hact⟩ := source_exists_center_quotient_action h d w.val e
+  obtain ⟨S,hS,hgen,hres⟩ := source_center_module_prepared_of_center_eq_bot h d w.val hz T e ρ hact
+  have hSE : (E.subgroupOf L).map q = (S : Subgroup SL(2,K)) := by
+    rw [hS]
+    exact (prepared_sylow_image _ L E (d.local_le w.val) T hTE (d.sylow_le w.val T) q).symm
+  have hZL : Z₀ ≤ L := pGroup_le_localGroup F d w.val _
+    (IsElementaryAbelian.isPGroup 2 _) (Z_le_stabilizer F w.val)
+  let δ := centerSection L Z₀ hZL ((d.local_le w.val).trans (stabilizer_normalizes_Z F w.val)) q ρ hact
+  have hquad : IsQuadratic ρ S := by
+    rw [←hSE]
+    apply BinaryConjugationSection.isQuadratic_of_triple_commutator_le L Z₀ ⊥ E ρ q δ
+    have he := source_moving_linear_full_sylow_quadratic h hB d hc hab hd hb hcomm models w hm e
+    rw [commutator_comm E,commutator_comm E]
+    exact he.le
+  have hf := linear_quotient_action_faithful hn hK e ρ hres
+  have hfix : fixedSpace ρ ⊤ = ⊥ := bot_unique ((fixedSpace_antitone ρ le_top).trans hres.le)
+  have hbound : Nat.card (S : Subgroup SL(2,K)) ^ 2 ≤ Nat.card (Additive Z₀ ⧸ fixedSpace ρ S) := by
+    by_contra! hs
+    have hnat := (binary_rank_one_bound_and_recognition (.sl2 K n hn hK (MulEquiv.refl _))
+      ρ hf S S le_rfl hquad hgen hres).2 hs
+    have hmark := source_natural_center_of_recognition h d w.val hz e ρ S hact hnat
+    have hH : ⁅V F beta 1 ⊓ Q F a',V F a' 1⁆ ≠ ⊥ := by
+      intro hh
+      exact hm (bot_unique ((commutator_mono le_rfl (Z_neighbor_le_V F w.property)).trans hh.le))
+    exact source_reciprocal_escape_of_natural_moving_neighbor h hB d hc hab hd hb hcomm
+      models hH w hmark hreverse
+  have hAS : (A.subgroupOf L).map q ≤ S := hSE ▸ map_mono (subgroupOf_mono L hAE)
+  have hne : (A.subgroupOf L).map q ≠ ⊥ := by
+    intro he
+    have hk := (Subgroup.map_eq_bot_iff _).mp he
+    rw [local_quotient_kernel F d w.val e] at hk
+    exact hAQ (fun a ha => hk (show (⟨a,hAL ha⟩ : L) ∈ A.subgroupOf L from ha))
+  have hfixed := linear_uniform_fixed ρ S hquad hgen hfix _ hAS hne
+  have hi := center_action_fixed_index L Z₀ A hZL δ.normalized hAL q ρ hact
+  rw [hfixed] at hi
+  rw [←hi]
+  have hcS : Nat.card (S : Subgroup SL(2,K)) = Nat.card K :=
+    Nat.card_congr (Matrix.SpecialLinearGroup.sylowEquivAdditive K 2 S).symm.toEquiv
+  rwa [hcS] at hbound
+
+/-- The field-square estimate on the literal moving actor A=V_beta∩Q_alpha'. -/
+theorem source_moving_linear_original_field_square_bound (h : LocallyRankOneTriple P B)
+    (hB : ∃ T : Sylow 2 B, (T : Subgroup B) = pCore 2 B)
+    (d : EarlierLocalTheorems (family P))
+    {a beta a' : Vertex (family P)} (hc : IsCriticalPair (family P) a a')
+    (hab : (graph (family P)).Adj a beta)
+    (hd : (graph (family P)).dist beta a' + 1 = b (family P))
+    (hb : 1 < b (family P)) (hcomm : ⁅Z (family P) a, Z (family P) a'⁆ = ⊥)
+    (models : ∀ v : Vertex (family P), IsRankOneModel (d.localGroup v ⧸ pCore 2 (d.localGroup v)))
+    (hreverse : V (family P) a' 1 ≤ Q (family P) beta)
+    (w : (graph (family P)).neighborSet a')
+    (hm : ⁅V (family P) beta 1 ⊓ Q (family P) a', Z (family P) w.val⁆ ≠ ⊥)
+    {K : Type u} [Field K] [Finite K] [CharP K 2]
+    {n : ℕ} (hn : 0 < n) (hK : Nat.card K = 2^n)
+    (e : (d.localGroup w.val ⧸ pCore 2 (d.localGroup w.val)) ≃* SL(2,K)) :
+    let A := V (family P) beta 1 ⊓ Q (family P) a'
+    Nat.card K ^ 2 ≤ (centralizer (A : Set G)).relIndex (Z (family P) w.val) := by
+  apply source_moving_linear_field_square_bound h hB d hc hab hd hb hcomm models hreverse w hm hn hK e
+  · exact inf_le_right.trans (by simpa only [inf_comm] using Noncommuting.graph_Q_le_edgeCore h w.property)
+  · exact (source_moving_actor h d hc hab hd hb hcomm w hm).2.2.2.1
+
+/-- Uniform field-square bounds for the selected original reduced moving
+neighbor and every escaping actor in its full-edge Sylow. No new module,
+faithfulness, quadraticity or generation premise is introduced. -/
+theorem reduced_moving_linear_field_square_bounds
+    {J : Fin 2 → Subgroup G} {S : Subgroup G} (h : HypothesisF11 J S)
+    (hob : ∀ v w : Vertex (Reduction.reducedFamily J S),
+      (graph (Reduction.reducedFamily J S)).Adj v w →
+      ¬ stabilizer (Reduction.reducedFamily J S) v ≤ normalizer
+        ((Q (Reduction.reducedFamily J S) w ⊓ Q (Reduction.reducedFamily J S) v :
+          Subgroup (Reduction.G₀ J S)) : Set (Reduction.G₀ J S)))
+    (models : ∀ v : Vertex (Reduction.reducedFamily J S),
+      IsRankOneModel (graphLocalGroup (Reduction.reducedFamily J S) v ⧸
+        pCore 2 (graphLocalGroup (Reduction.reducedFamily J S) v)))
+    {a beta a' : Vertex (Reduction.reducedFamily J S)}
+    (hc : IsCriticalPair (Reduction.reducedFamily J S) a a')
+    (hab : (graph (Reduction.reducedFamily J S)).Adj a beta)
+    (hd : (graph (Reduction.reducedFamily J S)).dist beta a' + 1 = b (Reduction.reducedFamily J S))
+    (hb : 1 < b (Reduction.reducedFamily J S))
+    (hcomm : ⁅Z (Reduction.reducedFamily J S) a, Z (Reduction.reducedFamily J S) a'⁆ = ⊥)
+    (hne : ⁅V (Reduction.reducedFamily J S) beta 1 ⊓ Q (Reduction.reducedFamily J S) a',
+      V (Reduction.reducedFamily J S) a' 1⁆ ≠ ⊥)
+    (hreverse : V (Reduction.reducedFamily J S) a' 1 ≤ Q (Reduction.reducedFamily J S) beta)
+    {K : Type u} [Field K] [Finite K] [CharP K 2]
+    {n : ℕ} (hn : 0 < n) (hK : Nat.card K = 2^n) :
+    let F := Reduction.reducedFamily J S
+    let A₀ := V F beta 1 ⊓ Q F a'
+    ∃ w : (graph F).neighborSet a', ⁅A₀,Z F w.val⁆ ≠ ⊥ ∧
+      ∀ _e : (graphLocalGroup F w.val ⧸ pCore 2 (graphLocalGroup F w.val)) ≃* SL(2,K),
+        Nat.card K ^ 2 ≤ (centralizer (A₀ : Set (Reduction.G₀ J S))).relIndex (Z F w.val) ∧
+        ∀ A : Subgroup (Reduction.G₀ J S),
+          A ≤ (stabilizer F w.val ⊓ stabilizer F a').pCoreIn 2 → ¬ A ≤ Q F w.val →
+          Nat.card K ^ 2 ≤ (centralizer (A : Set (Reduction.G₀ J S))).relIndex (Z F w.val) := by
+  dsimp only
+  let h' := Reduction.reduced_triple h
+  let d := Reduction.reducedEarlierLocalTheorems h hob
+  obtain ⟨w,hm,_⟩ := exists_moving_neighbor (Reduction.reducedFamily J S)
+    (fun v => (source_Z_Q_U h' v).1) beta a' hne
+  refine ⟨w,hm,fun e => ⟨?_,?_⟩⟩
+  · exact source_moving_linear_original_field_square_bound h' (Reduction.reduced_borel_core_sylow h)
+      d hc hab hd hb hcomm models hreverse w hm hn hK e
+  · exact fun A hAE hAQ => source_moving_linear_field_square_bound h'
+      (Reduction.reduced_borel_core_sylow h) d hc hab hd hb hcomm models hreverse w hm hn hK e A hAE hAQ
+
+end CFSG.Quasithin.ChapterF.Source.DGS85.CommutingNontrivial

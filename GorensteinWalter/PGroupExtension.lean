@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Classification
 public import Glauberman.ZJTheorem
 
+
 /-!
 # Small p-group extension and quotient-action bridges
 

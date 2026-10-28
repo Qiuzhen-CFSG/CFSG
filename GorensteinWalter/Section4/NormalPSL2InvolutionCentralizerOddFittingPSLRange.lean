@@ -9,6 +9,7 @@ public import GorensteinWalter.Section4.PSL2ReflectedTorusCard
 import GorensteinWalter.Section2.FStarCommute
 import Mathlib.Tactic
 
+
 /-!
 # Odd Fitting subgroups in involution centralizers of normal `PSL₂` extensions
 
@@ -153,7 +154,6 @@ public theorem normalPSL2_involutionCentralizer_oddFitting_image_le_pslRange
     have hlC : (l : R) ∈ C := by
       rw [Subgroup.mem_centralizer_singleton_iff]
       apply hfinj
-      change f ((l : R) * t) = f (t * (l : R))
       rw [map_mul, map_mul, hfl]
       have hxcomm := Subgroup.mem_centralizer_singleton_iff.mp hx.1
       simpa [tau] using hxcomm
@@ -241,7 +241,7 @@ public theorem normalPSL2_involutionCentralizer_oddFitting_image_le_pslRange
       simpa [map_mul, halpha_t] using h
     have hXleT : X ≤ T :=
       cyclic_subgroup_containing_involution_le_reflected_torus
-        htauPinv T s hTcyc htT hsI hsT hsInv hCT hXcyc hXcent htX
+        htauPinv T s htT hsI hsT hsInv hCT hXcyc hXcent htX
     have halphau : alphaP u ∈ T :=
       hXleT (Subgroup.mem_map.mpr ⟨u, huT, rfl⟩)
     apply Subgroup.mem_map.mpr

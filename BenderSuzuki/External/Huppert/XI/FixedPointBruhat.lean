@@ -97,6 +97,7 @@ private theorem xi1115_fixed_point_alpha_coordinate
     simp only [CharTwo.two_eq_zero, mul_zero, add_zero]
 
 set_option maxHeartbeats 800000 in
+-- The Bruhat-coordinate normalization needs additional simplifier heartbeats.
 public theorem xi1115_theta_fixed_points_of_bruhat_product
     {K F D : Type*} [Field K] [CharP K 2]
     [Group F] [Group D] [MulDistribMulAction D F]

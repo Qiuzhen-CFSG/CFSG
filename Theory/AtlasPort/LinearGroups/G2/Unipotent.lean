@@ -1,0 +1,150 @@
+module
+
+/-
+Copyright (c) 2026 Gerald Höhn and the ATLAS contributors. All rights reserved.
+Covered by the ATLAS Research and Attribution License 1.0 (LICENSES/ATLAS.txt).
+Source: Atlas/LinearGroups/G2/Unipotent.lean, revision
+8eabb35afe2b5e45bf913a2d05c53e558d2e2917; see LICENSES/ATLAS-CITATION.cff.
+Changes: CFSG import paths and Lean 4.33 public module boundaries.
+-/
+
+public import Theory.AtlasPort.LinearGroups.G2.RootGroups
+public import Mathlib.Algebra.Group.Subgroup.Lattice
+public import Mathlib.SetTheory.Cardinal.Finite
+
+/-! Ordered products of the six root families have unique coordinates, giving the unipotent parametrization. -/
+
+@[expose] public section
+
+namespace Atlas.G2
+open Atlas.SplitOctonion Explicit
+variable {K : Type*} [Field K]
+set_option maxRecDepth 4096
+set_option maxHeartbeats 4000000
+
+/-- Ordered product in the six actual root groups. -/
+def unipotentProduct (t : Fin 6 → K) : Model K :=
+  rootA (t 0) * rootB (t 1) * rootC (t 2) * rootD (t 3) * rootE (t 4) * rootF (t 5)
+
+def unipotentParameters (g : Model K) : Fin 6 → K :=
+  let d := -g.val (basisVector 2) 0
+  let e := -g.val (basisVector 2) 1
+  let f := -g.val (basisVector 1) 0
+  let c := g.val (basisVector 6) 2
+  ![g.val (basisVector 7) 1+c*d+c*e*f-d^2*f,
+    g.val (basisVector 7) 2-c*f,c,d,e,f]
+
+def unipotentProductParameters (t u : Fin 6 → K) : Fin 6 → K :=
+  ![u 0-u 1*t 4+3*u 2*t 3+3*u 2*t 4*t 5-3*(u 3)^2*t 5+
+      3*u 3*u 4*(t 5)^2-6*u 3*t 3*t 5-3*u 3*t 4*(t 5)^2-
+      (u 4)^2*(t 5)^3+3*u 4*t 3*(t 5)^2+u 4*t 4*(t 5)^3+t 0,
+    u 1-3*u 2*t 5+3*u 3*(t 5)^2-u 4*(t 5)^3+t 1,
+    u 2-2*u 3*t 5+u 4*(t 5)^2+t 2,
+    u 3-u 4*t 5+t 3,u 4+t 4,u 5+t 5]
+
+theorem unipotentParameters_product (t : Fin 6 → K) :
+    unipotentParameters (unipotentProduct t) = t := by
+  ext i; fin_cases i <;> simp [unipotentParameters,basisVector,unipotentProduct,rootA,rootB,rootC,rootD,rootE,rootF,rootAEquiv,rootBEquiv,rootCEquiv,rootDEquiv,rootEEquiv,rootFEquiv,rootALinear,rootBLinear,rootCLinear,rootDLinear,rootELinear,rootFLinear,rootAApply,rootBApply,rootCApply,rootDApply,rootEApply,rootFApply]; ring
+
+theorem unipotentProduct_injective : Function.Injective (unipotentProduct (K := K)) :=
+  Function.LeftInverse.injective unipotentParameters_product
+
+theorem unipotentProduct_mul (t u : Fin 6 → K) :
+    unipotentProduct t * unipotentProduct u = unipotentProduct (unipotentProductParameters t u) := by
+  apply Subtype.ext; apply LinearEquiv.ext; intro x
+  ext i; fin_cases i <;> simp [unipotentProductParameters,unipotentProduct,rootA,rootB,rootC,rootD,rootE,rootF,rootAEquiv,rootBEquiv,rootCEquiv,rootDEquiv,rootEEquiv,rootFEquiv,rootALinear,rootBLinear,rootCLinear,rootDLinear,rootELinear,rootFLinear,rootAApply,rootBApply,rootCApply,rootDApply,rootEApply,rootFApply] <;> ring
+
+
+def unipotentInverseParameters (t : Fin 6 → K) : Fin 6 → K :=
+  let e := -t 4
+  let d := e*t 5-t 3
+  let c := 2*d*t 5-e*(t 5)^2-t 2
+  let b := 3*c*t 5-3*d*(t 5)^2+e*(t 5)^3-t 1
+  let a := b*t 4-3*c*t 3-3*c*t 4*t 5+3*d^2*t 5-
+      3*d*e*(t 5)^2+6*d*t 3*t 5+3*d*t 4*(t 5)^2+
+      e^2*(t 5)^3-3*e*t 3*(t 5)^2-e*t 4*(t 5)^3-t 0
+  ![a,b,c,d,e,-t 5]
+
+theorem unipotentProductParameters_inv (t : Fin 6 → K) :
+    unipotentProductParameters t (unipotentInverseParameters t) = 0 := by
+  ext i; fin_cases i <;> simp [unipotentProductParameters,unipotentInverseParameters] <;> ring
+
+@[simp] theorem rootA_zero : rootA (0 : K) = 1 := by
+  apply mul_left_cancel (a := rootA (0 : K))
+  simpa using rootA_add (0 : K) 0
+@[simp] theorem rootB_zero : rootB (0 : K) = 1 := by
+  apply mul_left_cancel (a := rootB (0 : K))
+  simpa using rootB_add (0 : K) 0
+@[simp] theorem rootC_zero : rootC (0 : K) = 1 := by
+  apply mul_left_cancel (a := rootC (0 : K))
+  simpa using rootC_add (0 : K) 0
+@[simp] theorem rootD_zero : rootD (0 : K) = 1 := by
+  apply mul_left_cancel (a := rootD (0 : K))
+  simpa using rootD_add (0 : K) 0
+@[simp] theorem rootE_zero : rootE (0 : K) = 1 := by
+  apply mul_left_cancel (a := rootE (0 : K))
+  simpa using rootE_add (0 : K) 0
+@[simp] theorem rootF_zero : rootF (0 : K) = 1 := by
+  apply mul_left_cancel (a := rootF (0 : K))
+  simpa using rootF_add (0 : K) 0
+@[simp] theorem unipotentProduct_zero : unipotentProduct (0 : Fin 6 → K) = 1 := by
+  simp [unipotentProduct]
+
+theorem unipotentProduct_inv (t : Fin 6 → K) :
+    (unipotentProduct t)⁻¹ = unipotentProduct (unipotentInverseParameters t) := by
+  apply inv_eq_of_mul_eq_one_right
+  rw [unipotentProduct_mul,unipotentProductParameters_inv,unipotentProduct_zero]
+
+/-- The six-parameter range is a subgroup, established by polynomial product and inverse laws. -/
+def unipotentRange : Subgroup (Model K) where
+  carrier := Set.range unipotentProduct
+  one_mem' := ⟨0,unipotentProduct_zero⟩
+  mul_mem' := by
+    rintro _ _ ⟨t,rfl⟩ ⟨u,rfl⟩
+    exact ⟨unipotentProductParameters t u,(unipotentProduct_mul t u).symm⟩
+  inv_mem' := by
+    rintro _ ⟨t,rfl⟩
+    exact ⟨unipotentInverseParameters t,(unipotentProduct_inv t).symm⟩
+
+/-- The subgroup generated by the six root families. -/
+def unipotent : Subgroup (Model K) :=
+  Subgroup.closure (Set.range rootA ∪ Set.range rootB ∪ Set.range rootC ∪
+    Set.range rootD ∪ Set.range rootE ∪ Set.range rootF)
+
+theorem unipotentProduct_mem (t : Fin 6 → K) : unipotentProduct t ∈ unipotent := by
+  have ha : rootA (t 0) ∈ unipotent := Subgroup.subset_closure (by simp)
+  have hb : rootB (t 1) ∈ unipotent := Subgroup.subset_closure (by simp)
+  have hc : rootC (t 2) ∈ unipotent := Subgroup.subset_closure (by simp)
+  have hd : rootD (t 3) ∈ unipotent := Subgroup.subset_closure (by simp)
+  have he : rootE (t 4) ∈ unipotent := Subgroup.subset_closure (by simp)
+  have hf : rootF (t 5) ∈ unipotent := Subgroup.subset_closure (by simp)
+  exact unipotent.mul_mem (unipotent.mul_mem (unipotent.mul_mem
+    (unipotent.mul_mem (unipotent.mul_mem ha hb) hc) hd) he) hf
+
+theorem unipotent_eq_range : (unipotent : Subgroup (Model K)) = unipotentRange := by
+  apply le_antisymm
+  · apply (Subgroup.closure_le unipotentRange).mpr
+    intro g hg
+    rcases hg with (((((hg|hg)|hg)|hg)|hg)|hg)
+    all_goals obtain ⟨a,rfl⟩ := hg
+    · exact ⟨![a,0,0,0,0,0],by simp [unipotentProduct]⟩
+    · exact ⟨![0,a,0,0,0,0],by simp [unipotentProduct]⟩
+    · exact ⟨![0,0,a,0,0,0],by simp [unipotentProduct]⟩
+    · exact ⟨![0,0,0,a,0,0],by simp [unipotentProduct]⟩
+    · exact ⟨![0,0,0,0,a,0],by simp [unipotentProduct]⟩
+    · exact ⟨![0,0,0,0,0,a],by simp [unipotentProduct]⟩
+  · rintro g ⟨t,rfl⟩
+    exact unipotentProduct_mem t
+
+noncomputable def unipotentEquiv : (Fin 6 → K) ≃ unipotent (K := K) :=
+  Equiv.ofBijective (fun t => ⟨unipotentProduct t,unipotentProduct_mem t⟩) ⟨
+    fun _ _ h => unipotentProduct_injective (congrArg Subtype.val h), by
+      intro ⟨g,hg⟩
+      rw [unipotent_eq_range] at hg
+      obtain ⟨t,ht⟩ := hg
+      exact ⟨t,Subtype.ext ht⟩⟩
+
+theorem card_unipotent [Finite K] : Nat.card (unipotent (K := K)) = Nat.card K ^ 6 := by
+  rw [← Nat.card_congr unipotentEquiv]
+  simp only [Nat.card_fun, Nat.card_fin]
+end Atlas.G2

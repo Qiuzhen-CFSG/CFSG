@@ -1,0 +1,135 @@
+module
+
+public import Theory.SpecificGroups.ReeF4.ParabolicAmalgam.BinaryLocals.SuzukiProjection.MatrixIdentification.Basic
+public import Theory.SpecificGroups.ReeF4.ParabolicAmalgam.BinaryLocals.SuzukiProjection.MatrixIdentification.Representation.FourSpace
+public import Theory.SpecificGroups.ReeF4.ParabolicAmalgam.BinaryLocals.SuzukiProjection.MatrixIdentification.Representation.Kernel
+
+/-!
+# The binary Levi action on its four half-root lines
+
+Restriction of the actual 52-dimensional matrix action constructs an
+unconditional homomorphism `splitLeviRepresentation`. The intertwining
+relation is preserved by multiplication and inversion, so the four generator
+calculations extend to every element of the generated Levi. The inclusion of
+the four-space makes its restricted matrix unique and hence multiplicative.
+
+The resulting matrices have the required generator images and are literally
+the corresponding submatrices of the ambient action. The certified S₆
+comparison in `Kernel` proves that an element fixing this four-space is the
+identity on the whole carrier. Thus `splitLeviRepresentation_injective`
+establishes faithfulness on the entire generated Levi.
+
+Source: the split middle-node Levi used in Aschbacher–Smith F.1.12(I)(5),
+printed pp.263–264 (PDF pp.274–275) of `refs/quasithin.pdf`.
+-/
+
+@[expose] public section
+noncomputable section
+
+namespace ReeF4.Parabolics.BinarySuzuki.MatrixIdentification
+
+/-- Intertwining the ambient action with a four-dimensional matrix. -/
+def FourIntertwines (x : splitLevi) (M : BinaryGL) : Prop :=
+  (ambientLeviHom x).val * fourEmbedding = fourEmbedding * M.val
+
+theorem fourIntertwines_one : FourIntertwines 1 1 := by
+  simp [FourIntertwines]
+
+theorem fourIntertwines_mul {x y : splitLevi} {M N : BinaryGL}
+    (hx : FourIntertwines x M) (hy : FourIntertwines y N) :
+    FourIntertwines (x * y) (M * N) := by
+  unfold FourIntertwines at *
+  simp only [map_mul, Units.val_mul]
+  rw [Matrix.mul_assoc, hy, ← Matrix.mul_assoc, hx, Matrix.mul_assoc]
+
+theorem fourIntertwines_inv {x : splitLevi} {M : BinaryGL}
+    (hx : FourIntertwines x M) : FourIntertwines x⁻¹ M⁻¹ := by
+  unfold FourIntertwines at *
+  rw [map_inv]
+  calc
+    (ambientLeviHom x)⁻¹.val * fourEmbedding =
+        (ambientLeviHom x)⁻¹.val * ((fourEmbedding * M.val) * M⁻¹.val) := by
+      rw [Matrix.mul_assoc, Units.mul_inv, Matrix.mul_one]
+    _ = (ambientLeviHom x)⁻¹.val *
+        (((ambientLeviHom x).val * fourEmbedding) * M⁻¹.val) := by rw [hx]
+    _ = ((ambientLeviHom x)⁻¹.val * (ambientLeviHom x).val) *
+        fourEmbedding * M⁻¹.val := by simp only [Matrix.mul_assoc]
+    _ = fourEmbedding * M⁻¹.val := by rw [Units.inv_mul, Matrix.one_mul]
+
+/-- Every element of the generated Levi preserves this four-space. -/
+theorem fourIntertwines_exists (x : splitLevi) : ∃ M, FourIntertwines x M := by
+  have hx : x ∈ Subgroup.closure (Set.range splitGenerator) := by
+    rw [splitGenerator_closure]
+    exact Subgroup.mem_top x
+  induction hx using Subgroup.closure_induction with
+  | mem x hx =>
+    obtain ⟨i, rfl⟩ := hx
+    exact ⟨matrixGenerator i, splitGenerator_intertwines i⟩
+  | one => exact ⟨1, fourIntertwines_one⟩
+  | mul x y hx hy ihx ihy =>
+    obtain ⟨M, hM⟩ := ihx
+    obtain ⟨N, hN⟩ := ihy
+    exact ⟨M * N, fourIntertwines_mul hM hN⟩
+  | inv x hx ih =>
+    obtain ⟨M, hM⟩ := ih
+    exact ⟨M⁻¹, fourIntertwines_inv hM⟩
+
+theorem fourIntertwines_unique {x : splitLevi} {M N : BinaryGL}
+    (hM : FourIntertwines x M) (hN : FourIntertwines x N) : M = N := by
+  apply Units.ext
+  exact fourEmbedding_mul_injective (hM.symm.trans hN)
+
+/-- Restriction of the actual split Levi to the four half-root lines. -/
+def splitLeviRepresentation : splitLevi →* BinaryGL where
+  toFun x := (fourIntertwines_exists x).choose
+  map_one' := fourIntertwines_unique (fourIntertwines_exists 1).choose_spec
+    fourIntertwines_one
+  map_mul' x y := fourIntertwines_unique (fourIntertwines_exists (x * y)).choose_spec
+    (fourIntertwines_mul (fourIntertwines_exists x).choose_spec
+      (fourIntertwines_exists y).choose_spec)
+
+theorem splitLeviRepresentation_intertwines (x : splitLevi) :
+    FourIntertwines x (splitLeviRepresentation x) :=
+  (fourIntertwines_exists x).choose_spec
+
+@[simp] theorem splitLeviRepresentation_generator (i : Fin 4) :
+    splitLeviRepresentation (splitGenerator i) = matrixGenerator i :=
+  fourIntertwines_unique (splitLeviRepresentation_intertwines (splitGenerator i))
+    (splitGenerator_intertwines i)
+
+/-- The representation entries are the actual ambient matrix entries. -/
+theorem splitLeviRepresentation_entry (x : splitLevi) (i j : Fin 4) :
+    (splitLeviRepresentation x).val i j =
+      (ambientLeviHom x).val (fourIndex i) (fourIndex j) := by
+  have h := congrArg (fun A => A (fourIndex i) j) (splitLeviRepresentation_intertwines x)
+  simpa only [mul_fourEmbedding, fourEmbedding_mul] using h.symm
+
+/-- The image is exactly the group generated by the four specified matrices. -/
+theorem splitLeviRepresentation_range :
+    splitLeviRepresentation.range = Subgroup.closure (Set.range matrixGenerator) := by
+  rw [MonoidHom.range_eq_map, ← splitGenerator_closure,
+    MonoidHom.map_closure, ← Set.range_comp]
+  congr 2
+  funext i
+  exact splitLeviRepresentation_generator i
+
+/-- The representation kernel consists exactly of elements fixing all four
+embedded columns pointwise. -/
+theorem splitLeviRepresentation_eq_one_iff (x : splitLevi) :
+    splitLeviRepresentation x = 1 ↔
+      (ambientLeviHom x).val * fourEmbedding = fourEmbedding := by
+  constructor
+  · intro hx
+    have h := splitLeviRepresentation_intertwines x
+    simpa [FourIntertwines, hx] using h
+  · intro hx
+    apply fourIntertwines_unique (splitLeviRepresentation_intertwines x)
+    simpa [FourIntertwines] using hx
+
+/-- The four-dimensional restriction is faithful on the whole split binary Levi. -/
+theorem splitLeviRepresentation_injective : Function.Injective splitLeviRepresentation := by
+  apply (injective_iff_map_eq_one splitLeviRepresentation).mpr
+  intro x hx
+  exact fourSpace_faithful x ((splitLeviRepresentation_eq_one_iff x).mp hx)
+
+end ReeF4.Parabolics.BinarySuzuki.MatrixIdentification

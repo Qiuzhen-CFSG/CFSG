@@ -3,6 +3,7 @@ public import FeitThompson.BGsection3.Defs
 
 public import FeitThompson.GeneratorRank
 public import FeitThompson.BGsection4.theorem_4_18_a
+
 /-! # Theorem 4.18(b) from BG Section 4 -/
 
 universe u
@@ -22,7 +23,7 @@ private theorem isPGroup_of_unique_prime_dvd_natCard
   exact IsPGroup.of_card (p := p) (G := G) hcard
 
 public theorem theorem_4_18_b {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p.Prime]
-    (hsolv : IsSolvable G) (hodd : Odd (Nat.card G)) (hp_mem : p ∣ Nat.card G)
+    (hsolv : Group.IsSolvable G) (hodd : Odd (Nat.card G)) (hp_mem : p ∣ Nat.card G)
     (hrank : primeRank p G ≤ 2)
     (hp_small : p = 3 ∨ IsSmallestPrimeDivisor p (Nat.card G)) :
     HasNormalPComplement p G := by

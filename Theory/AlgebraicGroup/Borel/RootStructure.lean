@@ -1,0 +1,29 @@
+module
+
+public import Theory.AlgebraicGroup.Borel.RootStructure.IntersectionRadical
+public import Theory.AlgebraicGroup.Borel.RootStructure.theorem_1_11_2
+public import Theory.AlgebraicGroup.Borel.RootStructure.theorem_1_11_3
+public import Theory.AlgebraicGroup.Borel.RootStructure.theorem_1_11_4
+public import Theory.AlgebraicGroup.Borel.RootStructure.theorem_1_11_5
+public import Theory.AlgebraicGroup.Borel.RootStructure.theorem_1_12_1
+public import Theory.AlgebraicGroup.Borel.RootStructure.ChevalleyPresentationEvaluation
+public import Theory.AlgebraicGroup.Borel.RootStructure.GeneralChevalleyRelatorAPI
+public import Theory.AlgebraicGroup.Borel.RootStructure.PresentedChevalleyCollection
+public import Theory.AlgebraicGroup.Borel.RootStructure.PresentedChevalleyNormalizer
+public import Theory.AlgebraicGroup.Borel.RootStructure.PresentedChevalleyRankOneExchange
+public import Theory.AlgebraicGroup.Borel.RootStructure.theorem_1_12_4
+public import Theory.AlgebraicGroup.Borel.RootStructure.CenterClassificationTable.TypeE6
+public import Theory.AlgebraicGroup.Borel.RootStructure.CenterClassificationTable.TypeCUniversal
+public import Theory.AlgebraicGroup.Borel.RootStructure.CenterClassificationTable.TypeCHomomorphicImage
+public import Theory.AlgebraicGroup.Borel.RootStructure.CenterClassificationTable.TypeE7Universal
+public import Theory.AlgebraicGroup.Borel.RootStructure.CenterClassificationTable.TypeE7CoordinateRealization
+public import Theory.AlgebraicGroup.Borel.RootStructure.theorem_1_12_5
+public import Theory.AlgebraicGroup.Borel.RootStructure.theorem_1_12_6
+public import Theory.AlgebraicGroup.Borel.RootStructure.theorem_1_12_7
+public import Theory.AlgebraicGroup.Borel.SourceChevalleySystem
+
+/-!
+Assembly module for the declarations formerly stored together in `Theory.AlgebraicGroup.Borel.RootStructure`.
+The focused imports isolate unresolved results while this compatibility boundary
+preserves the original public import path and declaration order.
+-/

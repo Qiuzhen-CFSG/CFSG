@@ -7,6 +7,7 @@ public import Mathlib.Combinatorics.SimpleGraph.Maps
 public import Mathlib.GroupTheory.Subgroup.Simple
 import Mathlib.Tactic
 
+
 /-!
 # The clean 35-point commuting graph
 
@@ -150,7 +151,6 @@ private lemma stabilizer_base_eq_normalizer (c : CentralizerSetup G) :
     exact Subgroup.mem_normalizer_iff_map_conj_eq.mp hg
 
 private lemma hhat_ne_top
-    (hmin : IsMinimalCounterexample G)
     (c : CentralizerSetup G) (d : FirstCaseCountData c) :
     c.Hhat ≠ ⊤ := by
   intro htop
@@ -196,7 +196,7 @@ public theorem hhat_normalCore_eq_bot
     with hbot | htop
   · exact hbot
   · exfalso
-    exact hhat_ne_top hmin c d (le_antisymm le_top (htop.symm ▸ hle))
+    exact hhat_ne_top c d (le_antisymm le_top (htop.symm ▸ hle))
 
 /-- The conjugation action on the 35 conjugates of `U` is faithful. -/
 public theorem faithfulSMul (hmin : IsMinimalCounterexample G)
@@ -237,7 +237,7 @@ public theorem faithfulSMul (hmin : IsMinimalCounterexample G)
     rcases hker with hbot | htop
     · exact hbot
     · exfalso
-      exact hhat_ne_top hmin c d (le_antisymm le_top (htop.symm ▸ hker_le_Hhat))
+      exact hhat_ne_top c d (le_antisymm le_top (htop.symm ▸ hker_le_Hhat))
   have hgker : g ∈ φ.ker := by
     apply MonoidHom.mem_ker.mpr
     apply Equiv.ext

@@ -2,6 +2,7 @@ module
 
 public import FeitThompson.BGsection12.corollary_12_10_e
 
+
 open scoped Pointwise
 
 /-!
@@ -82,7 +83,7 @@ public theorem lemma_12_11_a
       (G := G) (M := Mstar) (A := A) (p := p) hMstar.1 hA_Mstar hMstar.2
   have hAp : IsPGroup p.val A := by
     have hElem := (section12_rankTwo_elementary hA).2
-    haveI : IsElementaryAbelian p.val A := hElem
+    have : IsElementaryAbelian p.val A := hElem
     exact IsElementaryAbelian.isPGroup p.val A
   have hp_alt :
       p ∈ section10SigmaPrimes Mstar ∪ section12Tau2Primes Mstar :=
@@ -104,7 +105,7 @@ public theorem lemma_12_11_a
     · subst q
       refine ⟨A, hA, (section12_rankTwo_le hA).trans hE_le_Mstar, ?_⟩
       have hElem := (section12_rankTwo_elementary hA).2
-      haveI : IsElementaryAbelian p.val A := hElem
+      have : IsElementaryAbelian p.val A := hElem
       have hAcomm : IsMulCommutative A := hElem.toIsMulCommutative
       intro x hx
       rw [Subgroup.mem_centralizer_iff]

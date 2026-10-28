@@ -8,6 +8,7 @@ import GorensteinWalter.Section4.SecondCaseA7InvolutionsInComponent
 import GorensteinWalter.Section3.FirstCaseKleinNormalizer
 import Mathlib.Tactic
 
+
 /-!
 # A distinct inverted conjugate in the A7 second case
 

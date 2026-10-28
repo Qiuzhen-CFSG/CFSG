@@ -5,6 +5,7 @@ public import GorensteinWalter.Section3.CyclicTwoCoreFittingTI
 public import GorensteinWalter.KleinFourFixedAutomorphism
 import Mathlib.Tactic
 
+
 noncomputable section
 
 open scoped Pointwise
@@ -417,7 +418,7 @@ public theorem firstCase_klein_fixed_V_involution_card_one
               rw [hct]
             _ = c.t * (c.t * tp) := by group
             _ = c.t * w := by rfl
-            _ = c.t := by simpa [h]
+            _ = c.t := by simp [h]
         exact this
       have hwI : IsInvolution w := by
         refine ⟨hwne, ?_⟩
@@ -550,7 +551,6 @@ public theorem firstCase_klein_commuting_fiber_card
     intro z
     apply Subtype.ext
     dsimp [fInv, f]
-    change g * (g⁻¹ * (z : G) * g) * g⁻¹ = (z : G)
     group
   exact Nat.card_congr (Equiv.ofBijective f ⟨
     (fun a b h => by

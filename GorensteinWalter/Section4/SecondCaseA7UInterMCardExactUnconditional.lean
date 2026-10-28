@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section4.SecondCaseA7UInterMCardExact
 import Mathlib.Tactic
 
+
 /-!
 # Unconditional exact order-three endpoint for the odd intersection image
 -/

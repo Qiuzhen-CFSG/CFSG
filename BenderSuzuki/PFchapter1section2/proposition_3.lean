@@ -5,12 +5,13 @@ public import Mathlib.GroupTheory.SemidirectProduct
 import BenderSuzuki.PFchapter1section2.AppendixIInput
 public import BenderSuzuki.PFchapter1section2.proposition_2
 
+
 namespace BenderSuzuki
 namespace PFchapter1section2
 
 open PFchapter1section1 PFAppendixI PFAppendixIII
 open Representation
-open Theory.Representation
+open Representation
 open scoped IsMulCommutative
 
 /-!
@@ -131,13 +132,13 @@ private theorem proposition_3_appendixIRepresentation_irreducible_of_transitive
           calc
             ρ τ x = Additive.ofMul ((τ : U) • Additive.toMul x) := by
               dsimp [ρ, AppendixIRepresentationOfT]
-              have h_rep : (Theory.Representation.ofElementaryAbelianAction (A := T) (G := E) (p := p)) τ x = Additive.ofMul (τ • Additive.toMul x) := by
+              have h_rep : (Representation.ofElementaryAbelianAction (A := T) (G := E) (p := p)) τ x = Additive.ofMul (τ • Additive.toMul x) := by
                 calc
-                  (Theory.Representation.ofElementaryAbelianAction (A := T) (G := E) (p := p)) τ x
-                      = (Theory.Representation.ofElementaryAbelianAction (A := T) (G := E) (p := p)) τ (Additive.ofMul (Additive.toMul x)) := by
+                  (Representation.ofElementaryAbelianAction (A := T) (G := E) (p := p)) τ x
+                      = (Representation.ofElementaryAbelianAction (A := T) (G := E) (p := p)) τ (Additive.ofMul (Additive.toMul x)) := by
                         cases x; rfl
                   _ = Additive.ofMul (τ • Additive.toMul x) :=
-                    Theory.Representation.ofElementaryAbelianAction_apply_ofMul (A := T) (G := E) (p := p) τ (Additive.toMul x)
+                    Representation.ofElementaryAbelianAction_apply_ofMul (A := T) (G := E) (p := p) τ (Additive.toMul x)
               have h_smul : τ • Additive.toMul x = (τ : U) • Additive.toMul x := rfl
               rw [h_rep, h_smul]
             _ = Additive.ofMul (Additive.toMul y) := congrArg Additive.ofMul hτ
@@ -157,7 +158,7 @@ private theorem proposition_3_quotient_conjugation_action
     (hfaith :
       ∀ d : D, (∀ x : G, x ∈ Q0 → rightConjugateElem x (d : G) = x) →
         (d : G) ∈ W) :
-    letI : (W.subgroupOf D).Normal := hWD
+    let : (W.subgroupOf D).Normal := hWD
     ∃ rhoD : (D ⧸ W.subgroupOf D) →* MulAut Q0,
       Function.Injective rhoD ∧
         ∀ d : D, ∀ q : Q0,
@@ -175,7 +176,7 @@ private theorem proposition_3_quotient_conjugation_action
                 simpa [rightConjugateElem] using
                   H.mul_mem (H.mul_mem hdH hq.1) (H.inv_mem hdH)⟩ := by
   classical
-  letI : (W.subgroupOf D).Normal := hWD
+  let : (W.subgroupOf D).Normal := hWD
   have hclosed :
       ∀ d : G, d ∈ D → ∀ q : G, q ∈ Q0 → d * q * d⁻¹ ∈ Q0 := by
     intro d hdD q hqQ0
@@ -197,7 +198,7 @@ private theorem proposition_3_quotient_conjugation_action
     · intro hq
       have hback := hclosed d⁻¹ (D.inv_mem hdD) (d * q * d⁻¹) hq
       simpa [mul_assoc] using hback
-  letI : Subgroup.Normalizes D Q0 := ⟨hDnorm⟩
+  let : Subgroup.Normalizes D Q0 := ⟨hDnorm⟩
   let conjHom : D →* MulAut Q0 := MulDistribMulAction.toMulAut D Q0
   have hWker : W.subgroupOf D ≤ conjHom.ker := by
     intro w hwW
@@ -255,7 +256,7 @@ private theorem proposition_3_quotient_transitive_on_Q0_nontrivial
       ∀ x : G, x ∈ Q0 → x ≠ 1 →
         ∀ y : G, y ∈ Q0 → y ≠ 1 →
           ∃ a : (K ⊔ W : Subgroup G), rightConjugateElem x (a : G) = y) :
-    letI : (W.subgroupOf D).Normal := hWD
+    let : (W.subgroupOf D).Normal := hWD
     letI : MulDistribMulAction (D ⧸ W.subgroupOf D) Q0 :=
       MulDistribMulAction.compHom Q0 rhoD
     ∀ x : Q0, x ≠ 1 → ∀ y : Q0, y ≠ 1 →
@@ -263,8 +264,9 @@ private theorem proposition_3_quotient_transitive_on_Q0_nontrivial
           (QuotientGroup.mk' (W.subgroupOf D)),
         (τ : D ⧸ W.subgroupOf D) • x = y := by
   classical
-  letI : (W.subgroupOf D).Normal := hWD
-  letI : MulDistribMulAction (D ⧸ W.subgroupOf D) Q0 :=
+  dsimp only
+  let : (W.subgroupOf D).Normal := hWD
+  let : MulDistribMulAction (D ⧸ W.subgroupOf D) Q0 :=
     MulDistribMulAction.compHom Q0 rhoD
   intro x hx y hy
   have hxG : (x : G) ≠ 1 := by
@@ -331,12 +333,12 @@ public theorem proposition_3_field_model_with_q0_card_of_hypothesisA1
       Nat.card Q0 = 2 ^ n ∧
       let F : Type := GaloisField 2 n
       letI : Field F := inferInstance
-      letI : Finite F := inferInstance
+      let : Finite F := inferInstance
       ∃ (A : Subgroup (F ≃+* F))
           (hWV : (W.subgroupOf V).Normal)
           (hWD : (W.subgroupOf D).Normal),
-        letI : (W.subgroupOf V).Normal := hWV
-        letI : (W.subgroupOf D).Normal := hWD
+        let : (W.subgroupOf V).Normal := hWV
+        let : (W.subgroupOf D).Normal := hWD
         ∃ (rhoD : (D ⧸ W.subgroupOf D) →* MulAut Q0)
             (rhoMul : Fˣ →* MulAut (Multiplicative F))
             (rhoAut : A →* MulAut
@@ -427,8 +429,8 @@ public theorem proposition_3_field_model_with_q0_card_of_hypothesisA1
     intro h
     apply hsI.ne_one
     simpa [sQ0] using congrArg Subtype.val h
-  letI : Nontrivial Q0 := ⟨⟨sQ0, 1, hsQ0_ne⟩⟩
-  letI : IsElementaryAbelian 2 Q0 :=
+  let : Nontrivial Q0 := ⟨⟨sQ0, 1, hsQ0_ne⟩⟩
+  let : IsElementaryAbelian 2 Q0 :=
     isElementaryAbelian_two_of_forall_sq_one
       hsec.Q0_commutative hsec.Q0_sq
   have hpgroup : IsPGroup 2 Q0 := by
@@ -444,7 +446,7 @@ public theorem proposition_3_field_model_with_q0_card_of_hypothesisA1
     intro hn0
     have hcardOne : Nat.card Q0 = 1 := by
       simpa [hn0] using hQ0card
-    letI : Subsingleton Q0 := (Nat.card_eq_one_iff_unique.mp hcardOne).1
+    let : Subsingleton Q0 := (Nat.card_eq_one_iff_unique.mp hcardOne).1
     exact hsQ0_ne (Subsingleton.elim sQ0 1)
   have hWcentralizer :
       W = D ⊓ Subgroup.centralizer ({x : G | x ∈ H ∧ IsInvolution x}) :=
@@ -454,18 +456,18 @@ public theorem proposition_3_field_model_with_q0_card_of_hypothesisA1
       proposition_3_quotient_conjugation_action
         H D W Q0 hsec.hA1.D_le_H hsec.Q0_def hWcentralizer hWD hfaith with
     ⟨rhoD, hrhoD_injective, hrhoD⟩
-  letI : (W.subgroupOf D).Normal := hWD
-  letI : MulDistribMulAction (D ⧸ W.subgroupOf D) Q0 :=
+  let : (W.subgroupOf D).Normal := hWD
+  let : MulDistribMulAction (D ⧸ W.subgroupOf D) Q0 :=
     MulDistribMulAction.compHom Q0 rhoD
-  letI : FaithfulSMul (D ⧸ W.subgroupOf D) Q0 :=
+  let : FaithfulSMul (D ⧸ W.subgroupOf D) Q0 :=
     { eq_of_smul_eq_smul := fun h =>
         hrhoD_injective (MulEquiv.ext fun x => h x) }
   let T : Subgroup (D ⧸ W.subgroupOf D) :=
     ((K ⊔ W).subgroupOf D).map
       (QuotientGroup.mk' (W.subgroupOf D))
-  letI : T.Normal := by
+  let : T.Normal := by
     simpa [T] using hKWmodW_normal
-  letI : IsCyclic T := by
+  let : IsCyclic T := by
     simpa [T] using hKWmodW_cyclic
   have hrhoD_coe : ∀ d : D, ∀ q : Q0,
       ((rhoD (QuotientGroup.mk d) q : Q0) : G) =
@@ -478,7 +480,7 @@ public theorem proposition_3_field_model_with_q0_card_of_hypothesisA1
     simpa [T] using
       proposition_3_quotient_transitive_on_Q0_nontrivial
         D K W Q0 hKWleD hWD rhoD hrhoD_coe htrans
-  letI :
+  let :
       Representation.IsIrreducible
         (AppendixIRepresentationOfT (p := 2) (E := Q0) T) :=
     proposition_3_appendixIRepresentation_irreducible_of_transitive T htransT
@@ -486,13 +488,13 @@ public theorem proposition_3_field_model_with_q0_card_of_hypothesisA1
     peterfalvi_appendixI_proposition_2_a
       (p := 2) (n := n) (U := D ⧸ W.subgroupOf D) (E := Q0) T hQ0card
   let F0 := AppendixIFpT (p := 2) (E := Q0) T
-  letI : Field F0 := fieldInst
+  let : Field F0 := fieldInst
   obtain ⟨_moduleInst, hfieldCard, _hfinrank, _hscalar⟩ := hfield
   have hF0isField : IsField F0 := by
     simpa [F0] using
       (Finite.isField_of_domain (AppendixIFpT (p := 2) (E := Q0) T))
   let canonicalField : Field F0 := hF0isField.toField
-  letI : Field F0 := canonicalField
+  let : Field F0 := canonicalField
   let sAdd : Additive Q0 := Additive.ofMul sQ0
   have hsAdd_ne : sAdd ≠ 0 := by
     simpa [sAdd] using hsQ0_ne
@@ -521,8 +523,8 @@ public theorem proposition_3_field_model_with_q0_card_of_hypothesisA1
           rw [hzeroEval]
           exact cInv.1.map_zero
     exact hsAdd_ne hsZero
-  letI : Fintype F0 := Fintype.ofFinite F0
-  letI : Fintype (Additive Q0) := Fintype.ofFinite (Additive Q0)
+  let : Fintype F0 := Fintype.ofFinite F0
+  let : Fintype (Additive Q0) := Fintype.ofFinite (Additive Q0)
   have hcardEq : Fintype.card F0 = Fintype.card (Additive Q0) := by
     rw [← Nat.card_eq_fintype_card, ← Nat.card_eq_fintype_card]
     change Nat.card (AppendixIFpT (p := 2) (E := Q0) T) = Nat.card Q0
@@ -571,18 +573,16 @@ public theorem proposition_3_field_model_with_q0_card_of_hypothesisA1
       toQ0 (coord.symm
           (Additive.ofMul ((tau : D ⧸ W.subgroupOf D) • x))) =
           Additive.ofMul ((tau : D ⧸ W.subgroupOf D) • x) := by
-            simpa [coord] using
-              coord.apply_symm_apply
-                (Additive.ofMul ((tau : D ⧸ W.subgroupOf D) • x))
+            simp [coord]
       _ = (tauF0 tau).1 (Additive.ofMul x) := by
             simp [tauF0, AppendixITActionEnd_apply]
       _ = (tauF0 tau).1 (toQ0 (coord.symm (Additive.ofMul x))) := by
             rw [show toQ0 (coord.symm (Additive.ofMul x)) =
               Additive.ofMul x by
-                simpa [coord] using coord.apply_symm_apply (Additive.ofMul x)]
+                simp [coord]]
       _ = toQ0 (tauF0 tau * coord.symm (Additive.ofMul x)) := rfl
   let F : Type := GaloisField 2 n
-  letI : Fintype F := Fintype.ofFinite F
+  let : Fintype F := Fintype.ofFinite F
   have hcardF : Fintype.card F0 = Fintype.card F := by
     rw [← Nat.card_eq_fintype_card, ← Nat.card_eq_fintype_card]
     exact hfieldCard.trans (GaloisField.card 2 n hn).symm
@@ -600,7 +600,7 @@ public theorem proposition_3_field_model_with_q0_card_of_hypothesisA1
         exact g.map_add _ _ }
   let q0_add : Q0 ≃* Multiplicative F := q0_add0.trans gMul
   have hq0_add_s : q0_add sQ0 = Multiplicative.ofAdd 1 := by
-    simpa [q0_add, gMul, hq0_add0_s] using (map_one g)
+    simp [q0_add, gMul, hq0_add0_s]
   let tauF : T →* F := g.toMonoidHom.comp tauF0
   have htauF_q0 (tau : T) (x : Q0) :
       q0_add ((tau : D ⧸ W.subgroupOf D) • x) =
@@ -633,7 +633,7 @@ public theorem proposition_3_field_model_with_q0_card_of_hypothesisA1
         have hcoord := congrArg
           (fun z : Q0 => Multiplicative.toAdd (q0_add z)) hyone
         have hu_zero : (u : F) = 0 := by
-          simpa [y, hq0_add_s] using hcoord
+          simp [y, hq0_add_s] at hcoord
         exact Units.ne_zero u hu_zero
       obtain ⟨tau, htau⟩ := htransT sQ0 hsQ0_ne y hy
       refine ⟨tau, ?_⟩
@@ -722,7 +722,7 @@ public theorem proposition_3_field_model_with_q0_card_of_hypothesisA1
       have hconj := hWD.conj_mem
         (⟨w, hWleD hw⟩ : D) hw (⟨v, hVleD hv⟩ : D)
       exact hconj)
-  letI : (W.subgroupOf V).Normal := hWV
+  let : (W.subgroupOf V).Normal := hWV
   let vToD : V →* D := Subgroup.inclusion hVleD
   let vToU : V →* (D ⧸ W.subgroupOf D) :=
     (QuotientGroup.mk' (W.subgroupOf D)).comp vToD
@@ -1272,12 +1272,12 @@ public theorem proposition_3_field_model_with_q0_card
       Nat.card Q0 = 2 ^ n ∧
       let F : Type := GaloisField 2 n
       letI : Field F := inferInstance
-      letI : Finite F := inferInstance
+      let : Finite F := inferInstance
       ∃ (A : Subgroup (F ≃+* F))
           (hWV : (W.subgroupOf V).Normal)
           (hWD : (W.subgroupOf D).Normal),
-        letI : (W.subgroupOf V).Normal := hWV
-        letI : (W.subgroupOf D).Normal := hWD
+        let : (W.subgroupOf V).Normal := hWV
+        let : (W.subgroupOf D).Normal := hWD
         ∃ (rhoD : (D ⧸ W.subgroupOf D) →* MulAut Q0)
             (rhoMul : Fˣ →* MulAut (Multiplicative F))
             (rhoAut : A →* MulAut
@@ -1356,8 +1356,8 @@ public theorem proposition_3_field_model_with_q0_card
     intro h
     apply hsI.ne_one
     simpa [sQ0] using congrArg Subtype.val h
-  letI : Nontrivial Q0 := ⟨⟨sQ0, 1, hsQ0_ne⟩⟩
-  letI : IsElementaryAbelian 2 Q0 :=
+  let : Nontrivial Q0 := ⟨⟨sQ0, 1, hsQ0_ne⟩⟩
+  let : IsElementaryAbelian 2 Q0 :=
     isElementaryAbelian_two_of_forall_sq_one hprop1c.2.1 hprop1c.2.2
   have hpgroup : IsPGroup 2 Q0 := by
     rw [IsPGroup.iff_orderOf]
@@ -1372,7 +1372,7 @@ public theorem proposition_3_field_model_with_q0_card
     intro hn0
     have hcardOne : Nat.card Q0 = 1 := by
       simpa [hn0] using hQ0card
-    letI : Subsingleton Q0 := (Nat.card_eq_one_iff_unique.mp hcardOne).1
+    let : Subsingleton Q0 := (Nat.card_eq_one_iff_unique.mp hcardOne).1
     exact hsQ0_ne (Subsingleton.elim sQ0 1)
   have hWcentralizer :
       W = D ⊓ Subgroup.centralizer ({x : G | x ∈ H ∧ IsInvolution x}) :=
@@ -1382,18 +1382,18 @@ public theorem proposition_3_field_model_with_q0_card
       proposition_3_quotient_conjugation_action
         H D W Q0 hsec.hA.A1.D_le_H hsec.Q0_def hWcentralizer hWD hfaith with
     ⟨rhoD, hrhoD_injective, hrhoD⟩
-  letI : (W.subgroupOf D).Normal := hWD
-  letI : MulDistribMulAction (D ⧸ W.subgroupOf D) Q0 :=
+  let : (W.subgroupOf D).Normal := hWD
+  let : MulDistribMulAction (D ⧸ W.subgroupOf D) Q0 :=
     MulDistribMulAction.compHom Q0 rhoD
-  letI : FaithfulSMul (D ⧸ W.subgroupOf D) Q0 :=
+  let : FaithfulSMul (D ⧸ W.subgroupOf D) Q0 :=
     { eq_of_smul_eq_smul := fun h =>
         hrhoD_injective (MulEquiv.ext fun x => h x) }
   let T : Subgroup (D ⧸ W.subgroupOf D) :=
     ((K ⊔ W).subgroupOf D).map
       (QuotientGroup.mk' (W.subgroupOf D))
-  letI : T.Normal := by
+  let : T.Normal := by
     simpa [T] using hKWmodW_normal
-  letI : IsCyclic T := by
+  let : IsCyclic T := by
     simpa [T] using hKWmodW_cyclic
   have hrhoD_coe : ∀ d : D, ∀ q : Q0,
       ((rhoD (QuotientGroup.mk d) q : Q0) : G) =
@@ -1406,19 +1406,19 @@ public theorem proposition_3_field_model_with_q0_card
     simpa [T] using
       proposition_3_quotient_transitive_on_Q0_nontrivial
         D K W Q0 hKWleD hWD rhoD hrhoD_coe htrans
-  haveI : IsSimpleOrder (Subrepresentation (AppendixIRepresentationOfT (p := 2) (E := Q0) T)) :=
+  have : IsSimpleOrder (Subrepresentation (AppendixIRepresentationOfT (p := 2) (E := Q0) T)) :=
     proposition_3_appendixIRepresentation_irreducible_of_transitive T htransT
   obtain ⟨fieldInst, hfield⟩ :=
     peterfalvi_appendixI_proposition_2_a
       (p := 2) (n := n) (U := D ⧸ W.subgroupOf D) (E := Q0) T hQ0card
   let F0 := AppendixIFpT (p := 2) (E := Q0) T
-  letI : Field F0 := fieldInst
+  let : Field F0 := fieldInst
   obtain ⟨_moduleInst, hfieldCard, _hfinrank, _hscalar⟩ := hfield
   have hF0isField : IsField F0 := by
     simpa [F0] using
       (Finite.isField_of_domain (AppendixIFpT (p := 2) (E := Q0) T))
   let canonicalField : Field F0 := hF0isField.toField
-  letI : Field F0 := canonicalField
+  let : Field F0 := canonicalField
   let sAdd : Additive Q0 := Additive.ofMul sQ0
   have hsAdd_ne : sAdd ≠ 0 := by
     simpa [sAdd] using hsQ0_ne
@@ -1447,8 +1447,8 @@ public theorem proposition_3_field_model_with_q0_card
           rw [hzeroEval]
           exact cInv.1.map_zero
     exact hsAdd_ne hsZero
-  letI : Fintype F0 := Fintype.ofFinite F0
-  letI : Fintype (Additive Q0) := Fintype.ofFinite (Additive Q0)
+  let : Fintype F0 := Fintype.ofFinite F0
+  let : Fintype (Additive Q0) := Fintype.ofFinite (Additive Q0)
   have hcardEq : Fintype.card F0 = Fintype.card (Additive Q0) := by
     rw [← Nat.card_eq_fintype_card, ← Nat.card_eq_fintype_card]
     change Nat.card (AppendixIFpT (p := 2) (E := Q0) T) = Nat.card Q0
@@ -1506,7 +1506,7 @@ public theorem proposition_3_field_model_with_q0_card
                 simp [coord]]
       _ = toQ0 (tauF0 tau * coord.symm (Additive.ofMul x)) := rfl
   let F : Type := GaloisField 2 n
-  letI : Fintype F := Fintype.ofFinite F
+  let : Fintype F := Fintype.ofFinite F
   have hcardF : Fintype.card F0 = Fintype.card F := by
     rw [← Nat.card_eq_fintype_card, ← Nat.card_eq_fintype_card]
     exact hfieldCard.trans (GaloisField.card 2 n hn).symm
@@ -1557,7 +1557,7 @@ public theorem proposition_3_field_model_with_q0_card
         have hcoord := congrArg
           (fun z : Q0 => Multiplicative.toAdd (q0_add z)) hyone
         have hu_zero : (u : F) = 0 := by
-          simpa [y, hq0_add_s] using hcoord
+          simp [y, hq0_add_s] at hcoord
         exact Units.ne_zero u hu_zero
       obtain ⟨tau, htau⟩ := htransT sQ0 hsQ0_ne y hy
       refine ⟨tau, ?_⟩
@@ -1646,7 +1646,7 @@ public theorem proposition_3_field_model_with_q0_card
       have hconj := hWD.conj_mem
         (⟨w, hWleD hw⟩ : D) hw (⟨v, hVleD hv⟩ : D)
       exact hconj)
-  letI : (W.subgroupOf V).Normal := hWV
+  let : (W.subgroupOf V).Normal := hWV
   let vToD : V →* D := Subgroup.inclusion hVleD
   let vToU : V →* (D ⧸ W.subgroupOf D) :=
     (QuotientGroup.mk' (W.subgroupOf D)).comp vToD
@@ -2212,15 +2212,15 @@ public theorem proposition_3_V_inf_centralizer_fixed_Q0_le_sup
       _hQ0card, _hrhoMul, _hrhoAutInl, _hrhoAutInr, _hrhoD,
       _hmodelQ, _hmodelK, _hmodelV, _hkAction, hvAction⟩
   let F : Type := GaloisField 2 fieldN
-  letI : Field F := inferInstance
-  letI : Finite F := inferInstance
-  letI : (W.subgroupOf V).Normal := hWnormalV
+  let : Field F := inferInstance
+  let : Finite F := inferInstance
+  let : (W.subgroupOf V).Normal := hWnormalV
   let pToV : P →* V := Subgroup.inclusion hPV
   let rhoP : P →* (F ≃+* F) :=
     A.subtype.comp
       (vmodWAut.toMonoidHom.comp
         ((QuotientGroup.mk' (W.subgroupOf V)).comp pToV))
-  letI : MulSemiringAction P F := MulSemiringAction.compHom F rhoP
+  let : MulSemiringAction P F := MulSemiringAction.compHom F rhoP
   let vV : V := ⟨v, hv.1⟩
   have hvFixes :
       ∀ x : FixedPoints.subfield P F,
@@ -2340,12 +2340,12 @@ public theorem proposition_3
       Nat.card Q0 = 2 ^ n ∧
       let F : Type := GaloisField 2 n
       letI : Field F := inferInstance
-      letI : Finite F := inferInstance
+      let : Finite F := inferInstance
       ∃ (A : Subgroup (F ≃+* F))
           (hWV : (W.subgroupOf V).Normal)
           (hWD : (W.subgroupOf D).Normal),
-        letI : (W.subgroupOf V).Normal := hWV
-        letI : (W.subgroupOf D).Normal := hWD
+        let : (W.subgroupOf V).Normal := hWV
+        let : (W.subgroupOf D).Normal := hWD
         ∃ (rhoD : (D ⧸ W.subgroupOf D) →* MulAut Q0)
             (rhoMul : Fˣ →* MulAut (Multiplicative F))
             (rhoAut : A →* MulAut
@@ -2407,7 +2407,7 @@ public theorem proposition_3
                     ((vmodW_aut (QuotientGroup.mk v) : F ≃+* F).symm
                       (Multiplicative.toAdd (q0_add q))))) ∧
       ∃ hWV : (W.subgroupOf V).Normal,
-        letI : (W.subgroupOf V).Normal := hWV
+        let : (W.subgroupOf V).Normal := hWV
         IsCyclic (V ⧸ W.subgroupOf V) := by
   classical
   have hmodel :=
@@ -2418,9 +2418,9 @@ public theorem proposition_3
     ⟨n, hn, hQ0card, A, hWV, hWD, rhoD, rhoMul, rhoAut,
       q0_add, k_units, vmodW_aut, modelIso, hdata⟩
   refine ⟨hWV, ?_⟩
-  letI : (W.subgroupOf V).Normal := hWV
+  let : (W.subgroupOf V).Normal := hWV
   let F : Type := GaloisField 2 n
-  letI : Algebra (ZMod 2) F := ZMod.algebra F 2
+  let : Algebra (ZMod 2) F := ZMod.algebra F 2
   let toAlg : (F ≃+* F) →* (F ≃ₐ[ZMod 2] F) :=
     { toFun := fun e =>
         AlgEquiv.ofRingEquiv (f := e) (by
@@ -2437,12 +2437,12 @@ public theorem proposition_3
         intro e f
         ext x
         rfl }
-  letI : IsCyclic (F ≃+* F) :=
+  let : IsCyclic (F ≃+* F) :=
     isCyclic_of_injective toAlg (by
       intro e f h
       ext x
       exact DFunLike.congr_fun h x)
-  letI : IsCyclic A := inferInstance
+  let : IsCyclic A := inferInstance
   exact (vmodW_aut.isCyclic).2 inferInstance
 end PFchapter1section2
 end BenderSuzuki

@@ -5,7 +5,7 @@ import FeitThompson.PFsection12.PFsection12_4
 import FeitThompson.PFsection12.PFsection12_9
 import FeitThompson.PFsection12.PFsection12_10
 import FeitThompson.PFsection12.PFsection12_12
-import FeitThompson.GroupAction.MinimalNormal
+import Theory.GroupAction.MinimalNormal
 import FeitThompson.PFsection5.RealVirtualParity
 import FeitThompson.PFsection6.PFsection6_5_a
 import FeitThompson.PFsection7.PFsection7_3
@@ -20,6 +20,7 @@ import FeitThompson.PFsection8.SourceTypePBridge
 import FeitThompson.PFsection9.PFsection9_1
 import Mathlib.GroupTheory.Schreier
 import Mathlib.RingTheory.ZMod.UnitsCyclic
+
 
 /-!
 # Peterfalvi, Section 12: Theorem (12.14)
@@ -130,8 +131,8 @@ private theorem CFOn_a1Set_sub_conjugate_of_puncturedInducedFamily
     Section2.CFOn L (Section8.a1Set H)
       (chi - Section1.conjugateCharacter chi) := by
   classical
-  letI : Fintype L := Fintype.ofFinite L
-  haveI : (H.subgroupOf L).Normal := section16MFSubgroup_subgroupOf_normal hMF
+  let : Fintype L := Fintype.ofFinite L
+  have : (H.subgroupOf L).Normal := section16MFSubgroup_subgroupOf_normal hMF
   have hchichar : Section1.IsCharacter chi := by
     rcases (hS chi).mp hchi with ⟨theta, hthetairr, _hthetane, rfl⟩
     exact Section1.isCharacter_inducedCF_of_isCharacter (H.subgroupOf L) theta
@@ -208,7 +209,7 @@ public theorem coherentExtension_subsetSum_of_hypothesis52WithRData
     {chi : Section1.ClassFunction L} (hchi : chi ∈ S) :
     Section5.isSubsetSumOf (R ⟨chi, hchi⟩) (tau1 chi) := by
   classical
-  letI : Fintype L := Fintype.ofFinite L
+  let : Fintype L := Fintype.ofFinite L
   rcases h52 with ⟨hsetup, h52a, h52b, h52c, h52d, h52e⟩
   let X : S := ⟨chi, hchi⟩
   have hchibar : Section1.conjugateCharacter chi ∈ S := by
@@ -301,13 +302,13 @@ public theorem not_conj_of_hypothesis_12_8_12_9_typeI
       simpa [hbot] using hxP0
     exact hxne this
   have hpP0 : IsPGroup p P0 := by
-    letI : Fact p.Prime := ⟨hp⟩
+    let : Fact p.Prime := ⟨hp⟩
     rcases hP0 with ⟨P, hP0eq⟩
     rw [← hP0eq]
     dsimp [section10AmbientSylowSubgroup]
     exact IsPGroup.map (p := p) (H := (P : Subgroup M)) P.isPGroup' M.subtype
   have hp_dvd_P0 : p ∣ Nat.card P0 := by
-    letI : Fact p.Prime := ⟨hp⟩
+    let : Fact p.Prime := ⟨hp⟩
     rcases hpP0.exists_card_eq with ⟨n, hn⟩
     have hnpos : 0 < n := by
       rcases n with _ | n
@@ -330,7 +331,7 @@ public theorem not_conj_of_hypothesis_12_8_12_9_typeI
     intro hpK
     apply hnot
     dsimp [subgroupPrimeSet]
-    apply Set.mem_setOf.mpr
+    apply Set.mem_ofPred.mpr
     exact hpK
   rintro ⟨g, _hg, hML⟩
   have hKconjMF : section16MFSubgroup L (K.conjBy g) := by
@@ -479,18 +480,18 @@ private theorem theorem_12_14_value_eq_projection
       exact ((Commute.refl (x : G)).zpow_right k).symm
     exact this
   have hP0p : IsPGroup p P0 := by
-    letI : Fact p.Prime := ⟨hp⟩
+    let : Fact p.Prime := ⟨hp⟩
     rcases hP0Sylow with ⟨PM, hP0eq⟩
     rw [← hP0eq]
     dsimp [section10AmbientSylowSubgroup]
     exact IsPGroup.map (p := p) (H := (PM : Subgroup M)) PM.isPGroup' M.subtype
   have hxK : x ∉ K := by
     intro hxK
-    letI : Fact p.Prime := ⟨hp⟩
+    let : Fact p.Prime := ⟨hp⟩
     have hpK := theorem_12_9_prime_not_mem_subgroupPrimeSet_of_quotient_noncyclic
       M K p hp hKMF hquot
     let P1 : Subgroup G := section12OmegaOneSubgroup ⟨p, hp⟩ P0
-    letI : IsElementaryAbelian p P1 := by
+    let : IsElementaryAbelian p P1 := by
       simpa [P1] using
         (theorem_12_9_omega_one_noncyclic P0 p hp hP0p hP0comm hP0rank).1
     have hxpowP1 : (⟨x, by simpa [P1] using hxOmega⟩ : P1) ^ p = 1 :=
@@ -503,7 +504,7 @@ private theorem theorem_12_14_value_eq_projection
       exact Subgroup.orderOf_dvd_natCard K hxK
     apply hpK
     dsimp [subgroupPrimeSet]
-    apply Set.mem_setOf.mpr
+    apply Set.mem_ofPred.mpr
     exact hpCardK
   have hinputM : theorem_12_4_dade_induction_lemma_source_inputs M K SM RM tauM := by
     intro _hhyp
@@ -549,7 +550,7 @@ private theorem theorem_12_14_value_eq_projection
   have hrhox : psirho ⟨x, hxL⟩ = psi x := by
     let xL : L := ⟨x, hxL⟩
     change psirho xL = psi x
-    letI : Fintype (R (xL : G)) := Fintype.ofFinite _
+    let : Fintype (R (xL : G)) := Fintype.ofFinite _
     rw [hrho.2, Section7.dadeProjection, Section2.dadeAveragingFunction]
     have hRxK' : R (xL : G) ≤ K := by simpa [xL] using hRxK
     have hsum : (∑ z : R (xL : G), psi ((xL : G) * (z : G))) =
@@ -721,16 +722,16 @@ private theorem theorem_12_14_projection_eq_character
         exact False.elim
           (Section8.not_typeIDefinitionData_of_typeP_source_data hP hTypeIL)
   have hP0p : IsPGroup p P0 := by
-    letI : Fact p.Prime := ⟨hp⟩
+    let : Fact p.Prime := ⟨hp⟩
     rcases hP0Sylow with ⟨PM, hP0eq⟩
     rw [← hP0eq]
     dsimp [section10AmbientSylowSubgroup]
     exact IsPGroup.map (p := p) (H := (PM : Subgroup M)) PM.isPGroup' M.subtype
   let P1 : Subgroup G := section12OmegaOneSubgroup ⟨p, hp⟩ P0
   have hP1card : Nat.card P1 = p ^ 2 := by
-    letI : Fact p.Prime := ⟨hp⟩
-    letI : IsMulCommutative P0 := hP0comm
-    letI : Fact (IsPGroup p P0) := ⟨hP0p⟩
+    let : Fact p.Prime := ⟨hp⟩
+    let : IsMulCommutative P0 := hP0comm
+    let : Fact (IsPGroup p P0) := ⟨hP0p⟩
     have hgen : generatorRank P0 = 2 := by
       apply le_antisymm
       · exact

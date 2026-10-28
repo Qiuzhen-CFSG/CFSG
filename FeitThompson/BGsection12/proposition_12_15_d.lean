@@ -200,7 +200,7 @@ public theorem section12_prime_dvd_card_of_primeRank_pos
   rcases hSup_mem with ⟨A, hAp, _hAcomm, hAgen⟩
   have hAgen_pos : 0 < generatorRank A := by
     have hSup_pos : 0 < sSup T := by
-      simpa [primeRank, T] using hpos
+      simpa [primeRank_eq_sSup_generatorRank, T] using hpos
     exact lt_of_lt_of_le hSup_pos hAgen
   have hAnontrivial : Nontrivial A := by
     rw [← not_subsingleton_iff_nontrivial]

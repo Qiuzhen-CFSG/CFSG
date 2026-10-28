@@ -7,13 +7,15 @@ public import Mathlib.LinearAlgebra.Matrix.ProjectiveSpecialLinearGroup
 # Projective special linear matrix groups
 
 This file contains the concrete `PSL(2,F)` matrix-group models used by the
-Peterfalvi Part II formalization.  The declarations live in the `BenderSuzuki.MatrixGroups` namespace so matrix-group models are not hidden under a Peterfalvi chapter namespace.
+Peterfalvi Part II formalization.  The declarations live in the
+`BenderSuzuki.MatrixGroups` namespace so matrix-group models are not hidden
+under a Peterfalvi chapter namespace.
 -/
 
 namespace BenderSuzuki
 namespace MatrixGroups
 
-open scoped MatrixGroups
+open scoped _root_.BenderSuzuki.MatrixGroups
 open PFAppendixIII
 
 universe w

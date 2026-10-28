@@ -7,6 +7,7 @@ public import GorensteinWalter.CommutatorCentralDecomposition
 public import GorensteinWalter.ComponentLayerPerfect
 import Mathlib.Tactic
 
+
 /-!
 # Equality of controlled normalizer layers in the A7 branch
 

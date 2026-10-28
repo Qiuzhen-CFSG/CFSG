@@ -1,0 +1,127 @@
+module
+public import CFSG.Quasithin.Chapter4.Section03.A5.SylowObstruction
+public import CFSG.Quasithin.ChapterC.Section05.CounterexampleCharacteristic.BlockSylow
+public import Theory.GroupTheory.SelfCentralizingCorePGroupJoin
+/-!
+# The local Sylow stage of the original 4.3.1 argument
+
+For a two-subgroup R of N(L) containing a Sylow subgroup of the original
+A₅ block L, suppose a Sylow subgroup of N(R) lies in N(L) and L joined
+with that same Sylow is a uniqueness subgroup. The actual L–Sylow join
+has characteristic two, residual L and the source unique-maximal property.
+Its C.5.1–2 counterexample would violate the local-Sylow rank obstruction.
+Thus N(R) lies in N(L). The source maximality argument that promotes the
+Sylow of N_M(R) to N_G(R) is kept separate.
+
+Source: Aschbacher–Smith 4.3.1, printed p.613.
+-/
+public section
+open Subgroup Theory.GroupTheory
+namespace CFSG.Quasithin.Chapter13.Section05.A5Source.Context
+variable {G : Type*} [Group G] [Finite G]
+  {T : Sylow 2 G} {L V V₁ V₂ V₃ : Subgroup G}
+  (d : Context T L V V₁ V₂ V₃)
+include d
+
+omit d in
+private theorem unique_intrinsic {A S : Subgroup G}
+    (P : Sylow 2 A) (hP : (P : Subgroup A).map A.subtype = S)
+    (hu : Order.HasUniqueMaximalOver S A) :
+    Order.HasUniqueMaximalOver (P : Subgroup A) ⊤ := by
+  obtain ⟨B,hB,_⟩ := hu.2
+  have hBA : B ≤ A := hB.2.le
+  have hPB : (P : Subgroup A) ≤ B.subgroupOf A := by
+    intro a ha
+    exact hB.1 (hP ▸ mem_map_of_mem A.subtype ha)
+  have hne : B.subgroupOf A ≠ ⊤ := by
+    intro he
+    have hh := congrArg (map A.subtype) he
+    rw [map_subgroupOf_eq_of_le hBA,← MonoidHom.range_eq_map,A.range_subtype] at hh
+    exact hB.2.ne hh
+  have hp (D : Subgroup A) (hPD : (P : Subgroup A) ≤ D) (hD : D ≠ ⊤) :
+      D ≤ B.subgroupOf A := by
+    apply map_le_iff_le_comap.mp
+    apply hu.le_maximal hB (hP ▸ map_mono hPD)
+    apply lt_of_le_of_ne (map_subtype_le _)
+    intro he
+    apply hD
+    apply map_injective A.subtype_injective
+    simpa only [← MonoidHom.range_eq_map,A.range_subtype] using he
+  have hco : IsCoatom (B.subgroupOf A) := by
+    refine ⟨hne,?_⟩
+    intro D hBD
+    by_contra hD
+    exact hBD.not_ge (hp D (hPB.trans hBD.le) hD)
+  refine ⟨hPB.trans_lt (lt_top_iff_ne_top.mpr hne), B.subgroupOf A,
+    ⟨hPB,hco.covBy_top⟩,?_⟩
+  intro D hD
+  apply le_antisymm (hp D hD.1 hD.2.ne)
+  exact le_of_eq ((hD.2.eq_or_eq (hp D hD.1 hD.2.ne) le_top).resolve_right hne)
+
+/-- The final local-Sylow stage of 4.3.1 on the original A5 block. -/
+theorem normalizer_le_of_source_sylow
+    (hblock : ChapterC.IsAlternatingBlock L 5)
+    (R : Subgroup G) (hR : IsPGroup 2 R) (hRM : R ≤ normalizer (L : Set G))
+    (Q : Sylow 2 L) (hQ : (Q : Subgroup L).map L.subtype ≤ R)
+    (P : Sylow 2 (normalizer (R : Set G)))
+    (hPM : (P : Subgroup (normalizer (R : Set G))).map
+      (normalizer (R : Set G)).subtype ≤ normalizer (L : Set G))
+    (hunique : Chapter4.UniqueMaximalOvergroup
+      (L ⊔ (P : Subgroup (normalizer (R : Set G))).map
+        (normalizer (R : Set G)).subtype) (normalizer (L : Set G))) :
+    normalizer (R : Set G) ≤ normalizer (L : Set G) := by
+  classical
+  by_contra hout
+  let M₀ := normalizer (R : Set G)
+  let S := (P : Subgroup M₀).map M₀.subtype
+  let H := L ⊔ S
+  have hS : IsPGroup 2 S := P.isPGroup'.map M₀.subtype
+  have hRS : R ≤ S := by
+    let : (R.subgroupOf M₀).Normal :=
+      (normal_subgroupOf_iff_le_normalizer R.le_normalizer).mpr le_rfl
+    have hpR : IsPGroup 2 (R.subgroupOf M₀) := hR.comap_subtype
+    have hh := map_mono (f := M₀.subtype) (hpR.le_sylow_of_normal P)
+    rwa [map_subgroupOf_eq_of_le R.le_normalizer] at hh
+  obtain ⟨P₀,hP₀⟩ := ChapterC.Section05.CounterexampleCharacteristic.chiZeroBlock_extension_sylow
+    L S hS hPM Q (hQ.trans hRS)
+  have hu := ChapterC.Section05.CounterexampleCharacteristic.chiZeroBlock_extension_unique
+    L S (Or.inr (Or.inr hblock)) hS hPM Q (hQ.trans hRS)
+  obtain ⟨P₁,hP₁⟩ := ChapterC.Section05.CounterexampleCharacteristic.chiZeroBlock_extension_sylow
+    L R hR hRM Q hQ
+  have hr : ∃ Z : Sylow 2 (R ⊔ L : Subgroup G),
+      (Z : Subgroup (R ⊔ L : Subgroup G)).map (R ⊔ L).subtype = R := by
+    rw [sup_comm R L]
+    exact ⟨P₁,hP₁⟩
+  obtain ⟨Z,hZ⟩ := hr
+  have hf : generalizedFitting H = pCore 2 H :=
+    generalizedFitting_eq_pCore_of_selfCentralizing 2
+      (centralizer_pCore_sup_le 2 L S
+        (by rw [←d.characteristic_L]; exact centralizer_generalizedFitting_le L) hS hPM)
+  have hHM : H ≤ normalizer (L : Set G) := sup_le L.le_normalizer hPM
+  have hH : IsSQTK KnownSimple.IsKnownSimple H :=
+    (IsSQTK.equiv (subgroupOfEquivOfLe hHM)).mp
+      ((d.hypothesis.qtke.twoLocal_sqtk d.normalizer_maximal_twoLocal.1).subgroup
+        (H.subgroupOf (normalizer (L : Set G))))
+  let c : ChapterC.Section05.BlockAnalysis.OriginalHypotheses H M₀ L R S := {
+    fitting := hf
+    sylow := P₀
+    sylow_image := hP₀
+    unique := unique_intrinsic P₀ hP₀ hu
+    residual := embedded_pResidual_join_pGroup L S d.twoPerfect hS hPM
+    R_le := hRS
+    T_le := map_subtype_le _
+    R_normal := le_rfl
+    residual_sylow := Z
+    residual_sylow_image := hZ
+    no_common_normal := by
+      intro N hNR hn
+      by_contra hne
+      have hNG : M₀ ⊔ H ≤ normalizer (N : Set G) :=
+        (normal_subgroupOf_iff_le_normalizer
+          (hNR.trans (R.le_normalizer.trans le_sup_left))).mp hn
+      have hb := normalizer_le_of_unique_maximalTwoLocal hunique.2.2 (hR.to_le hNR)
+        hne (le_sup_right.trans hNG)
+      exact hout (le_sup_left.trans (hNG.trans hb)) }
+  exact d.source_C56_impossible c hH P rfl
+
+end CFSG.Quasithin.Chapter13.Section05.A5Source.Context

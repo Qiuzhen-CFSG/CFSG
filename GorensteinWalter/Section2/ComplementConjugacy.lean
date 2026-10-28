@@ -1,10 +1,12 @@
 module
 
 public import BenderSuzuki.External.Huppert.I.theorem_18_3
-public import FeitThompson.HallSubgroups.Conjugacy
-public import FeitThompson.SubgroupConj
+public import Theory.GroupTheory.Hall.Conjugacy
+public import Theory.GroupTheory.SubgroupConjugation
 public import Mathlib.GroupTheory.SchurZassenhaus
+import Theory.GroupAction.CoprimeHall
 import Mathlib.Algebra.Group.Pointwise.Set.Basic
+
 
 /-!
 # Schur–Zassenhaus complement conjugacy support
@@ -95,7 +97,7 @@ theorem invariant_right_coset_has_fixed_representative_of_pgroup
     [MulDistribMulAction A G]
     {p : ℕ} [Fact (Nat.Prime p)] (hA : IsPGroup p A)
     (hcop : Nat.Coprime p (Nat.card G))
-    (U : Subgroup G) (hU : ∀ a : A, ∀ u : U, a • (u : G) ∈ U) (g : G)
+    (U : Subgroup G) (g : G)
     (hcoset : ∀ a : A,
       a • ((U : Set G) * ({g} : Set G)) = (U : Set G) * ({g} : Set G)) :
     ∃ c : G, c ∈ MulAction.fixedPoints A G ∧
@@ -807,11 +809,11 @@ theorem invariant_right_coset_has_fixed_representative
 
 /-- The two coprime-action identities used repeatedly in the Thompson lemma.
 This is the operator-action form of KS 8.2.7; ambient subgroup commutators are
-obtained with the bridges in `FeitThompson.SubgroupConj`. -/
+obtained with the bridges in `Theory.GroupTheory.SubgroupConjugation`. -/
 public theorem coprime_action_decomposition
     {A B : Type*} [Group A] [Finite A] [Group B] [Finite B]
     [MulDistribMulAction A B]
-    (hsolv : IsSolvable B) (hcop : Nat.Coprime (Nat.card A) (Nat.card B)) :
+    (hsolv : Group.IsSolvable B) (hcop : Nat.Coprime (Nat.card A) (Nat.card B)) :
     fixedPointSubgroup A B ⊔ commutatorAction (A := A) (G := B) = ⊤ ∧
       commutatorAction₂ (A := A) (G := B) = commutatorAction (A := A) (G := B) := by
   exact ⟨fixedPointSubgroup_sup_commutatorAction_eq_top_of_solvable_coprime

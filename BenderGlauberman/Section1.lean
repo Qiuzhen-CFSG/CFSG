@@ -23,9 +23,8 @@ open scoped Pointwise
 namespace BenderGlauberman
 
 open GorensteinWalter
-open Theory.Character
 
--- Local instances matching `Theory.Character`'s subgroup-sum convention; see
+-- Local instances matching `Character`'s subgroup-sum convention; see
 -- `BenderGlauberman/ClassFunction.lean`.
 attribute [local instance] Fintype.ofFinite
 attribute [local instance] Classical.propDecidable
@@ -173,6 +172,7 @@ public lemma sum_monoidHom_ne_one {A : Type u} [Group A] [Fintype A] (χ : A →
     ring
   exact (mul_eq_zero.mp h0).resolve_left (sub_ne_zero.mpr hc)
 
+omit [Fintype G] in
 /-- From `⁅H0,H0⁆ ≤ U` to the quotient-commutativity condition on `H0/U`. -/
 public lemma commutator_le_quotient_comm (H0 U : Subgroup G)
     (hcomm : ⁅H0, H0⁆ ≤ U) : ∀ x y : ↥H0, (x * y) / (y * x) ∈ U.subgroupOf H0 := by
@@ -243,8 +243,8 @@ public noncomputable instance instFintypeMonoidHomUnits {H : Type u} [Group H] [
   have hpos : 0 < Monoid.exponent H := by
     exact Monoid.exponent_pos_of_exists (Fintype.card H) (Fintype.card_pos)
       (fun g => pow_card_eq_one (x := g))
-  haveI : NeZero (Monoid.exponent H : ℂ) := ⟨by exact_mod_cast (ne_of_gt hpos)⟩
-  haveI : HasEnoughRootsOfUnity ℂ (Monoid.exponent H) :=
+  have : NeZero (Monoid.exponent H : ℂ) := ⟨by exact_mod_cast (ne_of_gt hpos)⟩
+  have : HasEnoughRootsOfUnity ℂ (Monoid.exponent H) :=
     IsSepClosed.hasEnoughRootsOfUnity ℂ (Monoid.exponent H)
   exact Fintype.ofFinite (α := H →* ℂˣ)
 
@@ -304,7 +304,7 @@ public lemma dual_sum_zero (H0 U : Subgroup G) [Fintype ↥(LambdaHom H0 U)]
     change LambdaChar b.1 * ν = ν at hb
     have h : LambdaChar (a * b).1 = LambdaChar a.1 * LambdaChar b.1 := by
       ext x
-      simp [LambdaChar, map_mul]
+      simp [LambdaChar]
     rw [h, mul_assoc, hb]
     exact ha
   inv_mem' := by
@@ -313,7 +313,7 @@ public lemma dual_sum_zero (H0 U : Subgroup G) [Fintype ↥(LambdaHom H0 U)]
     change LambdaChar a.1 * ν = ν at ha
     have h : LambdaChar (a⁻¹).1 = (LambdaChar a.1)⁻¹ := by
       ext x
-      simp [LambdaChar, map_inv, Units.val_inv]
+      simp [LambdaChar]
     rw [h]
     calc
       (LambdaChar a.1)⁻¹ * ν = (LambdaChar a.1)⁻¹ * (LambdaChar a.1 * ν) := by
@@ -345,7 +345,7 @@ public lemma orbit_fiber_card (H0 U : Subgroup G) [Fintype ↥(LambdaHom H0 U)]
         calc
           LambdaChar (l₀⁻¹ * l).1 * ν = (LambdaChar l₀.1)⁻¹ * LambdaChar l.1 * ν := by
                 funext x
-                simp [LambdaChar, map_mul, map_inv, Units.val_inv]
+                simp [LambdaChar]
           _ = (LambdaChar l₀.1)⁻¹ * (LambdaChar l.1 * ν) := by rw [mul_assoc]
           _ = (LambdaChar l₀.1)⁻¹ * μ := by rw [hl]
           _ = (LambdaChar l₀.1)⁻¹ * (LambdaChar l₀.1 * ν) := by rw [← hfl₀]
@@ -366,7 +366,7 @@ public lemma orbit_fiber_card (H0 U : Subgroup G) [Fintype ↥(LambdaHom H0 U)]
           calc
             LambdaChar (l₀ * s).1 * ν = LambdaChar l₀.1 * LambdaChar s.1 * ν := by
                   funext x
-                  simp [LambdaChar, map_mul]
+                  simp [LambdaChar]
             _ = LambdaChar l₀.1 * (LambdaChar s.1 * ν) := by rw [mul_assoc]
             _ = LambdaChar l₀.1 * ν := by rw [hs]
             _ = μ := hfl₀
@@ -387,7 +387,7 @@ public lemma orbit_map_injective_of_stab_one (H0 U : Subgroup G)
     calc
       LambdaChar (b⁻¹ * a).1 * ν = (LambdaChar b.1)⁻¹ * (LambdaChar a.1 * ν) := by
             funext x
-            simp [LambdaChar, map_mul, map_inv, Units.val_inv, mul_assoc]
+            simp [LambdaChar, mul_assoc]
       _ = (LambdaChar b.1)⁻¹ * (LambdaChar b.1 * ν) := by rw [hab]
       _ = ν := by
             rw [← mul_assoc]
@@ -488,7 +488,6 @@ public theorem lemma_1_7_i (H0 U : Subgroup G) [Fintype ↥(LambdaHom H0 U)]
     have hnon : (Finset.univ.filter (fun s : LambdaHom H0 U => LambdaChar s.1 * ν = ν)).Nonempty := by
       refine ⟨1, ?_⟩
       simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-      change LambdaChar (1 : ↥(LambdaHom H0 U)).1 * ν = ν
       have h1 : LambdaChar (1 : ↥(LambdaHom H0 U)).1 = (1 : ClassFunction (↥H0)) := by
         ext x
         simp [LambdaChar]
@@ -699,7 +698,7 @@ Lemma 1.7(i); the `e_ν`-sum regroups to `Σⱼ (χ, (νⱼ − λ₂νⱼ)*)_G 
 -/
 
 /-- From `|H0 : U| = 2` we get an element of `H0` outside `U`. -/
-private lemma exists_not_mem_of_index_two (H0 U : Subgroup G) (hK : (U.subgroupOf H0).Normal)
+private lemma exists_not_mem_of_index_two (H0 U : Subgroup G)
     (hindex : (U.subgroupOf H0).index = 2) : ∃ x : ↥H0, x ∉ U.subgroupOf H0 := by
   classical
   let K := U.subgroupOf H0
@@ -709,20 +708,20 @@ private lemma exists_not_mem_of_index_two (H0 U : Subgroup G) (hK : (U.subgroupO
     rw [this] at hindex
     norm_num at hindex
   by_contra h
-  push_neg at h
+  push Not at h
   exact hKtop ((Subgroup.eq_top_iff' K).mpr h)
 
 /-- A chosen element of `H0 \ U` (witness of `exists_not_mem_of_index_two`). -/
-private noncomputable def witnessIndexTwo (H0 U : Subgroup G) (hK : (U.subgroupOf H0).Normal)
+private noncomputable def witnessIndexTwo (H0 U : Subgroup G)
     (hindex : (U.subgroupOf H0).index = 2) : ↥H0 := by
   classical
-  exact Classical.choose (exists_not_mem_of_index_two H0 U hK hindex)
+  exact Classical.choose (exists_not_mem_of_index_two H0 U hindex)
 
-private lemma witnessIndexTwo_spec (H0 U : Subgroup G) (hK : (U.subgroupOf H0).Normal)
+private lemma witnessIndexTwo_spec (H0 U : Subgroup G)
     (hindex : (U.subgroupOf H0).index = 2) :
-    witnessIndexTwo H0 U hK hindex ∉ U.subgroupOf H0 := by
+    witnessIndexTwo H0 U hindex ∉ U.subgroupOf H0 := by
   classical
-  exact Classical.choose_spec (exists_not_mem_of_index_two H0 U hK hindex)
+  exact Classical.choose_spec (exists_not_mem_of_index_two H0 U hindex)
 
 /-- The nontrivial element `λ₂` of `ΛHom H0 U`, separating `witnessIndexTwo` from `1`.
 
@@ -731,19 +730,19 @@ public noncomputable def lambda2 (H0 U : Subgroup G) (hK : (U.subgroupOf H0).Nor
     (hcomm : ∀ x y : ↥H0, (x * y) / (y * x) ∈ U.subgroupOf H0)
     (hindex : (U.subgroupOf H0).index = 2) : LambdaHom H0 U := by
   classical
-  exact Classical.choose (LambdaHom_separates H0 U hK hcomm (witnessIndexTwo H0 U hK hindex)
-    (witnessIndexTwo_spec H0 U hK hindex))
+  exact Classical.choose (LambdaHom_separates H0 U hK hcomm (witnessIndexTwo H0 U hindex)
+    (witnessIndexTwo_spec H0 U hindex))
 
 private lemma lambda2_separates (H0 U : Subgroup G) (hK : (U.subgroupOf H0).Normal)
     (hcomm : ∀ x y : ↥H0, (x * y) / (y * x) ∈ U.subgroupOf H0)
     (hindex : (U.subgroupOf H0).index = 2) :
-    (lambda2 H0 U hK hcomm hindex).1 (witnessIndexTwo H0 U hK hindex) ≠ 1 := by
+    (lambda2 H0 U hK hcomm hindex).1 (witnessIndexTwo H0 U hindex) ≠ 1 := by
   classical
-  exact Classical.choose_spec (LambdaHom_separates H0 U hK hcomm (witnessIndexTwo H0 U hK hindex)
-    (witnessIndexTwo_spec H0 U hK hindex))
+  exact Classical.choose_spec (LambdaHom_separates H0 U hK hcomm (witnessIndexTwo H0 U hindex)
+    (witnessIndexTwo_spec H0 U hindex))
 
 /-- The quotient `H0/U` has exactly `2` elements. -/
-private lemma card_quotient_of_index_two (H0 U : Subgroup G) (hK : (U.subgroupOf H0).Normal)
+private lemma card_quotient_of_index_two (H0 U : Subgroup G)
     (hindex : (U.subgroupOf H0).index = 2) :
     Fintype.card (↥H0 ⧸ U.subgroupOf H0) = 2 := by
   classical
@@ -761,7 +760,7 @@ private lemma sq_mem_of_index_two (H0 U : Subgroup G) (hK : (U.subgroupOf H0).No
   let K := U.subgroupOf H0
   have hpow : (QuotientGroup.mk' K x : ↥H0 ⧸ K) ^ 2 = 1 := by
     have hc := pow_card_eq_one (x := (QuotientGroup.mk' K x : ↥H0 ⧸ K))
-    rw [card_quotient_of_index_two H0 U hK hindex] at hc
+    rw [card_quotient_of_index_two H0 U hindex] at hc
     exact hc
   have hq : QuotientGroup.mk' K (x ^ 2) = 1 := by
     rw [map_pow]
@@ -772,12 +771,12 @@ private lemma sq_mem_of_index_two (H0 U : Subgroup G) (hK : (U.subgroupOf H0).No
 private lemma quotient_dichotomy_of_index_two (H0 U : Subgroup G) (hK : (U.subgroupOf H0).Normal)
     (hindex : (U.subgroupOf H0).index = 2) :
     ∀ y : ↥H0 ⧸ U.subgroupOf H0,
-      y = 1 ∨ y = QuotientGroup.mk' (U.subgroupOf H0) (witnessIndexTwo H0 U hK hindex) := by
+      y = 1 ∨ y = QuotientGroup.mk' (U.subgroupOf H0) (witnessIndexTwo H0 U hindex) := by
   classical
   let K := U.subgroupOf H0
-  let w := witnessIndexTwo H0 U hK hindex
+  let w := witnessIndexTwo H0 U hindex
   intro y
-  have hcard : Fintype.card (↥H0 ⧸ K) = 2 := card_quotient_of_index_two H0 U hK hindex
+  have hcard : Fintype.card (↥H0 ⧸ K) = 2 := card_quotient_of_index_two H0 U hindex
   have huniv : (Finset.univ : Finset (↥H0 ⧸ K)).card = 2 := by
     simpa using hcard
   rcases Finset.card_eq_two.mp huniv with ⟨a, b, hab, huniv2⟩
@@ -792,7 +791,7 @@ private lemma quotient_dichotomy_of_index_two (H0 U : Subgroup G) (hK : (U.subgr
     simpa using hy
   have h1w : (1 : ↥H0 ⧸ K) ≠ QuotientGroup.mk' K w := by
     intro hEq
-    exact witnessIndexTwo_spec H0 U hK hindex
+    exact witnessIndexTwo_spec H0 U hindex
       ((QuotientGroup.eq_one_iff (N := K) w).mp hEq.symm)
   rcases h1ab with h1a | h1b
   · rcases hwab with hwa | hwb
@@ -808,9 +807,10 @@ private lemma quotient_dichotomy_of_index_two (H0 U : Subgroup G) (hK : (U.subgr
     · exfalso
       exact h1w (hwb.trans h1b.symm).symm
 
+omit [Fintype G] in
 /-- Elements of `ΛHom H0 U` agree on quotients that are equal modulo `U`. -/
 private lemma lambdaHom_eq_of_quotient_eq (H0 U : Subgroup G) (hK : (U.subgroupOf H0).Normal)
-    (hindex : (U.subgroupOf H0).index = 2) (l : LambdaHom H0 U) (x y : ↥H0)
+    (l : LambdaHom H0 U) (x y : ↥H0)
     (hq : QuotientGroup.mk' (U.subgroupOf H0) x = QuotientGroup.mk' (U.subgroupOf H0) y) :
     l.1 x = l.1 y := by
   classical
@@ -833,10 +833,10 @@ private lemma lambdaHom_eq_of_quotient_eq (H0 U : Subgroup G) (hK : (U.subgroupO
 private lemma lambda2_x0 (H0 U : Subgroup G) (hK : (U.subgroupOf H0).Normal)
     (hcomm : ∀ x y : ↥H0, (x * y) / (y * x) ∈ U.subgroupOf H0)
     (hindex : (U.subgroupOf H0).index = 2) :
-    ((lambda2 H0 U hK hcomm hindex).1 (witnessIndexTwo H0 U hK hindex) : ℂ) = -1 := by
+    ((lambda2 H0 U hK hcomm hindex).1 (witnessIndexTwo H0 U hindex) : ℂ) = -1 := by
   classical
   let lam2 := lambda2 H0 U hK hcomm hindex
-  let w := witnessIndexTwo H0 U hK hindex
+  let w := witnessIndexTwo H0 U hindex
   have hsqC : ((lam2.1 w : ℂ) ^ 2) = 1 := by
     have hsq : (lam2.1 w) ^ 2 = 1 := by
       calc
@@ -861,14 +861,14 @@ private lemma lambda2_dichotomy (H0 U : Subgroup G) (hK : (U.subgroupOf H0).Norm
   classical
   let K := U.subgroupOf H0
   let lam2 := lambda2 H0 U hK hcomm hindex
-  let w := witnessIndexTwo H0 U hK hindex
+  let w := witnessIndexTwo H0 U hindex
   intro l
   have hpoint (m : LambdaHom H0 U) (y : ↥H0) : m.1 y = 1 ∨ m.1 y = m.1 w := by
     rcases quotient_dichotomy_of_index_two H0 U hK hindex (QuotientGroup.mk' K y) with hq | hq
     · left
       exact m.2 y (Subgroup.mem_subgroupOf.mp ((QuotientGroup.eq_one_iff (N := K) y).mp hq))
     · right
-      exact lambdaHom_eq_of_quotient_eq H0 U hK hindex m y w hq
+      exact lambdaHom_eq_of_quotient_eq H0 U hK m y w hq
   by_cases hw : l.1 w = 1
   · left
     ext y
@@ -897,9 +897,9 @@ private lemma lambda2_dichotomy (H0 U : Subgroup G) (hK : (U.subgroupOf H0).Norm
           l.1 y = 1 := l.2 y (Subgroup.mem_subgroupOf.mp ((QuotientGroup.eq_one_iff (N := K) y).mp hq))
           _ = lam2.1 y := (lam2.2 y (Subgroup.mem_subgroupOf.mp ((QuotientGroup.eq_one_iff (N := K) y).mp hq))).symm
       · calc
-          l.1 y = l.1 w := lambdaHom_eq_of_quotient_eq H0 U hK hindex l y w hq
+          l.1 y = l.1 w := lambdaHom_eq_of_quotient_eq H0 U hK l y w hq
           _ = lam2.1 w := Units.ext hlwC
-          _ = lam2.1 y := (lambdaHom_eq_of_quotient_eq H0 U hK hindex lam2 y w hq).symm
+          _ = lam2.1 y := (lambdaHom_eq_of_quotient_eq H0 U hK lam2 y w hq).symm
     exact congrArg (fun u : ℂˣ => (u : ℂ)) hl
 
 /-- `λ₂(x) = -1` for `x ∈ T = H0 \ U`. -/
@@ -924,8 +924,8 @@ private lemma lambda2_T (H0 U : Subgroup G) (hK : (U.subgroupOf H0).Normal)
   · have hxK : x ∈ K := by
       rcases quotient_dichotomy_of_index_two H0 U hK hindex (QuotientGroup.mk' K x) with hq | hq
       · exact (QuotientGroup.eq_one_iff (N := K) x).mp hq
-      · have hlx : lam2.1 x = lam2.1 (witnessIndexTwo H0 U hK hindex) := by
-          exact lambdaHom_eq_of_quotient_eq H0 U hK hindex lam2 x (witnessIndexTwo H0 U hK hindex) hq
+      · have hlx : lam2.1 x = lam2.1 (witnessIndexTwo H0 U hindex) := by
+          exact lambdaHom_eq_of_quotient_eq H0 U hK lam2 x (witnessIndexTwo H0 U hindex) hq
         have hxC : (lam2.1 x : ℂ) = -1 := by
           rw [hlx]
           exact lambda2_x0 H0 U hK hcomm hindex

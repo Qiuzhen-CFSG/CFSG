@@ -1,0 +1,47 @@
+module
+
+public import CFSG.Quasithin.Chapter16.Section04To05.InnerFamily.OrderTwo.CentralizerCases.BinaryLinear
+
+@[expose] public section
+
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.eightAction
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.eightAction_injective
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.eightAction_inner
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.eightAction_component
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.eightAction_outer
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.eightAction_join_top
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.eightAction_surjective
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.eightEquiv
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.eight_join_eq_top
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.eightJoinEquiv
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.eightJoinEquiv_apply
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.eightJoinEquiv_component
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.eight_symmetricCase
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.eightAction_residual
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.eightEquiv_residualCentralizer
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.eightResidualCentralizerEquiv
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.eight_outer_cycleType
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.eight_modelResidual_eq
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.eightFixedResidualCentralizerEquiv
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.fourQuotientEquiv
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.binaryQuotientEquiv
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.five_graph_marking
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.EightModel.residual
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.EightModel.fullCentralizer
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.EightModel.onePair_card
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.EightModel.threePairs_card
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.EightModel.threePairs_elementary
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.eightAction_change
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.eight_marking
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.eight_onePair_card
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.eight_threePairs_data
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.eight_alternative
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.four_alternative
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.FiveModel.graphResidual
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.FiveModel.fixer_coverage
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.FiveModel.fixer_card_le_two
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.FiveModel.fixer_not_four_dvd
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.five_alternative_of_marked_conjugacy
+#print axioms CFSG.Quasithin.Chapter16.Intersections.OrderTwo.CentralizerCases.BinaryLinear.binary_alternative_of_graph_conjugacy
+
+end

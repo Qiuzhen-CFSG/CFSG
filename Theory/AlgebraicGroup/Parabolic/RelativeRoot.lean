@@ -1,0 +1,43 @@
+module
+
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.theorem_1_12_9
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.theorem_1_13_2
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.StandardUnipotentRootProduct
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.theorem_1_13_3
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.LayerCoordinateEquivalence
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.LayerQuotientModel
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.nonsingular_coefficient
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.ExactCommutatorLayers
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.UpperCommutatorDetection
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.SharpCentralSeries
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.ParabolicNormalizer
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.theorem_1_13_5
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.SourceSetup
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.SourceLayerClosedInterface
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.theorem_1_14_6
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.representation_source_nonsingular_coefficient
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.sourceRelativeRootLayer_next_normal
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.sourceRelativeRootLayer_root_mem
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.RepresentationSourceCoordinateEquivalence
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.SourceLayerCoordinateQuotient
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.SourceQuotientConjugation
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.SourceQuotientCoordinateRegularity
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.source_coordinate_fiber_stability
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.source_fiber_supported_coordinate_equiv
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.source_layer_levi_action
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.source_fiber_regular_morphism
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.fiber_module_exists
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.fiberModule_rational
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.source_chevalley_torus_fiber_bridge
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.fiber_torus_weight_generator_detection
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.fiber_generator_detection
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.fiber_full_levi_orbit_span
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.fiber_module_irreducible
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.borel_levi_max_root_action
+public import Theory.AlgebraicGroup.Parabolic.RelativeRoot.theorem_1_14_7
+
+/-!
+Assembly module for the declarations formerly stored together in `Theory.AlgebraicGroup.Parabolic.RelativeRoot`.
+The focused imports isolate unresolved results while this compatibility boundary
+preserves the original public import path and declaration order.
+-/

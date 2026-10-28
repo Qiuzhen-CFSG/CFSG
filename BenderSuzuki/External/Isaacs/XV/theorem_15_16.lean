@@ -3,11 +3,13 @@ module
 public import FeitThompson.BGsection3.Defs
 public import BenderSuzuki.External.Isaacs.VII.problem_7_1
 public import BenderSuzuki.External.Isaacs.XV.lemma_15_15
-public import FeitThompson.GroupAction.FreeOrbitQuotient
+public import Theory.GroupAction.FreeOrbitQuotient
 public import Theory.Representation.FreeBasis
 public import Theory.Representation.ScalarDescent
 public import Theory.Representation.PermutationBasisOrbits
 public import Mathlib.FieldTheory.AlgebraicClosure
+
+open Representation
 
 open scoped TensorProduct
 
@@ -50,12 +52,12 @@ private theorem isaacs_15_16_fixedSpace_of_freePermutationBasis
     Module.finrank K (Representation.fixedSubspace rho H0) =
         Module.finrank K (Representation.invariants (rho.comp H0.subtype : Representation K H0 V)) := rfl
     _ = Nat.card (MulAction.orbitRel.Quotient H0 iota) :=
-      Theory.Representation.permutedBasis_fixedSubspace_finrank_eq_orbitQuotient_card
+      Representation.permutedBasis_fixedSubspace_finrank_eq_orbitQuotient_card
         (rho.comp H0.subtype) b hb0
     _ = H0.index * Nat.card (MulAction.orbitRel.Quotient G iota) :=
       MulAction.natCard_orbitRelQuotient_subgroup H0
     _ = H0.index * Module.finrank K rho.invariants := by
-      rw [Theory.Representation.permutedBasis_fixedSubspace_finrank_eq_orbitQuotient_card
+      rw [Representation.permutedBasis_fixedSubspace_finrank_eq_orbitQuotient_card
         rho b hb]
 private theorem isaacs_15_16_of_repEquiv_free
     {G K V : Type*} [Group G] [Finite G] [Field K]
@@ -73,10 +75,10 @@ private theorem isaacs_15_16_of_repEquiv_free
         Module.finrank K (Representation.fixedSubspace rho H0) =
           H0.index * Module.finrank K rho.invariants) := by
   constructor
-  · exact Theory.Representation.exists_freeOrbitBasis_of_repEquiv_free rho e
-  · letI : Fintype G := Fintype.ofFinite G
-    letI : Fintype alpha := Fintype.ofFinite alpha
-    letI : MulAction G (alpha × G) := {
+  · exact Representation.exists_freeOrbitBasis_of_repEquiv_free rho e
+  · let : Fintype G := Fintype.ofFinite G
+    let : Fintype alpha := Fintype.ofFinite alpha
+    let : MulAction G (alpha × G) := {
       smul g x := (x.1, g * x.2)
       one_smul x := by
         rcases x with ⟨i, k⟩
@@ -86,78 +88,78 @@ private theorem isaacs_15_16_of_repEquiv_free
         rcases x with ⟨i, k⟩
         change (i, (g * h) * k) = (i, g * (h * k))
         rw [mul_assoc] }
-    letI : IsCancelSMul G (alpha × G) := {
+    let : IsCancelSMul G (alpha × G) := {
       toIsLeftCancelSMul := inferInstance
       right_cancel' g h x eq := by
         rcases x with ⟨i, k⟩
         change (i, g * k) = (i, h * k) at eq
         exact mul_right_cancel (congrArg Prod.snd eq) }
     let b : Module.Basis (alpha × G) K V :=
-      (Theory.Representation.freeBasis K G alpha).map e.toLinearEquiv.symm
+      (Representation.freeBasis K G alpha).map e.toLinearEquiv.symm
     have hb :
         forall g : G, forall i : alpha × G,
           rho g (b i) = b (g • i) := by
       intro g i
       have hfree :
-          Representation.free K G alpha g (Theory.Representation.freeBasis K G alpha i) =
-            Theory.Representation.freeBasis K G alpha (g • i) := by
+          Representation.free K G alpha g (Representation.freeBasis K G alpha i) =
+            Representation.freeBasis K G alpha (g • i) := by
         rcases i with ⟨j, k⟩
         change Representation.free K G alpha g
-            (Theory.Representation.freeBasis K G alpha (j, k)) =
-          Theory.Representation.freeBasis K G alpha (j, g * k)
+            (Representation.freeBasis K G alpha (j, k)) =
+          Representation.freeBasis K G alpha (j, g * k)
         simp
-      change rho g (e.symm (Theory.Representation.freeBasis K G alpha i)) =
-        e.symm (Theory.Representation.freeBasis K G alpha (g • i))
+      change rho g (e.symm (Representation.freeBasis K G alpha i)) =
+        e.symm (Representation.freeBasis K G alpha (g • i))
       rw [← hfree]
       exact (e.symm.isIntertwining g
-        (Theory.Representation.freeBasis K G alpha i)).symm
+        (Representation.freeBasis K G alpha i)).symm
     exact isaacs_15_16_fixedSpace_of_freePermutationBasis rho b hb
 
 private noncomputable def isaacs_15_16_extendScalars_free_equiv
     {K E G alpha : Type*} [Field K] [Field E] [Algebra K E] [Group G] :
-    Theory.Representation.extendScalars (F := K) (G := G) E (Representation.free K G alpha) ≃ₗ
+    Representation.extendScalars (F := K) (G := G) E (Representation.free K G alpha) ≃ₗ
       Representation.free E G alpha := by
-  let bK := (Theory.Representation.freeBasis K G alpha).baseChange E
-  let bE := Theory.Representation.freeBasis E G alpha
+  let bK := (Representation.freeBasis K G alpha).baseChange E
+  let bE := Representation.freeBasis E G alpha
   let e : (E ⊗[K] (alpha →₀ MonoidAlgebra K G)) ≃ₗ[E]
       (alpha →₀ MonoidAlgebra E G) := bK.equiv bE (Equiv.refl (alpha × G))
-  refine Theory.Representation.RepEquiv.mk e ?_
+  refine Representation.RepEquiv.mk e ?_
   intro g
   apply Module.Basis.ext bK
   intro i
   have heval (j : alpha × G) : e (bK j) = bE j := by
     simp [e]
   rcases i with ⟨a, h⟩
-  simp only [LinearMap.comp_apply, Theory.Representation.extendScalars_apply]
+  simp only [LinearMap.comp_apply, Representation.extendScalars_apply]
   dsimp only [bK]
   rw [Module.Basis.baseChange_apply, LinearMap.baseChange_tmul,
-    Theory.Representation.free_apply_freeBasis_pair, ← Module.Basis.baseChange_apply,
+    Representation.free_apply_freeBasis_pair, ← Module.Basis.baseChange_apply,
     ← Module.Basis.baseChange_apply]
   have heval1 :
       (e : E ⊗[K] (alpha →₀ MonoidAlgebra K G) → alpha →₀ MonoidAlgebra E G)
-          ((Theory.Representation.freeBasis K G alpha).baseChange E (a, g * h)) =
+          ((Representation.freeBasis K G alpha).baseChange E (a, g * h)) =
         bE (a, g * h) := by
     simpa only [bK] using heval (a, g * h)
   have heval2 :
       (e : E ⊗[K] (alpha →₀ MonoidAlgebra K G) → alpha →₀ MonoidAlgebra E G)
-          ((Theory.Representation.freeBasis K G alpha).baseChange E (a, h)) =
+          ((Representation.freeBasis K G alpha).baseChange E (a, h)) =
         bE (a, h) := by
     simpa only [bK] using heval (a, h)
-  change e ((Theory.Representation.freeBasis K G alpha).baseChange E (a, g * h)) =
+  change e ((Representation.freeBasis K G alpha).baseChange E (a, g * h)) =
     Representation.free E G alpha g
-      (e ((Theory.Representation.freeBasis K G alpha).baseChange E (a, h)))
+      (e ((Representation.freeBasis K G alpha).baseChange E (a, h)))
   rw [heval1, heval2]
   simpa only [bE] using
-    (Theory.Representation.free_apply_freeBasis_pair E G alpha g h a).symm
+    (Representation.free_apply_freeBasis_pair E G alpha g h a).symm
 private theorem isaacs_15_16_extendScalars_equiv_free
     {K E G V alpha : Type*} [Field K] [Field E] [Algebra K E]
     [Group G] [AddCommGroup V] [Module K V]
     (rho : Representation K G V)
-    (e : Theory.Representation.extendScalars (F := K) (G := G) (V := V) E rho ≃ₗ
+    (e : Representation.extendScalars (F := K) (G := G) (V := V) E rho ≃ₗ
       Representation.free E G alpha) :
     Nonempty
-      (Theory.Representation.extendScalars (F := K) (G := G) (V := V) E rho ≃ₗ
-        Theory.Representation.extendScalars (F := K) (G := G) E (Representation.free K G alpha)) :=
+      (Representation.extendScalars (F := K) (G := G) (V := V) E rho ≃ₗ
+        Representation.extendScalars (F := K) (G := G) E (Representation.free K G alpha)) :=
   ⟨e.trans (isaacs_15_16_extendScalars_free_equiv
     (K := K) (E := E) (G := G) (alpha := alpha)).symm⟩
 private theorem isaacs_15_16_repEquiv_of_extendScalars
@@ -165,21 +167,21 @@ private theorem isaacs_15_16_repEquiv_of_extendScalars
     [AddCommGroup V] [Module F V] [FiniteDimensional F V]
     [AddCommGroup W] [Module F W] [FiniteDimensional F W]
     (rho : Representation F G V) (sigma : Representation F G W)
-    (hE : Nonempty (Theory.Representation.extendScalars E rho ≃ₗ
-      Theory.Representation.extendScalars E sigma)) :
+    (hE : Nonempty (Representation.extendScalars E rho ≃ₗ
+      Representation.extendScalars E sigma)) :
     Nonempty (rho ≃ₗ sigma) :=
-  Theory.Representation.repEquiv_of_extendScalars rho sigma hE
+  Representation.repEquiv_of_extendScalars rho sigma hE
 set_option backward.isDefEq.respectTransparency false in
 private theorem isaacs_15_16_descend_equiv_free
     {K E G V alpha : Type*} [Field K] [Field E] [Algebra K E]
     [Group G] [Finite G] [Finite alpha]
     [AddCommGroup V] [Module K V] [FiniteDimensional K V]
     (rho : Representation K G V)
-    (e : Theory.Representation.extendScalars (F := K) (G := G) (V := V) E rho ≃ₗ
+    (e : Representation.extendScalars (F := K) (G := G) (V := V) E rho ≃ₗ
       Representation.free E G alpha) :
     Nonempty (rho ≃ₗ Representation.free K G alpha) := by
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fintype alpha := Fintype.ofFinite alpha
+  let : Fintype G := Fintype.ofFinite G
+  let : Fintype alpha := Fintype.ofFinite alpha
   refine isaacs_15_16_repEquiv_of_extendScalars
     (F := K) (E := E) (G := G) (V := V)
     (W := alpha →₀ MonoidAlgebra K G) rho (Representation.free K G alpha) ?_
@@ -192,7 +194,7 @@ private noncomputable def isaacs_15_16_repEquiv_asModule
     (e : rho ≃ₗ sigma) :
     rho.asModule ≃ₗ[MonoidAlgebra F G] sigma.asModule :=
   LinearEquiv.ofBijective
-    (Theory.Representation.RepMap.equivLinearMapAsModule rho sigma e.toRepMap)
+    (Representation.RepMap.equivLinearMapAsModule rho sigma e.toRepMap)
     e.bijective
 
 private noncomputable def isaacs_15_16_ofSubmodule'_repEquiv
@@ -203,7 +205,7 @@ private noncomputable def isaacs_15_16_ofSubmodule'_repEquiv
     (e : U ≃ₗ[MonoidAlgebra F G] W) :
     (Subrepresentation.ofSubmodule' U).toRepresentation ≃ₗ
       (Subrepresentation.ofSubmodule' W).toRepresentation := by
-  refine Theory.Representation.RepEquiv.mk (e.restrictScalars F) ?_
+  refine Representation.RepEquiv.mk (e.restrictScalars F) ?_
   intro g
   apply LinearMap.ext
   intro v
@@ -291,7 +293,7 @@ private noncomputable def isaacs_15_16_componentOrderIso
   let rhoN : Representation F N V := rho.comp N.subtype
   exact
     (Subrepresentation.subrepresentationSubmoduleOrderIso (ρ := rhoN)).symm |>.trans
-      ((Theory.Representation.conjugateSubrepresentationOrderIso rho N g).trans
+      ((Representation.conjugateSubrepresentationOrderIso rho N g).trans
         (Subrepresentation.subrepresentationSubmoduleOrderIso (ρ := rhoN)))
 
 @[simp]
@@ -304,8 +306,8 @@ private theorem isaacs_15_16_componentOrderIso_one
     isaacs_15_16_componentOrderIso rho N 1 W = W := by
   simp only [isaacs_15_16_componentOrderIso, Subrepresentation.subrepresentationSubmoduleOrderIso,
     OrderIso.symm_mk, OrderIso.trans_apply, RelIso.coe_fn_mk, Equiv.coe_fn_symm_mk,
-    Theory.Representation.conjugateSubrepresentationOrderIso_apply,
-    Theory.Representation.conjugateSubrepresentation, inv_one, map_one, Equiv.coe_fn_mk,
+    Representation.conjugateSubrepresentationOrderIso_apply,
+    Representation.conjugateSubrepresentation, inv_one, map_one, Equiv.coe_fn_mk,
     Subrepresentation.asSubmodule]
   congr
   ext
@@ -324,13 +326,13 @@ private theorem isaacs_15_16_componentOrderIso_mul
       isaacs_15_16_componentOrderIso rho N g
         (isaacs_15_16_componentOrderIso rho N k W) := by
   change
-    (Theory.Representation.conjugateSubrepresentationOrderIso rho N (g * k)
+    (Representation.conjugateSubrepresentationOrderIso rho N (g * k)
       (Subrepresentation.ofSubmodule' W)).asSubmodule =
-    (Theory.Representation.conjugateSubrepresentationOrderIso rho N g
-      (Theory.Representation.conjugateSubrepresentationOrderIso rho N k
+    (Representation.conjugateSubrepresentationOrderIso rho N g
+      (Representation.conjugateSubrepresentationOrderIso rho N k
         (Subrepresentation.ofSubmodule' W))).asSubmodule
   exact congrArg Subrepresentation.asSubmodule
-    (Theory.Representation.conjugateSubrepresentationOrderIso_mul rho N g k
+    (Representation.conjugateSubrepresentationOrderIso_mul rho N g k
       (Subrepresentation.ofSubmodule' W))
 
 private theorem isaacs_15_16_componentOrderIso_restrictScalars
@@ -343,11 +345,11 @@ private theorem isaacs_15_16_componentOrderIso_restrictScalars
     (isaacs_15_16_componentOrderIso rho N g W).restrictScalars F =
       Submodule.map (rho g) (W.restrictScalars F) := by
   change
-    ((Theory.Representation.conjugateSubrepresentationOrderIso rho N g
+    ((Representation.conjugateSubrepresentationOrderIso rho N g
       (Subrepresentation.ofSubmodule' W)).asSubmodule).restrictScalars F =
       Submodule.map (rho g) (W.restrictScalars F)
   exact congrArg (Submodule.restrictScalars F)
-    (Theory.Representation.conjugateSubrepresentationOrderIso_toSubmodule rho N g
+    (Representation.conjugateSubrepresentationOrderIso_toSubmodule rho N g
       (Subrepresentation.ofSubmodule' W))
 private noncomputable def isaacs_15_16_componentOrderIso_linearEquiv
     {F G V : Type*} [Field F] [Group G]
@@ -361,11 +363,11 @@ private noncomputable def isaacs_15_16_componentOrderIso_linearEquiv
   let rhoN : Representation F N V := rho.comp N.subtype
   let eRep := isaacs_15_16_ofSubmodule'_repEquiv rhoN e
   let eConj :=
-    Theory.Representation.conjugateSubrepresentationOrderIsoRepEquiv rho N eRep g
+    Representation.conjugateSubrepresentationOrderIsoRepEquiv rho N eRep g
   change
-    (Theory.Representation.conjugateSubrepresentationOrderIso rho N g
+    (Representation.conjugateSubrepresentationOrderIso rho N g
         (Subrepresentation.ofSubmodule' U)).asSubmodule ≃ₗ[MonoidAlgebra F N]
-      (Theory.Representation.conjugateSubrepresentationOrderIso rho N g
+      (Representation.conjugateSubrepresentationOrderIso rho N g
         (Subrepresentation.ofSubmodule' W)).asSubmodule
   exact isaacs_15_16_subrepresentation_repEquiv_asSubmodule eConj
 
@@ -387,7 +389,7 @@ private theorem isaacs_15_16_componentOrderIso_isotypicComponent_le
       isotypicComponent (MonoidAlgebra F N)
         V
         (isaacs_15_16_componentOrderIso rho N g S) := by
-  letI : Module (MonoidAlgebra F N)
+  let : Module (MonoidAlgebra F N)
       V :=
     Representation.instModuleMonoidAlgebraAsModule (rho.comp N.subtype)
   unfold isotypicComponent
@@ -428,7 +430,7 @@ private theorem isaacs_15_16_componentOrderIso_isotypicComponent_eq
       isotypicComponent (MonoidAlgebra F N)
         V
         (isaacs_15_16_componentOrderIso rho N g S) := by
-  letI : Module (MonoidAlgebra F N)
+  let : Module (MonoidAlgebra F N)
       V :=
     Representation.instModuleMonoidAlgebraAsModule (rho.comp N.subtype)
   apply le_antisymm
@@ -472,7 +474,7 @@ private theorem isaacs_15_16_componentOrderIso_mem_isotypicComponents
     isaacs_15_16_componentOrderIso rho N g c.1 ∈
       isotypicComponents (MonoidAlgebra F N)
         V := by
-  letI : Module (MonoidAlgebra F N)
+  let : Module (MonoidAlgebra F N)
       V :=
     Representation.instModuleMonoidAlgebraAsModule (rho.comp N.subtype)
   rcases c with ⟨c, S, hS, rfl⟩
@@ -502,7 +504,7 @@ private theorem isaacs_15_16_repEquiv_free_of_component_action_aux
     exists (alpha : Type) (_ : Finite alpha),
       Nonempty (rho ≃ₗ Representation.free E H alpha) := by
   classical
-  letI (c : C) : FiniteDimensional E (A c) :=
+  let (c : C) : FiniteDimensional E (A c) :=
     FiniteDimensional.of_injective (A c).subtype Subtype.val_injective
   let eH (h : H) : V ≃ₗ[E] V :=
     LinearEquiv.ofBijective (rho h) (Representation.apply_bijective rho h)
@@ -579,8 +581,8 @@ private theorem isaacs_15_16_repEquiv_free_of_component_action_aux
     change rho g (b (qAlpha.symm i, h)) = b (qAlpha.symm i, g * h)
     exact hb g (qAlpha.symm i, h)
   let eLin :=
-    b0.equiv (Theory.Representation.freeBasis E H alpha0) (Equiv.refl (alpha0 × H))
-  refine ⟨alpha0, inferInstance, ⟨Theory.Representation.RepEquiv.mk eLin ?_⟩⟩
+    b0.equiv (Representation.freeBasis E H alpha0) (Equiv.refl (alpha0 × H))
+  refine ⟨alpha0, inferInstance, ⟨Representation.RepEquiv.mk eLin ?_⟩⟩
   intro g
   apply b0.ext
   intro x
@@ -588,7 +590,7 @@ private theorem isaacs_15_16_repEquiv_free_of_component_action_aux
     Representation.free E H alpha0 g (eLin (b0 x))
   rw [hb0]
   rw [Module.Basis.equiv_apply, Module.Basis.equiv_apply]
-  exact (Theory.Representation.free_apply_freeBasis_pair E H alpha0 g x.2 x.1).symm
+  exact (Representation.free_apply_freeBasis_pair E H alpha0 g x.2 x.1).symm
 
 private theorem isaacs_15_16_repEquiv_free_of_component_action
     {H E V C : Type*} [Group H] [Finite H] [Field E]
@@ -601,10 +603,10 @@ private theorem isaacs_15_16_repEquiv_free_of_component_action
     exists (alpha : Type) (_ : Finite alpha),
       Nonempty (rho ≃ₗ Representation.free E H alpha) := by
   classical
-  letI : Fintype H := Fintype.ofFinite H
-  letI : Fintype C := Fintype.ofFinite C
+  let : Fintype H := Fintype.ofFinite H
+  let : Fintype C := Fintype.ofFinite C
   let Q := MulAction.orbitRel.Quotient H C
-  letI : Fintype Q := Fintype.ofFinite Q
+  let : Fintype Q := Fintype.ofFinite Q
   let eC : Q × H ≃ C := Equiv.ofBijective
     (fun qh => qh.2 • Quotient.out qh.1) (by
       constructor
@@ -648,7 +650,7 @@ private theorem isaacs_15_16_fixedSubspace_extendScalars_eq_bot
     (N : Subgroup G) (rho : Representation K G V)
     (hchar : ¬ ringChar K ∣ Nat.card N)
     (hfixedN : rho.fixedSubspace N = (⊥ : Submodule K V)) :
-    (Theory.Representation.extendScalars (AlgebraicClosure K) rho).fixedSubspace N =
+    (Representation.extendScalars (AlgebraicClosure K) rho).fixedSubspace N =
       (⊥ : Submodule (AlgebraicClosure K) (AlgebraicClosure K ⊗[K] V)) := by
   have hcardK : (Nat.card N : K) ≠ 0 := by
     intro hzero
@@ -662,13 +664,13 @@ private theorem isaacs_15_16_fixedSubspace_extendScalars_eq_bot
     simpa [Algebra.ringChar_eq K (AlgebraicClosure K)] using hdiv
   dsimp [Representation.fixedSubspace]
   change Representation.invariants
-      (Theory.Representation.extendScalars (AlgebraicClosure K)
+      (Representation.extendScalars (AlgebraicClosure K)
         (rho.comp N.subtype : Representation K N V)) = ⊥
   have hInv :
       Representation.invariants
           (rho.comp N.subtype : Representation K N V) = ⊥ := by
     simpa [Representation.fixedSubspace] using hfixedN
-  rw [Theory.Representation.invariants_extendScalars_eq_baseChange_of_card_ne_zero
+  rw [Representation.invariants_extendScalars_eq_baseChange_of_card_ne_zero
       (ρ := (rho.comp N.subtype : Representation K N V)) hcardK hcardE,
     hInv, Submodule.baseChange_bot]
 
@@ -681,16 +683,16 @@ private theorem isaacs_15_16_algebraicClosure_restrict_equiv_free
     (hfixedN : rho.fixedSubspace N = (⊥ : Submodule K V)) :
     exists (alpha : Type) (_ : Finite alpha),
       Nonempty
-        (Theory.Representation.extendScalars (AlgebraicClosure K)
+        (Representation.extendScalars (AlgebraicClosure K)
             (rho.comp H.subtype : Representation K H V) ≃ₗ
           Representation.free (AlgebraicClosure K) H alpha) := by
   classical
   let E := AlgebraicClosure K
-  letI : CharP E (ringChar E) := ringChar.charP E
+  let : CharP E (ringChar E) := ringChar.charP E
   let rhoE : Representation E G (E ⊗[K] V) :=
-    Theory.Representation.extendScalars E rho
-  letI : FiniteDimensional E (E ⊗[K] V) :=
-    Theory.Representation.extendScalars_finite_dimensional E rho
+    Representation.extendScalars E rho
+  let : FiniteDimensional E (E ⊗[K] V) :=
+    Representation.extendScalars_finite_dimensional E rho
   have hfixedE : rhoE.fixedSubspace N =
       (⊥ : Submodule E (E ⊗[K] V)) := by
     simpa [E, rhoE] using
@@ -706,31 +708,31 @@ private theorem isaacs_15_16_algebraicClosure_restrict_equiv_free
         (CharP.char_is_prime_or_zero E (ringChar E)).resolve_right hzero
       exact Or.inr ⟨hprime, hprime.coprime_iff_not_dvd.mpr hcharE⟩
   let psiN : Representation E N (E ⊗[K] V) := rhoE.comp N.subtype
-  letI : Module E (E ⊗[K] V) :=
+  let : Module E (E ⊗[K] V) :=
     Representation.instModuleAsModule psiN
-  letI : Module (MonoidAlgebra E N) (E ⊗[K] V) :=
+  let : Module (MonoidAlgebra E N) (E ⊗[K] V) :=
     Representation.instModuleMonoidAlgebraAsModule psiN
-  letI : Module (MonoidAlgebra E N)
+  let : Module (MonoidAlgebra E N)
       (Representation.asModule
         (rhoE.comp N.subtype : Representation E N (E ⊗[K] V))) :=
     Representation.instModuleMonoidAlgebraAsModule (rhoE.comp N.subtype)
-  letI : IsScalarTower E (MonoidAlgebra E N) (E ⊗[K] V) :=
+  let : IsScalarTower E (MonoidAlgebra E N) (E ⊗[K] V) :=
     Representation.instIsScalarTowerMonoidAlgebraAsModule (ρ := psiN)
-  letI : Module.Finite E (E ⊗[K] V) := inferInstance
-  letI : Module.Finite (MonoidAlgebra E N) (E ⊗[K] V) :=
+  let : Module.Finite E (E ⊗[K] V) := inferInstance
+  let : Module.Finite (MonoidAlgebra E N) (E ⊗[K] V) :=
     Module.Finite.of_restrictScalars_finite E (MonoidAlgebra E N) (E ⊗[K] V)
-  letI hsemi :
+  let hsemi :
       IsSemisimpleModule (MonoidAlgebra E N) (E ⊗[K] V) :=
     Representation.isCompletelyReducible_of_ringChar_eq_zero_or_prime_coprime
       psiN hmaschke
-  letI : DecidableEq (isotypicComponents (MonoidAlgebra E N) (E ⊗[K] V)) :=
+  let : DecidableEq (isotypicComponents (MonoidAlgebra E N) (E ⊗[K] V)) :=
     Classical.decEq _
   have hInternal :
       DirectSum.IsInternal
         (fun c : isotypicComponents (MonoidAlgebra E N) (E ⊗[K] V) =>
           (c.1 : Submodule (MonoidAlgebra E N) (E ⊗[K] V))) :=
     isaacs_15_16_isotypic_internal
-  letI : N.Normal := hfrob.normal
+  let : N.Normal := hfrob.normal
   let C := isotypicComponents (MonoidAlgebra E N) (E ⊗[K] V)
   let componentAction : MulAction H C := {
     smul h c :=
@@ -746,7 +748,7 @@ private theorem isaacs_15_16_algebraicClosure_restrict_equiv_free
         isaacs_15_16_componentOrderIso rhoE N (h : G)
           (isaacs_15_16_componentOrderIso rhoE N (k : G) c.1)
       exact isaacs_15_16_componentOrderIso_mul rhoE N (h : G) (k : G) c.1 }
-  letI : MulAction H C := componentAction
+  let : MulAction H C := componentAction
   let A : C -> Submodule E (E ⊗[K] V) :=
     fun c => c.1.restrictScalars E
   have hInternalE : DirectSum.IsInternal A := by
@@ -802,7 +804,7 @@ private theorem isaacs_15_16_algebraicClosure_restrict_equiv_free
     apply mul_inv_eq_iff_eq_mul.mp
     simpa [Subgroup.conjMulDistribMulActionOfNormal_smul_coe] using
       congrArg Subtype.val hfix
-  letI : IsCancelSMul H C := {
+  let : IsCancelSMul H C := {
     toIsLeftCancelSMul := inferInstance
     right_cancel' h k c hhk := by
       have hcne : c.1 ≠ (⊥ : Submodule (MonoidAlgebra E N) (E ⊗[K] V)) :=
@@ -810,10 +812,10 @@ private theorem isaacs_15_16_algebraicClosure_restrict_equiv_free
           isotypicComponents (MonoidAlgebra E N) (E ⊗[K] V) from c.2)).ne'
       obtain ⟨S, hSc, hSsimple⟩ :=
         (IsSemisimpleModule.eq_bot_or_exists_simple_le c.1).resolve_left hcne
-      letI : IsSimpleModule (MonoidAlgebra E N) S := hSsimple
+      let : IsSimpleModule (MonoidAlgebra E N) S := hSsimple
       let sigma : Representation E N S :=
         (Subrepresentation.ofSubmodule' (ρ := psiN) S).toRepresentation
-      letI : FiniteDimensional E S :=
+      let : FiniteDimensional E S :=
         FiniteDimensional.of_injective (S.subtype.restrictScalars E)
           Subtype.val_injective
       have hirr := irreducible_subrepresentation_of_simple_asModuleSubmodule psiN hSsimple
@@ -841,12 +843,12 @@ private theorem isaacs_15_16_algebraicClosure_restrict_equiv_free
         apply Subtype.ext
         exact hvzero
       let psiConj (h : H) : Representation E N S :=
-        Theory.Representation.conjugateRep (G := G) (H := N) (F := E) (V := S) sigma (h : G)⁻¹
+        Representation.conjugateRep (G := G) (H := N) (F := E) (V := S) sigma (h : G)⁻¹
       have hpsiConj : forall h : H, forall n : N,
           psiConj h (h • n) = sigma n := by
         intro h n
         ext v
-        simp [psiConj, Theory.Representation.conjugateRep_apply, mul_assoc]
+        simp [psiConj, Representation.conjugateRep_apply, mul_assoc]
       have hcomp :
           isaacs_15_16_componentOrderIso rhoE N (h : G) c.1 =
             isaacs_15_16_componentOrderIso rhoE N (k : G) c.1 := by
@@ -863,8 +865,8 @@ private theorem isaacs_15_16_algebraicClosure_restrict_equiv_free
         change IsAtom (isaacs_15_16_componentOrderIso rhoE N (k : G) S)
         exact ((isaacs_15_16_componentOrderIso rhoE N (k : G)).isAtom_iff S).mpr
           (isSimpleModule_iff_isAtom.mp hSsimple)
-      letI : IsSimpleModule (MonoidAlgebra E N) Sh := hShsimple
-      letI : IsSimpleModule (MonoidAlgebra E N) Sk := hSksimple
+      let : IsSimpleModule (MonoidAlgebra E N) Sh := hShsimple
+      let : IsSimpleModule (MonoidAlgebra E N) Sk := hSksimple
       have hShc : Sh <=
           isaacs_15_16_componentOrderIso rhoE N (h : G) c.1 :=
         (isaacs_15_16_componentOrderIso rhoE N (h : G)).monotone hSc
@@ -876,7 +878,7 @@ private theorem isaacs_15_16_algebraicClosure_restrict_equiv_free
         isaacs_15_16_componentOrderIso_mem_isotypicComponents
           rhoE N (h : G) c
       rcases hcH with ⟨T, hTsimple, hcT⟩
-      letI : IsSimpleModule (MonoidAlgebra E N) T := hTsimple
+      let : IsSimpleModule (MonoidAlgebra E N) T := hTsimple
       have htype : IsIsotypicOfType (MonoidAlgebra E N)
           (isaacs_15_16_componentOrderIso rhoE N (h : G) c.1) T := by
         rw [hcT]
@@ -898,49 +900,49 @@ private theorem isaacs_15_16_algebraicClosure_restrict_equiv_free
             Subrepresentation.ofSubmodule' (ρ := psiN) S := rfl
       have hShEq :
           Subrepresentation.ofSubmodule' Sh =
-            Theory.Representation.conjugateSubrepresentation rhoE N
+            Representation.conjugateSubrepresentation rhoE N
               (Subrepresentation.ofSubmodule' S) (h : G)⁻¹ := by
         change
           (Subrepresentation.subrepresentationSubmoduleOrderIso
             (ρ := psiN)).symm
-              ((Theory.Representation.conjugateSubrepresentationOrderIso rhoE N (h : G)
+              ((Representation.conjugateSubrepresentationOrderIso rhoE N (h : G)
                 ((Subrepresentation.subrepresentationSubmoduleOrderIso
                   (ρ := psiN)).symm S)).asSubmodule) = _
         rw [← Subrepresentation.subrepresentationSubmoduleOrderIso_apply]
         rw [OrderIso.symm_apply_apply]
-        rw [Theory.Representation.conjugateSubrepresentationOrderIso_apply]
+        rw [Representation.conjugateSubrepresentationOrderIso_apply]
         exact congrArg
           (fun W : Subrepresentation psiN =>
-            Theory.Representation.conjugateSubrepresentation rhoE N W (h : G)⁻¹)
+            Representation.conjugateSubrepresentation rhoE N W (h : G)⁻¹)
           hSbase
       have hSkEq :
           Subrepresentation.ofSubmodule' Sk =
-            Theory.Representation.conjugateSubrepresentation rhoE N
+            Representation.conjugateSubrepresentation rhoE N
               (Subrepresentation.ofSubmodule' S) (k : G)⁻¹ := by
         change
           (Subrepresentation.subrepresentationSubmoduleOrderIso
             (ρ := psiN)).symm
-              ((Theory.Representation.conjugateSubrepresentationOrderIso rhoE N (k : G)
+              ((Representation.conjugateSubrepresentationOrderIso rhoE N (k : G)
                 ((Subrepresentation.subrepresentationSubmoduleOrderIso
                   (ρ := psiN)).symm S)).asSubmodule) = _
         rw [← Subrepresentation.subrepresentationSubmoduleOrderIso_apply]
         rw [OrderIso.symm_apply_apply]
-        rw [Theory.Representation.conjugateSubrepresentationOrderIso_apply]
+        rw [Representation.conjugateSubrepresentationOrderIso_apply]
         exact congrArg
           (fun W : Subrepresentation psiN =>
-            Theory.Representation.conjugateSubrepresentation rhoE N W (k : G)⁻¹)
+            Representation.conjugateSubrepresentation rhoE N W (k : G)⁻¹)
           hSbase
       let eH :
           (Subrepresentation.ofSubmodule' Sh).toRepresentation ≃ₗ psiConj h := by
         rw [hShEq]
         simpa [psiConj, sigma] using
-          (Theory.Representation.conjugateSubrepresentationEquiv rhoE N
+          (Representation.conjugateSubrepresentationEquiv rhoE N
             (Subrepresentation.ofSubmodule' S) (h : G)⁻¹)
       let eK :
           (Subrepresentation.ofSubmodule' Sk).toRepresentation ≃ₗ psiConj k := by
         rw [hSkEq]
         simpa [psiConj, sigma] using
-          (Theory.Representation.conjugateSubrepresentationEquiv rhoE N
+          (Representation.conjugateSubrepresentationEquiv rhoE N
             (Subrepresentation.ofSubmodule' S) (k : G)⁻¹)
       have hequiv : Nonempty (psiConj h ≃ₗ psiConj k) :=
         ⟨eH.symm.trans (eTrans.trans eK)⟩
@@ -965,7 +967,7 @@ private theorem isaacs_15_16_restrict_equiv_free
   obtain ⟨alpha, hfinite, ⟨hE⟩⟩ :=
     isaacs_15_16_algebraicClosure_restrict_equiv_free
       N H rho hfrob hchar hfixedN
-  letI : Finite alpha := hfinite
+  let : Finite alpha := hfinite
   refine ⟨alpha, hfinite, ?_⟩
   exact isaacs_15_16_descend_equiv_free
     (E := AlgebraicClosure K) (rho.comp H.subtype) hE
@@ -988,7 +990,7 @@ public theorem isaacs_theorem_15_16
           H0.index * Module.finrank K (rho.fixedSubspace H)) := by
   obtain ⟨alpha, hfinite, ⟨e⟩⟩ :=
     isaacs_15_16_restrict_equiv_free N H rho hfrob hchar hfixedN
-  letI : Finite alpha := hfinite
+  let : Finite alpha := hfinite
   simpa [Representation.fixedSubspace] using
     (isaacs_15_16_of_repEquiv_free (rho.comp H.subtype) e)
 

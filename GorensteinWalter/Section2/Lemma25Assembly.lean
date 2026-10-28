@@ -2,6 +2,7 @@ module
 
 public import GorensteinWalter.Section2.Lemma25Fitting
 import GorensteinWalter.Section2.Bender1970_17iii
+import Mathlib.Data.Nat.Factorization.PrimePow
 
 /-!
 # Assembly of the non-`p` branch of Gorenstein--Walter Lemma 2.5
@@ -36,7 +37,7 @@ private theorem lemma25_two_le_card_primesOfOrder_of_not_isPGroup
   by_cases hcard1 : Nat.card (↥H) = 1
   · have hP : IsPGroup 2 H := by
       refine IsPGroup.of_card (n := 0) ?_
-      simpa [hcard1]
+      simp [hcard1]
     exact hnp 2 Nat.prime_two hP
   · have hpfne : (Nat.card (↥H)).primeFactors.card ≠ 0 := by
       intro hzero

@@ -1,0 +1,1039 @@
+module
+
+public import Theory.SpecificGroups.Rudvalis.Model.OrderLevel0Part5Residual0.Words
+import Mathlib.Tactic.FinCases
+
+/-!
+# Rudvalis part-5 residual transition 10
+
+The prescribed transition is verified on all 4060 points in 203 twenty-point
+kernel checks, then transferred by the certified packed evaluator. Source:
+`OrderLevel0Data` and `Part5Residual.target`; adapted from the candidate generated
+by `OrderCertificate/GenerateLevel0Part5Residual0.py`.
+-/
+
+namespace Rudvalis.OrderCertificate.ForwardReduction.Part5Residual.Residual0Checks
+set_option maxRecDepth 30000
+set_option Elab.async false
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice0 : slice 0 left10 right10 factor10 0 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice1 : slice 0 left10 right10 factor10 1 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice2 : slice 0 left10 right10 factor10 2 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice3 : slice 0 left10 right10 factor10 3 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice4 : slice 0 left10 right10 factor10 4 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice5 : slice 0 left10 right10 factor10 5 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice6 : slice 0 left10 right10 factor10 6 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice7 : slice 0 left10 right10 factor10 7 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice8 : slice 0 left10 right10 factor10 8 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice9 : slice 0 left10 right10 factor10 9 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice10 : slice 0 left10 right10 factor10 10 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice11 : slice 0 left10 right10 factor10 11 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice12 : slice 0 left10 right10 factor10 12 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice13 : slice 0 left10 right10 factor10 13 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice14 : slice 0 left10 right10 factor10 14 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice15 : slice 0 left10 right10 factor10 15 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice16 : slice 0 left10 right10 factor10 16 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice17 : slice 0 left10 right10 factor10 17 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice18 : slice 0 left10 right10 factor10 18 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice19 : slice 0 left10 right10 factor10 19 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice20 : slice 0 left10 right10 factor10 20 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice21 : slice 0 left10 right10 factor10 21 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice22 : slice 0 left10 right10 factor10 22 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice23 : slice 0 left10 right10 factor10 23 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice24 : slice 0 left10 right10 factor10 24 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice25 : slice 0 left10 right10 factor10 25 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice26 : slice 0 left10 right10 factor10 26 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice27 : slice 0 left10 right10 factor10 27 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice28 : slice 0 left10 right10 factor10 28 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice29 : slice 0 left10 right10 factor10 29 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice30 : slice 0 left10 right10 factor10 30 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice31 : slice 0 left10 right10 factor10 31 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice32 : slice 0 left10 right10 factor10 32 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice33 : slice 0 left10 right10 factor10 33 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice34 : slice 0 left10 right10 factor10 34 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice35 : slice 0 left10 right10 factor10 35 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice36 : slice 0 left10 right10 factor10 36 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice37 : slice 0 left10 right10 factor10 37 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice38 : slice 0 left10 right10 factor10 38 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice39 : slice 0 left10 right10 factor10 39 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice40 : slice 0 left10 right10 factor10 40 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice41 : slice 0 left10 right10 factor10 41 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice42 : slice 0 left10 right10 factor10 42 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice43 : slice 0 left10 right10 factor10 43 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice44 : slice 0 left10 right10 factor10 44 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice45 : slice 0 left10 right10 factor10 45 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice46 : slice 0 left10 right10 factor10 46 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice47 : slice 0 left10 right10 factor10 47 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice48 : slice 0 left10 right10 factor10 48 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice49 : slice 0 left10 right10 factor10 49 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice50 : slice 0 left10 right10 factor10 50 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice51 : slice 0 left10 right10 factor10 51 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice52 : slice 0 left10 right10 factor10 52 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice53 : slice 0 left10 right10 factor10 53 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice54 : slice 0 left10 right10 factor10 54 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice55 : slice 0 left10 right10 factor10 55 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice56 : slice 0 left10 right10 factor10 56 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice57 : slice 0 left10 right10 factor10 57 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice58 : slice 0 left10 right10 factor10 58 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice59 : slice 0 left10 right10 factor10 59 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice60 : slice 0 left10 right10 factor10 60 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice61 : slice 0 left10 right10 factor10 61 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice62 : slice 0 left10 right10 factor10 62 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice63 : slice 0 left10 right10 factor10 63 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice64 : slice 0 left10 right10 factor10 64 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice65 : slice 0 left10 right10 factor10 65 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice66 : slice 0 left10 right10 factor10 66 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice67 : slice 0 left10 right10 factor10 67 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice68 : slice 0 left10 right10 factor10 68 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice69 : slice 0 left10 right10 factor10 69 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice70 : slice 0 left10 right10 factor10 70 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice71 : slice 0 left10 right10 factor10 71 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice72 : slice 0 left10 right10 factor10 72 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice73 : slice 0 left10 right10 factor10 73 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice74 : slice 0 left10 right10 factor10 74 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice75 : slice 0 left10 right10 factor10 75 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice76 : slice 0 left10 right10 factor10 76 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice77 : slice 0 left10 right10 factor10 77 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice78 : slice 0 left10 right10 factor10 78 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice79 : slice 0 left10 right10 factor10 79 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice80 : slice 0 left10 right10 factor10 80 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice81 : slice 0 left10 right10 factor10 81 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice82 : slice 0 left10 right10 factor10 82 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice83 : slice 0 left10 right10 factor10 83 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice84 : slice 0 left10 right10 factor10 84 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice85 : slice 0 left10 right10 factor10 85 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice86 : slice 0 left10 right10 factor10 86 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice87 : slice 0 left10 right10 factor10 87 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice88 : slice 0 left10 right10 factor10 88 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice89 : slice 0 left10 right10 factor10 89 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice90 : slice 0 left10 right10 factor10 90 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice91 : slice 0 left10 right10 factor10 91 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice92 : slice 0 left10 right10 factor10 92 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice93 : slice 0 left10 right10 factor10 93 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice94 : slice 0 left10 right10 factor10 94 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice95 : slice 0 left10 right10 factor10 95 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice96 : slice 0 left10 right10 factor10 96 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice97 : slice 0 left10 right10 factor10 97 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice98 : slice 0 left10 right10 factor10 98 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice99 : slice 0 left10 right10 factor10 99 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice100 : slice 0 left10 right10 factor10 100 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice101 : slice 0 left10 right10 factor10 101 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice102 : slice 0 left10 right10 factor10 102 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice103 : slice 0 left10 right10 factor10 103 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice104 : slice 0 left10 right10 factor10 104 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice105 : slice 0 left10 right10 factor10 105 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice106 : slice 0 left10 right10 factor10 106 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice107 : slice 0 left10 right10 factor10 107 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice108 : slice 0 left10 right10 factor10 108 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice109 : slice 0 left10 right10 factor10 109 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice110 : slice 0 left10 right10 factor10 110 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice111 : slice 0 left10 right10 factor10 111 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice112 : slice 0 left10 right10 factor10 112 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice113 : slice 0 left10 right10 factor10 113 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice114 : slice 0 left10 right10 factor10 114 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice115 : slice 0 left10 right10 factor10 115 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice116 : slice 0 left10 right10 factor10 116 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice117 : slice 0 left10 right10 factor10 117 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice118 : slice 0 left10 right10 factor10 118 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice119 : slice 0 left10 right10 factor10 119 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice120 : slice 0 left10 right10 factor10 120 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice121 : slice 0 left10 right10 factor10 121 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice122 : slice 0 left10 right10 factor10 122 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice123 : slice 0 left10 right10 factor10 123 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice124 : slice 0 left10 right10 factor10 124 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice125 : slice 0 left10 right10 factor10 125 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice126 : slice 0 left10 right10 factor10 126 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice127 : slice 0 left10 right10 factor10 127 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice128 : slice 0 left10 right10 factor10 128 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice129 : slice 0 left10 right10 factor10 129 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice130 : slice 0 left10 right10 factor10 130 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice131 : slice 0 left10 right10 factor10 131 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice132 : slice 0 left10 right10 factor10 132 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice133 : slice 0 left10 right10 factor10 133 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice134 : slice 0 left10 right10 factor10 134 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice135 : slice 0 left10 right10 factor10 135 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice136 : slice 0 left10 right10 factor10 136 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice137 : slice 0 left10 right10 factor10 137 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice138 : slice 0 left10 right10 factor10 138 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice139 : slice 0 left10 right10 factor10 139 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice140 : slice 0 left10 right10 factor10 140 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice141 : slice 0 left10 right10 factor10 141 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice142 : slice 0 left10 right10 factor10 142 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice143 : slice 0 left10 right10 factor10 143 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice144 : slice 0 left10 right10 factor10 144 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice145 : slice 0 left10 right10 factor10 145 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice146 : slice 0 left10 right10 factor10 146 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice147 : slice 0 left10 right10 factor10 147 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice148 : slice 0 left10 right10 factor10 148 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice149 : slice 0 left10 right10 factor10 149 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice150 : slice 0 left10 right10 factor10 150 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice151 : slice 0 left10 right10 factor10 151 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice152 : slice 0 left10 right10 factor10 152 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice153 : slice 0 left10 right10 factor10 153 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice154 : slice 0 left10 right10 factor10 154 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice155 : slice 0 left10 right10 factor10 155 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice156 : slice 0 left10 right10 factor10 156 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice157 : slice 0 left10 right10 factor10 157 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice158 : slice 0 left10 right10 factor10 158 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice159 : slice 0 left10 right10 factor10 159 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice160 : slice 0 left10 right10 factor10 160 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice161 : slice 0 left10 right10 factor10 161 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice162 : slice 0 left10 right10 factor10 162 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice163 : slice 0 left10 right10 factor10 163 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice164 : slice 0 left10 right10 factor10 164 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice165 : slice 0 left10 right10 factor10 165 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice166 : slice 0 left10 right10 factor10 166 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice167 : slice 0 left10 right10 factor10 167 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice168 : slice 0 left10 right10 factor10 168 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice169 : slice 0 left10 right10 factor10 169 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice170 : slice 0 left10 right10 factor10 170 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice171 : slice 0 left10 right10 factor10 171 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice172 : slice 0 left10 right10 factor10 172 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice173 : slice 0 left10 right10 factor10 173 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice174 : slice 0 left10 right10 factor10 174 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice175 : slice 0 left10 right10 factor10 175 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice176 : slice 0 left10 right10 factor10 176 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice177 : slice 0 left10 right10 factor10 177 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice178 : slice 0 left10 right10 factor10 178 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice179 : slice 0 left10 right10 factor10 179 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice180 : slice 0 left10 right10 factor10 180 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice181 : slice 0 left10 right10 factor10 181 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice182 : slice 0 left10 right10 factor10 182 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice183 : slice 0 left10 right10 factor10 183 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice184 : slice 0 left10 right10 factor10 184 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice185 : slice 0 left10 right10 factor10 185 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice186 : slice 0 left10 right10 factor10 186 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice187 : slice 0 left10 right10 factor10 187 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice188 : slice 0 left10 right10 factor10 188 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice189 : slice 0 left10 right10 factor10 189 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice190 : slice 0 left10 right10 factor10 190 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice191 : slice 0 left10 right10 factor10 191 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice192 : slice 0 left10 right10 factor10 192 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice193 : slice 0 left10 right10 factor10 193 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice194 : slice 0 left10 right10 factor10 194 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice195 : slice 0 left10 right10 factor10 195 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice196 : slice 0 left10 right10 factor10 196 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice197 : slice 0 left10 right10 factor10 197 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice198 : slice 0 left10 right10 factor10 198 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice199 : slice 0 left10 right10 factor10 199 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice200 : slice 0 left10 right10 factor10 200 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice201 : slice 0 left10 right10 factor10 201 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point10slice202 : slice 0 left10 right10 factor10 202 = true := by
+  decide +kernel
+
+public theorem block0Point10 : residualCheck 10 := by
+  apply point10_ofSlices
+  intro c
+  fin_cases c
+  · exact point10slice0
+  · exact point10slice1
+  · exact point10slice2
+  · exact point10slice3
+  · exact point10slice4
+  · exact point10slice5
+  · exact point10slice6
+  · exact point10slice7
+  · exact point10slice8
+  · exact point10slice9
+  · exact point10slice10
+  · exact point10slice11
+  · exact point10slice12
+  · exact point10slice13
+  · exact point10slice14
+  · exact point10slice15
+  · exact point10slice16
+  · exact point10slice17
+  · exact point10slice18
+  · exact point10slice19
+  · exact point10slice20
+  · exact point10slice21
+  · exact point10slice22
+  · exact point10slice23
+  · exact point10slice24
+  · exact point10slice25
+  · exact point10slice26
+  · exact point10slice27
+  · exact point10slice28
+  · exact point10slice29
+  · exact point10slice30
+  · exact point10slice31
+  · exact point10slice32
+  · exact point10slice33
+  · exact point10slice34
+  · exact point10slice35
+  · exact point10slice36
+  · exact point10slice37
+  · exact point10slice38
+  · exact point10slice39
+  · exact point10slice40
+  · exact point10slice41
+  · exact point10slice42
+  · exact point10slice43
+  · exact point10slice44
+  · exact point10slice45
+  · exact point10slice46
+  · exact point10slice47
+  · exact point10slice48
+  · exact point10slice49
+  · exact point10slice50
+  · exact point10slice51
+  · exact point10slice52
+  · exact point10slice53
+  · exact point10slice54
+  · exact point10slice55
+  · exact point10slice56
+  · exact point10slice57
+  · exact point10slice58
+  · exact point10slice59
+  · exact point10slice60
+  · exact point10slice61
+  · exact point10slice62
+  · exact point10slice63
+  · exact point10slice64
+  · exact point10slice65
+  · exact point10slice66
+  · exact point10slice67
+  · exact point10slice68
+  · exact point10slice69
+  · exact point10slice70
+  · exact point10slice71
+  · exact point10slice72
+  · exact point10slice73
+  · exact point10slice74
+  · exact point10slice75
+  · exact point10slice76
+  · exact point10slice77
+  · exact point10slice78
+  · exact point10slice79
+  · exact point10slice80
+  · exact point10slice81
+  · exact point10slice82
+  · exact point10slice83
+  · exact point10slice84
+  · exact point10slice85
+  · exact point10slice86
+  · exact point10slice87
+  · exact point10slice88
+  · exact point10slice89
+  · exact point10slice90
+  · exact point10slice91
+  · exact point10slice92
+  · exact point10slice93
+  · exact point10slice94
+  · exact point10slice95
+  · exact point10slice96
+  · exact point10slice97
+  · exact point10slice98
+  · exact point10slice99
+  · exact point10slice100
+  · exact point10slice101
+  · exact point10slice102
+  · exact point10slice103
+  · exact point10slice104
+  · exact point10slice105
+  · exact point10slice106
+  · exact point10slice107
+  · exact point10slice108
+  · exact point10slice109
+  · exact point10slice110
+  · exact point10slice111
+  · exact point10slice112
+  · exact point10slice113
+  · exact point10slice114
+  · exact point10slice115
+  · exact point10slice116
+  · exact point10slice117
+  · exact point10slice118
+  · exact point10slice119
+  · exact point10slice120
+  · exact point10slice121
+  · exact point10slice122
+  · exact point10slice123
+  · exact point10slice124
+  · exact point10slice125
+  · exact point10slice126
+  · exact point10slice127
+  · exact point10slice128
+  · exact point10slice129
+  · exact point10slice130
+  · exact point10slice131
+  · exact point10slice132
+  · exact point10slice133
+  · exact point10slice134
+  · exact point10slice135
+  · exact point10slice136
+  · exact point10slice137
+  · exact point10slice138
+  · exact point10slice139
+  · exact point10slice140
+  · exact point10slice141
+  · exact point10slice142
+  · exact point10slice143
+  · exact point10slice144
+  · exact point10slice145
+  · exact point10slice146
+  · exact point10slice147
+  · exact point10slice148
+  · exact point10slice149
+  · exact point10slice150
+  · exact point10slice151
+  · exact point10slice152
+  · exact point10slice153
+  · exact point10slice154
+  · exact point10slice155
+  · exact point10slice156
+  · exact point10slice157
+  · exact point10slice158
+  · exact point10slice159
+  · exact point10slice160
+  · exact point10slice161
+  · exact point10slice162
+  · exact point10slice163
+  · exact point10slice164
+  · exact point10slice165
+  · exact point10slice166
+  · exact point10slice167
+  · exact point10slice168
+  · exact point10slice169
+  · exact point10slice170
+  · exact point10slice171
+  · exact point10slice172
+  · exact point10slice173
+  · exact point10slice174
+  · exact point10slice175
+  · exact point10slice176
+  · exact point10slice177
+  · exact point10slice178
+  · exact point10slice179
+  · exact point10slice180
+  · exact point10slice181
+  · exact point10slice182
+  · exact point10slice183
+  · exact point10slice184
+  · exact point10slice185
+  · exact point10slice186
+  · exact point10slice187
+  · exact point10slice188
+  · exact point10slice189
+  · exact point10slice190
+  · exact point10slice191
+  · exact point10slice192
+  · exact point10slice193
+  · exact point10slice194
+  · exact point10slice195
+  · exact point10slice196
+  · exact point10slice197
+  · exact point10slice198
+  · exact point10slice199
+  · exact point10slice200
+  · exact point10slice201
+  · exact point10slice202
+
+end Rudvalis.OrderCertificate.ForwardReduction.Part5Residual.Residual0Checks

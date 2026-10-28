@@ -5,6 +5,7 @@ public import GorensteinWalter.GWLemma21Trichotomy
 public import GorensteinWalter.QuotientTwoGroupNotNormalizerContainsCPrime
 import Mathlib.Tactic
 
+
 /-!
 # Split-four-subgroup reduction in the remark after Proposition 9
 

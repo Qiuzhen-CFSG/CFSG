@@ -8,6 +8,7 @@ import FeitThompson.PFsection4.PFsection4_5_to_10
 import FeitThompson.PFsection5.PFsection5_9
 import FeitThompson.PFsection7.PFsection7_8_a
 
+
 /-!
 # Peterfalvi, Section 14: theorem (14.9), Delta correction
 -/
@@ -80,10 +81,10 @@ public theorem section14_theorem_14_9_late_type_T1_fullData_omegaSigma_mem_of_tr
           (Finset.univ.image fun p : d52.I × d52.J =>
             d52.sigma (d52.omega p.1 p.2)) := by
   classical
-  letI : Fintype d52.I := d52.instFintypeI
-  letI : Fintype d52.J := d52.instFintypeJ
-  letI : DecidableEq d52.I := d52.instDecidableEqI
-  letI : DecidableEq d52.J := d52.instDecidableEqJ
+  let : Fintype d52.I := d52.instFintypeI
+  let : Fintype d52.J := d52.instFintypeJ
+  let : DecidableEq d52.I := d52.instDecidableEqI
+  let : DecidableEq d52.J := d52.instDecidableEqJ
   rcases d52.fullHypothesis with
     ⟨_h46, _hW2K, _h31, _hIsoFull, _hVirtFull, _hClassFull, _hPrinFull,
       _h22A, hω, _h43b, _h43c, _h43d, _h45a, _h45b, _hTauCyc,
@@ -192,10 +193,10 @@ public theorem section14_theorem_14_9_late_type_T1_fullData_transport_eq_of_cycl
           ξ ⟨x, Section3.cyclicTISet_subset W1 W2 W hx⟩) :
     σ ξ = d52.sigma (Section6.theorem_6_8_transportClassFunction e ξ) := by
   classical
-  letI : Fintype d52.I := d52.instFintypeI
-  letI : Fintype d52.J := d52.instFintypeJ
-  letI : DecidableEq d52.I := d52.instDecidableEqI
-  letI : DecidableEq d52.J := d52.instDecidableEqJ
+  let : Fintype d52.I := d52.instFintypeI
+  let : Fintype d52.J := d52.instFintypeJ
+  let : DecidableEq d52.I := d52.instDecidableEqI
+  let : DecidableEq d52.J := d52.instDecidableEqJ
   rcases hNotation with
     ⟨hωData, hσmap, _hη, _hδ, _hδ', _hμirr, _hνirr,
       _hμzero_nonprincipal, _hνzero_nonprincipal, _hμind, _hνind,
@@ -226,11 +227,11 @@ public theorem section14_theorem_14_9_late_type_T1_fullData_transport_eq_of_cycl
         (Section6.theorem_6_8_transportClassFunction e ξ) :=
     Section6.theorem_6_8_transportClassFunction_isClass e hξ_class
   have htransportVirt :
-      Theory.Character.IsVirtualCharacter
+      IsVirtualCharacter
         (Section6.theorem_6_8_transportClassFunction e ξ) :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup htransportIrr
   have hImageVirt :
-      Theory.Character.IsVirtualCharacter
+      IsVirtualCharacter
         (d52.sigma (Section6.theorem_6_8_transportClassFunction e ξ)) :=
     hVirtFull _ htransportVirt
   have hselfW : Section1.scalarProduct W ξ ξ = 1 :=
@@ -356,10 +357,10 @@ public theorem section14_theorem_14_9_late_type_T1_calt1_hypothesis52_fullData_o
         hctx hLateType hTtypeP with
     ⟨d52, hd52τ, hSigmaAgree⟩
   refine ⟨d52, hd52τ, ?_⟩
-  letI : Fintype d52.I := d52.instFintypeI
-  letI : Fintype d52.J := d52.instFintypeJ
-  letI : DecidableEq d52.I := d52.instDecidableEqI
-  letI : DecidableEq d52.J := d52.instDecidableEqJ
+  let : Fintype d52.I := d52.instFintypeI
+  let : Fintype d52.J := d52.instFintypeJ
+  let : DecidableEq d52.I := d52.instDecidableEqI
+  let : DecidableEq d52.J := d52.instDecidableEqJ
   have hΩactive :
       ∀ ξ : Section1.ClassFunction W,
         Section1.IsIrreducibleCharacterOnGroup ξ →
@@ -451,9 +452,9 @@ public theorem section14_principalInducedCharacter_sub_irreducible_isVirtualChar
     {G : Type u} [Group G] [Finite G]
     {L H : Subgroup G} {ζ : Section1.ClassFunction L}
     (hζ : Section1.IsIrreducibleCharacterOnGroup ζ) :
-    Theory.Character.IsVirtualCharacter (Section7.principalInducedCharacter L H - ζ) := by
+    IsVirtualCharacter (Section7.principalInducedCharacter L H - ζ) := by
   have hprincipalVirt :
-      Theory.Character.IsVirtualCharacter (Section7.principalInducedCharacter L H) := by
+      IsVirtualCharacter (Section7.principalInducedCharacter L H) := by
     unfold Section7.principalInducedCharacter
     exact Section2.inducedCF_isVirtualCharacter_of_virtualCharacter
       (H.subgroupOf L) Section3.isVirtualCharacter_principalCharacter
@@ -476,7 +477,7 @@ public theorem section14_theorem_14_9_late_type_T1_tauT1_mem_isVirtualCharacter
     {τT τT1 : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G}
     (hcoh : Section6.coherentExtension T1T τT τT1)
     {ζ : Section1.ClassFunction Tmax} (hζ : ζ ∈ T1T) :
-    Theory.Character.IsVirtualCharacter (τT1 ζ) :=
+    IsVirtualCharacter (τT1 ζ) :=
   hcoh.2.1 ζ (Section5.integerSpan_of_mem T1T hζ)
 
 public theorem section14_theorem_14_9_late_type_T1_delta_isVirtualCharacter_of_betaT0
@@ -484,9 +485,9 @@ public theorem section14_theorem_14_9_late_type_T1_delta_isVirtualCharacter_of_b
     {Tmax : Subgroup G}
     {τT τT1 : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G}
     {βT0 ζ : Section1.ClassFunction Tmax}
-    (hβT0 : Theory.Character.IsVirtualCharacter (τT βT0))
-    (hζ : Theory.Character.IsVirtualCharacter (τT1 ζ)) :
-    Theory.Character.IsVirtualCharacter
+    (hβT0 : IsVirtualCharacter (τT βT0))
+    (hζ : IsVirtualCharacter (τT1 ζ)) :
+    IsVirtualCharacter
       (τT βT0 - Section1.principalCharacter G + τT1 ζ) := by
     exact Section3.isVirtualCharacter_add
       (Section3.isVirtualCharacter_sub hβT0
@@ -522,10 +523,10 @@ public theorem section14_theorem_14_9_late_type_T1_book_AZero_source_bridge
   rcases hFourSixT with
     ⟨I, instI, decI, J, instJ, decJ, W46, A, A0, i0, j0, μ, δSign, ω, σ,
       _hNotation, _hSigmaAgree, hCyclicSource⟩
-  letI : Fintype I := instI
-  letI : DecidableEq I := decI
-  letI : Fintype J := instJ
-  letI : DecidableEq J := decJ
+  let : Fintype I := instI
+  let : DecidableEq I := decI
+  let : Fintype J := instJ
+  let : DecidableEq J := decJ
   rcases hCyclicSource with
     ⟨_Hcyclic, _hCyclic, _hTauCyclic, hBookSource⟩
   rcases hBookSource with
@@ -582,7 +583,7 @@ public theorem section14_theorem_14_9_late_type_T1_betaT0_CFOn_book_AZero
         _hVnil, _hW2norm, hDerComp, _hQnoncyc, _hSecond, _hFit,
         _hFitLe, _hW1le, _hW1cyc, _hW1ne, _hCent, _hNorm⟩
     exact hDerComp.2.2.1
-  haveI : ((Q ⊔ V).subgroupOf Tmax).Normal := by
+  have : ((Q ⊔ V).subgroupOf Tmax).Normal := by
     have hDerNormal :
         ((ambientDerivedSubgroup Tmax).subgroupOf Tmax).Normal :=
       (section12_normalIn_ambientDerivedSubgroup (G := G) (E := Tmax)).2
@@ -702,7 +703,7 @@ public theorem section14_theorem_14_9_late_type_T1_betaT0_supportedOn_QVsharp
         _hVnil, _hW2norm, hDerComp, _hQnoncyc, _hSecond, _hFit,
         _hFitLe, _hW1le, _hW1cyc, _hW1ne, _hCent, _hNorm⟩
     exact hDerComp.2.2.1
-  haveI : ((Q ⊔ V).subgroupOf Tmax).Normal := by
+  have : ((Q ⊔ V).subgroupOf Tmax).Normal := by
     have hDerNormal :
         ((ambientDerivedSubgroup Tmax).subgroupOf Tmax).Normal :=
       (section12_normalIn_ambientDerivedSubgroup (G := G) (E := Tmax)).2
@@ -838,9 +839,9 @@ public theorem section14_theorem_14_9_late_type_T1_tauT_isVirtualCharacter_of_bo
     (hCalT1 : Section9.kernelInducedFamily Tmax (Q ⊔ V) (Q ⊔ V) Q T1T)
     {ζ : Section1.ClassFunction Tmax} (hζ : ζ ∈ T1T)
     (hβT0Virt :
-      Theory.Character.IsVirtualCharacter
+      IsVirtualCharacter
         (Section7.principalInducedCharacter Tmax (Q ⊔ V) - ζ)) :
-    Theory.Character.IsVirtualCharacter
+    IsVirtualCharacter
       (τT (Section7.principalInducedCharacter Tmax (Q ⊔ V) - ζ)) := by
   classical
   rcases
@@ -1431,8 +1432,8 @@ private theorem section14_order_dvd_p_of_mem_Psharp
     {x : G} (hx : x ∈ section16NonidentityElements ((P : Subgroup G) : Set G)) :
     p ∣ orderOf x := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
-  letI : IsElementaryAbelian p P := hPelem
+  let : Fact p.Prime := ⟨hp⟩
+  let : IsElementaryAbelian p P := hPelem
   have hxpow : x ^ p = 1 :=
     elemPow_eq_one_of_isElementaryAbelian (p := p) (A := P) x hx.1
   have hxord : orderOf x = p := orderOf_eq_prime hxpow hx.2
@@ -1456,7 +1457,7 @@ private theorem section14_order_dvd_p_of_mem_W_diff
     Section13.section13_section12InternalDirectProduct_swap hprod
   have hW2_norm_W1 : W2 ≤ Subgroup.normalizer (W1 : Set G) :=
     hprodSwap.2.2.2.2.trans (centralizer_le_normalizer W1)
-  haveI hW1Jnormal : (W1.subgroupOf J).Normal := by
+  have hW1Jnormal : (W1.subgroupOf J).Normal := by
     simpa [J] using
       (Subgroup.normal_subgroupOf_sup_of_le_normalizer
         (H := W2) (N := W1) hW2_norm_W1)
@@ -1830,11 +1831,11 @@ public theorem section14_theorem_14_9_late_type_T1_hypothesis_11_2_of_section10_
   rcases hTypeData hTypeIIIIV with ⟨_hW1card, hChief, hNotCent⟩
   have hQuot :
       ∃ hH0H : ((⊥ : Subgroup G).subgroupOf Q).Normal,
-        letI : ((⊥ : Subgroup G).subgroupOf Q).Normal := hH0H
+        let : ((⊥ : Subgroup G).subgroupOf Q).Normal := hH0H
         Nontrivial (Q ⧸ (⊥ : Subgroup G).subgroupOf Q) ∧
           IsElementaryAbelian q (Q ⧸ (⊥ : Subgroup G).subgroupOf Q) := by
     refine ⟨hBotNormalQ', ?_⟩
-    letI : ((⊥ : Subgroup G).subgroupOf Q).Normal := hBotNormalQ'
+    let : ((⊥ : Subgroup G).subgroupOf Q).Normal := hBotNormalQ'
     constructor
     · have hBotQ_ne_top : (⊥ : Subgroup G).subgroupOf Q ≠ ⊤ := by
         intro htop
@@ -1890,9 +1891,9 @@ public theorem section14_theorem_14_9_late_type_T1_zeta_mem_base_and_kernel_of_h
     Section6.inducedKernelFamily_subset_base hSbot hT1Ind hζ
   have hζKerQ : Section1.subgroupInKernel' ζ (Q.subgroupOf Tmax) := by
     rcases (hT1Ind.2 ζ).mp hζ with ⟨θ, hθirr, hθker, _hθne, hζeq⟩
-    haveI : (Q.subgroupOf Tmax).Normal :=
+    have : (Q.subgroupOf Tmax).Normal :=
       Section12.section16MFSubgroup_subgroupOf_normal hQMF
-    haveI : ((Q ⊔ V).subgroupOf Tmax).Normal := by
+    have : ((Q ⊔ V).subgroupOf Tmax).Normal := by
       rw [hQVsub_eq_der]
       infer_instance
     rcases hθirr with ⟨n, ρ, _hρirr, hθeq⟩
@@ -2141,10 +2142,10 @@ a non-base local row; its local column need not be the base column. -/
       ⟨I, instI, decI, J, instJ, decJ, Wloc, A, A0, S, SHC, R, i0, i1, j0, j1,
         μloc, δSign, ωloc, σloc, h11, hNotation10, hSHC, hζSHC, hR, hi1,
         hη01, hPrincipal⟩
-    letI : Fintype I := instI
-    letI : DecidableEq I := decI
-    letI : Fintype J := instJ
-    letI : DecidableEq J := decJ
+    let : Fintype I := instI
+    let : DecidableEq I := decI
+    let : Fintype J := instJ
+    let : DecidableEq J := decJ
     rcases
         Section11.theorem_11_9
           Tmax Q Q V D ⊥ W2 W1 Wloc A A0 S SHC R i0 j0
@@ -2583,11 +2584,11 @@ a non-base local row; its local column need not be the base column. -/
         _hωloc, hIso, hVirt, _hPrin, _hσAgreeCyc, _h45, _h48,
         _hTauA0, _hFull⟩
     have hξloc_virt :
-        Theory.Character.IsVirtualCharacter
+        IsVirtualCharacter
           (Section6.theorem_6_8_transportClassFunction e ξ) :=
       Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup hξloc_irr
     have himage_virt :
-        Theory.Character.IsVirtualCharacter
+        IsVirtualCharacter
           (σloc (Section6.theorem_6_8_transportClassFunction e ξ)) :=
       hVirt _ hξloc_virt
     have hselfW : Section1.scalarProduct W ξ ξ = 1 :=
@@ -2950,10 +2951,10 @@ a non-base local row; its local column need not be the base column. -/
     rcases hFourSixT with
       ⟨I, instI, decI, J, instJ, decJ, Wloc, Asel, A0, i0, j0, μloc, δSign,
         ωloc, σloc, hNotation10, _hSigmaAgree, _hBookSource⟩
-    letI : Fintype I := instI
-    letI : DecidableEq I := decI
-    letI : Fintype J := instJ
-    letI : DecidableEq J := decJ
+    let : Fintype I := instI
+    let : DecidableEq I := decI
+    let : Fintype J := instJ
+    let : DecidableEq J := decJ
     have hNotation10Copy := hNotation10
     rcases hNotation10Copy with
       ⟨MFsrc, Ms, Abook, _A0book, _A1book, hSource, _hWloc, _hA0,
@@ -3215,10 +3216,10 @@ a non-base local row; its local column need not be the base column. -/
           hctx hLateType hTtypeP hNotation with
       ⟨I, instI, decI, J, instJ, decJ, Wloc, A0, i0, j0, μloc, δSign, ωloc,
         σloc, hNotation10, hNonbase⟩
-    letI : Fintype I := instI
-    letI : DecidableEq I := decI
-    letI : Fintype J := instJ
-    letI : DecidableEq J := decJ
+    let : Fintype I := instI
+    let : DecidableEq I := decI
+    let : Fintype J := instJ
+    let : DecidableEq J := decJ
     have hFamily :
         section14_theorem_14_9_late_type_T1PF11FamilySourceData
           Tmax Q V D W2 W1 Wloc i0 j0 μloc ωloc σloc τT
@@ -3363,10 +3364,10 @@ public theorem section14_theorem_14_9_late_type_T1_eta_tauT_betaT0_scalar_source
     ⟨I, instI, decI, J, instJ, decJ, Wloc, A, A0, S, SHC, R, i0, i1, j0, j1,
       μloc, δSign, ωloc, σloc, h11, hNotation10, hSHC, hζSHC, hR, hi1,
       hη01, hPrincipal⟩
-  letI : Fintype I := instI
-  letI : DecidableEq I := decI
-  letI : Fintype J := instJ
-  letI : DecidableEq J := decJ
+  let : Fintype I := instI
+  let : DecidableEq I := decI
+  let : Fintype J := instJ
+  let : DecidableEq J := decJ
   exact
     section14_theorem_14_9_late_type_T1_eta_tauT_betaT0_scalar_of_pf11_row_projection
       Tmax Q Q V D ⊥ W2 W1 Wloc A A0 S SHC R i0 i1 j0 j1
@@ -3528,7 +3529,7 @@ public theorem section14_theorem_14_9_late_type_T1_tauT1_conjugate_source_bridge
       τT1 (Section1.conjugateCharacter ζ) := by
   -- of the `calT1` members.
   classical
-  letI : Fintype Tmax := Fintype.ofFinite Tmax
+  let : Fintype Tmax := Fintype.ofFinite Tmax
   rcases h52 with ⟨hsetup, R, h52a, h52b, h52c, h52d, h52e⟩
   let X : T1T := ⟨ζ, hζ⟩
   have hζbar : Section1.conjugateCharacter ζ ∈ T1T := by
@@ -3720,28 +3721,28 @@ public theorem section14_theorem_14_9_late_type_T1_delta_correction_source_bridg
   have hζIrr : Section1.IsIrreducibleCharacterOnGroup ζ := hIrr ζ hζ
   let βT0 : Section1.ClassFunction Tmax :=
     Section7.principalInducedCharacter Tmax (Q ⊔ V) - ζ
-  have hβT0Virt : Theory.Character.IsVirtualCharacter βT0 := by
+  have hβT0Virt : IsVirtualCharacter βT0 := by
     simpa [βT0] using
       section14_principalInducedCharacter_sub_irreducible_isVirtualCharacter
         (L := Tmax) (H := Q ⊔ V) (ζ := ζ) hζIrr
   let Δ : Section1.ClassFunction G :=
     τT βT0 - Section1.principalCharacter G + τT1 ζ
-  have hτT1ζVirt : Theory.Character.IsVirtualCharacter (τT1 ζ) :=
+  have hτT1ζVirt : IsVirtualCharacter (τT1 ζ) :=
     section14_theorem_14_9_late_type_T1_tauT1_mem_isVirtualCharacter hcoh hζ
   have hΔVirt_of_βT0 :
-      Theory.Character.IsVirtualCharacter (τT βT0) →
-        Theory.Character.IsVirtualCharacter Δ := by
+      IsVirtualCharacter (τT βT0) →
+        IsVirtualCharacter Δ := by
     intro hβT0Virt
     dsimp [Δ]
     exact section14_theorem_14_9_late_type_T1_delta_isVirtualCharacter_of_betaT0
       hβT0Virt hτT1ζVirt
-  have hτTβT0Virt_book : Theory.Character.IsVirtualCharacter (τT βT0) := by
+  have hτTβT0Virt_book : IsVirtualCharacter (τT βT0) := by
     simpa [βT0] using
       section14_theorem_14_9_late_type_T1_tauT_isVirtualCharacter_of_book_AZero
         Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT p q u v c d
         hctx hLateType hTtypeP hCalT1 hζ (by
           simpa [βT0] using hβT0Virt)
-  have hΔVirt : Theory.Character.IsVirtualCharacter Δ :=
+  have hΔVirt : IsVirtualCharacter Δ :=
     hΔVirt_of_βT0 hτTβT0Virt_book
   refine ⟨Δ, ?_⟩
   -- `betaT0 := nu_ 0 - zeta`;
@@ -3898,7 +3899,7 @@ public theorem section14_theorem_14_9_late_type_T1_calt_extension_orth_delta_sou
                 Tmax W τT σ Γ T1T := by
   classical
   intro hctx h143 hLateType hNotation hGap T1T hCalT1 h52 hdeg
-  letI : Fintype Tmax := Fintype.ofFinite Tmax
+  let : Fintype Tmax := Fintype.ofFinite Tmax
   have hTtypeP :
       Section8.typePDefinitionData Tmax Q V W2 W1 :=
     section14_theorem_14_9_Tmax_typePDefinitionData_of_context hctx
@@ -3916,10 +3917,10 @@ public theorem section14_theorem_14_9_late_type_T1_calt_extension_orth_delta_sou
         ω η μ ν μsum νsum δ δ' σ p q u v c d
         hctx hLateType hTtypeP hNotation with
     ⟨d52, hd52τ, hΩCompat⟩
-  letI : Fintype d52.I := d52.instFintypeI
-  letI : Fintype d52.J := d52.instFintypeJ
-  letI : DecidableEq d52.I := d52.instDecidableEqI
-  letI : DecidableEq d52.J := d52.instDecidableEqJ
+  let : Fintype d52.I := d52.instFintypeI
+  let : Fintype d52.J := d52.instFintypeJ
+  let : DecidableEq d52.I := d52.instDecidableEqI
+  let : DecidableEq d52.J := d52.instDecidableEqJ
   have hDerEq : ambientDerivedSubgroup Tmax = Q ⊔ V := by
     rcases hTtypeP0 with
       ⟨_hQMF, _hW2cyc, _hW2ne, _hW2Hall, _hTcomp, _hVleDer,

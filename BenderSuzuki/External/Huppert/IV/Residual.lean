@@ -19,7 +19,7 @@ with `p`-group quotient. -/
 public noncomputable def hktPResidual (p : ℕ) (G : Type u) [Group G] :
     Subgroup G :=
   ⨅ R : {N : Subgroup G // ∃ hN : N.Normal,
-      letI : N.Normal := hN
+      let : N.Normal := hN
       IsPGroup p (G ⧸ N)}, R.1
 
 public theorem hktPResidual_normal
@@ -30,13 +30,13 @@ public theorem hktPResidual_normal
 
 public theorem hktPResidual_le
     {Q : Type u} [Group Q] {q : ℕ} (N : Subgroup Q) (hN : N.Normal)
-    (hquot : letI : N.Normal := hN; IsPGroup q (Q ⧸ N)) :
+    (hquot : let : N.Normal := hN; IsPGroup q (Q ⧸ N)) :
     hktPResidual q Q ≤ N := by
   let R : {N : Subgroup Q // ∃ hN : N.Normal,
-      letI : N.Normal := hN
+      let : N.Normal := hN
       IsPGroup q (Q ⧸ N)} := ⟨N, ⟨hN, hquot⟩⟩
   exact iInf_le (fun R : {N : Subgroup Q // ∃ hN : N.Normal,
-      letI : N.Normal := hN
+      let : N.Normal := hN
       IsPGroup q (Q ⧸ N)} => R.1) R
 
 /-- A normal `p`-complement makes the `p`-residual proper whenever `p`
@@ -60,7 +60,7 @@ public theorem hkt_pi_isPGroup
     {p : ℕ} [Fact p.Prime] (hG : ∀ i, IsPGroup p (G i)) :
     IsPGroup p ((i : ι) → G i) := by
   classical
-  letI := Fintype.ofFinite ι
+  let := Fintype.ofFinite ι
   choose n hn using fun i =>
     (IsPGroup.iff_card (p := p) (G := G i)).mp (hG i)
   refine (IsPGroup.iff_card (p := p) (G := (i : ι) → G i)).mpr ?_
@@ -73,16 +73,16 @@ public theorem hkt_pi_isPGroup
 
 public theorem hktPResidual_quotient_isPGroup
     {Q : Type u} [Group Q] [Finite Q] {q : ℕ} [Fact q.Prime] :
-    letI : (hktPResidual q Q).Normal := hktPResidual_normal (Q := Q) (q := q)
+    let : (hktPResidual q Q).Normal := hktPResidual_normal (Q := Q) (q := q)
     IsPGroup q (Q ⧸ hktPResidual q Q) := by
   classical
   -- Standard residual fact: `G/O^q(G)` embeds in the product of all
   -- `q`-group quotients `G/N`.
-  letI : ∀ R : {N : Subgroup Q // ∃ hN : N.Normal,
-      letI : N.Normal := hN
+  let : ∀ R : {N : Subgroup Q // ∃ hN : N.Normal,
+      let : N.Normal := hN
       IsPGroup q (Q ⧸ N)}, R.1.Normal := fun R => R.2.choose
   let diag0 : Q →* ((R : {N : Subgroup Q // ∃ hN : N.Normal,
-      letI : N.Normal := hN
+      let : N.Normal := hN
       IsPGroup q (Q ⧸ N)}) → Q ⧸ R.1) :=
     { toFun := fun x R => QuotientGroup.mk' R.1 x
       map_one' := by
@@ -110,10 +110,10 @@ public theorem hktPResidual_quotient_isPGroup
         exact (QuotientGroup.eq_one_iff (N := R.1) x).mp hcoord)
     · intro hx
       exact hker hx
-  letI : (hktPResidual q Q).Normal := hktPResidual_normal (Q := Q) (q := q)
+  let : (hktPResidual q Q).Normal := hktPResidual_normal (Q := Q) (q := q)
   let diag : Q ⧸ hktPResidual q Q →*
       ((R : {N : Subgroup Q // ∃ hN : N.Normal,
-        letI : N.Normal := hN
+        let : N.Normal := hN
         IsPGroup q (Q ⧸ N)}) → Q ⧸ R.1) :=
     QuotientGroup.lift (hktPResidual q Q) diag0 hker
   have hdiag_inj : Function.Injective diag := by
@@ -127,7 +127,7 @@ public theorem hktPResidual_quotient_isPGroup
       _ = ⊥ := QuotientGroup.map_mk'_self (N := hktPResidual q Q)
   have hprod :
       IsPGroup q ((R : {N : Subgroup Q // ∃ hN : N.Normal,
-        letI : N.Normal := hN
+        let : N.Normal := hN
         IsPGroup q (Q ⧸ N)}) → Q ⧸ R.1) :=
     hkt_pi_isPGroup (fun R => R.2.choose_spec)
   exact IsPGroup.of_injective (hG := hprod) (ϕ := diag) hdiag_inj
@@ -145,11 +145,11 @@ public theorem hktPResidual_quotient_eq_top_of_eq_top
   rw [hktPResidual, Subgroup.mem_iInf]
   intro R
   have hRnormal : R.1.Normal := R.2.choose
-  letI : R.1.Normal := hRnormal
+  let : R.1.Normal := hRnormal
   let q : G →* G ⧸ M := QuotientGroup.mk' M
   let N : Subgroup G := R.1.comap q
   have hNnormal : N.Normal := hRnormal.comap q
-  letI : N.Normal := hNnormal
+  let : N.Normal := hNnormal
   have hM_le_N : M ≤ N := by
     simpa [N, q] using QuotientGroup.le_comap_mk' M R.1
   have hNmap : N.map q = R.1 := by
@@ -183,9 +183,9 @@ public theorem hktPResidual_invariant
     let N : Subgroup G := R.1
     let Npre : Subgroup G := N.comap psi.toMonoidHom
     have hNnormal : N.Normal := R.2.choose
-    letI : N.Normal := hNnormal
+    let : N.Normal := hNnormal
     have hNpreNormal : Npre.Normal := hNnormal.comap psi.toMonoidHom
-    letI : Npre.Normal := hNpreNormal
+    let : Npre.Normal := hNpreNormal
     let qmap : G ⧸ Npre →* G ⧸ N :=
       QuotientGroup.map (N := Npre) N psi.toMonoidHom (by
         intro x hx
@@ -214,7 +214,7 @@ public theorem hktPResidual_invariant
     have hpreP : IsPGroup p (G ⧸ Npre) :=
       hquotP.of_equiv qequiv.symm
     let Rpre : {N : Subgroup G // ∃ hN : N.Normal,
-        letI : N.Normal := hN
+        let : N.Normal := hN
         IsPGroup p (G ⧸ N)} :=
       ⟨Npre, hNpreNormal, hpreP⟩
     exact hg Rpre
@@ -245,20 +245,20 @@ public theorem hktPResidual_le_hktAbelianPResidual
 public theorem hktAbelianPResidual_normal
     {Q : Type u} [Group Q] {q : ℕ} :
     (hktAbelianPResidual q Q).Normal := by
-  letI : (hktPResidual q Q).Normal := hktPResidual_normal (Q := Q) (q := q)
+  let : (hktPResidual q Q).Normal := hktPResidual_normal (Q := Q) (q := q)
   dsimp [hktAbelianPResidual]
   infer_instance
 
 public theorem hktAbelianPResidual_quotient_isPGroup
     {Q : Type u} [Group Q] [Finite Q] {q : ℕ} [Fact q.Prime] :
-    letI : (hktAbelianPResidual q Q).Normal :=
+    let : (hktAbelianPResidual q Q).Normal :=
       hktAbelianPResidual_normal (Q := Q) (q := q)
     IsPGroup q (Q ⧸ hktAbelianPResidual q Q) := by
   classical
   -- This is the abelian `q`-residual kernel `G'(q)` in Huppert IV.3.7:
   -- quotient the `q`-residual further by the commutator subgroup.
-  letI : (hktPResidual q Q).Normal := hktPResidual_normal (Q := Q) (q := q)
-  letI : (hktAbelianPResidual q Q).Normal :=
+  let : (hktPResidual q Q).Normal := hktPResidual_normal (Q := Q) (q := q)
+  let : (hktAbelianPResidual q Q).Normal :=
     hktAbelianPResidual_normal (Q := Q) (q := q)
   have hle : hktPResidual q Q ≤ hktAbelianPResidual q Q :=
     hktPResidual_le_hktAbelianPResidual (Q := Q) (q := q)

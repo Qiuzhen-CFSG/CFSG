@@ -1,6 +1,6 @@
 module
 
-public import FeitThompson.SubgroupConj
+public import Theory.GroupTheory.SubgroupConjugation
 
 /-!
 # A complement-intersection calculation for Brauer--Suzuki--Wall

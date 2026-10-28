@@ -7,6 +7,7 @@ public import FeitThompson.BGsection4.theorem_4_18_a
 public import FeitThompson.BGsection4.theorem_4_18_b
 public import FeitThompson.BGsection4.theorem_4_18_c
 public import FeitThompson.BGsection4.theorem_4_18_e
+
 /-! # Corollary 4.19 from BG Section 4 -/
 
 universe u
@@ -18,7 +19,7 @@ open scoped FixedPoints commutatorElement
 private theorem chiefFactor_quotient_isElementaryAbelian_of_isPFactor
     {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p.Prime]
     (hsolv : Group.IsSolvable G) (cf : ChiefFactor G) (hcf_p : cf.IsPFactor p) :
-    letI : cf.V.Normal := cf.isChief.normal_K
+    let : cf.V.Normal := cf.isChief.normal_K
     let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
     let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
     IsElementaryAbelian p Uq := by
@@ -301,16 +302,16 @@ private theorem chiefFactor_upper_le_Op_p'p_sup_lower_of_isPFactor
 private theorem derivedSubgroup_le_centralizerOfChiefFactor_of_chief_conj_image_isPGroup
     {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p.Prime]
     (cf : ChiefFactor G) (himage_p :
-      letI : cf.V.Normal := cf.isChief.normal_K
+      let : cf.V.Normal := cf.isChief.normal_K
       let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
       let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
-      letI : Uq.Normal := cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V)
+      let : Uq.Normal := cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V)
       IsPGroup p ((derivedSubgroup G).map ((MulAut.conjNormal (H := Uq)).comp π)))
     (hpcore_bot :
-      letI : cf.V.Normal := cf.isChief.normal_K
+      let : cf.V.Normal := cf.isChief.normal_K
       let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
       let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
-      letI : Uq.Normal := cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V)
+      let : Uq.Normal := cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V)
       pCore p ((MulAut.conjNormal (H := Uq)).comp π).range = ⊥) :
     derivedSubgroup G ≤ centralizerOfChiefFactor (G := G) (⊤ : Subgroup G) cf := by
   classical
@@ -430,10 +431,10 @@ private theorem chiefFactor_derived_conj_image_isPGroup_of_covered_coprime_quoti
     (hderR_p :
       let qM : G →* G ⧸ M := QuotientGroup.mk' M
       IsPGroup p ((derivedSubgroup G).map ((MulAut.conjNormal (H := R)).comp qM))) :
-    letI : cf.V.Normal := cf.isChief.normal_K
+    let : cf.V.Normal := cf.isChief.normal_K
     let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
     let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
-    letI : Uq.Normal := cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V)
+    let : Uq.Normal := cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V)
     let φ : (G ⧸ cf.V) →* MulAut Uq := MulAut.conjNormal (H := Uq)
     IsPGroup p ((derivedSubgroup G).map (φ.comp π)) := by
   classical
@@ -585,10 +586,10 @@ private theorem chiefFactor_derived_conj_image_isPGroup_of_covered_coprime_quoti
 private theorem chiefFactor_conj_range_pCore_eq_bot_local
     {G : Type*} [Group G] [Finite G] (hsolv : Group.IsSolvable G)
     {p : ℕ} [Fact p.Prime] (cf : ChiefFactor G) (hcf_p : cf.IsPFactor p) :
-    letI : cf.V.Normal := cf.isChief.normal_K
+    let : cf.V.Normal := cf.isChief.normal_K
     let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
     let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
-    letI : Uq.Normal := cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V)
+    let : Uq.Normal := cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V)
     let φ : (G ⧸ cf.V) →* MulAut Uq := MulAut.conjNormal (H := Uq)
     pCore p φ.range = ⊥ := by
   classical
@@ -699,10 +700,10 @@ private theorem chiefFactor_conj_range_pCore_eq_bot_local
 private theorem chiefFactor_conj_composed_range_pCore_eq_bot_local
     {G : Type*} [Group G] [Finite G] (hsolv : Group.IsSolvable G)
     {p : ℕ} [Fact p.Prime] (cf : ChiefFactor G) (hcf_p : cf.IsPFactor p) :
-    letI : cf.V.Normal := cf.isChief.normal_K
+    let : cf.V.Normal := cf.isChief.normal_K
     let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
     let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
-    letI : Uq.Normal := cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V)
+    let : Uq.Normal := cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V)
     let φ : G →* MulAut Uq := (MulAut.conjNormal (H := Uq)).comp π
     pCore p φ.range = ⊥ := by
   classical
@@ -803,10 +804,10 @@ public theorem corollary_4_19 {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p
       chiefFactor_upper_le_Op_p'p_map_comap_mk'_sup_lower
         (G := G) (p := p) hsolv hodd GStar hrank cf hcf_p hcfU
   have himage_p :
-      letI : cf.V.Normal := cf.isChief.normal_K
+      let : cf.V.Normal := cf.isChief.normal_K
       let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
       let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
-      letI : Uq.Normal := cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V)
+      let : Uq.Normal := cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V)
       IsPGroup p ((derivedSubgroup G).map ((MulAut.conjNormal (H := Uq)).comp π)) := by
     have : cf.V.Normal := cf.isChief.normal_K
     have : (Op_p'p p GStar).Characteristic := Op_p'p_characteristic_local (H := GStar) (p := p)
@@ -867,10 +868,10 @@ public theorem corollary_4_19 {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p
         (G := G) (p := p) (M := M) hMcop cf hcf_p (R := R)
         (by simpa [qM, R] using hU_le) (by simpa [qM, R] using hderR_p)
   have hpcore_bot :
-      letI : cf.V.Normal := cf.isChief.normal_K
+      let : cf.V.Normal := cf.isChief.normal_K
       let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
       let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
-      letI : Uq.Normal := cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V)
+      let : Uq.Normal := cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V)
       pCore p ((MulAut.conjNormal (H := Uq)).comp π).range = ⊥ := by
     simpa using chiefFactor_conj_composed_range_pCore_eq_bot_local
       (G := G) (p := p) hsolv cf hcf_p

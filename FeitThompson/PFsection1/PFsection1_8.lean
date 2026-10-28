@@ -16,7 +16,7 @@ Current scope discipline:
 * No Lean files outside `PFtest` are imported or read.
 * The book proposition is stated for an irreducible `Representation`; the
   condition \(D/B \le Z(C/B)\) is represented by the direct commutator
-  predicate `Theory.Character.IsCentralModulo` on the subgroups of `C`.
+  predicate `IsCentralModulo` on the subgroups of `C`.
 -/
 
 noncomputable section
@@ -102,7 +102,7 @@ private theorem orbitSpanSubrepresentation_eq_top_of_irreducible
     {C : Subgroup G} (S : Subrepresentation (ρ.comp C.subtype))
     [Representation.IsIrreducible S.toRepresentation] :
     orbitSpanSubrepresentation ρ S = ⊤ := by
-  haveI : Nontrivial S.toSubmodule :=
+  have : Nontrivial S.toSubmodule :=
     Subrepresentation.irreducible_module_nontrivial S.toRepresentation
   have hS_ne_bot : S.toSubmodule ≠ ⊥ :=
     Submodule.nontrivial_iff_ne_bot.mp inferInstance
@@ -233,15 +233,15 @@ private theorem proposition_1_8_square_bound
     (hBker : ∀ b : B, ρ b = (1 : Module.End ℂ V))
     (_hBD : B ≤ D) (hDC : D ≤ C)
     (hcentral :
-      Theory.Character.IsCentralModulo
+      IsCentralModulo
         (B.subgroupOf C) (D.subgroupOf C)) :
     (Module.finrank ℂ V : ℝ) ^ 2 ≤
       (Nat.card G : ℝ) ^ 2 / ((Nat.card C : ℝ) * Nat.card D) := by
   classical
-  haveI : Nontrivial V := Subrepresentation.irreducible_module_nontrivial ρ
+  have : Nontrivial V := Subrepresentation.irreducible_module_nontrivial ρ
   let ρC : Representation ℂ C V := ρ.comp C.subtype
   obtain ⟨S, hSirr⟩ := Subrepresentation.irreducible_subrepresentation_of_finite_dimensional ρC
-  letI : Representation.IsIrreducible S.toRepresentation := hSirr
+  let : Representation.IsIrreducible S.toRepresentation := hSirr
   let Bsub : Subgroup C := B.subgroupOf C
   let Dsub : Subgroup C := D.subgroupOf C
   have hdim_le :
@@ -259,7 +259,7 @@ private theorem proposition_1_8_square_bound
       congrArg (fun f : Module.End ℂ V => f (w : V)) hρb
   have hSsq :
       Module.finrank ℂ S.toSubmodule ^ 2 ≤ Dsub.index :=
-    Theory.Character.irreducible_finrank_sq_le_index_of_centralModulo_kernel
+    irreducible_finrank_sq_le_index_of_centralModulo_kernel
       (ρ := S.toRepresentation) Bsub Dsub hBker_sub (by
         simpa [Bsub, Dsub] using hcentral)
   have hsq_nat :
@@ -295,7 +295,7 @@ private theorem proposition_1_8_square_bound
 
 /-- Peterfalvi, Proposition (1.8), in `Representation` form.
 
-The hypothesis `Theory.Character.IsCentralModulo (B.subgroupOf C) (D.subgroupOf C)`
+The hypothesis `IsCentralModulo (B.subgroupOf C) (D.subgroupOf C)`
 is the direct commutator form of \(D/B \le Z(C/B)\). -/
 public theorem proposition_1_8
     {G V : Type*} [Group G] [Finite G]
@@ -306,7 +306,7 @@ public theorem proposition_1_8
     (hBD : B ≤ D) (hDC : D ≤ C)
     (_hBnormal : (B.subgroupOf C).Normal)
     (hcentral :
-      Theory.Character.IsCentralModulo
+      IsCentralModulo
         (B.subgroupOf C) (D.subgroupOf C)) :
     (Module.finrank ℂ V : ℝ) ≤
       Nat.card G / Real.sqrt ((Nat.card C : ℝ) * Nat.card D) := by

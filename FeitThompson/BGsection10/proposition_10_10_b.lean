@@ -4,6 +4,7 @@ public import FeitThompson.BGsection10.proposition_10_10_a
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
 
+
 open scoped Pointwise
 
 /-!
@@ -29,11 +30,11 @@ public theorem proposition_10_10_b
     ∃ P : Sylow p.val G, A ≤ (P : Subgroup G) ∧
       (P : Subgroup G) ≤ ambientDerivedSubgroup (Subgroup.normalizer (Q : Set G)) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
-  haveI : Fact q.val.Prime := ⟨q.property⟩
-  letI : IsElementaryAbelian p.val A := hA.1.2
-  letI : IsMulCommutative A := hA.1.2.toIsMulCommutative
-  letI : CommGroup A := IsMulCommutative.instCommGroup
+  have : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
+  let : IsElementaryAbelian p.val A := hA.1.2
+  let : IsMulCommutative A := hA.1.2.toIsMulCommutative
+  let : CommGroup A := IsMulCommutative.instCommGroup
   have hHyp : Hypothesis7_1 A := section10_rankTwoMaximal_hypothesis7_1 (G := G) hA
   have hAπ : subgroupPrimeSet A = ({p} : Set Nat.Primes) :=
     section10_rankTwoMaximal_subgroupPrimeSet_eq_singleton (G := G) hA
@@ -72,7 +73,7 @@ public theorem proposition_10_10_b
   obtain ⟨P₀, hAP₀⟩ := IsPGroup.exists_le_sylow (G := G) (p := p.val) hAp
   have hP₀proper : (P₀ : Subgroup G) ≠ ⊤ :=
     section10_global_pSubgroup_proper_of_min_ce (G := G) (p := p.val) P₀.isPGroup'
-  haveI : Group.IsNilpotent (P₀ : Subgroup G) :=
+  have : Group.IsNilpotent (P₀ : Subgroup G) :=
     IsPGroup.isNilpotent (p := p.val) (G := (P₀ : Subgroup G)) P₀.isPGroup'
   have hAsubnormalP₀ : IsSubnormalIn A (P₀ : Subgroup G) :=
     section8_isSubnormalIn_of_nilpotent (G := G) hAP₀
@@ -118,7 +119,7 @@ public theorem proposition_10_10_b
     simpa [hkQ, hPconj] using hQ₀conj
   have hPproper : (P : Subgroup G) ≠ ⊤ :=
     section10_global_pSubgroup_proper_of_min_ce (G := G) (p := p.val) P.isPGroup'
-  haveI : Group.IsNilpotent (P : Subgroup G) :=
+  have : Group.IsNilpotent (P : Subgroup G) :=
     IsPGroup.isNilpotent (p := p.val) (G := (P : Subgroup G)) P.isPGroup'
   have hAsubnormalP : IsSubnormalIn A (P : Subgroup G) :=
     section8_isSubnormalIn_of_nilpotent (G := G) hAP

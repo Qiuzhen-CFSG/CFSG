@@ -140,7 +140,6 @@ public theorem centralizerTwoPrimeResidual_normal_in_normalizer
     (centralizerTwoPrimeResidual_le_ambientCentralizer Y).trans hC_le_N
   rw [Subgroup.normal_subgroupOf_iff hF_le_N]
   intro f n hf hn
-  change n * f * n⁻¹ ∈ F
   have hnC : n ∈ Subgroup.normalizer (C : Set X) := by
     exact normalizer_le_normalizer_centralizer Y hn
   rcases hf with ⟨c, hc, rfl⟩

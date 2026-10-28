@@ -132,7 +132,7 @@ private theorem proposition82_odd_card_of_three_fixed_of_le
     Odd (Nat.card Y) := by
   have hnontrivial : Nontrivial (theorem4bFixedPoints M Y) :=
     Finite.one_lt_card_iff_nontrivial.mp (by omega)
-  letI : Nontrivial (theorem4bFixedPoints M Y) := hnontrivial
+  let : Nontrivial (theorem4bFixedPoints M Y) := hnontrivial
   let base : theorem4bFixedPoints M Y :=
     ⟨QuotientGroup.mk 1, theorem4b_baseCoset_mem_fixedPoints hYM⟩
   obtain ⟨beta, hbeta⟩ := exists_ne base
@@ -172,8 +172,8 @@ public theorem proposition82AmbientResidualData_of_subgroup
     (hYodd : Odd (Nat.card Y)) (hYsolv : Group.IsSolvable Y)
     (hYne : Y ≠ ⊥) :
     Nonempty (Proposition82AmbientResidualData Y) := by
-  letI : Group.IsSolvable Y := hYsolv
-  letI : Nontrivial Y := (Subgroup.nontrivial_iff_ne_bot (H := Y)).2 hYne
+  let : Group.IsSolvable Y := hYsolv
+  let : Nontrivial Y := (Subgroup.nontrivial_iff_ne_bot (H := Y)).2 hYne
   obtain ⟨d⟩ := proposition82ResidualData_nonempty_of_odd
     (Y := Y) hYodd
   let W0 : Subgroup Y := hktPResidual d.p Y
@@ -196,7 +196,7 @@ public theorem proposition82AmbientResidualData_of_subgroup
     exact d.residual_ne_top (by simpa [W0] using hW0top)
   have hWcard : Nat.card W < Nat.card Y :=
     natCard_lt_of_subgroup_lt (lt_of_le_of_ne hWle hWne)
-  letI : W0.Normal := by
+  let : W0.Normal := by
     simpa [W0] using (hktPResidual_normal (Q := Y) (q := d.p))
   have hRpg : IsPGroup d.p R := by
     exact d.R.isPGroup'.map Y.subtype
@@ -363,7 +363,7 @@ public theorem proposition82_proper_local_normalizer
       exact hPthree.trans (Nat.card_le_card_of_injective f hf)
     have hnontrivial : Nontrivial (theorem4bFixedPoints M W) :=
       Finite.one_lt_card_iff_nontrivial.mp (by omega)
-    letI : Nontrivial (theorem4bFixedPoints M W) := hnontrivial
+    let : Nontrivial (theorem4bFixedPoints M W) := hnontrivial
     let baseW : theorem4bFixedPoints M W :=
       ⟨QuotientGroup.mk 1, hbaseW⟩
     obtain ⟨betaW, hbetaW⟩ := exists_ne baseW
@@ -428,7 +428,7 @@ private theorem proposition82_base_step
   have hYsolv : Group.IsSolvable Y := odd_order_theorem Y hYodd
   obtain ⟨d⟩ := proposition82AmbientResidualData_of_subgroup
     hYodd hYsolv hYne
-  letI : Fact d.p.Prime := ⟨d.p_prime⟩
+  let : Fact d.p.Prime := ⟨d.p_prime⟩
   have hWM : d.W ≤ M := d.W_le_Y.trans hYM
   have hfixedW : 3 ≤ Nat.card (theorem4bFixedPoints M d.W) := by
     exact hfixed.trans (proposition82_fixedPoints_card_le_of_le d.W_le_Y)

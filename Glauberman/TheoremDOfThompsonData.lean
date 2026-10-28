@@ -8,6 +8,7 @@ public import FeitThompson.BGsection1.PLengthLemmas
 public import FeitThompson.PCore.PCore
 public import FeitThompson.PCore.PPrimeCore
 
+
 /-!
 # Glauberman Theorem D (the normal `p`-complement criterion)
 
@@ -120,7 +121,7 @@ recorded in `/tmp/glauberman-d-report.md`. -/
 private def ThompsonMethodData (p : ℕ) [Fact p.Prime]
     {G : Type u} [Group G] [Finite G] : Prop :=
   Subgroup.centralizer ((pCore p G : Subgroup G) : Set G) ≤ pCore p G ∧
-    IsSolvable G ∧
+    Group.IsSolvable G ∧
     ∃ q : ℕ, q.Prime ∧ q ≠ p ∧
       (∀ T : Sylow q G, IsMulCommutative (T : Subgroup G)) ∧
       ∀ r : ℕ, r.Prime → r ∣ Nat.card G → r = p ∨ r = q
@@ -173,7 +174,7 @@ public theorem theoremD_of_thompsonData {p : ℕ} [Fact p.Prime] (hpodd : p ≠ 
   let Z : Subgroup G := ZJ (G := G) S.toSubgroup
   have hZchar : Z.Characteristic :=
     Glauberman.TheoremA.theoremA hpodd S hstab hC
-  haveI : Z.Characteristic := hZchar
+  have : Z.Characteristic := hZchar
   have hZnorm : Z.Normal := inferInstance
   have hNtop : Subgroup.normalizer (Z : Set G) = ⊤ :=
     Subgroup.normalizer_eq_top_iff.mpr hZnorm

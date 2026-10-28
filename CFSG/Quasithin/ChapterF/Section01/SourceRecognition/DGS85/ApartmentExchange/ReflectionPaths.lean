@@ -1,0 +1,204 @@
+module
+public import CFSG.Quasithin.ChapterF.Section01.SourceRecognition.DGS85.ApartmentExchange.ReducedCartan
+public import CFSG.Quasithin.ChapterF.Section01.SourceRecognition.DGS85.ApartmentExchange.CartanApartment
+public import Theory.GroupTheory.WeakBNPair.RegularTree.PathRoot
+
+/-!
+# Chosen reflection paths and their source two-core factorization
+
+In the reduced source Borel B = UK, U is a normal two-group. Every subgroup
+F with K ≤ F ≤ B therefore has F = O₂(F)K: its U-part lies in the normal
+two-subgroup U ∩ F. This supplies the long-path product used after DGS (14.1).
+
+The chosen reflections normalizing the same K generate an orbit of the
+original edge. Each orbit vertex has two neighbors in the orbit. The universal
+tree therefore extends the edge to an arbitrary prescribed path length.
+Reversing the path puts its endpoint and preceding vertex at the original
+marked edge, and normalization makes K fix its entire support. The preceding
+subgroup argument applies to this actual path stabilizer.
+
+Only the reflection choices remain inputs; no path-existence or path-product
+callback is assumed. Source: DGS, *Groups and Graphs* (1985), Part II,
+(3.5), p.75, (14.1)--(14.2) and the root notation, pp.210--211.
+-/
+
+@[expose] public noncomputable section
+open Subgroup Theory.GroupTheory RankTwoAmalgam
+open Theory.GroupTheory.WeakBNPair.RegularTree Subgroup.CosetGeometry
+open CFSG.Quasithin.ChapterF.Source
+open CFSG.Quasithin.ChapterF.Source.SuzukiContainment
+open CFSG.Quasithin.ChapterF.Source.DGS85.OriginalExtension
+open scoped Pointwise
+namespace CFSG.Quasithin.ChapterF.Section01.SourceRecognition.DGS85.ApartmentExchange
+namespace ReducedCartan
+variable {G : Type*} [Group G] {L : Fin 2 → Subgroup G} {S : Subgroup G}
+variable (c : CompatibleCartans L (reducedSylow L S))
+
+/-- Every intermediate subgroup containing K inherits the source two-core/Cartan product. -/
+theorem intermediate_factorization (h : HypothesisF11 L S)
+    (F : Subgroup (reducedAmalgam L S).Universal)
+    (hF : F ≤ originalMiddle (reducedAmalgam L S)) (hK : cartan c ≤ F) :
+    (F : Set (reducedAmalgam L S).Universal) =
+      (F.pCoreIn 2 : Set (reducedAmalgam L S).Universal) *
+        (cartan c : Set (reducedAmalgam L S).Universal) := by
+  have hcore : twoGroup L S ⊓ F ≤ F.pCoreIn 2 :=
+    le_pCoreIn_of_normalizes ((twoGroup_isTwo h).to_le inf_le_left) inf_le_right
+      ((le_inf (hF.trans (twoGroup_normalized h)) F.le_normalizer).trans
+        inf_normalizer_le_normalizer_inf)
+  ext x
+  constructor
+  · intro hx
+    have hxb : x ∈ (originalMiddle (reducedAmalgam L S) : Set _) := hF hx
+    rw [factorization_set h c] at hxb
+    obtain ⟨u, hu, k, hk, rfl⟩ := hxb
+    refine ⟨u, hcore ⟨hu, ?_⟩, k, hk, rfl⟩
+    change u ∈ F
+    simpa only [mul_inv_cancel_right] using F.mul_mem hx (F.inv_mem (hK hk))
+  · rintro ⟨u, hu, k, hk, rfl⟩
+    exact F.mul_mem (F.pCoreIn_le 2 hu) (hK hk)
+
+/-- The genuine long-path stabilizer factors through its own two-core and the same Cartan. -/
+theorem pathFixer_factorization (h : HypothesisF11 L S)
+    {d : SourceVertex (reducedAmalgam L S)} {i : Bool}
+    (p : (sourceGraph (reducedAmalgam L S)).Walk d
+      (base (Universal.cosetFamily (reducedAmalgam L S)) i))
+    (hprev : p.penultimate = base (Universal.cosetFamily (reducedAmalgam L S)) (!i))
+    (hK : cartan c ≤ pathFixer (X := (reducedAmalgam L S).Universal) p) :
+    (pathFixer (X := (reducedAmalgam L S).Universal) p : Set (reducedAmalgam L S).Universal) =
+      (pathRoot (X := (reducedAmalgam L S).Universal) p : Set (reducedAmalgam L S).Universal) *
+        (cartan c : Set (reducedAmalgam L S).Universal) := by
+  apply intermediate_factorization c h _ _ hK
+  intro x hx
+  have ha : x ∈ MulAction.stabilizer (reducedAmalgam L S).Universal
+      (base (Universal.cosetFamily (reducedAmalgam L S)) i) := by
+    change x • _ = _
+    simpa only [SimpleGraph.Walk.getVert_length] using hx p.length le_rfl
+  have hb : x ∈ MulAction.stabilizer (reducedAmalgam L S).Universal
+      (base (Universal.cosetFamily (reducedAmalgam L S)) (!i)) := by
+    change x • _ = _
+    rw [← hprev]
+    exact hx (p.length-1) (Nat.sub_le _ _)
+  rw [stabilizer_base] at ha hb
+  change x ∈ ((Universal.left (reducedAmalgam L S)).comp (reducedAmalgam L S).left).range
+  rw [← Universal.overlap_eq _ (inclusion_injective (commonBorel_le_parabolic 0))
+    (inclusion_injective (commonBorel_le_parabolic 1))]
+  cases i
+  · exact ⟨ha, hb⟩
+  · exact ⟨hb, ha⟩
+
+variable (t : Bool → (reducedAmalgam L S).Universal)
+variable (htfix : ∀ i, t i • base (Universal.cosetFamily (reducedAmalgam L S)) i =
+  base (Universal.cosetFamily (reducedAmalgam L S)) i)
+variable (htmove : ∀ i, t i • base (Universal.cosetFamily (reducedAmalgam L S)) (!i) ≠
+  base (Universal.cosetFamily (reducedAmalgam L S)) (!i))
+variable (htnorm : ∀ i, t i ∈
+  Subgroup.normalizer (cartan c : Set (reducedAmalgam L S).Universal))
+
+/-- The group generated by K and the original two reflection lifts, before choosing roots. -/
+def reflectionGroup : Subgroup (reducedAmalgam L S).Universal :=
+  Subgroup.closure ((cartan c : Set (reducedAmalgam L S).Universal) ∪ Set.range t)
+
+/-- Both original lifts lie in their generated apartment group. -/
+theorem reflectionGroup_mem (i : Bool) : t i ∈ reflectionGroup c t :=
+  Subgroup.subset_closure (Or.inr ⟨i, rfl⟩)
+
+include htnorm in
+/-- The generated group normalizes the same chosen source Cartan. -/
+theorem reflectionGroup_normalizes : reflectionGroup c t ≤
+    Subgroup.normalizer (cartan c : Set (reducedAmalgam L S).Universal) := by
+  apply (Subgroup.closure_le _).mpr
+  rintro x (hx | ⟨i, rfl⟩)
+  · exact (cartan c).le_normalizer hx
+  · exact htnorm i
+
+include htnorm in
+/-- The Cartan fixes the entire reflection orbit of the original edge. -/
+theorem reflectionApartment_fixed : ∀ k ∈ cartan c,
+    ∀ a ∈ cartanApartment (reducedAmalgam L S) (reflectionGroup c t), k • a = a :=
+  cartanApartment_fixed (reducedAmalgam L S) (reflectionGroup c t) (cartan c)
+    (cartan_le c) (reflectionGroup_normalizes c t htnorm)
+    (inclusion_injective (commonBorel_le_parabolic 0))
+    (inclusion_injective (commonBorel_le_parabolic 1))
+
+include htfix htmove in
+/-- The two original reflections supply two neighbors at every orbit vertex. -/
+theorem reflectionApartment_twoNeighbors : TwoNeighborsIn (sourceGraph (reducedAmalgam L S))
+    (cartanApartment (reducedAmalgam L S) (reflectionGroup c t)) := by
+  let A := reducedAmalgam L S
+  let N := reflectionGroup c t
+  rintro v ⟨g, hg, i, rfl⟩
+  let a := base (Universal.cosetFamily A) i
+  let b := base (Universal.cosetFamily A) (!i)
+  have hbT : b ∈ cartanApartment A N := cartanApartment_base A N (!i)
+  have hcT : t i • b ∈ cartanApartment A N :=
+    cartanApartment_preserves A N (reflectionGroup_mem c t i) hbT
+  have hab : (sourceGraph A).Adj a b :=
+    ⟨by change i ≠ !i; cases i <;> decide, incident_base _ _ _⟩
+  refine ⟨g • b, cartanApartment_preserves A N hg hbT,
+    g • (t i • b), cartanApartment_preserves A N hg hcT,
+    source_action A g hab, ?_, ?_⟩
+  · apply source_action A g
+    simpa only [a, A, htfix i] using source_action A (t i) hab
+  · exact fun he => (htmove i) (((MulAction.toPerm g).injective he).symm)
+
+include htfix htmove htnorm in
+/-- The universal tree produces a long Cartan-fixed path ending at either original oriented edge. -/
+theorem exists_reflectionPath (n : ℕ) (hn : 0 < n) (i : Bool) :
+    ∃ d, ∃ p : (sourceGraph (reducedAmalgam L S)).Walk d
+      (base (Universal.cosetFamily (reducedAmalgam L S)) i),
+      p.IsPath ∧ p.length = n ∧
+      p.penultimate = base (Universal.cosetFamily (reducedAmalgam L S)) (!i) ∧
+      cartan c ≤ pathFixer (X := (reducedAmalgam L S).Universal) p ∧
+      ∀ z ∈ p.support, z ∈ cartanApartment (reducedAmalgam L S) (reflectionGroup c t) := by
+  let A := reducedAmalgam L S
+  let N := reflectionGroup c t
+  let a := base (Universal.cosetFamily A) i
+  let b := base (Universal.cosetFamily A) (!i)
+  have hab : (sourceGraph A).Adj a b :=
+    ⟨by change i ≠ !i; cases i <;> decide, incident_base _ _ _⟩
+  let e : (sourceGraph A).Walk a b := .cons hab .nil
+  have he : e.IsPath := by simpa [e] using hab.ne
+  have heT : ∀ z ∈ e.support, z ∈ cartanApartment A N := by
+    intro z hz
+    simp only [e, SimpleGraph.Walk.support_cons, SimpleGraph.Walk.support_nil,
+      List.mem_cons, List.not_mem_nil, or_false] at hz
+    rcases hz with rfl | rfl
+    · exact cartanApartment_base A N i
+    · exact cartanApartment_base A N (!i)
+  obtain ⟨d, q, hq, hlen, hT, hfirst⟩ := path_extension_in_set
+    (Universal.cosetGraph_isTree A (inclusion_injective (commonBorel_le_parabolic 0))
+      (inclusion_injective (commonBorel_le_parabolic 1))).isAcyclic
+    (reflectionApartment_twoNeighbors c t htfix htmove) e he heT
+    (show e.length ≤ n by simp only [e, SimpleGraph.Walk.length_cons, SimpleGraph.Walk.length_nil]; omega)
+  refine ⟨d, q.reverse, hq.reverse, ?_, ?_, ?_, ?_⟩
+  · simpa only [SimpleGraph.Walk.length_reverse] using hlen
+  · rw [SimpleGraph.Walk.penultimate_reverse]
+    exact hfirst
+  · intro k hk j hj
+    rw [SimpleGraph.Walk.getVert_reverse]
+    exact reflectionApartment_fixed c t htnorm k hk _
+      (hT _ (q.getVert_mem_support _))
+  · intro z hz
+    exact hT z (by simpa only [SimpleGraph.Walk.support_reverse, List.mem_reverse] using hz)
+
+/-- A chosen long path, with its original endpoint, preceding vertex and pointwise Cartan fixation. -/
+structure ReflectionPath (n : ℕ) (i : Bool) where
+  start : SourceVertex (reducedAmalgam L S)
+  walk : (sourceGraph (reducedAmalgam L S)).Walk start
+    (base (Universal.cosetFamily (reducedAmalgam L S)) i)
+  isPath : walk.IsPath
+  length_eq : walk.length = n
+  previous : walk.penultimate = base (Universal.cosetFamily (reducedAmalgam L S)) (!i)
+  fixed : cartan c ≤ pathFixer (X := (reducedAmalgam L S).Universal) walk
+  supported : ∀ z ∈ walk.support,
+    z ∈ cartanApartment (reducedAmalgam L S) (reflectionGroup c t)
+
+/-- Choose the path constructed in the actual reflection orbit; no path data are assumed. -/
+def reflectionPath (n : ℕ) (hn : 0 < n) (i : Bool) : ReflectionPath c t n i :=
+  Classical.choice (show Nonempty (ReflectionPath c t n i) from by
+    obtain ⟨d, p, hp, hl, hprev, hfixed, hsupport⟩ :=
+      exists_reflectionPath c t htfix htmove htnorm n hn i
+    exact ⟨⟨d, p, hp, hl, hprev, hfixed, hsupport⟩⟩)
+
+end ReducedCartan
+end CFSG.Quasithin.ChapterF.Section01.SourceRecognition.DGS85.ApartmentExchange

@@ -1,0 +1,1039 @@
+module
+
+public import Theory.SpecificGroups.Rudvalis.Model.OrderLevel0Part5Residual0.Words
+import Mathlib.Tactic.FinCases
+
+/-!
+# Rudvalis part-5 residual 42
+
+The prescribed transition is verified on all 4060 points by 203 twenty-point
+kernel checks, then transferred by `point42_ofSlices`. Source:
+`OrderLevel0Data` and `Part5Residual.target`; extracted from the certificate
+produced by `OrderCertificate/GenerateLevel0Part5Residual0.py`.
+-/
+
+namespace Rudvalis.OrderCertificate.ForwardReduction.Part5Residual.Residual0Checks
+set_option maxRecDepth 30000
+set_option Elab.async false
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice0 : slice 0 left42 right42 factor42 0 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice1 : slice 0 left42 right42 factor42 1 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice2 : slice 0 left42 right42 factor42 2 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice3 : slice 0 left42 right42 factor42 3 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice4 : slice 0 left42 right42 factor42 4 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice5 : slice 0 left42 right42 factor42 5 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice6 : slice 0 left42 right42 factor42 6 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice7 : slice 0 left42 right42 factor42 7 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice8 : slice 0 left42 right42 factor42 8 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice9 : slice 0 left42 right42 factor42 9 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice10 : slice 0 left42 right42 factor42 10 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice11 : slice 0 left42 right42 factor42 11 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice12 : slice 0 left42 right42 factor42 12 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice13 : slice 0 left42 right42 factor42 13 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice14 : slice 0 left42 right42 factor42 14 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice15 : slice 0 left42 right42 factor42 15 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice16 : slice 0 left42 right42 factor42 16 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice17 : slice 0 left42 right42 factor42 17 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice18 : slice 0 left42 right42 factor42 18 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice19 : slice 0 left42 right42 factor42 19 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice20 : slice 0 left42 right42 factor42 20 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice21 : slice 0 left42 right42 factor42 21 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice22 : slice 0 left42 right42 factor42 22 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice23 : slice 0 left42 right42 factor42 23 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice24 : slice 0 left42 right42 factor42 24 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice25 : slice 0 left42 right42 factor42 25 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice26 : slice 0 left42 right42 factor42 26 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice27 : slice 0 left42 right42 factor42 27 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice28 : slice 0 left42 right42 factor42 28 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice29 : slice 0 left42 right42 factor42 29 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice30 : slice 0 left42 right42 factor42 30 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice31 : slice 0 left42 right42 factor42 31 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice32 : slice 0 left42 right42 factor42 32 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice33 : slice 0 left42 right42 factor42 33 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice34 : slice 0 left42 right42 factor42 34 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice35 : slice 0 left42 right42 factor42 35 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice36 : slice 0 left42 right42 factor42 36 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice37 : slice 0 left42 right42 factor42 37 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice38 : slice 0 left42 right42 factor42 38 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice39 : slice 0 left42 right42 factor42 39 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice40 : slice 0 left42 right42 factor42 40 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice41 : slice 0 left42 right42 factor42 41 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice42 : slice 0 left42 right42 factor42 42 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice43 : slice 0 left42 right42 factor42 43 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice44 : slice 0 left42 right42 factor42 44 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice45 : slice 0 left42 right42 factor42 45 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice46 : slice 0 left42 right42 factor42 46 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice47 : slice 0 left42 right42 factor42 47 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice48 : slice 0 left42 right42 factor42 48 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice49 : slice 0 left42 right42 factor42 49 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice50 : slice 0 left42 right42 factor42 50 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice51 : slice 0 left42 right42 factor42 51 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice52 : slice 0 left42 right42 factor42 52 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice53 : slice 0 left42 right42 factor42 53 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice54 : slice 0 left42 right42 factor42 54 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice55 : slice 0 left42 right42 factor42 55 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice56 : slice 0 left42 right42 factor42 56 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice57 : slice 0 left42 right42 factor42 57 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice58 : slice 0 left42 right42 factor42 58 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice59 : slice 0 left42 right42 factor42 59 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice60 : slice 0 left42 right42 factor42 60 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice61 : slice 0 left42 right42 factor42 61 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice62 : slice 0 left42 right42 factor42 62 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice63 : slice 0 left42 right42 factor42 63 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice64 : slice 0 left42 right42 factor42 64 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice65 : slice 0 left42 right42 factor42 65 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice66 : slice 0 left42 right42 factor42 66 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice67 : slice 0 left42 right42 factor42 67 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice68 : slice 0 left42 right42 factor42 68 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice69 : slice 0 left42 right42 factor42 69 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice70 : slice 0 left42 right42 factor42 70 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice71 : slice 0 left42 right42 factor42 71 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice72 : slice 0 left42 right42 factor42 72 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice73 : slice 0 left42 right42 factor42 73 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice74 : slice 0 left42 right42 factor42 74 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice75 : slice 0 left42 right42 factor42 75 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice76 : slice 0 left42 right42 factor42 76 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice77 : slice 0 left42 right42 factor42 77 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice78 : slice 0 left42 right42 factor42 78 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice79 : slice 0 left42 right42 factor42 79 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice80 : slice 0 left42 right42 factor42 80 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice81 : slice 0 left42 right42 factor42 81 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice82 : slice 0 left42 right42 factor42 82 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice83 : slice 0 left42 right42 factor42 83 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice84 : slice 0 left42 right42 factor42 84 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice85 : slice 0 left42 right42 factor42 85 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice86 : slice 0 left42 right42 factor42 86 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice87 : slice 0 left42 right42 factor42 87 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice88 : slice 0 left42 right42 factor42 88 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice89 : slice 0 left42 right42 factor42 89 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice90 : slice 0 left42 right42 factor42 90 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice91 : slice 0 left42 right42 factor42 91 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice92 : slice 0 left42 right42 factor42 92 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice93 : slice 0 left42 right42 factor42 93 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice94 : slice 0 left42 right42 factor42 94 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice95 : slice 0 left42 right42 factor42 95 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice96 : slice 0 left42 right42 factor42 96 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice97 : slice 0 left42 right42 factor42 97 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice98 : slice 0 left42 right42 factor42 98 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice99 : slice 0 left42 right42 factor42 99 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice100 : slice 0 left42 right42 factor42 100 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice101 : slice 0 left42 right42 factor42 101 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice102 : slice 0 left42 right42 factor42 102 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice103 : slice 0 left42 right42 factor42 103 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice104 : slice 0 left42 right42 factor42 104 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice105 : slice 0 left42 right42 factor42 105 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice106 : slice 0 left42 right42 factor42 106 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice107 : slice 0 left42 right42 factor42 107 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice108 : slice 0 left42 right42 factor42 108 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice109 : slice 0 left42 right42 factor42 109 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice110 : slice 0 left42 right42 factor42 110 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice111 : slice 0 left42 right42 factor42 111 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice112 : slice 0 left42 right42 factor42 112 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice113 : slice 0 left42 right42 factor42 113 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice114 : slice 0 left42 right42 factor42 114 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice115 : slice 0 left42 right42 factor42 115 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice116 : slice 0 left42 right42 factor42 116 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice117 : slice 0 left42 right42 factor42 117 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice118 : slice 0 left42 right42 factor42 118 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice119 : slice 0 left42 right42 factor42 119 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice120 : slice 0 left42 right42 factor42 120 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice121 : slice 0 left42 right42 factor42 121 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice122 : slice 0 left42 right42 factor42 122 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice123 : slice 0 left42 right42 factor42 123 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice124 : slice 0 left42 right42 factor42 124 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice125 : slice 0 left42 right42 factor42 125 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice126 : slice 0 left42 right42 factor42 126 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice127 : slice 0 left42 right42 factor42 127 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice128 : slice 0 left42 right42 factor42 128 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice129 : slice 0 left42 right42 factor42 129 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice130 : slice 0 left42 right42 factor42 130 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice131 : slice 0 left42 right42 factor42 131 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice132 : slice 0 left42 right42 factor42 132 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice133 : slice 0 left42 right42 factor42 133 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice134 : slice 0 left42 right42 factor42 134 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice135 : slice 0 left42 right42 factor42 135 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice136 : slice 0 left42 right42 factor42 136 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice137 : slice 0 left42 right42 factor42 137 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice138 : slice 0 left42 right42 factor42 138 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice139 : slice 0 left42 right42 factor42 139 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice140 : slice 0 left42 right42 factor42 140 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice141 : slice 0 left42 right42 factor42 141 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice142 : slice 0 left42 right42 factor42 142 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice143 : slice 0 left42 right42 factor42 143 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice144 : slice 0 left42 right42 factor42 144 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice145 : slice 0 left42 right42 factor42 145 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice146 : slice 0 left42 right42 factor42 146 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice147 : slice 0 left42 right42 factor42 147 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice148 : slice 0 left42 right42 factor42 148 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice149 : slice 0 left42 right42 factor42 149 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice150 : slice 0 left42 right42 factor42 150 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice151 : slice 0 left42 right42 factor42 151 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice152 : slice 0 left42 right42 factor42 152 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice153 : slice 0 left42 right42 factor42 153 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice154 : slice 0 left42 right42 factor42 154 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice155 : slice 0 left42 right42 factor42 155 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice156 : slice 0 left42 right42 factor42 156 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice157 : slice 0 left42 right42 factor42 157 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice158 : slice 0 left42 right42 factor42 158 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice159 : slice 0 left42 right42 factor42 159 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice160 : slice 0 left42 right42 factor42 160 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice161 : slice 0 left42 right42 factor42 161 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice162 : slice 0 left42 right42 factor42 162 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice163 : slice 0 left42 right42 factor42 163 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice164 : slice 0 left42 right42 factor42 164 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice165 : slice 0 left42 right42 factor42 165 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice166 : slice 0 left42 right42 factor42 166 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice167 : slice 0 left42 right42 factor42 167 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice168 : slice 0 left42 right42 factor42 168 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice169 : slice 0 left42 right42 factor42 169 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice170 : slice 0 left42 right42 factor42 170 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice171 : slice 0 left42 right42 factor42 171 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice172 : slice 0 left42 right42 factor42 172 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice173 : slice 0 left42 right42 factor42 173 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice174 : slice 0 left42 right42 factor42 174 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice175 : slice 0 left42 right42 factor42 175 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice176 : slice 0 left42 right42 factor42 176 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice177 : slice 0 left42 right42 factor42 177 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice178 : slice 0 left42 right42 factor42 178 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice179 : slice 0 left42 right42 factor42 179 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice180 : slice 0 left42 right42 factor42 180 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice181 : slice 0 left42 right42 factor42 181 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice182 : slice 0 left42 right42 factor42 182 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice183 : slice 0 left42 right42 factor42 183 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice184 : slice 0 left42 right42 factor42 184 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice185 : slice 0 left42 right42 factor42 185 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice186 : slice 0 left42 right42 factor42 186 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice187 : slice 0 left42 right42 factor42 187 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice188 : slice 0 left42 right42 factor42 188 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice189 : slice 0 left42 right42 factor42 189 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice190 : slice 0 left42 right42 factor42 190 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice191 : slice 0 left42 right42 factor42 191 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice192 : slice 0 left42 right42 factor42 192 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice193 : slice 0 left42 right42 factor42 193 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice194 : slice 0 left42 right42 factor42 194 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice195 : slice 0 left42 right42 factor42 195 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice196 : slice 0 left42 right42 factor42 196 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice197 : slice 0 left42 right42 factor42 197 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice198 : slice 0 left42 right42 factor42 198 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice199 : slice 0 left42 right42 factor42 199 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice200 : slice 0 left42 right42 factor42 200 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice201 : slice 0 left42 right42 factor42 201 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point42slice202 : slice 0 left42 right42 factor42 202 = true := by
+  decide +kernel
+
+public theorem point42 : residualCheck 42 := by
+  apply point42_ofSlices
+  intro c
+  fin_cases c
+  · exact point42slice0
+  · exact point42slice1
+  · exact point42slice2
+  · exact point42slice3
+  · exact point42slice4
+  · exact point42slice5
+  · exact point42slice6
+  · exact point42slice7
+  · exact point42slice8
+  · exact point42slice9
+  · exact point42slice10
+  · exact point42slice11
+  · exact point42slice12
+  · exact point42slice13
+  · exact point42slice14
+  · exact point42slice15
+  · exact point42slice16
+  · exact point42slice17
+  · exact point42slice18
+  · exact point42slice19
+  · exact point42slice20
+  · exact point42slice21
+  · exact point42slice22
+  · exact point42slice23
+  · exact point42slice24
+  · exact point42slice25
+  · exact point42slice26
+  · exact point42slice27
+  · exact point42slice28
+  · exact point42slice29
+  · exact point42slice30
+  · exact point42slice31
+  · exact point42slice32
+  · exact point42slice33
+  · exact point42slice34
+  · exact point42slice35
+  · exact point42slice36
+  · exact point42slice37
+  · exact point42slice38
+  · exact point42slice39
+  · exact point42slice40
+  · exact point42slice41
+  · exact point42slice42
+  · exact point42slice43
+  · exact point42slice44
+  · exact point42slice45
+  · exact point42slice46
+  · exact point42slice47
+  · exact point42slice48
+  · exact point42slice49
+  · exact point42slice50
+  · exact point42slice51
+  · exact point42slice52
+  · exact point42slice53
+  · exact point42slice54
+  · exact point42slice55
+  · exact point42slice56
+  · exact point42slice57
+  · exact point42slice58
+  · exact point42slice59
+  · exact point42slice60
+  · exact point42slice61
+  · exact point42slice62
+  · exact point42slice63
+  · exact point42slice64
+  · exact point42slice65
+  · exact point42slice66
+  · exact point42slice67
+  · exact point42slice68
+  · exact point42slice69
+  · exact point42slice70
+  · exact point42slice71
+  · exact point42slice72
+  · exact point42slice73
+  · exact point42slice74
+  · exact point42slice75
+  · exact point42slice76
+  · exact point42slice77
+  · exact point42slice78
+  · exact point42slice79
+  · exact point42slice80
+  · exact point42slice81
+  · exact point42slice82
+  · exact point42slice83
+  · exact point42slice84
+  · exact point42slice85
+  · exact point42slice86
+  · exact point42slice87
+  · exact point42slice88
+  · exact point42slice89
+  · exact point42slice90
+  · exact point42slice91
+  · exact point42slice92
+  · exact point42slice93
+  · exact point42slice94
+  · exact point42slice95
+  · exact point42slice96
+  · exact point42slice97
+  · exact point42slice98
+  · exact point42slice99
+  · exact point42slice100
+  · exact point42slice101
+  · exact point42slice102
+  · exact point42slice103
+  · exact point42slice104
+  · exact point42slice105
+  · exact point42slice106
+  · exact point42slice107
+  · exact point42slice108
+  · exact point42slice109
+  · exact point42slice110
+  · exact point42slice111
+  · exact point42slice112
+  · exact point42slice113
+  · exact point42slice114
+  · exact point42slice115
+  · exact point42slice116
+  · exact point42slice117
+  · exact point42slice118
+  · exact point42slice119
+  · exact point42slice120
+  · exact point42slice121
+  · exact point42slice122
+  · exact point42slice123
+  · exact point42slice124
+  · exact point42slice125
+  · exact point42slice126
+  · exact point42slice127
+  · exact point42slice128
+  · exact point42slice129
+  · exact point42slice130
+  · exact point42slice131
+  · exact point42slice132
+  · exact point42slice133
+  · exact point42slice134
+  · exact point42slice135
+  · exact point42slice136
+  · exact point42slice137
+  · exact point42slice138
+  · exact point42slice139
+  · exact point42slice140
+  · exact point42slice141
+  · exact point42slice142
+  · exact point42slice143
+  · exact point42slice144
+  · exact point42slice145
+  · exact point42slice146
+  · exact point42slice147
+  · exact point42slice148
+  · exact point42slice149
+  · exact point42slice150
+  · exact point42slice151
+  · exact point42slice152
+  · exact point42slice153
+  · exact point42slice154
+  · exact point42slice155
+  · exact point42slice156
+  · exact point42slice157
+  · exact point42slice158
+  · exact point42slice159
+  · exact point42slice160
+  · exact point42slice161
+  · exact point42slice162
+  · exact point42slice163
+  · exact point42slice164
+  · exact point42slice165
+  · exact point42slice166
+  · exact point42slice167
+  · exact point42slice168
+  · exact point42slice169
+  · exact point42slice170
+  · exact point42slice171
+  · exact point42slice172
+  · exact point42slice173
+  · exact point42slice174
+  · exact point42slice175
+  · exact point42slice176
+  · exact point42slice177
+  · exact point42slice178
+  · exact point42slice179
+  · exact point42slice180
+  · exact point42slice181
+  · exact point42slice182
+  · exact point42slice183
+  · exact point42slice184
+  · exact point42slice185
+  · exact point42slice186
+  · exact point42slice187
+  · exact point42slice188
+  · exact point42slice189
+  · exact point42slice190
+  · exact point42slice191
+  · exact point42slice192
+  · exact point42slice193
+  · exact point42slice194
+  · exact point42slice195
+  · exact point42slice196
+  · exact point42slice197
+  · exact point42slice198
+  · exact point42slice199
+  · exact point42slice200
+  · exact point42slice201
+  · exact point42slice202
+
+end Rudvalis.OrderCertificate.ForwardReduction.Part5Residual.Residual0Checks

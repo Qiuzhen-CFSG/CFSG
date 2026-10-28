@@ -2,6 +2,7 @@ module
 
 public import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
 public import Mathlib.GroupTheory.Sylow
+public import Theory.GroupTheory.RightConjugation
 public import Mathlib.FieldTheory.Finite.GaloisField
 public import BenderSuzuki.PFAppendixIII.Basic
 public import FeitThompson.BGsection3.Defs
@@ -21,15 +22,6 @@ namespace BenderSuzuki
 namespace PFchapter1section1
 
 universe u v w
-
-
-/--
-The right-conjugate `H^g = g⁻¹ H g`, matching the exponent convention in the
-Peterfalvi text. The project-level `Subgroup.conjBy g` is left conjugation
-`g H g⁻¹`, so right conjugation is `conjBy g⁻¹`.
--/
-@[expose] public def rightConjugate {G : Type u} [Group G] (H : Subgroup G) (g : G) : Subgroup G :=
-  H.conjBy g⁻¹
 
 
 public theorem rightConjugate_stabilizer {G : Type u} [Group G] {Ω : Type*} [MulAction G Ω]
@@ -79,6 +71,53 @@ public theorem TwoRankAtLeastTwo.exists_subgroup {G : Type*} [Group G]
     (hG : TwoRankAtLeastTwo G) :
     ∃ E : Subgroup G, Nat.card E = 4 ∧ ∀ x : E, (x : E) ^ 2 = 1 :=
   hG
+
+/-! A group in which every element squares to one is abelian. -/
+
+public theorem isMulCommutative_of_forall_sq_one
+    {A : Type*} [Group A] (hA : ∀ x : A, x ^ 2 = 1) :
+    IsMulCommutative A := by
+  refine IsMulCommutative.mk <| Std.Commutative.mk ?_
+  intro a b
+  have hinv : ∀ x : A, x⁻¹ = x := by
+    intro x
+    have hx : x * x = 1 := by
+      simpa [pow_two] using hA x
+    calc
+      x⁻¹ = x⁻¹ * 1 := by simp
+      _ = x⁻¹ * (x * x) := by rw [hx]
+      _ = x := by simp
+  calc
+    a * b = (a * b)⁻¹ := (hinv (a * b)).symm
+    _ = b⁻¹ * a⁻¹ := by simp
+    _ = b * a := by rw [hinv a, hinv b]
+
+/-! Cardinality of a normalized disjoint product. -/
+
+public theorem natCard_sup_eq_mul_of_disjoint_of_le_normalizer
+    {G : Type*} [Group G]
+    (A B : Subgroup G)
+    (hnorm : B ≤ Subgroup.normalizer (A : Set G))
+    (hdisj : Disjoint A B) :
+    Nat.card (A ⊔ B : Subgroup G) = Nat.card A * Nat.card B := by
+  let toSup : A × B → ↥(A ⊔ B) := fun z =>
+    ⟨(z.1 : G) * (z.2 : G),
+      Subgroup.mul_mem_sup z.1.property z.2.property⟩
+  have hinj : Function.Injective toSup := by
+    intro x y hxy
+    apply Subgroup.mul_injective_of_disjoint hdisj
+    exact congrArg Subtype.val hxy
+  have hsurj : Function.Surjective toSup := by
+    intro x
+    have hx : (x : G) ∈ (A : Set G) * (B : Set G) := by
+      rw [← Subgroup.coe_mul_of_right_le_normalizer_left A B hnorm]
+      exact x.property
+    rcases hx with ⟨a, ha, b, hb, hab⟩
+    exact ⟨(⟨a, ha⟩, ⟨b, hb⟩), Subtype.ext hab⟩
+  calc
+    Nat.card (A ⊔ B : Subgroup G) = Nat.card (A × B) :=
+      Nat.card_congr (Equiv.ofBijective toSup ⟨hinj, hsurj⟩).symm
+    _ = Nat.card A * Nat.card B := Nat.card_prod A B
 
 /-! ## Shared Part II statement-level interfaces -/
 

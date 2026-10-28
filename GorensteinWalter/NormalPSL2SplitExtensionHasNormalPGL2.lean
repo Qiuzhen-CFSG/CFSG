@@ -9,6 +9,7 @@ public import GorensteinWalter.DGroupQuotient
 public import GorensteinWalter.PGroupExtension
 public import GorensteinWalter.CPrime
 
+
 /-!
 # The split-four normal-extension lift
 
@@ -171,7 +172,7 @@ private theorem normal_PSL2_split_extension_has_normal_PGL2_cardThree
     (hN₁ : cPrime Z₁ = (Subgroup.normalizer (Z₁ : Set G) : Set G)) :
     ∃ L : Subgroup G, L.Normal ∧ IsIsoToPGL2OddExists (G := G) L := by
   classical
-  letI : Fintype K := Fintype.ofFinite K
+  let : Fintype K := Fintype.ofFinite K
   have hFcard : Fintype.card K = 3 := by
     simpa [Nat.card_eq_fintype_card] using hcard
   let eK : ZMod 3 ≃+* K :=
@@ -257,6 +258,8 @@ private theorem normal_PSL2_split_extension_has_normal_PGL2_cardThree
     refine ⟨K, inferInstance, inferInstance, ?_⟩
     refine ⟨hK, ⟨(Subgroup.topEquiv (G := G)).trans eGPGLK⟩⟩
 
+-- These compatibility hypotheses retain the complete split-extension API.
+set_option linter.unusedVariables false in
 /-- The split-four normal-extension lift: a self-centralizing normal
 `PSL₂(K)` core in a dihedral-Sylow group with trivial odd core and a split
 Klein-four pair forces a normal `PGL₂(K)` subgroup of `G`. -/
@@ -276,7 +279,7 @@ public theorem normal_PSL2_split_extension_has_normal_PGL2
     ∃ L : Subgroup G, L.Normal ∧ IsIsoToPGL2OddExists (G := G) L := by
   classical
   rcases hK with ⟨p, f, hp, hpodd, hf, hKcard⟩
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hK' : IsOddPrimePower (Nat.card K) :=
     ⟨p, f, hp, hpodd, hf, hKcard⟩
   by_cases hcard3 : Nat.card K = 3
@@ -316,7 +319,7 @@ public theorem normal_PSL2_split_extension_has_normal_PGL2
     let eG : G ≃* A := MulEquiv.ofBijective fmap.rangeRestrict
       ⟨fun a b hab => hfmap (congrArg Subtype.val hab),
         fmap.rangeRestrict_surjective⟩
-    letI : Finite A := Finite.of_surjective eG eG.surjective
+    let : Finite A := Finite.of_surjective eG eG.surjective
     have hA : HasDihedralSylowTwo A :=
       hasDihedralSylowTwo_of_mulEquiv eG.symm hSylow
     have hPSL : pGammaL2PSLRange K ≤ A := by
@@ -331,7 +334,7 @@ public theorem normal_PSL2_split_extension_has_normal_PGL2
       pGammaL2_contains_pgl_of_selfCentralizing_four_all
         hK' A hPSL hA Z hZ hZN
     let L : Subgroup G := (pGammaL2PGLRange K).comap fmap
-    haveI : L.Normal := inferInstance
+    have : L.Normal := inferInstance
     have hLmap : L.map fmap = pGammaL2PGLRange K := by
       apply le_antisymm
       · intro x hx

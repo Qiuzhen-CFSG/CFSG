@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section4.SecondCaseLinearEquationEightDefs
 import GorensteinWalter.Section2.PSubgroupInfNormalNilpotentLePCore
 import Mathlib.Tactic
+
 open scoped Pointwise commutatorElement
 noncomputable section
 namespace GorensteinWalter
@@ -271,7 +272,7 @@ private theorem conj_le_A :
   rcases Subgroup.mem_map.mp (od.Q_le_upperCentralSeries_two hq0) with ⟨z, hz, hzq⟩
   have hqOp : q ∈ OpU.map c.U.subtype := by
     refine Subgroup.mem_map.mpr ⟨(z : OpU), ?_, ?_⟩
-    · simpa [OpU] using hz
+    · simp [OpU]
     · calc
         c.U.subtype (z : OpU) = c.U.subtype q0 := by simpa using hzq
         _ = q := hqeq
@@ -289,15 +290,14 @@ private theorem conj_le_A :
   have hqpZ : ⁅q, p⁆ ∈ ((Subgroup.center OpU).map OpU.subtype).map c.U.subtype := by
     refine Subgroup.mem_map.mpr ⟨OpU.subtype ⁅(z : OpU), p0O⁆, ?_, ?_⟩
     · exact Subgroup.mem_map.mpr ⟨⁅(z : OpU), p0O⁆, hcomm_center, rfl⟩
-    · change c.U.subtype (OpU.subtype ⁅(z : OpU), p0O⁆) = ⁅q, p⁆
-      rw [map_commutatorElement]
+    · rw [map_commutatorElement]
       change ⁅(z : G), (p0O : G)⁆ = ⁅q, p⁆
       have hzG : (z : G) = q := by
         calc
           (z : G) = c.U.subtype q0 := by simpa using hzq
           _ = q := hqeq
       have hpG : (p0O : G) = p := by simpa [p0O] using hpeq
-      simpa [hzG, hpG]
+      simp [hzG, hpG]
   have hqpZ_le : ⁅q, p⁆ ∈ OpU.map c.U.subtype := by
     rcases Subgroup.mem_map.mp hqpZ with ⟨y, hy, hEq⟩
     rcases Subgroup.mem_map.mp hy with ⟨z0, hz0, hzEq⟩
@@ -350,7 +350,6 @@ private theorem conj_le_A :
   have hqpU : ⁅q, p⁆ ∈ c.U := by
     rcases Subgroup.mem_map.mp hqpZ_le with ⟨y, hy, hEq⟩
     have hyU : (y : G) ∈ c.U := by
-      change (y : G) ∈ c.U
       exact y.2
     rw [← hEq]
     exact hyU

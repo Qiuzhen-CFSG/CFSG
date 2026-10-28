@@ -4,6 +4,7 @@ public import GorensteinWalter.Section4.SecondCaseQuotientReflectedTorus
 public import BenderGlauberman.Defs
 import Mathlib.Tactic
 
+
 /-!
 # Section 4: the image of `U ∩ E` in `E / Z(E)` is cyclic and reflected
 

@@ -7,6 +7,7 @@ namespace GorensteinWalter
 
 set_option maxRecDepth 1000000 in
 set_option maxHeartbeats 2000000 in
+-- Exhaustive evaluation over the concrete permutation certificate needs this heartbeat budget.
 public theorem a7_fixed_cyclic_three_certificate :
     ∀ x : ASevenCertificateGroup,
       (x ≠ 1 ∧ x ^ 3 = 1 ∧
@@ -18,7 +19,7 @@ public theorem a7_fixed_cyclic_three_certificate :
   have hv2 : a7v ^ 2 = a7t := by decide
   have hvpow : a7v * x ^ (i : Nat) * a7v⁻¹ =
       (a7v * x * a7v⁻¹) ^ (i : Nat) := by
-    simpa using (map_pow (MulAut.conj a7v) x (i : Nat))
+    simp
   have hv2x : a7v ^ 2 * x * (a7v ^ 2)⁻¹ =
       (x ^ (i : Nat)) ^ (i : Nat) := by
     calc

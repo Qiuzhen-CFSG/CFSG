@@ -4,6 +4,7 @@ public import Mathlib.Algebra.GCDMonoid.FinsetLemmas
 public import FeitThompson.BGsection12.corollary_12_9_b
 public import FeitThompson.BGsection3.Remaining
 
+
 open scoped Pointwise
 
 /-!
@@ -31,7 +32,7 @@ public theorem section12_isMulCommutative_of_nilpotent_of_sylow
   let y' := e.symm y
   have hxy' : x' * y' = y' * x' := by
     funext p P
-    haveI : Fact p.val.Prime := ⟨Nat.prime_of_mem_primeFactors p.property⟩
+    have : Fact p.val.Prime := ⟨Nat.prime_of_mem_primeFactors p.property⟩
     have hcomm : IsMulCommutative (P : Subgroup K) := hSyl p.val P
     exact Subtype.ext <|
       setLike_mul_comm (s := (P : Subgroup K))
@@ -45,10 +46,10 @@ public theorem section12_primeRank_at_least_two_of_rankTwo
     (hA : A ∈ section12RankTwoElementaryAbelianIn p M) :
     2 ≤ primeRank p.val M := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   have hAM : A ≤ M := section12_rankTwo_le hA
   rcases section12_rankTwo_elementary hA with ⟨hcard, hElem⟩
-  haveI : IsElementaryAbelian p.val A := hElem
+  have : IsElementaryAbelian p.val A := hElem
   have hAcomm : IsMulCommutative A := inferInstance
   let A' : Subgroup M := A.subgroupOf M
   have hA'p : IsPGroup p.val A' :=
@@ -73,9 +74,9 @@ public theorem section12_primeRank_le_one_of_cyclic_sylow
     {p : ℕ} {R : Type*} [Group R] [Finite R] [Fact p.Prime]
     (S : Sylow p R) (hS_cyc : IsCyclic (S : Subgroup R)) :
     primeRank p R ≤ 1 := by
-  rw [primeRank]
+  rw [primeRank_eq_sSup_generatorRank]
   refine csSup_le ?_ ?_
-  · letI : IsCyclic (S : Subgroup R) := hS_cyc
+  · let : IsCyclic (S : Subgroup R) := hS_cyc
     refine ⟨0, ?_⟩
     exact ⟨(S : Subgroup R), S.isPGroup', inferInstance, by simp⟩
   · intro n hn
@@ -312,7 +313,7 @@ public theorem section12_complementIn_of_normal_isComplement'
       _ = ⊤ := by
         rw [sup_comm, hHsup]
         simp
-  haveI : (K.subgroupOf H).Normal := hKnorm.2
+  have : (K.subgroupOf H).Normal := hKnorm.2
   refine Subgroup.isComplement'_of_disjoint_and_mul_eq_univ ?_ ?_
   · rw [Subgroup.disjoint_def]
     intro x hxL hxK
@@ -333,7 +334,7 @@ public theorem section12_exists_EData_containing_sigma_compl_piSubgroup
   let A_M : Subgroup M := A.subgroupOf M
   have hAπ_M : IsPiSubgroup (G := M) (section10SigmaPrimes M)ᶜ A_M :=
     section12_isPiSubgroup_subgroupOf hAπ hAM
-  letI : MulDistribMulAction Unit M := {
+  let : MulDistribMulAction Unit M := {
     smul := fun _ x => x
     one_smul := fun _ => rfl
     mul_smul := fun _ _ _ => rfl
@@ -343,7 +344,7 @@ public theorem section12_exists_EData_containing_sigma_compl_piSubgroup
     refine ⟨?_⟩
     intro _ x
     simp
-  have hsolvM : IsSolvable M :=
+  have hsolvM : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.mpr hM.1)
   have hcopM : Nat.Coprime (Nat.card Unit) (Nat.card M) := by simp
   obtain ⟨Eloc, hElocHall, _hElocInv, hA_Eloc⟩ :=
@@ -365,9 +366,9 @@ public theorem section12_exists_EData_containing_sigma_compl_piSubgroup
     have htop_le_M : (⊤ : Subgroup G) ≤ M := by
       simpa [hEtop] using hEcomp.2.1
     exact hM.1 (top_le_iff.mp htop_le_M)
-  have hsolvE : IsSolvable E :=
+  have hsolvE : Group.IsSolvable E :=
     IsMinCE.proper_subgroups_solvable E (lt_top_iff_ne_top.2 hEproper)
-  letI : MulDistribMulAction Unit E := {
+  let : MulDistribMulAction Unit E := {
     smul := fun _ x => x
     one_smul := fun _ => rfl
     mul_smul := fun _ _ _ => rfl
@@ -388,9 +389,9 @@ public theorem section12_exists_EData_containing_sigma_compl_piSubgroup
     have htop_le_M : (⊤ : Subgroup G) ≤ M := by
       simpa [htop] using hE₁₂HallIn.1.trans hEcomp.2.1
     exact hM.1 (top_le_iff.mp htop_le_M)
-  have hsolvE₁₂ : IsSolvable E₁₂ :=
+  have hsolvE₁₂ : Group.IsSolvable E₁₂ :=
     IsMinCE.proper_subgroups_solvable E₁₂ (lt_top_iff_ne_top.2 hE₁₂proper)
-  letI : MulDistribMulAction Unit E₁₂ := {
+  let : MulDistribMulAction Unit E₁₂ := {
     smul := fun _ x => x
     one_smul := fun _ => rfl
     mul_smul := fun _ _ _ => rfl
@@ -450,9 +451,9 @@ public theorem section12_natCard_omegaOne_cyclic_pGroup_eq_prime
     [Fact (IsPGroup p.val H)] (hcyc : IsCyclic H) [Nontrivial H] :
     Nat.card (omega₁ (G := H) (p := p.val)) = p.val := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.2⟩
-  letI : IsCyclic H := hcyc
-  letI : CommGroup H := hcyc.commGroup
+  have : Fact p.val.Prime := ⟨p.2⟩
+  let : IsCyclic H := hcyc
+  let : CommGroup H := hcyc.commGroup
   have hOmega_eq_ker : omega₁ (G := H) (p := p.val) =
       (powMonoidHom p.val : H →* H).ker := by
     apply le_antisymm
@@ -483,8 +484,8 @@ public theorem section12_omegaOneSubgroup_card_eq_prime_of_cyclic_pSubgroup
     (hHp : IsPGroup p.val H) (hHcyc : IsCyclic H) (hHne : H ≠ ⊥) :
     Nat.card (section12OmegaOneSubgroup p H) = p.val := by
   classical
-  haveI : Fact (IsPGroup p.val H) := ⟨hHp⟩
-  haveI : Nontrivial H := (Subgroup.nontrivial_iff_ne_bot H).2 hHne
+  have : Fact (IsPGroup p.val H) := ⟨hHp⟩
+  have : Nontrivial H := (Subgroup.nontrivial_iff_ne_bot H).2 hHne
   have hcard :
       Nat.card (section12OmegaOneSubgroup p H) =
         Nat.card (omega₁ (G := H) (p := p.val)) := by
@@ -501,8 +502,8 @@ public theorem section12_isCyclic_of_omegaOneSubgroup_card_eq_prime
     (hOmegaH : Nat.card (section12OmegaOneSubgroup p H) = p.val) :
     IsCyclic H := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.2⟩
-  haveI : Fact (IsPGroup p.val H) := ⟨hHp⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact (IsPGroup p.val H) := ⟨hHp⟩
   by_contra hHcyc
   obtain ⟨A, _hAnorm, hAcard, _hAelem⟩ :=
     lemma_4_5_a (R := H) (p := p.val) hpodd hHcyc
@@ -533,7 +534,7 @@ public theorem section12_omegaOneSubgroup_le_of_nontrivial_subgroup_of_cyclic_pS
   have hKsubp : IsPGroup p.val (K.subgroupOf H) := hHp.to_subgroup (K.subgroupOf H)
   have hKp : IsPGroup p.val K :=
     hKsubp.of_equiv (Subgroup.subgroupOfEquivOfLe (H := K) (K := H) hKH)
-  letI : IsCyclic H := hHcyc
+  let : IsCyclic H := hHcyc
   have hKsubcyc : IsCyclic (K.subgroupOf H) := by infer_instance
   have hKcyc : IsCyclic K :=
     (Subgroup.subgroupOfEquivOfLe (H := K) (K := H) hKH).isCyclic.mp hKsubcyc
@@ -667,7 +668,7 @@ public theorem section12_pow_eq_one_mem_of_cyclic_quotient_nontrivial_image
   have htop_p : IsPGroup p.val (⊤ : Subgroup (R ⧸ K)) :=
     hquot_p.to_subgroup (⊤ : Subgroup (R ⧸ K))
   have htop_cyc : IsCyclic (⊤ : Subgroup (R ⧸ K)) := by
-    letI : IsCyclic (R ⧸ K) := hquot_cyc
+    let : IsCyclic (R ⧸ K) := hquot_cyc
     infer_instance
   have homega_le_Lbar :
       section12OmegaOneSubgroup (G := R ⧸ K) p (⊤ : Subgroup (R ⧸ K)) ≤ Lbar :=
@@ -699,8 +700,8 @@ public theorem section12_isMulCommutative_of_mulEquiv
     IsMulCommutative A := by
   classical
   refine ⟨⟨fun x y => ?_⟩⟩
-  letI : IsMulCommutative B := hB
-  letI : CommGroup B := IsMulCommutative.instCommGroup
+  let : IsMulCommutative B := hB
+  let : CommGroup B := IsMulCommutative.instCommGroup
   apply e.injective
   calc
     e (x * y) = e x * e y := e.map_mul x y
@@ -729,15 +730,15 @@ public theorem section12_sylow_abelian_of_sigma_compl_nilpotent_subgroup
     let e : (P : Subgroup K) ≃* Pamb :=
       Subgroup.equivMapOfInjective (f := K.subtype) (P : Subgroup K) K.subtype_injective
     have hPcyc : IsCyclic (P : Subgroup K) := e.isCyclic.2 hPamb_cyc
-    letI : IsCyclic (P : Subgroup K) := hPcyc
+    let : IsCyclic (P : Subgroup K) := hPcyc
     exact hPnonab inferInstance
   have hP_ne_bot : (P : Subgroup K) ≠ ⊥ := by
     intro hPbot
-    haveI : Subsingleton (P : Subgroup K) := by
+    have : Subsingleton (P : Subgroup K) := by
       rw [hPbot]
       infer_instance
     exact hPnonab inferInstance
-  haveI : Nontrivial (P : Subgroup K) :=
+  have : Nontrivial (P : Subgroup K) :=
     (Subgroup.nontrivial_iff_ne_bot (H := (P : Subgroup K))).2 hP_ne_bot
   have hp_dvd_P : p'.val ∣ Nat.card (P : Subgroup K) :=
     section12_prime_dvd_card_of_nontrivial_pSubgroup
@@ -775,7 +776,7 @@ public theorem section12_sylow_abelian_of_sigma_compl_nilpotent_subgroup
       ⟨⟨x, hPamb_le_M hx⟩,
         hPsubM_le_T (by simpa [PsubM, Subgroup.mem_subgroupOf] using hx), rfl⟩
   have hTamb_comm : IsMulCommutative Tamb := by
-    letI : IsMulCommutative (T : Subgroup M) := hM_sylow_ab T
+    let : IsMulCommutative (T : Subgroup M) := hM_sylow_ab T
     change IsMulCommutative ((T : Subgroup M).map M.subtype)
     exact Subgroup.map_isMulCommutative (f := M.subtype) (H := (T : Subgroup M))
   have hPamb_comm : IsMulCommutative Pamb := by

@@ -19,8 +19,8 @@ public theorem lemma_5_1_a
       have hAle : A ≤ Subgroup.centralizer (A : Set R) := by
         simp [hAcent]
       exact (Subgroup.le_centralizer_iff_isMulCommutative (K := A)).1 hAle
-    letI : IsMulCommutative A := hAcomm
-    haveI : Fact (IsPGroup p A) := ⟨hpR.to_subgroup A⟩
+    let : IsMulCommutative A := hAcomm
+    have : Fact (IsPGroup p A) := ⟨hpR.to_subgroup A⟩
     exact ⟨hAnorm, hAcent, hArank.trans (generatorRank_le_groupRank_of_commutative_pgroup (p := p) A)⟩
   by_contra hnone
   have hempty : selfCentralizingAbelianSubgroupsAtLeast R 3 = ∅ := by

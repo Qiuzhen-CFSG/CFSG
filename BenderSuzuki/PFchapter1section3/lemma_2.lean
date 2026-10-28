@@ -5,7 +5,7 @@ import BenderSuzuki.PFchapter1section3.proposition_1_a
 import BenderSuzuki.PFchapter1section2.proposition_2
 import BenderSuzuki.PFchapter1section1.lemma_a
 import BenderSuzuki.PFchapter1section1.proposition_1_d
-import FeitThompson.SubgroupConj
+import Theory.GroupTheory.SubgroupConjugation
 
 namespace BenderSuzuki
 namespace PFchapter1section3

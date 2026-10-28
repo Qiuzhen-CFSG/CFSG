@@ -12,6 +12,7 @@ import GorensteinWalter.Section2.Lemma27Infra
 import GorensteinWalter.Section2.PreambleInvolutions
 import GorensteinWalter.Section2.Reflection
 
+
 open scoped Pointwise
 
 namespace GorensteinWalter
@@ -71,7 +72,7 @@ private lemma invertedSubgroup_normal_in_H_probe
     (hS0cent : c.S0 ≤ Subgroup.centralizer (I : Set G))
     (hIinv : BenderGlauberman.IsInvertedBy c.t1 I)
     (hInorm : IsNormalIn I c.U)
-    (hIleU : I ≤ c.U) :
+    (_hIleU : I ≤ c.U) :
     c.H ≤ Subgroup.normalizer (I : Set G) := by
   have hUle : c.U ≤ Subgroup.normalizer (I : Set G) := by
     intro u hu
@@ -149,7 +150,7 @@ private lemma involution_centralizing_nontrivial_invertedSubgroup_eq_t_probe
     (hIinv : BenderGlauberman.IsInvertedBy c.t1 I)
     (hInormH : c.H ≤ Subgroup.normalizer (I : Set G))
     (hIodd : Nat.Coprime 2 (Nat.card I))
-    (hIleU : I ≤ c.U)
+    (_hIleU : I ≤ c.U)
     (hXne : X ≠ ⊥) (hXI : X ≤ I)
     {y : G} (hyH : y ∈ c.H) (hyInv : IsInvolution y)
     (hycent : y ∈ Subgroup.centralizer (X : Set G)) :

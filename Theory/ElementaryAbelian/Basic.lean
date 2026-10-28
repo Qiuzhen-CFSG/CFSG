@@ -4,6 +4,8 @@ public import Mathlib.Algebra.Field.ZMod
 public import Mathlib.Algebra.Module.ZMod
 public import Mathlib.LinearAlgebra.Basis.VectorSpace
 
+@[expose] public section
+
 open scoped IsMulCommutative
 
 /-!
@@ -19,45 +21,51 @@ Public items:
   `.zpowers_of_pow_eq_one`;
 - `IsElementaryAbelian.not_isCyclic_of_card_eq_prime_sq`.
 
-The vector-space complement API lives in `Theory.ElementaryAbelian.VectorSpace`, and the join
-lemma lives in `Theory.ElementaryAbelian.Join`.
+The vector-space complement API lives in `VectorSpace`, and the join
+lemma lives in `Join`.
 -/
-
-namespace Theory.ElementaryAbelian
 
 universe u
 
 /-- An *elementary abelian* `p`-group: a commutative group whose exponent divides `p`. -/
-public class IsElementaryAbelian (p : ℕ) (G : Type u) [Group G] : Prop
+class IsElementaryAbelian (p : ℕ) (G : Type u) [Group G] : Prop
     extends IsMulCommutative G where
   exponent_dvd_p (p) (G) : Monoid.exponent G ∣ p
 
-public lemma elemPow_eq_one_of_isElementaryAbelian {p : ℕ} {G : Type*} [Group G] {A : Subgroup G}
-    [IsElementaryAbelian p A] (a : G) (ha : a ∈ A) : a ^ p = 1 := by
+lemma elemPow_eq_one_of_isElementaryAbelian {p : ℕ} {G : Type*} [Group G] {A : Subgroup G}
+    [IsElementaryAbelian p A] (a : G) (ha : a ∈ A)
+    : a ^ p = 1 := by
   simpa using congrArg Subtype.val (Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
     (IsElementaryAbelian.exponent_dvd_p p A) ⟨a, ha⟩)
 
-public theorem IsElementaryAbelian.isPGroup (p : ℕ) (G : Type u) [Group G]
-    [IsElementaryAbelian p G] : IsPGroup p G :=
-  fun x => ⟨1, by simpa using
-    (Monoid.exponent_dvd_iff_forall_pow_eq_one.mp (IsElementaryAbelian.exponent_dvd_p p G) x)⟩
+theorem IsElementaryAbelian.isPGroup (p : ℕ) (G : Type u) [Group G]
+    [IsElementaryAbelian p G]
+    : IsPGroup p G :=
+  fun x =>
+    ⟨
+      1,
+      by
+        simpa using
+          (Monoid.exponent_dvd_iff_forall_pow_eq_one.mp (IsElementaryAbelian.exponent_dvd_p p G) x)
+    ⟩
 
-public theorem IsElementaryAbelian.exponent_eq_prime
+theorem IsElementaryAbelian.exponent_eq_prime
     {p : ℕ} {G : Type u} [Group G] [Finite G] [Nontrivial G] [Fact p.Prime]
-    [IsElementaryAbelian p G] :
-    Monoid.exponent G = p := by
+    [IsElementaryAbelian p G]
+    : Monoid.exponent G = p := by
   have hExp_dvd : Monoid.exponent G ∣ p := IsElementaryAbelian.exponent_dvd_p p G
   exact (Fact.out : Nat.Prime p).eq_one_or_self_of_dvd (Monoid.exponent G) hExp_dvd |>.resolve_left
     (Nat.ne_of_gt Monoid.one_lt_exponent)
 
 /-- A subgroup of an elementary abelian group, restricted to a larger subgroup, is still elementary
 abelian. -/
-public theorem IsElementaryAbelian.subgroupOf {p : ℕ} [Fact p.Prime] {G : Type*} [Group G]
-    {H K : Subgroup G} [IsElementaryAbelian p H] (_hHK : H ≤ K) :
-    IsElementaryAbelian p (H.subgroupOf K) := by
-  refine
-    { toIsMulCommutative := Subgroup.subgroupOf_isMulCommutative (H := H) (K := K)
-      exponent_dvd_p := ?_ }
+theorem IsElementaryAbelian.subgroupOf {p : ℕ} [Fact p.Prime] {G : Type*} [Group G]
+    {H K : Subgroup G} [IsElementaryAbelian p H] (_hHK : H ≤ K)
+    : IsElementaryAbelian p (H.subgroupOf K) := by
+  refine {
+    toIsMulCommutative := Subgroup.subgroupOf_isMulCommutative (H := H) (K := K)
+    exponent_dvd_p := ?_
+  }
   refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
   intro x
   apply Subtype.ext
@@ -70,12 +78,13 @@ public theorem IsElementaryAbelian.subgroupOf {p : ℕ} [Fact p.Prime] {G : Type
 
 /-- The image of an elementary abelian subgroup under the subtype map into the ambient group is
 still elementary abelian. -/
-public theorem IsElementaryAbelian.map_subtype {p : ℕ} [Fact p.Prime] {G : Type*} [Group G]
-    {K : Subgroup G} {H : Subgroup K} [IsElementaryAbelian p H] :
-    IsElementaryAbelian p (H.map K.subtype) := by
-  refine
-    { toIsMulCommutative := Subgroup.map_isMulCommutative (H := H) (f := K.subtype)
-      exponent_dvd_p := ?_ }
+theorem IsElementaryAbelian.map_subtype {p : ℕ} [Fact p.Prime] {G : Type*} [Group G]
+    {K : Subgroup G} {H : Subgroup K} [IsElementaryAbelian p H]
+    : IsElementaryAbelian p (H.map K.subtype) := by
+  refine {
+    toIsMulCommutative := Subgroup.map_isMulCommutative (H := H) (f := K.subtype)
+    exponent_dvd_p := ?_
+  }
   refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
   intro x
   apply Subtype.ext
@@ -89,14 +98,15 @@ public theorem IsElementaryAbelian.map_subtype {p : ℕ} [Fact p.Prime] {G : Typ
   simpa [hx_eq] using hy_pow_G
 
 /-- The image of an elementary abelian subgroup under a homomorphism is elementary abelian. -/
-public theorem IsElementaryAbelian.map
+theorem IsElementaryAbelian.map
     {p : ℕ} [Fact p.Prime] {R S : Type*} [Group R] [Group S]
-    {A : Subgroup R} [IsElementaryAbelian p A] (f : R →* S) :
-    IsElementaryAbelian p (A.map f) := by
-  refine
-    { toIsMulCommutative := by
-        simpa using (Subgroup.map_isMulCommutative (f := f) (H := A))
-      exponent_dvd_p := ?_ }
+    {A : Subgroup R} [IsElementaryAbelian p A] (f : R →* S)
+    : IsElementaryAbelian p (A.map f) := by
+  refine {
+    toIsMulCommutative := by
+      simpa using (Subgroup.map_isMulCommutative (f := f) (H := A))
+    exponent_dvd_p := ?_
+  }
   refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
   intro x
   apply Subtype.ext
@@ -111,10 +121,10 @@ public theorem IsElementaryAbelian.map
     _ = f (y ^ p) := by simp
     _ = 1 := by simpa using congrArg f (congrArg Subtype.val hypow)
 
-public theorem IsElementaryAbelian.not_isCyclic_of_card_eq_prime_sq
+theorem IsElementaryAbelian.not_isCyclic_of_card_eq_prime_sq
     {A : Type*} [Group A] [Finite A] {p : ℕ} [Fact p.Prime]
-    [IsElementaryAbelian p A] (hcard : Nat.card A = p ^ 2) :
-    ¬ IsCyclic A := by
+    [IsElementaryAbelian p A] (hcard : Nat.card A = p ^ 2)
+    : ¬ IsCyclic A := by
   intro hcyc
   have hcard_exp : Monoid.exponent A = p ^ 2 := by
     rw [hcyc.exponent_eq_card, hcard]
@@ -124,17 +134,16 @@ public theorem IsElementaryAbelian.not_isCyclic_of_card_eq_prime_sq
   have hp : 1 < p := (Fact.out : Nat.Prime p).one_lt
   nlinarith
 
-public theorem IsElementaryAbelian.zpowers_of_pow_eq_one
-    {p : ℕ} {G : Type*} [Group G] {x : G} (hxpow : x ^ p = 1) :
-    IsElementaryAbelian p (Subgroup.zpowers x) := by
-  refine
-    { toIsMulCommutative := Subgroup.zpowers_isMulCommutative x
-      exponent_dvd_p := ?_ }
+theorem IsElementaryAbelian.zpowers_of_pow_eq_one
+    {p : ℕ} {G : Type*} [Group G] {x : G} (hxpow : x ^ p = 1)
+    : IsElementaryAbelian p (Subgroup.zpowers x) := by
+  refine {
+    toIsMulCommutative := Subgroup.zpowers_isMulCommutative x
+    exponent_dvd_p := ?_
+  }
   refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
   intro y
   apply Subtype.ext
   have hy_dvd : orderOf ((y : Subgroup.zpowers x) : G) ∣ p := by
     exact (orderOf_dvd_of_mem_zpowers y.2).trans (orderOf_dvd_of_pow_eq_one hxpow)
   simpa using (orderOf_dvd_iff_pow_eq_one.mp hy_dvd)
-
-end Theory.ElementaryAbelian

@@ -2,6 +2,7 @@ module
 
 public import GorensteinWalter.Defs
 
+
 /-! # Ambient normality of the two-core -/
 
 namespace GorensteinWalter

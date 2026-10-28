@@ -5,7 +5,9 @@ public import GorensteinWalter.Section2.ControlCore
 public import GorensteinWalter.Section2.Bender1970_18
 public import GorensteinWalter.Section2.FStarSubnormal
 public import GorensteinWalter.Defs
+import FeitThompson.PCore.CentralizerControl
 import Mathlib.GroupTheory.IsPerfect
+
 
 /-!
 # Bender (1970) Statement 1.6
@@ -459,7 +461,7 @@ private theorem centralizer_self_le_fitting_center {G : Type u} [Group G] [Finit
         _ = f⁻¹ * (f * y) := by rw [hfy]
         _ = y := by group
     calc
-      y * e = (f⁻¹ * y * f) * e := by simpa [hconj_y]
+      y * e = (f⁻¹ * y * f) * e := by simp [hconj_y]
       _ = f⁻¹ * (y * (f * e)) := by group
       _ = f⁻¹ * ((f * e) * y) := by rw [hxy]
       _ = e * y := by group
@@ -522,8 +524,7 @@ private theorem componentLayer_top_map_eq_componentLayerOf_early
     change sSup {E : Subgroup (↥B) | IsComponentOf E (⊤ : Subgroup (↥B))} ≤
       Subgroup.comap B.subtype (componentLayerOf B)
     refine sSup_le ?_
-    intro E hE
-    intro y hy
+    intro E hE y hy
     rw [Subgroup.mem_comap]
     exact le_sSup (s := {E' : Subgroup G | IsComponentOf E' B})
       (a := E.map B.subtype)
@@ -534,8 +535,7 @@ private theorem componentLayer_top_map_eq_componentLayerOf_early
       Subgroup.map B.subtype
         (sSup {E : Subgroup (↥B) | IsComponentOf E (⊤ : Subgroup (↥B))})
     refine sSup_le ?_
-    intro E hE
-    intro y hy
+    intro E hE y hy
     exact Subgroup.mem_map.mpr
       ⟨⟨y, hE.1 hy⟩,
         Subgroup.mem_sSup_of_mem
@@ -705,7 +705,7 @@ private lemma centralizer_sup_of_centralizes {G : Type u} [Group G]
           _ = k := by group
           _ = (k * v⁻¹) * v := by group
       exact mul_right_cancel hright
-  · simpa using (Subgroup.mem_centralizer_iff.mp (hKF hk) (1 : G) F.one_mem)
+  · simp
   · intro a b _ha _hb hka hkb
     calc
       (a * b) * k = a * (b * k) := by group
@@ -980,7 +980,7 @@ private theorem isPGroup_of_pResidualOf_isPGroup_local
   have hordG : orderOf (x : G) = q := by
     calc
       orderOf (x : G) = orderOf x :=
-        by simpa using (orderOf_injective H.subtype H.subtype_injective x).symm
+        by simp
       _ = q := hxorder
   have hcopq : Nat.Coprime p q := (Nat.coprime_primes hp hqprime).2 (by
     intro hpq
@@ -1309,7 +1309,7 @@ private theorem generalizedFittingSubgroupOf_le_of_le
 subnormal in that normal subgroup. -/
 private theorem isSubnormal_of_subnormal_le_normal
     {G : Type u} [Group G] {S X : Subgroup G}
-    (hS : S.IsSubnormal) (hSX : S ≤ X) (hX : X.Normal) :
+    (hS : S.IsSubnormal) (_hSX : S ≤ X) (_hX : X.Normal) :
     (S.subgroupOf X).IsSubnormal := by
   classical
   rcases (Subgroup.IsSubnormal.isSubnormal_iff (G := G) (H := S)).1 hS with
@@ -1463,7 +1463,6 @@ private theorem centralizer_qCoreOf_S_le_A
     (hsimple : IsSimpleGroup G)
     (A S : Subgroup G) (hA : IsCoatom A)
     (hSF : S ≤ generalizedFittingSubgroupOf A)
-    (hSsub : (S.subgroupOf (generalizedFittingSubgroupOf A)).IsSubnormal)
     (hCS : generalizedFittingSubgroupOf A ⊓ Subgroup.centralizer (S : Set G) ≤ S)
     {p : ℕ} (hp : p.Prime)
     (hpF : p ∈ primesOfOrder (fittingSubgroupOf A)) :
@@ -1473,7 +1472,7 @@ private theorem centralizer_qCoreOf_S_le_A
   let Z : Subgroup G := (Subgroup.center (↥P)).map P.subtype
   have hZleQ : Z ≤ qCoreOf S p := by
     simpa [Z, P] using
-      (fstar_center_qCoreOf_fitting_le_qCoreOf_S A S hSF hSsub hCS p hp hpF)
+      (fstar_center_qCoreOf_fitting_le_qCoreOf_S A S hSF hCS p hp)
   have hNZ : Subgroup.normalizer (Z : Set G) = A := by
     simpa [Z, P] using
       (normalizer_center_qCoreOf_fitting_eq_A hsimple A hA hp hpF)
@@ -1527,13 +1526,10 @@ private theorem centralizer_qCoreOf_A_le_A
     Subgroup.centralizer ((qCoreOf A p : Subgroup G) : Set G) ≤ A := by
   let S : Subgroup G := generalizedFittingSubgroupOf A
   have hSF : S ≤ S := le_rfl
-  have hSsub : (S.subgroupOf S).IsSubnormal := by
-    simpa [Subgroup.subgroupOf_self] using
-      (Subgroup.IsSubnormal.top : (⊤ : Subgroup (↥S)).IsSubnormal)
   have hCS : generalizedFittingSubgroupOf A ⊓ Subgroup.centralizer (S : Set G) ≤ S :=
     inf_le_left
   have hcentS : Subgroup.centralizer ((qCoreOf S p : Subgroup G) : Set G) ≤ A :=
-    centralizer_qCoreOf_S_le_A hsimple A S hA hSF hSsub hCS hp hpF
+    centralizer_qCoreOf_S_le_A hsimple A S hA hSF hCS hp hpF
   exact (Subgroup.centralizer_le
     (show (qCoreOf S p : Set G) ⊆ (qCoreOf A p : Set G) from
       qCoreOf_generalizedFitting_le_qCoreOf A p hp)).trans hcentS
@@ -1595,7 +1591,7 @@ private theorem piCore_normal
   refine Subgroup.closure_induction'' hgen ?_ ?_ ?_ hn
   · intro y hy
     simpa [mul_assoc] using (piCore π G).inv_mem (hgen y hy)
-  · simpa using (piCore π G).one_mem
+  · simp
   · intro a b _ _ ha hb
     simpa [mul_assoc, mul_left_comm, mul_right_comm] using
       (piCore π G).mul_mem ha hb
@@ -1931,7 +1927,7 @@ centralizes `N`, when `N` is normal in `B`. -/
 private theorem commutatorElement_mem_centralizer_of_mem_centralizer_normal
     {G : Type u} [Group G]
     {B N : Subgroup G} (hN : IsNormalIn N B)
-    {x h : G} (hxB : x ∈ B) (hhB : h ∈ B)
+    {x h : G} (_hxB : x ∈ B) (hhB : h ∈ B)
     (hxN : x ∈ Subgroup.centralizer (N : Set G)) :
     ⁅x, h⁆ ∈ Subgroup.centralizer (N : Set G) := by
   let X : Subgroup G := Subgroup.zpowers x
@@ -2261,7 +2257,7 @@ private lemma isNormalIn_iSup
     · intro y hy
       rcases (Set.mem_iUnion).1 hy with ⟨i, hyi⟩
       exact (le_iSup (f := fun i : ι => X i) i) ((h i).2 b hb y⁻¹ ((X i).inv_mem hyi))
-    · simpa using (⨆ i : ι, X i).one_mem
+    · simp
     · intro y z _ _ hyP hzP
       simpa [mul_assoc, mul_left_comm, mul_right_comm] using (⨆ i : ι, X i).mul_mem hyP hzP
 
@@ -2411,7 +2407,7 @@ private lemma commutator_three_subgroups_le
 `O_p(B)`. -/
 private lemma le_qCoreOf_of_isNormalIn_chain
     {G : Type u} [Group G] [Finite G]
-    (M B : Subgroup G) (p : ℕ) (hp : p.Prime)
+    (M B : Subgroup G) (p : ℕ) (_hp : p.Prime)
     {N : Subgroup G} (hNM : IsNormalIn N M) (hMB : IsNormalIn M B) (hNp : IsPGroup p N) :
     N ≤ qCoreOf B p := by
   have h1 : N ≤ qCoreOf M p := le_qCoreOf_of_normal_isPGroup M N p hNM.1 (by
@@ -2440,7 +2436,7 @@ private lemma coprime_card_of_isPGroup_ne
 /-- `O_q(F(A)) ≤ O_q(A)`. -/
 private lemma qCoreOf_fittingSubgroupOf_le_qCoreOf
     {G : Type u} [Group G] [Finite G]
-    (A : Subgroup G) (q : ℕ) (hq : q.Prime) :
+    (A : Subgroup G) (q : ℕ) (_hq : q.Prime) :
     qCoreOf (fittingSubgroupOf A) q ≤ qCoreOf A q := by
   let F : Subgroup G := fittingSubgroupOf A
   have hQF : qCoreOf F q ≤ F := qCoreOf_le F q
@@ -2685,7 +2681,7 @@ private lemma mem_primesOfOrder_fittingB_of_mem_primesOfOrder_fittingA
         by_cases hqr : q = r.1
         · have hbot : qCoreOf B r.1 = ⊥ := by simpa [hqr] using hQBbot
           have hcomm : ⁅qCoreOf A q, qCoreOf B r.1⁆ = ⊥ := by
-            simpa [hbot] using (Subgroup.commutator_bot_right (H₁ := qCoreOf A q))
+            simp [hbot]
           exact (Subgroup.commutator_eq_bot_iff_le_centralizer
             (H₁ := qCoreOf A q) (H₂ := qCoreOf B r.1)).1 hcomm
         · have hcomm : ⁅qCoreOf A q, qCoreOf B r.1⁆ = ⊥ :=
@@ -2734,7 +2730,7 @@ private lemma commutator_double_le_intersection
     (hFAB : generalizedFittingSubgroupOf A ≤ B)
     (hFBA : generalizedFittingSubgroupOf B ≤ A)
     {p q : ℕ} (hp : p.Prime) (hq : q.Prime) (hpq : p ≠ q)
-    (hpA : p ∈ primesOfOrder (fittingSubgroupOf A))
+    (_hpA : p ∈ primesOfOrder (fittingSubgroupOf A))
     (hqA : q ∈ primesOfOrder (fittingSubgroupOf A)) :
     ⁅⁅B, qCoreOf A p⁆, qCoreOf A p⁆ ≤ A ⊓ B := by
   let P : Subgroup G := qCoreOf A p
@@ -2941,7 +2937,7 @@ private lemma commutator_double_le_intersection
 
 /-- Normality transports through `subgroupOf`. -/
 private lemma isNormal_subgroupOf_of_isNormalIn
-    {G : Type u} [Group G] {B H K : Subgroup G} (hK : K ≤ H) (hH : H ≤ B)
+    {G : Type u} [Group G] {B H K : Subgroup G} (hK : K ≤ H) (_hH : H ≤ B)
     (hKH : IsNormalIn K H) :
     ((K.subgroupOf B).subgroupOf (H.subgroupOf B)).Normal := by
   exact (Subgroup.normal_subgroupOf_iff (Subgroup.subgroupOf_mono B hK)).mpr (by
@@ -2962,8 +2958,7 @@ private lemma isSubnormal_of_normal_chain
   · have hHsub : (H.subgroupOf B).IsSubnormal := by
       refine Subgroup.IsSubnormal.step (H.subgroupOf B) (B.subgroupOf B) ?_ ?_ ?_
       · exact Subgroup.subgroupOf_mono B hH
-      · simpa [Subgroup.subgroupOf_self] using
-          (Subgroup.IsSubnormal.top : (⊤ : Subgroup (↥B)).IsSubnormal)
+      · simp [Subgroup.subgroupOf_self]
       · exact isNormal_subgroupOf_of_isNormalIn hH le_rfl hHB
     exact hHsub
   · exact isNormal_subgroupOf_of_isNormalIn hK hH hKH
@@ -3318,7 +3313,7 @@ public theorem bender1970_1_6_maximalSubgroups_pGroups
               by_contra hQ
               have hrS : r.1 ∈ S := mem_primesOfOrder_of_qCoreOf_ne_bot A r.2 hQ
               exact hrp (hsing hrS hpS)
-            simpa [hQbot] using (bot_le : (⊥ : Subgroup G) ≤ qCoreOf A p))
+            simp [hQbot])
       exact IsPGroup.to_le (qCoreOf_isPGroup A p) hFleOp
     have hFpB : IsPGroup p (fittingSubgroupOf B) := by
       have hFleOp : fittingSubgroupOf B ≤ qCoreOf B p := by
@@ -3333,7 +3328,7 @@ public theorem bender1970_1_6_maximalSubgroups_pGroups
                   hsimple A B hA hB hne hFAB hFBA r.2
                     (mem_primesOfOrder_of_qCoreOf_ne_bot B r.2 hQ)
               exact hrp (hsing hrS hpS)
-            simpa [hQbot] using (bot_le : (⊥ : Subgroup G) ≤ qCoreOf B p))
+            simp [hQbot])
       exact IsPGroup.to_le (qCoreOf_isPGroup B p) hFleOp
     refine ⟨p, hp, ?_, ?_⟩
     · rw [hFstA]

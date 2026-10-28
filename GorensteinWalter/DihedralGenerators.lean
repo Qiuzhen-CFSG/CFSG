@@ -68,10 +68,11 @@ private lemma pow_val_add_eq {D : Type u} [Group D] [Finite D] {ρ : D} {n : ℕ
     _ = ρ ^ i.val * ρ ^ j.val := by rw [pow_add]
 
 -- (I2) ρ^((j−i).val) = ρ^((j.val : ℤ) − (i.val : ℤ))
-private lemma pow_val_sub_zpow {D : Type u} [Group D] [Finite D] {ρ : D} {n : ℕ} (hn : orderOf ρ = n)
+private lemma pow_val_sub_zpow {D : Type u} [Group D] [Finite D] {ρ : D} {n : ℕ}
+    (hn : orderOf ρ = n)
     (i j : ZMod n) : ρ ^ ((j - i).val) = ρ ^ ((j.val : ℤ) - (i.val : ℤ)) := by
   have : NeZero n := ⟨by rw [← hn]; exact (orderOf_pos ρ).ne'⟩
-  have hji : (i + (j - i) : ZMod n) = j := by simp [sub_eq_add_neg, add_assoc]
+  have hji : (i + (j - i) : ZMod n) = j := by simp [sub_eq_add_neg]
   have hval : j.val = (i.val + (j - i).val) % n := by
     calc
       j.val = (i + (j - i) : ZMod n).val := by rw [hji]
@@ -153,11 +154,13 @@ private def dihedralMap {D : Type u} [Group D] [Finite D] {ρ σ : D} {n : ℕ} 
     | DihedralGroup.r i =>
         match y with
         | DihedralGroup.r j => simpa [DihedralGroup.r_mul_r] using pow_val_add_eq hn i j
-        | DihedralGroup.sr j => simpa [DihedralGroup.r_mul_sr] using (map_mul_rs hn hσ2 hrel i j).symm
+        | DihedralGroup.sr j =>
+          simpa [DihedralGroup.r_mul_sr] using (map_mul_rs hn hσ2 hrel i j).symm
     | DihedralGroup.sr i =>
         match y with
         | DihedralGroup.r j => simpa [DihedralGroup.sr_mul_r] using map_mul_sr hn i j
-        | DihedralGroup.sr j => simpa [DihedralGroup.sr_mul_sr] using (map_mul_ss hn hσ2 hrel i j).symm
+        | DihedralGroup.sr j =>
+          simpa [DihedralGroup.sr_mul_sr] using (map_mul_ss hn hσ2 hrel i j).symm
 
 /-- Two generators satisfying the dihedral relations generate the expected
 dihedral group when the reflection does not lie in the rotation subgroup. -/
@@ -246,7 +249,7 @@ public theorem dihedral_of_generators_of_not_mem
     refine ⟨DihedralGroup.sr 0, ?_⟩
     dsimp [φ, dihedralMap]
     rw [show ZMod.val (0 : ZMod (orderOf ρ)) = 0 % orderOf ρ by
-      simpa using (ZMod.val_natCast (n := orderOf ρ) (a := 0))]
+      simp]
     simp
   have hle : ⊤ ≤ φ.range := by
     rw [hgen]

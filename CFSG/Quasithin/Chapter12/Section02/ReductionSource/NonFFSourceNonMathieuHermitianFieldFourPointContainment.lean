@@ -1,0 +1,149 @@
+module
+public import CFSG.Quasithin.Chapter12.Section02.ReductionSource.NonFFSourceNonMathieuHermitianFieldFourPointTransvections
+public import CFSG.Quasithin.Chapter8.Section02.HermitianSourceFieldFourPointContainment
+import all CFSG.Quasithin.Chapter12.Section02.ReductionSource.NonFFSourceNonMathieuHermitianCoordinates
+import all CFSG.Quasithin.Chapter12.Section02.ReductionSource.NonFFSourceNonMathieuHermitianFieldFourBlock
+
+
+
+/-!
+# The original Hermitian orbit inside the centralizer-residual core
+
+The original Sylow-fixed involution and tensor coordinates give full
+point-parabolic movement. Thus [V,L_z]=V and V lies in O₂(L_z). Combined
+with the exact point-core action kernel, the transvection action now has
+precisely the denominator V required by the source. The same strict flag,
+residual quotient, C-component and central involution are retained.
+
+Source: Aschbacher–Smith 8.2.11(2–4), printed p.722, refs/quasithin.pdf.
+No residual-containment or movement premise remains on the tensor consumer.
+The natural and A₅ sections, 8.2.12–13, and zero weak closure still require
+proof before the full normalized Hermitian exclusion can be concluded.
+-/
+
+public noncomputable section
+open Subgroup Representation Representation.BinaryOffender Theory.GroupTheory
+open Representation.HermitianTensorThree Representation.HermitianTensorThree.ImageOuter
+open scoped IsMulCommutative MatrixGroups commutatorElement
+namespace CFSG.Quasithin.Chapter12.Section02.ChosenModule
+open Stellmacher ChapterE ChapterB.QuasisimpleSource ChapterK.Linear.Recognition
+open ChapterK.Linear.Recognition.ThreeCubicSieve
+open ChapterG.Section09.DefiningCharacteristic.LinearThreeRecognition
+open Chapter8.Section02.HermitianSource
+variable {G : Type*} [Group G] [Finite G] {T : Sylow 2 G} {L V : Subgroup G}
+  (D : ChosenModule T L V)
+set_option backward.isDefEq.respectTransparency false
+
+private theorem point_core_of_marking
+    (hVL : D.sourceOrbit ≤ L)
+    (d : ActionEquiv (D.orbitRepresentation.comp D.orbitComponent.subtype)
+      (overgroupAction 1 (binaryImage 1))) (c : binaryImage 1)
+    (hk : IsPGroup 2 D.orbitComponentHom.ker)
+    (z : D.sourceOrbit)
+    (hc : c.val (D.hermitianOrbitCoordinates 1 d (Additive.ofMul z)) = PointSection.pointVector) :
+    ⁅D.sourceOrbit,Chapter8.Section02.Centralizer.localResidual L z⁆ = D.sourceOrbit ∧
+      D.sourceOrbit ≤ Chapter8.Section02.Centralizer.localTwoCore L z := by
+  let e := (D.hermitianOrbitCoordinates 1 d).trans c.val
+  let q := (MulAut.conj c).toMonoidHom.comp (d.groupEquiv.toMonoidHom.comp D.orbitComponentHom)
+  have hq : Function.Surjective q := (MulAut.conj c).surjective.comp
+    (d.groupEquiv.surjective.comp D.orbitComponentHom_surjective)
+  have hker : IsPGroup 2 q.ker := by
+    rw [MonoidHom.ker_comp_of_injective _ _ (MulAut.conj c).injective,
+      MonoidHom.ker_comp_of_injective _ _ d.groupEquiv.injective]
+    exact hk
+  have he (l : L) (v : Additive D.sourceOrbit) :
+      e (automizerRepresentation D.sourceOrbit
+        (D.sourceOrbit.normalizerMonoidHom.rangeRestrict
+          (inclusion D.sourceOrbit_component_normalizes l)) v) = (q l).val (e v) := by
+    change c.val (D.hermitianOrbitCoordinates 1 d
+      (automizerRepresentation D.sourceOrbit (D.hermitianComponentAutomizer l) v)) =
+        c.val ((d.groupEquiv (D.orbitComponentHom l)).val
+          (c.val.symm (c.val (D.hermitianOrbitCoordinates 1 d v))))
+    exact (congrArg c.val (D.hermitianOrbitCoordinates_component 1 d l v)).trans
+      (congrArg (fun w => c.val ((d.groupEquiv (D.orbitComponentHom l)).val w))
+        (c.val.symm_apply_apply (D.hermitianOrbitCoordinates 1 d v)).symm)
+  exact marked_point_residual_contains_module D.sourceOrbit L
+    hVL D.sourceOrbit_component_normalizes e q he hq hker z hc
+
+/-- The original point residual moves all of the chosen orbit and contains it
+in its two-core, retaining the original central involution. -/
+theorem sourceOrbit_hermitian_point_core
+    (h : Hypothesis1223 KnownSimple.IsKnownSimple T L)
+    (hmany : 1 < (maximalTwoLocalOvergroups (T : Subgroup G)).ncard)
+    (hV : V = D.sourceOrbit) (hnon : D.SourceOrbitNonFF)
+    (hcommL : ⁅L.pCoreIn 2,L⁆ = D.sourceOrbit)
+    (d : ActionEquiv (D.orbitRepresentation.comp D.orbitComponent.subtype)
+      (overgroupAction 1 (binaryImage 1)))
+    (z : D.sourceOrbit) (hz : (z : G) ∈ centralizer (T : Set G)) (hne : z ≠ 1) :
+    ⁅D.sourceOrbit,Chapter8.Section02.Centralizer.localResidual L z⁆ = D.sourceOrbit ∧
+      D.sourceOrbit ≤ Chapter8.Section02.Centralizer.localTwoCore L z := by
+  obtain ⟨c,hc⟩ := D.sourceOrbit_hermitian_point_marking d z hz hne
+  have hk : IsPGroup 2 D.orbitComponentHom.ker := by
+    rw [D.hermitian_component_kernel h hmany hV hnon hcommL 1 d]
+    exact pCore_isPGroup
+  exact D.point_core_of_marking (hV ▸ D.le_component) d c hk z hc
+
+/-- The literal tensor consumer supplies V ≤ O₂(L_z), full residual movement,
+and the transvection pairing with its exact denominator V. -/
+theorem sourceOrbit_hermitian_tensor_point_core
+    (h : Hypothesis1223 KnownSimple.IsKnownSimple T L)
+    (hmany : 1 < (maximalTwoLocalOvergroups (T : Subgroup G)).ncard)
+    (hV : V = D.sourceOrbit)
+    (hs : ChapterK.RankOne.SourceHypotheses D.orbitRepresentation D.orbitComponent)
+    (hnon : D.SourceOrbitNonFF)
+    (B : BinaryField) (C : LinearCover B 3 D.orbitComponent)
+    (eQ : (D.orbitComponent ⧸ center D.orbitComponent) ≃* PSL(3,B.Carrier))
+    (n : ℕ) [NeZero n]
+    (hdegree : let := inflated_irreducible D.orbitRepresentation C hs.irreducible
+      schurDegree (inflated D.orbitRepresentation C) = n)
+    (hfield : B.degree = 2*n)
+    (hmodel : let := inflated_irreducible D.orbitRepresentation C hs.irreducible
+      HasAbsoluteTwistedModel (inflated D.orbitRepresentation C) n)
+    (hw : 0 < globalW D.sourceOrbit T) :
+    n = 1 ∧ B.degree = 2 ∧ globalW D.sourceOrbit T = 1 ∧ V = L.pCoreIn 2 ∧
+      ∃ z : D.sourceOrbit, z ≠ 1 ∧ orderOf (z : G) = 2 ∧
+        zpowers (z : G) = omegaOneCenterAmbient (T : Subgroup G) ∧
+        Nonempty ((Chapter8.Section02.Centralizer.localResidual L z ⧸
+          pCore 2 (Chapter8.Section02.Centralizer.localResidual L z)) ≃* SL(2,Matrix.PSL3Four.F)) ∧
+        ((Chapter8.Section02.Centralizer.localResidual L z).subgroupOf
+          (normalizer (L : Set G) ⊓ centralizer ({(z : G)} : Set G))).IsCComponent ∧
+        Nat.card (Chapter8.Section02.Centralizer.commutatorSpace L D.sourceOrbit z) = 32 ∧
+        ⊥ < zpowers (z : G) ∧
+        zpowers (z : G) < Chapter8.Section02.Centralizer.commutatorSpace L D.sourceOrbit z ∧
+        Chapter8.Section02.Centralizer.commutatorSpace L D.sourceOrbit z < D.sourceOrbit ∧
+        Chapter8.Section02.Centralizer.localResidual L z ⊔ (T : Subgroup G) ≤ normalizer
+          (Chapter8.Section02.Centralizer.commutatorSpace L D.sourceOrbit z : Set G) ∧
+        ⁅D.sourceOrbit,Chapter8.Section02.Centralizer.localResidual L z⁆ = D.sourceOrbit ∧
+        D.sourceOrbit ≤ Chapter8.Section02.Centralizer.localTwoCore L z ∧
+        (centralizer (D.sourceOrbit : Set G)).subgroupOf (Chapter8.Section02.Centralizer.localTwoCore L z) =
+          D.sourceOrbit.subgroupOf (Chapter8.Section02.Centralizer.localTwoCore L z) ∧
+        FullPointTransvectionAction D.sourceOrbit (Chapter8.Section02.Centralizer.localTwoCore L z) z ∧
+        D.sourceOrbit ⊓ centralizer (Chapter8.Section02.Centralizer.localTwoCore L z : Set G) =
+          zpowers (z : G) ∧
+        ∀ v : D.sourceOrbit, (∀ x : Chapter8.Section02.Centralizer.localTwoCore L z,
+          ⁅(x : G),(v : G)⁆ ∈ zpowers (z : G)) ↔
+            v.val ∈ Chapter8.Section02.Centralizer.commutatorSpace L D.sourceOrbit z := by
+  obtain ⟨hn,hB,hw1,hcore,z,hzne,hzo,hZ,he,hcomp,hWcard,hZbot,hZW,hWV,hWN⟩ :=
+    D.sourceOrbit_hermitian_tensor_point_movement
+      h hmany hV hs hnon B C eQ n hdegree hfield hmodel hw
+  have hdegree1 : let := inflated_irreducible D.orbitRepresentation C hs.irreducible
+      schurDegree (inflated D.orbitRepresentation C) = 1 := hdegree.trans hn
+  have hfield1 : B.degree = 2*1 := hfield.trans (congrArg (fun k : ℕ => 2*k) hn)
+  have hmodel1 : let := inflated_irreducible D.orbitRepresentation C hs.irreducible
+      HasAbsoluteTwistedModel (inflated D.orbitRepresentation C) 1 := hn ▸ hmodel
+  obtain ⟨d,_,_⟩ := Chapter7.NormalizedSource.NonMathieuHermitian.exists_component_coordinates
+    hs B C 1 hdegree1 hfield1 hmodel1
+  obtain ⟨_,_,_,hcomm,hcommL⟩ := D.sourceOrbit_hermitian_tensor_core_commutators
+    h hmany hV hs hnon B C eQ n hdegree hfield hmodel hw
+  have hzEq := D.sourceOrbit_omega_center_of_core_commutator h hmany hV hnon hcomm
+  have hz : (z : G) ∈ centralizer (T : Set G) :=
+    (hzEq.le.trans inf_le_right) (hZ.le (mem_zpowers _))
+  have hpointCore := D.sourceOrbit_hermitian_point_core h hmany hV hnon hcommL d z hz hzne
+  have htrans := D.sourceOrbit_hermitian_point_transvections h hmany hV hnon hcommL d z hz hzne
+  have hker := D.sourceOrbit_hermitian_point_action_kernel h hmany hV hnon hcommL (z : G)
+  have hker' := hker.trans (congrArg
+    (fun U : Subgroup G => U.subgroupOf (Chapter8.Section02.Centralizer.localTwoCore L z))
+    (hcore.symm.trans hV))
+  exact ⟨hn,hB,hw1,hcore,z,hzne,hzo,hZ,he,hcomp,hWcard,hZbot,hZW,hWV,hWN,hpointCore.1,hpointCore.2,hker',htrans⟩
+
+end CFSG.Quasithin.Chapter12.Section02.ChosenModule

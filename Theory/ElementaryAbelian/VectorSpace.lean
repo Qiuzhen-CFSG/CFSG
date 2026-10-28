@@ -1,7 +1,6 @@
 module
 
 public import Theory.ElementaryAbelian.Basic
-
 public import Mathlib.Algebra.Group.Defs
 public import Mathlib.Algebra.Group.TypeTags.Basic
 public import Mathlib.Algebra.Field.ZMod
@@ -19,28 +18,29 @@ Public items:
 - `IsElementaryAbelian.exists_isCompl`
 -/
 
-namespace Theory.ElementaryAbelian
+@[expose] public section
 
 open scoped IsMulCommutative
 
 universe u
 
-public instance IsElementaryAbelian.isVectorSpace (p : ℕ) [Fact p.Prime]
-    {G : Type u} [Group G] [inst : IsElementaryAbelian p G] :
-    Module (ZMod p) (Additive G) :=
+instance IsElementaryAbelian.isVectorSpace (p : ℕ) [Fact p.Prime]
+    {G : Type u} [Group G] [inst : IsElementaryAbelian p G]
+    : Module (ZMod p) (Additive G) :=
   have hpow : ∀ g : G, g ^ p = 1 :=
     Monoid.exponent_dvd_iff_forall_pow_eq_one.mp inst.exponent_dvd_p
-  have hsmul : ∀ x : Additive G, p • x = 0 := fun x =>
-    toMul_eq_one.mp (hpow x)
+  have hsmul : ∀ x : Additive G, p • x = 0 :=
+    fun x =>
+      toMul_eq_one.mp (hpow x)
   AddCommMonoid.zmodModule (M := Additive G) (n := p) hsmul
 
 /-- For every subgroup `B` of an elementary abelian group `A`, there exists a subgroup `C` disjoint
 from `B` and such that `B` and `C` generate the whole group `A`. -/
-public theorem IsElementaryAbelian.exists_isCompl (p : ℕ) [hp : Fact p.Prime]
+theorem IsElementaryAbelian.exists_isCompl (p : ℕ) [hp : Fact p.Prime]
     (A : Type u) [Group A]
-    [h : IsElementaryAbelian p A] (B : Subgroup A) :
-    ∃ C : Subgroup A, IsCompl B C := by
-  letI : Module (ZMod p) (Additive A) := IsElementaryAbelian.isVectorSpace (p := p) (G := A)
+    [h : IsElementaryAbelian p A] (B : Subgroup A)
+    : ∃ C : Subgroup A, IsCompl B C := by
+  let : Module (ZMod p) (Additive A) := IsElementaryAbelian.isVectorSpace (p := p) (G := A)
   let φ : AddSubgroup (Additive A) ≃o Submodule (ZMod p) (Additive A) :=
     AddSubgroup.toZModSubmodule (n := p)
   let ψ : AddSubgroup (Additive A) ≃o Subgroup A :=
@@ -56,5 +56,3 @@ public theorem IsElementaryAbelian.exists_isCompl (p : ℕ) [hp : Fact p.Prime]
   have hcompl : IsCompl B C :=
     IsCompl.of_orderEmbedding (RelIso.toRelEmbedding Subgroup.toAddSubgroup) hcompl_add
   exact ⟨C, hcompl⟩
-
-end Theory.ElementaryAbelian

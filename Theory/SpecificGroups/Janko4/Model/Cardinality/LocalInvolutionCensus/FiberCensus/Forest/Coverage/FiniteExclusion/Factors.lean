@@ -1,0 +1,5020 @@
+module
+
+public import Theory.SpecificGroups.Janko4.Model.Cardinality.LocalInvolutionCensus.FiberCensus.Forest.Coverage.RowWords
+
+/-!
+# Bounded inverse-factor row lookups
+
+Untrusted witnesses from the unchanged ATLAS J4G1-max2W1 data of
+R. A. Wilson, S. J. Nickerson and J. N. Bray. All uses of these tables
+require the kernel certificates. See `Coverage/source/README.md`.
+-/
+
+@[expose] public section
+namespace Janko4.Cardinality.LocalInvolutionCensus.FiberCensus.Forest.Coverage.FiniteExclusion
+open Janko4.GeneratorCertificates
+open OuterReduction.FixedGenerator.NormalizerSquares.TwoCoreCentralizerData
+open LowerBound KernelSeparation
+
+noncomputable def inverseEntry0_part0 (m : ℕ) : ℕ :=
+  if m < 3 then
+    if m < 1 then
+      1306133655207697700948628159104449
+    else
+      if m < 2 then
+        4070836559545725367722663494252990
+      else
+        3746919480012429828088033144352552
+  else
+    if m < 5 then
+      if m < 4 then
+        4166914570123524552556409595301619
+      else
+        1134604349015343883581609549725507
+    else
+      if m < 6 then
+        1473105559670867824894523957253537
+      else
+        4286414264485760482059857958654316
+
+noncomputable def inverseEntry0_part1 (m : ℕ) : ℕ :=
+  if m < 10 then
+    if m < 8 then
+      1218657952960143593835712241386676
+    else
+      if m < 9 then
+        2206505714078516786421575125121725
+      else
+        4451814834091363670517527062154502
+  else
+    if m < 12 then
+      if m < 11 then
+        1051148551255027500834613403322258
+      else
+        1544893932582355450301886452395734
+    else
+      if m < 13 then
+        4215054747404118086176442594177125
+      else
+        1302366301485174032103162546882613
+
+noncomputable def inverseEntry0_part2 (m : ℕ) : ℕ :=
+  if m < 17 then
+    if m < 15 then
+      4994533309261565407112550635890070
+    else
+      if m < 16 then
+        2491844126778919253886836305057938
+      else
+        3181573008330758804551137004519828
+  else
+    if m < 19 then
+      if m < 18 then
+        4357272630620689455373072135670619
+      else
+        2247087395586588603924696546842636
+    else
+      if m < 20 then
+        4711427011642063155596302034638371
+      else
+        4427926308022500900643271640995651
+
+noncomputable def inverseEntry0_part3 (m : ℕ) : ℕ :=
+  if m < 24 then
+    if m < 22 then
+      2497182176152212915073352926193398
+    else
+      if m < 23 then
+        3371444679859951202555071522687889
+      else
+        1459439396146932336539651757299915
+  else
+    if m < 26 then
+      if m < 25 then
+        715353954500602198686789049479516
+      else
+        127428959216724461937080701081120
+    else
+      if m < 27 then
+        5053586850871291098929304899760342
+      else
+        4286703099584484241920566298002988
+
+noncomputable def inverseEntry0_part4 (m : ℕ) : ℕ :=
+  if m < 31 then
+    if m < 29 then
+      586854845994172145147156161355132
+    else
+      if m < 30 then
+        3227930514533551209959167954373950
+      else
+        3109126812562319524268182108498332
+  else
+    if m < 33 then
+      if m < 32 then
+        907746770339569223463155336731503
+      else
+        2512039961863810697034048612379436
+    else
+      if m < 34 then
+        5085571487298592467073224237343770
+      else
+        1998111886812272114898861923666852
+
+noncomputable def inverseEntry0_part5 (m : ℕ) : ℕ :=
+  if m < 38 then
+    if m < 36 then
+      5025284148638485679370399070927848
+    else
+      if m < 37 then
+        1399983919346674039097037762782689
+      else
+        2554991804632054590072643390311352
+  else
+    if m < 40 then
+      if m < 39 then
+        1555840098569907680129175236943903
+      else
+        4936644289628679453548031917430013
+    else
+      if m < 41 then
+        4860978513018327518626183818582130
+      else
+        4593212091231284085649478032872253
+
+noncomputable def inverseEntry0_part6 (m : ℕ) : ℕ :=
+  if m < 45 then
+    if m < 43 then
+      344272848815481396887381423042319
+    else
+      if m < 44 then
+        3125689370169853606066440722838109
+      else
+        4658939279495651747732387646916545
+  else
+    if m < 47 then
+      if m < 46 then
+        2019489341518687060203226190950453
+      else
+        2835030411794346891070546391246548
+    else
+      if m < 48 then
+        4039470292341826925037861850543128
+      else
+        255956767071180404800411275589031
+
+noncomputable def inverseEntry0_part7 (m : ℕ) : ℕ :=
+  if m < 52 then
+    if m < 50 then
+      4071064255855868331266780550737216
+    else
+      if m < 51 then
+        2128763249480230345028841553700752
+      else
+        4818371077351626682156628613269978
+  else
+    if m < 54 then
+      if m < 53 then
+        1820740192670882832880050086291537
+      else
+        4913595314922897961263290542846593
+    else
+      if m < 55 then
+        2862664916104038748502043937091893
+      else
+        2863201035961214528577702023477061
+
+noncomputable def inverseEntry0_part8 (m : ℕ) : ℕ :=
+  if m < 59 then
+    if m < 57 then
+      435731615284340709594910531298913
+    else
+      if m < 58 then
+        2367842469600936605922175595883091
+      else
+        2189014625525852154259859268460075
+  else
+    if m < 61 then
+      if m < 60 then
+        1089308742738250625954804503689107
+      else
+        4265800855302284303511983310700676
+    else
+      if m < 62 then
+        3455384667781882798951088799643330
+      else
+        4216309912090687839571851377293067
+
+noncomputable def inverseEntry0_part9 (m : ℕ) : ℕ :=
+  if m < 66 then
+    if m < 64 then
+      1008733453125503329933271935461968
+    else
+      if m < 65 then
+        508040409631372581455170146697595
+      else
+        3081741551406488161313092960970885
+  else
+    if m < 68 then
+      if m < 67 then
+        4741534666274927457116025985524152
+      else
+        4239695616693854129090196523171024
+    else
+      if m < 69 then
+        1502097590784773855380781019027475
+      else
+        1080744131466347236677634486679518
+
+noncomputable def inverseEntry0_part10 (m : ℕ) : ℕ :=
+  if m < 73 then
+    if m < 71 then
+      3357412385072858137409068924878432
+    else
+      if m < 72 then
+        4161652544892236609424573102877126
+      else
+        4596064110850026195525344009286293
+  else
+    if m < 75 then
+      if m < 74 then
+        2096313375300702476685836303440580
+      else
+        2226642822660869037480160136628147
+    else
+      if m < 76 then
+        4976530559167021800841970116438325
+      else
+        4530020315124650882687320137816973
+
+noncomputable def inverseEntry0_part11 (m : ℕ) : ℕ :=
+  if m < 80 then
+    if m < 78 then
+      3294588452670390536277234383193549
+    else
+      if m < 79 then
+        1809547037917339774171153121994990
+      else
+        5062545686545924850327462451242647
+  else
+    if m < 82 then
+      if m < 81 then
+        2623924011687793923850965695798977
+      else
+        686387060036467290202723687605966
+    else
+      if m < 83 then
+        1893696035192136012313867338317814
+      else
+        2742824884569340820148842421342604
+
+noncomputable def inverseEntry0_part12 (m : ℕ) : ℕ :=
+  if m < 87 then
+    if m < 85 then
+      3500389174363061256554479032084680
+    else
+      if m < 86 then
+        4865146278819148713932052961427390
+      else
+        283527973326581053162217317879903
+  else
+    if m < 89 then
+      if m < 88 then
+        2401063894368200485533873440557680
+      else
+        1438543591851323120716886964739100
+    else
+      if m < 90 then
+        48153513344599730285817638458609
+      else
+        5052384218847342441541362779484676
+
+noncomputable def inverseEntry0_part13 (m : ℕ) : ℕ :=
+  if m < 94 then
+    if m < 92 then
+      202989483123504302150049131659414
+    else
+      if m < 93 then
+        4957328198933423656677965477395019
+      else
+        2913545152473073681744748965971397
+  else
+    if m < 96 then
+      if m < 95 then
+        4122390358121279216239254817931671
+      else
+        3959164078934038393420080940810367
+    else
+      if m < 97 then
+        3691178293414140118504200034080491
+      else
+        1846688585255519473345294082390795
+
+noncomputable def inverseEntry0_part14 (m : ℕ) : ℕ :=
+  if m < 101 then
+    if m < 99 then
+      4730197866186368005447004135439131
+    else
+      if m < 100 then
+        1945097477347061432659679327832314
+      else
+        636411664125762236725926399825855
+  else
+    if m < 103 then
+      if m < 102 then
+        4939380278547558914946787444723759
+      else
+        2389252494902353668201884013862456
+    else
+      if m < 104 then
+        3860611987264220822637169112366603
+      else
+        2543284841532208304678103237552674
+
+noncomputable def inverseEntry0_part15 (m : ℕ) : ℕ :=
+  if m < 108 then
+    if m < 106 then
+      2117130932172183150542481445955252
+    else
+      if m < 107 then
+        1714010961999795950918402134202073
+      else
+        1118558715607613322814942494949684
+  else
+    if m < 110 then
+      if m < 109 then
+        2149802437964635831563248624996325
+      else
+        260612983369805093515327390475342
+    else
+      if m < 111 then
+        765399066467257547244053039351045
+      else
+        165627209884267602086378484438570
+
+noncomputable def inverseEntry0 (m : ℕ) : ℕ :=
+  if m < 56 then
+    if m < 28 then
+      if m < 14 then
+        if m < 7 then
+          inverseEntry0_part0 m
+        else
+          inverseEntry0_part1 m
+      else
+        if m < 21 then
+          inverseEntry0_part2 m
+        else
+          inverseEntry0_part3 m
+    else
+      if m < 42 then
+        if m < 35 then
+          inverseEntry0_part4 m
+        else
+          inverseEntry0_part5 m
+      else
+        if m < 49 then
+          inverseEntry0_part6 m
+        else
+          inverseEntry0_part7 m
+  else
+    if m < 84 then
+      if m < 70 then
+        if m < 63 then
+          inverseEntry0_part8 m
+        else
+          inverseEntry0_part9 m
+      else
+        if m < 77 then
+          inverseEntry0_part10 m
+        else
+          inverseEntry0_part11 m
+    else
+      if m < 98 then
+        if m < 91 then
+          inverseEntry0_part12 m
+        else
+          inverseEntry0_part13 m
+      else
+        if m < 105 then
+          inverseEntry0_part14 m
+        else
+          inverseEntry0_part15 m
+
+noncomputable def inverseEntry1_part0 (m : ℕ) : ℕ :=
+  if m < 3 then
+    if m < 1 then
+      2875432471105133242374440905111490
+    else
+      if m < 2 then
+        4251899305581217447447377410414388
+      else
+        3541301985448297319599961626637771
+  else
+    if m < 5 then
+      if m < 4 then
+        1614652653051693680604181523421461
+      else
+        2152117468052013678808105172428375
+    else
+      if m < 6 then
+        277840273081734413507240522756663
+      else
+        2120387645064937402325377857540499
+
+noncomputable def inverseEntry1_part1 (m : ℕ) : ℕ :=
+  if m < 10 then
+    if m < 8 then
+      4720451925556403343992980572388115
+    else
+      if m < 9 then
+        4479754872484756524610735942935328
+      else
+        5090924454012644854062229190469981
+  else
+    if m < 12 then
+      if m < 11 then
+        4149487679385773505709316988077352
+      else
+        4970742993090492200858187599707335
+    else
+      if m < 13 then
+        731590899235863004907978390991770
+      else
+        1957073702500117929338581351857597
+
+noncomputable def inverseEntry1_part2 (m : ℕ) : ℕ :=
+  if m < 17 then
+    if m < 15 then
+      5034439001822762915723021577700413
+    else
+      if m < 16 then
+        3173634523646531242191442370032073
+      else
+        2020058058296118948698271544749451
+  else
+    if m < 19 then
+      if m < 18 then
+        3351050824354662306736231138936120
+      else
+        4008598286287716188927757440811046
+    else
+      if m < 20 then
+        3567081227538922522743119851465645
+      else
+        851125983320924678490056418838968
+
+noncomputable def inverseEntry1_part3 (m : ℕ) : ℕ :=
+  if m < 24 then
+    if m < 22 then
+      771645385189179810084597146549896
+    else
+      if m < 23 then
+        2008760448751525554992055941847059
+      else
+        3110394874731581849004984082892469
+  else
+    if m < 26 then
+      if m < 25 then
+        3758982475470916473446146906922022
+      else
+        5133895173329870741209325152087196
+    else
+      if m < 27 then
+        2452403757326451706781595708309966
+      else
+        723322087934011250971004318682039
+
+noncomputable def inverseEntry1_part4 (m : ℕ) : ℕ :=
+  if m < 31 then
+    if m < 29 then
+      3101894902118543328897587236378085
+    else
+      if m < 30 then
+        859451208517740135135611792768115
+      else
+        2067919259117620154868787255361197
+  else
+    if m < 33 then
+      if m < 32 then
+        3815359372868085388727292348879612
+      else
+        1309463390760546402575778156195727
+    else
+      if m < 34 then
+        2304134421497528734722439505692796
+      else
+        3958733231465777507990776667010759
+
+noncomputable def inverseEntry1_part5 (m : ℕ) : ℕ :=
+  if m < 38 then
+    if m < 36 then
+      1905477872119614603126442769726096
+    else
+      if m < 37 then
+        1973083416017326067702112633187541
+      else
+        229386826948200402146881847284882
+  else
+    if m < 40 then
+      if m < 39 then
+        4705470232458290115699092591237899
+      else
+        4697434858699574971420816819277776
+    else
+      if m < 41 then
+        470828195058160097769637614771644
+      else
+        3032566115161445175406848416579159
+
+noncomputable def inverseEntry1_part6 (m : ℕ) : ℕ :=
+  if m < 45 then
+    if m < 43 then
+      1440323098096761658598630100169678
+    else
+      if m < 44 then
+        5014987307822370919725332009537536
+      else
+        2400126334546439513901979144753250
+  else
+    if m < 47 then
+      if m < 46 then
+        89481083512383527738930824487699
+      else
+        3219712263288068336930578500910717
+    else
+      if m < 48 then
+        2071652094733617888054997112074056
+      else
+        3026567314656375528244297589980642
+
+noncomputable def inverseEntry1_part7 (m : ℕ) : ℕ :=
+  if m < 52 then
+    if m < 50 then
+      4753547625827645752982524238421524
+    else
+      if m < 51 then
+        3805915303050014185904227148329377
+      else
+        1222315970925920111537411595680351
+  else
+    if m < 54 then
+      if m < 53 then
+        4987092151734013408901836858625887
+      else
+        1996848705988651724860007611529750
+    else
+      if m < 55 then
+        3835097971354865340520294465654398
+      else
+        602881376507577998899762291151494
+
+noncomputable def inverseEntry1_part8 (m : ℕ) : ℕ :=
+  if m < 59 then
+    if m < 57 then
+      489252088893041680546816786252103
+    else
+      if m < 58 then
+        126126179271433131926819422451857
+      else
+        3561709698107983163426874312179063
+  else
+    if m < 61 then
+      if m < 60 then
+        4215179209218349789422374297883165
+      else
+        2556359306477585502764742010324772
+    else
+      if m < 62 then
+        2124667591968891602163883912014933
+      else
+        1998444484976663634795037101094638
+
+noncomputable def inverseEntry1_part9 (m : ℕ) : ℕ :=
+  if m < 66 then
+    if m < 64 then
+      2431972042259251332607638910962972
+    else
+      if m < 65 then
+        1374193528956808828154370511830704
+      else
+        1396971973437431468077810347862153
+  else
+    if m < 68 then
+      if m < 67 then
+        5149155102246133248407871703518069
+      else
+        111069367476335251392655443205267
+    else
+      if m < 69 then
+        710887721840579548972116848427640
+      else
+        3115100940457150467079514115651126
+
+noncomputable def inverseEntry1_part10 (m : ℕ) : ℕ :=
+  if m < 73 then
+    if m < 71 then
+      4942699438624032626450982645940047
+    else
+      if m < 72 then
+        5036536793969287822297193461976035
+      else
+        136574264676314062980849369051240
+  else
+    if m < 75 then
+      if m < 74 then
+        1866661967690541240437928816863224
+      else
+        3110734319148298404132692592553595
+    else
+      if m < 76 then
+        908977116425585195585985957009895
+      else
+        1884707834174902577400286480616785
+
+noncomputable def inverseEntry1_part11 (m : ℕ) : ℕ :=
+  if m < 80 then
+    if m < 78 then
+      4851105127942673356769540427113361
+    else
+      if m < 79 then
+        892461757467112816594320296983153
+      else
+        1067404129670090389324609873435331
+  else
+    if m < 82 then
+      if m < 81 then
+        2531474010126868530750724217442711
+      else
+        4409472151793658829094424109950428
+    else
+      if m < 83 then
+        2426447189939787888630047983331932
+      else
+        4049121067093279470548830988255807
+
+noncomputable def inverseEntry1_part12 (m : ℕ) : ℕ :=
+  if m < 87 then
+    if m < 85 then
+      350938350427102214326296153678688
+    else
+      if m < 86 then
+        395061172970291870561135242061104
+      else
+        3329178691609824673631438168914589
+  else
+    if m < 89 then
+      if m < 88 then
+        4586122840482431948276855831900913
+      else
+        140478695893556841084789223384683
+    else
+      if m < 90 then
+        3438563298443569039440694460253587
+      else
+        1241807142947355483293146158342660
+
+noncomputable def inverseEntry1_part13 (m : ℕ) : ℕ :=
+  if m < 94 then
+    if m < 92 then
+      681507096119443331191799007934781
+    else
+      if m < 93 then
+        1229002437567576862435763887218943
+      else
+        3471480836748419194377325822739664
+  else
+    if m < 96 then
+      if m < 95 then
+        1903922699627457895129999674054722
+      else
+        3730388500536736819064865976263207
+    else
+      if m < 97 then
+        867746677000098760499364589719253
+      else
+        3779041938307417753456365518989295
+
+noncomputable def inverseEntry1_part14 (m : ℕ) : ℕ :=
+  if m < 101 then
+    if m < 99 then
+      1455586695556930956455874198317260
+    else
+      if m < 100 then
+        4821504150079604987862105244917818
+      else
+        5052084454202083029353932011600802
+  else
+    if m < 103 then
+      if m < 102 then
+        2367479454187310648775286187489545
+      else
+        5412344887313242056174560433698
+    else
+      if m < 104 then
+        1697149539249654896473463467737510
+      else
+        1247782364821617170600579534991765
+
+noncomputable def inverseEntry1_part15 (m : ℕ) : ℕ :=
+  if m < 108 then
+    if m < 106 then
+      5146563027796565404706672926484288
+    else
+      if m < 107 then
+        2599583477005220068321729113876821
+      else
+        4060138019936058956383848005799393
+  else
+    if m < 110 then
+      if m < 109 then
+        2780892638691313399176171758476630
+      else
+        2541198363246513956298408844308970
+    else
+      if m < 111 then
+        2032271707764517357349106369541885
+      else
+        1968659013259702303002026257907121
+
+noncomputable def inverseEntry1 (m : ℕ) : ℕ :=
+  if m < 56 then
+    if m < 28 then
+      if m < 14 then
+        if m < 7 then
+          inverseEntry1_part0 m
+        else
+          inverseEntry1_part1 m
+      else
+        if m < 21 then
+          inverseEntry1_part2 m
+        else
+          inverseEntry1_part3 m
+    else
+      if m < 42 then
+        if m < 35 then
+          inverseEntry1_part4 m
+        else
+          inverseEntry1_part5 m
+      else
+        if m < 49 then
+          inverseEntry1_part6 m
+        else
+          inverseEntry1_part7 m
+  else
+    if m < 84 then
+      if m < 70 then
+        if m < 63 then
+          inverseEntry1_part8 m
+        else
+          inverseEntry1_part9 m
+      else
+        if m < 77 then
+          inverseEntry1_part10 m
+        else
+          inverseEntry1_part11 m
+    else
+      if m < 98 then
+        if m < 91 then
+          inverseEntry1_part12 m
+        else
+          inverseEntry1_part13 m
+      else
+        if m < 105 then
+          inverseEntry1_part14 m
+        else
+          inverseEntry1_part15 m
+
+noncomputable def inverseEntry2_part0 (m : ℕ) : ℕ :=
+  if m < 3 then
+    if m < 1 then
+      2414737516106478309648997882644255
+    else
+      if m < 2 then
+        2425285101164219787464023249125162
+      else
+        5168705300586616048033481873387803
+  else
+    if m < 5 then
+      if m < 4 then
+        1088916839616344137961138601266495
+      else
+        3850054656692645001308462975766546
+    else
+      if m < 6 then
+        2399554865528757028153981332899311
+      else
+        3812393521016753927146391601140030
+
+noncomputable def inverseEntry2_part1 (m : ℕ) : ℕ :=
+  if m < 10 then
+    if m < 8 then
+      3806225083098443782653639710283337
+    else
+      if m < 9 then
+        4415042775562456149194329756772181
+      else
+        116678244740549981510196234494653
+  else
+    if m < 12 then
+      if m < 11 then
+        1312585229971598156348965373599641
+      else
+        483131199173009556283785884770989
+    else
+      if m < 13 then
+        4084105566761408317474586968809733
+      else
+        1881521875152774068657671698662248
+
+noncomputable def inverseEntry2_part2 (m : ℕ) : ℕ :=
+  if m < 17 then
+    if m < 15 then
+      733588842681438010183520927072585
+    else
+      if m < 16 then
+        895191650194672382080763776586510
+      else
+        2468678070794002800179471300967211
+  else
+    if m < 19 then
+      if m < 18 then
+        3924792810896338529732401506409975
+      else
+        1672374516948027219686888895593947
+    else
+      if m < 20 then
+        4240959182558695259665716630825614
+      else
+        4400138227267354543289121064828110
+
+noncomputable def inverseEntry2_part3 (m : ℕ) : ℕ :=
+  if m < 24 then
+    if m < 22 then
+      3978217974697079711684059638323066
+    else
+      if m < 23 then
+        984769934213562072585965516029350
+      else
+        2935668788898189935716235263260235
+  else
+    if m < 26 then
+      if m < 25 then
+        2677247472773456003427310758566937
+      else
+        2182499333467905185661754560431544
+    else
+      if m < 27 then
+        200609169914026245947419513644843
+      else
+        2399940278876533071771616954205814
+
+noncomputable def inverseEntry2_part4 (m : ℕ) : ℕ :=
+  if m < 31 then
+    if m < 29 then
+      3451345928131304314480427372212851
+    else
+      if m < 30 then
+        1158274717933865409440045104990835
+      else
+        796168953402268956217670611249194
+  else
+    if m < 33 then
+      if m < 32 then
+        1211552805284884992518177318257575
+      else
+        167498918213461137098146337141300
+    else
+      if m < 34 then
+        3934054582734816322252055940523103
+      else
+        1887292886165649545837557120693866
+
+noncomputable def inverseEntry2_part5 (m : ℕ) : ℕ :=
+  if m < 38 then
+    if m < 36 then
+      5100588583795265158990202494241423
+    else
+      if m < 37 then
+        4316217476078510745543663633314098
+      else
+        2521462393717239411621401003491792
+  else
+    if m < 40 then
+      if m < 39 then
+        2607839187351663688361612889876397
+      else
+        267347934580798122863520128385567
+    else
+      if m < 41 then
+        4264494992155019069787442593496257
+      else
+        2512075515514134301335251682889080
+
+noncomputable def inverseEntry2_part6 (m : ℕ) : ℕ :=
+  if m < 45 then
+    if m < 43 then
+      4049682324550595226022942097681829
+    else
+      if m < 44 then
+        3453845110160013506145143788802678
+      else
+        4497806348110905479617513958930322
+  else
+    if m < 47 then
+      if m < 46 then
+        1516346081427033308268898398440849
+      else
+        178411334493030000522010632913569
+    else
+      if m < 48 then
+        2796080813057552820987367071403657
+      else
+        4134339880409374912519168898319409
+
+noncomputable def inverseEntry2_part7 (m : ℕ) : ℕ :=
+  if m < 52 then
+    if m < 50 then
+      46879550675488666577950870515661
+    else
+      if m < 51 then
+        2909206099519690498223182060901052
+      else
+        3881485416232357763596469153941249
+  else
+    if m < 54 then
+      if m < 53 then
+        3190301087582042363363598028670450
+      else
+        3771681478006145157304403070052927
+    else
+      if m < 55 then
+        2139116253159257038573539999315112
+      else
+        1319522259934758605888049296279588
+
+noncomputable def inverseEntry2_part8 (m : ℕ) : ℕ :=
+  if m < 59 then
+    if m < 57 then
+      848746584850812211101328166150272
+    else
+      if m < 58 then
+        694431718215211468665066856844395
+      else
+        3012063740574470481914215829021775
+  else
+    if m < 61 then
+      if m < 60 then
+        2167646687513389733476656487699176
+      else
+        965512591094323131976533037179833
+    else
+      if m < 62 then
+        4081017996082798422741160666585736
+      else
+        3470008873619925012824763649346623
+
+noncomputable def inverseEntry2_part9 (m : ℕ) : ℕ :=
+  if m < 66 then
+    if m < 64 then
+      1319136675017296540307130222286522
+    else
+      if m < 65 then
+        907648624720724619242142773155605
+      else
+        2433149073098158350480412255916109
+  else
+    if m < 68 then
+      if m < 67 then
+        2452106115996429998759230015087457
+      else
+        5108491216096565133377899707078827
+    else
+      if m < 69 then
+        968433424174641037528573423818133
+      else
+        5073216731981205526513527908113820
+
+noncomputable def inverseEntry2_part10 (m : ℕ) : ℕ :=
+  if m < 73 then
+    if m < 71 then
+      410922300471992516291904476595380
+    else
+      if m < 72 then
+        3035780336440619411956909831021892
+      else
+        1128829379163309593190446887766743
+  else
+    if m < 75 then
+      if m < 74 then
+        2011899509706547682393428273591732
+      else
+        2702845451886200038044441782684760
+    else
+      if m < 76 then
+        4206664838852073030339952452119808
+      else
+        424241787123682435007442582123777
+
+noncomputable def inverseEntry2_part11 (m : ℕ) : ℕ :=
+  if m < 80 then
+    if m < 78 then
+      573399915142164832999973095531480
+    else
+      if m < 79 then
+        4825314515738924570462780251322520
+      else
+        3381775125228375836884997823762022
+  else
+    if m < 82 then
+      if m < 81 then
+        4575746866540424399258324187379699
+      else
+        1389451862461571990486822638037153
+    else
+      if m < 83 then
+        3640153282216851539636905302931872
+      else
+        4799025775091795348273342623182876
+
+noncomputable def inverseEntry2_part12 (m : ℕ) : ℕ :=
+  if m < 87 then
+    if m < 85 then
+      3271071048454444698466088859435089
+    else
+      if m < 86 then
+        4546716449263595197410627128836119
+      else
+        625185158196718996858341577719849
+  else
+    if m < 89 then
+      if m < 88 then
+        64508117197268070337270954891218
+      else
+        2269764253683081453189483680009719
+    else
+      if m < 90 then
+        1760320807026836879731900522293787
+      else
+        2435895922051755887700329132258636
+
+noncomputable def inverseEntry2_part13 (m : ℕ) : ℕ :=
+  if m < 94 then
+    if m < 92 then
+      3999015560033490997373006002648591
+    else
+      if m < 93 then
+        3662210102245679103993988455200080
+      else
+        4595013381197598608519462680901818
+  else
+    if m < 96 then
+      if m < 95 then
+        4688818567082931395553615707048809
+      else
+        2452799178070257397988499305073742
+    else
+      if m < 97 then
+        2348113886538444025271718794522158
+      else
+        3813388127490059742465065837491840
+
+noncomputable def inverseEntry2_part14 (m : ℕ) : ℕ :=
+  if m < 101 then
+    if m < 99 then
+      2706092979179256307042516922982982
+    else
+      if m < 100 then
+        2410837277768611834091938303309864
+      else
+        1170957838275225740860172326190572
+  else
+    if m < 103 then
+      if m < 102 then
+        4753091071645896537120728345529339
+      else
+        767824849320607135512419382746064
+    else
+      if m < 104 then
+        5156447647271383124518271853214446
+      else
+        3712821113770470300726181007729621
+
+noncomputable def inverseEntry2_part15 (m : ℕ) : ℕ :=
+  if m < 108 then
+    if m < 106 then
+      2028602547462693933319540480075440
+    else
+      if m < 107 then
+        2722204536842195703796999189801417
+      else
+        2855465721916348178513182021198115
+  else
+    if m < 110 then
+      if m < 109 then
+        5080197616434709135026009262177898
+      else
+        1301339040749501407604937452418127
+    else
+      if m < 111 then
+        4315584562582486266524957509648036
+      else
+        4614836296634569075237337586924096
+
+noncomputable def inverseEntry2 (m : ℕ) : ℕ :=
+  if m < 56 then
+    if m < 28 then
+      if m < 14 then
+        if m < 7 then
+          inverseEntry2_part0 m
+        else
+          inverseEntry2_part1 m
+      else
+        if m < 21 then
+          inverseEntry2_part2 m
+        else
+          inverseEntry2_part3 m
+    else
+      if m < 42 then
+        if m < 35 then
+          inverseEntry2_part4 m
+        else
+          inverseEntry2_part5 m
+      else
+        if m < 49 then
+          inverseEntry2_part6 m
+        else
+          inverseEntry2_part7 m
+  else
+    if m < 84 then
+      if m < 70 then
+        if m < 63 then
+          inverseEntry2_part8 m
+        else
+          inverseEntry2_part9 m
+      else
+        if m < 77 then
+          inverseEntry2_part10 m
+        else
+          inverseEntry2_part11 m
+    else
+      if m < 98 then
+        if m < 91 then
+          inverseEntry2_part12 m
+        else
+          inverseEntry2_part13 m
+      else
+        if m < 105 then
+          inverseEntry2_part14 m
+        else
+          inverseEntry2_part15 m
+
+noncomputable def inverseEntry3_part0 (m : ℕ) : ℕ :=
+  if m < 3 then
+    if m < 1 then
+      4783096296427349963825115626109300
+    else
+      if m < 2 then
+        5017182428124066444192678254073224
+      else
+        87323522765521776162458320478703
+  else
+    if m < 5 then
+      if m < 4 then
+        5026137088772908165370667639686946
+      else
+        4586965054239377992263172625237109
+    else
+      if m < 6 then
+        1995457438888650016731524115091448
+      else
+        1309578838272875369467756052757403
+
+noncomputable def inverseEntry3_part1 (m : ℕ) : ℕ :=
+  if m < 10 then
+    if m < 8 then
+      3060297785735187771672175789613493
+    else
+      if m < 9 then
+        1602856180126544582613575380737453
+      else
+        1112055848870664681379305856021145
+  else
+    if m < 12 then
+      if m < 11 then
+        3191539838058035113328420740533412
+      else
+        4410423817318531676991178044680684
+    else
+      if m < 13 then
+        879970204321671465013357529474569
+      else
+        3512418960562758484629796162725263
+
+noncomputable def inverseEntry3_part2 (m : ℕ) : ℕ :=
+  if m < 17 then
+    if m < 15 then
+      457419240771239512292583268725797
+    else
+      if m < 16 then
+        2397498868642563981764848840049183
+      else
+        3556561534078178546829438611201853
+  else
+    if m < 19 then
+      if m < 18 then
+        4525368530711849605979860240653925
+      else
+        883561814061029547593580565546974
+    else
+      if m < 20 then
+        1884253909339841719069150528299731
+      else
+        4687489447670225218983621428390175
+
+noncomputable def inverseEntry3_part3 (m : ℕ) : ℕ :=
+  if m < 24 then
+    if m < 22 then
+      1225287332469608547999999597084496
+    else
+      if m < 23 then
+        3246804776955496593896094640903989
+      else
+        5150922150154969209685925430234194
+  else
+    if m < 26 then
+      if m < 25 then
+        3924482358775978272341557634234656
+      else
+        2154653347401778337292185387144054
+    else
+      if m < 27 then
+        1864352642004336711271974263606837
+      else
+        1600564917455829476477694612186576
+
+noncomputable def inverseEntry3_part4 (m : ℕ) : ℕ :=
+  if m < 31 then
+    if m < 29 then
+      4868053167150368623103882207009504
+    else
+      if m < 30 then
+        1123809407064513403327100126078838
+      else
+        4022206535109671452331868825255725
+  else
+    if m < 33 then
+      if m < 32 then
+        4411321251960880087919700874002453
+      else
+        3462289766795686559521770752454111
+    else
+      if m < 34 then
+        1332115710825547419612686429103749
+      else
+        159285846216755805625915541962344
+
+noncomputable def inverseEntry3_part5 (m : ℕ) : ℕ :=
+  if m < 38 then
+    if m < 36 then
+      3775730517276080307958500298193927
+    else
+      if m < 37 then
+        1293456802203594319161228765044164
+      else
+        3598478297779487092536036723558753
+  else
+    if m < 40 then
+      if m < 39 then
+        558454877958029742705657291212685
+      else
+        4580612016497250042856473950683540
+    else
+      if m < 41 then
+        1937069622093401979361580383600238
+      else
+        1070576547217614656931948064018691
+
+noncomputable def inverseEntry3_part6 (m : ℕ) : ℕ :=
+  if m < 45 then
+    if m < 43 then
+      3026395540531781455898619169586356
+    else
+      if m < 44 then
+        3358954411310794284620046787511953
+      else
+        2027249304810948035829711125323028
+  else
+    if m < 47 then
+      if m < 46 then
+        1459449885322885494084601865240002
+      else
+        751791242352861747174065068345588
+    else
+      if m < 48 then
+        4876213273063152151909542622512158
+      else
+        1876575964686528971107926866193917
+
+noncomputable def inverseEntry3_part7 (m : ℕ) : ℕ :=
+  if m < 52 then
+    if m < 50 then
+      4965752520756441024421956391445431
+    else
+      if m < 51 then
+        23058719767619741420776359481458
+      else
+        4943361555939253158141447848588180
+  else
+    if m < 54 then
+      if m < 53 then
+        3156160502102262977639229888533865
+      else
+        8871343912954798798842900058486
+    else
+      if m < 55 then
+        4010480931140613929189777792683028
+      else
+        1315554119826079304417267154971590
+
+noncomputable def inverseEntry3_part8 (m : ℕ) : ℕ :=
+  if m < 59 then
+    if m < 57 then
+      4217084831864994349624068299726539
+    else
+      if m < 58 then
+        330224890685148897968413618977348
+      else
+        5175378015219438791474295764177951
+  else
+    if m < 61 then
+      if m < 60 then
+        5188948303669428528734618034772706
+      else
+        1679328530815728542446651723191779
+    else
+      if m < 62 then
+        4497231700272717729141900085500716
+      else
+        4616315520647114287254511138502967
+
+noncomputable def inverseEntry3_part9 (m : ℕ) : ℕ :=
+  if m < 66 then
+    if m < 64 then
+      3082822291803741625875866421720055
+    else
+      if m < 65 then
+        3522730715376337479545986320326797
+      else
+        2279125455087173392834262275921489
+  else
+    if m < 68 then
+      if m < 67 then
+        1953339279949648806933389179596064
+      else
+        1718836903269282445359486115571198
+    else
+      if m < 69 then
+        3585586667019704291935647755854816
+      else
+        522421308844826181290137452669512
+
+noncomputable def inverseEntry3_part10 (m : ℕ) : ℕ :=
+  if m < 73 then
+    if m < 71 then
+      3064963769908812536676156139961104
+    else
+      if m < 72 then
+        5107369925254544702642064281785664
+      else
+        846093602616936844421926001729552
+  else
+    if m < 75 then
+      if m < 74 then
+        3858197092132004037736768939925421
+      else
+        2053925189461553836051842652833005
+    else
+      if m < 76 then
+        1744876979747482948656975214007549
+      else
+        1608488414746256817454746936887108
+
+noncomputable def inverseEntry3_part11 (m : ℕ) : ℕ :=
+  if m < 80 then
+    if m < 78 then
+      3580318996802995000905752954735560
+    else
+      if m < 79 then
+        2860490513058851681906486853860517
+      else
+        1236678170460840895930058619417270
+  else
+    if m < 82 then
+      if m < 81 then
+        1578489767695845462095409668057021
+      else
+        483728834763923441508185674659019
+    else
+      if m < 83 then
+        3747744870682797725671577741659729
+      else
+        1558906944345196120858738260871324
+
+noncomputable def inverseEntry3_part12 (m : ℕ) : ℕ :=
+  if m < 87 then
+    if m < 85 then
+      3347452259829365824328351185102727
+    else
+      if m < 86 then
+        3803144610828151546356301869293243
+      else
+        3042242006515986121394663648788006
+  else
+    if m < 89 then
+      if m < 88 then
+        3688678871624429655442324164627478
+      else
+        2712796655941885017922021853314757
+    else
+      if m < 90 then
+        1992887594867180893026791446677706
+      else
+        2877681640479285254341501453097612
+
+noncomputable def inverseEntry3_part13 (m : ℕ) : ℕ :=
+  if m < 94 then
+    if m < 92 then
+      4277466050505633042668657427147737
+    else
+      if m < 93 then
+        3860453372736393105415430734596678
+      else
+        1702562944158149991822587654827170
+  else
+    if m < 96 then
+      if m < 95 then
+        3351962628358264071802100642081393
+      else
+        4687460957745234961781332457009836
+    else
+      if m < 97 then
+        361470222499070352030113348831720
+      else
+        4772169212729206310189157939252082
+
+noncomputable def inverseEntry3_part14 (m : ℕ) : ℕ :=
+  if m < 101 then
+    if m < 99 then
+      621616685293100917984204500702819
+    else
+      if m < 100 then
+        1401169668058292824309786050793909
+      else
+        4217603844364960239186510607861851
+  else
+    if m < 103 then
+      if m < 102 then
+        3335087451961899124992433852011684
+      else
+        390121019553220130289193478808553
+    else
+      if m < 104 then
+        3531722186446048777024764226925776
+      else
+        697444303270188648284392103617789
+
+noncomputable def inverseEntry3_part15 (m : ℕ) : ℕ :=
+  if m < 108 then
+    if m < 106 then
+      2600597875463589585648186599814213
+    else
+      if m < 107 then
+        4330405332634212418276534198392854
+      else
+        2168723511911872080966680812697879
+  else
+    if m < 110 then
+      if m < 109 then
+        1921874218298642282880014727691365
+      else
+        3685589706698639212286658156379892
+    else
+      if m < 111 then
+        4060159666200792476240333608409058
+      else
+        1224490066915864801832583727055382
+
+noncomputable def inverseEntry3 (m : ℕ) : ℕ :=
+  if m < 56 then
+    if m < 28 then
+      if m < 14 then
+        if m < 7 then
+          inverseEntry3_part0 m
+        else
+          inverseEntry3_part1 m
+      else
+        if m < 21 then
+          inverseEntry3_part2 m
+        else
+          inverseEntry3_part3 m
+    else
+      if m < 42 then
+        if m < 35 then
+          inverseEntry3_part4 m
+        else
+          inverseEntry3_part5 m
+      else
+        if m < 49 then
+          inverseEntry3_part6 m
+        else
+          inverseEntry3_part7 m
+  else
+    if m < 84 then
+      if m < 70 then
+        if m < 63 then
+          inverseEntry3_part8 m
+        else
+          inverseEntry3_part9 m
+      else
+        if m < 77 then
+          inverseEntry3_part10 m
+        else
+          inverseEntry3_part11 m
+    else
+      if m < 98 then
+        if m < 91 then
+          inverseEntry3_part12 m
+        else
+          inverseEntry3_part13 m
+      else
+        if m < 105 then
+          inverseEntry3_part14 m
+        else
+          inverseEntry3_part15 m
+
+noncomputable def inverseEntry4_part0 (m : ℕ) : ℕ :=
+  if m < 3 then
+    if m < 1 then
+      3945461396747830750436808232191698
+    else
+      if m < 2 then
+        459794044985476783203092086079771
+      else
+        634082528292543383082190922622416
+  else
+    if m < 5 then
+      if m < 4 then
+        693754346877762116604038711169049
+      else
+        657894104671571062956512356166401
+    else
+      if m < 6 then
+        4410050361159498555575468357458265
+      else
+        4930671853074265689897960358783962
+
+noncomputable def inverseEntry4_part1 (m : ℕ) : ℕ :=
+  if m < 10 then
+    if m < 8 then
+      2130309653794482843999063264225256
+    else
+      if m < 9 then
+        4378980651879471504012181366046546
+      else
+        4467597056425508513038480083315807
+  else
+    if m < 12 then
+      if m < 11 then
+        3783957217320829556755410154189920
+      else
+        5039210848281119010274210881954751
+    else
+      if m < 13 then
+        613546894004134952436355194554980
+      else
+        3222331436004731699510178347685210
+
+noncomputable def inverseEntry4_part2 (m : ℕ) : ℕ :=
+  if m < 17 then
+    if m < 15 then
+      2424364132493081870554487686656407
+    else
+      if m < 16 then
+        3146189204569040114396560103065278
+      else
+        2342137254209272440031440546367499
+  else
+    if m < 19 then
+      if m < 18 then
+        1253672646868040904499298341718762
+      else
+        1202554067127084957133724096899870
+    else
+      if m < 20 then
+        301263668079358263591559039458464
+      else
+        1409256335102789075453389110033984
+
+noncomputable def inverseEntry4_part3 (m : ℕ) : ℕ :=
+  if m < 24 then
+    if m < 22 then
+      3463124648462989026965661983192850
+    else
+      if m < 23 then
+        775828497863303922996709307075500
+      else
+        1414517540385789864393363248225578
+  else
+    if m < 26 then
+      if m < 25 then
+        5054722684547008485449494910791011
+      else
+        3025826906523620438798117800769058
+    else
+      if m < 27 then
+        3505022558943331528997622176182551
+      else
+        3475867165165310999612231404535830
+
+noncomputable def inverseEntry4_part4 (m : ℕ) : ℕ :=
+  if m < 31 then
+    if m < 29 then
+      4312404424275818006977340161037331
+    else
+      if m < 30 then
+        1275904961582005835118962697215638
+      else
+        2231835506107927859044155852582436
+  else
+    if m < 33 then
+      if m < 32 then
+        3494604698978957731211421062204480
+      else
+        2805470204444268934654619634422742
+    else
+      if m < 34 then
+        2123511984031832321872654451777032
+      else
+        2972417470237893098404189987936571
+
+noncomputable def inverseEntry4_part5 (m : ℕ) : ℕ :=
+  if m < 38 then
+    if m < 36 then
+      1727069926289893518935915381941010
+    else
+      if m < 37 then
+        2731067890307401789242497942475816
+      else
+        993756627327677055556916423860271
+  else
+    if m < 40 then
+      if m < 39 then
+        2558798393486834808692310288376152
+      else
+        2859043177091456313749769056397937
+    else
+      if m < 41 then
+        4630934821427603374768285800491263
+      else
+        4260124480739739845631533615545241
+
+noncomputable def inverseEntry4_part6 (m : ℕ) : ℕ :=
+  if m < 45 then
+    if m < 43 then
+      1098144247479802073107816283521189
+    else
+      if m < 44 then
+        508584546033740012799029484215150
+      else
+        5095918899971538834612933428580589
+  else
+    if m < 47 then
+      if m < 46 then
+        4157750360602409920658957231180916
+      else
+        3323142129441672715401274965915985
+    else
+      if m < 48 then
+        180736301299889142594722552213004
+      else
+        3158615646135762237464233642159333
+
+noncomputable def inverseEntry4_part7 (m : ℕ) : ℕ :=
+  if m < 52 then
+    if m < 50 then
+      2590780538486291276304171224120498
+    else
+      if m < 51 then
+        3382450463453745002448750610927419
+      else
+        1725279563353431032473601307034707
+  else
+    if m < 54 then
+      if m < 53 then
+        1916545285635618002172098660091032
+      else
+        4630564213838880690511003376047192
+    else
+      if m < 55 then
+        1961791345868970073268791478463499
+      else
+        121503151972685020870999404078427
+
+noncomputable def inverseEntry4_part8 (m : ℕ) : ℕ :=
+  if m < 59 then
+    if m < 57 then
+      3751402144162375891775159219347731
+    else
+      if m < 58 then
+        2583578904172191719263268553146467
+      else
+        1428346442363907173805679452820762
+  else
+    if m < 61 then
+      if m < 60 then
+        5138159344631254303289207914533549
+      else
+        1998696795196818481923762644915636
+    else
+      if m < 62 then
+        4610068174082155270004400540901094
+      else
+        1866497517826500022798153179112641
+
+noncomputable def inverseEntry4_part9 (m : ℕ) : ℕ :=
+  if m < 66 then
+    if m < 64 then
+      789609796485735355058365980509443
+    else
+      if m < 65 then
+        3479122785609898175392938500363378
+      else
+        2348071033083747298269626970597052
+  else
+    if m < 68 then
+      if m < 67 then
+        3877066071752693377081841039262225
+      else
+        157356366181489250804558025463835
+    else
+      if m < 69 then
+        2835495346219241167544996179048965
+      else
+        4964762985514140738044982550405618
+
+noncomputable def inverseEntry4_part10 (m : ℕ) : ℕ :=
+  if m < 73 then
+    if m < 71 then
+      2258721169702625860287149287927693
+    else
+      if m < 72 then
+        4653497846554966537190221669060325
+      else
+        918803502863735331431292937379671
+  else
+    if m < 75 then
+      if m < 74 then
+        3344524438590091151055756623620727
+      else
+        3206295352793674744960245144008368
+    else
+      if m < 76 then
+        1746755461518093079248433657924723
+      else
+        1631994938534899093540713436797567
+
+noncomputable def inverseEntry4_part11 (m : ℕ) : ℕ :=
+  if m < 80 then
+    if m < 78 then
+      4839534695040178144195759860621508
+    else
+      if m < 79 then
+        5175103541435416587459031067737172
+      else
+        2631817259870056776269540880549054
+  else
+    if m < 82 then
+      if m < 81 then
+        317216368178413096890092301139688
+      else
+        2774181461874927951956375455266197
+    else
+      if m < 83 then
+        2490723461116497734367124349690380
+      else
+        2858885148445986492810561642949954
+
+noncomputable def inverseEntry4_part12 (m : ℕ) : ℕ :=
+  if m < 87 then
+    if m < 85 then
+      3428603707951825583590892521131500
+    else
+      if m < 86 then
+        1463288124500282068930409381119580
+      else
+        3670079471107339017912931494702915
+  else
+    if m < 89 then
+      if m < 88 then
+        3255657959180335185193078276618688
+      else
+        376169296276883057083389542633812
+    else
+      if m < 90 then
+        198855843177276438822791050962592
+      else
+        499901799889612663005202506658352
+
+noncomputable def inverseEntry4_part13 (m : ℕ) : ℕ :=
+  if m < 94 then
+    if m < 92 then
+      2948722333400511751422342263433065
+    else
+      if m < 93 then
+        5107987044711581854663615037366525
+      else
+        4814269848552552686695879299589438
+  else
+    if m < 96 then
+      if m < 95 then
+        1547557269016928820202222842821762
+      else
+        2026042352628931899225516509243880
+    else
+      if m < 97 then
+        2610047783624573509798168090802898
+      else
+        3670263426548284436151408256057399
+
+noncomputable def inverseEntry4_part14 (m : ℕ) : ℕ :=
+  if m < 101 then
+    if m < 99 then
+      932638377649485310504932328674809
+    else
+      if m < 100 then
+        2280827337014902080483258373680764
+      else
+        3238942555104783110842955433983194
+  else
+    if m < 103 then
+      if m < 102 then
+        4100082359068864008332268376564053
+      else
+        775192460402034496573928986541673
+    else
+      if m < 104 then
+        1969650873538677209591416567717722
+      else
+        709295125757530257614691012120728
+
+noncomputable def inverseEntry4_part15 (m : ℕ) : ℕ :=
+  if m < 108 then
+    if m < 106 then
+      1779047408692113868886860085760812
+    else
+      if m < 107 then
+        2828497314024662863987655159925367
+      else
+        2969250560224877575105289177085468
+  else
+    if m < 110 then
+      if m < 109 then
+        1900327458493769379006173692869290
+      else
+        3408973330320095533882630397394190
+    else
+      if m < 111 then
+        2977542952191995957580533847565554
+      else
+        2099833906654607142734090171635567
+
+noncomputable def inverseEntry4 (m : ℕ) : ℕ :=
+  if m < 56 then
+    if m < 28 then
+      if m < 14 then
+        if m < 7 then
+          inverseEntry4_part0 m
+        else
+          inverseEntry4_part1 m
+      else
+        if m < 21 then
+          inverseEntry4_part2 m
+        else
+          inverseEntry4_part3 m
+    else
+      if m < 42 then
+        if m < 35 then
+          inverseEntry4_part4 m
+        else
+          inverseEntry4_part5 m
+      else
+        if m < 49 then
+          inverseEntry4_part6 m
+        else
+          inverseEntry4_part7 m
+  else
+    if m < 84 then
+      if m < 70 then
+        if m < 63 then
+          inverseEntry4_part8 m
+        else
+          inverseEntry4_part9 m
+      else
+        if m < 77 then
+          inverseEntry4_part10 m
+        else
+          inverseEntry4_part11 m
+    else
+      if m < 98 then
+        if m < 91 then
+          inverseEntry4_part12 m
+        else
+          inverseEntry4_part13 m
+      else
+        if m < 105 then
+          inverseEntry4_part14 m
+        else
+          inverseEntry4_part15 m
+
+noncomputable def inverseEntry5_part0 (m : ℕ) : ℕ :=
+  if m < 3 then
+    if m < 1 then
+      4925028126024539704412135849308848
+    else
+      if m < 2 then
+        5015712598102112441015524831510994
+      else
+        4120005996993058652002699981436110
+  else
+    if m < 5 then
+      if m < 4 then
+        2422479138610967240607600141455633
+      else
+        2789458247882942036853073403704920
+    else
+      if m < 6 then
+        1814336192538861724395773593117952
+      else
+        1859495904371937125015712545952807
+
+noncomputable def inverseEntry5_part1 (m : ℕ) : ℕ :=
+  if m < 10 then
+    if m < 8 then
+      2268419342425451971159543555062455
+    else
+      if m < 9 then
+        1939576088363348998571181705474867
+      else
+        5147160792884470539615072875587513
+  else
+    if m < 12 then
+      if m < 11 then
+        4200795495479541291217009626046142
+      else
+        3090474144996851693110040159263174
+    else
+      if m < 13 then
+        3445100964741605577696387440752922
+      else
+        2300457879906414996101954288811897
+
+noncomputable def inverseEntry5_part2 (m : ℕ) : ℕ :=
+  if m < 17 then
+    if m < 15 then
+      3154861576368173458749111317000642
+    else
+      if m < 16 then
+        5023060203579862930168301266988497
+      else
+        53078095913803800553372298570127
+  else
+    if m < 19 then
+      if m < 18 then
+        1713518374947948575108368256352479
+      else
+        2632373046662001789417857479593699
+    else
+      if m < 20 then
+        567569871899448178146120881630696
+      else
+        899157460352611802266815034339089
+
+noncomputable def inverseEntry5_part3 (m : ℕ) : ℕ :=
+  if m < 24 then
+    if m < 22 then
+      3618775170842719854210828141196977
+    else
+      if m < 23 then
+        4100947132940498495347241535690802
+      else
+        3494434503558035752132846878678712
+  else
+    if m < 26 then
+      if m < 25 then
+        2710351053728201227430889400541314
+      else
+        1088452081061454569214930480208633
+    else
+      if m < 27 then
+        1297941174403001996222203467080695
+      else
+        3636933089978087228030242155644693
+
+noncomputable def inverseEntry5_part4 (m : ℕ) : ℕ :=
+  if m < 31 then
+    if m < 29 then
+      165239789803313738426408492278996
+    else
+      if m < 30 then
+        4762526629464472198765571384288422
+      else
+        1542321762643573791443938261110073
+  else
+    if m < 33 then
+      if m < 32 then
+        2633958483177313909592799832822763
+      else
+        1243333106823922800022518252682792
+    else
+      if m < 34 then
+        4615410000066208661245372416998753
+      else
+        596909941263042003098521117465286
+
+noncomputable def inverseEntry5_part5 (m : ℕ) : ℕ :=
+  if m < 38 then
+    if m < 36 then
+      1037587375898147516619591882115340
+    else
+      if m < 37 then
+        3184934563465703187680365460587189
+      else
+        1302598391857220278202443314305119
+  else
+    if m < 40 then
+      if m < 39 then
+        2716366551760421971825293612541295
+      else
+        702585060345508576043695824580387
+    else
+      if m < 41 then
+        73563191309010479345139446239110
+      else
+        4792899680314357858496347273901945
+
+noncomputable def inverseEntry5_part6 (m : ℕ) : ℕ :=
+  if m < 45 then
+    if m < 43 then
+      5117860024643390458119073427814386
+    else
+      if m < 44 then
+        4033713222072676657120901785100243
+      else
+        3635882731204720773619194490982290
+  else
+    if m < 47 then
+      if m < 46 then
+        860972504195022120953472480866005
+      else
+        2619391909170944172894504027325127
+    else
+      if m < 48 then
+        4443313016672098366081572534890426
+      else
+        1419551087832949893319558323972823
+
+noncomputable def inverseEntry5_part7 (m : ℕ) : ℕ :=
+  if m < 52 then
+    if m < 50 then
+      364486915008651835625831652933385
+    else
+      if m < 51 then
+        454321742681320917622847584384513
+      else
+        5160338439870018935689353840475854
+  else
+    if m < 54 then
+      if m < 53 then
+        1334064599256906212019045778348264
+      else
+        735585096546869169650991541272030
+    else
+      if m < 55 then
+        2378389666992907157618982555963883
+      else
+        3762686864804618185222562500417424
+
+noncomputable def inverseEntry5_part8 (m : ℕ) : ℕ :=
+  if m < 59 then
+    if m < 57 then
+      4592722409348247402959158826013227
+    else
+      if m < 58 then
+        4004979559505338852859516281444621
+      else
+        1363096954933448370606132759761765
+  else
+    if m < 61 then
+      if m < 60 then
+        5143536146463083126691145021565453
+      else
+        2783587699044904291158601178786438
+    else
+      if m < 62 then
+        3883045918691753935484569274399720
+      else
+        3799660828186735556997905859473165
+
+noncomputable def inverseEntry5_part9 (m : ℕ) : ℕ :=
+  if m < 66 then
+    if m < 64 then
+      254604900097540117932240169485617
+    else
+      if m < 65 then
+        1272725027078387611409039774375874
+      else
+        1381973619070438562961965248854590
+  else
+    if m < 68 then
+      if m < 67 then
+        3703250184078910338118368155986500
+      else
+        1647998048782966206114894011804979
+    else
+      if m < 69 then
+        5034546166442580150789367560600261
+      else
+        2148572083818507037619919779696235
+
+noncomputable def inverseEntry5_part10 (m : ℕ) : ℕ :=
+  if m < 73 then
+    if m < 71 then
+      70582881724747358931334689861923
+    else
+      if m < 72 then
+        3002236321289520166479727561198641
+      else
+        1503507452676389649925491155205466
+  else
+    if m < 75 then
+      if m < 74 then
+        1766880549741263676517910715627709
+      else
+        4392377742892850102563557146026347
+    else
+      if m < 76 then
+        5009100027225794203506512828296112
+      else
+        2346815462170597038279410272314528
+
+noncomputable def inverseEntry5_part11 (m : ℕ) : ℕ :=
+  if m < 80 then
+    if m < 78 then
+      4861091139168623964960512078392407
+    else
+      if m < 79 then
+        783418655051778119075531512365382
+      else
+        3797697411010106194899734220589970
+  else
+    if m < 82 then
+      if m < 81 then
+        934526389919604489368564767355713
+      else
+        300909741846433573449836632926647
+    else
+      if m < 83 then
+        4416559786014314668233673660490986
+      else
+        4814708675614994907439303830485686
+
+noncomputable def inverseEntry5_part12 (m : ℕ) : ℕ :=
+  if m < 87 then
+    if m < 85 then
+      339398808654030488062360058096951
+    else
+      if m < 86 then
+        4119774228981509125645798553675913
+      else
+        4086509165048518230853410235945343
+  else
+    if m < 89 then
+      if m < 88 then
+        4674669585870977012294492533285916
+      else
+        1071231536447522426292054513358207
+    else
+      if m < 90 then
+        2530524896441856092961013581686054
+      else
+        1721174940996709342081539192125805
+
+noncomputable def inverseEntry5_part13 (m : ℕ) : ℕ :=
+  if m < 94 then
+    if m < 92 then
+      4747798033131387642166477834859717
+    else
+      if m < 93 then
+        5186874939349683422679046376414625
+      else
+        1930301676617138572934346519115551
+  else
+    if m < 96 then
+      if m < 95 then
+        5048741953423655102828306444382551
+      else
+        5075073652582124625967673843111393
+    else
+      if m < 97 then
+        2387527139382602393135935008275733
+      else
+        26287563408747447544364855444142
+
+noncomputable def inverseEntry5_part14 (m : ℕ) : ℕ :=
+  if m < 101 then
+    if m < 99 then
+      832218565057145480048477255262644
+    else
+      if m < 100 then
+        3236574204687931024296420994554434
+      else
+        531914201839434974103442701809399
+  else
+    if m < 103 then
+      if m < 102 then
+        924103055601716332431381693496321
+      else
+        3678522888851620122052075981056436
+    else
+      if m < 104 then
+        4092428633670260303510386847485922
+      else
+        535817020790996690458648776705446
+
+noncomputable def inverseEntry5_part15 (m : ℕ) : ℕ :=
+  if m < 108 then
+    if m < 106 then
+      3081690047302816727358909449724287
+    else
+      if m < 107 then
+        3764527891262069500950895589889029
+      else
+        523224578006287722702330646522755
+  else
+    if m < 110 then
+      if m < 109 then
+        3648152021177630043341538229408688
+      else
+        8486064318236640161314604211331
+    else
+      if m < 111 then
+        4730534950315519469073363506819614
+      else
+        510568871400800603088870302247895
+
+noncomputable def inverseEntry5 (m : ℕ) : ℕ :=
+  if m < 56 then
+    if m < 28 then
+      if m < 14 then
+        if m < 7 then
+          inverseEntry5_part0 m
+        else
+          inverseEntry5_part1 m
+      else
+        if m < 21 then
+          inverseEntry5_part2 m
+        else
+          inverseEntry5_part3 m
+    else
+      if m < 42 then
+        if m < 35 then
+          inverseEntry5_part4 m
+        else
+          inverseEntry5_part5 m
+      else
+        if m < 49 then
+          inverseEntry5_part6 m
+        else
+          inverseEntry5_part7 m
+  else
+    if m < 84 then
+      if m < 70 then
+        if m < 63 then
+          inverseEntry5_part8 m
+        else
+          inverseEntry5_part9 m
+      else
+        if m < 77 then
+          inverseEntry5_part10 m
+        else
+          inverseEntry5_part11 m
+    else
+      if m < 98 then
+        if m < 91 then
+          inverseEntry5_part12 m
+        else
+          inverseEntry5_part13 m
+      else
+        if m < 105 then
+          inverseEntry5_part14 m
+        else
+          inverseEntry5_part15 m
+
+noncomputable def inverseEntry6_part0 (m : ℕ) : ℕ :=
+  if m < 3 then
+    if m < 1 then
+      1445465759498216579117008421781577
+    else
+      if m < 2 then
+        3472892452965056132353925404612467
+      else
+        1335634273437134412930509119787457
+  else
+    if m < 5 then
+      if m < 4 then
+        3624788325571463798773333750052926
+      else
+        1461711175563816703657773878440074
+    else
+      if m < 6 then
+        1200809087366174776675935713800303
+      else
+        3344613685550538480401203496727269
+
+noncomputable def inverseEntry6_part1 (m : ℕ) : ℕ :=
+  if m < 10 then
+    if m < 8 then
+      4671653093742979143324830338501175
+    else
+      if m < 9 then
+        4746409191489234995830999311500094
+      else
+        4425369300674159906629506642160659
+  else
+    if m < 12 then
+      if m < 11 then
+        5026179749171649560097285635800829
+      else
+        348569473581637556324309092767418
+    else
+      if m < 13 then
+        4249817843624499784684924343119619
+      else
+        4985853981140767605498255584951160
+
+noncomputable def inverseEntry6_part2 (m : ℕ) : ℕ :=
+  if m < 17 then
+    if m < 15 then
+      4314559396261741440701750942057614
+    else
+      if m < 16 then
+        3438665889566559221491546294495912
+      else
+        480774705682999318753980433090068
+  else
+    if m < 19 then
+      if m < 18 then
+        2213117920592929215927150620248684
+      else
+        3057543488757781411806337800021397
+    else
+      if m < 20 then
+        2350584503007315842948460273738667
+      else
+        4299388218102630240189675247644209
+
+noncomputable def inverseEntry6_part3 (m : ℕ) : ℕ :=
+  if m < 24 then
+    if m < 22 then
+      1687533596176153121035611412795812
+    else
+      if m < 23 then
+        2152354821069558893121657933851903
+      else
+        5050878314999734466367874360397125
+  else
+    if m < 26 then
+      if m < 25 then
+        2378320956223020795106567101416672
+      else
+        638525431700234876250977418889993
+    else
+      if m < 27 then
+        2907424312218112619967121822371954
+      else
+        1942785521762915298249163486556919
+
+noncomputable def inverseEntry6_part4 (m : ℕ) : ℕ :=
+  if m < 31 then
+    if m < 29 then
+      189514944246843567446198454994292
+    else
+      if m < 30 then
+        3631894534058155721664450989889771
+      else
+        1155128876862118792268875055367363
+  else
+    if m < 33 then
+      if m < 32 then
+        1905338880827497809593159137303712
+      else
+        4941797636517940303939412398352530
+    else
+      if m < 34 then
+        246210315464532759633546467474315
+      else
+        131174452595313198145297667337521
+
+noncomputable def inverseEntry6_part5 (m : ℕ) : ℕ :=
+  if m < 38 then
+    if m < 36 then
+      10582347322461950754343643033505
+    else
+      if m < 37 then
+        1809229578380542074270719233997092
+      else
+        358593892935212516639032181201388
+  else
+    if m < 40 then
+      if m < 39 then
+        2687995727600489011772832243145426
+      else
+        5007223912665606731130087915447283
+    else
+      if m < 41 then
+        5127932252058087855916511362513674
+      else
+        3367876824136553470550505308789021
+
+noncomputable def inverseEntry6_part6 (m : ℕ) : ℕ :=
+  if m < 45 then
+    if m < 43 then
+      4538123617295659320122227582017828
+    else
+      if m < 44 then
+        677681683746626502826377203167256
+      else
+        747747462744182529481008554336357
+  else
+    if m < 47 then
+      if m < 46 then
+        4238005881793024845820823992120614
+      else
+        1196053933591896505568751050356419
+    else
+      if m < 48 then
+        1464187237585480570832209622965233
+      else
+        2751520889924599088071443079944670
+
+noncomputable def inverseEntry6_part7 (m : ℕ) : ℕ :=
+  if m < 52 then
+    if m < 50 then
+      2928776201628557328071983458976783
+    else
+      if m < 51 then
+        263320828247903560043555719538090
+      else
+        4675797286940200309065286053746867
+  else
+    if m < 54 then
+      if m < 53 then
+        4527533696892357038780046354338182
+      else
+        3915341706108511730226482049213520
+    else
+      if m < 55 then
+        1827269343296717084837983452984799
+      else
+        4971515724427329583245369276407483
+
+noncomputable def inverseEntry6_part8 (m : ℕ) : ℕ :=
+  if m < 59 then
+    if m < 57 then
+      779549062857461252010249479251711
+    else
+      if m < 58 then
+        2617249069189807047790799980478356
+      else
+        1126430713425879482399644153144562
+  else
+    if m < 61 then
+      if m < 60 then
+        2549287410716953887365738492312242
+      else
+        3944195953055582502567600135940766
+    else
+      if m < 62 then
+        182239901212719503692215961155836
+      else
+        904072548164482517466495476039457
+
+noncomputable def inverseEntry6_part9 (m : ℕ) : ℕ :=
+  if m < 66 then
+    if m < 64 then
+      1457775061625581184363379307578311
+    else
+      if m < 65 then
+        4087101808699710057237138831465014
+      else
+        3901122434977998149636939571710314
+  else
+    if m < 68 then
+      if m < 67 then
+        1974789790696647362213038035878343
+      else
+        2143418443044785006624416608518409
+    else
+      if m < 69 then
+        4213704741691062045286565129681080
+      else
+        2469382915786982336568133360335935
+
+noncomputable def inverseEntry6_part10 (m : ℕ) : ℕ :=
+  if m < 73 then
+    if m < 71 then
+      1183441018162773594466139926444555
+    else
+      if m < 72 then
+        2211558396318641093016426788170049
+      else
+        4518325963236965184005620761900370
+  else
+    if m < 75 then
+      if m < 74 then
+        2762984920294682594545092349133502
+      else
+        773296443157762158449293029228981
+    else
+      if m < 76 then
+        2025667268908762343493528716895464
+      else
+        967226998925561631412942037500788
+
+noncomputable def inverseEntry6_part11 (m : ℕ) : ℕ :=
+  if m < 80 then
+    if m < 78 then
+      3210511397020839862617862061855507
+    else
+      if m < 79 then
+        1398116165127351718983156748796011
+      else
+        2082129375504827855150628486418961
+  else
+    if m < 82 then
+      if m < 81 then
+        790582480985203891227814338760220
+      else
+        2472735669781927729860301403898824
+    else
+      if m < 83 then
+        275986023391420782685593801402652
+      else
+        4962728968770933633155060736840515
+
+noncomputable def inverseEntry6_part12 (m : ℕ) : ℕ :=
+  if m < 87 then
+    if m < 85 then
+      1443129746097971586859084147412435
+    else
+      if m < 86 then
+        2040324668601710786340129046896676
+      else
+        1359679823465950570058361369921373
+  else
+    if m < 89 then
+      if m < 88 then
+        4751281989436001197886729551848084
+      else
+        248611650686979495160607075242956
+    else
+      if m < 90 then
+        1303912942592919069335901593142951
+      else
+        4951957949972743297636005031413404
+
+noncomputable def inverseEntry6_part13 (m : ℕ) : ℕ :=
+  if m < 94 then
+    if m < 92 then
+      4986603273985825318710805609148153
+    else
+      if m < 93 then
+        1189730737961725368813054892765709
+      else
+        4113719488279128226624313171042400
+  else
+    if m < 96 then
+      if m < 95 then
+        5071562420220637455529475892470208
+      else
+        2352386303209146874745396544661980
+    else
+      if m < 97 then
+        749547157122403641335690492726580
+      else
+        2246896337529841391670216490564620
+
+noncomputable def inverseEntry6_part14 (m : ℕ) : ℕ :=
+  if m < 101 then
+    if m < 99 then
+      4440629270928071923153019677746515
+    else
+      if m < 100 then
+        582570328064248590708694246032900
+      else
+        266964732510083017900859785075138
+  else
+    if m < 103 then
+      if m < 102 then
+        1281930979217190954624596373889969
+      else
+        3890850844582162588951311119977796
+    else
+      if m < 104 then
+        2055602795339644012666614300474593
+      else
+        4587461999303543764110074701254210
+
+noncomputable def inverseEntry6_part15 (m : ℕ) : ℕ :=
+  if m < 108 then
+    if m < 106 then
+      3798110145753485968944865227887397
+    else
+      if m < 107 then
+        633948772433221733103415722923469
+      else
+        3686520802750110503573731183335189
+  else
+    if m < 110 then
+      if m < 109 then
+        2675024472029250215532895062861594
+      else
+        1479973572104486921054501145501471
+    else
+      if m < 111 then
+        2492886552320121439645630929299351
+      else
+        3503589970301350711215975886786332
+
+noncomputable def inverseEntry6 (m : ℕ) : ℕ :=
+  if m < 56 then
+    if m < 28 then
+      if m < 14 then
+        if m < 7 then
+          inverseEntry6_part0 m
+        else
+          inverseEntry6_part1 m
+      else
+        if m < 21 then
+          inverseEntry6_part2 m
+        else
+          inverseEntry6_part3 m
+    else
+      if m < 42 then
+        if m < 35 then
+          inverseEntry6_part4 m
+        else
+          inverseEntry6_part5 m
+      else
+        if m < 49 then
+          inverseEntry6_part6 m
+        else
+          inverseEntry6_part7 m
+  else
+    if m < 84 then
+      if m < 70 then
+        if m < 63 then
+          inverseEntry6_part8 m
+        else
+          inverseEntry6_part9 m
+      else
+        if m < 77 then
+          inverseEntry6_part10 m
+        else
+          inverseEntry6_part11 m
+    else
+      if m < 98 then
+        if m < 91 then
+          inverseEntry6_part12 m
+        else
+          inverseEntry6_part13 m
+      else
+        if m < 105 then
+          inverseEntry6_part14 m
+        else
+          inverseEntry6_part15 m
+
+noncomputable def inverseEntry7_part0 (m : ℕ) : ℕ :=
+  if m < 3 then
+    if m < 1 then
+      3202560236127247774888495187828960
+    else
+      if m < 2 then
+        174076025443611895439124058174359
+      else
+        3865181778806597790061293185345963
+  else
+    if m < 5 then
+      if m < 4 then
+        3438673806460149623139622729662263
+      else
+        2666108043418444725670997321189654
+    else
+      if m < 6 then
+        3009335083901928520226603858138394
+      else
+        2784668882885159301527839190220180
+
+noncomputable def inverseEntry7_part1 (m : ℕ) : ℕ :=
+  if m < 10 then
+    if m < 8 then
+      1126953228335153196483025089500170
+    else
+      if m < 9 then
+        2223305840568227283465561807367936
+      else
+        3132665708210240397344169200338448
+  else
+    if m < 12 then
+      if m < 11 then
+        3567566784026487402178565664909482
+      else
+        1686649414815277065851636120496550
+    else
+      if m < 13 then
+        2950572681422961480242193523053697
+      else
+        991691299042156298619560341489645
+
+noncomputable def inverseEntry7_part2 (m : ℕ) : ℕ :=
+  if m < 17 then
+    if m < 15 then
+      5161642599856241451705034016170457
+    else
+      if m < 16 then
+        1825993291506129562138036520470933
+      else
+        1985757192642753822862330943112396
+  else
+    if m < 19 then
+      if m < 18 then
+        3564070545148220054054855116487410
+      else
+        2661758851354833476520532573882490
+    else
+      if m < 20 then
+        50620049864065769556202390079306
+      else
+        4581396555769926481787472608404719
+
+noncomputable def inverseEntry7_part3 (m : ℕ) : ℕ :=
+  if m < 24 then
+    if m < 22 then
+      1278949985196460871368557015313656
+    else
+      if m < 23 then
+        678124851435237424628847509320367
+      else
+        3379390650327209927509720691953787
+  else
+    if m < 26 then
+      if m < 25 then
+        3405034564746760411705063310550599
+      else
+        3852462480634447056529275369053584
+    else
+      if m < 27 then
+        4977659498935670906309484363739977
+      else
+        4741229557695193516363668799179207
+
+noncomputable def inverseEntry7_part4 (m : ℕ) : ℕ :=
+  if m < 31 then
+    if m < 29 then
+      519988260004664275841807602703941
+    else
+      if m < 30 then
+        2232381074652688512120525013709049
+      else
+        1912198929346481418936061010780234
+  else
+    if m < 33 then
+      if m < 32 then
+        1103642307104248575732235134445588
+      else
+        1473083882659173175865742463310631
+    else
+      if m < 34 then
+        293352630445429332228162317574174
+      else
+        3253930466399160361235392223418481
+
+noncomputable def inverseEntry7_part5 (m : ℕ) : ℕ :=
+  if m < 38 then
+    if m < 36 then
+      1381673420054109297818842064543378
+    else
+      if m < 37 then
+        1865167494564521258060895082921753
+      else
+        2604833783543099851506332751027658
+  else
+    if m < 40 then
+      if m < 39 then
+        2089444818208360908449536216918250
+      else
+        4398585569632714345065278057928430
+    else
+      if m < 41 then
+        681060281517795543718032691582544
+      else
+        2055761692447206504492357837881489
+
+noncomputable def inverseEntry7_part6 (m : ℕ) : ℕ :=
+  if m < 45 then
+    if m < 43 then
+      482998636152839961703333630830501
+    else
+      if m < 44 then
+        169142834088148880713665071848425
+      else
+        1110307811511938824948581664467027
+  else
+    if m < 47 then
+      if m < 46 then
+        3938469982707396344274513664078846
+      else
+        719172943339533064745621713473545
+    else
+      if m < 48 then
+        2781479572947087225046411153782521
+      else
+        400746875296291867641800472405533
+
+noncomputable def inverseEntry7_part7 (m : ℕ) : ℕ :=
+  if m < 52 then
+    if m < 50 then
+      4869060215077999344316352679890914
+    else
+      if m < 51 then
+        2373055545248871802616095353301780
+      else
+        1987395492950684494451713305679428
+  else
+    if m < 54 then
+      if m < 53 then
+        2073218688475572215107848551049487
+      else
+        3843496848488387512902159259959966
+    else
+      if m < 55 then
+        4663151881589924156827373278153802
+      else
+        5130177395498699093334263107251132
+
+noncomputable def inverseEntry7_part8 (m : ℕ) : ℕ :=
+  if m < 59 then
+    if m < 57 then
+      2584024326611460742807399931133990
+    else
+      if m < 58 then
+        4096151085294878401230357694741790
+      else
+        3720161592824590452149408062099190
+  else
+    if m < 61 then
+      if m < 60 then
+        3009715536629372178328980749963424
+      else
+        3633324343716810513706070468485934
+    else
+      if m < 62 then
+        1092063283153265186904631521590003
+      else
+        758513383532489444974749102393089
+
+noncomputable def inverseEntry7_part9 (m : ℕ) : ℕ :=
+  if m < 66 then
+    if m < 64 then
+      3221182525729071982856887076010594
+    else
+      if m < 65 then
+        2093926028081520502107236905346259
+      else
+        2726860076224083262447584993141718
+  else
+    if m < 68 then
+      if m < 67 then
+        3795619363374211483820343495625923
+      else
+        4522451809308667162741060726076473
+    else
+      if m < 69 then
+        4813250956531698534220758912608443
+      else
+        5022668861616165699682331885593575
+
+noncomputable def inverseEntry7_part10 (m : ℕ) : ℕ :=
+  if m < 73 then
+    if m < 71 then
+      1117270327042889240843929731965857
+    else
+      if m < 72 then
+        2437034777490334400948128434848769
+      else
+        678951879962645797232264279346344
+  else
+    if m < 75 then
+      if m < 74 then
+        1023383353189348699112690654566197
+      else
+        2236438502396828487410730196469896
+    else
+      if m < 76 then
+        462991371168368161154461048118898
+      else
+        3866219559953041887317810668627179
+
+noncomputable def inverseEntry7_part11 (m : ℕ) : ℕ :=
+  if m < 80 then
+    if m < 78 then
+      1213520957443785766056471692904171
+    else
+      if m < 79 then
+        1333575341992233867900288199726143
+      else
+        1490119517750098924128040275205865
+  else
+    if m < 82 then
+      if m < 81 then
+        4279748622336434013567953282094654
+      else
+        3506026451437692412102725543485925
+    else
+      if m < 83 then
+        222859628719270597165066919545348
+      else
+        953392669990504190073976029274243
+
+noncomputable def inverseEntry7_part12 (m : ℕ) : ℕ :=
+  if m < 87 then
+    if m < 85 then
+      1685691450089574912669518683806710
+    else
+      if m < 86 then
+        3373917979256993999005442384372608
+      else
+        3482641819934980118893077756556207
+  else
+    if m < 89 then
+      if m < 88 then
+        4296867231536719240660023653064884
+      else
+        537003883916261482496219005269115
+    else
+      if m < 90 then
+        2225250721880328812710821127522242
+      else
+        1069582151904683427348441703655739
+
+noncomputable def inverseEntry7_part13 (m : ℕ) : ℕ :=
+  if m < 94 then
+    if m < 92 then
+      2057471669298572062756635061577762
+    else
+      if m < 93 then
+        2389723239805768648360678142949312
+      else
+        926593898804232594043494269445303
+  else
+    if m < 96 then
+      if m < 95 then
+        2882477270802106593113339155942156
+      else
+        2330620645377638181589036309029748
+    else
+      if m < 97 then
+        681950390211676211727315987095867
+      else
+        3126863305730250226381724228192155
+
+noncomputable def inverseEntry7_part14 (m : ℕ) : ℕ :=
+  if m < 101 then
+    if m < 99 then
+      2818706763836170993695021273045122
+    else
+      if m < 100 then
+        2543264079684853339677141574543979
+      else
+        2173727020780766919079182073194168
+  else
+    if m < 103 then
+      if m < 102 then
+        2407178691310619393724716816491405
+      else
+        1624123793893388550595458677304819
+    else
+      if m < 104 then
+        3687447633240156467055807043163755
+      else
+        1595564800635603438227765583475975
+
+noncomputable def inverseEntry7_part15 (m : ℕ) : ℕ :=
+  if m < 108 then
+    if m < 106 then
+      3814820696017631856242185937462041
+    else
+      if m < 107 then
+        2791417412498516956638811827373079
+      else
+        973348765053882343847197432588590
+  else
+    if m < 110 then
+      if m < 109 then
+        2502784934491673913385829517890485
+      else
+        842397975370924036804740449878481
+    else
+      if m < 111 then
+        581460842433357757324852795167062
+      else
+        3996686057182471769054255688639373
+
+noncomputable def inverseEntry7 (m : ℕ) : ℕ :=
+  if m < 56 then
+    if m < 28 then
+      if m < 14 then
+        if m < 7 then
+          inverseEntry7_part0 m
+        else
+          inverseEntry7_part1 m
+      else
+        if m < 21 then
+          inverseEntry7_part2 m
+        else
+          inverseEntry7_part3 m
+    else
+      if m < 42 then
+        if m < 35 then
+          inverseEntry7_part4 m
+        else
+          inverseEntry7_part5 m
+      else
+        if m < 49 then
+          inverseEntry7_part6 m
+        else
+          inverseEntry7_part7 m
+  else
+    if m < 84 then
+      if m < 70 then
+        if m < 63 then
+          inverseEntry7_part8 m
+        else
+          inverseEntry7_part9 m
+      else
+        if m < 77 then
+          inverseEntry7_part10 m
+        else
+          inverseEntry7_part11 m
+    else
+      if m < 98 then
+        if m < 91 then
+          inverseEntry7_part12 m
+        else
+          inverseEntry7_part13 m
+      else
+        if m < 105 then
+          inverseEntry7_part14 m
+        else
+          inverseEntry7_part15 m
+
+noncomputable def inverseEntry8_part0 (m : ℕ) : ℕ :=
+  if m < 3 then
+    if m < 1 then
+      841601434387762297602074820815318
+    else
+      if m < 2 then
+        4540043247020873859903097097489368
+      else
+        1506596212132775072083899044188082
+  else
+    if m < 5 then
+      if m < 4 then
+        3690916666976292710763199066374885
+      else
+        4688149544140734640341185968198440
+    else
+      if m < 6 then
+        4441190334791907501212765207544826
+      else
+        562093511827872922652165559093331
+
+noncomputable def inverseEntry8_part1 (m : ℕ) : ℕ :=
+  if m < 10 then
+    if m < 8 then
+      2014823522699486133652924981514770
+    else
+      if m < 9 then
+        1720313986855162486388100271800120
+      else
+        2538729632176855569905827946885962
+  else
+    if m < 12 then
+      if m < 11 then
+        2159729283815088753157775247160153
+      else
+        5156076731837931084827740293739369
+    else
+      if m < 13 then
+        1045499542676433939915830421779269
+      else
+        4402984794959432111484000370174369
+
+noncomputable def inverseEntry8_part2 (m : ℕ) : ℕ :=
+  if m < 17 then
+    if m < 15 then
+      4135094238053519134207079215279119
+    else
+      if m < 16 then
+        1098497555743133411233770496349715
+      else
+        2773919335534422654924670093815652
+  else
+    if m < 19 then
+      if m < 18 then
+        2360272822237127344063526474489217
+      else
+        2876100916933889931419658318724668
+    else
+      if m < 20 then
+        2454458076631211244686336164179965
+      else
+        384776814740436338180747315316535
+
+noncomputable def inverseEntry8_part3 (m : ℕ) : ℕ :=
+  if m < 24 then
+    if m < 22 then
+      3372927392075847429592388958043062
+    else
+      if m < 23 then
+        4453556460033167109683115562231223
+      else
+        3973147207752185859228719481542512
+  else
+    if m < 26 then
+      if m < 25 then
+        3563081939704142868865900912772311
+      else
+        4318181670251849732049882938635220
+    else
+      if m < 27 then
+        1274262589011782442817274202147304
+      else
+        157787285481219160008707396893682
+
+noncomputable def inverseEntry8_part4 (m : ℕ) : ℕ :=
+  if m < 31 then
+    if m < 29 then
+      1713722652823188425256335129140980
+    else
+      if m < 30 then
+        248821748899033931879108791527098
+      else
+        3123073910099007622000416174373678
+  else
+    if m < 33 then
+      if m < 32 then
+        3981683866462793242078059565168798
+      else
+        5085404466993326213539890401876697
+    else
+      if m < 34 then
+        4479090762272253477087188237299210
+      else
+        597744061578088981278365528782484
+
+noncomputable def inverseEntry8_part5 (m : ℕ) : ℕ :=
+  if m < 38 then
+    if m < 36 then
+      788624991797501173203500126256464
+    else
+      if m < 37 then
+        945326470295458572634714732671756
+      else
+        4922428755622298119520113686383074
+  else
+    if m < 40 then
+      if m < 39 then
+        4548162159439425883190198244197298
+      else
+        2783564192244068020005742784506112
+    else
+      if m < 41 then
+        4466604706165933545404605751260405
+      else
+        6399408349305343899110566077773
+
+noncomputable def inverseEntry8_part6 (m : ℕ) : ℕ :=
+  if m < 45 then
+    if m < 43 then
+      596599323638135697989532696949246
+    else
+      if m < 44 then
+        1783718407729733108405166612333834
+      else
+        4345964171742964230365518535766447
+  else
+    if m < 47 then
+      if m < 46 then
+        3144731947253421148991241727618629
+      else
+        747231447879570066452301492271040
+    else
+      if m < 48 then
+        4340315004346272031369706694777678
+      else
+        4054388526219818624387810800636385
+
+noncomputable def inverseEntry8_part7 (m : ℕ) : ℕ :=
+  if m < 52 then
+    if m < 50 then
+      1898307007635701159942144377899427
+    else
+      if m < 51 then
+        5089892413592543236750815349785131
+      else
+        4504546999923964395037667838353611
+  else
+    if m < 54 then
+      if m < 53 then
+        2908524983962819805210365899005277
+      else
+        2077604722736192978812442490417818
+    else
+      if m < 55 then
+        2720398256131691985242846168967080
+      else
+        99253918895826859407499858670209
+
+noncomputable def inverseEntry8_part8 (m : ℕ) : ℕ :=
+  if m < 59 then
+    if m < 57 then
+      255339034016190696532928847837428
+    else
+      if m < 58 then
+        313407922925075126091683465251640
+      else
+        2805953192317540448302468005941709
+  else
+    if m < 61 then
+      if m < 60 then
+        3302480961993677304162865420975798
+      else
+        4466617092774857342077408193368387
+    else
+      if m < 62 then
+        72820235225540031349456535625767
+      else
+        5141943733297115438447806525952694
+
+noncomputable def inverseEntry8_part9 (m : ℕ) : ℕ :=
+  if m < 66 then
+    if m < 64 then
+      515786281793017611454789987397850
+    else
+      if m < 65 then
+        4514046796275282974589225270471014
+      else
+        4164782474694309506534392839245419
+  else
+    if m < 68 then
+      if m < 67 then
+        3333638947390799289864157326760193
+      else
+        2826937171425436467561740144873918
+    else
+      if m < 69 then
+        158457214657752916395347220299810
+      else
+        223522488297168349174940201108999
+
+noncomputable def inverseEntry8_part10 (m : ℕ) : ℕ :=
+  if m < 73 then
+    if m < 71 then
+      1124437487064073903661030050699375
+    else
+      if m < 72 then
+        4142015317841058053316449495109511
+      else
+        3921122956820333977384691552510087
+  else
+    if m < 75 then
+      if m < 74 then
+        1636391142076181556472760978677954
+      else
+        3931411623078102073031034550998311
+    else
+      if m < 76 then
+        4167287742185851928107065508246622
+      else
+        51051344583672222322751419997837
+
+noncomputable def inverseEntry8_part11 (m : ℕ) : ℕ :=
+  if m < 80 then
+    if m < 78 then
+      1233638484478434340325543953668388
+    else
+      if m < 79 then
+        1109910796017575236428881618374227
+      else
+        2831578557350697309811798622891762
+  else
+    if m < 82 then
+      if m < 81 then
+        3235257231851529503233997037445075
+      else
+        4001302206320170468407584378686585
+    else
+      if m < 83 then
+        2627192205093936682446599135997253
+      else
+        3693996737900750542131378745368321
+
+noncomputable def inverseEntry8_part12 (m : ℕ) : ℕ :=
+  if m < 87 then
+    if m < 85 then
+      4942196952548780864988857429182163
+    else
+      if m < 86 then
+        5146640188585744977883639378127760
+      else
+        4515945622660313943268235402667229
+  else
+    if m < 89 then
+      if m < 88 then
+        3783810702314532745747035729351732
+      else
+        3438715361615257463840274787612331
+    else
+      if m < 90 then
+        3755960661148072904255978385395511
+      else
+        1315907237149416201026621442149888
+
+noncomputable def inverseEntry8_part13 (m : ℕ) : ℕ :=
+  if m < 94 then
+    if m < 92 then
+      3525295107973932570851849583146132
+    else
+      if m < 93 then
+        3650892929164474480578236294394623
+      else
+        3281892215548479955885455483454569
+  else
+    if m < 96 then
+      if m < 95 then
+        1092468271377821035378434261155577
+      else
+        1800027645891875046592199342355959
+    else
+      if m < 97 then
+        1713335421349680070845052686207413
+      else
+        3614113636593786803647104098259853
+
+noncomputable def inverseEntry8_part14 (m : ℕ) : ℕ :=
+  if m < 101 then
+    if m < 99 then
+      1100486177282419838118093299156308
+    else
+      if m < 100 then
+        3661952538619218685595491131758483
+      else
+        1010348320451592994237461753052758
+  else
+    if m < 103 then
+      if m < 102 then
+        661789214905115027906244258905438
+      else
+        4414430079048393813986493859971817
+    else
+      if m < 104 then
+        4037801733989283269586235501706263
+      else
+        3750660406023880830783001101359807
+
+noncomputable def inverseEntry8_part15 (m : ℕ) : ℕ :=
+  if m < 108 then
+    if m < 106 then
+      3716684943102704344108369330799279
+    else
+      if m < 107 then
+        3428611710916517398816237815981608
+      else
+        2303873623164383368707212591988092
+  else
+    if m < 110 then
+      if m < 109 then
+        3052323538127276959488415518889378
+      else
+        5151373389828609004814731617093063
+    else
+      if m < 111 then
+        3512646966447713952096080506163901
+      else
+        4291779390284384364905372058849011
+
+noncomputable def inverseEntry8 (m : ℕ) : ℕ :=
+  if m < 56 then
+    if m < 28 then
+      if m < 14 then
+        if m < 7 then
+          inverseEntry8_part0 m
+        else
+          inverseEntry8_part1 m
+      else
+        if m < 21 then
+          inverseEntry8_part2 m
+        else
+          inverseEntry8_part3 m
+    else
+      if m < 42 then
+        if m < 35 then
+          inverseEntry8_part4 m
+        else
+          inverseEntry8_part5 m
+      else
+        if m < 49 then
+          inverseEntry8_part6 m
+        else
+          inverseEntry8_part7 m
+  else
+    if m < 84 then
+      if m < 70 then
+        if m < 63 then
+          inverseEntry8_part8 m
+        else
+          inverseEntry8_part9 m
+      else
+        if m < 77 then
+          inverseEntry8_part10 m
+        else
+          inverseEntry8_part11 m
+    else
+      if m < 98 then
+        if m < 91 then
+          inverseEntry8_part12 m
+        else
+          inverseEntry8_part13 m
+      else
+        if m < 105 then
+          inverseEntry8_part14 m
+        else
+          inverseEntry8_part15 m
+
+noncomputable def inverseEntry9_part0 (m : ℕ) : ℕ :=
+  if m < 3 then
+    if m < 1 then
+      3756561818557300629457950098242662
+    else
+      if m < 2 then
+        4231022890892001571481680202849418
+      else
+        2215120276552282032514871202492563
+  else
+    if m < 5 then
+      if m < 4 then
+        1383808116778645932977348017684424
+      else
+        3673813100930312294544454616277803
+    else
+      if m < 6 then
+        1645710705896945486374657799073054
+      else
+        3914379145861142861544276567121244
+
+noncomputable def inverseEntry9_part1 (m : ℕ) : ℕ :=
+  if m < 10 then
+    if m < 8 then
+      1997028640067108436809269684381242
+    else
+      if m < 9 then
+        2877139851677352508243424314599103
+      else
+        494820353480644293139036650976259
+  else
+    if m < 12 then
+      if m < 11 then
+        3095630488264941080069098999505430
+      else
+        181635360585763389273865487879255
+    else
+      if m < 13 then
+        591844308181328738906406731342911
+      else
+        3823210742396824502890188281091887
+
+noncomputable def inverseEntry9_part2 (m : ℕ) : ℕ :=
+  if m < 17 then
+    if m < 15 then
+      2794326230100685143660727820762296
+    else
+      if m < 16 then
+        560580014720651902448392072348089
+      else
+        588578799410286978472136946971963
+  else
+    if m < 19 then
+      if m < 18 then
+        2988313619374615156349452349687977
+      else
+        1324022955008115629362274364411816
+    else
+      if m < 20 then
+        3088474408377092786939273751416236
+      else
+        4958066107068820602688450831138682
+
+noncomputable def inverseEntry9_part3 (m : ℕ) : ℕ :=
+  if m < 24 then
+    if m < 22 then
+      3690676777106706643614539688899182
+    else
+      if m < 23 then
+        1463587091619838279369540808969054
+      else
+        236072476613080122438026906280182
+  else
+    if m < 26 then
+      if m < 25 then
+        4924348852109730687463414236438898
+      else
+        2471195584619560861650210105564909
+    else
+      if m < 27 then
+        4887928661813649587669073972497882
+      else
+        2388003728344142603510368987709174
+
+noncomputable def inverseEntry9_part4 (m : ℕ) : ℕ :=
+  if m < 31 then
+    if m < 29 then
+      1623224430417051634713637886663777
+    else
+      if m < 30 then
+        4697435247508440375207388807244726
+      else
+        4491672150681441076137520454662491
+  else
+    if m < 33 then
+      if m < 32 then
+        1937367290001913366490995634199257
+      else
+        3989415030310807436659940289106557
+    else
+      if m < 34 then
+        196853987034259134497648323588037
+      else
+        4101464152261750112017132197411324
+
+noncomputable def inverseEntry9_part5 (m : ℕ) : ℕ :=
+  if m < 38 then
+    if m < 36 then
+      3023009826128529974268638095893478
+    else
+      if m < 37 then
+        1075460682067368095221162759720403
+      else
+        820516797343567582231328437116004
+  else
+    if m < 40 then
+      if m < 39 then
+        787011953600513140337756191361271
+      else
+        2763788536935179974444947652374341
+    else
+      if m < 41 then
+        3114385858320735433570415975971322
+      else
+        1455169934471619742731439970064209
+
+noncomputable def inverseEntry9_part6 (m : ℕ) : ℕ :=
+  if m < 45 then
+    if m < 43 then
+      1940494825277822030075998667840999
+    else
+      if m < 44 then
+        4757226196029668228037595515543301
+      else
+        137901402117291394222770275741516
+  else
+    if m < 47 then
+      if m < 46 then
+        3728316420669852066924439637435899
+      else
+        662623647726312647800383001746257
+    else
+      if m < 48 then
+        2719159349258432473157776870556353
+      else
+        3490084386190560857909472647988151
+
+noncomputable def inverseEntry9_part7 (m : ℕ) : ℕ :=
+  if m < 52 then
+    if m < 50 then
+      4274281226455349603983672854945001
+    else
+      if m < 51 then
+        4787818359105258303831405067227766
+      else
+        104197585672330907900323623273424
+  else
+    if m < 54 then
+      if m < 53 then
+        3729216447468040296086550358296233
+      else
+        1982894693682130671093863487319844
+    else
+      if m < 55 then
+        4045547914150669125850040913238588
+      else
+        5147627940067231972955587282168172
+
+noncomputable def inverseEntry9_part8 (m : ℕ) : ℕ :=
+  if m < 59 then
+    if m < 57 then
+      1057473889316828164763566829367350
+    else
+      if m < 58 then
+        3319457018669581043145469596302443
+      else
+        1867005233936650808416140946828107
+  else
+    if m < 61 then
+      if m < 60 then
+        1540952982027178625858057067045321
+      else
+        1433017293432615857445703720636521
+    else
+      if m < 62 then
+        4373425272667293741141619558757171
+      else
+        2649820280140946565756166379329571
+
+noncomputable def inverseEntry9_part9 (m : ℕ) : ℕ :=
+  if m < 66 then
+    if m < 64 then
+      2680069409681513508029563028526773
+    else
+      if m < 65 then
+        2304968925037768507534086133370785
+      else
+        3345677788478019966637071676698938
+  else
+    if m < 68 then
+      if m < 67 then
+        611553156249136893036856833063510
+      else
+        5137776872028183145510817564705119
+    else
+      if m < 69 then
+        4693100315851835050969748380346828
+      else
+        1503434361595689079984868423630933
+
+noncomputable def inverseEntry9_part10 (m : ℕ) : ℕ :=
+  if m < 73 then
+    if m < 71 then
+      4100092023246099803282740157805116
+    else
+      if m < 72 then
+        1029435386157707554032762048670016
+      else
+        2251265746014992826596886153012583
+  else
+    if m < 75 then
+      if m < 74 then
+        1882144994435830863172282032836853
+      else
+        1084685277767008623951887174545110
+    else
+      if m < 76 then
+        1612495233401320625863673520366282
+      else
+        996061089869473969862110462916023
+
+noncomputable def inverseEntry9_part11 (m : ℕ) : ℕ :=
+  if m < 80 then
+    if m < 78 then
+      1231140926301394621341625894010807
+    else
+      if m < 79 then
+        4567301614807346265371670669602131
+      else
+        3123992869860761122532506530284042
+  else
+    if m < 82 then
+      if m < 81 then
+        4835441756144305530904721843786445
+      else
+        1347131867696813672932867640299348
+    else
+      if m < 83 then
+        2442231921211648563959600390696231
+      else
+        2056824796201418534570019754058539
+
+noncomputable def inverseEntry9_part12 (m : ℕ) : ℕ :=
+  if m < 87 then
+    if m < 85 then
+      2894153673548124758513181572994559
+    else
+      if m < 86 then
+        4070044706713859774998845890375664
+      else
+        1410147875811505572733272163966919
+  else
+    if m < 89 then
+      if m < 88 then
+        1937007257513661847443753621863390
+      else
+        415287390767380956794936054027178
+    else
+      if m < 90 then
+        3445414580592450747052101652561028
+      else
+        3467019421061461688766060454628737
+
+noncomputable def inverseEntry9_part13 (m : ℕ) : ℕ :=
+  if m < 94 then
+    if m < 92 then
+      2823425091234718432593195721176875
+    else
+      if m < 93 then
+        4701902479282234017151587926155146
+      else
+        1273822234971186645488275625160564
+  else
+    if m < 96 then
+      if m < 95 then
+        98418970537308837414704897731336
+      else
+        56685663834538794635183985083639
+    else
+      if m < 97 then
+        3109328350556831249399608522291921
+      else
+        2149544426192027365264710476210349
+
+noncomputable def inverseEntry9_part14 (m : ℕ) : ℕ :=
+  if m < 101 then
+    if m < 99 then
+      3691496931182719582018625805247518
+    else
+      if m < 100 then
+        2544238882451280976708082637520071
+      else
+        1847688695804723606640134011599617
+  else
+    if m < 103 then
+      if m < 102 then
+        4472503930808038808065738094986004
+      else
+        4010438819957138972083002122173102
+    else
+      if m < 104 then
+        973591958027668116504203933897473
+      else
+        4782879565382375416848183435504052
+
+noncomputable def inverseEntry9_part15 (m : ℕ) : ℕ :=
+  if m < 108 then
+    if m < 106 then
+      2640199475985371414380244734220924
+    else
+      if m < 107 then
+        922985057481079516343541988508533
+      else
+        4198569510909865590935257327943084
+  else
+    if m < 110 then
+      if m < 109 then
+        3200796569950822039818032634650926
+      else
+        3109153648366668610940464664388100
+    else
+      if m < 111 then
+        574057254328611354813817760944817
+      else
+        3515143618735504516790175130075885
+
+noncomputable def inverseEntry9 (m : ℕ) : ℕ :=
+  if m < 56 then
+    if m < 28 then
+      if m < 14 then
+        if m < 7 then
+          inverseEntry9_part0 m
+        else
+          inverseEntry9_part1 m
+      else
+        if m < 21 then
+          inverseEntry9_part2 m
+        else
+          inverseEntry9_part3 m
+    else
+      if m < 42 then
+        if m < 35 then
+          inverseEntry9_part4 m
+        else
+          inverseEntry9_part5 m
+      else
+        if m < 49 then
+          inverseEntry9_part6 m
+        else
+          inverseEntry9_part7 m
+  else
+    if m < 84 then
+      if m < 70 then
+        if m < 63 then
+          inverseEntry9_part8 m
+        else
+          inverseEntry9_part9 m
+      else
+        if m < 77 then
+          inverseEntry9_part10 m
+        else
+          inverseEntry9_part11 m
+    else
+      if m < 98 then
+        if m < 91 then
+          inverseEntry9_part12 m
+        else
+          inverseEntry9_part13 m
+      else
+        if m < 105 then
+          inverseEntry9_part14 m
+        else
+          inverseEntry9_part15 m
+
+noncomputable def inverseEntry10_part0 (m : ℕ) : ℕ :=
+  if m < 3 then
+    if m < 1 then
+      4416640320652979169442522791918178
+    else
+      if m < 2 then
+        3977120842551876171678467036883647
+      else
+        2950222135610416953190443340587928
+  else
+    if m < 5 then
+      if m < 4 then
+        3489264542162403026957552123191490
+      else
+        1334672016338352517345837504895328
+    else
+      if m < 6 then
+        4616654651580407863446453316842656
+      else
+        417006395494973838037456990730822
+
+noncomputable def inverseEntry10_part1 (m : ℕ) : ℕ :=
+  if m < 10 then
+    if m < 8 then
+      909834897514470733533129942695939
+    else
+      if m < 9 then
+        5098073291903088613105183367798980
+      else
+        3193024222554808237064826458763864
+  else
+    if m < 12 then
+      if m < 11 then
+        4751732950519623425950153647158467
+      else
+        4857972539878812677472824227896676
+    else
+      if m < 13 then
+        2832122148415335059328321369079093
+      else
+        4285239285961334517473365912878859
+
+noncomputable def inverseEntry10_part2 (m : ℕ) : ℕ :=
+  if m < 17 then
+    if m < 15 then
+      2257302358333583268257014897055695
+    else
+      if m < 16 then
+        3425126537176424526076794245800687
+      else
+        2328114552256042291432313637169436
+  else
+    if m < 19 then
+      if m < 18 then
+        1494230378949433729720220940711885
+      else
+        4787552423287473421087887693688347
+    else
+      if m < 20 then
+        1599748575343924278876096512277416
+      else
+        4541443621296518670892760172381695
+
+noncomputable def inverseEntry10_part3 (m : ℕ) : ℕ :=
+  if m < 24 then
+    if m < 22 then
+      1684223173729722538084273459723035
+    else
+      if m < 23 then
+        900636685442815641146665973429451
+      else
+        2156957951937807772396196147693446
+  else
+    if m < 26 then
+      if m < 25 then
+        184854699599182612362219664692614
+      else
+        394301450260570506838870457393170
+    else
+      if m < 27 then
+        332367759389176415882157815926857
+      else
+        5044945371754402016005398986352695
+
+noncomputable def inverseEntry10_part4 (m : ℕ) : ℕ :=
+  if m < 31 then
+    if m < 29 then
+      814851031159851612236540291448969
+    else
+      if m < 30 then
+        1852603564726413168988308479674260
+      else
+        2467481376129631632373586905662873
+  else
+    if m < 33 then
+      if m < 32 then
+        3671317298932143893138292078850671
+      else
+        118033090870603908778551374741600
+    else
+      if m < 34 then
+        3602352608352672693159405182763730
+      else
+        4127702491718310535066306884589467
+
+noncomputable def inverseEntry10_part5 (m : ℕ) : ℕ :=
+  if m < 38 then
+    if m < 36 then
+      3755931362818379966457774913351826
+    else
+      if m < 37 then
+        1618029732027533100587316260621631
+      else
+        959920242274539701752905457878951
+  else
+    if m < 40 then
+      if m < 39 then
+        3298862177834720584513872413857358
+      else
+        3443700706198539078992527657466507
+    else
+      if m < 41 then
+        4309480052584453034691720696635045
+      else
+        3120092531228073464784154419732046
+
+noncomputable def inverseEntry10_part6 (m : ℕ) : ℕ :=
+  if m < 45 then
+    if m < 43 then
+      4631026712785979486665214702962780
+    else
+      if m < 44 then
+        254545581376001660133919234840239
+      else
+        2014117702404474961721904491310455
+  else
+    if m < 47 then
+      if m < 46 then
+        4980374647941517251042785272926079
+      else
+        187813701924550287892879129139242
+    else
+      if m < 48 then
+        2162740463266215764375815140065499
+      else
+        3740690090060139665980810272103954
+
+noncomputable def inverseEntry10_part7 (m : ℕ) : ℕ :=
+  if m < 52 then
+    if m < 50 then
+      1081497074807368394433282653385481
+    else
+      if m < 51 then
+        232485184222642583601599221169848
+      else
+        4189870773899075942567019558785652
+  else
+    if m < 54 then
+      if m < 53 then
+        2772322007153142810003521401323396
+      else
+        209008636760567673551474928387506
+    else
+      if m < 55 then
+        1206972189320686734502807086482229
+      else
+        3975195489609662634070626237341647
+
+noncomputable def inverseEntry10_part8 (m : ℕ) : ℕ :=
+  if m < 59 then
+    if m < 57 then
+      812181665249066342656975620038832
+    else
+      if m < 58 then
+        3267865304797634054573272106501839
+      else
+        3356072195786266832295521462835111
+  else
+    if m < 61 then
+      if m < 60 then
+        4841860796174180145201348919674374
+      else
+        2067105444367429499316533232220421
+    else
+      if m < 62 then
+        3942436675574618662025296988922841
+      else
+        126673449240427702321998827085323
+
+noncomputable def inverseEntry10_part9 (m : ℕ) : ℕ :=
+  if m < 66 then
+    if m < 64 then
+      3992827794121305680184423148242662
+    else
+      if m < 65 then
+        4634795944093995750333569487052793
+      else
+        4913412725357854116132031031918797
+  else
+    if m < 68 then
+      if m < 67 then
+        466905280763009503052546948029524
+      else
+        4417364033407861172485663366249090
+    else
+      if m < 69 then
+        406508754568758416526331845277113
+      else
+        1631385100038916671999638329233950
+
+noncomputable def inverseEntry10_part10 (m : ℕ) : ℕ :=
+  if m < 73 then
+    if m < 71 then
+      4636106096911443093129757607965047
+    else
+      if m < 72 then
+        4947863953673166940341677807028106
+      else
+        1402190901725731133572428864292283
+  else
+    if m < 75 then
+      if m < 74 then
+        2690151854655236251021876186392799
+      else
+        904304540738436282739623136644755
+    else
+      if m < 76 then
+        4538165007856936217449143973280422
+      else
+        1262039180215751576743430256513266
+
+noncomputable def inverseEntry10_part11 (m : ℕ) : ℕ :=
+  if m < 80 then
+    if m < 78 then
+      522841047969781119329051023826463
+    else
+      if m < 79 then
+        4474876558856633232211322762684572
+      else
+        1063942651901685828950136179985337
+  else
+    if m < 82 then
+      if m < 81 then
+        1716045471193752303731306207238362
+      else
+        2498633130329058733694175291260149
+    else
+      if m < 83 then
+        962780299462026400164211489901100
+      else
+        5086895376668925835423641341919279
+
+noncomputable def inverseEntry10_part12 (m : ℕ) : ℕ :=
+  if m < 87 then
+    if m < 85 then
+      311452764320991276940472223929144
+    else
+      if m < 86 then
+        4118789135207402059852294151859444
+      else
+        975888593946784543071011598026591
+  else
+    if m < 89 then
+      if m < 88 then
+        786901905913208698876368546705305
+      else
+        3984173154325461591130804398452776
+    else
+      if m < 90 then
+        2195149487573889907005094841873145
+      else
+        4279012794252754404412342654375206
+
+noncomputable def inverseEntry10_part13 (m : ℕ) : ℕ :=
+  if m < 94 then
+    if m < 92 then
+      2022647812926952788451507917470225
+    else
+      if m < 93 then
+        2585211938177208381894646472538150
+      else
+        3586810480542110076461647934068597
+  else
+    if m < 96 then
+      if m < 95 then
+        1594533313264855399992792706063851
+      else
+        33679843801633465777452432482021
+    else
+      if m < 97 then
+        4893804186795143928517809302399251
+      else
+        3242936346105269511714934842131221
+
+noncomputable def inverseEntry10_part14 (m : ℕ) : ℕ :=
+  if m < 101 then
+    if m < 99 then
+      3323752776178633898180988243440873
+    else
+      if m < 100 then
+        865198496776170272606360329914790
+      else
+        2740551407136905464898882491950440
+  else
+    if m < 103 then
+      if m < 102 then
+        3366131593866612664840590622605463
+      else
+        4910006649989380649983503990773258
+    else
+      if m < 104 then
+        1851604214942774209151894640667198
+      else
+        2257777876833341274671915908009552
+
+noncomputable def inverseEntry10_part15 (m : ℕ) : ℕ :=
+  if m < 108 then
+    if m < 106 then
+      1200976770341871863053604204163697
+    else
+      if m < 107 then
+        3003914015269450848795498649452842
+      else
+        4802620950383108884457304597415725
+  else
+    if m < 110 then
+      if m < 109 then
+        342661904064679355239182522702266
+      else
+        4841177646176061837180080731883736
+    else
+      if m < 111 then
+        2509628041489071607418322314182678
+      else
+        3806581833107044666504053479879217
+
+noncomputable def inverseEntry10 (m : ℕ) : ℕ :=
+  if m < 56 then
+    if m < 28 then
+      if m < 14 then
+        if m < 7 then
+          inverseEntry10_part0 m
+        else
+          inverseEntry10_part1 m
+      else
+        if m < 21 then
+          inverseEntry10_part2 m
+        else
+          inverseEntry10_part3 m
+    else
+      if m < 42 then
+        if m < 35 then
+          inverseEntry10_part4 m
+        else
+          inverseEntry10_part5 m
+      else
+        if m < 49 then
+          inverseEntry10_part6 m
+        else
+          inverseEntry10_part7 m
+  else
+    if m < 84 then
+      if m < 70 then
+        if m < 63 then
+          inverseEntry10_part8 m
+        else
+          inverseEntry10_part9 m
+      else
+        if m < 77 then
+          inverseEntry10_part10 m
+        else
+          inverseEntry10_part11 m
+    else
+      if m < 98 then
+        if m < 91 then
+          inverseEntry10_part12 m
+        else
+          inverseEntry10_part13 m
+      else
+        if m < 105 then
+          inverseEntry10_part14 m
+        else
+          inverseEntry10_part15 m
+
+noncomputable def inverseEntry11_part0 (m : ℕ) : ℕ :=
+  if m < 3 then
+    if m < 1 then
+      733640745594355016024770235137714
+    else
+      if m < 2 then
+        1604573075522922510080640814188813
+      else
+        3561406225420182266709550145593409
+  else
+    if m < 5 then
+      if m < 4 then
+        909166232262470985361033309965101
+      else
+        3998305737112241319246812684320717
+    else
+      if m < 6 then
+        1759031641249500039523570096666862
+      else
+        2028265305174043456513811782646688
+
+noncomputable def inverseEntry11_part1 (m : ℕ) : ℕ :=
+  if m < 10 then
+    if m < 8 then
+      4549393588687312359934560481600711
+    else
+      if m < 9 then
+        2900010714478862645755909445942625
+      else
+        3465141982441637620813039066793843
+  else
+    if m < 12 then
+      if m < 11 then
+        3985080676937055891791868100741218
+      else
+        5101062694316543906957803399489635
+    else
+      if m < 13 then
+        3156412460141263173911115550094004
+      else
+        286556294966495497421062921080730
+
+noncomputable def inverseEntry11_part2 (m : ℕ) : ℕ :=
+  if m < 17 then
+    if m < 15 then
+      526015463982565434926692470561749
+    else
+      if m < 16 then
+        2312071304246400698027561116297935
+      else
+        2052293097811465160351608255820569
+  else
+    if m < 19 then
+      if m < 18 then
+        5031320816748489608622289534791876
+      else
+        2847371304262024314308209547030730
+    else
+      if m < 20 then
+        82923967244902250172559393830429
+      else
+        476768966607040434156687228598068
+
+noncomputable def inverseEntry11_part3 (m : ℕ) : ℕ :=
+  if m < 24 then
+    if m < 22 then
+      2798977818771297518809181730508655
+    else
+      if m < 23 then
+        4933334517894144842473431551020415
+      else
+        1445057664099001392653711942968068
+  else
+    if m < 26 then
+      if m < 25 then
+        1640390872262508275783806384945790
+      else
+        986863714941389201851795865634406
+    else
+      if m < 27 then
+        3197019931947698487995430742962407
+      else
+        2374754190465211419747410103041732
+
+noncomputable def inverseEntry11_part4 (m : ℕ) : ℕ :=
+  if m < 31 then
+    if m < 29 then
+      3639125284915005212830518084328439
+    else
+      if m < 30 then
+        4106354250824259431899506587904279
+      else
+        2232967887836006302914978233486351
+  else
+    if m < 33 then
+      if m < 32 then
+        1847886236584328656991215146232541
+      else
+        3301287547267883525318612642278163
+    else
+      if m < 34 then
+        321826523733359398859004099343571
+      else
+        956989536621562221848445411186663
+
+noncomputable def inverseEntry11_part5 (m : ℕ) : ℕ :=
+  if m < 38 then
+    if m < 36 then
+      2119297509912067632353323572135856
+    else
+      if m < 37 then
+        4836198266287327612294775814821900
+      else
+        677626090084197071981830457147237
+  else
+    if m < 40 then
+      if m < 39 then
+        2149379164535086401212792306677950
+      else
+        1699960040909927097193130705522690
+    else
+      if m < 41 then
+        2082281191703310121480041085005504
+      else
+        3069713341302604490680069134967665
+
+noncomputable def inverseEntry11_part6 (m : ℕ) : ℕ :=
+  if m < 45 then
+    if m < 43 then
+      3551845123730255743219967006808001
+    else
+      if m < 44 then
+        4144464959969062435011766010867028
+      else
+        2973419576210586958946869127423788
+  else
+    if m < 47 then
+      if m < 46 then
+        1507751075216579722781151646971631
+      else
+        2682073761685844465852074581761830
+    else
+      if m < 48 then
+        1685371494604935376154778554358765
+      else
+        2133222669983099995783074129766524
+
+noncomputable def inverseEntry11_part7 (m : ℕ) : ℕ :=
+  if m < 52 then
+    if m < 50 then
+      3341951124690903103653101605517244
+    else
+      if m < 51 then
+        3450025308216525082619254324424328
+      else
+        2660260795910055426016810358984460
+  else
+    if m < 54 then
+      if m < 53 then
+        462989688211194846762139818709473
+      else
+        4612057896303994716949438483182320
+    else
+      if m < 55 then
+        2760598800248644609797970215459710
+      else
+        2654249237410406002494889863281339
+
+noncomputable def inverseEntry11_part8 (m : ℕ) : ℕ :=
+  if m < 59 then
+    if m < 57 then
+      930283166485387081401734597266766
+    else
+      if m < 58 then
+        326719859546671978556037648657922
+      else
+        3374181926052050496354823992324323
+  else
+    if m < 61 then
+      if m < 60 then
+        3067668303987296607717770093114524
+      else
+        2765166940351121327090141791685217
+    else
+      if m < 62 then
+        5133110622622890846450988310892798
+      else
+        2930812047612163918565354584202662
+
+noncomputable def inverseEntry11_part9 (m : ℕ) : ℕ :=
+  if m < 66 then
+    if m < 64 then
+      287280618448322111719238052656500
+    else
+      if m < 65 then
+        520837874567378561018621871895890
+      else
+        4069898690572228239191522840578490
+  else
+    if m < 68 then
+      if m < 67 then
+        2601982056420386928626476514546372
+      else
+        892165297023880759658875050665558
+    else
+      if m < 69 then
+        839875930968309195222378702190657
+      else
+        2303841258536587301744959298068438
+
+noncomputable def inverseEntry11_part10 (m : ℕ) : ℕ :=
+  if m < 73 then
+    if m < 71 then
+      701449301919230784355061021439344
+    else
+      if m < 72 then
+        3439321645610300701059747790888446
+      else
+        2421680845880870366107927081891291
+  else
+    if m < 75 then
+      if m < 74 then
+        4987535359081594412036597182498899
+      else
+        4015701809732352033333998833914442
+    else
+      if m < 76 then
+        2943091146421746512528800269376014
+      else
+        1935709055535578077083816460835287
+
+noncomputable def inverseEntry11_part11 (m : ℕ) : ℕ :=
+  if m < 80 then
+    if m < 78 then
+      3630432510106862411723910889851816
+    else
+      if m < 79 then
+        187090532362005238977238685830799
+      else
+        3193662393770104843283474060343590
+  else
+    if m < 82 then
+      if m < 81 then
+        1406495520814070120912319002901111
+      else
+        5072391158937345578679835446258061
+    else
+      if m < 83 then
+        1157336822493777999752808634962888
+      else
+        676149232580514074333179277728077
+
+noncomputable def inverseEntry11_part12 (m : ℕ) : ℕ :=
+  if m < 87 then
+    if m < 85 then
+      2355002664072155646315205978305498
+    else
+      if m < 86 then
+        2578525325705167356097692976249871
+      else
+        1238150824292155893481789097549623
+  else
+    if m < 89 then
+      if m < 88 then
+        1687849804116886747384759555082081
+      else
+        734501623370898617533883908581246
+    else
+      if m < 90 then
+        4890727103632159147458576030691536
+      else
+        2326145548238260007624742243683895
+
+noncomputable def inverseEntry11_part13 (m : ℕ) : ℕ :=
+  if m < 94 then
+    if m < 92 then
+      4609374806282235395797837502166763
+    else
+      if m < 93 then
+        4960861600270880729649440092805543
+      else
+        594275840221734271367909357716138
+  else
+    if m < 96 then
+      if m < 95 then
+        1964776035821425612251033425955527
+      else
+        3215771425845683368271107121345991
+    else
+      if m < 97 then
+        1557857050060070467653237269038389
+      else
+        3979501978621862734023181991406420
+
+noncomputable def inverseEntry11_part14 (m : ℕ) : ℕ :=
+  if m < 101 then
+    if m < 99 then
+      2088091312401991864768197320132217
+    else
+      if m < 100 then
+        3079697371024267700762806047074865
+      else
+        4766861851294830393363334698117261
+  else
+    if m < 103 then
+      if m < 102 then
+        3326931839329697267877078139591280
+      else
+        4671617809297040939050645792722752
+    else
+      if m < 104 then
+        4129687145045755644883529446300742
+      else
+        1132482594277641880355185604790344
+
+noncomputable def inverseEntry11_part15 (m : ℕ) : ℕ :=
+  if m < 108 then
+    if m < 106 then
+      865193779067993563681235496772175
+    else
+      if m < 107 then
+        3889319961665796422120751888715603
+      else
+        1063192816215587467898381600197082
+  else
+    if m < 110 then
+      if m < 109 then
+        2555619980214998318160505722376203
+      else
+        452169421675703863256057145581836
+    else
+      if m < 111 then
+        3830366327134631785142261214508970
+      else
+        2665859045126801108221931268940879
+
+noncomputable def inverseEntry11 (m : ℕ) : ℕ :=
+  if m < 56 then
+    if m < 28 then
+      if m < 14 then
+        if m < 7 then
+          inverseEntry11_part0 m
+        else
+          inverseEntry11_part1 m
+      else
+        if m < 21 then
+          inverseEntry11_part2 m
+        else
+          inverseEntry11_part3 m
+    else
+      if m < 42 then
+        if m < 35 then
+          inverseEntry11_part4 m
+        else
+          inverseEntry11_part5 m
+      else
+        if m < 49 then
+          inverseEntry11_part6 m
+        else
+          inverseEntry11_part7 m
+  else
+    if m < 84 then
+      if m < 70 then
+        if m < 63 then
+          inverseEntry11_part8 m
+        else
+          inverseEntry11_part9 m
+      else
+        if m < 77 then
+          inverseEntry11_part10 m
+        else
+          inverseEntry11_part11 m
+    else
+      if m < 98 then
+        if m < 91 then
+          inverseEntry11_part12 m
+        else
+          inverseEntry11_part13 m
+      else
+        if m < 105 then
+          inverseEntry11_part14 m
+        else
+          inverseEntry11_part15 m
+
+noncomputable def inverseEntry12_part0 (m : ℕ) : ℕ :=
+  if m < 3 then
+    if m < 1 then
+      4765555862591662645371690389105601
+    else
+      if m < 2 then
+        1253037197704409422741518519281130
+      else
+        2347287775444610574202260922484842
+  else
+    if m < 5 then
+      if m < 4 then
+        644811432840737288948804603118500
+      else
+        1921311978925707371640712836914782
+    else
+      if m < 6 then
+        3284521892860684343811391751683052
+      else
+        3717940622622237659667284072518093
+
+noncomputable def inverseEntry12_part1 (m : ℕ) : ℕ :=
+  if m < 10 then
+    if m < 8 then
+      5178771962793831939602417694424100
+    else
+      if m < 9 then
+        1638506949035561551600710123433241
+      else
+        3711642257912699078490025402910909
+  else
+    if m < 12 then
+      if m < 11 then
+        4395493229574133804717768590195757
+      else
+        2735823653382686644114697484040639
+    else
+      if m < 13 then
+        2471753697822375280836920684829341
+      else
+        2156141304188296804847859330838618
+
+noncomputable def inverseEntry12_part2 (m : ℕ) : ℕ :=
+  if m < 17 then
+    if m < 15 then
+      700571633992499211419593289892594
+    else
+      if m < 16 then
+        5131275446918813478973445910690293
+      else
+        2861775728308386449262612599621258
+  else
+    if m < 19 then
+      if m < 18 then
+        2284254426655852244604833688922674
+      else
+        1448385341434918125309278299150819
+    else
+      if m < 20 then
+        2558041453928689869469741042146886
+      else
+        4169341132845010735846990664149668
+
+noncomputable def inverseEntry12_part3 (m : ℕ) : ℕ :=
+  if m < 24 then
+    if m < 22 then
+      3774694576296283066250157109773776
+    else
+      if m < 23 then
+        3804803046819404905384668245811788
+      else
+        266655523493719507612418628664826
+  else
+    if m < 26 then
+      if m < 25 then
+        1505069363939837532129290433719231
+      else
+        468624784624195718095618338319796
+    else
+      if m < 27 then
+        2896054372701628343069111133022956
+      else
+        4849424667369174395187584548868600
+
+noncomputable def inverseEntry12_part4 (m : ℕ) : ℕ :=
+  if m < 31 then
+    if m < 29 then
+      2456918397446663012070899274308730
+    else
+      if m < 30 then
+        2743183672307652201022436087600087
+      else
+        1764361091414615144968757255172081
+  else
+    if m < 33 then
+      if m < 32 then
+        268716488247742894463776745049391
+      else
+        2086306940087743135252063431846154
+    else
+      if m < 34 then
+        4638848215829024844523437370509591
+      else
+        1436005514577476401563987097816589
+
+noncomputable def inverseEntry12_part5 (m : ℕ) : ℕ :=
+  if m < 38 then
+    if m < 36 then
+      2847619491639328301906332092577865
+    else
+      if m < 37 then
+        539615433939935339692270303424544
+      else
+        5158956217329671673518883908826033
+  else
+    if m < 40 then
+      if m < 39 then
+        488231338558157511779897049191826
+      else
+        4971428219183667082128155974248187
+    else
+      if m < 41 then
+        994412867982410199420671245819376
+      else
+        3939033565080494583736421560374100
+
+noncomputable def inverseEntry12_part6 (m : ℕ) : ℕ :=
+  if m < 45 then
+    if m < 43 then
+      3043194143338695210729814408745090
+    else
+      if m < 44 then
+        1213076196983745757542861663938199
+      else
+        1717154759067290211450394793298090
+  else
+    if m < 47 then
+      if m < 46 then
+        2171456926235178212054066543770142
+      else
+        82982213336326703713367904522532
+    else
+      if m < 48 then
+        213847457778497603455292054303482
+      else
+        194801745413402457124815765450736
+
+noncomputable def inverseEntry12_part7 (m : ℕ) : ℕ :=
+  if m < 52 then
+    if m < 50 then
+      3750905522016059211987851276063098
+    else
+      if m < 51 then
+        41075453964961985424346570340633
+      else
+        2509542421157008502714842403684008
+  else
+    if m < 54 then
+      if m < 53 then
+        2869897335086061301132794844200911
+      else
+        2953439989020094761017094171620501
+    else
+      if m < 55 then
+        502974261002538730536579016735968
+      else
+        5049731203209759341914108069981187
+
+noncomputable def inverseEntry12_part8 (m : ℕ) : ℕ :=
+  if m < 59 then
+    if m < 57 then
+      3988336669181507586545196929272003
+    else
+      if m < 58 then
+        4198144300769512580365715048525093
+      else
+        1800016286140605548760285737010221
+  else
+    if m < 61 then
+      if m < 60 then
+        367898705578965480520617287554760
+      else
+        1270669641895650201860020228851951
+    else
+      if m < 62 then
+        2291128100621006326656236341877515
+      else
+        3980178885546345058900561226530361
+
+noncomputable def inverseEntry12_part9 (m : ℕ) : ℕ :=
+  if m < 66 then
+    if m < 64 then
+      3621003244813040780506903753290670
+    else
+      if m < 65 then
+        736996612666936798509287634024741
+      else
+        4321900087936206017951020551240064
+  else
+    if m < 68 then
+      if m < 67 then
+        2799432313011715449055518925760090
+      else
+        105578788711210571915191845642769
+    else
+      if m < 69 then
+        2436760796265014210091571889354752
+      else
+        4328998437795283644845581262115486
+
+noncomputable def inverseEntry12_part10 (m : ℕ) : ℕ :=
+  if m < 73 then
+    if m < 71 then
+      982626274645467871492303557441480
+    else
+      if m < 72 then
+        3493047472229852455678266678516387
+      else
+        3127580416510255232570663889293901
+  else
+    if m < 75 then
+      if m < 74 then
+        883501079959751430530353743590831
+      else
+        1420897781831183589657455546938511
+    else
+      if m < 76 then
+        602657991304484464237980506202637
+      else
+        3977701438639793107897090603416379
+
+noncomputable def inverseEntry12_part11 (m : ℕ) : ℕ :=
+  if m < 80 then
+    if m < 78 then
+      4016332230010915390120718494736862
+    else
+      if m < 79 then
+        3983558132311564398398206866493051
+      else
+        3392022194487123769529703860207682
+  else
+    if m < 82 then
+      if m < 81 then
+        763330525176023100395821126240083
+      else
+        2234971580723803997941537369105400
+    else
+      if m < 83 then
+        4006996625836493202160038273823824
+      else
+        679954301631631003852400817683179
+
+noncomputable def inverseEntry12_part12 (m : ℕ) : ℕ :=
+  if m < 87 then
+    if m < 85 then
+      3586672170538791317348295754870181
+    else
+      if m < 86 then
+        2636512124981941798785649658957289
+      else
+        1051571038199471765625565606316438
+  else
+    if m < 89 then
+      if m < 88 then
+        1903910589478472447450198485024160
+      else
+        3838034755140455680011594429581444
+    else
+      if m < 90 then
+        4770000494805649786737981010638434
+      else
+        3169410966366411290908730658516722
+
+noncomputable def inverseEntry12_part13 (m : ℕ) : ℕ :=
+  if m < 94 then
+    if m < 92 then
+      2337195393474618696820135380794026
+    else
+      if m < 93 then
+        1768051828463481617148134371651819
+      else
+        4299649093496245526103777060203635
+  else
+    if m < 96 then
+      if m < 95 then
+        3797928737266190200399897530977325
+      else
+        4698091113039368226678765327052258
+    else
+      if m < 97 then
+        2625852726542353603062714300698190
+      else
+        4566797709202733621898666447181885
+
+noncomputable def inverseEntry12_part14 (m : ℕ) : ℕ :=
+  if m < 101 then
+    if m < 99 then
+      1786889486236766949508985405429217
+    else
+      if m < 100 then
+        4886527127268773108479775074768680
+      else
+        4220265680386379902935413289823757
+  else
+    if m < 103 then
+      if m < 102 then
+        2126987083197120704490021052974290
+      else
+        1289571588591902175155162602701082
+    else
+      if m < 104 then
+        4735947146982644061903973430619114
+      else
+        3822526171091227605443451873702056
+
+noncomputable def inverseEntry12_part15 (m : ℕ) : ℕ :=
+  if m < 108 then
+    if m < 106 then
+      3182538182325704289448569526823205
+    else
+      if m < 107 then
+        3835443838166828762577406776340925
+      else
+        1535417354273256761826159350179707
+  else
+    if m < 110 then
+      if m < 109 then
+        956864021725016277208235115575961
+      else
+        1656068433937920796471245311129747
+    else
+      if m < 111 then
+        491933271714403588507977173200322
+      else
+        4636139644082589580449312858640271
+
+noncomputable def inverseEntry12 (m : ℕ) : ℕ :=
+  if m < 56 then
+    if m < 28 then
+      if m < 14 then
+        if m < 7 then
+          inverseEntry12_part0 m
+        else
+          inverseEntry12_part1 m
+      else
+        if m < 21 then
+          inverseEntry12_part2 m
+        else
+          inverseEntry12_part3 m
+    else
+      if m < 42 then
+        if m < 35 then
+          inverseEntry12_part4 m
+        else
+          inverseEntry12_part5 m
+      else
+        if m < 49 then
+          inverseEntry12_part6 m
+        else
+          inverseEntry12_part7 m
+  else
+    if m < 84 then
+      if m < 70 then
+        if m < 63 then
+          inverseEntry12_part8 m
+        else
+          inverseEntry12_part9 m
+      else
+        if m < 77 then
+          inverseEntry12_part10 m
+        else
+          inverseEntry12_part11 m
+    else
+      if m < 98 then
+        if m < 91 then
+          inverseEntry12_part12 m
+        else
+          inverseEntry12_part13 m
+      else
+        if m < 105 then
+          inverseEntry12_part14 m
+        else
+          inverseEntry12_part15 m
+
+noncomputable def inverseEntry : Fin 13 → ℕ → ℕ :=
+  ![inverseEntry0, inverseEntry1, inverseEntry2, inverseEntry3, inverseEntry4, inverseEntry5, inverseEntry6, inverseEntry7, inverseEntry8, inverseEntry9, inverseEntry10, inverseEntry11, inverseEntry12]
+
+set_option maxRecDepth 10000 in
+theorem inverseEntry_checked : ∀ (j : Fin 13) (i : Fin 112),
+    inverseEntry j i.val = (inverseFactorRows j).get i := by
+  simp only [inverseFactorRows, get_ofFn]
+  decide +kernel
+
+end Janko4.Cardinality.LocalInvolutionCensus.FiberCensus.Forest.Coverage.FiniteExclusion

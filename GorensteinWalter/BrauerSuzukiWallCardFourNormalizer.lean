@@ -4,6 +4,7 @@ public import GorensteinWalter.BrauerSuzukiWallCardH
 import GorensteinWalter.PGroupExtension
 import Mathlib.Tactic
 
+
 /-!
 # The Klein-four normalizer in the order-four Brauer--Suzuki--Wall branch
 

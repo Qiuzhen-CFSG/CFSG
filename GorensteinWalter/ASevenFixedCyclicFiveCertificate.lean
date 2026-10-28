@@ -7,6 +7,7 @@ namespace GorensteinWalter
 
 set_option maxRecDepth 1000000 in
 set_option maxHeartbeats 2000000 in
+-- Exhaustive evaluation over the concrete permutation certificate needs this heartbeat budget.
 public theorem a7_fixed_cyclic_five_certificate :
     ∀ x : ASevenCertificateGroup,
       (x ≠ 1 ∧ x ^ 5 = 1 ∧

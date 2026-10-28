@@ -1,0 +1,679 @@
+module
+
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch00
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch01
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch02
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch03
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch04
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch05
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch06
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch07
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch08
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch09
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch10
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch11
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch12
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch13
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch14
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch15
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch16
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch17
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch18
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch19
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch20
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch21
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch22
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch23
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch24
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch25
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch26
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch27
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch28
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch29
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch30
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch31
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch32
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch33
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch34
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch35
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch36
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch37
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch38
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch39
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch40
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch41
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch42
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch43
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch44
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch45
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch46
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch47
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch48
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Parity.Columns.Batch49
+public import Theory.Representation.Mathieu.SmallModules.M12Recognition.PointClassification.NormalizedInvolution.Certificate.NormReduction.Interpretation
+
+/-!
+# Binary cancellation for every published M11 norm column
+
+Generated by `Parity/source/generate.py`. All arithmetic certificates use
+`decide +kernel`; no Python result is a mathematical premise.
+Source application: Aschbacher–Smith G.7.3(2), printed p.348/PDF p.359.
+-/
+
+@[expose] public section
+namespace Representation.MathieuSmall.M12Recognition.PointClassification.NormalizedInvolution.NormReduction.Parity
+open Inputs
+
+/-- All 600 published columns are sums of the selected original eleven-term seeds. -/
+theorem rowIdentities : RowIdentities := by
+  intro s j
+  fin_cases s
+  · fin_cases j
+    · exact row0
+    · exact row1
+    · exact row2
+    · exact row3
+    · exact row4
+    · exact row5
+    · exact row6
+    · exact row7
+    · exact row8
+    · exact row9
+    · exact row10
+    · exact row11
+    · exact row12
+    · exact row13
+    · exact row14
+    · exact row15
+    · exact row16
+    · exact row17
+    · exact row18
+    · exact row19
+    · exact row20
+    · exact row21
+    · exact row22
+    · exact row23
+    · exact row24
+    · exact row25
+    · exact row26
+    · exact row27
+    · exact row28
+    · exact row29
+    · exact row30
+    · exact row31
+    · exact row32
+    · exact row33
+    · exact row34
+    · exact row35
+    · exact row36
+    · exact row37
+    · exact row38
+    · exact row39
+    · exact row40
+    · exact row41
+    · exact row42
+    · exact row43
+    · exact row44
+    · exact row45
+    · exact row46
+    · exact row47
+    · exact row48
+    · exact row49
+    · exact row50
+    · exact row51
+    · exact row52
+    · exact row53
+    · exact row54
+    · exact row55
+    · exact row56
+    · exact row57
+    · exact row58
+    · exact row59
+    · exact row60
+    · exact row61
+    · exact row62
+    · exact row63
+    · exact row64
+    · exact row65
+    · exact row66
+    · exact row67
+    · exact row68
+    · exact row69
+    · exact row70
+    · exact row71
+    · exact row72
+    · exact row73
+    · exact row74
+    · exact row75
+    · exact row76
+    · exact row77
+    · exact row78
+    · exact row79
+    · exact row80
+    · exact row81
+    · exact row82
+    · exact row83
+    · exact row84
+    · exact row85
+    · exact row86
+    · exact row87
+    · exact row88
+    · exact row89
+    · exact row90
+    · exact row91
+    · exact row92
+    · exact row93
+    · exact row94
+    · exact row95
+    · exact row96
+    · exact row97
+    · exact row98
+    · exact row99
+    · exact row100
+    · exact row101
+    · exact row102
+    · exact row103
+    · exact row104
+    · exact row105
+    · exact row106
+    · exact row107
+    · exact row108
+    · exact row109
+    · exact row110
+    · exact row111
+    · exact row112
+    · exact row113
+    · exact row114
+    · exact row115
+    · exact row116
+    · exact row117
+    · exact row118
+    · exact row119
+    · exact row120
+    · exact row121
+    · exact row122
+    · exact row123
+    · exact row124
+    · exact row125
+    · exact row126
+    · exact row127
+    · exact row128
+    · exact row129
+    · exact row130
+    · exact row131
+    · exact row132
+    · exact row133
+    · exact row134
+    · exact row135
+    · exact row136
+    · exact row137
+    · exact row138
+    · exact row139
+    · exact row140
+    · exact row141
+    · exact row142
+    · exact row143
+    · exact row144
+    · exact row145
+    · exact row146
+    · exact row147
+    · exact row148
+    · exact row149
+    · exact row150
+    · exact row151
+    · exact row152
+    · exact row153
+    · exact row154
+    · exact row155
+    · exact row156
+    · exact row157
+    · exact row158
+    · exact row159
+    · exact row160
+    · exact row161
+    · exact row162
+    · exact row163
+    · exact row164
+    · exact row165
+    · exact row166
+    · exact row167
+    · exact row168
+    · exact row169
+    · exact row170
+    · exact row171
+    · exact row172
+    · exact row173
+    · exact row174
+    · exact row175
+    · exact row176
+    · exact row177
+    · exact row178
+    · exact row179
+    · exact row180
+    · exact row181
+    · exact row182
+    · exact row183
+    · exact row184
+    · exact row185
+    · exact row186
+    · exact row187
+    · exact row188
+    · exact row189
+    · exact row190
+    · exact row191
+    · exact row192
+    · exact row193
+    · exact row194
+    · exact row195
+    · exact row196
+    · exact row197
+    · exact row198
+    · exact row199
+    · exact row200
+    · exact row201
+    · exact row202
+    · exact row203
+    · exact row204
+    · exact row205
+    · exact row206
+    · exact row207
+    · exact row208
+    · exact row209
+    · exact row210
+    · exact row211
+    · exact row212
+    · exact row213
+    · exact row214
+    · exact row215
+    · exact row216
+    · exact row217
+    · exact row218
+    · exact row219
+    · exact row220
+    · exact row221
+    · exact row222
+    · exact row223
+    · exact row224
+    · exact row225
+    · exact row226
+    · exact row227
+    · exact row228
+    · exact row229
+    · exact row230
+    · exact row231
+    · exact row232
+    · exact row233
+    · exact row234
+    · exact row235
+    · exact row236
+    · exact row237
+    · exact row238
+    · exact row239
+    · exact row240
+    · exact row241
+    · exact row242
+    · exact row243
+    · exact row244
+    · exact row245
+    · exact row246
+    · exact row247
+    · exact row248
+    · exact row249
+    · exact row250
+    · exact row251
+    · exact row252
+    · exact row253
+    · exact row254
+    · exact row255
+    · exact row256
+    · exact row257
+    · exact row258
+    · exact row259
+    · exact row260
+    · exact row261
+    · exact row262
+    · exact row263
+    · exact row264
+    · exact row265
+    · exact row266
+    · exact row267
+    · exact row268
+    · exact row269
+    · exact row270
+    · exact row271
+    · exact row272
+    · exact row273
+    · exact row274
+    · exact row275
+    · exact row276
+    · exact row277
+    · exact row278
+    · exact row279
+    · exact row280
+    · exact row281
+    · exact row282
+    · exact row283
+    · exact row284
+    · exact row285
+    · exact row286
+    · exact row287
+    · exact row288
+    · exact row289
+    · exact row290
+    · exact row291
+    · exact row292
+    · exact row293
+    · exact row294
+    · exact row295
+    · exact row296
+    · exact row297
+    · exact row298
+    · exact row299
+  · fin_cases j
+    · exact row300
+    · exact row301
+    · exact row302
+    · exact row303
+    · exact row304
+    · exact row305
+    · exact row306
+    · exact row307
+    · exact row308
+    · exact row309
+    · exact row310
+    · exact row311
+    · exact row312
+    · exact row313
+    · exact row314
+    · exact row315
+    · exact row316
+    · exact row317
+    · exact row318
+    · exact row319
+    · exact row320
+    · exact row321
+    · exact row322
+    · exact row323
+    · exact row324
+    · exact row325
+    · exact row326
+    · exact row327
+    · exact row328
+    · exact row329
+    · exact row330
+    · exact row331
+    · exact row332
+    · exact row333
+    · exact row334
+    · exact row335
+    · exact row336
+    · exact row337
+    · exact row338
+    · exact row339
+    · exact row340
+    · exact row341
+    · exact row342
+    · exact row343
+    · exact row344
+    · exact row345
+    · exact row346
+    · exact row347
+    · exact row348
+    · exact row349
+    · exact row350
+    · exact row351
+    · exact row352
+    · exact row353
+    · exact row354
+    · exact row355
+    · exact row356
+    · exact row357
+    · exact row358
+    · exact row359
+    · exact row360
+    · exact row361
+    · exact row362
+    · exact row363
+    · exact row364
+    · exact row365
+    · exact row366
+    · exact row367
+    · exact row368
+    · exact row369
+    · exact row370
+    · exact row371
+    · exact row372
+    · exact row373
+    · exact row374
+    · exact row375
+    · exact row376
+    · exact row377
+    · exact row378
+    · exact row379
+    · exact row380
+    · exact row381
+    · exact row382
+    · exact row383
+    · exact row384
+    · exact row385
+    · exact row386
+    · exact row387
+    · exact row388
+    · exact row389
+    · exact row390
+    · exact row391
+    · exact row392
+    · exact row393
+    · exact row394
+    · exact row395
+    · exact row396
+    · exact row397
+    · exact row398
+    · exact row399
+    · exact row400
+    · exact row401
+    · exact row402
+    · exact row403
+    · exact row404
+    · exact row405
+    · exact row406
+    · exact row407
+    · exact row408
+    · exact row409
+    · exact row410
+    · exact row411
+    · exact row412
+    · exact row413
+    · exact row414
+    · exact row415
+    · exact row416
+    · exact row417
+    · exact row418
+    · exact row419
+    · exact row420
+    · exact row421
+    · exact row422
+    · exact row423
+    · exact row424
+    · exact row425
+    · exact row426
+    · exact row427
+    · exact row428
+    · exact row429
+    · exact row430
+    · exact row431
+    · exact row432
+    · exact row433
+    · exact row434
+    · exact row435
+    · exact row436
+    · exact row437
+    · exact row438
+    · exact row439
+    · exact row440
+    · exact row441
+    · exact row442
+    · exact row443
+    · exact row444
+    · exact row445
+    · exact row446
+    · exact row447
+    · exact row448
+    · exact row449
+    · exact row450
+    · exact row451
+    · exact row452
+    · exact row453
+    · exact row454
+    · exact row455
+    · exact row456
+    · exact row457
+    · exact row458
+    · exact row459
+    · exact row460
+    · exact row461
+    · exact row462
+    · exact row463
+    · exact row464
+    · exact row465
+    · exact row466
+    · exact row467
+    · exact row468
+    · exact row469
+    · exact row470
+    · exact row471
+    · exact row472
+    · exact row473
+    · exact row474
+    · exact row475
+    · exact row476
+    · exact row477
+    · exact row478
+    · exact row479
+    · exact row480
+    · exact row481
+    · exact row482
+    · exact row483
+    · exact row484
+    · exact row485
+    · exact row486
+    · exact row487
+    · exact row488
+    · exact row489
+    · exact row490
+    · exact row491
+    · exact row492
+    · exact row493
+    · exact row494
+    · exact row495
+    · exact row496
+    · exact row497
+    · exact row498
+    · exact row499
+    · exact row500
+    · exact row501
+    · exact row502
+    · exact row503
+    · exact row504
+    · exact row505
+    · exact row506
+    · exact row507
+    · exact row508
+    · exact row509
+    · exact row510
+    · exact row511
+    · exact row512
+    · exact row513
+    · exact row514
+    · exact row515
+    · exact row516
+    · exact row517
+    · exact row518
+    · exact row519
+    · exact row520
+    · exact row521
+    · exact row522
+    · exact row523
+    · exact row524
+    · exact row525
+    · exact row526
+    · exact row527
+    · exact row528
+    · exact row529
+    · exact row530
+    · exact row531
+    · exact row532
+    · exact row533
+    · exact row534
+    · exact row535
+    · exact row536
+    · exact row537
+    · exact row538
+    · exact row539
+    · exact row540
+    · exact row541
+    · exact row542
+    · exact row543
+    · exact row544
+    · exact row545
+    · exact row546
+    · exact row547
+    · exact row548
+    · exact row549
+    · exact row550
+    · exact row551
+    · exact row552
+    · exact row553
+    · exact row554
+    · exact row555
+    · exact row556
+    · exact row557
+    · exact row558
+    · exact row559
+    · exact row560
+    · exact row561
+    · exact row562
+    · exact row563
+    · exact row564
+    · exact row565
+    · exact row566
+    · exact row567
+    · exact row568
+    · exact row569
+    · exact row570
+    · exact row571
+    · exact row572
+    · exact row573
+    · exact row574
+    · exact row575
+    · exact row576
+    · exact row577
+    · exact row578
+    · exact row579
+    · exact row580
+    · exact row581
+    · exact row582
+    · exact row583
+    · exact row584
+    · exact row585
+    · exact row586
+    · exact row587
+    · exact row588
+    · exact row589
+    · exact row590
+    · exact row591
+    · exact row592
+    · exact row593
+    · exact row594
+    · exact row595
+    · exact row596
+    · exact row597
+    · exact row598
+    · exact row599
+
+/-- The actual group-algebra decoder respects the proved coordinate identities. -/
+theorem decode_column_eq_decode_combination (s : Fin 2) (j : Fin 300) :
+    decode (columnVector s j) = decode (combinationVector s j) :=
+  congrArg decode (rowIdentities s j)
+
+end Representation.MathieuSmall.M12Recognition.PointClassification.NormalizedInvolution.NormReduction.Parity

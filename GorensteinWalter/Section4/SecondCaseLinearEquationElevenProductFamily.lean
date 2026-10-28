@@ -520,7 +520,8 @@ public theorem secondCase_linearEquation11_product_family_conjugate_card
         (torus_recover_of_familyMap hPcard hP0card hP0interP hP0leE hPinterE hEcentP hP0comm
           b.1 (τ b.2)).symm
       calc
-        (τ a.2).1 = (secondCase_linearEquation11_familyMap (G := G) P P0 E ⟨a.1, τ a.2⟩ ⊔ P) ⊓ E := h1
+        (τ a.2).1 =
+            (secondCase_linearEquation11_familyMap (G := G) P P0 E ⟨a.1, τ a.2⟩ ⊔ P) ⊓ E := h1
         _ = (secondCase_linearEquation11_familyMap (G := G) P P0 E ⟨b.1, τ b.2⟩ ⊔ P) ⊓ E := by
               rw [hfm]
         _ = (τ b.2).1 := h2.symm

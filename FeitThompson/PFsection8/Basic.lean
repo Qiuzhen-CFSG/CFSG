@@ -40,7 +40,7 @@ taken inside the group `M`. -/
     (M MF U U1 : Subgroup G)
     (θ : Section1.ClassFunction MF) : Prop :=
   ∀ hMFNormal : (MF.subgroupOf M).Normal,
-    letI : (MF.subgroupOf M).Normal := hMFNormal
+    let : (MF.subgroupOf M).Normal := hMFNormal
     let θM : Section1.ClassFunction (MF.subgroupOf M) :=
       classFunctionOnSubgroupOf M MF θ
     ((Section1.inertiaSubgroup (MF.subgroupOf M) θM).map M.subtype ⊓ U) ≤ U1
@@ -49,7 +49,7 @@ taken inside the group `M`. -/
 @[expose] public def typeFData
     {G : Type u} [Group G] [Finite G]
     (M MF U U1 U0 : Subgroup G) : Prop :=
-  IsSolvable M ∧
+  Group.IsSolvable M ∧
     Odd (Nat.card M) ∧
     section16MFSubgroup M MF ∧
     ⊥ < MF ∧
@@ -1070,3 +1070,4 @@ public instance instCoeOutTheorem_8_18_source_dataNotation
 
 
 end Section8
+

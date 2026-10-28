@@ -1,0 +1,79 @@
+module
+public import Theory.SpecificGroups.Janko3.Model.OuterSimpleSections
+public import Theory.GroupTheory.SylowFrattiniBounds
+
+/-!
+# Three Frattini generators for the actual J₃ Sylow subgroup
+
+The four square words (g₁g₂)², (g₁g₃)², (g₂g₃)² and (g₂g₄)² have
+sixteen distinct ordered binary products. Evaluation at the single letter
+zero proves distinctness using the existing kernel-checked ATLAS tables.
+Thus the order-128 Sylow subgroup has Frattini quotient of order at most
+eight. Sylow conjugacy transports this bound through any actual J₃ marking.
+
+The application excludes a GL₄(2) section in the original component's outer
+automorphism group in Aschbacher–Smith 4.4.10–11 and 12.1.9, pp.621 and 793.
+Source: ATLAS J3G1-p6156B0, with the unchanged generator and composition
+conventions documented in `Model/TwoLocal/source/README.md`.
+-/
+
+public noncomputable section
+open Subgroup
+namespace Sporadic.Janko3.TwoLocal.FrattiniEight
+open CentralizerCertificate
+
+private def squareWord (i : Fin 16) : Model :=
+  ((sylowGenerator 1 * sylowGenerator 2)^2)^(i.val%2) *
+    ((sylowGenerator 1 * sylowGenerator 3)^2)^((i.val/2)%2) *
+    ((sylowGenerator 2 * sylowGenerator 3)^2)^((i.val/4)%2) *
+    ((sylowGenerator 2 * sylowGenerator 4)^2)^((i.val/8)%2)
+
+private theorem squareWord_injective : Function.Injective squareWord := by
+  have h : Function.Injective (fun i : Fin 16 =>
+      ((((S0G1 * S0G2)^2)^(i.val%2) * ((S0G1 * S0G3)^2)^((i.val/2)%2) *
+        ((S0G2 * S0G3)^2)^((i.val/4)%2) *
+        ((S0G2 * S0G4)^2)^((i.val/8)%2)) (0 : Fin 6156))) := by decide +kernel
+  intro i j he
+  apply h
+  rw [S0G1_eq_generator,S0G2_eq_generator,S0G3_eq_generator,S0G4_eq_generator]
+  exact congrArg (fun x : Model => x.val 0) he
+
+/-- Sixteen square words force a Frattini subgroup of order at least sixteen. -/
+theorem candidate_frattini_card_le_eight :
+    Nat.card (sylowCandidate ⧸ frattini sylowCandidate) ≤ 8 := by
+  let x : Fin 5 → sylowCandidate := fun k => ⟨sylowGenerator k,sylowGenerator_mem k⟩
+  let : Fact (IsPGroup 2 sylowCandidate) := ⟨sylowCandidate_isPGroup⟩
+  have hx (i j : Fin 5) : (x i * x j)^2 ∈ frattini sylowCandidate :=
+    pth_power_mem_frattini_of_isPGroup (p := 2) (x i * x j)
+  let w (i : Fin 16) : sylowCandidate :=
+    ((x 1 * x 2)^2)^(i.val%2) * ((x 1 * x 3)^2)^((i.val/2)%2) *
+      ((x 2 * x 3)^2)^((i.val/4)%2) * ((x 2 * x 4)^2)^((i.val/8)%2)
+  have hw (i : Fin 16) : w i ∈ frattini sylowCandidate :=
+    mul_mem (mul_mem (mul_mem (pow_mem (hx 1 2) _) (pow_mem (hx 1 3) _))
+      (pow_mem (hx 2 3) _)) (pow_mem (hx 2 4) _)
+  let f : Fin 16 → frattini sylowCandidate := fun i => ⟨w i,hw i⟩
+  have hf : Function.Injective f := by
+    intro i j he
+    apply squareWord_injective
+    exact congrArg (fun z : frattini sylowCandidate => (z.val : Model)) he
+  have h16 : 16 ≤ Nat.card (frattini sylowCandidate) := by
+    simpa only [Nat.card_fin] using Nat.card_le_card_of_injective f hf
+  have hprod := card_eq_card_quotient_mul_card_subgroup (frattini sylowCandidate)
+  have hc : Nat.card sylowCandidate = 128 := sylowCandidate_card
+  rw [hc] at hprod
+  nlinarith
+
+/-- The sharper bound on any carrier marked by the actual J₃ model. -/
+theorem sylow_frattini_card_le_eight {Q : Type*} [Group Q] [Finite Q]
+    (e : Q ≃* Model) (P : Sylow 2 Q) : Nat.card (P ⧸ frattini P) ≤ 8 := by
+  let R := P.mapSurjective (f := e.toMonoidHom) e.surjective
+  let a : P ≃* R := e.subgroupMap (P : Subgroup Q)
+  let S : Sylow 2 Model := sylowCandidate_isPGroup.toSylow (by
+    have hc := sylowCandidate.index_mul_card
+    rw [sylowCandidate_card,model_card] at hc
+    omega)
+  rw [Theory.GroupTheory.SylowFrattiniBounds.card_congr a,
+    Theory.GroupTheory.SylowFrattiniBounds.card_congr (R.equiv S)]
+  exact candidate_frattini_card_le_eight
+
+end Sporadic.Janko3.TwoLocal.FrattiniEight

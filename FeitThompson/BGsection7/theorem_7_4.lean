@@ -4,8 +4,8 @@ public import FeitThompson.BGsection6.Defs
 public import FeitThompson.BGsection6.lemma_6_5_a
 public import FeitThompson.MinCE
 import FeitThompson.BGsection3.theorem_3_4
-import FeitThompson.HallSubgroups.Conjugacy
-import FeitThompson.SubgroupConj
+public import Theory.GroupTheory.Hall.Conjugacy
+import Theory.GroupTheory.SubgroupConjugation
 import FeitThompson.PCore.CentralizerControl
 import Theory.Representation.SolvableDimension
 import Mathlib.GroupTheory.IndexNormal
@@ -13,9 +13,12 @@ import Mathlib.GroupTheory.IsSubnormal
 import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Card
 import Mathlib.Order.Preorder.Finite
 public import FeitThompson.BGsection7.Defs
+
 public import FeitThompson.BGsection7.lemma_7_1
 public import FeitThompson.BGsection7.theorem_7_2
 public import FeitThompson.BGsection7.theorem_7_3
+open Representation
+
 
 open scoped Pointwise commutatorElement
 

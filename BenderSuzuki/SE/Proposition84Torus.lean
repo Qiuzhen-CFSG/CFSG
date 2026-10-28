@@ -37,7 +37,7 @@ public theorem invertedTorus_lift_of_central_odd_kernel
         intro x y
         ext
         exact map_mul q (x : G) (y : G) }
-  letI : IsCyclic T := hTcyclic
+  let : IsCyclic T := hTcyclic
   have hfker : f.ker ≤ Subgroup.center P := by
     intro x hx
     have hxq : q (x : G) = 1 := by
@@ -47,9 +47,9 @@ public theorem invertedTorus_lift_of_central_odd_kernel
     intro y
     apply Subtype.ext
     exact Subgroup.mem_center_iff.mp (hZcenter hxZ) y
-  letI : IsMulCommutative P :=
-    ⟨Std.Commutative.mk (commutative_of_cyclic_center_quotient f hfker)⟩
-  letI : CommGroup P := IsMulCommutative.instCommGroup
+  let : IsMulCommutative P :=
+    MonoidHom.isMulCommutative_of_isCyclic_of_ker_le_center f hfker
+  let : CommGroup P := IsMulCommutative.instCommGroup
   let J : Subgroup G :=
     { carrier := {x : G | q x ∈ T ∧ rightConjugateElem x t = x⁻¹}
       one_mem' := by simp [rightConjugateElem]
@@ -214,7 +214,7 @@ public theorem invertedTorus_lift_of_central_odd_kernel
           _ = (cG * kG) * x⁻¹ := (mul_assoc cG kG x⁻¹).symm
           _ = kG⁻¹ * x⁻¹ := by rw [hck]
           _ = (x * kG)⁻¹ := (mul_inv_rev _ _).symm
-      let j : J := ⟨x * kG, ⟨by simpa [hxkq] using y.property, hxkanti⟩⟩
+      let j : J := ⟨x * kG, ⟨by simp [hxkq], hxkanti⟩⟩
       refine ⟨j, ?_⟩
       apply Subtype.ext
       exact hxkq
@@ -286,7 +286,7 @@ public theorem invertedTorus_of_standard_pair
       rw [mul_smul, hwInvAlpha, ht0beta]
     · change (t0 * w⁻¹) • beta0 = beta0
       rw [mul_smul, hwInvBeta, ht0alpha]
-  letI : IsMulCommutative H0 := hH0comm
+  let : IsMulCommutative H0 := hH0comm
   have ht0_eq : t0 = d * w := by
     dsimp [d]
     group
@@ -295,7 +295,7 @@ public theorem invertedTorus_of_standard_pair
     intro x hx
     have hdInvH0 : d⁻¹ ∈ H0 := H0.inv_mem hdH0
     have hcomm : d⁻¹ * x = x * d⁻¹ :=
-      Subgroup.mul_comm_of_mem_isMulCommutative (H := H0) hdInvH0 hx
+      setLike_mul_comm hdInvH0 hx
     change t0⁻¹ * x * t0 = w⁻¹ * x * w
     rw [ht0_eq]
     calc
@@ -357,13 +357,13 @@ public theorem invertedTorus_of_standard_pair
       simp
   let e : T ≃* T0 :=
     { toFun := fun x ↦ ⟨c x, (hmemT (x : G)).mp x.property⟩
-      invFun := fun y ↦ ⟨c.symm y, (hmemT (c.symm y)).mpr (by simpa)⟩
+      invFun := fun y ↦ ⟨c.symm y, (hmemT (c.symm y)).mpr (by simp)⟩
       left_inv := by intro x; apply Subtype.ext; simp
       right_inv := by intro y; apply Subtype.ext; simp
       map_mul' := by
         intro x y
         apply Subtype.ext
-        simpa using c.map_mul (x : G) (y : G) }
+        simp }
   refine ⟨T, ?_, e.isCyclic.mpr hT0cyclic, Nat.card_congr e.toEquiv⟩
   ext x
   change x ∈ T ↔
@@ -449,12 +449,12 @@ public theorem centralizer_borel_inter_rightConjugate_of_standard_pair
       rw [mul_smul, hwInvAlpha, ht0beta]
     · change (t0 * w⁻¹) • beta0 = beta0
       rw [mul_smul, hwInvBeta, ht0alpha]
-  letI : IsMulCommutative H0 := hH0comm
+  let : IsMulCommutative H0 := hH0comm
   have ht0_eq : t0 = d * w := by
     dsimp [d]
     group
   have hz0d : z0 * d = d * z0 :=
-    Subgroup.mul_comm_of_mem_isMulCommutative H0 hz0H hdH0
+    setLike_mul_comm hz0H hdH0
   have hz0t0 : z0 * t0 = t0 * z0 := by
     rw [ht0_eq]
     calc

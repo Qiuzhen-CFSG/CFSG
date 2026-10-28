@@ -1,0 +1,1209 @@
+module
+
+public import Theory.SpecificGroups.LeechRelated.AtlasCarriers.Co1.CentralizerSection
+public import Mathlib.Tactic.FinCases
+
+/-!
+# Three elementary abelian witnesses in the fixed Co₁ numerator
+
+This file certifies literal products of the two ATLAS centralizer words.
+Each multiplication is checked in packed binary rows by the Lean kernel.
+The final three matrices belong to the actual numerator, not just its
+8-dimensional image. See `source/README.md` and `source/witness.json` for
+the finite multiplication program and its provenance.
+
+Source: ATLAS `Co1G1-f2r24B0`, `Co1G1-max5W1`, GLS3 Table 5.3l;
+Aschbacher--Smith A.2.19 and I.1.3, printed pp.40--41 and 407.
+-/
+
+@[expose] public section
+-- The parallel baseline peaked at 6,231,628 KiB; keep this finite replay serial.
+set_option Elab.async false
+namespace Sporadic.LeechRelated.Co1.CentralizerSection.ElementaryThree
+open Packed
+
+abbrev Rows := Fin 24 → ℕ
+
+private theorem product_witness {a b c : Rows}
+    (ha : ∃ g : numerator, g.val.val.val = decode a)
+    (hb : ∃ g : numerator, g.val.val.val = decode b)
+    (h : product a b = c) : ∃ g : numerator, g.val.val.val = decode c := by
+  obtain ⟨g, hg⟩ := ha
+  obtain ⟨f, hf⟩ := hb
+  refine ⟨g * f, ?_⟩
+  change g.val.val.val * f.val.val.val = decode c
+  rw [hg, hf]
+  exact mul_eq_of_certificate _ _ _ h
+
+private def rows0 : Rows := Matrices.step05Rows
+private def rows1 : Rows := Matrices.step12Rows
+
+private theorem witness0 : ∃ g : numerator, g.val.val.val = decode rows0 := by
+  refine ⟨⟨x, ?_⟩, x_matrix⟩
+  rw [numerator_eq]
+  exact Subgroup.subset_closure (by simp)
+
+private theorem witness1 : ∃ g : numerator, g.val.val.val = decode rows1 := by
+  refine ⟨⟨y, ?_⟩, y_matrix⟩
+  rw [numerator_eq]
+  exact Subgroup.subset_closure (by simp)
+
+private def rows2 : Rows :=
+  ![10517859, 2759984, 914008, 11751693, 11525290, 12219054, 7094280, 13669777, 8542685, 5405591, 10378758, 1285526, 7763579, 9980040, 13473527, 8947618, 9506200, 8611303, 3829546, 14255148, 15735854, 7829012, 10861626, 13743616]
+
+private theorem witness2 : ∃ g : numerator, g.val.val.val = decode rows2 :=
+  product_witness witness0 witness1 (by decide +kernel)
+
+private def rows3 : Rows :=
+  ![14065832, 4314605, 16482048, 6542114, 1723601, 8632120, 5236434, 12178510, 7675941, 13502747, 168748, 4962710, 3444234, 4579839, 1757562, 9319373, 7546317, 733927, 16157383, 14587903, 2496800, 4682290, 6961758, 12552012]
+
+private theorem witness3 : ∃ g : numerator, g.val.val.val = decode rows3 :=
+  product_witness witness2 witness2 (by decide +kernel)
+
+private def rows4 : Rows :=
+  ![10255988, 16075017, 9169886, 9205776, 10131741, 8085127, 9044627, 4669152, 6649641, 2548168, 1162500, 1330546, 12384118, 2860587, 13822804, 15650894, 16329350, 27098, 14210489, 11770922, 3369619, 10042915, 8446400, 7218531]
+
+private theorem witness4 : ∃ g : numerator, g.val.val.val = decode rows4 :=
+  product_witness witness3 witness3 (by decide +kernel)
+
+private def rows5 : Rows :=
+  ![7371841, 10502729, 889851, 11391420, 10248027, 13726531, 9488021, 6778435, 4990793, 9111745, 7148874, 6389972, 13005280, 9546685, 7852086, 8852319, 14306275, 11522484, 7319636, 16047614, 16191978, 14066295, 15570621, 6754794]
+
+private theorem witness5 : ∃ g : numerator, g.val.val.val = decode rows5 :=
+  product_witness witness3 witness4 (by decide +kernel)
+
+private def rows6 : Rows :=
+  ![12569562, 11246674, 13443158, 16444238, 8306963, 12555200, 7116160, 629323, 10692511, 11850784, 13438251, 549324, 7307180, 6221634, 1317722, 6451599, 14169764, 2952632, 7532237, 13818194, 14092125, 469973, 11941338, 13956565]
+
+private theorem witness6 : ∃ g : numerator, g.val.val.val = decode rows6 :=
+  product_witness witness0 witness5 (by decide +kernel)
+
+private def rows7 : Rows :=
+  ![12944253, 10009672, 6408875, 6111038, 532504, 6507688, 9879078, 12717054, 6021814, 13248886, 4021183, 13577555, 13155665, 4030399, 10246217, 9549412, 3300755, 3931068, 13109586, 6840457, 15706725, 12530760, 2409610, 14305680]
+
+private theorem witness7 : ∃ g : numerator, g.val.val.val = decode rows7 :=
+  product_witness witness6 witness0 (by decide +kernel)
+
+private def rows8 : Rows :=
+  ![12356535, 4001410, 6630878, 16542337, 3951663, 1092248, 10558753, 566976, 1786100, 15045824, 16055682, 345182, 589461, 10846344, 14859509, 12436706, 15385813, 10137091, 11083561, 9522678, 956843, 4526644, 3007808, 3897950]
+
+private theorem witness8 : ∃ g : numerator, g.val.val.val = decode rows8 :=
+  product_witness witness5 witness7 (by decide +kernel)
+
+private def rows9 : Rows :=
+  ![760950, 2106497, 3416468, 2865404, 6329491, 6144441, 4994123, 15978561, 11964736, 3277236, 14943095, 10725131, 5408567, 4842634, 15254396, 1887169, 9234302, 9050111, 10367176, 6978686, 9669512, 5614536, 4659324, 6745994]
+
+private theorem witness9 : ∃ g : numerator, g.val.val.val = decode rows9 :=
+  product_witness witness8 witness5 (by decide +kernel)
+
+private def rows10 : Rows :=
+  ![13508362, 12097739, 5630779, 7768010, 6861979, 4099377, 14322221, 3267391, 15561462, 16263874, 14245064, 7111256, 10103398, 7650101, 7658293, 9305509, 12565229, 11791427, 5388698, 662775, 7086573, 13279104, 2350326, 3974682]
+
+private theorem witness10 : ∃ g : numerator, g.val.val.val = decode rows10 :=
+  product_witness witness9 witness7 (by decide +kernel)
+
+private def rows11 : Rows :=
+  ![1000997, 2591101, 577019, 6303001, 6080747, 2774185, 10795057, 2206750, 3902981, 14125077, 4682292, 15009058, 15186069, 1813092, 6147404, 214046, 14686864, 5166039, 1887982, 15601763, 1701804, 11899389, 8487783, 7816246]
+
+private theorem witness11 : ∃ g : numerator, g.val.val.val = decode rows11 :=
+  product_witness witness1 witness1 (by decide +kernel)
+
+private def rows12 : Rows :=
+  ![6515429, 8457148, 4845048, 13510303, 5376230, 7694960, 12384284, 2579054, 3364093, 12489776, 7598275, 15927497, 16652166, 7759930, 3091106, 2333091, 15101457, 15492276, 1981714, 15691281, 9491555, 2704386, 15668562, 7460311]
+
+private theorem witness12 : ∃ g : numerator, g.val.val.val = decode rows12 :=
+  product_witness witness1 witness11 (by decide +kernel)
+
+private def rows13 : Rows :=
+  ![12386256, 7330777, 9570830, 8774202, 3572977, 9225775, 12423823, 16561013, 10325942, 14693725, 3900127, 13542199, 9563619, 16084134, 8493124, 10999627, 15403003, 9529229, 2127465, 12501155, 8194701, 7121469, 14086803, 14452003]
+
+private theorem witness13 : ∃ g : numerator, g.val.val.val = decode rows13 :=
+  product_witness witness11 witness11 (by decide +kernel)
+
+private def rows14 : Rows :=
+  ![15622939, 1347011, 6704548, 7641464, 8091700, 16236918, 5694495, 1222816, 4215467, 8671291, 2198341, 13749032, 15713918, 14472981, 14713798, 15791973, 4841595, 3137554, 5918196, 4713096, 13357545, 4822745, 8225859, 12055539]
+
+private theorem witness14 : ∃ g : numerator, g.val.val.val = decode rows14 :=
+  product_witness witness13 witness13 (by decide +kernel)
+
+private def rows15 : Rows :=
+  ![32325, 6758158, 11752261, 54821, 8991550, 6290529, 11735479, 8944025, 16698270, 11923633, 263349, 2182429, 1069186, 9133207, 4889055, 12499238, 2822949, 8111557, 1401053, 2431446, 16371763, 9574762, 5195780, 9166796]
+
+private theorem witness15 : ∃ g : numerator, g.val.val.val = decode rows15 :=
+  product_witness witness12 witness14 (by decide +kernel)
+
+private def rows16 : Rows :=
+  ![4898331, 2938161, 11050833, 8139771, 9723444, 7222679, 5144865, 12123399, 3331575, 949998, 5572863, 7858728, 8494134, 8257248, 12702743, 15979015, 16394063, 1496207, 2054237, 5155202, 3015246, 9970154, 1614425, 5026893]
+
+private theorem witness16 : ∃ g : numerator, g.val.val.val = decode rows16 :=
+  product_witness witness15 witness5 (by decide +kernel)
+
+private def rows17 : Rows :=
+  ![9291023, 12976109, 10169488, 3155415, 5067181, 8868659, 13199584, 7052664, 15388345, 16031483, 1502618, 8955474, 4982646, 4442679, 3912969, 1245894, 158222, 7057725, 13023350, 12045332, 6415149, 14858358, 2384057, 4503844]
+
+private theorem witness17 : ∃ g : numerator, g.val.val.val = decode rows17 :=
+  product_witness witness16 witness1 (by decide +kernel)
+
+private def rows18 : Rows :=
+  ![14697209, 816493, 16656771, 668042, 9053186, 10385355, 12345217, 8559151, 5931903, 10611302, 8009291, 9514295, 11418069, 5934969, 15310321, 425959, 16331157, 8888044, 14405178, 10516085, 15744731, 4833270, 2074408, 485951]
+
+private theorem witness18 : ∃ g : numerator, g.val.val.val = decode rows18 :=
+  product_witness witness0 witness17 (by decide +kernel)
+
+private def rows19 : Rows :=
+  ![5514604, 4956565, 4314553, 12790971, 16057222, 11569621, 12032618, 7579078, 15310368, 6685659, 14198746, 10297785, 7042606, 15589630, 13812669, 13276312, 3351734, 15927301, 9409896, 5081699, 441553, 13536511, 13638145, 5429232]
+
+private theorem witness19 : ∃ g : numerator, g.val.val.val = decode rows19 :=
+  product_witness witness18 witness0 (by decide +kernel)
+
+private def rows20 : Rows :=
+  ![15353383, 526548, 8542541, 4393230, 8121231, 12878739, 6409872, 15046477, 8932456, 13781593, 9106899, 9948995, 3616168, 11695176, 7031936, 2515433, 9551417, 7548336, 5499739, 5422231, 8099677, 1432201, 4378623, 3144828]
+
+private theorem witness20 : ∃ g : numerator, g.val.val.val = decode rows20 :=
+  product_witness witness5 witness19 (by decide +kernel)
+
+private def rows21 : Rows :=
+  ![10107495, 15939932, 1326726, 11905913, 10336013, 9307332, 7147527, 4357753, 323030, 10365721, 130834, 15838177, 15813704, 10058699, 10901640, 4712765, 9281115, 4383814, 14265586, 5215892, 8035644, 2364287, 11781879, 15626730]
+
+private theorem witness21 : ∃ g : numerator, g.val.val.val = decode rows21 :=
+  product_witness witness10 witness19 (by decide +kernel)
+
+private def rows22 : Rows :=
+  ![8465412, 13324764, 1595918, 1538420, 4486665, 2614111, 8026391, 4082078, 998457, 528480, 6759317, 12877797, 12071879, 8817939, 13231963, 7995394, 16728777, 1680430, 1320470, 12153563, 11578393, 14378304, 1372195, 7862767]
+
+private theorem witness22 : ∃ g : numerator, g.val.val.val = decode rows22 :=
+  product_witness witness15 witness17 (by decide +kernel)
+
+private def rows23 : Rows :=
+  ![11371774, 8524190, 8487999, 8889879, 8400390, 2321629, 16693669, 14565439, 9775818, 12092195, 12688089, 7309185, 16553583, 14407484, 7234988, 2477785, 10517857, 8207838, 12231431, 16400507, 16621085, 13475357, 15338742, 13556982]
+
+private theorem witness23 : ∃ g : numerator, g.val.val.val = decode rows23 :=
+  product_witness witness22 witness1 (by decide +kernel)
+
+private def rows24 : Rows :=
+  ![14006890, 3742212, 13535674, 6880266, 11116746, 6087725, 11558326, 3021040, 4128609, 14327052, 7663090, 10529887, 8850705, 16496080, 1541273, 2732280, 178426, 7155033, 6475272, 5684368, 1932459, 3617794, 14425604, 2133277]
+
+private theorem witness24 : ∃ g : numerator, g.val.val.val = decode rows24 :=
+  product_witness witness15 witness19 (by decide +kernel)
+
+private def rows25 : Rows :=
+  ![2194344, 6607800, 16351968, 15231974, 14135283, 4970843, 4914941, 11927992, 3183523, 16273078, 14516268, 7382597, 2861554, 14525484, 3099329, 2760244, 11038926, 5779569, 13214580, 10451601, 11396261, 14483333, 3235863, 1181680]
+
+private theorem witness25 : ∃ g : numerator, g.val.val.val = decode rows25 :=
+  product_witness witness24 witness1 (by decide +kernel)
+
+private def rows26 : Rows :=
+  ![12952946, 4001410, 7638279, 16003056, 11373118, 2884073, 7634237, 15781236, 15097225, 2445377, 10878738, 15333882, 1923592, 10321545, 11978924, 15804318, 13340232, 14310782, 3988860, 6817275, 9857094, 1389341, 4011796, 14907598]
+
+private theorem witness26 : ∃ g : numerator, g.val.val.val = decode rows26 :=
+  product_witness witness20 witness25 (by decide +kernel)
+
+private def rows27 : Rows :=
+  ![15609348, 8255040, 7100063, 13153810, 16634943, 15997570, 4913538, 4614872, 14250269, 4065625, 2848416, 16460758, 15315668, 1735695, 14293444, 6964165, 15923620, 3737771, 4348513, 12187311, 15702097, 12947248, 13208373, 3305722]
+
+private theorem witness27 : ∃ g : numerator, g.val.val.val = decode rows27 :=
+  product_witness witness0 witness23 (by decide +kernel)
+
+private def rows28 : Rows :=
+  ![8051310, 5342426, 4898906, 6276490, 10948455, 10999537, 15572573, 14933959, 4066143, 5254643, 14516268, 1041009, 2479691, 8004553, 5346796, 1719961, 13844329, 10137091, 6001846, 14955830, 12742237, 15887965, 7462958, 7862562]
+
+private theorem witness28 : ∃ g : numerator, g.val.val.val = decode rows28 :=
+  product_witness witness27 witness0 (by decide +kernel)
+
+private def rows29 : Rows :=
+  ![14737416, 5111840, 12376960, 447327, 4242355, 13367117, 11229247, 11483586, 3440501, 618347, 9285330, 3650285, 13928963, 9954103, 8590929, 819784, 10013363, 15834208, 1973973, 3900723, 16328333, 3217059, 10971136, 4638168]
+
+private theorem witness29 : ∃ g : numerator, g.val.val.val = decode rows29 :=
+  product_witness witness21 witness28 (by decide +kernel)
+
+private def rows30 : Rows :=
+  ![6789897, 4233024, 898042, 12879688, 13404611, 8814328, 14028398, 8717968, 10607461, 9758390, 14385497, 4802776, 7942196, 3879231, 9329412, 9447881, 1029957, 2588023, 13936584, 10869905, 2758083, 3368567, 14914422, 9369627]
+
+private theorem witness30 : ∃ g : numerator, g.val.val.val = decode rows30 :=
+  product_witness witness0 witness13 (by decide +kernel)
+
+private def rows31 : Rows :=
+  ![16417582, 418316, 8964958, 11138484, 13088590, 2201287, 8986423, 4685838, 13054518, 8670156, 12084514, 14732550, 15498375, 11591452, 14806453, 11178264, 5498567, 11611995, 6614209, 7390582, 15989708, 16051649, 11558661, 7375783]
+
+private theorem witness31 : ∃ g : numerator, g.val.val.val = decode rows31 :=
+  product_witness witness30 witness0 (by decide +kernel)
+
+private def rows32 : Rows :=
+  ![4264036, 3301176, 10555056, 12145950, 5748532, 7389451, 13950881, 10565524, 11494493, 15696130, 16580526, 1235389, 5013497, 5564582, 410635, 14297537, 5270672, 14148759, 509622, 371656, 16026125, 5060806, 16212072, 16580424]
+
+private theorem witness32 : ∃ g : numerator, g.val.val.val = decode rows32 :=
+  product_witness witness11 witness14 (by decide +kernel)
+
+private def rows33 : Rows :=
+  ![10513335, 7689248, 14576043, 5516971, 765641, 4183323, 12497782, 8848270, 13164667, 12776076, 216870, 4774378, 13060519, 3436646, 12145451, 11819166, 12071035, 10909742, 15713590, 10607756, 13553664, 4772910, 4303849, 12939507]
+
+private theorem witness33 : ∃ g : numerator, g.val.val.val = decode rows33 :=
+  product_witness witness31 witness32 (by decide +kernel)
+
+private def rows34 : Rows :=
+  ![2186628, 11709200, 16588717, 4452246, 9498000, 11925351, 13058156, 12705871, 4941443, 5896476, 2109357, 13678691, 14853110, 12188020, 8384420, 4148699, 13221175, 7560582, 8730214, 1992831, 12411495, 12507588, 12141570, 516320]
+
+private theorem witness34 : ∃ g : numerator, g.val.val.val = decode rows34 :=
+  product_witness witness33 witness0 (by decide +kernel)
+
+private def rows35 : Rows :=
+  ![12782678, 6099065, 7721771, 3098823, 6104304, 2684107, 15434907, 14362509, 5991610, 15176249, 14976355, 8194309, 16250823, 5743181, 12706447, 3908288, 222298, 13738607, 13494707, 14260529, 5943489, 3523896, 1873003, 8397966]
+
+private theorem witness35 : ∃ g : numerator, g.val.val.val = decode rows35 :=
+  product_witness witness34 witness12 (by decide +kernel)
+
+private def rows36 : Rows :=
+  ![7141428, 10678750, 4420089, 10642679, 5115512, 13783181, 14672388, 6027043, 10331315, 13935790, 395631, 15123900, 4774489, 7171610, 15464228, 11237942, 6335203, 1384907, 8349431, 1075691, 9877077, 3719872, 10890672, 15991240]
+
+private theorem witness36 : ∃ g : numerator, g.val.val.val = decode rows36 :=
+  product_witness witness35 witness0 (by decide +kernel)
+
+private def rows37 : Rows :=
+  ![15232631, 386630, 7046166, 4763644, 6926864, 10139158, 12384906, 16426905, 14501013, 7413595, 10655129, 8874491, 14986435, 6811630, 7187446, 6572061, 12560148, 15163047, 670269, 13936700, 7004439, 16391678, 15863532, 14037547]
+
+private theorem witness37 : ∃ g : numerator, g.val.val.val = decode rows37 :=
+  product_witness witness36 witness32 (by decide +kernel)
+
+private def rows38 : Rows :=
+  ![5165946, 9102288, 15828208, 1262493, 9679732, 7556190, 5368695, 16729946, 10275603, 11495029, 2238268, 3375502, 8265610, 1867163, 5803734, 3394297, 15003223, 66897, 1460845, 7923683, 16038379, 15360288, 11088681, 16761465]
+
+private theorem witness38 : ∃ g : numerator, g.val.val.val = decode rows38 :=
+  product_witness witness37 witness0 (by decide +kernel)
+
+private def rows39 : Rows :=
+  ![11118685, 5447566, 13850454, 1709473, 10148526, 16072493, 3763624, 9944221, 3306058, 14658537, 4781469, 2592502, 16690980, 10830605, 14390917, 11963901, 4340623, 15433922, 1460139, 3288699, 4402909, 6856710, 10006382, 15423418]
+
+private theorem witness39 : ∃ g : numerator, g.val.val.val = decode rows39 :=
+  product_witness witness38 witness15 (by decide +kernel)
+
+private def rows40 : Rows :=
+  ![6695227, 6341874, 7526488, 7791563, 946304, 6805744, 13453796, 1774651, 7194161, 12438276, 9321876, 1899128, 2712579, 7525998, 16490584, 3490764, 16341126, 6845116, 11895560, 14387831, 8367993, 12180916, 10987832, 7847821]
+
+private theorem witness40 : ∃ g : numerator, g.val.val.val = decode rows40 :=
+  product_witness witness39 witness0 (by decide +kernel)
+
+private def rows41 : Rows :=
+  ![7226292, 16387064, 2211889, 15295174, 6974761, 15352731, 4604075, 2835944, 4271229, 3675125, 2567584, 8763865, 12968897, 9715863, 8712904, 12913186, 9268960, 13679413, 3243557, 8105966, 14735637, 15111613, 10278553, 5938590]
+
+private theorem witness41 : ∃ g : numerator, g.val.val.val = decode rows41 :=
+  product_witness witness40 witness32 (by decide +kernel)
+
+private def rows42 : Rows :=
+  ![5652264, 7118589, 15166003, 12751344, 6916304, 12252028, 12734834, 9874491, 4008233, 13435008, 1417121, 5623581, 1528136, 1726714, 6398252, 9898510, 1094126, 1706804, 16493615, 3356483, 488179, 3411446, 11652478, 12734392]
+
+private theorem witness42 : ∃ g : numerator, g.val.val.val = decode rows42 :=
+  product_witness witness41 witness0 (by decide +kernel)
+
+private def rows43 : Rows :=
+  ![7498233, 9249932, 16248431, 186182, 16708790, 5015245, 1675560, 12418767, 8072546, 5735551, 13681493, 2650538, 11248479, 5695034, 13702501, 7839232, 9609407, 11068936, 4269556, 3890378, 11212156, 10272904, 5628921, 12966326]
+
+private theorem witness43 : ∃ g : numerator, g.val.val.val = decode rows43 :=
+  product_witness witness42 witness15 (by decide +kernel)
+
+private def rows44 : Rows :=
+  ![16613764, 6407521, 767093, 1271751, 9958546, 3266219, 3809287, 14599408, 4916586, 6110820, 557838, 8944178, 3738699, 16030272, 14739391, 8895506, 3416573, 6101142, 1541796, 14309172, 6220770, 9300324, 15921312, 15053103]
+
+private theorem witness44 : ∃ g : numerator, g.val.val.val = decode rows44 :=
+  product_witness witness43 witness0 (by decide +kernel)
+
+private def rows45 : Rows :=
+  ![9787581, 8441033, 11523509, 3808655, 7659863, 7429657, 15553758, 5804202, 642264, 5098463, 11887552, 1046124, 1873507, 670331, 10448162, 3522936, 5123398, 6986983, 13462526, 6095870, 3910660, 10409520, 7390582, 6750970]
+
+private theorem witness45 : ∃ g : numerator, g.val.val.val = decode rows45 :=
+  product_witness witness44 witness32 (by decide +kernel)
+
+private def rows46 : Rows :=
+  ![1526878, 4851790, 1738009, 1092870, 13976731, 5527971, 14101286, 14816574, 12507097, 13136978, 14454287, 3715619, 10670720, 10205119, 10022030, 12069473, 6452510, 13959894, 5258000, 8879246, 1190096, 7334361, 10869905, 1568838]
+
+private theorem witness46 : ∃ g : numerator, g.val.val.val = decode rows46 :=
+  product_witness witness45 witness0 (by decide +kernel)
+
+private def rows47 : Rows :=
+  ![12779869, 10825721, 1025991, 12480329, 15960266, 12635252, 11472731, 12906950, 12386406, 13299727, 8853570, 13928310, 14655416, 3416535, 14013985, 11937773, 10030329, 4824837, 14384751, 6542785, 3177136, 14903575, 12887606, 7614769]
+
+private theorem witness47 : ∃ g : numerator, g.val.val.val = decode rows47 :=
+  product_witness witness46 witness12 (by decide +kernel)
+
+private def rows48 : Rows :=
+  ![14177667, 16053859, 12732366, 1275300, 11700396, 10590404, 1411791, 11369986, 12079882, 12478182, 10804715, 14998520, 3220341, 4059605, 14666008, 13387144, 8036673, 3013330, 3173032, 4474994, 6059964, 7771659, 9569638, 12552774]
+
+private theorem witness48 : ∃ g : numerator, g.val.val.val = decode rows48 :=
+  product_witness witness47 witness0 (by decide +kernel)
+
+private def rows49 : Rows :=
+  ![5718153, 15690297, 5572104, 15108751, 6301683, 3492433, 142148, 2400085, 11744282, 7029523, 3176215, 2136418, 5656108, 14692885, 16755569, 13375371, 138387, 10987034, 15327840, 3358205, 16087242, 3313291, 13345932, 13492232]
+
+private theorem witness49 : ∃ g : numerator, g.val.val.val = decode rows49 :=
+  product_witness witness48 witness15 (by decide +kernel)
+
+private def rows50 : Rows :=
+  ![5773905, 3319978, 8752042, 15041181, 12497718, 7306466, 6731253, 7070815, 12490432, 7637246, 345274, 3035553, 8700138, 8120353, 4296089, 9256239, 8364318, 6885445, 11940880, 15030414, 13259870, 10396511, 15360577, 5619150]
+
+private theorem witness50 : ∃ g : numerator, g.val.val.val = decode rows50 :=
+  product_witness witness49 witness0 (by decide +kernel)
+
+private def rows51 : Rows :=
+  ![5531637, 5440013, 13470647, 7441643, 2991878, 14902272, 1156814, 13551068, 9846200, 7047958, 16187198, 9230825, 14542696, 15206538, 15280947, 6951130, 4273143, 8295187, 7247728, 9320360, 1841741, 10357194, 14255153, 13136633]
+
+private theorem witness51 : ∃ g : numerator, g.val.val.val = decode rows51 :=
+  product_witness witness50 witness11 (by decide +kernel)
+
+private def rows52 : Rows :=
+  ![15064300, 3352909, 7011045, 416473, 16694235, 9854141, 1002647, 6119870, 12162708, 545570, 14895585, 3141793, 13301745, 6109741, 3931057, 112312, 15885921, 8044431, 8078244, 7311353, 3670006, 12632641, 6444183, 9886585]
+
+private theorem witness52 : ∃ g : numerator, g.val.val.val = decode rows52 :=
+  product_witness witness51 witness0 (by decide +kernel)
+
+private def rows53 : Rows :=
+  ![7379371, 749002, 1015108, 8980931, 8178820, 14324776, 9801969, 14694451, 1011397, 14298561, 4043984, 8746298, 46768, 8436792, 9424025, 7608464, 2376845, 4798347, 8070998, 13159532, 5699948, 16087328, 7312739, 6687350]
+
+private theorem witness53 : ∃ g : numerator, g.val.val.val = decode rows53 :=
+  product_witness witness52 witness1 (by decide +kernel)
+
+private def rows54 : Rows :=
+  ![5859833, 1635565, 7846247, 10467086, 13638198, 11446243, 15963209, 2256649, 7908986, 8995984, 16593194, 3310544, 5122855, 11141061, 15846057, 6275428, 15411200, 10145840, 13321885, 7025792, 10518528, 14598879, 1711729, 11122527]
+
+private theorem witness54 : ∃ g : numerator, g.val.val.val = decode rows54 :=
+  product_witness witness53 witness0 (by decide +kernel)
+
+private def rows55 : Rows :=
+  ![4972062, 6328022, 10738440, 11317459, 12265921, 2839879, 15129783, 4637440, 10933216, 13239026, 15320702, 5756293, 7213056, 10409744, 3407225, 8610344, 8998942, 1993928, 16286887, 12578657, 10977152, 5346374, 4343062, 9666654]
+
+private theorem witness55 : ∃ g : numerator, g.val.val.val = decode rows55 :=
+  product_witness witness54 witness15 (by decide +kernel)
+
+private def rows56 : Rows :=
+  ![1474444, 2241805, 2975303, 8588658, 8433828, 1743826, 12978049, 10871128, 11805626, 5109458, 10512874, 9498012, 1240626, 12758096, 6348974, 12707260, 3176634, 9268616, 9483194, 74850, 3974580, 6940890, 5137242, 9277793]
+
+private theorem witness56 : ∃ g : numerator, g.val.val.val = decode rows56 :=
+  product_witness witness55 witness0 (by decide +kernel)
+
+private def rows57 : Rows :=
+  ![15534290, 1837613, 16085627, 11917676, 9119637, 11181592, 2180215, 14217541, 2151621, 6255425, 11722022, 11005352, 3599729, 16448816, 3514500, 1102456, 16263414, 16490263, 7173981, 1419045, 6641456, 280285, 2636731, 3889176]
+
+private theorem witness57 : ∃ g : numerator, g.val.val.val = decode rows57 :=
+  product_witness witness56 witness11 (by decide +kernel)
+
+private def rows58 : Rows :=
+  ![7663053, 6358031, 4283687, 15214266, 7585016, 6946331, 10666639, 5935392, 9312158, 2026058, 7282613, 2497714, 13525137, 668361, 12788366, 6133337, 13813307, 825739, 1552410, 2166814, 8168872, 14459812, 4973455, 15412956]
+
+private theorem witness58 : ∃ g : numerator, g.val.val.val = decode rows58 :=
+  product_witness witness57 witness0 (by decide +kernel)
+
+private def rows59 : Rows :=
+  ![2864432, 15904316, 16570972, 1291072, 16529593, 4840788, 7724647, 5570542, 3502364, 1133823, 10315367, 5549805, 3004755, 16646186, 4689692, 808855, 5463664, 14086580, 9082957, 5922416, 2343395, 83783, 13047319, 2997859]
+
+private theorem witness59 : ∃ g : numerator, g.val.val.val = decode rows59 :=
+  product_witness witness1 witness14 (by decide +kernel)
+
+private def rows60 : Rows :=
+  ![12817516, 4070231, 7257018, 12819598, 15797815, 12141602, 12718362, 3496636, 658250, 4263874, 6644220, 11176792, 14049964, 5709243, 13202347, 8063819, 10954641, 966826, 15621441, 10371069, 6391730, 3030290, 15437599, 2157300]
+
+private theorem witness60 : ∃ g : numerator, g.val.val.val = decode rows60 :=
+  product_witness witness58 witness59 (by decide +kernel)
+
+private def rows61 : Rows :=
+  ![338147, 5661827, 5773672, 13310398, 5441227, 9968514, 6740981, 9827334, 3863270, 15888534, 16245802, 11915093, 15993169, 13837984, 2068405, 10352031, 7657127, 4591822, 828875, 12296490, 5848071, 11737466, 9612705, 14058773]
+
+private theorem witness61 : ∃ g : numerator, g.val.val.val = decode rows61 :=
+  product_witness witness60 witness0 (by decide +kernel)
+
+private def rows62 : Rows :=
+  ![6815071, 11527055, 15386624, 13908939, 2682553, 8451386, 1758336, 16026576, 14089909, 2018048, 12440245, 212834, 13250124, 15662527, 6544006, 5276063, 13225977, 3461395, 6342045, 1900635, 7527837, 4957221, 8451072, 1125598]
+
+private theorem witness62 : ∃ g : numerator, g.val.val.val = decode rows62 :=
+  product_witness witness61 witness32 (by decide +kernel)
+
+private def rows63 : Rows :=
+  ![11940674, 10862841, 361693, 12876634, 16237221, 16567329, 5592300, 6977038, 2777990, 5139818, 11255260, 1654414, 14886264, 12857149, 11026357, 6944373, 3953516, 8613680, 5030785, 1374875, 2883739, 15136257, 3110116, 4335492]
+
+private theorem witness63 : ∃ g : numerator, g.val.val.val = decode rows63 :=
+  product_witness witness62 witness0 (by decide +kernel)
+
+private def rows64 : Rows :=
+  ![11085620, 12480109, 987430, 1449174, 7996441, 15367236, 14111068, 9518695, 2179030, 1457222, 2986675, 6133952, 12318755, 3588023, 4544903, 1373270, 10364146, 2721562, 15354797, 7886668, 16570761, 16202960, 14993312, 15937016]
+
+private theorem witness64 : ∃ g : numerator, g.val.val.val = decode rows64 :=
+  product_witness witness63 witness1 (by decide +kernel)
+
+private def rows65 : Rows :=
+  ![3249945, 4551410, 12274428, 552930, 10060643, 898473, 2287371, 13452583, 3151418, 14437230, 15427317, 12770759, 892114, 5855042, 12685175, 10172137, 5778386, 12330562, 4763322, 207058, 15564677, 3864091, 14290345, 12202435]
+
+private theorem witness65 : ∃ g : numerator, g.val.val.val = decode rows65 :=
+  product_witness witness64 witness0 (by decide +kernel)
+
+private def rows66 : Rows :=
+  ![7102684, 3234090, 7780188, 13546031, 1060725, 15374182, 6576526, 11452881, 4902791, 2562694, 3659510, 11174419, 3830268, 4623527, 979279, 8180541, 1086928, 15087214, 7399003, 13744421, 15048528, 2217179, 4565977, 2512567]
+
+private theorem witness66 : ∃ g : numerator, g.val.val.val = decode rows66 :=
+  product_witness witness65 witness32 (by decide +kernel)
+
+private def rows67 : Rows :=
+  ![12331607, 11174686, 4083194, 10482392, 4804496, 7948162, 4644760, 1290607, 9865602, 9062562, 14018901, 8489539, 4988695, 10904004, 14366988, 8879117, 4359025, 3547809, 14357607, 3330996, 10462065, 8956515, 13271019, 9906823]
+
+private theorem witness67 : ∃ g : numerator, g.val.val.val = decode rows67 :=
+  product_witness witness66 witness0 (by decide +kernel)
+
+private def rows68 : Rows :=
+  ![2203170, 15675884, 3866660, 8057212, 6611720, 12602236, 11170658, 4878723, 9630677, 937451, 2802023, 6207647, 6033978, 12604931, 12551995, 8998582, 10792805, 15481818, 6554402, 5415499, 646695, 8655514, 2527159, 7607150]
+
+private theorem witness68 : ∃ g : numerator, g.val.val.val = decode rows68 :=
+  product_witness witness67 witness15 (by decide +kernel)
+
+private def rows69 : Rows :=
+  ![16418863, 10065966, 12503855, 6152032, 14493255, 1689464, 9504748, 9663079, 3833213, 13427127, 10506420, 2069051, 7133145, 577444, 10276210, 8628969, 10755274, 1811499, 13677843, 6709750, 4087105, 12435538, 13907884, 1221753]
+
+private theorem witness69 : ∃ g : numerator, g.val.val.val = decode rows69 :=
+  product_witness witness68 witness0 (by decide +kernel)
+
+private def rows70 : Rows :=
+  ![5725644, 2530331, 16451231, 9833705, 5672862, 12414536, 15959047, 285162, 6767661, 10294322, 12287994, 753679, 2008263, 9023348, 5061623, 6931897, 11156563, 4674313, 11069648, 12648472, 10073656, 2740672, 5878591, 16540120]
+
+private theorem witness70 : ∃ g : numerator, g.val.val.val = decode rows70 :=
+  product_witness witness69 witness1 (by decide +kernel)
+
+private def rows71 : Rows :=
+  ![15622058, 13022801, 7970204, 6685753, 9354051, 2915041, 9926845, 7222231, 2041132, 14221281, 15380717, 4983475, 8869717, 4945838, 3937177, 8960705, 14177510, 14577983, 11545969, 3702248, 16054411, 5831086, 73605, 10529079]
+
+private theorem witness71 : ∃ g : numerator, g.val.val.val = decode rows71 :=
+  product_witness witness70 witness0 (by decide +kernel)
+
+private def rows72 : Rows :=
+  ![7057111, 9727606, 1171005, 11768993, 13479216, 4754329, 4048328, 10107211, 5346277, 7532754, 15522972, 15927185, 7683343, 12137924, 9464604, 7494606, 13794532, 8303662, 15452394, 7000739, 1947986, 826561, 2111408, 4904107]
+
+private theorem witness72 : ∃ g : numerator, g.val.val.val = decode rows72 :=
+  product_witness witness71 witness13 (by decide +kernel)
+
+private def rows73 : Rows :=
+  ![12069735, 11388984, 3409955, 11691185, 8408115, 10316056, 4445557, 924805, 6370317, 7398715, 12855224, 15024698, 5137219, 11911724, 5510110, 10579409, 15978159, 2876426, 15132112, 16609439, 2464650, 7955285, 15610432, 15021636]
+
+private theorem witness73 : ∃ g : numerator, g.val.val.val = decode rows73 :=
+  product_witness witness72 witness0 (by decide +kernel)
+
+private def rows74 : Rows :=
+  ![1886859, 7241821, 6128869, 2622285, 4621066, 2200283, 10162496, 7241951, 4798021, 6057585, 10584064, 15252608, 14023921, 6740337, 3855045, 9358833, 1282432, 2470111, 6632389, 1741184, 4957893, 16618975, 10327519, 6344110]
+
+private theorem witness74 : ∃ g : numerator, g.val.val.val = decode rows74 :=
+  product_witness witness11 witness13 (by decide +kernel)
+
+private def rows75 : Rows :=
+  ![12722009, 14867100, 6841426, 1810010, 424172, 13916568, 10465279, 15277146, 555299, 2920079, 7076018, 3228062, 6786899, 1849543, 14397818, 8196254, 9754763, 14999637, 13184033, 8479040, 385505, 16197985, 3048837, 16658879]
+
+private theorem witness75 : ∃ g : numerator, g.val.val.val = decode rows75 :=
+  product_witness witness73 witness74 (by decide +kernel)
+
+private def rows76 : Rows :=
+  ![334607, 14144894, 14468334, 3424752, 13931553, 13392656, 3050891, 1488180, 15537800, 14908271, 15790882, 13205457, 2931406, 4120725, 11800902, 4031203, 8430091, 14900662, 2733508, 10460564, 7962072, 6292669, 1795980, 15549811]
+
+private theorem witness76 : ∃ g : numerator, g.val.val.val = decode rows76 :=
+  product_witness witness75 witness0 (by decide +kernel)
+
+private def rows77 : Rows :=
+  ![2293199, 6651732, 15910815, 4573729, 10726242, 4604538, 6879094, 3405262, 5490135, 4377103, 7646226, 9242373, 3104570, 15867962, 15081144, 11042180, 5743983, 14632574, 6110326, 854618, 14651134, 10071393, 2192292, 12689202]
+
+private theorem witness77 : ∃ g : numerator, g.val.val.val = decode rows77 :=
+  product_witness witness76 witness32 (by decide +kernel)
+
+private def rows78 : Rows :=
+  ![6398089, 4470393, 16600291, 4863451, 4220113, 4121682, 15659846, 6468921, 6616350, 7280321, 11688020, 5614261, 10505249, 8243271, 6721618, 7379197, 9812636, 9934362, 2983427, 3615718, 14681928, 9606124, 4232379, 11078925]
+
+private theorem witness78 : ∃ g : numerator, g.val.val.val = decode rows78 :=
+  product_witness witness77 witness0 (by decide +kernel)
+
+private def rows79 : Rows :=
+  ![4945411, 1418816, 14160332, 10861399, 3714220, 405707, 6191187, 11504012, 31524, 2575464, 6891228, 12855316, 2725109, 9282862, 4202581, 16087472, 5225311, 13000311, 14769965, 8359365, 11171498, 3869086, 14460093, 8369478]
+
+private theorem witness79 : ∃ g : numerator, g.val.val.val = decode rows79 :=
+  product_witness witness78 witness15 (by decide +kernel)
+
+private def rows80 : Rows :=
+  ![8952288, 4730128, 11494108, 2672931, 14111710, 5242196, 10122263, 782540, 10067515, 4487607, 14713682, 16291327, 4212085, 10147772, 15615532, 12487428, 9810089, 8265646, 10057445, 11601877, 11171498, 806353, 12812987, 392673]
+
+private theorem witness80 : ∃ g : numerator, g.val.val.val = decode rows80 :=
+  product_witness witness79 witness0 (by decide +kernel)
+
+private def rows81 : Rows :=
+  ![6245883, 6539618, 14885688, 14800917, 4778914, 8649480, 5380527, 9025747, 8468624, 8182941, 12111269, 12148587, 4184726, 5503239, 8440182, 8982923, 2954137, 2322074, 10522828, 15682415, 4462043, 10312887, 5877399, 16660404]
+
+private theorem witness81 : ∃ g : numerator, g.val.val.val = decode rows81 :=
+  product_witness witness80 witness59 (by decide +kernel)
+
+private def rows82 : Rows :=
+  ![12620177, 12247108, 15269966, 15762815, 15688086, 10632645, 2515629, 9487787, 16020651, 13585954, 5492719, 16149672, 14701480, 1146515, 11892027, 12496546, 14620717, 4064049, 15572004, 7852416, 6691885, 2337787, 6684311, 8892456]
+
+private theorem witness82 : ∃ g : numerator, g.val.val.val = decode rows82 :=
+  product_witness witness81 witness0 (by decide +kernel)
+
+private def rows83 : Rows :=
+  ![16147732, 15227097, 16744858, 11589791, 2237464, 1580808, 7295994, 7696915, 12734918, 1969845, 178954, 1529632, 6082111, 16429453, 5988986, 8697053, 13607406, 621845, 5916417, 1976284, 14654173, 2606642, 2786749, 16475539]
+
+private theorem witness83 : ∃ g : numerator, g.val.val.val = decode rows83 :=
+  product_witness witness82 witness1 (by decide +kernel)
+
+private def rows84 : Rows :=
+  ![2180056, 6987166, 10974052, 15359363, 5723244, 158306, 14144778, 1746601, 326596, 13721207, 9144297, 9978939, 2076470, 10517592, 14660746, 7839453, 11829300, 11709875, 2348560, 5840591, 8360261, 14193722, 13592054, 12570111]
+
+private theorem witness84 : ∃ g : numerator, g.val.val.val = decode rows84 :=
+  product_witness witness83 witness0 (by decide +kernel)
+
+private def rows85 : Rows :=
+  ![7297543, 10269270, 1232967, 12385013, 1517439, 15959928, 12817484, 5616584, 5169311, 7728621, 11145224, 16256755, 5664084, 8696505, 15388700, 7023855, 7731892, 14850397, 952103, 9437130, 380278, 9722742, 5662722, 13548106]
+
+private theorem witness85 : ∃ g : numerator, g.val.val.val = decode rows85 :=
+  product_witness witness84 witness14 (by decide +kernel)
+
+private def rows86 : Rows :=
+  ![7402465, 103998, 6989771, 3333847, 4715923, 2326108, 14456968, 6969461, 14057750, 12040919, 203318, 8519145, 3566806, 7750251, 7382140, 8561185, 16725283, 11467976, 14920341, 6047285, 3242573, 6484926, 14743445, 9130393]
+
+private theorem witness86 : ∃ g : numerator, g.val.val.val = decode rows86 :=
+  product_witness witness85 witness0 (by decide +kernel)
+
+private def rows87 : Rows :=
+  ![6217169, 1241124, 11259108, 5966397, 4391605, 15551632, 13905607, 4709673, 5497147, 4394531, 3737257, 14043109, 7897105, 592919, 8095028, 4114772, 11252952, 3305167, 10196394, 15950497, 12576974, 4037424, 8451072, 13031358]
+
+private theorem witness87 : ∃ g : numerator, g.val.val.val = decode rows87 :=
+  product_witness witness86 witness1 (by decide +kernel)
+
+private def rows88 : Rows :=
+  ![2831560, 15308861, 14321281, 9332572, 3983578, 14461127, 14898887, 6633780, 12447321, 5832671, 12997793, 9116945, 10898064, 7517344, 10238047, 8561681, 3870245, 6308897, 7770842, 2788526, 5604345, 10881485, 3110116, 1838572]
+
+private theorem witness88 : ∃ g : numerator, g.val.val.val = decode rows88 :=
+  product_witness witness87 witness0 (by decide +kernel)
+
+private def rows89 : Rows :=
+  ![11211050, 6135667, 15902541, 11979352, 8080396, 4527012, 6424223, 9703051, 7217577, 228723, 6120215, 1725018, 8580220, 13691533, 4007332, 3507553, 11837185, 769902, 13825073, 15790185, 1507818, 11333949, 11052739, 11890774]
+
+private theorem witness89 : ∃ g : numerator, g.val.val.val = decode rows89 :=
+  product_witness witness88 witness11 (by decide +kernel)
+
+private def rows90 : Rows :=
+  ![12868722, 8440326, 11962575, 7689511, 5031709, 7436009, 15594384, 10665453, 12290333, 13552626, 5099136, 3147775, 5397291, 6773239, 15871448, 5887897, 4878596, 5540097, 16054825, 2128939, 12706834, 13316501, 14611279, 13890607]
+
+private theorem witness90 : ∃ g : numerator, g.val.val.val = decode rows90 :=
+  product_witness witness14 witness0 (by decide +kernel)
+
+private def rows91 : Rows :=
+  ![6927057, 5151669, 4416281, 10639459, 10192595, 15630223, 6699362, 12172605, 11404947, 3180243, 14261449, 3941058, 7787179, 5066731, 15427979, 7659557, 3511950, 2271382, 314630, 464584, 4874622, 2675097, 1132637, 5983720]
+
+private theorem witness91 : ∃ g : numerator, g.val.val.val = decode rows91 :=
+  product_witness witness90 witness32 (by decide +kernel)
+
+private def rows92 : Rows :=
+  ![12901562, 12762355, 15252455, 452106, 12591739, 5873640, 1154006, 7506346, 8592756, 13578173, 16430219, 14960731, 9205485, 2805701, 3091718, 434770, 11389768, 7576807, 12891034, 11886245, 6416078, 4973638, 614423, 2334534]
+
+private theorem witness92 : ∃ g : numerator, g.val.val.val = decode rows92 :=
+  product_witness witness91 witness0 (by decide +kernel)
+
+private def rows93 : Rows :=
+  ![1963276, 9488496, 9361588, 13732380, 3640622, 16379270, 15209933, 8128160, 16728588, 5939561, 1070110, 3701386, 11081237, 7912416, 15019654, 13770082, 5961524, 11527964, 5704538, 10342443, 12945978, 7580062, 6445123, 15316679]
+
+private theorem witness93 : ∃ g : numerator, g.val.val.val = decode rows93 :=
+  product_witness witness92 witness1 (by decide +kernel)
+
+private def rows94 : Rows :=
+  ![13685292, 16399136, 6356244, 9923037, 12255066, 6478425, 3843908, 5171941, 2899162, 14463956, 6441005, 10400513, 10014221, 6459598, 7698832, 8973560, 14876196, 11240265, 15834261, 14591919, 14153088, 10763517, 13306937, 4440173]
+
+private theorem witness94 : ∃ g : numerator, g.val.val.val = decode rows94 :=
+  product_witness witness93 witness0 (by decide +kernel)
+
+private def rows95 : Rows :=
+  ![10440981, 15803327, 12210180, 3023259, 463356, 441614, 1265076, 15554814, 13123731, 4365460, 2215127, 11002609, 10689440, 4642355, 13088070, 7378469, 7010359, 2581570, 1007526, 16194368, 7208770, 5454818, 892445, 5661223]
+
+private theorem witness95 : ∃ g : numerator, g.val.val.val = decode rows95 :=
+  product_witness witness94 witness14 (by decide +kernel)
+
+private def rows96 : Rows :=
+  ![4793067, 7476968, 12006903, 14868518, 7277603, 5643108, 2316787, 2129886, 10578549, 11858805, 16094863, 5231846, 2954560, 4628218, 13137651, 4540515, 7912386, 5647911, 10963043, 1994472, 15524787, 13732387, 12776080, 15791592]
+
+private theorem witness96 : ∃ g : numerator, g.val.val.val = decode rows96 :=
+  product_witness witness95 witness0 (by decide +kernel)
+
+private def rows97 : Rows :=
+  ![8588883, 15326545, 13288568, 13594386, 13252219, 2436415, 12762709, 12073563, 9739926, 3065981, 14598479, 1020140, 7524165, 1551431, 15029649, 15264228, 12803222, 15869526, 14022499, 4174516, 9620803, 4408378, 1954714, 8615876]
+
+private theorem witness97 : ∃ g : numerator, g.val.val.val = decode rows97 :=
+  product_witness witness96 witness59 (by decide +kernel)
+
+private def rows98 : Rows :=
+  ![3829310, 10113913, 12690609, 7202830, 10553716, 3181933, 7742118, 12230738, 3253353, 107640, 4326330, 10073670, 13106658, 58010, 7655128, 7895515, 7508745, 14364002, 6942368, 11290770, 6409601, 3956721, 11150704, 15747651]
+
+private theorem witness98 : ∃ g : numerator, g.val.val.val = decode rows98 :=
+  product_witness witness97 witness0 (by decide +kernel)
+
+private def rows99 : Rows :=
+  ![5610121, 1370424, 4135843, 554876, 4992961, 6990689, 2129170, 14298392, 6433417, 2507788, 8082291, 12023490, 7900251, 11453890, 13684115, 10301691, 583434, 12589876, 9860537, 9101896, 943242, 6880909, 8895186, 2043382]
+
+private theorem witness99 : ∃ g : numerator, g.val.val.val = decode rows99 :=
+  product_witness witness98 witness1 (by decide +kernel)
+
+private def rows100 : Rows :=
+  ![10260789, 1736639, 3193373, 14332275, 4949167, 16461864, 14538520, 7409280, 11808241, 4949343, 3363507, 2532674, 5843101, 7710537, 6293882, 12274645, 4265690, 13156416, 13751751, 11953132, 14915740, 6508512, 3990932, 14672069]
+
+private theorem witness100 : ∃ g : numerator, g.val.val.val = decode rows100 :=
+  product_witness witness99 witness0 (by decide +kernel)
+
+private def rows101 : Rows :=
+  ![3830059, 3285189, 9696734, 13282275, 8405328, 14258948, 4209434, 13671422, 2468354, 583174, 765408, 3386237, 2106423, 15325477, 2081535, 5639784, 2185480, 13307268, 967378, 1644147, 5250939, 3497473, 3999524, 8044794]
+
+private theorem witness101 : ∃ g : numerator, g.val.val.val = decode rows101 :=
+  product_witness witness100 witness14 (by decide +kernel)
+
+private def rows102 : Rows :=
+  ![3798745, 6484521, 13863496, 16490000, 10546912, 554971, 11184971, 9431212, 3826159, 6920308, 10554094, 13546200, 13352720, 3167521, 12292477, 2199699, 11782739, 7041690, 3417159, 6586684, 13558437, 13607939, 12338577, 16229379]
+
+private theorem witness102 : ∃ g : numerator, g.val.val.val = decode rows102 :=
+  product_witness witness101 witness0 (by decide +kernel)
+
+private def rows103 : Rows :=
+  ![14332558, 15218381, 6495985, 1240428, 2709805, 6349549, 10347640, 7072368, 8149383, 8818863, 5209787, 15529884, 16456446, 8564724, 12636429, 150440, 13914184, 13983829, 10184595, 3105639, 8537717, 650075, 11736314, 7418767]
+
+private theorem witness103 : ∃ g : numerator, g.val.val.val = decode rows103 :=
+  product_witness witness102 witness59 (by decide +kernel)
+
+private def rows104 : Rows :=
+  ![392345, 5896530, 6099921, 10222413, 7138490, 8313104, 8623948, 6681367, 857058, 1297041, 4040097, 11407875, 10084145, 9768130, 10095189, 6378677, 7793435, 10851049, 11629112, 7976113, 12212450, 14407218, 1866229, 623402]
+
+private theorem witness104 : ∃ g : numerator, g.val.val.val = decode rows104 :=
+  product_witness witness103 witness0 (by decide +kernel)
+
+private def rows105 : Rows :=
+  ![2387554, 13275516, 13990916, 1006039, 13322910, 16211541, 5739309, 7179772, 1446937, 4817665, 9009813, 3969725, 6567744, 9430124, 3949793, 7725268, 5819839, 815047, 6284444, 11244849, 5557830, 1036883, 13612832, 16090126]
+
+private theorem witness105 : ∃ g : numerator, g.val.val.val = decode rows105 :=
+  product_witness witness104 witness74 (by decide +kernel)
+
+private def rows106 : Rows :=
+  ![16159778, 12109190, 9731170, 13473664, 1853072, 14639704, 16452950, 1985309, 14403679, 13660307, 11030963, 16049905, 12874769, 3231076, 12397718, 222164, 155182, 926826, 2795687, 13791398, 3377473, 7275125, 5928051, 5910056]
+
+private theorem witness106 : ∃ g : numerator, g.val.val.val = decode rows106 :=
+  product_witness witness105 witness0 (by decide +kernel)
+
+private def rows107 : Rows :=
+  ![10940242, 1683455, 14200890, 9054205, 5995193, 12228041, 5551467, 13261476, 11287241, 1787117, 13812080, 7305393, 6236920, 944637, 2235259, 14006592, 14967867, 2727414, 12796677, 2392230, 7642683, 6955752, 2421213, 1874856]
+
+private theorem witness107 : ∃ g : numerator, g.val.val.val = decode rows107 :=
+  product_witness witness106 witness11 (by decide +kernel)
+
+private def rows108 : Rows :=
+  ![7251793, 6204067, 11805787, 2707697, 7881846, 16381120, 9794350, 1058260, 12093280, 11227552, 4280272, 16006120, 3453141, 8226270, 364613, 9276567, 14187762, 7626351, 9086040, 15533306, 7015314, 4081141, 6599172, 14241086]
+
+private theorem witness108 : ∃ g : numerator, g.val.val.val = decode rows108 :=
+  product_witness witness107 witness0 (by decide +kernel)
+
+private def rows109 : Rows :=
+  ![10449440, 476055, 10743530, 4278786, 13712088, 11143101, 5975285, 7383273, 8571857, 478577, 3003582, 4406464, 12487478, 10304232, 16072043, 12464184, 6982288, 13468334, 6730581, 3263882, 11442203, 9135108, 3256116, 14722713]
+
+private theorem witness109 : ∃ g : numerator, g.val.val.val = decode rows109 :=
+  product_witness witness108 witness32 (by decide +kernel)
+
+private def rows110 : Rows :=
+  ![10014659, 9304198, 2426673, 9915770, 13664769, 93420, 14043148, 13066828, 4535521, 3981977, 5405914, 3702545, 16059652, 5275587, 4842369, 13987132, 12413813, 2104499, 3639076, 16457600, 435484, 10874524, 2202403, 11517848]
+
+private theorem witness110 : ∃ g : numerator, g.val.val.val = decode rows110 :=
+  product_witness witness109 witness0 (by decide +kernel)
+
+private def rows111 : Rows :=
+  ![1804394, 13461720, 2728635, 9624676, 1743680, 6928432, 9384953, 3411941, 6752574, 3381376, 16329810, 6880447, 5188553, 4809336, 5678580, 8295201, 4064125, 2247115, 11749473, 1389846, 12439374, 14428274, 4396302, 11793344]
+
+private theorem witness111 : ∃ g : numerator, g.val.val.val = decode rows111 :=
+  product_witness witness110 witness1 (by decide +kernel)
+
+private def rows112 : Rows :=
+  ![4819014, 7610999, 7506419, 5661583, 10142734, 14724625, 16524476, 313862, 16636028, 6256743, 3992649, 12647927, 1611106, 5236898, 9981423, 8047419, 14185033, 13563490, 7156047, 14485907, 2728521, 14184552, 11738590, 15288979]
+
+private theorem witness112 : ∃ g : numerator, g.val.val.val = decode rows112 :=
+  product_witness witness111 witness0 (by decide +kernel)
+
+private def rows113 : Rows :=
+  ![15549802, 6668017, 1259017, 4686118, 4827528, 1487218, 7732671, 9098932, 5655358, 6849766, 12814501, 4134180, 4107043, 10257700, 11639223, 2963795, 6026602, 3545496, 14732559, 5960304, 10912786, 2675185, 10168790, 9526886]
+
+private theorem witness113 : ∃ g : numerator, g.val.val.val = decode rows113 :=
+  product_witness witness112 witness59 (by decide +kernel)
+
+private def rows114 : Rows :=
+  ![13191590, 16029207, 15067719, 9403018, 10060040, 4419254, 14759322, 5196011, 949993, 3980735, 15971872, 6752817, 11040495, 13269040, 10114766, 7867260, 14738149, 4908970, 7744652, 15573432, 5931084, 9570849, 89526, 1573006]
+
+private theorem witness114 : ∃ g : numerator, g.val.val.val = decode rows114 :=
+  product_witness witness113 witness0 (by decide +kernel)
+
+private def rows115 : Rows :=
+  ![6240248, 5153548, 5019201, 14551308, 3694187, 6596305, 1663597, 8584708, 11011678, 3082438, 11636768, 13451875, 15896328, 6570552, 3048038, 7353078, 7943895, 8604434, 9398657, 4583307, 16231346, 3670006, 12313216, 10035790]
+
+private theorem witness115 : ∃ g : numerator, g.val.val.val = decode rows115 :=
+  product_witness witness114 witness11 (by decide +kernel)
+
+private def rows116 : Rows :=
+  ![4623785, 13700064, 3003516, 11740596, 8621773, 9397170, 10716658, 3030587, 8010551, 12798985, 3491536, 4040536, 14670886, 2345092, 11852996, 12049227, 3617325, 11492227, 5644972, 6956716, 10662751, 1841741, 7830905, 4771868]
+
+private theorem witness116 : ∃ g : numerator, g.val.val.val = decode rows116 :=
+  product_witness witness115 witness0 (by decide +kernel)
+
+private def rows117 : Rows :=
+  ![14807762, 14845135, 8717146, 3202959, 16650421, 1587172, 6237623, 16673383, 12845389, 4043648, 16210927, 8283676, 10502013, 9477896, 8190730, 7920640, 15258492, 14156453, 6827375, 14465482, 13663797, 4866725, 3030744, 16710681]
+
+private theorem witness117 : ∃ g : numerator, g.val.val.val = decode rows117 :=
+  product_witness witness116 witness13 (by decide +kernel)
+
+private def rows118 : Rows :=
+  ![9679013, 7164157, 11348442, 9496664, 5979335, 16094646, 7771436, 8541052, 10582369, 10679943, 4390965, 11982201, 7231622, 666689, 5837147, 13219517, 9037255, 1166896, 5088565, 7713780, 6282881, 2828890, 14547251, 3835099]
+
+private theorem witness118 : ∃ g : numerator, g.val.val.val = decode rows118 :=
+  product_witness witness117 witness0 (by decide +kernel)
+
+private def rows119 : Rows :=
+  ![10359676, 8357658, 834302, 7691346, 2479978, 7806769, 9884861, 10122989, 10328259, 10427716, 2110290, 6650471, 10753525, 15010867, 11940137, 9816621, 4034912, 5645952, 8143901, 11533243, 7369086, 896873, 14668088, 2664940]
+
+private theorem witness119 : ∃ g : numerator, g.val.val.val = decode rows119 :=
+  product_witness witness118 witness59 (by decide +kernel)
+
+private def rows120 : Rows :=
+  ![13705407, 13204102, 9246112, 1889174, 14461594, 5595713, 382461, 9814494, 10420938, 11113812, 976782, 9397718, 1925909, 12072140, 5525710, 1258875, 10739473, 2960792, 6915652, 11430304, 5697846, 10997582, 2957802, 3305257]
+
+private theorem witness120 : ∃ g : numerator, g.val.val.val = decode rows120 :=
+  product_witness witness119 witness0 (by decide +kernel)
+
+private def rows121 : Rows :=
+  ![1530532, 13861007, 11382707, 11789440, 13296993, 5222852, 8294652, 2119198, 16511392, 13277974, 2563277, 11955487, 5397060, 13822637, 1491959, 13282411, 4874177, 14168423, 14439501, 10206299, 4938057, 10594620, 16759081, 14741330]
+
+private theorem witness121 : ∃ g : numerator, g.val.val.val = decode rows121 :=
+  product_witness witness120 witness15 (by decide +kernel)
+
+private def rows122 : Rows :=
+  ![5325315, 4500819, 11477815, 9878910, 3556381, 11659450, 11464885, 15440367, 13082095, 1728125, 4708966, 5298946, 15735409, 2650788, 9361144, 12865130, 14451213, 4478640, 5763751, 3777066, 1353211, 9559920, 12723574, 711201]
+
+private theorem witness122 : ∃ g : numerator, g.val.val.val = decode rows122 :=
+  product_witness witness121 witness0 (by decide +kernel)
+
+private def rows123 : Rows :=
+  ![14345306, 13428066, 4190356, 13061299, 14658108, 9145051, 9238704, 14063384, 14068316, 12794998, 1675296, 1036099, 5437172, 3072890, 7415806, 750348, 11437244, 14742061, 7641792, 64000, 14303525, 11259320, 2236966, 945608]
+
+private theorem witness123 : ∃ g : numerator, g.val.val.val = decode rows123 :=
+  product_witness witness122 witness11 (by decide +kernel)
+
+private def rows124 : Rows :=
+  ![7110827, 9302921, 3099491, 4360120, 7147450, 5824207, 8353682, 7284433, 16077754, 2689285, 15330422, 1385284, 3977301, 14243401, 15251047, 5788308, 217077, 1823485, 12363333, 2114365, 489680, 6124541, 9376265, 15251934]
+
+private theorem witness124 : ∃ g : numerator, g.val.val.val = decode rows124 :=
+  product_witness witness123 witness0 (by decide +kernel)
+
+private def rows125 : Rows :=
+  ![14918613, 3961816, 5887473, 10185630, 9516586, 574598, 12374351, 3502915, 12165366, 15775770, 11739956, 493185, 16190184, 7063942, 14616987, 13541871, 2799561, 8635291, 5522076, 16158688, 472570, 6881448, 5142644, 15689146]
+
+private theorem witness125 : ∃ g : numerator, g.val.val.val = decode rows125 :=
+  product_witness witness124 witness15 (by decide +kernel)
+
+private def rows126 : Rows :=
+  ![13926135, 4135361, 9101217, 6008864, 10973086, 1467926, 9958365, 5728040, 2177561, 3817682, 3282183, 15379251, 5532521, 3320163, 14854539, 11526045, 8219497, 2022332, 4421831, 13430808, 14054407, 6106878, 14688834, 15380411]
+
+private theorem witness126 : ∃ g : numerator, g.val.val.val = decode rows126 :=
+  product_witness witness125 witness0 (by decide +kernel)
+
+private def rows127 : Rows :=
+  ![5283466, 16754392, 8977054, 12131923, 2496413, 12204818, 1183284, 2293404, 4137128, 11192459, 3055931, 15101734, 14945830, 7463731, 2680482, 4315699, 7871935, 13719826, 7187, 1189684, 5390738, 9382536, 12332093, 6997039]
+
+private theorem witness127 : ∃ g : numerator, g.val.val.val = decode rows127 :=
+  product_witness witness126 witness15 (by decide +kernel)
+
+private def rows128 : Rows :=
+  ![13831935, 9772353, 2766155, 883142, 11926326, 455541, 15091827, 5270863, 10231661, 1385020, 12377995, 10140630, 15987540, 13796018, 1575299, 1657542, 519071, 15956518, 4673926, 3128171, 15456921, 4653184, 14688180, 6634453]
+
+private theorem witness128 : ∃ g : numerator, g.val.val.val = decode rows128 :=
+  product_witness witness127 witness0 (by decide +kernel)
+
+private def rows129 : Rows :=
+  ![12872536, 3457345, 7970974, 16407810, 14269607, 10240307, 5325019, 13314773, 6504962, 10241490, 11903893, 329654, 5435006, 7627361, 15488948, 13032150, 8721133, 3215421, 15911208, 3551032, 5402244, 8554400, 12929316, 1257121]
+
+private theorem witness129 : ∃ g : numerator, g.val.val.val = decode rows129 :=
+  product_witness witness128 witness15 (by decide +kernel)
+
+private def rows130 : Rows :=
+  ![3002196, 14016637, 15502886, 5370234, 12430838, 4293536, 13929424, 1607079, 16102668, 15258427, 411052, 4344355, 213858, 1481697, 9121020, 10482426, 16436751, 9745327, 8081641, 14879376, 8709660, 8139573, 9688635, 13791625]
+
+private theorem witness130 : ∃ g : numerator, g.val.val.val = decode rows130 :=
+  product_witness witness129 witness0 (by decide +kernel)
+
+private def rows131 : Rows :=
+  ![11457392, 12839091, 3915585, 7493547, 8664034, 9956754, 3432648, 15944529, 10622401, 16679364, 15800743, 12024086, 14208416, 3678232, 16049064, 16185538, 12838825, 9153605, 15170926, 16260117, 13962148, 13920327, 5996123, 5972632]
+
+private theorem witness131 : ∃ g : numerator, g.val.val.val = decode rows131 :=
+  product_witness witness130 witness13 (by decide +kernel)
+
+private def rows132 : Rows :=
+  ![11658235, 10233934, 2707227, 9585070, 11315917, 11224820, 11375450, 16638361, 12959533, 436486, 15458146, 14884363, 10332563, 5559922, 16775143, 5312765, 1770192, 8720384, 9571610, 3542888, 11538819, 16138229, 9998776, 14785347]
+
+private theorem witness132 : ∃ g : numerator, g.val.val.val = decode rows132 :=
+  product_witness witness131 witness0 (by decide +kernel)
+
+private def rows133 : Rows :=
+  ![7688942, 9432231, 5667985, 12486637, 29883, 13209727, 12228001, 3432840, 6104256, 5278305, 2273712, 14747319, 15019279, 16039283, 6243405, 13862852, 9155748, 10878134, 3977753, 8856885, 14783835, 6950762, 5854448, 7172845]
+
+private theorem witness133 : ∃ g : numerator, g.val.val.val = decode rows133 :=
+  product_witness witness132 witness15 (by decide +kernel)
+
+private def rows134 : Rows :=
+  ![7631706, 1681414, 13015080, 15891221, 1441323, 5640785, 2103975, 8257831, 10461790, 2397032, 13960323, 2300228, 16087827, 9051745, 3042339, 16632437, 2787333, 11526080, 666756, 10912243, 7939446, 6927575, 9022932, 16593782]
+
+private theorem witness134 : ∃ g : numerator, g.val.val.val = decode rows134 :=
+  product_witness witness133 witness0 (by decide +kernel)
+
+private def rows135 : Rows :=
+  ![12841003, 16239479, 16339744, 6956721, 9112145, 4227390, 6517698, 10879144, 1641882, 6325003, 4230161, 15208689, 11990850, 1596487, 8045070, 12607385, 13654224, 13104705, 10169603, 14984336, 3814905, 7692729, 2019285, 6729289]
+
+private theorem witness135 : ∃ g : numerator, g.val.val.val = decode rows135 :=
+  product_witness witness134 witness12 (by decide +kernel)
+
+private def rows136 : Rows :=
+  ![8003494, 4425248, 466131, 9033037, 11120648, 5337083, 13775805, 6147475, 12260331, 8072371, 13054200, 14945010, 5692680, 10401180, 11648592, 6551857, 1730353, 5568257, 8578004, 9538208, 15858184, 2276633, 13488904, 1170777]
+
+private theorem witness136 : ∃ g : numerator, g.val.val.val = decode rows136 :=
+  product_witness witness135 witness0 (by decide +kernel)
+
+private def rows137 : Rows :=
+  ![5115411, 10728923, 6969820, 12124170, 3693971, 3043876, 10870966, 13008107, 5311185, 11755160, 11491777, 10848391, 5036069, 16017693, 16507756, 16674361, 4153917, 16202291, 16250091, 13159187, 9823530, 8922347, 3597384, 14408616]
+
+private theorem witness137 : ∃ g : numerator, g.val.val.val = decode rows137 :=
+  product_witness witness136 witness1 (by decide +kernel)
+
+private def rows138 : Rows :=
+  ![13455298, 6551304, 11519875, 3696765, 15538736, 4754938, 11081566, 5605069, 15839974, 14724772, 5649084, 10786172, 14423646, 6317585, 14630404, 8848462, 12974644, 14792881, 1712703, 16301407, 15485044, 9191614, 6108844, 4543216]
+
+private theorem witness138 : ∃ g : numerator, g.val.val.val = decode rows138 :=
+  product_witness witness137 witness0 (by decide +kernel)
+
+private def rows139 : Rows :=
+  ![5579348, 15931715, 6446129, 5543564, 15874897, 4260352, 3607244, 1420386, 1204586, 2978457, 14558120, 16572174, 14529921, 11600221, 3278654, 6938629, 14963714, 14772616, 4433297, 6963711, 13871559, 12586548, 8732755, 14885560]
+
+private theorem witness139 : ∃ g : numerator, g.val.val.val = decode rows139 :=
+  product_witness witness138 witness11 (by decide +kernel)
+
+private def rows140 : Rows :=
+  ![15034717, 5683921, 4952108, 5400784, 1824660, 11963260, 6472581, 15395047, 7364547, 15136161, 15155919, 11772932, 9539152, 3450973, 14025192, 9056182, 11204058, 5473479, 11874582, 2012445, 9240647, 11769489, 12323830, 16097338]
+
+private theorem witness140 : ∃ g : numerator, g.val.val.val = decode rows140 :=
+  product_witness witness139 witness0 (by decide +kernel)
+
+private def rows141 : Rows :=
+  ![4141555, 11555486, 12452211, 16000612, 13085403, 7132114, 13318510, 16669507, 2045708, 16521930, 13057889, 16043918, 8320929, 6780854, 4410338, 6276226, 12084314, 1376280, 3131526, 15410242, 12067096, 7522756, 16071859, 16011119]
+
+private theorem witness141 : ∃ g : numerator, g.val.val.val = decode rows141 :=
+  product_witness witness140 witness74 (by decide +kernel)
+
+private def rows142 : Rows :=
+  ![8454550, 3634970, 7602909, 2714391, 12444284, 9773506, 11591581, 4724080, 3481320, 12714343, 15103564, 9851909, 7866877, 14328362, 10854388, 1800803, 8291985, 10457547, 7505151, 8134419, 10630777, 11779118, 6095284, 16208368]
+
+private theorem witness142 : ∃ g : numerator, g.val.val.val = decode rows142 :=
+  product_witness witness141 witness0 (by decide +kernel)
+
+private def rows143 : Rows :=
+  ![15540792, 1939721, 6783261, 1614486, 484930, 13584190, 15259405, 14204357, 7688738, 1108671, 3493196, 7489853, 9308538, 924985, 5331596, 13147167, 14723154, 10772580, 59011, 13654273, 6145675, 13159187, 5242618, 850542]
+
+private theorem witness143 : ∃ g : numerator, g.val.val.val = decode rows143 :=
+  product_witness witness142 witness59 (by decide +kernel)
+
+private def rows144 : Rows :=
+  ![15529502, 3853719, 3256502, 13005323, 14858377, 832424, 12123714, 12748394, 14016175, 945302, 6530783, 1365929, 3385803, 11359477, 5337814, 11180303, 9250200, 12607207, 10030619, 7057004, 12413606, 13803444, 4071465, 2575048]
+
+private theorem witness144 : ∃ g : numerator, g.val.val.val = decode rows144 :=
+  product_witness witness12 witness0 (by decide +kernel)
+
+private def rows145 : Rows :=
+  ![14172113, 3852882, 10674013, 3279812, 11165849, 3146569, 2856556, 5753765, 16528063, 5513923, 16188485, 8418611, 6706180, 7080864, 9448835, 6229909, 8556999, 16574915, 2880267, 8319645, 3015304, 12586548, 10462188, 16586147]
+
+private theorem witness145 : ∃ g : numerator, g.val.val.val = decode rows145 :=
+  product_witness witness144 witness74 (by decide +kernel)
+
+private def rows146 : Rows :=
+  ![5904253, 14523090, 4558813, 9476693, 10369609, 6629355, 15469399, 15487946, 7000892, 11855202, 11307567, 2912805, 5431152, 383520, 6068408, 6903329, 1853147, 10532929, 4094363, 10921035, 12592936, 11769489, 4321280, 16344955]
+
+private theorem witness146 : ∃ g : numerator, g.val.val.val = decode rows146 :=
+  product_witness witness145 witness0 (by decide +kernel)
+
+private def rows147 : Rows :=
+  ![9118310, 14031485, 11482120, 3459, 1354135, 13251491, 4710147, 11597350, 8899852, 1037368, 9375351, 3070001, 1668627, 4858273, 12196907, 8850375, 759959, 16019304, 15978356, 859781, 2816354, 15760852, 6551149, 3206963]
+
+private theorem witness147 : ∃ g : numerator, g.val.val.val = decode rows147 :=
+  product_witness witness146 witness32 (by decide +kernel)
+
+private def rows148 : Rows :=
+  ![7855454, 13051164, 11628030, 8110514, 4657506, 9593983, 6926077, 5607168, 14934034, 8069338, 14648031, 13800614, 5721766, 4866986, 11332143, 5277737, 11156827, 15858477, 9378692, 15358088, 5662043, 3998896, 13273301, 15281150]
+
+private theorem witness148 : ∃ g : numerator, g.val.val.val = decode rows148 :=
+  product_witness witness147 witness0 (by decide +kernel)
+
+private def rows149 : Rows :=
+  ![11566538, 13239319, 15237073, 6425796, 7313405, 8204548, 2644833, 5775470, 9898012, 1016007, 3153596, 15705756, 2803583, 10517044, 4810277, 7747597, 5898609, 7147566, 11172939, 16480589, 12493483, 2756868, 313840, 8426475]
+
+private theorem witness149 : ∃ g : numerator, g.val.val.val = decode rows149 :=
+  product_witness witness148 witness15 (by decide +kernel)
+
+private def rows150 : Rows :=
+  ![3077266, 12329525, 9008421, 15157295, 5518039, 15446668, 12006564, 10878690, 12519518, 8820454, 6986656, 14162357, 9125111, 6050984, 211653, 2057837, 2629901, 9788135, 9307137, 15960315, 9998668, 11108721, 14104774, 7007825]
+
+private theorem witness150 : ∃ g : numerator, g.val.val.val = decode rows150 :=
+  product_witness witness149 witness0 (by decide +kernel)
+
+private def rows151 : Rows :=
+  ![5799472, 5388462, 8801605, 8934927, 5505631, 4278884, 11487414, 3139711, 10149421, 12254075, 442852, 15287338, 5856016, 13479963, 15063626, 12309163, 5551149, 11874413, 10312381, 4920390, 14313811, 16208149, 7240803, 8778158]
+
+private theorem witness151 : ∃ g : numerator, g.val.val.val = decode rows151 :=
+  product_witness witness150 witness59 (by decide +kernel)
+
+private def rows152 : Rows :=
+  ![14376426, 8300511, 1522663, 10973891, 3979938, 12779715, 13559648, 15143891, 536445, 5369788, 8235255, 12078100, 6748260, 12942818, 4936152, 14430350, 7109406, 11478796, 13697895, 10633130, 15085534, 8507925, 4604014, 6413754]
+
+private theorem witness152 : ∃ g : numerator, g.val.val.val = decode rows152 :=
+  product_witness witness151 witness0 (by decide +kernel)
+
+private def rows153 : Rows :=
+  ![6658623, 13975500, 7044932, 4928567, 13298445, 6488490, 7052529, 334892, 3356756, 2388697, 7673642, 3867640, 13281882, 16168961, 3117958, 11532977, 3376369, 14380267, 7516062, 13490036, 5443866, 14716309, 4226478, 11402131]
+
+private theorem witness153 : ∃ g : numerator, g.val.val.val = decode rows153 :=
+  product_witness witness152 witness1 (by decide +kernel)
+
+private def rows154 : Rows :=
+  ![2483625, 13775232, 14389615, 16303235, 10078869, 13446938, 7636664, 10655256, 3711995, 10951114, 15338601, 15904102, 652822, 3068568, 8226087, 11304259, 12002951, 2660175, 10712846, 1306654, 7794118, 10088815, 9776256, 8406358]
+
+private theorem witness154 : ∃ g : numerator, g.val.val.val = decode rows154 :=
+  product_witness witness153 witness0 (by decide +kernel)
+
+private def rows155 : Rows :=
+  ![8966843, 5221675, 3551333, 14050198, 14039410, 7195088, 1714694, 6589969, 7015685, 9973582, 2126996, 2623274, 8457238, 1931965, 5359861, 2902266, 16711401, 4856452, 11020068, 15963491, 12604221, 5767399, 5353549, 6944151]
+
+private theorem witness155 : ∃ g : numerator, g.val.val.val = decode rows155 :=
+  product_witness witness154 witness14 (by decide +kernel)
+
+private def rows156 : Rows :=
+  ![2989250, 11820127, 5876758, 2601364, 11633939, 4553277, 1070900, 16602945, 2251255, 9552643, 14845580, 86618, 881940, 15170521, 6695320, 6572346, 8903767, 11728239, 12224826, 5125241, 506496, 4629111, 1357429, 4253742]
+
+private theorem witness156 : ∃ g : numerator, g.val.val.val = decode rows156 :=
+  product_witness witness155 witness0 (by decide +kernel)
+
+private def rows157 : Rows :=
+  ![9774174, 13117908, 11264921, 14698175, 1119581, 6811805, 5553156, 11549544, 12268299, 12941629, 12073845, 12824807, 4541386, 3887382, 9885161, 8036819, 15921689, 1419842, 2027530, 6270088, 1358030, 856324, 13667043, 14004439]
+
+private theorem witness157 : ∃ g : numerator, g.val.val.val = decode rows157 :=
+  product_witness witness156 witness1 (by decide +kernel)
+
+private def rows158 : Rows :=
+  ![236441, 8670273, 2478390, 16668544, 8530002, 15911080, 8635532, 3405145, 12313263, 3731320, 10110469, 1057754, 2696397, 1774413, 2431250, 2661808, 7387326, 11997457, 8033757, 2746529, 9164555, 14911243, 2034565, 2268297]
+
+private theorem witness158 : ∃ g : numerator, g.val.val.val = decode rows158 :=
+  product_witness witness157 witness0 (by decide +kernel)
+
+private def rows159 : Rows :=
+  ![14417109, 12253630, 799365, 15939547, 14033538, 3175888, 8996775, 1982142, 10100110, 6714613, 7780366, 8515112, 2452999, 16583930, 10636111, 7587932, 3514642, 4983439, 10678612, 5958475, 9911359, 9124704, 12693715, 14505679]
+
+private theorem witness159 : ∃ g : numerator, g.val.val.val = decode rows159 :=
+  product_witness witness158 witness1 (by decide +kernel)
+
+private def rows160 : Rows :=
+  ![11759338, 6161422, 15979298, 11044350, 5861341, 14383002, 7238956, 10724331, 3265533, 6320591, 12138856, 5275249, 6839968, 3984063, 8139361, 8600554, 16581882, 8804197, 4433134, 8848154, 9761540, 587089, 6973485, 13548398]
+
+private theorem witness160 : ∃ g : numerator, g.val.val.val = decode rows160 :=
+  product_witness witness159 witness0 (by decide +kernel)
+
+private def rows161 : Rows :=
+  ![14868800, 2996770, 6824010, 4297826, 1475902, 11575569, 5361216, 3468793, 11652476, 1934143, 4631811, 9573449, 15056132, 11632618, 14063457, 2698863, 3825232, 11488453, 10383809, 7055563, 15739812, 9086685, 9372268, 16293823]
+
+private theorem witness161 : ∃ g : numerator, g.val.val.val = decode rows161 :=
+  product_witness witness160 witness15 (by decide +kernel)
+
+private def rows162 : Rows :=
+  ![956864, 11432979, 11344695, 5913562, 244737, 1507815, 3704493, 5351834, 5049867, 11110049, 2907731, 5517739, 14430600, 14123060, 2525500, 9427883, 15481635, 14034610, 4333897, 6817275, 2023328, 7065384, 1558215, 13230725]
+
+private theorem witness162 : ∃ g : numerator, g.val.val.val = decode rows162 :=
+  product_witness witness161 witness0 (by decide +kernel)
+
+private def rows163 : Rows :=
+  ![11753921, 11706436, 6687423, 11022827, 6063867, 13363972, 3294422, 13996403, 4855779, 16462426, 9012163, 3509202, 13422552, 2519926, 16506505, 10157711, 8015832, 412840, 16547308, 10457094, 13599283, 5925493, 1761053, 7867580]
+
+private theorem witness163 : ∃ g : numerator, g.val.val.val = decode rows163 :=
+  product_witness witness162 witness1 (by decide +kernel)
+
+private def rows164 : Rows :=
+  ![8392029, 16725441, 5890306, 13377722, 14401908, 2469039, 4848737, 11051806, 2421856, 7241449, 14336080, 2946730, 6040417, 2577090, 7140181, 14450501, 15319416, 3374853, 9211728, 7004536, 13948653, 4203344, 3105616, 1226533]
+
+private theorem witness164 : ∃ g : numerator, g.val.val.val = decode rows164 :=
+  product_witness witness163 witness0 (by decide +kernel)
+
+private def rows165 : Rows :=
+  ![7485560, 10798247, 14409329, 2930047, 6464482, 11334192, 6496631, 10507005, 4952226, 14555560, 16199574, 6169845, 3099021, 6551539, 1567365, 15436499, 4724952, 2156952, 8699181, 604134, 12630817, 13572246, 7698829, 854396]
+
+private theorem witness165 : ∃ g : numerator, g.val.val.val = decode rows165 :=
+  product_witness witness164 witness1 (by decide +kernel)
+
+private def rows166 : Rows :=
+  ![11019523, 2733779, 15622716, 12582134, 11928284, 8829407, 8014466, 1115151, 8891001, 13741723, 4723845, 16692736, 464779, 5478194, 6501541, 5414456, 11703900, 2300652, 1351357, 11955966, 16282642, 7042907, 2692160, 1258113]
+
+private theorem witness166 : ∃ g : numerator, g.val.val.val = decode rows166 :=
+  product_witness witness165 witness0 (by decide +kernel)
+
+private def rows167 : Rows :=
+  ![16362249, 6283533, 2070402, 9513026, 7368173, 2420133, 13435819, 14388196, 7143871, 13798196, 11429841, 10337583, 385788, 12510881, 13044828, 7174748, 1237741, 7030275, 7705904, 12278073, 9819687, 7857047, 13444628, 1814911]
+
+private theorem witness167 : ∃ g : numerator, g.val.val.val = decode rows167 :=
+  product_witness witness166 witness59 (by decide +kernel)
+
+private def rows168 : Rows :=
+  ![6442354, 8504935, 9133991, 14389188, 7992614, 11765936, 14167065, 7280407, 3249940, 5157543, 13389813, 3337327, 6452319, 3181130, 12095226, 14023852, 9577678, 3141231, 14216662, 6038395, 6495460, 6952785, 9649211, 12801030]
+
+private theorem witness168 : ∃ g : numerator, g.val.val.val = decode rows168 :=
+  product_witness witness167 witness0 (by decide +kernel)
+
+private def rows169 : Rows :=
+  ![11141809, 12189938, 11636751, 5225044, 475552, 10010674, 13003211, 16707891, 3025704, 13310938, 4740295, 5463521, 12222142, 13585149, 13663241, 7110243, 13046861, 12309248, 16270517, 15503099, 16455944, 7717881, 10931096, 10891625]
+
+private theorem witness169 : ∃ g : numerator, g.val.val.val = decode rows169 :=
+  product_witness witness168 witness13 (by decide +kernel)
+
+private def rows170 : Rows :=
+  ![945532, 5400737, 16320674, 1046925, 5068169, 14706202, 16212087, 13616320, 12071373, 15060742, 7923106, 5332613, 4284961, 9012222, 7458632, 11871171, 624848, 16227415, 6281228, 8038481, 8054802, 8235810, 4494896, 14816997]
+
+private theorem witness170 : ∃ g : numerator, g.val.val.val = decode rows170 :=
+  product_witness witness169 witness0 (by decide +kernel)
+
+private def rows171 : Rows :=
+  ![15435829, 570671, 942991, 8139459, 14919502, 4097833, 5911520, 8485011, 14877462, 8829446, 5287813, 8069965, 16297342, 7113862, 12828263, 11697513, 1063934, 2845991, 196542, 8318169, 1007422, 10412144, 13017088, 11328601]
+
+private theorem witness171 : ∃ g : numerator, g.val.val.val = decode rows171 :=
+  product_witness witness170 witness12 (by decide +kernel)
+
+private def rows172 : Rows :=
+  ![13451444, 8988222, 7355387, 12744224, 8193236, 4464170, 15708904, 4490439, 622252, 8620897, 3032158, 682280, 10554034, 15308329, 16077948, 8794420, 12584435, 15820497, 1558145, 6262582, 6305835, 13665921, 12443550, 16663832]
+
+private theorem witness172 : ∃ g : numerator, g.val.val.val = decode rows172 :=
+  product_witness witness171 witness0 (by decide +kernel)
+
+private def rows173 : Rows :=
+  ![7897530, 12396701, 6286181, 8441762, 3860371, 14873608, 12723873, 1036138, 2827960, 14898603, 7962665, 2078108, 10469863, 1625584, 1686281, 15016261, 11837145, 4610477, 7451951, 294761, 6249321, 12193029, 10792590, 14504368]
+
+private theorem witness173 : ∃ g : numerator, g.val.val.val = decode rows173 :=
+  product_witness witness172 witness15 (by decide +kernel)
+
+private def rows174 : Rows :=
+  ![9299529, 16086809, 15893774, 872509, 6588730, 7704861, 6120358, 15988603, 10747078, 2208062, 5496139, 1657792, 4297227, 2525209, 6622706, 661790, 12061498, 12417405, 13890842, 8374238, 14509384, 10756213, 2676620, 6107825]
+
+private theorem witness174 : ∃ g : numerator, g.val.val.val = decode rows174 :=
+  product_witness witness173 witness0 (by decide +kernel)
+
+private def rows175 : Rows :=
+  ![11402235, 13531319, 12679409, 9026688, 12289800, 407908, 6920344, 10882413, 10395078, 15017319, 4949718, 12241843, 9852131, 13265031, 966521, 7586042, 5103507, 4369209, 4707514, 8468540, 1663733, 11413639, 1569767, 684622]
+
+private theorem witness175 : ∃ g : numerator, g.val.val.val = decode rows175 :=
+  product_witness witness174 witness1 (by decide +kernel)
+
+private def rows176 : Rows :=
+  ![5876529, 14975223, 8242192, 5354514, 10908622, 9861375, 4333352, 11268595, 8175726, 2490073, 10897039, 10855804, 13162401, 12556051, 5527662, 1126391, 3984306, 11390246, 3238901, 1698330, 6616506, 4787329, 10062209, 14227989]
+
+private theorem witness176 : ∃ g : numerator, g.val.val.val = decode rows176 :=
+  product_witness witness175 witness0 (by decide +kernel)
+
+private def rows177 : Rows :=
+  ![2948147, 6691031, 14431438, 10670308, 15243914, 1912971, 12269539, 14203908, 2848170, 8253794, 1971201, 12961982, 3266829, 4173698, 3216392, 4561034, 5043512, 15936321, 8189423, 1447340, 12305620, 1743985, 2237355, 13880373]
+
+private theorem witness177 : ∃ g : numerator, g.val.val.val = decode rows177 :=
+  product_witness witness176 witness1 (by decide +kernel)
+
+private def rows178 : Rows :=
+  ![12585811, 779723, 3881482, 3851755, 3738323, 5215621, 3004000, 13029168, 8147564, 11096156, 1139739, 1986899, 3026607, 2442117, 102319, 6812535, 16666814, 12117434, 10595857, 7723797, 1269950, 2328976, 5739766, 6038600]
+
+private theorem witness178 : ∃ g : numerator, g.val.val.val = decode rows178 :=
+  product_witness witness177 witness0 (by decide +kernel)
+
+private def rows179 : Rows :=
+  ![3111905, 11857997, 6653143, 13201985, 6418953, 6534103, 29342, 12762750, 5556749, 15088345, 15520394, 16039592, 2891469, 14592287, 15136901, 3845712, 4489280, 1866043, 1855724, 3817608, 15269888, 12317558, 5583158, 15918910]
+
+private theorem witness179 : ∃ g : numerator, g.val.val.val = decode rows179 :=
+  product_witness witness178 witness11 (by decide +kernel)
+
+private def rows180 : Rows :=
+  ![1719498, 14891616, 3231845, 727348, 3684302, 11509633, 2824389, 4271627, 6151462, 1308680, 7046024, 7651234, 5386815, 11078571, 5607772, 6739216, 8152497, 15828269, 5087227, 2695881, 13231993, 2072820, 11893111, 6330766]
+
+private theorem witness180 : ∃ g : numerator, g.val.val.val = decode rows180 :=
+  product_witness witness179 witness0 (by decide +kernel)
+
+private def rows181 : Rows :=
+  ![4581528, 15008813, 4576247, 14648621, 7672128, 3274162, 6196973, 1575361, 1683582, 15184135, 14005229, 13286594, 14780962, 13469937, 5336604, 2390040, 7420598, 2899197, 2009366, 10059761, 10463303, 15887965, 6396610, 15785406]
+
+private theorem witness181 : ∃ g : numerator, g.val.val.val = decode rows181 :=
+  product_witness witness180 witness15 (by decide +kernel)
+
+private def rows182 : Rows :=
+  ![14353355, 3465458, 15872912, 11596981, 6714113, 1614018, 10521047, 6183343, 8345901, 15463744, 5432047, 6480846, 14774596, 3159158, 9449780, 5954314, 10147095, 9713133, 8533415, 7315440, 12644823, 12947248, 6146754, 7243074]
+
+private theorem witness182 : ∃ g : numerator, g.val.val.val = decode rows182 :=
+  product_witness witness181 witness0 (by decide +kernel)
+
+private def rows183 : Rows :=
+  ![787189, 9628674, 12808826, 4569484, 1170204, 5138810, 8022097, 10810547, 3374242, 4721148, 8492732, 5462425, 13336459, 9760878, 6272011, 6398219, 16701335, 4244954, 10070636, 1993914, 3713512, 2564363, 6953159, 10360979]
+
+private theorem witness183 : ∃ g : numerator, g.val.val.val = decode rows183 :=
+  product_witness witness182 witness1 (by decide +kernel)
+
+private def rows184 : Rows :=
+  ![1661377, 10383212, 75072, 9302415, 2531155, 3233907, 16392594, 4630811, 13786526, 13417735, 10955451, 10953617, 12090947, 4733323, 2719682, 15697193, 11880232, 6444353, 10881304, 2784931, 14158914, 6562313, 12904403, 787496]
+
+private theorem witness184 : ∃ g : numerator, g.val.val.val = decode rows184 :=
+  product_witness witness183 witness0 (by decide +kernel)
+
+private def rows185 : Rows :=
+  ![16339371, 3974292, 2356468, 10294825, 10337995, 15329041, 8432477, 119209, 11559562, 4371587, 4597548, 16080070, 7169491, 2376845, 16165095, 2475740, 10172097, 1554097, 7513639, 14828824, 2123460, 9147705, 16076081, 16766217]
+
+private theorem witness185 : ∃ g : numerator, g.val.val.val = decode rows185 :=
+  product_witness witness184 witness11 (by decide +kernel)
+
+private def rows186 : Rows :=
+  ![2241312, 670217, 10497096, 10328521, 532371, 776370, 7120731, 4715841, 5794002, 11742792, 10839935, 380283, 7974140, 15411200, 3860154, 1249416, 6978990, 11954171, 5797029, 8053688, 12982256, 5144544, 16076081, 7891424]
+
+private theorem witness186 : ∃ g : numerator, g.val.val.val = decode rows186 :=
+  product_witness witness185 witness0 (by decide +kernel)
+
+private def rows187 : Rows :=
+  ![6690804, 5359050, 267275, 2345656, 4001855, 9001880, 13264809, 2912780, 10898858, 1630825, 1602895, 1292465, 6555046, 8998942, 12772045, 3275245, 9078039, 9066816, 2275430, 1080044, 1637049, 14649288, 14059418, 8081167]
+
+private theorem witness187 : ∃ g : numerator, g.val.val.val = decode rows187 :=
+  product_witness witness186 witness15 (by decide +kernel)
+
+private def rows188 : Rows :=
+  ![6424359, 16280278, 4425786, 4871153, 8549736, 11333517, 1201012, 6725900, 3109193, 3415827, 15761175, 10080772, 13102023, 3176634, 5173065, 9224602, 11616822, 12360089, 4533957, 9716215, 13793015, 6729580, 16680920, 2042584]
+
+private theorem witness188 : ∃ g : numerator, g.val.val.val = decode rows188 :=
+  product_witness witness187 witness0 (by decide +kernel)
+
+private def rows189 : Rows :=
+  ![1366583, 2027412, 16102317, 6931705, 6488046, 182071, 808767, 14713657, 6283697, 5489840, 14076571, 10675710, 3768351, 11583658, 15563231, 5724201, 15360272, 3987804, 9692080, 12996159, 5028486, 14557497, 5408455, 11647561]
+
+private theorem witness189 : ∃ g : numerator, g.val.val.val = decode rows189 :=
+  product_witness witness89 witness89 (by decide +kernel)
+
+private def rows190 : Rows :=
+  ![3303238, 2157079, 11596129, 4034989, 9936500, 12823015, 11387387, 8078984, 6047928, 2413696, 11153873, 14613573, 1921440, 814947, 230674, 5415546, 10956286, 4934675, 11388734, 7401030, 2346394, 3470807, 14934295, 9908421]
+
+private theorem witness190 : ∃ g : numerator, g.val.val.val = decode rows190 :=
+  product_witness witness189 witness189 (by decide +kernel)
+
+private def rows191 : Rows :=
+  ![1620853, 3657802, 12051841, 132590, 16024270, 6786027, 6499762, 3862176, 15692206, 15868673, 388827, 5801776, 13140921, 13284959, 12462031, 13969587, 12096233, 12956204, 4193882, 467349, 4881299, 13452149, 1383557, 4116489]
+
+private theorem witness191 : ∃ g : numerator, g.val.val.val = decode rows191 :=
+  product_witness witness26 witness143 (by decide +kernel)
+
+private def rows192 : Rows :=
+  ![4130804, 4169470, 10175543, 14978100, 13975417, 14619683, 5105081, 6855095, 2559663, 4707714, 9494842, 40988, 13472846, 10219096, 14900111, 3256638, 14985220, 7867674, 15913366, 13269779, 8983044, 5649182, 14038313, 10929384]
+
+private theorem witness192 : ∃ g : numerator, g.val.val.val = decode rows192 :=
+  product_witness witness29 witness188 (by decide +kernel)
+
+def generatorRows : Fin 3 → Rows :=
+  ![![3303238, 2157079, 11596129, 4034989, 9936500, 12823015, 11387387, 8078984, 6047928, 2413696, 11153873, 14613573, 1921440, 814947, 230674, 5415546, 10956286, 4934675, 11388734, 7401030, 2346394, 3470807, 14934295, 9908421],
+    ![1620853, 3657802, 12051841, 132590, 16024270, 6786027, 6499762, 3862176, 15692206, 15868673, 388827, 5801776, 13140921, 13284959, 12462031, 13969587, 12096233, 12956204, 4193882, 467349, 4881299, 13452149, 1383557, 4116489],
+    ![4130804, 4169470, 10175543, 14978100, 13975417, 14619683, 5105081, 6855095, 2559663, 4707714, 9494842, 40988, 13472846, 10219096, 14900111, 3256638, 14985220, 7867674, 15913366, 13269779, 8983044, 5649182, 14038313, 10929384]]
+
+theorem exists_generators (i : Fin 3) :
+    ∃ g : numerator, g.val.val.val = decode (generatorRows i) := by
+  fin_cases i
+  · exact witness190
+  · exact witness191
+  · exact witness192
+
+end Sporadic.LeechRelated.Co1.CentralizerSection.ElementaryThree

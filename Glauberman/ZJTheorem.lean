@@ -6,6 +6,7 @@ public import Glauberman.TheoremB
 public import Glauberman.TheoremC
 import Glauberman.Lemma6_3
 
+
 /-!
 # Glauberman, "A Characteristic Subgroup of a p-Stable Group" — Theorems A–D and Lemma 6.3
 
@@ -42,17 +43,18 @@ public theorem theoremA {p : ℕ} [Fact p.Prime] (hpodd : p ≠ 2) {G : Type*} [
       (ZJ (G := G) S.toSubgroup).Characteristic := by
   exact Glauberman.TheoremA.theoremA hpodd (G := G) S
 
-/-- Glauberman's Theorem D: if `p` is an odd prime and `S` is a Sylow `p`-subgroup of
-the finite group `G`, then `G` has a normal `p`-complement if and only if
-`N(Z(J(S)))` has a normal `p`-complement ([6], §2, Theorem D, p. 1105: "Let `p` be an
-odd prime, and let `S` be a Sylow `p`-subgroup of a finite group `G`. Then `G` has a
-normal `p`-complement if and only if `N(Z(J(S)))` has a normal `p`-complement"). -/
-public theorem theoremD {p : ℕ} [Fact p.Prime] (hpodd : p ≠ 2) {G : Type*} [Group G]
-    [Finite G] (S : Sylow p G) :
-    NormalPComplement p G ↔
-      NormalPComplement p
-        (↥(Subgroup.normalizer ((ZJ (G := G) S.toSubgroup : Subgroup G) : Set G))) := by
-  sorry
+-- set_option warningAsError false in
+-- /-- Glauberman's Theorem D: if `p` is an odd prime and `S` is a Sylow `p`-subgroup of
+-- the finite group `G`, then `G` has a normal `p`-complement if and only if
+-- `N(Z(J(S)))` has a normal `p`-complement ([6], §2, Theorem D, p. 1105: "Let `p` be an
+-- odd prime, and let `S` be a Sylow `p`-subgroup of a finite group `G`. Then `G` has a
+-- normal `p`-complement if and only if `N(Z(J(S)))` has a normal `p`-complement"). -/
+-- public theorem theoremD {p : ℕ} [Fact p.Prime] (hpodd : p ≠ 2) {G : Type*} [Group G]
+--     [Finite G] (S : Sylow p G) :
+--     NormalPComplement p G ↔
+--       NormalPComplement p
+--         (↥(Subgroup.normalizer ((ZJ (G := G) S.toSubgroup : Subgroup G) : Set G))) := by
+--   sorry
 
 /-! ## Lemma 6.3: sorry-free partial infrastructure -/
 
@@ -77,7 +79,7 @@ minimal-counterexample implication. -/
 private theorem lemma_6_3_forward_of_qd_involved {p : ℕ} [Fact p.Prime]
     {G : Type*} [Group G] [Finite G]
     (hbridge : (∃ (K : Subgroup G) (N : Subgroup K) (hN : N.Normal),
-      letI : N.Normal := hN; ¬ pStable p (K ⧸ N)) → Involved (Qd p) G)
+      let : N.Normal := hN; ¬ pStable p (K ⧸ N)) → Involved (Qd p) G)
     (hInv : ¬ Involved (Qd p) G) :
     ∀ (K : Subgroup G) (N : Subgroup K) [_hN : N.Normal], pStable p (K ⧸ N) := by
   classical
@@ -91,7 +93,7 @@ minimal-counterexample implication. -/
 private theorem lemma_6_3_of_qd_involved {p : ℕ} [Fact p.Prime] (hpodd : p ≠ 2)
     {G : Type*} [Group G] [Finite G]
     (hbridge : (∃ (K : Subgroup G) (N : Subgroup K) (hN : N.Normal),
-      letI : N.Normal := hN; ¬ pStable p (K ⧸ N)) → Involved (Qd p) G) :
+      let : N.Normal := hN; ¬ pStable p (K ⧸ N)) → Involved (Qd p) G) :
     (¬ Involved (Qd p) G) ↔
       ∀ (K : Subgroup G) (N : Subgroup K) [N.Normal], pStable p (K ⧸ N) := by
   constructor

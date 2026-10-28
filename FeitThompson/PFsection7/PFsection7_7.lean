@@ -135,7 +135,7 @@ public theorem projectionBasisPackage_CFon_of_inducedFamilyEnumeration_pf77
   have h76orig := h76
   have henumorig := henum
   rcases h76 with ⟨_hHL, hHnormal, _h71, hAeq, _hT⟩
-  haveI : (H.subgroupOf L).Normal := hHnormal
+  have : (H.subgroupOf L).Normal := hHnormal
   rcases henum with ⟨_henum_mem, _hζinj, hdeg⟩
   rcases inducedFamilyEnumeration_induced_irreducible_pf77
       (A := A) (L := L) (H := H) (K := K) (T := T)
@@ -191,7 +191,7 @@ private theorem inducedFamilyEnumeration_scalarProduct_ne_zero_pf77
     Section1.scalarProduct L (ζ i) (ζ i) ≠ 0 := by
   have h76orig := h76
   rcases h76 with ⟨_hHL, hHnormal, _h71, _hA, _hT⟩
-  haveI : (H.subgroupOf L).Normal := hHnormal
+  have : (H.subgroupOf L).Normal := hHnormal
   rcases inducedFamilyEnumeration_induced_irreducible_pf77
       (A := A) (L := L) (H := H) (K := K) (T := T)
       (ζ := ζ) (d := d) h76orig henum i with
@@ -205,7 +205,7 @@ private theorem inducedFamilyEnumeration_scalarProduct_ne_zero_pf77
     have hrel :
         (H.subgroupOf L).relIndex
           (Section1.inertiaSubgroup (H.subgroupOf L) ρ.character) ≠ 0 := by
-      haveI :
+      have :
           ((H.subgroupOf L).subgroupOf
             (Section1.inertiaSubgroup (H.subgroupOf L) ρ.character)).FiniteIndex :=
         inferInstance
@@ -272,7 +272,7 @@ private theorem inducedFamilyEnumeration_scalarProduct_eq_zero_of_ne_pf77
   have h76orig := h76
   have henumorig := henum
   rcases h76 with ⟨_hHL, hHnormal, _h71, _hA, _hT⟩
-  haveI : (H.subgroupOf L).Normal := hHnormal
+  have : (H.subgroupOf L).Normal := hHnormal
   rcases henum with ⟨henum_mem, hζinj, hdeg⟩
   rcases inducedFamilyEnumeration_induced_irreducible_pf77
       (A := A) (L := L) (H := H) (K := K) (T := T)
@@ -394,9 +394,9 @@ private theorem classFunction_eq_weighted_sum_irreducibles_pf77
         (∀ i : ι, Section1.IsIrreducibleCharacterOnGroup (ψ i)) ∧
           φ = Section1.weightedFamilySum a ψ := by
   classical
-  rcases Theory.Character.irreducible_characters_form_basis (G := G) with
+  rcases irreducible_characters_form_basis (G := G) with
     ⟨ι, hι, χ, hχ, b, hb⟩
-  letI : Fintype ι := hι
+  let : Fintype ι := hι
   let a : ι → ℂ := fun i => b.repr (Section1.toConjClassFunction φ hφ) i
   let ψ : ι → Section1.ClassFunction G :=
     fun i => Section1.ofConjClassFunction (χ i)
@@ -438,7 +438,7 @@ private theorem weightedFamilySum_mem_span_of_mem_pf77
     (hψ : ∀ i : ι, ψ i ∈ Submodule.span ℂ S) :
     Section1.weightedFamilySum a ψ ∈ Submodule.span ℂ S := by
   classical
-  haveI : Finite ι := Finite.of_fintype ι
+  have : Finite ι := Finite.of_fintype ι
   have hsum :
       Section1.weightedFamilySum a ψ =
         @Finset.sum ι (Section1.ClassFunction G) _ (@Finset.univ ι (Fintype.ofFinite ι))
@@ -491,7 +491,7 @@ private theorem induced_restriction_mem_span_zeta_of_CFon_pf77
   rcases classFunction_eq_weighted_sum_irreducibles_pf77
       (Section1.subgroupRestriction (H.subgroupOf L) φ) hres_class with
     ⟨ι, hι, a, θ, hθirr, hres_eq⟩
-  letI : Fintype ι := hι
+  let : Fintype ι := hι
   have hind_eq :
       Section1.inducedCF (H.subgroupOf L)
           (Section1.subgroupRestriction (H.subgroupOf L) φ) =
@@ -611,7 +611,7 @@ public theorem CFOn_eq_inv_relIndex_smul_induced_restriction_source_bridge_pf77
   classical
   intro φ hφ
   rcases h76 with ⟨_hHL, hHnormal, _h71, hAeq, _hT⟩
-  haveI : (H.subgroupOf L).Normal := hHnormal
+  have : (H.subgroupOf L).Normal := hHnormal
   have hrel_ne_nat : H.relIndex L ≠ 0 := by
     simpa [Subgroup.relIndex] using
       (Subgroup.FiniteIndex.index_ne_zero (H := H.subgroupOf L))
@@ -633,7 +633,7 @@ public theorem CFOn_eq_inv_relIndex_smul_induced_restriction_source_bridge_pf77
     rw [hindex']
     field_simp [hcardH_ne]
     rfl
-  letI : Fintype L := Fintype.ofFinite L
+  let : Fintype L := Fintype.ofFinite L
   ext y
   by_cases hyH : y ∈ H.subgroupOf L
   · have hsum :
@@ -793,7 +793,7 @@ public theorem projectionBasisPackage_detection_of_inducedFamilyEnumeration_sour
       ∀ y z : L, ((y * z * y⁻¹ : L) : G) ∈ A ↔ (z : G) ∈ A := by
     intro y z
     rw [hAeq]
-    simp only [puncturedSubgroupSet, Set.mem_setOf_eq]
+    simp only [puncturedSubgroupSet, Set.mem_ofPred_eq]
     constructor
     · intro hz
       rcases hz with ⟨hzH, hz_ne⟩
@@ -1001,7 +1001,7 @@ private theorem projectionBasisPackage_normExpansion_of_inducedFamilyEnumeration
   intro c
   have h76orig := h76
   rcases h76 with ⟨hHL, hHnormal, _h71, hAeq, _hT⟩
-  haveI : (H.subgroupOf L).Normal := hHnormal
+  have : (H.subgroupOf L).Normal := hHnormal
   let ζtail : Fin n → Section1.ClassFunction L := fun i => ζ (Fin.succ i)
   let b : Fin n → ℂ := fun i => star (c i) / (Section5.cfNormSq (ζtail i) : ℂ)
   let approx : Section1.ClassFunction L := ∑ i : Fin n, b i • ζtail i

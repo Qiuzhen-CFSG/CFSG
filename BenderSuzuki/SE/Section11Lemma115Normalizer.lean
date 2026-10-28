@@ -2,6 +2,7 @@ module
 
 public import BenderSuzuki.SE.Section11Lemma115QuotientLift
 
+
 /-!
 # Section 11, Lemma 11.5: ambient normalization after the quotient lift
 
@@ -83,8 +84,8 @@ public theorem lemma115_lift_Q_le_B
   let q : Nstar →* (Nstar ⧸ core) := QuotientGroup.mk' core
   let Qx : Subgroup X := hL.Q.map Nstar.subtype
   have hQbarComm : IsMulCommutative d103.Qbar := by
-    letI : Fact d103.q.Prime := ⟨d103.q_prime⟩
-    letI : IsElementaryAbelian d103.q d103.Qbar :=
+    let : Fact d103.q.Prime := ⟨d103.q_prime⟩
+    let : IsElementaryAbelian d103.q d103.Qbar :=
       d103.Qbar_elementaryAbelian
     infer_instance
   have hQcomm : IsMulCommutative hL.Q := by
@@ -259,8 +260,8 @@ public theorem lemma115_lift_normalizes_B
   let P : Subgroup X := d.choice.P
   let Nstar : Subgroup X := lemma103NStar P
   let Qx : Subgroup X := hL.Q.map Nstar.subtype
-  letI : IsMulCommutative B := hBcomm
-  letI : hL.Q.Normal := hL.Q_normal
+  let : IsMulCommutative B := hBcomm
+  let : hL.Q.Normal := hL.Q_normal
   have hQB : Qx ≤ B := by
     simpa [Qx, Nstar, P] using
       lemma115_lift_Q_le_B d83 d d103 hL B hBset

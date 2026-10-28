@@ -4,6 +4,7 @@ public import BenderSuzuki.SE.Proposition53
 public import BenderSuzuki.SE.Permutation
 import BenderSuzuki.SE.Section7Final
 
+
 /-!
 # Theorem 2 and Proposition 5.3
 
@@ -41,7 +42,7 @@ private theorem fixedPoints_card_even_of_fixedPoint_free_involution
     apply IsPGroup.of_card (p := 2) (G := C) (n := 1)
     simp [C, Nat.card_zpowers,
       orderOf_eq_prime hs.sq_eq_one hs.ne_one]
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hfixedZero : Nat.card (MulAction.fixedPoints C FixedP) = 0 := by
     rw [Finite.card_eq_zero_iff]
     refine ⟨fun omega => ?_⟩
@@ -71,7 +72,7 @@ public theorem IsStronglyEmbedded.theorem4b_twoPoint_sylow_invertedCard_eq_prime
     (htBeta : t • beta = gamma) :
     theorem4bInvertedCard t P = theorem4bPrimeShare M z p := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let base : conjugateCosetSpace M := QuotientGroup.mk 1
   obtain ⟨g, hg⟩ := MulAction.exists_smul_eq X beta base
   let gamma' : conjugateCosetSpace M := g • gamma
@@ -466,7 +467,7 @@ private theorem local_maximal_two_fixed_transitive_and_global
     omega ∈ fixedPointsOfSubgroup X Omega Q}
   have hFixedQpos : 0 < Nat.card FixedQ := by
     exact lt_trans (by decide) hQgood.2
-  letI : Nonempty FixedQ := (Nat.card_pos_iff.mp hFixedQpos).1
+  let : Nonempty FixedQ := (Nat.card_pos_iff.mp hFixedQpos).1
   let deltaQ : FixedQ := Classical.choice inferInstance
   let delta : Omega := deltaQ
   have hdeltaQ : delta ∈ fixedPointsOfSubgroup X Omega Q :=
@@ -589,8 +590,8 @@ public theorem chapter1_bender_criterion
           omega ∈ fixedPointsOfSubgroup G Omega P} = 2) :
     MulAction.IsMultiplyPretransitive G Omega 2 := by
   classical
-  letI : Fact (Nat.Prime p) := ⟨hp⟩
-  letI : MulAction.IsPretransitive G Omega := hpre
+  let : Fact (Nat.Prime p) := ⟨hp⟩
+  let : MulAction.IsPretransitive G Omega := hpre
   rw [MulAction.is_two_pretransitive_iff]
   intro alpha beta gamma delta halphaBeta hgammaDelta
   obtain ⟨g, hgAlpha⟩ := MulAction.exists_smul_eq G alpha gamma
@@ -798,13 +799,13 @@ public theorem proposition_5_2_fixes_involution_fixedPoint
     change 0 < Nat.card {omega : conjugateCosetSpace M //
       omega ∈ fixedPointsOfSubgroup X (conjugateCosetSpace M) P}
     exact lt_trans (by decide) hmax.1.2.1
-  letI : Nonempty FixedP := (Nat.card_pos_iff.mp hFixedPpos).1
+  let : Nonempty FixedP := (Nat.card_pos_iff.mp hFixedPpos).1
   have hbadPair : ∃ beta delta : FixedP, beta ≠ delta ∧
       ∀ t : N, IsInvolution t →
         (t : X) • (beta : conjugateCosetSpace M) ≠
           (delta : conjugateCosetSpace M) := by
     by_contra hno
-    push_neg at hno
+    push Not at hno
     have hpair : ∀ beta delta : FixedP, beta ≠ delta →
         ∃ t : N, IsInvolution t ∧ t • beta = delta := by
       intro beta delta hne
@@ -894,7 +895,7 @@ public theorem proposition_5_2_fixes_involution_fixedPoint
           simpa [f] using (congrArg Subtype.val hij).symm
         · rfl
       simpa using Nat.card_le_card_of_injective f hf
-  letI : Fact (Nat.Prime p) := ⟨hp⟩
+  let : Fact (Nat.Prime p) := ⟨hp⟩
   have hOmegaMod : Nat.card (conjugateCosetSpace M) ≡ 2 [MOD p] := by
     have hRcong := IsPGroup.card_modEq_card_fixedPointsOfSubgroup
       (Omega := conjugateCosetSpace M) hRp
@@ -983,7 +984,7 @@ public theorem proposition_5_2_fixes_involution_fixedPoint
     rw [Nat.mod_eq_of_lt (lt_trans hlt hpGtTwo),
       Nat.mod_eq_of_lt hpGtTwo] at hBmod
     omega
-  letI : Nontrivial FixedB :=
+  let : Nontrivial FixedB :=
     Finite.one_lt_card_iff_nontrivial.mp (by omega)
   let lambda₀ : FixedB := Classical.choice inferInstance
   obtain ⟨eta₀, heta₀⟩ := exists_ne lambda₀
@@ -1029,7 +1030,7 @@ public theorem proposition_5_2_fixes_involution_fixedPoint
     have hnot' : ¬ 3 ≤ Nat.card FixedA := by
       simpa [FixedA] using hnot
     have hAcardLe : Nat.card FixedA ≤ 2 := by omega
-    letI : Nontrivial FixedA := ⟨⟨betaA, deltaA, hbetaDeltaA⟩⟩
+    let : Nontrivial FixedA := ⟨⟨betaA, deltaA, hbetaDeltaA⟩⟩
     have hAcardGtOne : 1 < Nat.card FixedA :=
       Finite.one_lt_card_iff_nontrivial.mpr inferInstance
     have hAcard : Nat.card FixedA = 2 := by omega
@@ -1140,7 +1141,7 @@ public theorem corollary_5_7_normalized_fixedPoint_pair
     intro hfixed
     exact hnot2 (chapter1_bender_criterion
       (conjugateCosetSpace_isPretransitive M) hp hpOdd hfixed)
-  push_neg at hnotFixed
+  push Not at hnotFixed
   obtain ⟨beta, gamma, hbetaGamma, Q, hQSylow, hQneTwo⟩ := hnotFixed
   have hQp : IsPGroup p Q := by
     rcases hQSylow with ⟨S, hQeq⟩
@@ -1215,7 +1216,7 @@ private theorem exists_ambient_sylow_fixedPoints_card_two
   classical
   obtain ⟨E, hEp, hEcard⟩ := hexact
   have hEpos : 0 < Nat.card (theorem4bFixedPoints M E) := by omega
-  letI : Nonempty (theorem4bFixedPoints M E) :=
+  let : Nonempty (theorem4bFixedPoints M E) :=
     (Nat.card_pos_iff.mp hEpos).1
   let betaE : theorem4bFixedPoints M E := Classical.choice inferInstance
   let beta : conjugateCosetSpace M := betaE
@@ -1325,7 +1326,7 @@ private theorem fixedPoints_card_two_of_sylow_pointStabilizer
           (Ralpha : Subgroup (MulAction.stabilizer X alpha)).map
             (MulAction.stabilizer X alpha).subtype := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let A : Subgroup X := MulAction.stabilizer X alpha
   let R : Subgroup X :=
     (Ralpha : Subgroup (MulAction.stabilizer X alpha)).map
@@ -1439,13 +1440,13 @@ public theorem proposition_5_3_fixes_involution_fixedPoint
     change 0 < Nat.card {omega : conjugateCosetSpace M //
       omega ∈ fixedPointsOfSubgroup X (conjugateCosetSpace M) P}
     exact lt_trans (by decide) hmax.1.2
-  letI : Nonempty FixedP := (Nat.card_pos_iff.mp hFixedPpos).1
+  let : Nonempty FixedP := (Nat.card_pos_iff.mp hFixedPpos).1
   have hbadPair : ∃ beta delta : FixedP, beta ≠ delta ∧
       ∀ t : N, IsInvolution t →
         (t : X) • (beta : conjugateCosetSpace M) ≠
           (delta : conjugateCosetSpace M) := by
     by_contra hno
-    push_neg at hno
+    push Not at hno
     have hpair : ∀ beta delta : FixedP, beta ≠ delta →
         ∃ t : N, IsInvolution t ∧ t • beta = delta := by
       intro beta delta hne
@@ -1531,7 +1532,7 @@ public theorem proposition_5_3_fixes_involution_fixedPoint
           simpa [f] using (congrArg Subtype.val hij).symm
         · rfl
       simpa using Nat.card_le_card_of_injective f hf
-  letI : Fact (Nat.Prime p) := ⟨hp⟩
+  let : Fact (Nat.Prime p) := ⟨hp⟩
   have hPmod : Nat.card {omega : conjugateCosetSpace M //
       omega ∈ fixedPointsOfSubgroup X (conjugateCosetSpace M) P} ≡ 2 [MOD p] := by
     have hPcong := IsPGroup.card_modEq_card_fixedPointsOfSubgroup
@@ -1616,7 +1617,7 @@ public theorem proposition_5_3_fixes_involution_fixedPoint
     rw [Nat.mod_eq_of_lt (lt_trans hlt hpGtTwo),
       Nat.mod_eq_of_lt hpGtTwo] at hBmod
     omega
-  letI : Nontrivial FixedB :=
+  let : Nontrivial FixedB :=
     Finite.one_lt_card_iff_nontrivial.mp (by omega)
   let lambda₀ : FixedB := Classical.choice inferInstance
   obtain ⟨eta₀, heta₀⟩ := exists_ne lambda₀
@@ -1662,7 +1663,7 @@ public theorem proposition_5_3_fixes_involution_fixedPoint
     have hnot' : ¬ 3 ≤ Nat.card FixedA := by
       simpa [FixedA] using hnot
     have hAcardLe : Nat.card FixedA ≤ 2 := by omega
-    letI : Nontrivial FixedA := ⟨⟨betaA, deltaA, hbetaDeltaA⟩⟩
+    let : Nontrivial FixedA := ⟨⟨betaA, deltaA, hbetaDeltaA⟩⟩
     have hAcardGtOne : 1 < Nat.card FixedA :=
       Finite.one_lt_card_iff_nontrivial.mpr inferInstance
     have hAcard : Nat.card FixedA = 2 := by omega
@@ -1843,7 +1844,7 @@ public theorem theorem_2_two_pretransitive_of_exact_two
       IsPGroup p P ∧ Nat.card (theorem4bFixedPoints M P) = 2) :
     MulAction.IsMultiplyPretransitive X (conjugateCosetSpace M) 2 := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   by_contra hnot2
   obtain ⟨z, Q, s, alpha, hzM, hz, hQp, hQthree,
       hs, hsNormQ, hQexact, hsAlpha, hQalpha⟩ :=
@@ -1914,7 +1915,7 @@ public theorem theorem_2_two_pretransitive_of_exact_two
   obtain ⟨P, _hPp, hPcard, T, hTP⟩ :=
     exists_ambient_sylow_fixedPoints_card_two hp hpOdd hexact
   have hPpos : 0 < Nat.card (theorem4bFixedPoints M P) := by omega
-  letI : Nonempty (theorem4bFixedPoints M P) :=
+  let : Nonempty (theorem4bFixedPoints M P) :=
     (Nat.card_pos_iff.mp hPpos).1
   let betaP : theorem4bFixedPoints M P := Classical.choice inferInstance
   let beta : conjugateCosetSpace M := betaP
@@ -2118,7 +2119,7 @@ private theorem eq_bot_of_isPGroup_two_of_two_le_fixedPoints
     · intro huOne
       exact huP.ne_one (Subtype.ext huOne)
     · exact congrArg Subtype.val huP.sq_eq_one
-  letI : Nontrivial (theorem4bFixedPoints M P) :=
+  let : Nontrivial (theorem4bFixedPoints M P) :=
     Finite.one_lt_card_iff_nontrivial.mp (by omega)
   obtain ⟨alpha, beta, hab⟩ :=
     exists_pair_ne (theorem4bFixedPoints M P)

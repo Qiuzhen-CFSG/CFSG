@@ -464,8 +464,8 @@ public theorem lemma4_transitive_linearAut_order
   have hcard_gt : 1 < Nat.card V := by
     rw [hcard]
     exact one_lt_pow₀ (by norm_num : 1 < (2 : ℕ)) (by omega)
-  letI : Nontrivial V := Finite.one_lt_card_iff_nontrivial.mp hcard_gt
-  letI := Fintype.ofFinite V
+  let : Nontrivial V := Finite.one_lt_card_iff_nontrivial.mp hcard_gt
+  let := Fintype.ofFinite V
   obtain ⟨x, hx⟩ := exists_ne (0 : V)
   let orbit :
       Subgroup.zpowers T → {v : V // v ≠ 0} :=
@@ -682,8 +682,8 @@ private theorem lemma4_singer_frobenius_eigenvalue
       (M := TensorProduct (ZMod 2) K V)
       (T.toLinearMap.baseChange K) (lambda ^ (2 ^ i)) := by
   classical
-  letI := Fintype.ofFinite V
-  letI : Module.Finite K (TensorProduct (ZMod 2) K V) :=
+  let := Fintype.ofFinite V
+  let : Module.Finite K (TensorProduct (ZMod 2) K V) :=
     Module.Finite.of_basis
       ((Module.Free.chooseBasis (ZMod 2) V).baseChange K)
   let f : Module.End K (BC V) := T.toLinearMap.baseChange K
@@ -736,8 +736,8 @@ private theorem lemma4_singer_primitive_root
           (T.toLinearMap.baseChange K) lambda ∧
         lambda ≠ 0 ∧ orderOf lambda = 2 ^ n - 1 := by
   classical
-  letI := Fintype.ofFinite V
-  letI : Module.Finite K (TensorProduct (ZMod 2) K V) :=
+  let := Fintype.ofFinite V
+  let : Module.Finite K (TensorProduct (ZMod 2) K V) :=
     Module.Finite.of_basis
       ((Module.Free.chooseBasis (ZMod 2) V).baseChange K)
   have hfinrank : Module.finrank (ZMod 2) V = n := by
@@ -831,8 +831,8 @@ private theorem lemma4_singer_eigenbasis
           (T.toLinearMap.baseChange K) (basis i) =
             lambda ^ (2 ^ (i : ℕ)) • basis i := by
   classical
-  letI := Fintype.ofFinite V
-  letI : Module.Finite K (BC V) :=
+  let := Fintype.ofFinite V
+  let : Module.Finite K (BC V) :=
     Module.Finite.of_basis
       ((Module.Free.chooseBasis (ZMod 2) V).baseChange K)
   obtain ⟨lambda, hlambda_eigen, hlambda_ne, hlambda_order⟩ :=
@@ -884,7 +884,7 @@ private theorem lemma4_singer_eigenbasis
   choose v hv using fun i => (heigen i).exists_hasEigenvector
   have hv_linearIndependent : LinearIndependent K v :=
     Module.End.eigenvectors_linearIndependent' f mu hmu_injective v hv
-  letI : Nonempty (Fin n) := ⟨⟨0, by omega⟩⟩
+  let : Nonempty (Fin n) := ⟨⟨0, by omega⟩⟩
   let basis : Module.Basis (Fin n) K (BC V) :=
     basisOfLinearIndependentOfCardEqFinrank hv_linearIndependent
       (by simp [hfinrank_bc])

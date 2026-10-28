@@ -30,15 +30,15 @@ public theorem simpleStronglyEmbeddedRankTwo :
   intro X _ _ M hX hM
   have hcore : involutionCore X = ⊤ :=
     hM.involutionCore_eq_top_of_isSimple hX
-  have hnsolv : ¬ IsSolvable X := by
+  have hnsolv : ¬ Group.IsSolvable X := by
     intro hsolv
-    letI : IsSimpleGroup X := hX
+    let : IsSimpleGroup X := hX
     have hcomm : ∀ a b : X, a * b = b * a :=
       IsSimpleGroup.comm_iff_isSolvable.mpr hsolv
-    letI : CommGroup X :=
+    let : CommGroup X :=
       { (inferInstance : Group X) with
         mul_comm := hcomm }
-    have hMnormal : M.Normal := Subgroup.normal_of_comm M
+    have hMnormal : M.Normal := Subgroup.normal_of_isMulCommutative M
     rcases hX.eq_bot_or_eq_top_of_normal M hMnormal with hMbot | hMtop
     · obtain ⟨x, hxM, hx⟩ := hM.exists_involution
       exact hx.ne_one (Subgroup.mem_bot.mp (hMbot ▸ hxM))
@@ -49,3 +49,4 @@ public theorem simpleStronglyEmbeddedRankTwo :
   exact hMrank.map_of_injective M.subtype Subtype.val_injective
 
 end BenderSuzuki
+

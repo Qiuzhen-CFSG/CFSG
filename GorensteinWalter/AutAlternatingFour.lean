@@ -1,6 +1,6 @@
 module
 
-public import Theory.AutAlternating
+public import Theory.Alternating.Aut
 import Mathlib.GroupTheory.SpecificGroups.Alternating.Centralizer
 
 /-!

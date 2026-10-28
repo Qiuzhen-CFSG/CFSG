@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section3.FirstCaseKleinData
 import Mathlib.Tactic
 
+
 /-!
 # Ambient centralizers of the Klein-four two-core
 

@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.GeneralizedFittingSubgroupConjugate
 public import GorensteinWalter.Section2.Lemma24
 
+
 /-!
 # The `p`-group branch of Gorenstein--Walter Lemma 2.5
 

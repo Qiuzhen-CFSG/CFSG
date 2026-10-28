@@ -2,8 +2,9 @@ module
 
 public import GorensteinWalter.Section1
 public import FeitThompson.GroupAction.NoncyclicAbelianPGroup
-public import FeitThompson.SubgroupConj
+public import Theory.GroupTheory.SubgroupConjugation
 public import Mathlib.GroupTheory.SpecificGroups.KleinFour
+
 
 /-!
 # A Klein-four fixed-point witness for Theorem 2.6

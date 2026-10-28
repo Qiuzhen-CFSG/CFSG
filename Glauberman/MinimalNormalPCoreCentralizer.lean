@@ -2,6 +2,7 @@ module
 
 public import Glauberman.MinimalNormalPSubgroupFaithfulIrreducibleAction
 
+
 /-!
 # Minimal normal p-subgroups and their faithful conjugation quotient
 

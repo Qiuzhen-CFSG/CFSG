@@ -14,6 +14,7 @@ import BenderSuzuki.PFchapter2.claim_9
 import FeitThompson.GroupAction.NoncyclicAbelianPGroup
 import Mathlib.Data.Nat.Factorization.PrimePow
 
+
 namespace BenderSuzuki
 namespace PFchapter2
 
@@ -900,7 +901,7 @@ private theorem claim_13_fixed_cover_of_card_le_two
       fin_cases i <;> fin_cases j <;>
         simp [f, hpa_ne_pb, hpa_ne_pb.symm, hpa_ne_pz, hpa_ne_pz.symm,
           hpb_ne_pz, hpb_ne_pz.symm] at hij ⊢
-    haveI : Fintype Fixed := Fintype.ofFinite Fixed
+    have : Fintype Fixed := Fintype.ofFinite Fixed
     simpa [Nat.card_eq_fintype_card] using Fintype.card_le_of_injective f hf_inj
   have hcard' : Nat.card Fixed ≤ 2 := by simpa [Fixed] using hcard
   omega
@@ -1149,7 +1150,7 @@ private theorem claim_13_exists_prime_order_invertingSet
   have hphi_order : orderOf phi ∣ 2 :=
     orderOf_dvd_of_pow_eq_one hphi_sq
   let A : Subgroup (MulAut X) := Subgroup.zpowers phi
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hA_pgroup : IsPGroup 2 A := by
     have hcard_dvd : Nat.card A ∣ 2 := by
       simpa [A, Nat.card_zpowers] using hphi_order
@@ -1157,8 +1158,8 @@ private theorem claim_13_exists_prime_order_invertingSet
       hcard_one | hcard_two
     · exact IsPGroup.of_card (p := 2) (G := A) (n := 0) (by simp [hcard_one])
     · exact IsPGroup.of_card (p := 2) (G := A) (n := 1) (by simp [hcard_two])
-  letI : Fact (IsPGroup 2 A) := ⟨hA_pgroup⟩
-  letI : Fact (Nat.Prime r) := ⟨hr⟩
+  let : Fact (IsPGroup 2 A) := ⟨hA_pgroup⟩
+  let : Fact (Nat.Prime r) := ⟨hr⟩
   have hcoprime : Nat.Coprime 2 (Nat.card X) :=
     hXodd.coprime_two_left
   obtain ⟨P, hPinv⟩ :=
@@ -1361,7 +1362,7 @@ private theorem claim_13_card_three_power_of_prime_divisors
   have hJ_nonempty : Nonempty {x : G // x ∈ ({y : G | y ∈ Subgroup.centralizer (Z1 : Set G) ∧ rightConjugateElem y s = y⁻¹} : Set G)} := by
     refine ⟨⟨1, ?_⟩⟩
     exact ⟨by simp, by simp [rightConjugateElem]⟩
-  haveI : Nonempty {x : G // x ∈ ({y : G | y ∈ Subgroup.centralizer (Z1 : Set G) ∧ rightConjugateElem y s = y⁻¹} : Set G)} := hJ_nonempty
+  have : Nonempty {x : G // x ∈ ({y : G | y ∈ Subgroup.centralizer (Z1 : Set G) ∧ rightConjugateElem y s = y⁻¹} : Set G)} := hJ_nonempty
   have hJ_pos : Nat.card {x : G // x ∈ ({y : G | y ∈ Subgroup.centralizer (Z1 : Set G) ∧ rightConjugateElem y s = y⁻¹} : Set G)} ≠ 0 :=
     (Nat.card_pos (α := {x : G // x ∈ ({y : G | y ∈ Subgroup.centralizer (Z1 : Set G) ∧ rightConjugateElem y s = y⁻¹} : Set G)})).ne'
   refine
@@ -1643,7 +1644,7 @@ private theorem chapter2_claim13_psl28_excludes_seven_in_invertingSet
     simpa [KL, natCard_subgroupOf_eq K L
       (show K ≤ L from fun _ hk => Subgroup.subset_closure (Or.inl (Or.inr hk)))]
       using hKcard
-  letI : Fact (Nat.Prime 7) := ⟨Nat.prime_seven⟩
+  let : Fact (Nat.Prime 7) := ⟨Nat.prime_seven⟩
   let K7 : Sylow 7 L := Sylow.ofCard KL (by
     have hfac : (Nat.card L).factorization 7 = 1 := by
       rw [hLcard]
@@ -1758,7 +1759,7 @@ private theorem chapter2_claim13_psl28_excludes_seven_in_invertingSet
   have hk1K : k1 ∈ K :=
     (hch.section3.section2.K_def k1).mpr vk.2.property
   have hz_eq : z = v * k1 := by simpa [v, k1] using hvk_eq.symm
-  haveI : IsCyclic K := isCyclic_of_prime_card hKcard
+  have : IsCyclic K := isCyclic_of_prime_card hKcard
   have hkgen : Subgroup.zpowers k = K := by
     apply Subgroup.eq_of_le_of_card_ge (Subgroup.zpowers_le_of_mem hkK)
     rw [Nat.card_zpowers, hkorder, hKcard]
@@ -2149,7 +2150,7 @@ public theorem claim_13
         · exact hxDs.2
     have hWP :=
       (PFchapter2.claim_1 H D Q K V W Q0 S Q1 P t s p hch).1
-    letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+    let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
     have hWcard_or : Nat.card W = 3 ∨ Nat.card W = 9 :=
       hcase10_2.2.2.2.2.1
     have hW3 : IsPGroup 3 W := by

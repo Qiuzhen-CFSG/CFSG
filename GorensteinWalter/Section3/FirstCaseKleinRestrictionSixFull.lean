@@ -5,6 +5,7 @@ public import GorensteinWalter.Section3.FirstCaseKleinRestrictionSixIndex
 public import GorensteinWalter.Section3.FirstCaseKleinIntersectionOddCoreIndex
 public import GorensteinWalter.Section3.FirstCaseKleinCosetInvolution
 import Mathlib.Tactic
+
 noncomputable section
 open scoped Pointwise
 namespace GorensteinWalter
@@ -33,4 +34,3 @@ public theorem firstCase_klein_restrictionSix
   exact firstCase_klein_restrictionSix_oddCore_of_index_two c hy hyH hOidx hI'
 
 end GorensteinWalter
-

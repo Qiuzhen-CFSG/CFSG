@@ -10,13 +10,14 @@ public import BenderGlauberman.Congruence
 public import GorensteinWalter.Defs
 public import GorensteinWalter.Section1
 public import Mathlib.GroupTheory.SpecificGroups.Dihedral
-import FeitThompson.GroupAction.CoprimeHall
-import FeitThompson.GroupAction.Defs
-import FeitThompson.GroupAction.Invariant
-import FeitThompson.GroupAction.Quotient
-import FeitThompson.SubgroupConj
-import FeitThompson.SubgroupConjAction
+import Theory.GroupAction.CoprimeHall
+import Theory.GroupAction.Defs
+import Theory.GroupAction.Invariant
+import Theory.GroupAction.Quotient
+import Theory.GroupTheory.SubgroupConjugation
+import Theory.GroupAction.SubgroupConjugation
 import Mathlib.GroupTheory.PGroup
+
 
 /-!
 # Bender--Glauberman: Section 2 setup and the general situation
@@ -37,9 +38,8 @@ open scoped Pointwise
 namespace BenderGlauberman
 
 open GorensteinWalter
-open Theory.Character
 
--- Local instances matching `Theory.Character`'s subgroup-sum convention; see
+-- Local instances matching `Character`'s subgroup-sum convention; see
 -- `BenderGlauberman/ClassFunction.lean`.
 attribute [local instance] Fintype.ofFinite
 attribute [local instance] Classical.propDecidable
@@ -50,6 +50,7 @@ section Section2
 
 variable {G : Type u} [Group G] [Fintype G]
 
+omit [Fintype G] in
 /-- For an element `t` with `t² = 1`, every character of the dual group takes
 the value `±1` at `t`. -/
 private lemma lambda_sq_eq_one (H0 U : Subgroup G) (t : ↥H0) (ht_sq : t ^ 2 = 1)
@@ -1325,7 +1326,7 @@ private lemma s0_commGroup (c : Hyp11 G) : IsMulCommutative ↥(c.S0 : Subgroup 
 private lemma sPrime_subgroupOf_normal (c : Hyp11 G) :
     ((SPrime c).subgroupOf (c.S0 : Subgroup G)).Normal := by
   let : IsMulCommutative ↥(c.S0 : Subgroup G) := s0_commGroup c
-  exact Subgroup.normal_of_comm ((SPrime c).subgroupOf (c.S0 : Subgroup G))
+  exact Subgroup.normal_of_isMulCommutative ((SPrime c).subgroupOf (c.S0 : Subgroup G))
 
 /-- The commutator hypothesis for the `S0`-instance of the `Λ`-machinery. -/
 private lemma sPrime_hcomm (c : Hyp11 G) :
@@ -1566,7 +1567,7 @@ public theorem lambda_fixed_by_s_iff (c : Hyp11 G) (h12 : Hyp12 c)
 
 /-- Existence of `κ1`: a linear character of `H0` whose kernel contains `S0`
 and `[S,U]`. -/
-theorem exists_kappaOne (c : Hyp11 G) (h12 : Hyp12 c) :
+theorem exists_kappaOne (c : Hyp11 G) :
     ∃ κ1 : ClassFunction (↥c.H0), IsLinearCharacter κ1 ∧
       (∀ x : ↥c.H0, (x : G) ∈ (c.S0 : Subgroup G) → κ1 x = 1) ∧
       (∀ x : ↥c.H0, (x : G) ∈ ⁅(c.S : Subgroup G), c.U⁆ → κ1 x = 1) := by
@@ -1577,23 +1578,23 @@ theorem exists_kappaOne (c : Hyp11 G) (h12 : Hyp12 c) :
     rfl
 
 /-- `κ1`: a linear character of `H0` whose kernel contains `S0` and `[S,U]`. -/
-noncomputable def kappaOne (c : Hyp11 G) (h12 : Hyp12 c) : ClassFunction (↥c.H0) :=
-  Classical.choose (exists_kappaOne c h12)
+noncomputable def kappaOne (c : Hyp11 G) : ClassFunction (↥c.H0) :=
+  Classical.choose (exists_kappaOne c)
 
 /-- `κ1` is a linear character of `H0`. -/
-theorem kappaOne_isLinear (c : Hyp11 G) (h12 : Hyp12 c) :
-    IsLinearCharacter (kappaOne c h12) := by
-  exact (Classical.choose_spec (exists_kappaOne c h12)).1
+theorem kappaOne_isLinear (c : Hyp11 G) :
+    IsLinearCharacter (kappaOne c) := by
+  exact (Classical.choose_spec (exists_kappaOne c)).1
 
 /-- The kernel of `κ1` contains `S0`. -/
-theorem kappaOne_trivial_on_S0 (c : Hyp11 G) (h12 : Hyp12 c) :
-    ∀ x : ↥c.H0, (x : G) ∈ (c.S0 : Subgroup G) → kappaOne c h12 x = 1 := by
-  exact (Classical.choose_spec (exists_kappaOne c h12)).2.1
+theorem kappaOne_trivial_on_S0 (c : Hyp11 G) :
+    ∀ x : ↥c.H0, (x : G) ∈ (c.S0 : Subgroup G) → kappaOne c x = 1 := by
+  exact (Classical.choose_spec (exists_kappaOne c)).2.1
 
 /-- The kernel of `κ1` contains `[S,U]`. -/
-theorem kappaOne_trivial_on_comm (c : Hyp11 G) (h12 : Hyp12 c) :
-    ∀ x : ↥c.H0, (x : G) ∈ ⁅(c.S : Subgroup G), c.U⁆ → kappaOne c h12 x = 1 := by
-  exact (Classical.choose_spec (exists_kappaOne c h12)).2.2
+theorem kappaOne_trivial_on_comm (c : Hyp11 G) :
+    ∀ x : ↥c.H0, (x : G) ∈ ⁅(c.S : Subgroup G), c.U⁆ → kappaOne c x = 1 := by
+  exact (Classical.choose_spec (exists_kappaOne c)).2.2
 
 /-- `κ1` is fixed by `s` (`κ1^s = κ1`): `κ1` kills `S0` and `[S,U]`, and
 `H0 = U·S0` with `s` inverting `S0` and normalizing `U`. -/
@@ -1677,10 +1678,10 @@ theorem kappaOne_fixed_by_s (c : Hyp11 G) (h12 : Hyp12 c)
   exact hk1
 
 /-- `Λ_{κ1} = 1`: the stabilizer of `κ1` in `Λ` is trivial, so `|Λ·κ1| = |Λ|`. -/
-theorem kappaOne_stab (c : Hyp11 G) (h12 : Hyp12 c)
+theorem kappaOne_stab (c : Hyp11 G)
     [Fintype ↥(LambdaHom c.H0 c.U)] :
     (Finset.univ.filter (fun l : LambdaHom c.H0 c.U =>
-      LambdaChar l.1 * kappaOne c h12 = kappaOne c h12)).card = 1 := by
+      LambdaChar l.1 * kappaOne c = kappaOne c)).card = 1 := by
   rw [Finset.card_eq_one]
   refine ⟨1, ?_⟩
   apply Finset.ext
@@ -1694,11 +1695,11 @@ theorem kappaOne_stab (c : Hyp11 G) (h12 : Hyp12 c)
     intro x
     change l.1 x = 1
     have hx := congrFun h x
-    have hx' : (l.1 x : ℂ) * (kappaOne c h12 x : ℂ) =
-        (kappaOne c h12 x : ℂ) := by
+    have hx' : (l.1 x : ℂ) * (kappaOne c x : ℂ) =
+        (kappaOne c x : ℂ) := by
       simpa [LambdaChar] using hx
-    have hκnz : (kappaOne c h12 x : ℂ) ≠ 0 :=
-      linearChar_ne_zero (kappaOne_isLinear c h12) x
+    have hκnz : (kappaOne c x : ℂ) ≠ 0 :=
+      linearChar_ne_zero (kappaOne_isLinear c) x
     have hx'' : (l.1 x : ℂ) = 1 :=
       mul_right_cancel₀ hκnz (by simpa [one_mul] using hx')
     exact Units.ext hx''
@@ -1724,7 +1725,7 @@ public theorem kappa_eq_lambda_mul (c : Hyp11 G)
   rfl
 
 /-- The product of two linear characters is linear. -/
-private lemma isLinearCharacter_mul (c : Hyp11 G) (h12 : Hyp12 c)
+private lemma isLinearCharacter_mul (c : Hyp11 G)
     {φ ψ : ClassFunction (↥c.H0)} (hφ : IsLinearCharacter φ) (hψ : IsLinearCharacter ψ) :
     IsLinearCharacter (φ * ψ) := by
   let φh := linearCharHom hφ
@@ -1800,14 +1801,14 @@ private lemma LambdaChar_conj_eq_inv (c : Hyp11 G) (h12 : Hyp12 c)
           l.1 ⟨(r : G), S0_le_H0 c r.2⟩ : ℂ) := by
         exact congrArg (fun z : ℂˣ => (z : ℂ)) hmul
       _ = (l.1 ⟨(r : G), S0_le_H0 c r.2⟩ : ℂ) := by rw [hl_u']; simp
-  simpa [hxr']
+  simp [hxr']
 
 /-- Each `κi` is a linear (hence irreducible) character of `H0`. -/
-theorem kappa_isLinear (c : Hyp11 G) (h12 : Hyp12 c) {κ1 : ClassFunction (↥c.H0)}
+theorem kappa_isLinear (c : Hyp11 G) {κ1 : ClassFunction (↥c.H0)}
     (hκ1 : IsLinearCharacter κ1) (l : LambdaHom c.H0 c.U) :
     IsLinearCharacter (kappa c κ1 l) := by
   unfold kappa
-  exact isLinearCharacter_mul c h12 (LambdaChar_isLinear c l) hκ1
+  exact isLinearCharacter_mul c (LambdaChar_isLinear c l) hκ1
 
 /-- `s` fixes no `κi` except `κ1` and `κ2`. -/
 theorem kappa_conj_fixed_iff (c : Hyp11 G) (h12 : Hyp12 c)
@@ -2645,6 +2646,7 @@ private lemma mem_U_of_mem_B (c : Hyp11 G) {b : G} (hbB : b ∈ c.B) : b ∈ c.U
   unfold Hyp11.B1 centralizerIn at hbB1
   exact (inf_le_left : c.U ⊓ Subgroup.centralizer ({c.t1} : Set G) ≤ c.U) hbB1
 
+omit [Fintype G] in
 /-- Membership in the fixed-point subgroup is pointwise fixedness. -/
 private lemma mem_fixedPointSubgroup_iff (A K : Subgroup G) [Subgroup.Normalizes A K]
     {x : ↥K} : x ∈ fixedPointSubgroup (↥A) (↥K) ↔ ∀ a : ↥A, a • x = x := by
@@ -2694,7 +2696,7 @@ private lemma b_mem_fixedPointSubgroup (c : Hyp11 G) (_h12 : Hyp12 c)
           have ht1S : t1S ∉ (c.S0 : Subgroup G).subgroupOf (c.S : Subgroup G) := by
             exact fun h => c.t1_not_mem_S0 (Subgroup.mem_subgroupOf.mp h)
           have hmul : aS * t1S ∈ (c.S0 : Subgroup G).subgroupOf (c.S : Subgroup G) := by
-            exact (Subgroup.mul_mem_iff_of_index_two (S0_index c)).2 (by simpa [haS, ht1S])
+            exact (Subgroup.mul_mem_iff_of_index_two (S0_index c)).2 (by simp [haS, ht1S])
           have hrS0 : (a : G) * c.t1 ∈ (c.S0 : Subgroup G) := by
             simpa [aS, t1S, Subgroup.coe_mul] using (Subgroup.mem_subgroupOf.mp hmul)
           rcases (Subgroup.mem_zpowers_iff.mp (by simpa [c.S0_eq_zpowers] using hrS0)) with
@@ -2794,10 +2796,10 @@ private lemma b_not_mem_comm_of_not_mem_Uprime (c : Hyp11 G) (h12 : Hyp12 c) {b 
         _ = U'sub.map c.U.subtype := by
               exact (Subgroup.map_subgroupOf_eq_of_le (Subgroup.commutator_le_self c.U)).symm
     rw [hEq]
-  have hsolvQ : IsSolvable (↥c.U ⧸ U'sub) := by
+  have hsolvQ : Group.IsSolvable (↥c.U ⧸ U'sub) := by
     let : IsMulCommutative (↥c.U ⧸ U'sub) := hQcomm
     let : CommGroup (↥c.U ⧸ U'sub) := IsMulCommutative.instCommGroup
-    exact isSolvable_of_comm (fun a b => mul_comm a b)
+    exact Group.isSolvable_of_comm (fun a b => mul_comm a b)
   have hcop2U : Nat.Coprime 2 (Nat.card ↥c.U) := by
     have h1 : Nat.card ↥c.U = Nat.card (pPrimeCore 2 c.H) := by
       dsimp [Hyp11.U]
@@ -2831,7 +2833,7 @@ private lemma b_not_mem_comm_of_not_mem_Uprime (c : Hyp11 G) (h12 : Hyp12 c) {b 
       exact (mem_fixedPointSubgroup_iff (c.S : Subgroup G) c.U).mp hbfix a
     have hsmul : a • (QuotientGroup.mk' U'sub ⟨b, hbU⟩ : ↥c.U ⧸ U'sub) =
         QuotientGroup.mk' U'sub (a • ⟨b, hbU⟩ : ↥c.U) := by
-      simpa using (MulAction.Quotient.smul_mk (H := U'sub) a ⟨b, hbU⟩)
+      simp
     calc
       a • qb = QuotientGroup.mk' U'sub (a • ⟨b, hbU⟩ : ↥c.U) := hsmul
       _ = QuotientGroup.mk' U'sub ⟨b, hbU⟩ := by rw [hfix']
@@ -2846,7 +2848,7 @@ private lemma b_not_mem_comm_of_not_mem_Uprime (c : Hyp11 G) (h12 : Hyp12 c) {b 
     rcases hx with ⟨a0, u, hxeq⟩
     refine ⟨a0, QuotientGroup.mk' U'sub u, ⟨by simp, ?_⟩⟩
     have hsmul : a0 • (QuotientGroup.mk' U'sub u) = QuotientGroup.mk' U'sub (a0 • u) := by
-      simpa using (MulAction.Quotient.smul_mk (H := U'sub) a0 u)
+      simp
     calc
       QuotientGroup.mk' U'sub x = QuotientGroup.mk' U'sub (u⁻¹ * (a0 • u)) := by rw [hxeq]
       _ = (QuotientGroup.mk' U'sub u)⁻¹ * QuotientGroup.mk' U'sub (a0 • u) := by
@@ -2958,7 +2960,7 @@ theorem exists_kappaOne_ne_one (c : Hyp11 G) (h12 : Hyp12 c)
       have hx := congrFun hk1 x
       change ((φ x : ℂˣ) : ℂ) = 1 at hx
       exact hx
-    simpa [hφ1]
+    simp [hφ1]
   · intro x hxS0
     change (l.1 (uPart c h12 x) : ℂ) = 1
     have hup : uPart c h12 x = 1 := uPart_eq_one_of_mem_S0 c h12 hxS0

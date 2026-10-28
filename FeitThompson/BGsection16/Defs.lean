@@ -5,6 +5,7 @@ import FeitThompson.PFsection2.PFsection2_1
 import Mathlib.GroupTheory.Schreier
 import Mathlib.Order.Preorder.Finite
 
+
 open scoped Pointwise
 
 /-!
@@ -112,7 +113,7 @@ public theorem section16MFSubgroup_unique
 /-- The ambient `p`-core of a subgroup. -/
 @[expose] public def section16PCoreIn
     (p : Nat.Primes) (H : Subgroup G) : Subgroup G := by
-  letI : Fact p.val.Prime := ⟨p.property⟩
+  let : Fact p.val.Prime := ⟨p.property⟩
   exact (pCore p.val H).map H.subtype
 
 /-- The set `pi*` from Section 16. -/

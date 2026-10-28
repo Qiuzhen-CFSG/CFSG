@@ -5,6 +5,7 @@ public import GorensteinWalter.Section3.FirstCaseKleinB4Divisible
 public import GorensteinWalter.CentralizerSup
 import Mathlib.Tactic
 
+
 /-!
 # Odd-graph neighbours of `U`
 
@@ -416,7 +417,7 @@ private def neighbor_sylow
     exact (V.2.2 u hu w hw).eq
   have hsup9 : Nat.card (U ⊔ W : Subgroup G) = 9 :=
     join_card_nine_of_commute U W hU3 hW3 hWneU.symm hcomm
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   have hfac : (Nat.card G).factorization 3 = 2 :=
     factorization_three_of_countData c d
   let R : Sylow 3 G := Sylow.ofCard (U ⊔ W : Subgroup G) (by

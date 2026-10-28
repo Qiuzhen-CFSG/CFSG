@@ -8,6 +8,7 @@ public import FeitThompson.BGsection6.theorem_6_7
 public import FeitThompson.BGsection5.theorem_5_3
 public import FeitThompson.BGsection4.proposition_4_6
 
+
 open scoped Pointwise IsMulCommutative commutatorElement
 
 /-! # Proposition 7.5 from BG Section 7 -/

@@ -4,6 +4,7 @@ public import FeitThompson.BGsection5.corollary_5_4
 public import FeitThompson.BGsection4.theorem_4_17
 public import FeitThompson.BGsection4.lemma_4_5_b
 
+
 /-! # Theorem 5.5(a) from BG Section 5 -/
 
 open scoped commutatorElement
@@ -193,7 +194,7 @@ public theorem groupRank_at_least_three_of_generatorRank_subgroup
     rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
     exact Group.rank_congr (Subgroup.subgroupOfEquivOfLe (H := A) (K := K) hAK)
   have hqrankK : 3 ≤ primeRank q K := by
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     refine le_csSup ?_ ?_
     · refine ⟨Nat.card K, ?_⟩
       intro n hn
@@ -223,7 +224,7 @@ private theorem generatorRank_le_groupRank_of_subgroup
     rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
     exact Group.rank_congr (Subgroup.subgroupOfEquivOfLe (H := A) (K := K) hAK)
   have hqrankK : generatorRank A ≤ primeRank q K := by
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     refine le_csSup ?_ ?_
     · refine ⟨Nat.card K, ?_⟩
       intro n hn
@@ -244,7 +245,7 @@ private theorem primeRank_le_primeRank_of_subgroup
     (hHK : H ≤ K) :
     primeRank q H ≤ primeRank q K := by
   classical
-  rw [primeRank]
+  rw [primeRank_eq_sSup_generatorRank, primeRank_eq_sSup_generatorRank]
   refine csSup_le ?_ ?_
   · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := H), inferInstance, Nat.zero_le _⟩
   · intro n hn
@@ -324,7 +325,7 @@ private theorem primeRank_le_groupRank_sylow
     {G : Type*} [Group G] [Finite G] (S : Sylow p G) :
     primeRank p G ≤ groupRank (S : Subgroup G) := by
   classical
-  rw [primeRank]
+  rw [primeRank_eq_sSup_generatorRank]
   refine csSup_le ?_ ?_
   · exact ⟨0, ⊥, IsPGroup.of_bot (p := p) (G := G), inferInstance, Nat.zero_le _⟩
   · intro n hn
@@ -369,7 +370,7 @@ public theorem primeRank_fitting_le_groupRank_pCore
     {G : Type*} [Group G] [Finite G] {q : ℕ} [Fact q.Prime] :
     primeRank q (fittingSubgroup G) ≤ groupRank (pCore q G) := by
   classical
-  rw [primeRank]
+  rw [primeRank_eq_sSup_generatorRank]
   refine csSup_le ?_ ?_
   · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := fittingSubgroup G), inferInstance,
       Nat.zero_le _⟩
@@ -465,7 +466,7 @@ public theorem pCore_commute_of_ne_local
   have hcomm : ⁅x, y⁆ = (1 : G) := by simpa using hmem_inf
   rwa [commutatorElement_eq_one_iff_mul_comm] at hcomm
 
-private theorem actsTrivially_of_isPGroup_on_cyclic_prime_order_local
+private theorem isTrivialAction_of_isPGroup_on_cyclic_prime_order_local
     {A G : Type*} [Group A] [Finite A] [Group G] [Finite G] [MulDistribMulAction A G]
     {p : ℕ} (hp : Nat.Prime p) (hA : IsPGroup p A) (hG_cyclic : IsCyclic G)
     (hG_card : Nat.card G = p) :
@@ -760,7 +761,7 @@ private theorem normal_prime_order_subgroup_le_center_of_isPGroup
   let : Finite (ConjAct R) := Finite.of_equiv R ConjAct.toConjAct.toEquiv
   have hConjP : IsPGroup p (ConjAct R) := hpR.of_equiv ConjAct.toConjAct
   have htriv : ActsTrivially (A := ConjAct R) (G := S) :=
-    actsTrivially_of_isPGroup_on_cyclic_prime_order_local
+    isTrivialAction_of_isPGroup_on_cyclic_prime_order_local
       (A := ConjAct R) (G := S) (Fact.out : Nat.Prime p) hConjP inferInstance hScard
   intro s hs
   rw [Subgroup.mem_center_iff]
@@ -790,7 +791,7 @@ private theorem theorem_5_5_a_high_rank_R₀_not_le_H
   intro hR₀_le_H
   let ZH : Subgroup R := centerIn (G := R) H
   have hZH_eq : ZH = (Subgroup.center H).map H.subtype := by
-    simpa [ZH] using centerIn_eq_map_center_local (G := R) H
+    simp [ZH]
   have hZH_norm : ZH.Normal := by
     rw [hZH_eq]
     let : (Subgroup.center H).Characteristic := Subgroup.centerCharacteristic

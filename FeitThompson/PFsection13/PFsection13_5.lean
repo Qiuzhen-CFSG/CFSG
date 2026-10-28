@@ -27,7 +27,7 @@ private theorem theorem_13_5_virtualCharacter_one_eq_int
     [Group K]
     [Finite K]
     {phi : Section1.ClassFunction K}
-    (hphi : Theory.Character.IsVirtualCharacter phi) :
+    (hphi : IsVirtualCharacter phi) :
     ∃ z : ℤ, phi 1 = (z : ℂ) := by
   classical
   rcases hphi with ⟨r, m, n, rho, hphi_eq⟩
@@ -36,7 +36,7 @@ private theorem theorem_13_5_virtualCharacter_one_eq_int
     intro i
     simp
   rw [hphi_eq]
-  unfold Theory.Character.virtualCharacterOfRepresentations
+  unfold virtualCharacterOfRepresentations
   simp_rw [hdegree]
   exact_mod_cast (rfl : (∑ i : Fin r, m i * (n i : ℤ)) =
     ∑ i : Fin r, m i * (n i : ℤ))
@@ -53,8 +53,8 @@ private theorem theorem_13_5_subgroup_restriction_raw_energy_eq_ambient
     (Nat.card H : ℝ) * Section5.cfNormSq phiH =
       (Nat.card M : ℝ) * Section5.cfNormSq phiM := by
   classical
-  letI : Fintype H := Fintype.ofFinite H
-  letI : Fintype M := Fintype.ofFinite M
+  let : Fintype H := Fintype.ofFinite H
+  let : Fintype M := Fintype.ofFinite M
   rcases hres with ⟨hHM, hres⟩
   let e : H.subgroupOf M ≃ H :=
     (Subgroup.subgroupOfEquivOfLe hHM).toEquiv
@@ -110,7 +110,7 @@ private theorem theorem_13_5_punctured_energy_eq_card_mul_cfNormSq_sub_one
     Section7.subgroupSupportEnergy H (Section7.puncturedSubgroupSet H) phi =
       (Nat.card H : ℝ) * Section5.cfNormSq phi - Complex.normSq (phi 1) := by
   classical
-  letI : Fintype H := Fintype.ofFinite H
+  let : Fintype H := Fintype.ofFinite H
   have henergy :
       Section7.subgroupSupportEnergy H (Section7.puncturedSubgroupSet H) phi =
         ∑ x : H, if x = 1 then 0 else Complex.normSq (phi x) := by
@@ -224,7 +224,7 @@ private theorem theorem_13_5_subgroupRestriction_inducedCF_orthogonal_of_kernel
   classical
   rcases htheta_irreducible with ⟨n, rho, hrho_irreducible, htheta⟩
   subst theta
-  letI orbitFintype : Fintype (Section1.conjugateOrbitIndex H rho.character) :=
+  let orbitFintype : Fintype (Section1.conjugateOrbitIndex H rho.character) :=
     Quotient.fintype (Section1.conjugateOrbitSetoid H rho.character)
   have horbit_zero : ∀ i : Section1.conjugateOrbitIndex H rho.character,
       Section1.scalarProduct H
@@ -234,7 +234,7 @@ private theorem theorem_13_5_subgroupRestriction_inducedCF_orthogonal_of_kernel
         Section1.IsIrreducibleCharacterOnGroup
           (Section1.conjugateOrbitConj H rho.character i) := by
       refine ⟨n, Section1.conjugateOrbitRepresentation H rho i, ?_, ?_⟩
-      · letI : Representation.IsIrreducible rho := hrho_irreducible
+      · let : Representation.IsIrreducible rho := hrho_irreducible
         exact Section1.irreducible_conjugateRepresentation H rho (Quotient.out i)
       · exact Section1.conjugateOrbitConj_representationCharacter H rho i
     have horbit_ne : Section1.conjugateOrbitConj H rho.character i ≠ psi := by
@@ -300,15 +300,15 @@ private theorem theorem_13_5_restriction_inducedCF_orthogonal_kernelConstituent
     intro x hx
     change ((x : M) : K) ∈ H
     exact hPH (by simpa [Subgroup.mem_subgroupOf] using hx)
-  letI : (H.subgroupOf M).Normal := hHnormal
-  letI : (P.subgroupOf M).Normal := hPnormal
+  let : (H.subgroupOf M).Normal := hHnormal
+  let : (P.subgroupOf M).Normal := hPnormal
   rcases halpha with ⟨halpha_virtual, halpha_kernel⟩
   have halpha_class : Section1.IsClassFunction alpha :=
     Section1.isVirtualCharacter_isClassFunction halpha_virtual
-  rcases Theory.Character.irreducible_characters_form_basis (G := H) with
+  rcases irreducible_characters_form_basis (G := H) with
     ⟨ι, hι, chi, hchi, b, hb⟩
-  letI : Fintype ι := hι
-  letI : DecidableEq ι := Classical.decEq ι
+  let : Fintype ι := hι
+  let : DecidableEq ι := Classical.decEq ι
   let psi : ι → Section1.ClassFunction H :=
     fun i => Section1.ofConjClassFunction (chi i)
   have hpsi_irreducible : ∀ i,
@@ -500,8 +500,8 @@ private theorem theorem_13_5_subgroup_energy_cast_add
         r * theorem_13_5_crossSum H A psi phi +
         (Section7.subgroupSupportEnergy H A psi : ℂ) := by
   classical
-  letI : DecidablePred (fun x : K => x ∈ H) := Classical.decPred _
-  letI : Fintype H := H.instFintypeSubtypeMemOfDecidablePred
+  let : DecidablePred (fun x : K => x ∈ H) := Classical.decPred _
+  let : Fintype H := H.instFintypeSubtypeMemOfDecidablePred
   have hcast : ∀ f : Section1.ClassFunction H,
       ((∑ x : H, if (x : K) ∈ A then Complex.normSq (f x) else 0 : ℝ) : ℂ) =
         ∑ x : H, if (x : K) ∈ A then f x * star (f x) else 0 := by
@@ -578,7 +578,7 @@ private theorem theorem_13_5_isMulCommutative_sup_of_le_centralizer
           y = a⁻¹ * y' * a := by simp [y', mul_assoc]
           _ = y' := hconj
       simpa [hy_eq] using hy'Y
-  haveI : YD.Normal := by
+  have : YD.Normal := by
     simpa [D, YD] using
       (Subgroup.normal_subgroupOf_sup_of_le_normalizer
         (H := A) (N := Y) hA_norm_Y)
@@ -788,23 +788,23 @@ private theorem theorem_13_5_transportClassFunction_isCharacter
 private theorem theorem_13_5_isVirtualCharacter_int_smul
     {K : Type u} [Group K] [Finite K]
     (z : ℤ) {phi : Section1.ClassFunction K}
-    (hphi : Theory.Character.IsVirtualCharacter phi) :
-    Theory.Character.IsVirtualCharacter ((z : ℂ) • phi) := by
+    (hphi : IsVirtualCharacter phi) :
+    IsVirtualCharacter ((z : ℂ) • phi) := by
   classical
   rcases hphi with ⟨r, m, n, rho, rfl⟩
   refine ⟨r, fun i => z * m i, n, rho, ?_⟩
   ext g
-  simp [Theory.Character.virtualCharacterOfRepresentations, Finset.mul_sum,
+  simp [virtualCharacterOfRepresentations, Finset.mul_sum,
     mul_assoc]
 
 private theorem theorem_13_5_isVirtualCharacter_fintype_int_sum
     {K : Type u} {I : Type v} [Group K] [Finite K] [Fintype I]
     (z : I → ℤ) (phi : I → Section1.ClassFunction K)
-    (hphi : ∀ i, Theory.Character.IsVirtualCharacter (phi i)) :
-    Theory.Character.IsVirtualCharacter (∑ i : I, (z i : ℂ) • phi i) := by
+    (hphi : ∀ i, IsVirtualCharacter (phi i)) :
+    IsVirtualCharacter (∑ i : I, (z i : ℂ) • phi i) := by
   classical
   have hsum : ∀ s : Finset I,
-      Theory.Character.IsVirtualCharacter (∑ i ∈ s, (z i : ℂ) • phi i) := by
+      IsVirtualCharacter (∑ i ∈ s, (z i : ℂ) • phi i) := by
     intro s
     induction s using Finset.induction_on with
     | empty =>
@@ -829,7 +829,7 @@ private theorem theorem_13_5_integer_sum_character_kernelConstituentData
     virtualCharacterKernelConstituentData H P
       (∑ i : I, (z i : ℂ) • beta i) := by
   classical
-  have hbetaVirt : ∀ i, Theory.Character.IsVirtualCharacter (beta i) :=
+  have hbetaVirt : ∀ i, IsVirtualCharacter (beta i) :=
     fun i => Section5.isVirtualCharacter_of_isCharacter (hbetaChar i)
   refine ⟨theorem_13_5_isVirtualCharacter_fintype_int_sum z beta hbetaVirt, ?_⟩
   intro theta hthetaIrr hscalar
@@ -879,8 +879,8 @@ private theorem theorem_13_5_normalized_induced_restriction_kernel_package
   have hPHS : PS ≤ HS := by
     intro x hx
     exact hPH hx
-  letI : HS.Normal := hHnormal
-  letI : PS.Normal := hPnormal
+  let : HS.Normal := hHnormal
+  let : PS.Normal := hPnormal
   have hθchar : Section1.IsCharacter θ :=
     Section6.theorem_6_8_isCharacter_of_irreducible hθirr
   rcases hθirr with ⟨m, θrep, hθrepirr, hθeq⟩
@@ -974,8 +974,8 @@ private theorem theorem_13_5_expansion_source
             χ (x : G) =
               (a / (Section5.cfNormSq ζ1 : ℂ)) * ζ1H x + α x := by
   classical
-  letI : Fintype Smax := Fintype.ofFinite Smax
-  letI : Fintype (H.subgroupOf Smax) := Fintype.ofFinite (H.subgroupOf Smax)
+  let : Fintype Smax := Fintype.ofFinite Smax
+  let : Fintype (H.subgroupOf Smax) := Fintype.ofFinite (H.subgroupOf Smax)
   rcases _hhyp with
     ⟨hH, hS1, hζ0S1, hζ1S1, hζ01, hχvirt, ha, hzero⟩
   have hHS : H ≤ Smax := hS1.1
@@ -995,8 +995,8 @@ private theorem theorem_13_5_expansion_source
       _hW1norm, _hDercomp, _hMFnotcyc, _hsecond, _hfitDef, _hfitDer,
       _hW2le, _hW2cyc, _hW2ne, _hcent, _hnorm⟩
   rcases hMF with ⟨⟨_hPSmax, hPnormal, _hPnil, _hPHall⟩, _hPmax⟩
-  letI : (H.subgroupOf Smax).Normal := hHnormal
-  letI : IsMulCommutative (H.subgroupOf Smax) :=
+  let : (H.subgroupOf Smax).Normal := hHnormal
+  let : IsMulCommutative (H.subgroupOf Smax) :=
     theorem_13_5_H_subgroupOf_isMulCommutative
       Smax Tmax W W1 W2 P Q U V C D H Sfam Tfam τS τT
         p q u v c d _hsource hH hHS
@@ -1159,7 +1159,7 @@ private theorem theorem_13_5_expansion_source
     intro j
     exact (henum.1 (η j)).mpr ⟨j, rfl⟩
   have hηvirt : ∀ j : Fin (n + 1),
-      Theory.Character.IsVirtualCharacter (η j) := by
+      IsVirtualCharacter (η j) := by
     intro j
     rcases (hTnotation (η j)).mp (hηT j) with ⟨θ, hθirr, hηind⟩
     rw [hηind]
@@ -1168,12 +1168,12 @@ private theorem theorem_13_5_expansion_source
       (Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup hθirr)
   have hcoeffInt : ∀ i : Fin n, ∃ zi : ℤ, coeff i = (zi : ℂ) := by
     intro i
-    have hdiffVirt : Theory.Character.IsVirtualCharacter
+    have hdiffVirt : IsVirtualCharacter
         (η (Fin.succ i) - η 0) :=
       Section3.isVirtualCharacter_sub (hηvirt (Fin.succ i)) (hηvirt 0)
-    have hindVirt : Theory.Character.IsVirtualCharacter
+    have hindVirt : IsVirtualCharacter
         (τind (η (Fin.succ i) - η 0)) := by
-      change Theory.Character.IsVirtualCharacter
+      change IsVirtualCharacter
         (Section1.inducedCF Smax (η (Fin.succ i) - η 0))
       exact Section2.inducedCF_isVirtualCharacter_of_virtualCharacter Smax hdiffVirt
     exact Section3.scalarProduct_isVirtualCharacter_eq_int hindVirt hχvirt
@@ -1337,7 +1337,7 @@ private theorem theorem_13_5_squareSumFormula_source
       _hW1norm, _hDercomp, _hMFnotcyc, _hsecond, _hfitDef, _hfitDer,
       _hW2le, _hW2cyc, _hW2ne, _hcent, _hnorm⟩
   rcases hMF with ⟨⟨_hPSmax, hPnormal, _hPnil, _hPHall⟩, _hPmax⟩
-  letI : (H.subgroupOf Smax).Normal := hHnormal
+  let : (H.subgroupOf Smax).Normal := hHnormal
   have hζ1support :
       Section1.supportedOn ζ1 (H.subgroupOf Smax : Set Smax) := by
     rw [Section1.supportedOn_iff]
@@ -1349,10 +1349,10 @@ private theorem theorem_13_5_squareSumFormula_source
     theorem_13_5_restriction_inducedCF_orthogonal_kernelConstituent
       H Smax P ζ1 ζ1H α theta hres hPH hHnormal hPnormal
       htheta_irreducible htheta_not_kernel hζ1_induced _hα
-  have htheta_virtual : Theory.Character.IsVirtualCharacter theta :=
+  have htheta_virtual : IsVirtualCharacter theta :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup
       htheta_irreducible
-  have hζ1virtual : Theory.Character.IsVirtualCharacter ζ1 := by
+  have hζ1virtual : IsVirtualCharacter ζ1 := by
     rw [hζ1_induced]
     exact Section2.inducedCF_isVirtualCharacter_of_virtualCharacter
       (H.subgroupOf Smax) htheta_virtual
@@ -1566,10 +1566,10 @@ public theorem theorem_13_5_virtualCharacterKernelConstituent_subgroupInKernel
   rcases hα with ⟨hvirt, hker⟩
   have hαclass : Section1.IsClassFunction α :=
     Section1.isVirtualCharacter_isClassFunction hvirt
-  rcases Theory.Character.irreducible_characters_form_basis (G := H) with
+  rcases irreducible_characters_form_basis (G := H) with
     ⟨ι, hι, χ, hχ, b, hb⟩
-  letI : Fintype ι := hι
-  letI : DecidableEq ι := Classical.decEq ι
+  let : Fintype ι := hι
+  let : DecidableEq ι := Classical.decEq ι
   let ψ : ι → Section1.ClassFunction H := fun i => Section1.ofConjClassFunction (χ i)
   have hψirr : ∀ i, Section1.IsIrreducibleCharacterOnGroup (ψ i) := by
     intro i

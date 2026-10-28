@@ -5,6 +5,7 @@ public import GorensteinWalter.GWLemma21Trichotomy
 import GorensteinWalter.DihedralCore
 import GorensteinWalter.QuotientTwoGroupNotNormalizerContainsCPrime
 
+
 /-!
 # Proposition 9 remark under the classification conclusion
 

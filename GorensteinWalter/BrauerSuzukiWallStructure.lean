@@ -15,6 +15,7 @@ import Mathlib.GroupTheory.Rank
 import Mathlib.GroupTheory.FixedPointFree
 import Mathlib.Tactic.Group
 
+
 /-!
 # Structural completion of the Brauer--Suzuki--Wall theorem
 
@@ -2706,7 +2707,7 @@ private theorem centralizer_involution_card_eq_card_H
     _ = Nat.card ((⊤ : Subgroup G) ⊓
         Subgroup.centralizer ({h.t} : Set G) : Subgroup G) :=
       Nat.card_congr he
-    _ = Nat.card h.H := by simpa [h.H_eq_centralizer]
+    _ = Nat.card h.H := by simp [h.H_eq_centralizer]
 
 /-- Conjugating an involution to `t` identifies the involutions in its
 centralizer with the involutions in `H = C_G(t)`. -/
@@ -4127,7 +4128,6 @@ private theorem selected_centralizer_card_le_unoccupied_of_nonempty
   let omega : Extra := Classical.choice hNonempty
   have base_fix (m : G) (hmM : m ∈ M) : m • base = base := by
     dsimp [base, Omega]
-    change ((((m * 1 : G)) : G ⧸ M) = ((1 : G) : G ⧸ M))
     rw [QuotientGroup.eq]
     simpa using M.inv_mem hmM
   let orbitMap : F → Extra := fun a =>
@@ -4330,7 +4330,6 @@ private theorem selected_centralizer_occupied_nonbase_cosets_card
       _ = r * Nat.card (h.K ⊓ M : Subgroup G) := hrMul.symm
   have hbaseFix (u : U) : (u : G) • base = base := by
     dsimp [base, Omega]
-    change ((((u : G) * 1 : G) : G ⧸ M) = ((1 : G) : G ⧸ M))
     rw [QuotientGroup.eq]
     simpa using M.inv_mem u.property.1
   have houtCard (u : U) : Nat.card (NonbaseFixed u) = r - 1 := by
@@ -4338,9 +4337,7 @@ private theorem selected_centralizer_occupied_nonbase_cosets_card
     have hcomp : Nat.card {omega : Fixed u // omega ≠ baseFixed} =
         Nat.card (Fixed u) - 1 := by
       let : Fintype (Fixed u) := Fintype.ofFinite (Fixed u)
-      simpa [Nat.card_eq_fintype_card] using
-        (Fintype.card_subtype_compl
-          (fun omega : Fixed u => omega = baseFixed))
+      simp [Nat.card_eq_fintype_card]
     let e : {omega : Fixed u // omega ≠ baseFixed} ≃ NonbaseFixed u :=
       Equiv.subtypeEquiv (Equiv.refl (Fixed u)) (by
         intro omega
@@ -4481,7 +4478,7 @@ private theorem natCard_dvd_card_sub_one_of_fixedPointFree_action
     have hane : a ≠ 1 := by
       intro haeq
       apply ha1
-      simpa [haeq]
+      simp [haeq]
     exact x.2 (hfree a hane (x : N) (congrArg Subtype.val hax))
   let Omega := Quotient (MulAction.orbitRel A X)
   have hcard :=
@@ -4908,7 +4905,7 @@ private theorem selected_centralizer_bender_3_4_card_data
   have hglobal : M.index * (f * n) = (2 * k) * h.H.index := by
     calc
       M.index * (f * n) = M.index * Nat.card M := by rw [hMcard]
-      _ = Nat.card G := by simpa [mul_comm] using M.card_mul_index
+      _ = Nat.card G := by simp [mul_comm, M.card_mul_index]
       _ = Nat.card h.H * h.H.index := h.H.card_mul_index.symm
       _ = (2 * k) * h.H.index := by rw [h.card_H]
   have hn2 : 2 ≤ n := by
@@ -5094,7 +5091,7 @@ into the same punctured conjugate union. -/
 private theorem bender_3_5_residual_centralizer_card_dvd
     {G : Type u} [Group G] [Finite G]
     (h : BrauerSuzukiWallHypotheses G)
-    (hk : 4 < Nat.card h.K) (F : Subgroup G)
+    (F : Subgroup G)
     (hFcard : Nat.card F = Nat.card h.K - 1)
     (hFCent : ∀ a : G, a ∈ F → a ≠ 1 →
       Subgroup.centralizer ({a} : Set G) = F)
@@ -5493,7 +5490,7 @@ private theorem bender_3_5_residual_orbit_data
         q := by
     simpa [q, k, Y] using
       bender_3_5_residual_centralizer_card_dvd
-        h hk F hFcard hFCent hFHall hHindex
+        h F hFcard hFCent hFHall hHindex
         (Quotient.out omega).property
   let m : Omega → ℕ := fun omega => (hCdvd omega).choose
   have hqFactor (omega : Omega) :
@@ -5583,7 +5580,7 @@ private theorem bender_3_5_residual_orbit_data
     let omega : Omega := Quotient.mk'' y
     have hquot :
         (Quotient.mk'' (Quotient.out omega) : Omega) = Quotient.mk'' y := by
-      simpa [omega] using Quotient.out_eq' omega
+      simp [omega]
     have hrel :
         MulAction.orbitRel (ConjAct G) Y (Quotient.out omega) y :=
       Quotient.exact' hquot
@@ -6071,13 +6068,13 @@ private theorem bender_3_6_residual_prime_data
     rcases hpPrime.dvd_mul.mp hpRest with hpTwoK | hpPred
     · have hpOne : p ∣ 1 := by
         have hsub := Nat.dvd_sub hpTwoK hpq
-        convert hsub using 1 <;> omega
+        convert hsub using 1; omega
       exact hpPrime.not_dvd_one hpOne
     · have hpTwoPred : p ∣ 2 * (k - 1) :=
         dvd_mul_of_dvd_right hpPred 2
       have hpOne : p ∣ 1 := by
         have hsub := Nat.dvd_sub hpq hpTwoPred
-        convert hsub using 1 <;> omega
+        convert hsub using 1; omega
       exact hpPrime.not_dvd_one hpOne
   exact ⟨p, hpPrime, hpC, by simpa [k] using hpq, hpOdd,
     by simpa [k] using hpCop⟩
@@ -6541,9 +6538,7 @@ private theorem sup_normalizer_eq_top_of_commutator_le
           (((RC : Subgroup C).map C.subtype : Subgroup H) : Set H) ⊔ C = ⊤ :=
     Sylow.normalizer_sup_eq_top RC
   have hRCmap : (RC : Subgroup C).map C.subtype = (R : Subgroup H) := by
-    simpa [RC, C] using
-      (Subgroup.map_subgroupOf_eq_of_le
-        (H := (R : Subgroup H)) (K := C) le_sup_right)
+    simp [RC, C]
   rw [hRCmap] at hfrattini
   rw [← hfrattini]
   change (P : Subgroup H) ⊔

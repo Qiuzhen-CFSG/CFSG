@@ -130,9 +130,9 @@ public noncomputable def subgroup_sup_equiv_prod_of_disjoint_of_normalIn
       have hback := hKnorm.2 c⁻¹ hc' (c * x * c⁻¹) hx
       have hEq : c⁻¹ * (c * x * c⁻¹) * c = x := by group
       simpa [hEq] using hback
-  haveI hHc : (H.subgroupOf C).Normal :=
+  have hHc : (H.subgroupOf C).Normal :=
     Subgroup.normal_subgroupOf_of_le_normalizer (H := C) (N := H) hCnormH
-  haveI hKc : (K.subgroupOf C).Normal :=
+  have hKc : (K.subgroupOf C).Normal :=
     Subgroup.normal_subgroupOf_of_le_normalizer (H := C) (N := K) hCnormK
   have hdisjC : H.subgroupOf C ⊓ K.subgroupOf C = ⊥ := by
     apply le_bot_iff.mp

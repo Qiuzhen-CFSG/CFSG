@@ -129,7 +129,7 @@ public theorem lemma115_sylow_preimage_map_eq_quotient_subgroup
       (Qbar.comap (QuotientGroup.mk' K))) :
     Q.map (QuotientGroup.mk' K) = Qbar := by
   classical
-  letI : Fact f.Prime := ⟨hf⟩
+  let : Fact f.Prime := ⟨hf⟩
   let q : G →* G ⧸ K := QuotientGroup.mk' K
   let H : Subgroup G := Qbar.comap q
   let phi : H →* Qbar :=
@@ -191,8 +191,8 @@ public theorem lemma115_exists_invariant_inverted_sylow_lift
         Disjoint Q K ∧
         (∀ q : G, q ∈ Q → rightConjugateElem q u0 = q⁻¹) := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
-  letI : Fact f.Prime := ⟨hf⟩
+  let : Fact p.Prime := ⟨hp⟩
+  let : Fact f.Prime := ⟨hf⟩
   obtain ⟨Q, hQsyl, _hQH, huNormQ⟩ :=
     lemma115_exists_invariant_sylow_in_quotient_preimage
       K hKodd hu Qbar hQbarNormal hQbarOdd hf
@@ -535,8 +535,8 @@ public theorem lemma115_regular_normal_inverted_by_unique_fixed_involution
       u0 • omega = omega → omega = alpha) :
     ∀ q : G, q ∈ Q → rightConjugateElem q u0 = q⁻¹ := by
   classical
-  letI : Q.Normal := hQnormal
-  letI : IsMulCommutative Q := hQcomm
+  let : Q.Normal := hQnormal
+  let : IsMulCommutative Q := hQcomm
   have hconj_fixed_one {q : G} (hq : q ∈ Q)
       (hqu : rightConjugateElem q u0 = q) : q = 1 := by
     let qQ : Q := ⟨q, hq⟩

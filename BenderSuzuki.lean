@@ -7,6 +7,7 @@ public import BenderSuzuki.Converse.PSU3
 public import BenderSuzuki.Converse.StronglyEmbedded
 public import BenderSuzuki.Converse.Sz
 public import BenderSuzuki.External.Hall.Basic
+public import BenderSuzuki.External.Hall.WeaklyClosedInvolution
 public import BenderSuzuki.External.Hall.corollary_14_4_2
 public import BenderSuzuki.External.Hall.lemma_14_4_2
 public import BenderSuzuki.External.Hall.lemma_14_4_3
@@ -54,6 +55,8 @@ public import BenderSuzuki.External.Huppert.IV.Basic
 public import BenderSuzuki.External.Huppert.IV.ComplementTransfer
 public import BenderSuzuki.External.Huppert.IV.GrunCore
 public import BenderSuzuki.External.Huppert.IV.Residual
+public import BenderSuzuki.External.Huppert.IV.ResidualCommutator
+public import BenderSuzuki.External.Huppert.IV.ResidualGenerators
 public import BenderSuzuki.External.Huppert.IV.theorem_3_3
 public import BenderSuzuki.External.Huppert.IV.theorem_3_4
 public import BenderSuzuki.External.Huppert.IV.theorem_3_7
@@ -86,6 +89,8 @@ public import BenderSuzuki.External.Huppert.XI.theorem_11_15
 public import BenderSuzuki.External.Huppert.XI.theorem_11_16
 public import BenderSuzuki.External.Huppert.XI.theorem_2_5
 public import BenderSuzuki.External.Huppert.XI.theorem_2_6
+public import BenderSuzuki.External.Huppert.XI.theorem_3_10
+public import BenderSuzuki.External.Huppert.XI.SubgroupSolvable
 public import BenderSuzuki.External.Huppert.XI.theorem_3_3
 public import BenderSuzuki.External.Huppert.XI.theorem_3_6
 public import BenderSuzuki.External.Huppert.XI.theorem_6_1
@@ -109,8 +114,10 @@ public import BenderSuzuki.External.Suzuki.VI.section_2_2.example_3
 public import BenderSuzuki.External.Suzuki.VI.theorem_1_8
 public import BenderSuzuki.External.Suzuki.VI.theorem_2_3
 public import BenderSuzuki.FinalTheorem
+public import BenderSuzuki.MatrixGroups.HermitianConjugation
 public import BenderSuzuki.MatrixGroups.PSL2
 public import BenderSuzuki.MatrixGroups.PSL28Facts
+public import BenderSuzuki.MatrixGroups.SpecialUnitaryFixedEquiv
 public import BenderSuzuki.MatrixGroups.Suzuki
 public import BenderSuzuki.MatrixGroups.Unitary
 public import BenderSuzuki.PFAppendixI.Basic

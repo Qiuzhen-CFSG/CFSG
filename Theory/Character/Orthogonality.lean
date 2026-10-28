@@ -19,26 +19,25 @@ relations for the ConjClasses-based characters, including the basis of
 irreducible characters and `Σ|χ(1)|² = |G|`.
 -/
 
+@[expose] public section
+
 noncomputable section
 
 open scoped BigOperators
 
 attribute [local instance] Fintype.ofFinite
 
-namespace Theory.Character
-
-open _root_.Representation
-open Theory.Representation
+open Representation
 
 universe u
 
-variable {G : Type u} [Group G] [Fintype G]
 
 /-- Irreducible characters are pairwise orthogonal with respect to the
 `g⁻¹`-form product: `⟨φ, ψ⟩ = 0` when `φ ≠ ψ`. -/
-public theorem irreducibleCharacters_orthogonal {φ ψ : ClassFunction G}
-    (hφ : IsIrreducibleCharacter φ) (hψ : IsIrreducibleCharacter ψ) (h : φ ≠ ψ) :
-    characterProduct G φ ψ = 0 := by
+theorem irreducibleCharacters_orthogonal {G : Type u} [Group G] [Fintype G]
+    {φ ψ : ClassFunction G}
+    (hφ : IsIrreducibleCharacter φ) (hψ : IsIrreducibleCharacter ψ) (h : φ ≠ ψ)
+    : characterProduct G φ ψ = 0 := by
   rcases hφ with ⟨n, ρ, hρ, rfl⟩
   rcases hψ with ⟨m, σ, hσ, rfl⟩
   have : ρ.IsIrreducible := hρ
@@ -53,8 +52,9 @@ public theorem irreducibleCharacters_orthogonal {φ ψ : ClassFunction G}
   simp [hneq]
 
 /-- The `g⁻¹`-form norm of an irreducible character is `1`. -/
-public theorem irreducibleCharacter_self {φ : ClassFunction G} (hφ : IsIrreducibleCharacter φ) :
-    characterProduct G φ φ = 1 := by
+theorem irreducibleCharacter_self {G : Type u} [Group G] [Fintype G]
+    {φ : ClassFunction G} (hφ : IsIrreducibleCharacter φ)
+    : characterProduct G φ φ = 1 := by
   rcases hφ with ⟨n, ρ, hρ, rfl⟩
   have : ρ.IsIrreducible := hρ
   have : Invertible (Nat.card G : ℂ) := by
@@ -63,62 +63,31 @@ public theorem irreducibleCharacter_self {φ : ClassFunction G} (hφ : IsIrreduc
   rw [Representation.char_orthonormal (ρ := ρ) (σ := ρ)]
   rw [if_pos ⟨Representation.Equiv.refl ρ⟩]
 
-end Theory.Character
-
 /-! ## Completeness and orthogonality for ConjClasses-based characters -/
-
-namespace Theory.Character
-
-open Theory.Character
 
 attribute [local instance] Fintype.ofFinite
 
-variable {G : Type*} [Group G] [Finite G]
 
-private lemma classFunctionInner_zero_left (φ : ConjClassFunction G) :
-    classFunctionInner (0 : ConjClassFunction G) φ = 0 := by
-  classical
-  simp [classFunctionInner]
-
-private noncomputable def classFunctionInnerLeftLinear (ψ : ConjClassFunction G) :
-    ConjClassFunction G →ₗ[ℂ] ℂ where
-  toFun φ := classFunctionInner φ ψ
-  map_add' φ₁ φ₂ := by
-    classical
-    simp [classFunctionInner, add_mul, Finset.sum_add_distrib, mul_add]
-  map_smul' a φ := by
-    classical
-    simp [classFunctionInner, Finset.mul_sum, mul_assoc, mul_left_comm]
-
-private lemma classFunctionInner_sum_left {ι : Type*} [Fintype ι]
-    (a : ι → ℂ) (φ : ι → ConjClassFunction G) (ψ : ConjClassFunction G) :
-    classFunctionInner (∑ i, a i • φ i) ψ =
-      ∑ i, a i • classFunctionInner (φ i) ψ := by
-  classical
-  change classFunctionInnerLeftLinear (G := G) ψ (∑ i, a i • φ i) =
-    ∑ i, a i • classFunctionInnerLeftLinear (G := G) ψ (φ i)
-  rw [map_sum]
-  simp
-
-private lemma classFunctionInner_characterClassFunction
+lemma classFunctionInner_characterClassFunction
+    {G : Type*} [Group G] [Finite G]
     {V W : Type*} [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
     [AddCommGroup W] [Module ℂ W] [FiniteDimensional ℂ W]
-    (ρ : Representation ℂ G V) (σ : Representation ℂ G W) :
-    classFunctionInner (characterClassFunction ρ) (characterClassFunction σ) =
-      (Nat.card G : ℂ)⁻¹ * ∑ g : G, ρ.character g * σ.character g⁻¹ := by
+    (ρ : Representation ℂ G V) (σ : Representation ℂ G W)
+    : classFunctionInner (characterClassFunction ρ) (characterClassFunction σ)
+      = (Nat.card G : ℂ)⁻¹ * ∑ g : G, ρ.character g * σ.character g⁻¹ := by
   classical
-  change
-    (Nat.card G : ℂ)⁻¹ * ∑ g : G, ρ.character g * star (σ.character g) =
-      (Nat.card G : ℂ)⁻¹ * ∑ g : G, ρ.character g * σ.character g⁻¹
+  change (Nat.card G : ℂ)⁻¹ * ∑ g : G, ρ.character g * star (σ.character g)
+          = (Nat.card G : ℂ)⁻¹ * ∑ g : G, ρ.character g * σ.character g⁻¹
   congr 1
   refine Finset.sum_congr rfl ?_
   intro g _hg
-  rw [(Theory.Representation.representation_character_inv_eq_star_character σ g).symm]
+  rw [(Representation.representation_character_inv_eq_star_character σ g).symm]
 
-private lemma completeFamily_orthonormal {ι : Type*} [Fintype ι] [DecidableEq ι]
+lemma completeFamily_orthonormal {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {G : Type*} [Group G] [Finite G]
     {χ : ι → ConjClassFunction G} (hχ : IsCompleteIrreducibleCharacterFamily χ)
-    (i j : ι) :
-    classFunctionInner (χ i) (χ j) = if i = j then 1 else 0 := by
+    (i j : ι)
+    : classFunctionInner (χ i) (χ j) = if i = j then 1 else 0 := by
   classical
   rcases hχ with ⟨hirr, _hcomplete, hinj⟩
   rcases (hirr i).1 with ⟨nᵢ, ρᵢ, hρᵢ⟩
@@ -156,9 +125,10 @@ private lemma completeFamily_orthonormal {ι : Type*} [Fintype ι] [DecidableEq 
       exact isEmptyElim h.some
     simp [hij, hnone]
 
-private lemma completeFamily_linearIndependent {ι : Type*} [Fintype ι]
-    {χ : ι → ConjClassFunction G} (hχ : IsCompleteIrreducibleCharacterFamily χ) :
-    LinearIndependent ℂ χ := by
+lemma completeFamily_linearIndependent {G : Type*} [Group G] [Finite G]
+    {ι : Type*} [Fintype ι]
+    {χ : ι → ConjClassFunction G} (hχ : IsCompleteIrreducibleCharacterFamily χ)
+    : LinearIndependent ℂ χ := by
   classical
   rw [Fintype.linearIndependent_iff]
   intro a ha i
@@ -172,22 +142,26 @@ private lemma completeFamily_linearIndependent {ι : Type*} [Fintype ι]
     simp [completeFamily_orthonormal hχ]
   exact hcoeff ▸ hinner
 
-private noncomputable def classProjection (c : ConjClasses G) : ConjClassFunction G := by
+noncomputable def classProjection {G : Type*} [Group G] [Finite G]
+    (c : ConjClasses G) : ConjClassFunction G := by
   classical
   exact fun d => if d = c then (Nat.card G : ℂ) / (Nat.card c.carrier : ℂ) else 0
 
-private lemma classProjection_apply_eq (c : ConjClasses G) :
-    classProjection (G := G) c c = (Nat.card G : ℂ) / (Nat.card c.carrier : ℂ) := by
+lemma classProjection_apply_eq {G : Type*} [Group G] [Finite G]
+    (c : ConjClasses G)
+    : classProjection (G := G) c c = (Nat.card G : ℂ) / (Nat.card c.carrier : ℂ) := by
   classical
   simp [classProjection]
 
-private lemma classProjection_apply_ne {c d : ConjClasses G} (h : d ≠ c) :
-    classProjection (G := G) c d = 0 := by
+lemma classProjection_apply_ne {G : Type*} [Group G] [Finite G]
+    {c d : ConjClasses G} (h : d ≠ c)
+    : classProjection (G := G) c d = 0 := by
   classical
   simp [classProjection, h]
 
-private lemma classProjection_inner (c : ConjClasses G) (φ : ConjClassFunction G) :
-    classFunctionInner (classProjection (G := G) c) φ = star (φ c) := by
+lemma classProjection_inner {G : Type*} [Group G] [Finite G]
+    (c : ConjClasses G) (φ : ConjClassFunction G)
+    : classFunctionInner (classProjection (G := G) c) φ = star (φ c) := by
   classical
   simp only [classFunctionInner, classProjection]
   simp_rw [ite_mul, zero_mul]
@@ -205,15 +179,15 @@ private lemma classProjection_inner (c : ConjClasses G) (φ : ConjClassFunction 
     calc
       ∑ x ∈ Finset.univ with ConjClasses.mk x = c,
           ↑(Nat.card G) / ↑(Nat.card ↑c.carrier) * star (φ (ConjClasses.mk x))
-        = ∑ x ∈ Finset.univ with ConjClasses.mk x = c,
-          ↑(Nat.card G) / ↑(Nat.card ↑c.carrier) * star (φ c) := by
-            refine Finset.sum_congr rfl ?_
-            intro g hg
-            simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hg
-            rw [hg]
-      _ = (Finset.univ.filter (fun g : G => ConjClasses.mk g = c)).card •
-          (↑(Nat.card G) / ↑(Nat.card ↑c.carrier) * star (φ c)) := by
-            rw [Finset.sum_const]
+          = ∑ x ∈ Finset.univ with ConjClasses.mk x = c,
+              ↑(Nat.card G) / ↑(Nat.card ↑c.carrier) * star (φ c) := by
+        refine Finset.sum_congr rfl ?_
+        intro g hg
+        simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hg
+        rw [hg]
+      _ = (Finset.univ.filter (fun g : G => ConjClasses.mk g = c)).card
+          • (↑(Nat.card G) / ↑(Nat.card ↑c.carrier) * star (φ c)) := by
+        rw [Finset.sum_const]
   · rw [hcard]
     have hG : (Nat.card G : ℂ) ≠ 0 := by
       exact_mod_cast (Nat.card_pos (α := G)).ne'
@@ -225,60 +199,66 @@ private lemma classProjection_inner (c : ConjClasses G) (φ : ConjClassFunction 
     rw [nsmul_eq_mul]
     field_simp [hG, hc]
 
-private lemma basis_repr_classProjection {ι : Type*} [Fintype ι]
+lemma basis_repr_classProjection {ι : Type*} [Fintype ι]
+    {G : Type*} [Group G] [Finite G]
     {χ : ι → ConjClassFunction G} (hχ : IsCompleteIrreducibleCharacterFamily χ)
     (b : Module.Basis ι ℂ (ConjClassFunction G)) (hb : ∀ i, b i = χ i)
-    (c : ConjClasses G) (i : ι) :
-    b.repr (classProjection (G := G) c) i = star (χ i c) := by
+    (c : ConjClasses G) (i : ι)
+    : b.repr (classProjection (G := G) c) i = star (χ i c) := by
   classical
   let f : ConjClassFunction G := classProjection (G := G) c
   have hsum_f : (∑ j, b.repr f j • χ j) = f := by
     calc
       (∑ j, b.repr f j • χ j) = ∑ j, b.repr f j • b j := by
-          refine Finset.sum_congr rfl ?_
-          intro j _hj
-          rw [hb j]
+        refine Finset.sum_congr rfl ?_
+        intro j _hj
+        rw [hb j]
       _ = f := Module.Basis.sum_repr b f
   have hinner : classFunctionInner f (χ i) =
       classFunctionInner (∑ j, b.repr f j • χ j) (χ i) := by
     rw [hsum_f]
   calc
-    b.repr f i
-        = classFunctionInner (∑ j, b.repr f j • χ j) (χ i) := by
-            rw [classFunctionInner_sum_left]
-            simp [completeFamily_orthonormal hχ]
+    b.repr f i = classFunctionInner (∑ j, b.repr f j • χ j) (χ i) := by
+      rw [classFunctionInner_sum_left]
+      simp [completeFamily_orthonormal hχ]
     _ = classFunctionInner f (χ i) := hinner.symm
     _ = star (χ i c) := classProjection_inner c (χ i)
 
-private lemma basis_sum_character_projection {ι : Type*} [Fintype ι]
+lemma basis_sum_character_projection {ι : Type*} [Fintype ι]
+    {G : Type*} [Group G] [Finite G]
     {χ : ι → ConjClassFunction G} (hχ : IsCompleteIrreducibleCharacterFamily χ)
     (b : Module.Basis ι ℂ (ConjClassFunction G)) (hb : ∀ i, b i = χ i)
-    (c d : ConjClasses G) :
-    ∑ i : ι, χ i d * star (χ i c) = classProjection (G := G) c d := by
+    (c d : ConjClasses G)
+    : ∑ i : ι, χ i d * star (χ i c) = classProjection (G := G) c d := by
   classical
   let f : ConjClassFunction G := classProjection (G := G) c
   have hsum := congrFun (Module.Basis.sum_repr b f) d
   calc
-    ∑ i : ι, χ i d * star (χ i c)
-        = ∑ i : ι, b.repr f i • b i d := by
-            refine Finset.sum_congr rfl ?_
-            intro i _hi
-            rw [basis_repr_classProjection hχ b hb c i, hb i]
-            simp [smul_eq_mul, mul_comm]
+    ∑ i : ι, χ i d * star (χ i c) = ∑ i : ι, b.repr f i • b i d := by
+      refine Finset.sum_congr rfl ?_
+      intro i _hi
+      rw [basis_repr_classProjection hχ b hb c i, hb i]
+      simp [smul_eq_mul, mul_comm]
     _ = f d := by simpa using hsum
 
-private noncomputable def stabilizerCentralizerEquiv (g : G) :
-    MulAction.stabilizer (ConjAct G) g ≃ {x : G // x * g = g * x} where
+noncomputable def stabilizerCentralizerEquiv {G : Type*} [Group G] [Finite G] (g : G)
+    : MulAction.stabilizer (ConjAct G) g ≃ {x : G // x * g = g * x} where
   toFun x :=
-    ⟨ConjAct.ofConjAct x.1, by
-      have hx : x.1 • g = g := x.2
-      rw [ConjAct.smul_def] at hx
-      exact mul_inv_eq_iff_eq_mul.mp (by simpa [mul_assoc] using hx)⟩
+    ⟨
+      ConjAct.ofConjAct x.1,
+      by
+        have hx : x.1 • g = g := x.2
+        rw [ConjAct.smul_def] at hx
+        exact mul_inv_eq_iff_eq_mul.mp (by simpa [mul_assoc] using hx)
+    ⟩
   invFun x :=
-    ⟨ConjAct.toConjAct x.1, by
-      change ConjAct.toConjAct x.1 • g = g
-      rw [ConjAct.toConjAct_smul]
-      exact mul_inv_eq_of_eq_mul x.2⟩
+    ⟨
+      ConjAct.toConjAct x.1,
+      by
+        change ConjAct.toConjAct x.1 • g = g
+        rw [ConjAct.toConjAct_smul]
+        exact mul_inv_eq_of_eq_mul x.2
+    ⟩
   left_inv x := by
     apply Subtype.ext
     rfl
@@ -286,8 +266,9 @@ private noncomputable def stabilizerCentralizerEquiv (g : G) :
     apply Subtype.ext
     rfl
 
-private lemma class_card_mul_centralizer_card (g : G) :
-    Nat.card (ConjClasses.mk g).carrier * Nat.card {x : G // x * g = g * x} = Nat.card G := by
+lemma class_card_mul_centralizer_card {G : Type*} [Group G] [Finite G] (g : G)
+    : Nat.card (ConjClasses.mk g).carrier * Nat.card {x : G // x * g = g * x}
+      = Nat.card G := by
   classical
   have hst := MulAction.card_orbit_mul_card_stabilizer_eq_card_group (ConjAct G) g
   have hst' : Fintype.card (ConjClasses.mk g).carrier *
@@ -301,11 +282,11 @@ private lemma class_card_mul_centralizer_card (g : G) :
   exact hst'
 
 /-- The irreducible characters form a basis of the complex class functions. -/
-public theorem irreducible_characters_form_basis
-    :
-    ∃ (ι : Type) (_ : Fintype ι) (χ : ι → ConjClassFunction G),
-      IsCompleteIrreducibleCharacterFamily χ ∧
-        ∃ b : Module.Basis ι ℂ (ConjClassFunction G), ∀ i, b i = χ i := by
+theorem irreducible_characters_form_basis
+    {G : Type*} [Group G] [Finite G]
+    : ∃ (ι : Type) (_ : Fintype ι) (χ : ι → ConjClassFunction G),
+        IsCompleteIrreducibleCharacterFamily χ
+        ∧ ∃ b : Module.Basis ι ℂ (ConjClassFunction G), ∀ i, b i = χ i := by
   classical
   rcases classFunction_span_irreducible_characters (G := G) with
     ⟨ι, hι, χ, hχ, hspan⟩
@@ -316,11 +297,12 @@ public theorem irreducible_characters_form_basis
   · intro i
     simp
 
-public theorem completeFamily_span_eq_top
+theorem completeFamily_span_eq_top
+    {G : Type*} [Group G] [Finite G]
     {ι : Type*} [Fintype ι]
     {χ : ι → ConjClassFunction G}
-    (hχ : IsCompleteIrreducibleCharacterFamily χ) :
-    Submodule.span ℂ (Set.range χ) = ⊤ := by
+    (hχ : IsCompleteIrreducibleCharacterFamily χ)
+    : Submodule.span ℂ (Set.range χ) = ⊤ := by
   classical
   rcases classFunction_span_irreducible_characters (G := G) with
     ⟨κ, hκ, ψ, hψ, hspanψ⟩
@@ -333,32 +315,33 @@ public theorem completeFamily_span_eq_top
   rcases hχ.2.1 (ψ k) (hψ.1 k) with ⟨i, hi⟩
   exact ⟨i, hi⟩
 
-public theorem completeFamily_form_basis
+theorem completeFamily_form_basis
+    {G : Type*} [Group G] [Finite G]
     {ι : Type*} [Fintype ι]
     {χ : ι → ConjClassFunction G}
-    (hχ : IsCompleteIrreducibleCharacterFamily χ) :
-    ∃ b : Module.Basis ι ℂ (ConjClassFunction G), ∀ i, b i = χ i := by
+    (hχ : IsCompleteIrreducibleCharacterFamily χ)
+    : ∃ b : Module.Basis ι ℂ (ConjClassFunction G), ∀ i, b i = χ i := by
   classical
   refine ⟨Module.Basis.mk (completeFamily_linearIndependent hχ) ?_, ?_⟩
   · rw [completeFamily_span_eq_top hχ]
   · intro i
     simp
 
-public theorem completeFamily_basis_repr_eq_inner
+theorem completeFamily_basis_repr_eq_inner
+    {G : Type*} [Group G] [Finite G]
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     {χ : ι → ConjClassFunction G}
     (hχ : IsCompleteIrreducibleCharacterFamily χ)
     (b : Module.Basis ι ℂ (ConjClassFunction G)) (hb : ∀ i, b i = χ i)
-    (φ : ConjClassFunction G) (i : ι) :
-    b.repr φ i = classFunctionInner φ (χ i) := by
+    (φ : ConjClassFunction G) (i : ι)
+    : b.repr φ i = classFunctionInner φ (χ i) := by
   classical
   have hsumφ : (∑ j : ι, b.repr φ j • χ j) = φ := by
     calc
-      (∑ j : ι, b.repr φ j • χ j) =
-          ∑ j : ι, b.repr φ j • b j := by
-            refine Finset.sum_congr rfl ?_
-            intro j _hj
-            rw [hb j]
+      (∑ j : ι, b.repr φ j • χ j) = ∑ j : ι, b.repr φ j • b j := by
+        refine Finset.sum_congr rfl ?_
+        intro j _hj
+        rw [hb j]
       _ = φ := Module.Basis.sum_repr b φ
   have h := congrArg (fun f => classFunctionInner f (χ i)) hsumφ
   change classFunctionInner (∑ j : ι, b.repr φ j • χ j) (χ i) =
@@ -367,38 +350,39 @@ public theorem completeFamily_basis_repr_eq_inner
   simp [completeFamily_orthonormal hχ] at h
   exact h
 
-public theorem completeFamily_sum_inner_smul_eq
+theorem completeFamily_sum_inner_smul_eq
+    {G : Type*} [Group G] [Finite G]
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     {χ : ι → ConjClassFunction G}
     (hχ : IsCompleteIrreducibleCharacterFamily χ)
-    (φ : ConjClassFunction G) :
-    (∑ i : ι, classFunctionInner φ (χ i) • χ i) = φ := by
+    (φ : ConjClassFunction G)
+    : (∑ i : ι, classFunctionInner φ (χ i) • χ i) = φ := by
   classical
   rcases completeFamily_form_basis (G := G) hχ with ⟨b, hb⟩
   calc
-    (∑ i : ι, classFunctionInner φ (χ i) • χ i) =
-        ∑ i : ι, b.repr φ i • b i := by
-          refine Finset.sum_congr rfl ?_
-          intro i _hi
-          rw [completeFamily_basis_repr_eq_inner hχ b hb φ i, hb i]
+    (∑ i : ι, classFunctionInner φ (χ i) • χ i) = ∑ i : ι, b.repr φ i • b i := by
+      refine Finset.sum_congr rfl ?_
+      intro i _hi
+      rw [completeFamily_basis_repr_eq_inner hχ b hb φ i, hb i]
     _ = φ := Module.Basis.sum_repr b φ
 
-public theorem completeFamily_apply_eq_sum_inner
+theorem completeFamily_apply_eq_sum_inner
+    {G : Type*} [Group G] [Finite G]
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     {χ : ι → ConjClassFunction G}
     (hχ : IsCompleteIrreducibleCharacterFamily χ)
-    (φ : ConjClassFunction G) (c : ConjClasses G) :
-    φ c = ∑ i : ι, classFunctionInner φ (χ i) * χ i c := by
+    (φ : ConjClassFunction G) (c : ConjClasses G)
+    : φ c = ∑ i : ι, classFunctionInner φ (χ i) * χ i c := by
   classical
   have h := congrFun (completeFamily_sum_inner_smul_eq hχ φ) c
   simpa [Pi.smul_apply, smul_eq_mul] using h.symm
 
 /-- The number of irreducible characters equals the number of conjugacy classes. -/
-public theorem card_irreducible_characters_eq_card_conjClasses
-    :
-    ∃ (ι : Type) (_ : Fintype ι) (χ : ι → ConjClassFunction G),
-      IsCompleteIrreducibleCharacterFamily χ ∧
-        Fintype.card ι = Nat.card (ConjClasses G) := by
+theorem card_irreducible_characters_eq_card_conjClasses
+    {G : Type*} [Group G] [Finite G]
+    : ∃ (ι : Type) (_ : Fintype ι) (χ : ι → ConjClassFunction G),
+        IsCompleteIrreducibleCharacterFamily χ
+        ∧ Fintype.card ι = Nat.card (ConjClasses G) := by
   classical
   rcases irreducible_characters_form_basis (G := G) with
     ⟨ι, hι, χ, hχ, b, hb⟩
@@ -415,16 +399,17 @@ public theorem card_irreducible_characters_eq_card_conjClasses
   exact hfinrank_basis.symm.trans hfinrank_fun
 
 /-- Second orthogonality relation for irreducible complex characters, indexed by conjugacy classes. -/
-public theorem second_orthogonality
-    :
-    ∃ (ι : Type) (_ : Fintype ι) (χ : ι → ConjClassFunction G),
-      IsCompleteIrreducibleCharacterFamily χ ∧
-        ∀ g h : G,
-          (ConjClasses.mk g = ConjClasses.mk h →
-              ∑ i : ι, χ i (ConjClasses.mk g) * star (χ i (ConjClasses.mk h)) =
-                (Nat.card { x : G // x * g = g * x } : ℂ)) ∧
-            (ConjClasses.mk g ≠ ConjClasses.mk h →
-              ∑ i : ι, χ i (ConjClasses.mk g) * star (χ i (ConjClasses.mk h)) = 0) := by
+theorem second_orthogonality
+    {G : Type*} [Group G] [Finite G]
+    : ∃ (ι : Type) (_ : Fintype ι) (χ : ι → ConjClassFunction G),
+        IsCompleteIrreducibleCharacterFamily χ
+        ∧ ∀ g h : G,
+            (ConjClasses.mk g = ConjClasses.mk h
+              → ∑ i : ι, χ i (ConjClasses.mk g) * star (χ i (ConjClasses.mk h))
+                = (Nat.card { x : G // x * g = g * x } : ℂ))
+            ∧ (ConjClasses.mk g ≠ ConjClasses.mk h
+                → ∑ i : ι, χ i (ConjClasses.mk g) * star (χ i (ConjClasses.mk h))
+                  = 0) := by
   classical
   rcases irreducible_characters_form_basis (G := G) with
     ⟨ι, hι, χ, hχ, b, hb⟩
@@ -459,12 +444,11 @@ public theorem second_orthogonality
 
 /-- The sum of the squared degrees of a complete irreducible character family is
 the group order. -/
-public theorem exists_completeIrreducibleCharacterFamily_sum_degree_normSq
-    :
-    ∃ (ι : Type) (_ : Fintype ι) (χ : ι → ConjClassFunction G),
-      IsCompleteIrreducibleCharacterFamily χ ∧
-        ∑ i : ι, Complex.normSq (χ i (ConjClasses.mk (1 : G))) =
-          (Nat.card G : ℝ) := by
+theorem exists_completeIrreducibleCharacterFamily_sum_degree_normSq
+    {G : Type*} [Group G] [Finite G]
+    : ∃ (ι : Type) (_ : Fintype ι) (χ : ι → ConjClassFunction G),
+        IsCompleteIrreducibleCharacterFamily χ
+        ∧ ∑ i : ι, Complex.normSq (χ i (ConjClasses.mk (1 : G))) = (Nat.card G : ℝ) := by
   classical
   rcases second_orthogonality (G := G) with ⟨ι, hι, χ, hχ, horth⟩
   let : Fintype ι := hι
@@ -495,5 +479,3 @@ public theorem exists_completeIrreducibleCharacterFamily_sum_degree_normSq
       rfl
     · exact hcomplex
   exact Complex.ofReal_injective hrealCast
-
-end Theory.Character

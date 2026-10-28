@@ -1,0 +1,2 @@
+module
+public import CFSG.Quasithin.Chapter5.Section03UnitaryFullNormalizer.Endpoint

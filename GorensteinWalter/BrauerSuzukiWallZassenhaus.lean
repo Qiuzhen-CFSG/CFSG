@@ -8,15 +8,19 @@ public import GorensteinWalter.LinearThree
 import GorensteinWalter.LinearThreeEquiv
 public import BenderSuzuki.External.Huppert.XI.theorem_11_16
 public import BenderSuzuki.External.Huppert.XI.example_1_3
-public import FeitThompson.SubgroupConjAction
-public import FeitThompson.SubgroupConj
+public import Theory.GroupAction.SubgroupConjugation
+public import Theory.GroupTheory.SubgroupConjugation
+
 
 /-!
 # The Zassenhaus endpoint of the Brauer--Suzuki--Wall theorem
 
 The structural conclusion acts by conjugation on the conjugates of its TI
 subgroup `Q`.  The resulting finite Zassenhaus action is classified by
-Huppert--Blackburn XI.11.16 and yields the required `D`-group conclusion.
+Huppert--Blackburn XI.11.16 and yields a concrete `PSL₂` equivalence over
+a field of cardinality `q`, as well as the required `D`-group conclusion.
+
+Source: `refs/bender-bsw.tex`, the final recognition step.
 -/
 
 noncomputable section
@@ -442,8 +446,7 @@ private theorem BrauerSuzukiWallConclusion.orbit_two_transitive
       calc
         Nat.card {C : Omega // C ≠ base} = Nat.card Omega - 1 := by
           let : Fintype {C : Omega // C ≠ base} := Fintype.ofFinite _
-          simpa [Nat.card_eq_fintype_card] using
-            (Fintype.card_subtype_compl (fun C : Omega => C = base))
+          simp [Nat.card_eq_fintype_card]
         _ = h.q := by rw [h.orbit_degree]; omega
     let : Fintype h.Q := Fintype.ofFinite h.Q
     let : Fintype Away := Fintype.ofFinite Away
@@ -557,8 +560,7 @@ private theorem BrauerSuzukiWallConclusion.existsUnique_Q_smul_eq_away
     calc
       Nat.card {C : Omega // C ≠ base} = Nat.card Omega - 1 := by
         let : Fintype {C : Omega // C ≠ base} := Fintype.ofFinite _
-        simpa [Nat.card_eq_fintype_card] using
-          (Fintype.card_subtype_compl (fun C : Omega => C = base))
+        simp [Nat.card_eq_fintype_card]
       _ = h.q := by rw [h.orbit_degree]; omega
   let : Fintype h.Q := Fintype.ofFinite h.Q
   let : Fintype Away := Fintype.ofFinite Away
@@ -979,8 +981,7 @@ private theorem BrauerSuzukiWallConclusion.exists_reflection_two_point_stabilize
       calc
         Nat.card {C : Omega // C ≠ base} = Nat.card Omega - 1 := by
           let : Fintype {C : Omega // C ≠ base} := Fintype.ofFinite _
-          simpa [Nat.card_eq_fintype_card] using
-            (Fintype.card_subtype_compl (fun C : Omega => C = base))
+          simp [Nat.card_eq_fintype_card]
         _ = h.q := by rw [h.orbit_degree]; omega
     have hSindex : S.index = h.q := by
       change (MulAction.stabilizer H betaAway).index = h.q
@@ -1130,7 +1131,7 @@ private theorem BrauerSuzukiWallConclusion.at_most_two_fixed_points
     change (Subgroup.zpowers x).map
         (MulAut.conj (q : G)⁻¹).toMonoidHom = Subgroup.zpowers y
     rw [MonoidHom.map_zpowers]
-    simp [MulAut.conj_apply, y]
+    simp [y]
   have hXqne : Xq ≠ ⊥ := by
     intro hXqbot
     apply hXne
@@ -1304,8 +1305,7 @@ private theorem BrauerSuzukiWallConclusion.regularNormal_two_structure
     calc
       Nat.card {r : R // r ≠ 1} = Nat.card R - 1 := by
         let : Fintype {r : R // r ≠ 1} := Fintype.ofFinite _
-        simpa [Nat.card_eq_fintype_card] using
-          (Fintype.card_subtype_compl (fun r : R => r = 1))
+        simp [Nat.card_eq_fintype_card]
       _ = h.q := by rw [hRcard]; omega
   let : Fintype h.Q := Fintype.ofFinite h.Q
   let : Fintype Rstar := Fintype.ofFinite Rstar
@@ -1650,18 +1650,23 @@ private theorem card_eq_descFactorial_three_of_sharp_three_transitive
     _ = (Fintype.card Omega).descFactorial 3 := by
       rw [Fintype.card_embedding_eq, Fintype.card_fin]
 
-/-- The Brauer--Suzuki--Wall structural conclusion is a `D`-group. -/
-public theorem BrauerSuzukiWallConclusion.isDGroup
+/-- The structural conclusion recognizes `G` as `PSL₂` over a finite field
+of cardinality exactly `q`. The conjugation action and the Zassenhaus
+classification exclude all other alternatives. -/
+public theorem BrauerSuzukiWallConclusion.exists_field_mulEquiv_psl2
     {G : Type u} [Group G] [Finite G]
-    (h : BrauerSuzukiWallConclusion G) : IsDGroup G := by
+    (h : BrauerSuzukiWallConclusion G) :
+    ∃ (F : Type) (_ : Field F) (_ : Finite F),
+      Nat.card F = h.q ∧ IsOddPrimePower (Nat.card F) ∧
+        Nonempty (G ≃* PSL2 F) := by
   classical
   by_cases hq : h.q = 3
   · have eA4 := h.iso_alternatingGroup_four_of_q_eq_three hq
     have ePSL : Nonempty (G ≃* PSL2 (ZMod 3)) :=
       ⟨eA4.some.trans psl2_three_equiv_alternatingGroup.symm⟩
-    exact isDGroup_of_iso_PSL2_three
-      (h.pPrimeCore_eq_bot_of_q_eq_three hq)
-      (h.hasDihedralSylowTwo_of_q_eq_three hq) ePSL
+    refine ⟨ZMod 3, inferInstance, inferInstance, ?_, ?_, ePSL⟩
+    · simpa using hq.symm
+    · exact ⟨3, 1, by decide, by decide, by omega, by simp⟩
   · let : MulAction G (Subgroup G) :=
       MulAction.compHom _ MulAut.conj
     let Omega := ConjugateOrbit h.Q
@@ -1720,40 +1725,7 @@ public theorem BrauerSuzukiWallConclusion.isDGroup
       let : Finite K := hKfinite
       have hKprime : IsOddPrimePower (Nat.card K) :=
         ⟨p, f, hp, hpOdd, hf, hKcard.trans hqpow⟩
-      have hSylowD : HasDihedralSylowTwo G :=
-        hasDihedralSylowTwo_of_mulEquiv eG
-          (psl2_odd_hasDihedralSylowTwo_model K hKprime)
-      have hKgt : 3 < Nat.card K := by
-        rw [hKcard]
-        have hqge := h.three_le_q
-        omega
-      rcases BenderSuzuki.External.huppert_blackburn_XI_example_1_3_a K with
-        ⟨_hproj, _rho, _iota, _hrho, _hiota, _hiotaApply,
-          _hrhoApply, _hiotaNormal, _hiotaIndex, _hsharp,
-          hlarge, _hsmallTwo, _hsmallThree⟩
-      have hsimplePSL : IsSimpleGroup (PSL2 K) :=
-        (hlarge hKgt).1
-      let : IsSimpleGroup (PSL2 K) := hsimplePSL
-      let : IsSimpleGroup G := eG.isSimpleGroup
-      have hGeven : 2 ∣ Nat.card G := by
-        rw [h.group_card_factorized]
-        exact dvd_mul_of_dvd_left (h.q_odd.add_one.two_dvd) _
-      have hcore : pPrimeCore 2 G = ⊥ :=
-        pPrimeCore_eq_bot_of_simple_of_even hGeven
-      have hSylow : HasCyclicOrDihedralSylowTwo G := by
-        intro S
-        exact Or.inr (hSylowD S)
-      have hKprimeLift :
-          IsOddPrimePower (Nat.card (ULift.{u} K)) := by
-        simpa using hKprime
-      refine IsDGroup.quotientHasLinearNormalSubgroup
-        hSylow (ULift.{u} K) hKprimeLift
-        (⊤ : Subgroup (G ⧸ pPrimeCore 2 G)) inferInstance (by simp) ?_
-      left
-      refine ⟨Subgroup.topEquiv.trans ?_⟩
-      exact ((QuotientGroup.quotientMulEquivOfEq (G := G) hcore).trans
-        (QuotientGroup.quotientBot (G := G))).trans
-          (eG.trans (psl2ULiftEquiv (R := K)).symm)
+      exact ⟨K, hKfield, hKfinite, hKcard, hKprime, ⟨eG⟩⟩
     · have hsharpCard :
           Nat.card G = (Fintype.card Omega).descFactorial 3 :=
         card_eq_descFactorial_three_of_sharp_three_transitive
@@ -1787,5 +1759,56 @@ public theorem BrauerSuzukiWallConclusion.isDGroup
         h.group_card_factorized.symm.trans hcardFull
       omega
     · exact (hpNeTwo hSuzuki.1).elim
+
+/-- The Brauer--Suzuki--Wall structural conclusion is a `D`-group. -/
+public theorem BrauerSuzukiWallConclusion.isDGroup
+    {G : Type u} [Group G] [Finite G]
+    (h : BrauerSuzukiWallConclusion G) : IsDGroup G := by
+  classical
+  by_cases hq : h.q = 3
+  · have eA4 := h.iso_alternatingGroup_four_of_q_eq_three hq
+    have ePSL : Nonempty (G ≃* PSL2 (ZMod 3)) :=
+      ⟨eA4.some.trans psl2_three_equiv_alternatingGroup.symm⟩
+    exact isDGroup_of_iso_PSL2_three
+      (h.pPrimeCore_eq_bot_of_q_eq_three hq)
+      (h.hasDihedralSylowTwo_of_q_eq_three hq) ePSL
+  · obtain ⟨K, hKfield, hKfinite, hKcard, hKprime, ⟨eG⟩⟩ :=
+      h.exists_field_mulEquiv_psl2
+    let : Field K := hKfield
+    let : Finite K := hKfinite
+    have hSylowD : HasDihedralSylowTwo G :=
+      hasDihedralSylowTwo_of_mulEquiv eG
+        (psl2_odd_hasDihedralSylowTwo_model K hKprime)
+    have hKgt : 3 < Nat.card K := by
+      rw [hKcard]
+      have hqge := h.three_le_q
+      omega
+    rcases BenderSuzuki.External.huppert_blackburn_XI_example_1_3_a K with
+      ⟨_hproj, _rho, _iota, _hrho, _hiota, _hiotaApply,
+        _hrhoApply, _hiotaNormal, _hiotaIndex, _hsharp,
+        hlarge, _hsmallTwo, _hsmallThree⟩
+    have hsimplePSL : IsSimpleGroup (PSL2 K) :=
+      (hlarge hKgt).1
+    let : IsSimpleGroup (PSL2 K) := hsimplePSL
+    let : IsSimpleGroup G := eG.isSimpleGroup
+    have hGeven : 2 ∣ Nat.card G := by
+      rw [h.group_card_factorized]
+      exact dvd_mul_of_dvd_left (h.q_odd.add_one.two_dvd) _
+    have hcore : pPrimeCore 2 G = ⊥ :=
+      pPrimeCore_eq_bot_of_simple_of_even hGeven
+    have hSylow : HasCyclicOrDihedralSylowTwo G := by
+      intro S
+      exact Or.inr (hSylowD S)
+    have hKprimeLift :
+        IsOddPrimePower (Nat.card (ULift.{u} K)) := by
+      simpa using hKprime
+    refine IsDGroup.quotientHasLinearNormalSubgroup
+      hSylow (ULift.{u} K) hKprimeLift
+      (⊤ : Subgroup (G ⧸ pPrimeCore 2 G)) inferInstance (by simp) ?_
+    left
+    refine ⟨Subgroup.topEquiv.trans ?_⟩
+    exact ((QuotientGroup.quotientMulEquivOfEq (G := G) hcore).trans
+      (QuotientGroup.quotientBot (G := G))).trans
+        (eG.trans (psl2ULiftEquiv (R := K)).symm)
 
 end GorensteinWalter

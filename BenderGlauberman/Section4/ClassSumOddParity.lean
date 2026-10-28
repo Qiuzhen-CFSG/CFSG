@@ -16,9 +16,8 @@ noncomputable section
 
 namespace BenderGlauberman
 
-open Theory.Character
 
--- Local instances matching `Theory.Character`'s subgroup-sum convention; see
+-- Local instances matching `Character`'s subgroup-sum convention; see
 -- `BenderGlauberman/ClassFunction.lean`.
 attribute [local instance] Fintype.ofFinite
 attribute [local instance] Classical.propDecidable
@@ -33,7 +32,7 @@ public theorem classSumScalar_congruent_character_of_odd_degree_and_class
     (hdegree : Odd (Module.finrank ℂ V))
     (hclass : Odd (Nat.card (ConjClasses.mk g).carrier)) :
     CongruentModTwo
-      (Theory.Character.classSumScalar (ρ := rho) (ConjClasses.mk g))
+      (classSumScalar (ρ := rho) (ConjClasses.mk g))
       (rho.character g) := by
   classical
   have hsc := classSumScalar_eq_card_mul_character_div (ρ := rho) (ConjClasses.mk g)

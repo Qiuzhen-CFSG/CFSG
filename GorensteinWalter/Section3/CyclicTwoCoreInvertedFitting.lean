@@ -9,6 +9,7 @@ public import FeitThompson.PCore.CentralizerControl
 import all FeitThompson.PCore.CentralizerControl
 import Mathlib.Tactic
 
+
 /-!
 # Cyclic first case: inversion corollaries on `F(U)`
 
@@ -258,7 +259,7 @@ private theorem firstCase_cyclic_I1_card_coprime_three
       _ = 1 := by simp
   have hord2 : orderOf xG ∣ 2 :=
     (orderOf_dvd_iff_pow_eq_one (x := xG) (n := 2)).2 (by simpa [pow_two] using hx2)
-  have h3dvd2 : (3 : ℕ) ∣ 2 := by simpa [hx3G] using hord2
+  have h3dvd2 : (3 : ℕ) ∣ 2 := by simp [hx3G] at hord2
   norm_num at h3dvd2
 
 /-- `I₂ = F(U)`: `t₂` inverts all of the Fitting subgroup. -/

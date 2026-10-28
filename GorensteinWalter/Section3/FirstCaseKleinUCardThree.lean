@@ -10,6 +10,7 @@ public import GorensteinWalter.Section3.FirstCaseKleinCosetRepresentative
 public import GorensteinWalter.Section3.FirstCaseJNCoset
 import Mathlib.Tactic
 
+
 noncomputable section
 
 open scoped Pointwise
@@ -34,7 +35,7 @@ public theorem firstCase_klein_U_card_three_of_count
     (hfirst : FirstCase c)
     (hklein : IsKleinFour (pCore 2 c.Hhat))
     (K : Subgroup G) (b0 b1 b2 b3 b4 : ℕ)
-    (hKHall : IsHallIn K c.FU) (hKne : K ≠ ⊥)
+    (_hKHall : IsHallIn K c.FU) (hKne : K ≠ ⊥)
     (hJn : ∀ n : ℕ, n ≤ 4 →
       Nat.card {x : G // x ∈ firstCaseJ c n} =
         n * firstCaseBn b0 b1 b2 b3 b4 n)

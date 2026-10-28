@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section3.FirstCaseKleinCommutator
 public import GorensteinWalter.Section3.FirstCaseKleinData
 
+
 /-!
 # Complete structural data for the Klein-four branch
 -/
@@ -19,7 +20,7 @@ public theorem firstCase_klein_data_complete
     (c : CentralizerSetup G)
     (hfirst : FirstCase c)
     (hklein : IsKleinFour (pCore 2 c.Hhat)) :
-    ∃ d : FirstCaseKleinData c, ∃ K : Subgroup G,
+    ∃ _d : FirstCaseKleinData c, ∃ K : Subgroup G,
       IsHallIn K c.FU ∧ K ≠ ⊥ ∧
         ∀ s : G, s ∈ c.Hhat → IsInvolution s →
           s ∉ twoCoreOf c.Hhat →

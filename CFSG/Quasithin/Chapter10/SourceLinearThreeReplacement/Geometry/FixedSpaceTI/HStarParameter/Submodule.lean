@@ -1,0 +1,140 @@
+module
+public import CFSG.Quasithin.Chapter10.SourceLinearThreeReplacement.Geometry.FixedSpaceTI.HStarParameter.Transport
+public import Theory.Representation.NormalElementaryQuotient
+public import Theory.Representation.BinaryOffender.Homogeneous.Basic
+public import Theory.GroupTheory.ConjugateSpanOrder
+public import Theory.ElementaryAbelian.AbelianNormalClosure
+
+/-!
+# Realizing a subrepresentation as an ambient subgroup
+
+The range of the original inclusion of a binary subrepresentation is the actual
+subgroup of U. Its coordinate isomorphism intertwines conjugation, so a faithful
+subrepresentation of H/C_H(U) detects precisely the movement detected on U and
+has the same fixed-space parameter on Aut_H(I).
+
+Source application: Aschbacher--Smith 10.3.1, printed pp.755--756.
+-/
+
+@[expose] public noncomputable section
+open Subgroup
+open scoped IsMulCommutative
+namespace CFSG.Quasithin.Chapter10.SourceLinearThreeReplacement.Geometry.FixedSpaceTI.HStarParameter
+open ChapterE
+variable {G X : Type*} [Group G] [Group X]
+  (U H : Subgroup G) [IsElementaryAbelian 2 U]
+  (ρ : Representation (ZMod 2) X (Additive U)) (q : H →* X)
+  (hρ : ∀ (h : H) (v : Additive U),
+    ((ρ (q h) v).toMul : G) = h * (v.toMul : G) * (h : G)⁻¹)
+
+/-- The inclusion of the subrepresentation in the original ambient group. -/
+def submoduleMap (S : Subrepresentation ρ) : Multiplicative S.toSubmodule →* G :=
+  U.subtype.comp S.toSubmodule.subtype.toAddMonoidHom.toMultiplicative
+
+theorem submoduleMap_injective (S : Subrepresentation ρ) :
+    Function.Injective (submoduleMap U ρ S) :=
+  U.subtype_injective.comp Subtype.val_injective
+
+/-- The literal elementary subgroup supplied by a subrepresentation. -/
+def submoduleGroup (S : Subrepresentation ρ) : Subgroup G := (submoduleMap U ρ S).range
+
+theorem submoduleGroup_le (S : Subrepresentation ρ) : submoduleGroup U ρ S ≤ U := by
+  rintro _ ⟨v,rfl⟩
+  exact v.toAdd.val.toMul.property
+
+instance submoduleGroup_elementary (S : Subrepresentation ρ) :
+    IsElementaryAbelian 2 (submoduleGroup U ρ S) :=
+  IsElementaryAbelian.of_le (submoduleGroup_le U ρ S)
+
+/-- Full-module coordinates; there is no denominator. -/
+def submoduleCoordinates (S : Subrepresentation ρ) :
+    Additive (submoduleGroup U ρ S) ≃ₗ[ZMod 2] S.toSubmodule :=
+  let f : Additive (submoduleGroup U ρ S) →+ S.toSubmodule :=
+    (MonoidHom.ofInjective (submoduleMap_injective U ρ S)).symm.toMonoidHom.toAdditive
+  LinearEquiv.ofBijective (f.toZModLinearMap 2)
+    (MonoidHom.ofInjective (submoduleMap_injective U ρ S)).symm.bijective
+
+theorem submoduleCoordinates_val (S : Subrepresentation ρ)
+    (v : Additive (submoduleGroup U ρ S)) :
+    ((submoduleCoordinates U ρ S v).val.toMul : G) = (v.toMul : G) :=
+  congrArg Subtype.val ((MonoidHom.ofInjective (submoduleMap_injective U ρ S)).apply_symm_apply v.toMul)
+
+include q hρ
+
+theorem submoduleGroup_normalizes (S : Subrepresentation ρ) :
+    H ≤ normalizer (submoduleGroup U ρ S : Set G) := by
+  apply le_normalizer_iff.mpr
+  rintro h hh _ ⟨v,rfl⟩
+  refine ⟨Multiplicative.ofAdd (S.toRepresentation (q ⟨h,hh⟩) v.toAdd),?_⟩
+  exact hρ ⟨h,hh⟩ v.toAdd.val
+
+theorem submoduleCoordinates_equivariant (S : Subrepresentation ρ)
+    (h : H) (v : Additive (submoduleGroup U ρ S)) :
+    submoduleCoordinates U ρ S
+      (((automizerRepresentation (submoduleGroup U ρ S)).comp
+        (inducedAutomizer (submoduleGroup U ρ S) H).subtype)
+        (actionMap (submoduleGroup U ρ S) H (submoduleGroup_normalizes U H ρ q hρ S) h) v) =
+      S.toRepresentation (q h) (submoduleCoordinates U ρ S v) := by
+  apply Subtype.ext
+  apply Additive.toMul.injective
+  apply Subtype.ext
+  change ((submoduleCoordinates U ρ S _).val.toMul : G) =
+    ((ρ (q h) (submoduleCoordinates U ρ S v).val).toMul : G)
+  rw [submoduleCoordinates_val,hρ,submoduleCoordinates_val]
+  rfl
+
+/-- The faithful submodule bound is a bound for its actual induced automizer. -/
+theorem submoduleGroup_parameter_le (S : Subrepresentation ρ)
+    (hf : Function.Injective S.toRepresentation) :
+    moduleA ((automizerRepresentation (submoduleGroup U ρ S)).comp
+      (inducedAutomizer (submoduleGroup U ρ S) H).subtype) ≤ moduleA S.toRepresentation :=
+  moduleA_le_of_faithful_coordinates (submoduleGroup U ρ S) H
+    (submoduleGroup_normalizes U H ρ q hρ S) S.toRepresentation hf q
+    (submoduleCoordinates U ρ S) (submoduleCoordinates_equivariant U H ρ q hρ S)
+
+/-- Faithfulness preserves the exact quotient kernel when selecting the subgroup. -/
+theorem submoduleGroup_centralizes_iff (S : Subrepresentation ρ)
+    (hf : Function.Injective S.toRepresentation) (h : H) :
+    (h:G) ∈ centralizer (submoduleGroup U ρ S : Set G) ↔ q h = 1 :=
+  centralizes_iff_marked_eq_one (submoduleGroup U ρ S) H
+    (submoduleGroup_normalizes U H ρ q hρ S) S.toRepresentation hf q
+    (submoduleCoordinates U ρ S) (submoduleCoordinates_equivariant U H ρ q hρ S) h
+
+/-- A conjugate-generated module is generated by maximal-overgroup fixed vectors
+as soon as that overgroup centralizes the original seed. -/
+theorem orbitSpan_fixedSpace_eq_top (Z B : Subgroup G)
+    (hBZ : B ≤ centralizer (Z : Set G))
+    (hgen : U = conjugateSpanBy Z H) :
+    Representation.BinaryOffender.Homogeneous.orbitSpan ρ ⊤
+      (Representation.BinaryOffender.fixedSpace ρ ((B.subgroupOf H).map q)) = ⊤ := by
+  let W := Representation.BinaryOffender.Homogeneous.orbitSpan ρ ⊤
+    (Representation.BinaryOffender.fixedSpace ρ ((B.subgroupOf H).map q))
+  let S : Subrepresentation ρ := ⟨W,fun x v hv =>
+    (Representation.BinaryOffender.Homogeneous.orbitSpan_invariant ρ ⊤ _ (mem_top x) v).mpr hv⟩
+  have hZU : Z ≤ U := hgen ▸ le_conjugateSpanBy Z H
+  have hZS : Z ≤ submoduleGroup U ρ S := by
+    intro z hz
+    have hzfix : Additive.ofMul (⟨z,hZU hz⟩ : U) ∈
+        Representation.BinaryOffender.fixedSpace ρ ((B.subgroupOf H).map q) := by
+      intro b
+      change ρ b.val (Additive.ofMul (⟨z,hZU hz⟩ : U)) = _
+      obtain ⟨c,hc,hqc⟩ := b.property
+      rw [← hqc]
+      apply Additive.toMul.injective
+      apply Subtype.ext
+      rw [hρ]
+      change (c:G) * z * (c:G)⁻¹ = z
+      exact (congrArg (fun x : G => x * (c:G)⁻¹) (hBZ hc z hz).symm).trans
+        (mul_inv_cancel_right z (c:G))
+    exact ⟨Multiplicative.ofAdd
+      (⟨Additive.ofMul (⟨z,hZU hz⟩ : U),
+        Representation.BinaryOffender.Homogeneous.le_orbitSpan ρ ⊤ _ hzfix⟩ : S.toSubmodule),rfl⟩
+  have hUS : U ≤ submoduleGroup U ρ S := by
+    exact hgen.le.trans (conjugateSpanBy_le hZS (submoduleGroup_normalizes U H ρ q hρ S))
+  apply top_unique
+  intro v _
+  obtain ⟨w,hw⟩ := hUS v.toMul.property
+  have hv : w.toAdd.val = v := Additive.toMul.injective (Subtype.ext hw)
+  exact hv ▸ w.toAdd.property
+
+end CFSG.Quasithin.Chapter10.SourceLinearThreeReplacement.Geometry.FixedSpaceTI.HStarParameter

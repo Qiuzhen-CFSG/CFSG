@@ -1,0 +1,105 @@
+module
+public import CFSG.Quasithin.ChapterI.Section04To05.Janko23.J3Recognition.Ambient.FieldOverlap
+public import CFSG.Quasithin.Chapter14.Section03.NonabelianSource.SourceAbelianReduction.TerminalSolvable.JankoRecognition.J3PlaneNatural
+
+/-!
+# Compatible field roots in the original terminal J₃ row
+
+Keep the full original terminal prefix, the selected component, and the
+actual returning pair. The two field-affine subgroups are now constructed
+with coincident base-field translation maps, whose common image is exactly
+E. Each fourth-power field involution lies in the other original plane
+and outside its own plane. The whole plane-normalizer overlap has order 576.
+
+The opposite sixteen-root and Weyl relations, generation, presentation and
+order comparison, and the independent EightImageRow exclusion remain open.
+These results do not conclude ambient recognition or terminal solvability.
+
+Sources: Aschbacher–Smith 14.3.15 and I.4.7(2), pp.994,418;
+Aschbacher, *Sporadic Groups* (1994), 46.14(1–5a), pp.257–258.
+-/
+
+public noncomputable section
+open Subgroup Module Representation Representation.BinaryOffender Theory.GroupTheory
+open scoped IsMulCommutative commutatorElement
+namespace CFSG.Quasithin.Chapter14.Section03.NonabelianSource.SourceAbelianReduction.TerminalSolvable
+open Chapter12.Section08 Chapter12.Section08.InvariantFlag
+open Chapter12.Section08.InvariantFlag.Symplectic
+open Chapter14.Section02 SourcePreliminaries Chapter15.Section03 ChapterA.Section05To06
+section Source
+variable {G : Type*} [Group G] [Finite G]
+    (hG : IsSimpleQTKE KnownSimple.IsKnownSimple G)
+    (T : Sylow 2 G) (hempty : MainForward.faithfulLocalComponents T = ∅)
+    {M Mc : Subgroup G} (hM : IsOrderingMaximal T M)
+    (hu : maximalTwoLocalOvergroups (centralizer (centralInvolutions T : Set G)) = {Mc})
+    (hmany : 1 < (maximalTwoLocalOvergroups (T : Subgroup G)).ncard)
+    (hcard : Nat.card (localModule T M) = 4)
+    (e : (M ⧸ (centralizer (localModule T M : Set G)).subgroupOf M) ≃* Equiv.Perm (Fin 3))
+    (F : InvariantFlag T (rankTwoSeed T M) 2)
+    [IsElementaryAbelian 2 (rankTwoSeed T M)] [IsElementaryAbelian 2 F.Uhat]
+    (hne : ¬ IsMulCommutative F.U)
+
+variable (hnot : ¬ ClassificationModels.IsTheoremEModel G) (g : G)
+    [IsElementaryAbelian 2 (F.terminalDot (F.X g))]
+    (hgP : g ∈ F.P (sourceResidual M Mc)) (hgH : g ∉ F.H)
+    {B : LinearMap.BilinForm (ZMod 2) (Additive F.Uhat)} {v : Additive F.Uhat}
+    (hyp : ChapterG.Section10.Hypothesis F.terminalRepresentation B v
+      (hatSpace F (F.E g)) (F.terminalDot (F.X g))
+      ((F.terminalDot (conjugate F.ZU g)).subgroupOf (F.terminalDot (F.X g))))
+    {K : Subgroup G} (hK : ComponentLift F g K)
+include hnot hgP hgH hyp hK
+
+
+include hG hempty hM hu hmany hcard e hne
+
+open Janko23.J3Recognition.LocalSixteen
+
+open Representation.CentralCubicNaturalFour
+open Sporadic.Janko3.SourceRecognition.SingerField hiding normalizer
+
+open Sporadic.Janko3.SourceRecognition.PlaneCoordinates
+open Sporadic.Janko3.SourceRecognition.PlaneTransport
+
+/-- Compatible actual field roots and crossing field involutions from the
+complete original selected terminal prefix. -/
+theorem source_single_a5_j3_compatible_fields_of_four
+    (e5 : F.terminalDot K ≃* alternatingGroup (Fin 5))
+    (hspan : K = conjugateSpanBy K (T : Subgroup G))
+    (hd : finrank (ZMod 2) (Additive F.Uhat) = 4) :
+    Janko23.OneInvolutionClass G ∧
+    ∃ (D : Seed G) (P : ReturningPair D)
+      (eR : P.R ≃* Matrix.PSL3Four.RootNormalizerModel.Root),
+      F.H = K ∧ F.H = Janko23.involutionCentralizer D.z ∧
+      Janko23.ambientCore D.z = F.U ∧
+      P.A₁ eR ≠ P.A₂ eR ∧ P.A₁ eR ⊔ P.A₂ eR = P.R ∧ P.A₁ eR ⊓ P.A₂ eR = P.E ∧
+      Nat.card (normalizer (P.A₁ eR : Set G) ⊓ normalizer (P.A₂ eR : Set G) : Subgroup G) = 576 ∧
+    ∃ (C₁ : Subgroup (normalizer (P.A₁ eR : Set G)))
+      (f₁ : C₁ ≃* LinearGroup) (a₁ : P.A₁ eR ≃* Plane)
+      (j₁ : Sporadic.Janko3.SourceRecognition.SingerField.Model →* G)
+      (C₂ : Subgroup (normalizer (P.A₂ eR : Set G)))
+      (f₂ : C₂ ≃* LinearGroup) (a₂ : P.A₂ eR ≃* Plane)
+      (j₂ : Sporadic.Janko3.SourceRecognition.SingerField.Model →* G),
+      ((P.A₁ eR).subgroupOf (normalizer (P.A₁ eR : Set G))).IsComplement' C₁ ∧
+      (∀ (c : C₁) (x : P.A₁ eR),
+        a₁ ((P.A₁ eR).normalizerMonoidHom c x) = naturalAction (f₁ c) (a₁ x)) ∧
+      FieldEmbedding (P.A₁ eR) C₁ a₁ j₁ ∧
+      ((P.A₂ eR).subgroupOf (normalizer (P.A₂ eR : Set G))).IsComplement' C₂ ∧
+      (∀ (c : C₂) (x : P.A₂ eR),
+        a₂ ((P.A₂ eR).normalizerMonoidHom c x) = naturalAction (f₂ c) (a₂ x)) ∧
+      FieldEmbedding (P.A₂ eR) C₂ a₂ j₂ ∧
+      (∀ (x : G) (hx₁ : x ∈ P.A₁ eR) (hx₂ : x ∈ P.A₂ eR),
+        a₁ ⟨x,hx₁⟩ = a₂ ⟨x,hx₂⟩) ∧
+      j₁.comp baseRoot = j₂.comp baseRoot ∧ (j₁.comp baseRoot).range = P.E ∧
+      j₁ Sporadic.Janko3.SourceRecognition.SingerField.fieldElement ∈ P.A₂ eR ∧
+      j₁ Sporadic.Janko3.SourceRecognition.SingerField.fieldElement ∉ P.A₁ eR ∧
+      j₂ Sporadic.Janko3.SourceRecognition.SingerField.fieldElement ∈ P.A₁ eR ∧
+      j₂ Sporadic.Janko3.SourceRecognition.SingerField.fieldElement ∉ P.A₂ eR := by
+  obtain ⟨hc,D,P,eR,_,_,hHK,hHz,hcore,_⟩ :=
+    source_single_a5_j3_local_sixteen_of_four
+      hG T hempty hM hu hmany hcard e F hne hnot g hgP hgH hyp hK e5 hspan hd
+  exact ⟨hc,D,P,eR,hHK,hHz,hcore,P.planes_ne eR,P.planes_sup eR,P.planes_inf eR,
+    Janko23.J3Recognition.Ambient.overlap_card P eR,
+    Janko23.J3Recognition.Ambient.compatible_field_embeddings P hc eR⟩
+
+end Source
+end CFSG.Quasithin.Chapter14.Section03.NonabelianSource.SourceAbelianReduction.TerminalSolvable

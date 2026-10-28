@@ -198,7 +198,13 @@ public theorem split_matrix_diag_or_antidiag
   have h01 := congrFun (congrFun heq (0 : Fin 2)) (1 : Fin 2)
   have h10 := congrFun (congrFun heq (1 : Fin 2)) (0 : Fin 2)
   have h11 := congrFun (congrFun heq (1 : Fin 2)) (1 : Fin 2)
-  simp [Matrix.mul_apply] at h00 h01 h10 h11
+  simp only [Matrix.scalar_apply, Matrix.cons_mul, Nat.succ_eq_add_one,
+    Nat.reduceAdd, Matrix.vecMul_diagonal_const, Matrix.smul_cons,
+    MulOpposite.smul_eq_mul_unop, MulOpposite.unop_op, smul_zero,
+    Matrix.smul_empty, Matrix.empty_mul, Equiv.symm_apply_apply, Fin.isValue,
+    Matrix.mul_apply, Matrix.of_apply, Matrix.cons_val', Matrix.cons_val_fin_one,
+    Matrix.cons_val_zero, Fin.sum_univ_two, Matrix.cons_val_one, zero_mul,
+    add_zero, mul_zero, zero_add] at h00 h01 h10 h11
   by_cases hA00 : (A : Matrix (Fin 2) (Fin 2) F) 0 0 = 0
   · right
     refine ⟨hA00, ?_⟩

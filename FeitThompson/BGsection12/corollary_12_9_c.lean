@@ -2,6 +2,7 @@ module
 
 public import FeitThompson.BGsection12.lemma_12_8_e
 
+
 open scoped Pointwise commutatorElement
 
 /-!

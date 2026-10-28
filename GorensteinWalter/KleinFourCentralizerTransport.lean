@@ -130,7 +130,7 @@ public theorem no_kleinFour_centralizes_odd_cyclic_of_conjugate_torus
     have hsc : SemiconjBy (g⁻¹) (a : G) x := by
       change g⁻¹ * (a : G) = x * g⁻¹
       rw [← hax]
-      simp [MulAut.conj_apply, mul_assoc]
+      simp [mul_assoc]
     have hord_eq : orderOf x = orderOf (a : G) :=
       (SemiconjBy.orderOf_eq (g⁻¹) (x := (a : G)) (y := x) hsc).symm
     simpa [hord_eq] using hordA
@@ -145,7 +145,7 @@ public theorem center_eq_bot_perm_fin4 :
     Subgroup.center (Equiv.Perm (Fin 4)) = ⊥ := by
   rw [Subgroup.eq_bot_iff_forall]
   exact (by
-    native_decide :
+    decide :
       ∀ x : Equiv.Perm (Fin 4),
         x ∈ Subgroup.center (Equiv.Perm (Fin 4)) → x = 1)
 

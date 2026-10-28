@@ -5,6 +5,7 @@ public import GorensteinWalter.Section4.SecondCaseFactorization
 public import GorensteinWalter.Section1
 import Mathlib.Tactic
 
+
 /-!
 # Section 4: equations (1)--(2), involution half
 

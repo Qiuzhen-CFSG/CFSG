@@ -2,6 +2,7 @@ module
 
 public import FeitThompson.BGsection12.theorem_12_7_c
 
+
 open scoped Pointwise
 
 section Section12
@@ -57,13 +58,11 @@ public theorem section12_sigma_compl_fitting_core_isPGroup_of_tau2_singleton_pre
     let Rq : Subgroup G :=
       piCoreIn ({q} : Set Nat.Primes) (section8CenterInFitting M)
     have hqZFit : q ∈ subgroupPrimeSet (section8CenterInFitting M) := by
-      simpa [F] using
-        (by
-          rw [section8CenterInFitting_primeSet_eq_fitting M]
-          exact hqF)
+      rw [section8CenterInFitting_primeSet_eq_fitting M]
+      simpa [F] using hqF
     have hZFit_comm : IsMulCommutative (section8CenterInFitting M) := by
       simpa using section8CenterInFitting_isMulCommutative M
-    letI : IsMulCommutative (section8CenterInFitting M) := hZFit_comm
+    let : IsMulCommutative (section8CenterInFitting M) := hZFit_comm
     have hRq_ne : Rq ≠ ⊥ := by
       simpa [Rq] using
         section8_piCoreIn_singleton_ne_bot_of_mem_subgroupPrimeSet_of_isMulCommutative
@@ -231,7 +230,7 @@ public theorem section12_sigma_compl_fitting_core_le_CA_msigma_pre
     piCoreIn (section10SigmaPrimes M)ᶜ (section8FittingSubgroup M) ≤
       subgroupCentralizerIn A (section10Msigma M) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   let F : Subgroup G := section8FittingSubgroup M
   let S : Subgroup G := section10Msigma M
   let Z : Subgroup G := piCoreIn (section10SigmaPrimes M)ᶜ F
@@ -246,7 +245,7 @@ public theorem section12_sigma_compl_fitting_core_le_CA_msigma_pre
         hM hE hp hA hSylow
   have hAp : IsPGroup p.val A := by
     have hElem := (section12_rankTwo_elementary hA).2
-    haveI : IsElementaryAbelian p.val A := hElem
+    have : IsElementaryAbelian p.val A := hElem
     exact IsElementaryAbelian.isPGroup p.val A
   have hZ_le_F : Z ≤ F := by
     simpa [Z, F] using
@@ -275,7 +274,7 @@ public theorem section12_sigma_compl_fitting_core_le_CA_msigma_pre
     intro hPcomm
     obtain ⟨g, hg⟩ := MulAction.exists_smul_eq G P Pnonab
     have hconj_comm : IsMulCommutative ((g • P : Sylow p.val G) : Subgroup G) := by
-      letI : IsMulCommutative (P : Subgroup G) := hPcomm
+      let : IsMulCommutative (P : Subgroup G) := hPcomm
       rw [Sylow.coe_subgroup_smul]
       exact Subgroup.map_isMulCommutative
         (f := (MulAut.conj g).toMonoidHom) (H := (P : Subgroup G))
@@ -369,7 +368,7 @@ public theorem section12_sigma_compl_fitting_core_le_CA_msigma_pre
   let D : Subgroup G := C ⊔ Y
   let CD : Subgroup D := C.subgroupOf D
   let YD : Subgroup D := Y.subgroupOf D
-  haveI : YD.Normal := by
+  have : YD.Normal := by
     simpa [D, YD] using
       (Subgroup.normal_subgroupOf_sup_of_le_normalizer
         (H := C) (N := Y) hC_norm_Y)
@@ -508,15 +507,15 @@ public theorem section12_exists_isCompl_isInvariant_of_elementaryAbelian_coprime
     (hcop : Nat.Coprime p (Nat.card A)) (B : Subgroup V) [IsInvariant A V B] :
     ∃ C : Subgroup V, IsCompl B C ∧ IsInvariant A V C := by
   classical
-  letI : CommGroup V := IsMulCommutative.instCommGroup
-  letI : AddCommGroup (Additive V) := Additive.addCommGroup
+  let : CommGroup V := IsMulCommutative.instCommGroup
+  let : AddCommGroup (Additive V) := Additive.addCommGroup
   let ρ : Representation (ZMod p) A (Additive V) :=
-    Theory.Representation.ofElementaryAbelianAction (A := A) (G := V) (p := p)
+    Representation.ofElementaryAbelianAction (A := A) (G := V) (p := p)
   let instAdd : AddCommGroup ρ.asModule := Representation.instAddCommGroupAsModule ρ
-  letI : AddCommGroup ρ.asModule := instAdd
+  let : AddCommGroup ρ.asModule := instAdd
   let instMod : Module (MonoidAlgebra (ZMod p) A) ρ.asModule :=
     Representation.instModuleMonoidAlgebraAsModule ρ
-  letI : Module (MonoidAlgebra (ZMod p) A) ρ.asModule := instMod
+  let : Module (MonoidAlgebra (ZMod p) A) ρ.asModule := instMod
   let η : Subgroup V ≃o Submodule (ZMod p) (Additive V) :=
     Subgroup.toAddSubgroup.trans (AddSubgroup.toZModSubmodule (n := p))
   have hBinv : η B ∈ ρ.invtSubmodule := by
@@ -528,8 +527,8 @@ public theorem section12_exists_isCompl_isInvariant_of_elementaryAbelian_coprime
     simpa [ρ, η] using
       (IsInvariant.invariant (A := A) (G := V) (H := B) a (Additive.toMul x)).1 hxB
   let Bpack : ρ.invtSubmodule := ⟨η B, hBinv⟩
-  haveI : Fintype A := Fintype.ofFinite A
-  haveI : NeZero (Fintype.card A : ZMod p) := by
+  have : Fintype A := Fintype.ofFinite A
+  have : NeZero (Fintype.card A : ZMod p) := by
     constructor
     intro hzero
     have hdiv : p ∣ Fintype.card A :=
@@ -614,14 +613,14 @@ public theorem section12_rankTwo_tau2_le_E2
     (corollary_12_6_a (G := G) (M := M) (E := E) (E₁₂ := E₁₂)
       (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) (A := A) (p := p)
       hM hE hp hA).1
-  haveI : (A.subgroupOf E).Normal := hAnorm.2
+  have : (A.subgroupOf E).Normal := hAnorm.2
   have hE2HallIn :
       section12HallSubgroupIn (section12Tau2Primes M) E₂ E :=
     section12_E2_hall_in_E hE.2.1 hE.2.2.2.1
   rcases hE2HallIn with ⟨hE2E, hHallE2⟩
   have hAp : IsPGroup p.val (A.subgroupOf E) :=
     section12_rankTwo_subgroupOf_isPGroup hA
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   have hp' : (⟨p.val, Fact.out⟩ : Nat.Primes) ∈ section12Tau2Primes M := by
     rw [show (⟨p.val, Fact.out⟩ : Nat.Primes) = p by exact Subtype.ext rfl]
     exact hp

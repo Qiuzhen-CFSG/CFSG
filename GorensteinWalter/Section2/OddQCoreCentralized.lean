@@ -14,6 +14,7 @@ import all GorensteinWalter.GWLemma21Trichotomy
 import GorensteinWalter.Section2.Lemma21
 import Mathlib.Tactic
 
+
 /-!
 # Odd cores centralized by the distinguished involution
 

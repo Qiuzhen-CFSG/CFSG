@@ -11,6 +11,7 @@ public import FeitThompson.PCore.PPrimeCore
 public import Mathlib.GroupTheory.Solvable
 import BenderSuzuki.External.Huppert.IV.ComplementTransfer
 
+
 /-!
 # Thompson's minimal-counterexample data for Theorem D
 
@@ -52,7 +53,7 @@ divisors of `|G|`. -/
 public def ThompsonMethodData (p : ℕ) [Fact p.Prime]
     (G : Type u) [Group G] [Finite G] : Prop :=
   Subgroup.centralizer ((pCore p G : Subgroup G) : Set G) ≤ pCore p G ∧
-    IsSolvable G ∧
+    Group.IsSolvable G ∧
     ∃ q : ℕ, q.Prime ∧ q ≠ p ∧
       (∀ T : Sylow q G, IsMulCommutative (T : Subgroup G)) ∧
       ∀ r : ℕ, r.Prime → r ∣ Nat.card G → r = p ∨ r = q
@@ -261,7 +262,7 @@ private theorem normalPComplementZJ_of_quotient_pPrimeCore
   let Nbar : Subgroup Q := Subgroup.normalizer (Zbar : Set Q)
   have hZmap' : Z.map q = Zbar := by
     simpa [Z, Zbar, Sbar] using ZJ_map_quotient_pPrimeCore (G := G) (p := p) S
-  haveI : Fact (IsPGroup p (↥Z)) :=
+  have : Fact (IsPGroup p (↥Z)) :=
     ⟨IsPGroup.to_le S.isPGroup' (thompsonCenter_le S.toSubgroup)⟩
   have hMnormal : M.Normal := by
     simpa [M] using (pPrimeCore_normal (p := p) (G := G))
@@ -277,7 +278,7 @@ private theorem normalPComplementZJ_of_quotient_pPrimeCore
   have hNhas : HasNormalPComplement p (↥N) :=
     hasNormalPComplement_of_normalPComplement hN
   let K : Subgroup N := M.subgroupOf N
-  haveI : K.Normal := by
+  have : K.Normal := by
     dsimp [K]
     infer_instance
   have hquotN : HasNormalPComplement p (N ⧸ K) :=

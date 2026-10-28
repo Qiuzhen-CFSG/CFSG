@@ -65,7 +65,7 @@ public theorem not_twoRankAtLeastTwo_quotient_of_odd
       apply Subtype.ext
       change pi (m : G) = 1
       exact (QuotientGroup.eq_one_iff (N := N) (m : G)).2 hm
-  haveI : NM.Normal := (inferInstance : N.Normal).subgroupOf M
+  have : NM.Normal := (inferInstance : N.Normal).subgroupOf M
   have hNMcard : Nat.card NM = Nat.card N :=
     Nat.card_congr (Subgroup.subgroupOfEquivOfLe hN_le_M).toEquiv
   have hNModd : Odd (Nat.card NM) := hNMcard ▸ hNodd
@@ -185,13 +185,13 @@ public theorem pointStabilizerCoreQuotientAction_mk_smul
 public theorem pointStabilizerCoreQuotientAction_twoPretransitive
     {G : Type u} {Omega : Type v} [Group G] [MulAction G Omega]
     (htwo : MulAction.IsMultiplyPretransitive G Omega 2) :
-    letI : (pointStabilizerCore G Omega).Normal := pointStabilizerCore_normal
+    let : (pointStabilizerCore G Omega).Normal := pointStabilizerCore_normal
     letI : MulAction (G ⧸ pointStabilizerCore G Omega) Omega :=
       pointStabilizerCoreQuotientAction
     MulAction.IsMultiplyPretransitive
       (G ⧸ pointStabilizerCore G Omega) Omega 2 := by
-  letI : (pointStabilizerCore G Omega).Normal := pointStabilizerCore_normal
-  letI : MulAction (G ⧸ pointStabilizerCore G Omega) Omega :=
+  let : (pointStabilizerCore G Omega).Normal := pointStabilizerCore_normal
+  let : MulAction (G ⧸ pointStabilizerCore G Omega) Omega :=
     pointStabilizerCoreQuotientAction
   rw [MulAction.is_two_pretransitive_iff] at htwo ⊢
   intro a b c d hab hcd
@@ -211,7 +211,7 @@ public theorem faithfulSMul_quotient_pointStabilizerCore
         quotientAction.toSMul (QuotientGroup.mk g) omega = g • omega) :
     @FaithfulSMul (G ⧸ pointStabilizerCore G Omega) Omega
       quotientAction.toSMul := by
-  letI : MulAction (G ⧸ pointStabilizerCore G Omega) Omega := quotientAction
+  let : MulAction (G ⧸ pointStabilizerCore G Omega) Omega := quotientAction
   refine { eq_of_smul_eq_smul := ?_ }
   intro a b hab
   obtain ⟨g, rfl⟩ :=
@@ -219,7 +219,6 @@ public theorem faithfulSMul_quotient_pointStabilizerCore
   obtain ⟨h, rfl⟩ :=
     QuotientGroup.mk'_surjective (pointStabilizerCore G Omega) b
   apply QuotientGroup.eq_iff_div_mem.mpr
-  change g / h ∈ pointStabilizerCore G Omega
   simp only [pointStabilizerCore, Subgroup.mem_iInf,
     MulAction.mem_stabilizer_iff]
   intro w
@@ -251,7 +250,7 @@ public theorem conjugacyOrbit_ncard_mul_centralizer_card
     (MulAction.orbit (ConjAct G) x).ncard *
         Nat.card (Subgroup.centralizer ({x} : Set G)) = Nat.card G := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   have h :=
     MulAction.card_orbit_mul_card_stabilizer_eq_card_group (ConjAct G) x
   rw [← Nat.card_coe_set_eq,

@@ -4,6 +4,7 @@ public import GorensteinWalter.Section4.SecondCaseA7FittingCentralizesSylow
 public import GorensteinWalter.Section4.SecondCaseFittingNormal
 import Mathlib.Tactic
 
+
 noncomputable section
 
 namespace GorensteinWalter

@@ -12,7 +12,6 @@ character as a difference of two ordinary characters.  Suzuki's transfer
 API uses the equivalent finite integral-combination representation.
 -/
 
-namespace Theory.Character
 
 universe u
 
@@ -31,5 +30,3 @@ public theorem generalizedCharacter_isVirtualCharacter
     ext g
     simp [virtualCharacterOfRepresentations]
   exact Section3.isVirtualCharacter_sub (toVirtual hchi) (toVirtual hpsi)
-
-end Theory.Character

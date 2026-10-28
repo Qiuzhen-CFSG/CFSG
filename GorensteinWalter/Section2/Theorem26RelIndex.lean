@@ -14,6 +14,7 @@ import Mathlib.GroupTheory.Index
 import Mathlib.Algebra.Group.Subgroup.Pointwise
 import Mathlib.Tactic
 
+
 open scoped Pointwise
 open scoped commutatorElement
 open scoped IsMulCommutative
@@ -210,7 +211,7 @@ public theorem S_relIndex_E_eq_two_t26
           = (((P : Subgroup c.Hhat) ⊓ (Ei ⊔ O)).map q).relIndex
               ((P : Subgroup c.Hhat).map q) := by
               congr 1 <;> ext x <;>
-                simp [f, Subgroup.mem_map, Subgroup.mem_subgroupOf, and_assoc, and_comm, and_left_comm]
+                simp [f, Subgroup.mem_map, Subgroup.mem_subgroupOf, and_assoc, and_comm]
       _ = Ebar.relIndex (Pq : Subgroup (c.Hhat ⧸ O)) := by
               rw [hmap, hEsup, hPq]
               rw [Subgroup.inf_relIndex_left (H := (Pq : Subgroup (c.Hhat ⧸ O)))

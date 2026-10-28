@@ -4,6 +4,7 @@ public import FeitThompson.BGsection10.proposition_10_14_c
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
 
+
 open scoped Pointwise
 
 /-!
@@ -19,6 +20,16 @@ module imports the shared Section 10 notation from `FeitThompson.BGsection10.Def
 section Section10
 
 variable {G : Type*} [Group G] [Finite G] [IsMinCE G]
+
+omit [IsMinCE G] in
+private theorem section10_pSubgroup_le_pCore_of_nilpotent
+    {p : ℕ} [Fact p.Prime] {R : Type*} [Group R] [Finite R]
+    [Group.IsNilpotent R] {B : Subgroup R} (hBp : IsPGroup p B) :
+    B ≤ pCore p R := by
+  obtain ⟨S, hB_le_S⟩ := IsPGroup.exists_le_sylow (G := R) (p := p) hBp
+  have hS_normal : (S : Subgroup R).Normal :=
+    Group.IsNilpotent.sylow_normal (p := p) inferInstance S
+  exact hB_le_S.trans (le_sSup ⟨hS_normal, S.isPGroup'⟩)
 
 omit [Finite G] [IsMinCE G] in
 public theorem section10_proper_of_le_maximal
@@ -82,15 +93,6 @@ public theorem section10_normalizer_le_of_unique_le_maximal
   have hMuniq : section9MaximalSubgroupsContaining D = {M} :=
     section10_unique_overgroups_eq_of_contains_maximal hDunique hM hDM
   exact section10_le_unique_maximal_of_le hDX hXproper hMuniq
-
-private theorem section10_pSubgroup_le_pCore_of_nilpotent
-    {p : ℕ} [Fact p.Prime] {R : Type*} [Group R] [Finite R]
-    [Group.IsNilpotent R] {B : Subgroup R} (hBp : IsPGroup p B) :
-    B ≤ pCore p R := by
-  obtain ⟨S, hB_le_S⟩ := IsPGroup.exists_le_sylow (G := R) (p := p) hBp
-  have hS_normal : (S : Subgroup R).Normal :=
-    Group.IsNilpotent.sylow_normal (p := p) inferInstance S
-  exact hB_le_S.trans (le_sSup ⟨hS_normal, S.isPGroup'⟩)
 
 public theorem section10_pCore_ne_bot_of_dvd_card_nilpotent
     {H : Type*} [Group H] [Finite H] [Group.IsNilpotent H]

@@ -20,14 +20,6 @@ open PFAppendixIII PFchapter1section1
 
 universe u
 
-private theorem isPGroup_zpowers_of_involution
-    {X : Type u} [Group X] [Finite X] {x : X} (hx : IsInvolution x) :
-    IsPGroup 2 (Subgroup.zpowers x) := by
-  have horder : orderOf x = 2 :=
-    (orderOf_eq_prime_iff).2 ⟨hx.sq_eq_one, hx.ne_one⟩
-  apply IsPGroup.of_card (p := 2) (G := Subgroup.zpowers x) (n := 1)
-  simp [Nat.card_zpowers, horder]
-
 namespace IsStronglyEmbedded
 
 /-- Every involution of `X` belongs to a right conjugate of a strongly

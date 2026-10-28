@@ -5,7 +5,7 @@ import FeitThompson.PFsection10.PFsection10_11
 import FeitThompson.PFsection11.PFsection11_9
 import FeitThompson.PFsection12.PFsection12_6
 import FeitThompson.PFsection12.PFsection12_9
-import FeitThompson.GroupAction.MinimalNormal
+import Theory.GroupAction.MinimalNormal
 import FeitThompson.PFsection5.RealVirtualParity
 import FeitThompson.PFsection6.PFsection6_5_a
 import FeitThompson.PFsection7.PFsection7_3
@@ -20,6 +20,7 @@ import FeitThompson.PFsection8.SourceTypePBridge
 import FeitThompson.PFsection9.PFsection9_1
 import Mathlib.GroupTheory.Schreier
 import Mathlib.RingTheory.ZMod.UnitsCyclic
+
 
 /-!
 # Peterfalvi, Section 12: Theorem (12.10)
@@ -172,7 +173,7 @@ private theorem theorem_12_10_p0_le_mf_of_typeIIIIV
       have hqeq : q = pp := by simpa using hqpp
       subst q
       simpa using hpH
-    letI : MulDistribMulAction Unit D := {
+    let : MulDistribMulAction Unit D := {
       smul := fun _ z => z
       one_smul := fun _ => rfl
       mul_smul := fun _ _ _ => rfl
@@ -188,7 +189,7 @@ private theorem theorem_12_10_p0_le_mf_of_typeIIIIV
       apply top_unique
       intro z _hz
       exact hDL (by simp [hDtop])
-    have hDsolv : IsSolvable D :=
+    have hDsolv : Group.IsSolvable D :=
       IsMinCE.proper_subgroups_solvable D (lt_top_iff_ne_top.2 hDneTop)
     obtain ⟨Q, hQHall, _hQinv, hP0DQ⟩ :=
       exists_isHallSubgroup_isInvariant_of_isPiSubgroup
@@ -205,7 +206,7 @@ private theorem theorem_12_10_p0_le_mf_of_typeIIIIV
       (Subgroup.subgroupOfEquivOfLe hUD).isCyclic.2 hUcyc
     have hP0DmapCyc :
         IsCyclic (P0D.map (MulAut.conj d).toMonoidHom) := by
-      letI : IsCyclic (U.subgroupOf D) := hUsubCyc
+      let : IsCyclic (U.subgroupOf D) := hUsubCyc
       exact Subgroup.isCyclic_of_le hP0Dmap_le
     let eP0D : P0D ≃* P0D.map (MulAut.conj d).toMonoidHom :=
       Subgroup.equivMapOfInjective
@@ -239,7 +240,7 @@ public theorem theorem_12_10_typeI_reduction_source_leaf
   rcases h129 with
     ⟨_hP0comm, _hP0rank, hL, hH, hLs, hP0Ls, _hxL,
       ⟨hp, hxOmega, hxne⟩, _hCK, _hNxM, hCnotL⟩
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have h128copy := h128
   rcases h128copy with
     ⟨_hp128, _hbad, _hmin, _hM, _hK, _hTypeI, _hMs, _hK', _hnoncyc,
@@ -425,7 +426,7 @@ public theorem theorem_12_10_typeI_frobenius_source_leaf
   rcases h129 with
     ⟨hP0comm, hP0rank, hL, hH, hLs, hP0Ls, _hxL,
       ⟨hp, hxOmega, hxne⟩, _hCK, _hNxM, hCnotL⟩
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hxP0 : x ∈ P0 := by
     rcases hxOmega with ⟨y, _hyOmega, hyx⟩
     have hyP0 : (y : G) ∈ P0 := y.property
@@ -508,7 +509,7 @@ public theorem theorem_12_10_typeI_frobenius_source_leaf
     have hcyc : IsCyclic P0 := by
       rw [hbot]
       infer_instance
-    letI : IsCyclic P0 := hcyc
+    let : IsCyclic P0 := hcyc
     have hle : groupRank P0 ≤ 1 := groupRank_le_one_of_isCyclic P0
     omega
   have hpP0 : p ∣ Nat.card P0 := by
@@ -530,7 +531,7 @@ public theorem theorem_12_10_typeI_frobenius_source_leaf
   refine frobeniusWithKernel_of_typeFData_cyclicSylow hF ?_
   intro q Q
   by_contra hQnoncyc
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   have hTypeI' : Section8.typeIDefinitionData L H :=
     ⟨U, U1, U0, hF, Or.inr hCases⟩
   have hbadq : badPrimeForHypothesis12 G q.val := by
@@ -587,7 +588,7 @@ public theorem theorem_12_10_typeI_frobenius_source_leaf
       have hq2 := q.property.two_le
       omega
   rcases hCases with hRank | hExp
-  · letI : IsMulCommutative H := hRank.1
+  · let : IsMulCommutative H := hRank.1
     let P : Subgroup G := (pCore p H).map H.subtype
     have hPH : P ≤ H := by
       intro z hz
@@ -598,8 +599,8 @@ public theorem theorem_12_10_typeI_frobenius_source_leaf
         IsPGroup.map (p := p) (H := pCore p H) (pCore_isPGroup (G := H))
           H.subtype
     have hPcomm : IsMulCommutative P := by infer_instance
-    letI : IsMulCommutative P := hPcomm
-    letI : Fact (IsPGroup p P) := ⟨hPp⟩
+    let : IsMulCommutative P := hPcomm
+    let : Fact (IsPGroup p P) := ⟨hPp⟩
     let P0H : Subgroup H := P0.subgroupOf H
     have hP0Hp : IsPGroup p P0H :=
       hP0p.of_equiv (Subgroup.subgroupOfEquivOfLe hP0H).symm
@@ -649,14 +650,14 @@ public theorem theorem_12_10_typeI_frobenius_source_leaf
         (section16MFSubgroup_subgroupOf_normal hH)
     have hU0normH : U0 ≤ Subgroup.normalizer (H : Set G) :=
       hU0le.trans (hcomp.2.1.trans hLnormH)
-    haveI : (pCore p H).Characteristic :=
+    have : (pCore p H).Characteristic :=
       pCore_characteristic (G := H) (p := p)
     have hNormHleP :
         Subgroup.normalizer (H : Set G) ≤ Subgroup.normalizer (P : Set G) := by
       simpa [P] using
         (section8_normalizer_map_subtype_le_of_characteristic
           (G := G) (H := H) (K := pCore p H))
-    haveI : (omega₁ (G := P) (p := p)).Characteristic :=
+    have : (omega₁ (G := P) (p := p)).Characteristic :=
       omega₁_characteristic (G := P) (p := p)
     have hNormPleP1 :
         Subgroup.normalizer (P : Set G) ≤ Subgroup.normalizer (P1 : Set G) := by
@@ -675,7 +676,7 @@ public theorem theorem_12_10_typeI_frobenius_source_leaf
     have hP1normalS : (P1.subgroupOf S).Normal := by
       exact (Subgroup.normal_subgroupOf_iff_le_normalizer hP1S).2
         (sup_le hHnormP1 hU0normP1)
-    letI : (P1.subgroupOf S).Normal := hP1normalS
+    let : (P1.subgroupOf S).Normal := hP1normalS
     have hfrobS :
         IsFrobeniusGroupWithKernelComplement
           (H.subgroupOf S) (U0.subgroupOf S) := by

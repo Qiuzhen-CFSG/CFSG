@@ -1,0 +1,123 @@
+module
+public import CFSG.Quasithin.Chapter14.Section06.SourceParabolicComponent.StarModule
+public import CFSG.Quasithin.Chapter14.Section06.SourceParabolicComponent.GeneratedMSInputs
+public import CFSG.Quasithin.ChapterC.Section02.SourceGeometry.AlternatingSixMovedSource
+
+/-!
+# The actual generated A₆ plane span has rank at most five
+
+The original plane span lies in the moved star module, and full B.5 applied
+to the literal A₆ star image bounds that module by sixteen or thirty-two.
+This gives the required preliminary rank bound directly on the original
+span, without reconstructing the whole two-core or assuming an A₆ block.
+The second-parabolic span inherits the same bound.
+
+Source: Aschbacher--Smith 14.6.10(5), printed p.1029, via B.5.1 and C.2.7.
+The rank-five contradiction still needs its original whole-core commutator
+control; the rank-three conclusion is not asserted here.
+-/
+
+public section
+open Subgroup Theory.GroupTheory Stellmacher
+open scoped Pointwise IsMulCommutative MatrixGroups
+namespace CFSG.Quasithin.Chapter14.Section06
+universe u
+open Chapter12.Section08 SourcePreliminaries Chapter15.Section03 ChapterA.Section05To06
+open Chapter1.RadicalExclusions.ModelReduction FullSieve FullSieve.SourceInterface
+open Chapter15.Section03.AbelianAmalgam.GoldschmidtCore.Centrality.Semilinear.Recognition
+open Chapter15.Section04.LocalSetup.TwoFactors.FFBranch.ClassificationComparison.FFAlternatives
+variable {G : Type u} [Group G] [Finite G]
+
+variable (hG : IsSimpleQTKE KnownSimple.IsKnownSimple G)
+    (T : Sylow 2 G) (hempty : MainForward.faithfulLocalComponents T = ∅)
+    {M Mc : Subgroup G} (hM : IsOrderingMaximal T M)
+    (hunique : maximalTwoLocalOvergroups (centralizer (centralInvolutions T : Set G)) = {Mc})
+    (hmany : 1 < (maximalTwoLocalOvergroups (T : Subgroup G)).ncard)
+    (hcard : Nat.card (localModule T M) = 4)
+    (e : (M ⧸ (centralizer (localModule T M : Set G)).subgroupOf M) ≃* Equiv.Perm (Fin 3))
+    (hab : IsMulCommutative (conjugateSpanBy (localModule T M) Mc))
+    (H : Subgroup G) (hH : H ∈ Chapter1.HOutside G (T : Set G) (M : Set G))
+    (u : G) (hu : u ∈ conjugateSpanBy (localModule T M) H)
+    (hindex : (suitableQuotientCentralizer
+      (source_rankTwo_f9_hypothesis hG T hempty hM hunique hmany hcard e hab H hH) u).relIndex
+        (T : Subgroup G) = 2)
+    (hmove : ¬ Mc.pCoreIn 2 ≤ centralizer ({u} : Set G))
+    (hproduct : ∀ t ∈ (T : Subgroup G), t ∉ suitableQuotientCentralizer
+      (source_rankTwo_f9_hypothesis hG T hempty hM hunique hmany hcard e hab H hH) u →
+        ¬ Mc.pCoreIn 2 ≤ centralizer ({u * (MulAut.conj t⁻¹) u} : Set G))
+    (hU3 : Mc ⊓ normalizer (suitableQuotientCentralizer
+      (source_rankTwo_f9_hypothesis hG T hempty hM hunique hmany hcard e hab H hH) u : Set G) =
+        (T : Subgroup G))
+    (hlocal : Chapter1.IsSylowIn 2 ((T : Subgroup G) ⊓ centralizer ({u} : Set G))
+      (H ⊓ centralizer ({u} : Set G)))
+
+include hG hempty hM hunique hmany hcard e hab H hH hu hindex hmove hproduct hU3 hlocal
+
+/-- Direct B.5 bound on the original full plane span in the generated A₆ row. -/
+theorem source_generated_parabolic_a6_span_card_le_thirtyTwo
+    (I H2 : Subgroup G)
+    (hI : I ∈ IStar (T : Subgroup G) (outsideOvergroups (Chapter1.H G)
+      ((T : Subgroup G) ⊓ centralizer ({u} : Set G)) Mc M))
+    (hout : ¬ I ⊓ M ≤ Mc)
+    (hSylH2 : Chapter1.IsSylowIn 2 (suitableQuotientCentralizer
+      (source_rankTwo_f9_hypothesis hG T hempty hM hunique hmany hcard e hab H hH) u) H2)
+    (hH2kernel : H2 ≤
+      (source_rankTwo_f9_hypothesis hG T hempty hM hunique hmany hcard e hab H hH).kernel (zpowers u))
+    (hH2quot : Nonempty ((H2 ⧸ pCore 2 H2) ≃* Equiv.Perm (Fin 3)))
+    (hH2out : ¬ H2 ≤ M)
+    (hcoreIndex : 4 < (H.pCoreIn 2).relIndex (T : Subgroup G))
+    (hrank : 4 ≤ Nat.log 2 ((centralizer (H.pCoreIn 2 : Set G)).relIndex
+      (conjugateSpanBy (localModule T M) H))) :
+    let I2 := (pResidual 2 H2).map H2.subtype ⊔ ((T : Subgroup G) ⊓ I)
+    let I0 := ((pResidual 2 (sourceResidual M Mc ⊓ I : Subgroup G)).map
+      (sourceResidual M Mc ⊓ I).subtype ⊔ ((T : Subgroup G) ⊓ I)) ⊔ I2
+    let I1 := (pResidual 2 (sourceResidual M Mc ⊓ I0 : Subgroup G)).map
+      (sourceResidual M Mc ⊓ I0).subtype ⊔ ((T : Subgroup G) ⊓ I0)
+    let C := (pResidual 2 I0).map I0.subtype
+    Nonempty (starImage C (I1.pCoreIn 2) C ≃* alternatingGroup (Fin 6)) →
+      Nat.card (conjugateSpanBy (localModule T M) I0) ≤ 32 := by
+  dsimp only
+  intro he
+  obtain ⟨eC⟩ := he
+  obtain ⟨hi,_,_⟩ := source_generated_parabolic_ms_inputs
+    hG T hempty hM hunique hmany hcard e hab H hH u hu hindex hmove hproduct hU3 hlocal
+    I H2 hI hout hSylH2 hH2kernel hH2quot hH2out hcoreIndex hrank
+  have hle := source_generated_parabolic_span_le_star_module
+    hG T hempty hM hunique hmany hcard e hab H hH u hu hindex hmove hproduct hU3 hlocal
+    I H2 hI hout hSylH2 hH2kernel hH2quot hH2out hcoreIndex hrank
+  have hc := ChapterC.C27Source.star_alternatingSix_moved_card_le_thirtyTwo hi eC
+  have hbound := Nat.card_le_card_of_injective _ (inclusion_injective hle)
+  rw [card_map_of_injective (subtype_injective _)] at hbound
+  exact hbound.trans hc
+
+/-- The actual second-parabolic span inherits the bound with no block premise. -/
+theorem source_generated_parabolic_a6_second_span_card_le_thirtyTwo
+    (I H2 : Subgroup G)
+    (hI : I ∈ IStar (T : Subgroup G) (outsideOvergroups (Chapter1.H G)
+      ((T : Subgroup G) ⊓ centralizer ({u} : Set G)) Mc M))
+    (hout : ¬ I ⊓ M ≤ Mc)
+    (hSylH2 : Chapter1.IsSylowIn 2 (suitableQuotientCentralizer
+      (source_rankTwo_f9_hypothesis hG T hempty hM hunique hmany hcard e hab H hH) u) H2)
+    (hH2kernel : H2 ≤
+      (source_rankTwo_f9_hypothesis hG T hempty hM hunique hmany hcard e hab H hH).kernel (zpowers u))
+    (hH2quot : Nonempty ((H2 ⧸ pCore 2 H2) ≃* Equiv.Perm (Fin 3)))
+    (hH2out : ¬ H2 ≤ M)
+    (hcoreIndex : 4 < (H.pCoreIn 2).relIndex (T : Subgroup G))
+    (hrank : 4 ≤ Nat.log 2 ((centralizer (H.pCoreIn 2 : Set G)).relIndex
+      (conjugateSpanBy (localModule T M) H))) :
+    let I2 := (pResidual 2 H2).map H2.subtype ⊔ ((T : Subgroup G) ⊓ I)
+    let I0 := ((pResidual 2 (sourceResidual M Mc ⊓ I : Subgroup G)).map
+      (sourceResidual M Mc ⊓ I).subtype ⊔ ((T : Subgroup G) ⊓ I)) ⊔ I2
+    let I1 := (pResidual 2 (sourceResidual M Mc ⊓ I0 : Subgroup G)).map
+      (sourceResidual M Mc ⊓ I0).subtype ⊔ ((T : Subgroup G) ⊓ I0)
+    let C := (pResidual 2 I0).map I0.subtype
+    Nonempty (starImage C (I1.pCoreIn 2) C ≃* alternatingGroup (Fin 6)) →
+      Nat.card (conjugateSpanBy (localModule T M) I2) ≤ 32 := by
+  dsimp only
+  intro he
+  have hc := source_generated_parabolic_a6_span_card_le_thirtyTwo
+    hG T hempty hM hunique hmany hcard e hab H hH u hu hindex hmove hproduct hU3 hlocal
+    I H2 hI hout hSylH2 hH2kernel hH2quot hH2out hcoreIndex hrank he
+  exact (Nat.card_le_card_of_injective _
+    (inclusion_injective (conjugateSpanBy_mono le_rfl le_sup_right))).trans hc
+end CFSG.Quasithin.Chapter14.Section06

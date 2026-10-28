@@ -16,7 +16,8 @@ import BenderSuzuki.PFchapter4section4.case_v_ne_w
 
 namespace BenderSuzuki
 
-open PFchapter1section1 PFchapter1section2 PFchapter1section3 PFAppendixIII MatrixGroups
+open PFchapter1section1 PFchapter1section2 PFchapter1section3 PFAppendixIII
+  _root_.BenderSuzuki.MatrixGroups
 open scoped LinearAlgebra.Projectivization
 
 universe u v
@@ -128,7 +129,7 @@ private theorem exists_canonical_maps
     intro y hy
     let QH : Subgroup H := Q.subgroupOf H
     let DH : Subgroup H := D.subgroupOf H
-    haveI : QH.Normal := by
+    have : QH.Normal := by
       simpa [QH] using hA1.Q_normal_in_H
     have hsupH : QH ⊔ DH = ⊤ := by
       rw [← Subgroup.subgroupOf_sup (A := Q) (A' := D) (B := H)
@@ -618,7 +619,7 @@ public theorem suzuki
               (psl2GeneratedSubgroup Q0 K tL : Set L) from rfl,
             hlemma.1]
           ext x
-          simp only [q0KUnionQ0KtQ0, Set.mem_setOf_eq, Set.mem_union]
+          simp only [q0KUnionQ0KtQ0, Set.mem_ofPred_eq, Set.mem_union]
           constructor
           · rintro (⟨q, k, hq, hk, hx⟩ | ⟨q, k, q', hq, hk, hq', hx⟩)
             · left

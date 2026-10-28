@@ -10,6 +10,7 @@ import GorensteinWalter.KleinFourMapInjective
 import GorensteinWalter.CentralizerSup
 import Mathlib.Tactic
 
+
 /-! # Fixed points on the A7 Klein four -/
 
 noncomputable section

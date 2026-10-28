@@ -2,6 +2,7 @@ module
 
 public import FeitThompson.ChiefFactors.Core
 
+
 /-!
 # Minimal normal p-subgroups are elementary abelian at the same prime
 -/

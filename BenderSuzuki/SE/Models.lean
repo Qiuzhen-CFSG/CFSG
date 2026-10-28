@@ -26,7 +26,7 @@ namespace BenderSuzuki
 
 open scoped IsMulCommutative
 
-open PFAppendixIII MatrixGroups
+open PFAppendixIII _root_.BenderSuzuki.MatrixGroups
 
 universe u v
 
@@ -135,8 +135,8 @@ public theorem isSimple {G : Type u} [Group G] [Finite G]
     have hmodel : IsSimpleGroup (SuzukiMatrixGroup n) :=
       (External.huppert_blackburn_XI_3_6 n (Nat.pos_of_ne_zero hn0)).1
     exact e.some.isSimpleGroup_congr.mpr hmodel
-  · letI : Field E := hEfield
-    letI : Finite E := hEfinite
+  · let : Field E := hEfield
+    let : Finite E := hEfinite
     have hqgt : 2 < 2 ^ n := by
       change 2 ^ 1 < 2 ^ n
       exact Nat.pow_lt_pow_right (by omega) (by omega)
@@ -149,10 +149,10 @@ public theorem not_commutative {G : Type u} [Group G] [Finite G]
     (hG : IsSimpleBenderGroup G) :
     ¬ ∀ x y : G, x * y = y * x := by
   intro hcomm
-  letI : IsMulCommutative G :=
+  let : IsMulCommutative G :=
     IsMulCommutative.mk (Std.Commutative.mk hcomm)
-  letI : CommGroup G := IsMulCommutative.instCommGroup
-  letI : IsSimpleGroup G := hG.isSimple
+  let : CommGroup G := IsMulCommutative.instCommGroup
+  let : IsSimpleGroup G := hG.isSimple
   have hprime : (Nat.card G).Prime := IsSimpleGroup.prime_card
   rcases hG with ⟨⟨n, hn, e⟩⟩ | ⟨⟨m, hm, e⟩⟩ |
       ⟨⟨n, hn, E, hEfield, hEfinite, J, hJ, hEcard, hfixedCard, e⟩⟩
@@ -211,8 +211,8 @@ public theorem not_commutative {G : Type u} [Group G] [Finite G]
       Nat.card_congr e.some.toEquiv
     rw [hcardG] at hprime
     exact hnotprime hprime
-  · letI : Field E := hEfield
-    letI : Finite E := hEfinite
+  · let : Field E := hEfield
+    let : Finite E := hEfinite
     let q := 2 ^ n
     rcases External.huppert_II_10_12 J q (by simpa [q] using hEcard)
         (by simpa [q] using hfixedCard) hJ with

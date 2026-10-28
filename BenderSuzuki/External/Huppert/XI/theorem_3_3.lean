@@ -473,10 +473,10 @@ private theorem suzukiRoot_smul_finite
       Matrix.mulVec, dotProduct, Fin.sum_univ_four,
       hpow, hpow_one, hpow_two, map_add, map_mul, hpi_sq,
       CharTwo.add_self_eq_zero]
-  linear_combination
-    (x ^ 2 * pi a + 2 * x * a * pi a + x * a * pi x +
-      a ^ 2 * pi a + a ^ 2 * pi x) * htwo
-  ring
+  · linear_combination
+      (x ^ 2 * pi a + 2 * x * a * pi a + x * a * pi x +
+        a ^ 2 * pi a + a ^ 2 * pi x) * htwo
+  · ring
 
 /-- Every Suzuki torus element fixes the distinguished point at infinity. -/
 public theorem suzukiTorus_smul_infinity
@@ -990,6 +990,7 @@ private theorem suzukiOvoid_two_transitive
   · rw [hcomp, hg₁b, hback_d]
 
 set_option maxHeartbeats 2000000 in
+-- Expanding the finite-point coordinates needs additional algebra heartbeats.
 /-- The Suzuki root closure acts regularly on the finite part of the ovoid.
 
 The finite-point coordinates make this explicit: a root element with
@@ -1278,9 +1279,11 @@ private theorem suzukiMatrixGroup_faithful_on_ovoid
   have hf_1 := congrFun hf (1 : Fin 4)
   have hf_2 := congrFun hf (2 : Fin 4)
   have hf_3 := congrFun hf (3 : Fin 4)
-  simp [e0, e3, v01, v10, v11,
-    Matrix.mulVec,
-    dotProduct, Fin.sum_univ_four] at hc0_0 hc0_1 hc0_2 hc0_3 hc3_0 hc3_1 hc3_2 hc3_3 hd_0 hd_1 hd_2 hd_3 he_0 he_1 he_2 he_3 hf_0 hf_1 hf_2 hf_3
+  simp [e0, Matrix.mulVec, dotProduct, Fin.sum_univ_four] at hc0_0 hc0_1 hc0_2 hc0_3
+  simp [e3, Matrix.mulVec, dotProduct, Fin.sum_univ_four] at hc3_0 hc3_1 hc3_2 hc3_3
+  simp [v01, Matrix.mulVec, dotProduct, Fin.sum_univ_four] at hd_0 hd_1 hd_2 hd_3
+  simp [v10, Matrix.mulVec, dotProduct, Fin.sum_univ_four] at he_0 he_1 he_2 he_3
+  simp [v11, Matrix.mulVec, dotProduct, Fin.sum_univ_four] at hf_0 hf_1 hf_2 hf_3
   have hA10 : A 1 0 = 0 := hc0_1.symm
   have hA20 : A 2 0 = 0 := hc0_2.symm
   have hA30 : A 3 0 = 0 := hc0_3.symm
@@ -1586,7 +1589,8 @@ private theorem suzukiOvoid_stabilizer_fix_standard_is_torus
   have hc3_1 := congrFun hc3 (1 : Fin 4)
   have hc3_2 := congrFun hc3 (2 : Fin 4)
   have hc3_3 := congrFun hc3 (3 : Fin 4)
-  simp [e0, e3, Matrix.mulVec, dotProduct, Fin.sum_univ_four] at hc0_0 hc0_1 hc0_2 hc0_3 hc3_0 hc3_1 hc3_2 hc3_3
+  simp [e0, Matrix.mulVec, dotProduct, Fin.sum_univ_four] at hc0_0 hc0_1 hc0_2 hc0_3
+  simp [e3, Matrix.mulVec, dotProduct, Fin.sum_univ_four] at hc3_0 hc3_1 hc3_2 hc3_3
   have hA00 : A 0 0 = c0 := hc0_0.symm
   have hA10 : A 1 0 = 0 := hc0_1.symm
   have hA20 : A 2 0 = 0 := hc0_2.symm
@@ -1894,6 +1898,7 @@ private theorem suzukiBruhat_torus_powers
     _ = n⁻¹ := by rw [mul_inv_cancel₀ hpin, inv_mul_cancel₀ hn]; simp
 
 set_option maxHeartbeats 800000 in
+-- The root/Weyl matrix identity needs additional normalization heartbeats.
 /-- The nontrivial root/Weyl Gauss relation underlying the rank-one Suzuki
 Bruhat decomposition. -/
 public theorem suzukiWeyl_root_weyl_bruhat
@@ -2953,7 +2958,7 @@ private theorem suzukiMatrixGroup_card
       LinearMap.GeneralLinearGroup K (Fin 4 → K) :=
     Matrix.GeneralLinearGroup.toLin.toMonoidHom.comp
       (SuzukiMatrixGroup m).subtype
-  letI : MulAction (SuzukiMatrixGroup m) (ℙ K (Fin 4 → K)) :=
+  let : MulAction (SuzukiMatrixGroup m) (ℙ K (Fin 4 → K)) :=
     MulAction.compHom (ℙ K (Fin 4 → K)) rho
   let Omega : SubMulAction (SuzukiMatrixGroup m) (ℙ K (Fin 4 → K)) :=
     { carrier := O

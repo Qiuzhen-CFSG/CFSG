@@ -4,6 +4,7 @@ public import GorensteinWalter.Defs
 import GorensteinWalter.Section1
 import GorensteinWalter.Section2.Bender1970_18
 
+
 /-! # Normality of the centralizer setup's Fitting subgroup -/
 
 namespace GorensteinWalter

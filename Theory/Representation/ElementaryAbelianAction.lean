@@ -1,9 +1,11 @@
 module
 
 public import Mathlib.RepresentationTheory.Invariants
+public import Theory.ElementaryAbelian.Basic
+public import Theory.ElementaryAbelian.VectorSpace
+public import Theory.GroupAction.Defs
 
-public import FeitThompson.ElementaryAbelian
-public import FeitThompson.GroupAction.Defs
+@[expose] public section
 
 open scoped IsMulCommutative
 
@@ -14,22 +16,25 @@ An elementary abelian `p`-group is canonically a `ZMod p`-module after passing t
 `Additive`. Any action by group automorphisms is therefore linear over `ZMod p`.
 -/
 
-namespace Theory.Representation
+namespace Representation
 
 open _root_.Representation
 
-variable {A G : Type*} [Group A] [Group G] {p : ℕ} [Fact p.Prime]
 
 /-- The `ZMod p` representation associated to an action by automorphisms on an elementary abelian
 `p`-group. -/
-public noncomputable def ofElementaryAbelianAction [IsElementaryAbelian p G]
-    [MulDistribMulAction A G] : Representation (ZMod p) A (Additive G) where
+noncomputable def ofElementaryAbelianAction
+    {A G : Type*} [Group A] [Group G] {p : ℕ} [Fact p.Prime]
+    [IsElementaryAbelian p G]
+    [MulDistribMulAction A G]
+    : Representation (ZMod p) A (Additive G) where
   toFun a :=
     let eAdd : Additive G ≃+ Additive G :=
       MulEquiv.toAdditive (MulDistribMulAction.toMulAut A G a)
     let eLin : Additive G ≃ₗ[ZMod p] Additive G :=
-      eAdd.toLinearEquiv (fun c x => by
-        simpa using (ZMod.map_smul eAdd.toAddMonoidHom c x))
+      eAdd.toLinearEquiv
+        (fun c x => by
+          simpa using (ZMod.map_smul eAdd.toAddMonoidHom c x))
     eLin.toLinearMap
   map_one' := by
     ext x
@@ -42,25 +47,28 @@ public noncomputable def ofElementaryAbelianAction [IsElementaryAbelian p G]
     simp [MulDistribMulAction.toMulAut, smul_smul]
 
 @[simp]
-public theorem ofElementaryAbelianAction_apply [IsElementaryAbelian p G]
-    [MulDistribMulAction A G] (a : A) (x : Additive G) :
-    ofElementaryAbelianAction (A := A) (G := G) (p := p) a x =
-      Additive.ofMul (a • Additive.toMul x) := by
+theorem ofElementaryAbelianAction_apply {A G : Type*} [Group A] [Group G] {p : ℕ}
+    [Fact p.Prime] [IsElementaryAbelian p G]
+    [MulDistribMulAction A G] (a : A) (x : Additive G)
+    : ofElementaryAbelianAction (A := A) (G := G) (p := p) a x
+      = Additive.ofMul (a • Additive.toMul x) := by
   rfl
 
 @[simp]
-public theorem ofElementaryAbelianAction_apply_ofMul [IsElementaryAbelian p G]
-    [MulDistribMulAction A G] (a : A) (x : G) :
-    ofElementaryAbelianAction (A := A) (G := G) (p := p) a (Additive.ofMul x) =
-      Additive.ofMul (a • x) := by
+theorem ofElementaryAbelianAction_apply_ofMul {A G : Type*} [Group A] [Group G] {p : ℕ}
+    [Fact p.Prime] [IsElementaryAbelian p G]
+    [MulDistribMulAction A G] (a : A) (x : G)
+    : ofElementaryAbelianAction (A := A) (G := G) (p := p) a (Additive.ofMul x)
+      = Additive.ofMul (a • x) := by
   rfl
 
 /-- The kernel of the linear representation is the subgroup acting trivially on the elementary
 abelian group. -/
-public theorem ker_ofElementaryAbelianAction_eq_fixingSubgroup [IsElementaryAbelian p G]
-    [MulDistribMulAction A G] :
-    (ofElementaryAbelianAction (A := A) (G := G) (p := p)).ker =
-      fixingSubgroupOf A G (Set.univ : Set G) := by
+theorem ker_ofElementaryAbelianAction_eq_fixingSubgroup {A G : Type*} [Group A] [Group G]
+    {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p G]
+    [MulDistribMulAction A G]
+    : (ofElementaryAbelianAction (A := A) (G := G) (p := p)).ker
+      = fixingSubgroup (M := A) (α := G) (Set.univ : Set G) := by
   ext a
   rw [MonoidHom.mem_ker]
   constructor
@@ -80,5 +88,4 @@ public theorem ker_ofElementaryAbelianAction_eq_fixingSubgroup [IsElementaryAbel
         (Additive.toMul x) (Set.mem_univ _)
     simp [hfix]
 
-
-end Theory.Representation
+end Representation

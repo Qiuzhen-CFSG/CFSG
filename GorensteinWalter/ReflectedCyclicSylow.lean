@@ -46,7 +46,10 @@ public theorem exists_dihedral_two_subgroup_of_cyclic_reflection
     · intro x hx
       have hxmap : (x : G) ∈
           (Subgroup.zpowers ρ ⊔ Subgroup.zpowers σ).map D.subtype := by
-        simpa [Subgroup.map_sup, MonoidHom.map_zpowers, ρ, σ, D, hrgen] using x.2
+        rw [Subgroup.map_sup, MonoidHom.map_zpowers, MonoidHom.map_zpowers]
+        change (x : G) ∈ Subgroup.zpowers r ⊔ Subgroup.zpowers w
+        rw [hrgen]
+        exact x.2
       rcases Subgroup.mem_map.mp hxmap with ⟨y, hy, hyx⟩
       have hyx' : y = x := Subtype.ext hyx
       exact hyx' ▸ hy

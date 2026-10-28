@@ -16,6 +16,8 @@ namespace PFAppendixIII
 
 universe u
 
+-- The explicit `Fintype` binder is retained for public API compatibility.
+set_option linter.unusedFintypeInType false in
 /-- Appendix III, Lemma 2(a): field automorphisms form an F-basis of the
 F₂-linear endomorphisms of F. -/
 public theorem lemma2a_fieldAutomorphisms_basis_linearMaps
@@ -35,7 +37,7 @@ public theorem lemma2a_fieldAutomorphisms_basis_linearMaps
     intro sigma tau h
     ext x
     exact DFunLike.congr_fun h x
-  letI : Fintype (F ≃+* F) :=
+  let : Fintype (F ≃+* F) :=
     Fintype.ofInjective autToAlgHom hautToAlgHom_injective
   have hautToAlgHom_surjective : Function.Surjective autToAlgHom := by
     intro phi
@@ -71,6 +73,8 @@ public theorem lemma2a_fieldAutomorphisms_basis_linearMaps
   rw [hb]
   rfl
 
+-- The explicit `Fintype` binder is retained for public API compatibility.
+set_option linter.unusedFintypeInType false in
 /-- Appendix III, Lemma 2(b): the products sigma(x) tau(y) form an F-basis
 of the F₂-bilinear maps F × F -> F. -/
 public theorem lemma2b_fieldAutomorphism_products_basis_bilinearMaps
@@ -93,9 +97,9 @@ public theorem lemma2b_fieldAutomorphism_products_basis_bilinearMaps
     intro sigma tau h
     ext x
     exact DFunLike.congr_fun h x
-  letI : Finite (F ≃+* F) :=
+  let : Finite (F ≃+* F) :=
     Finite.of_injective autToAlgHom hautToAlgHom_injective
-  letI : Fintype (F ≃+* F) := Fintype.ofFinite _
+  let : Fintype (F ≃+* F) := Fintype.ofFinite _
   obtain ⟨autBasis, hAutBasis⟩ :=
     lemma2a_fieldAutomorphisms_basis_linearMaps F
   let bilinear : (F ≃+* F) × (F ≃+* F) →
@@ -224,6 +228,8 @@ public theorem lemma2b_fieldAutomorphism_products_basis_bilinearMaps
   intro sigma tau x y
   rw [hb]
   exact hbilinear_eval sigma tau x y
+-- The explicit `Fintype` binder is retained for public API compatibility.
+set_option linter.unusedFintypeInType false in
 /-- Appendix III, Lemma 2(c): the monomials sigma(x) tau(x), indexed by the
 one- and two-element subsets of Aut(F), form an F-basis of the quadratic maps.
 A singleton index represents the diagonal monomial `sigma(x)^2`. -/
@@ -237,13 +243,13 @@ public theorem lemma2c_fieldAutomorphism_products_basis_quadraticMaps
           (∏ sigma ∈ s.1, sigma x) ^ 2
         else ∏ sigma ∈ s.1, sigma x := by
   classical
-  letI : Fintype (F ≃+* F) :=
+  let : Fintype (F ≃+* F) :=
     Fintype.ofInjective (fun sigma : F ≃+* F => (sigma : F → F)) (by
       intro sigma tau h
       ext x
       exact congrFun h x)
   let I := {s : Finset (F ≃+* F) // s.card = 1 ∨ s.card = 2}
-  letI : Fintype I := Fintype.ofFinite I
+  let : Fintype I := Fintype.ofFinite I
   obtain ⟨bilinBasis, hBilinBasis⟩ :=
     lemma2b_fieldAutomorphism_products_basis_bilinearMaps F
   let diag : (F →ₗ[ZMod 2] F →ₗ[ZMod 2] F) →ₗ[F]
@@ -483,6 +489,5 @@ public theorem lemma2c_fieldAutomorphism_products_basis_quadraticMaps
 
 end PFAppendixIII
 end BenderSuzuki
-
 
 

@@ -27,6 +27,7 @@ public import Mathlib.Tactic
 
 import Glauberman.InvolvedQuotient
 
+
 noncomputable section
 
 open Matrix
@@ -783,10 +784,10 @@ smaller subquotient of the chosen group is then `p`-stable. -/
 private theorem exists_minimal_bad_subquotient {p : ℕ} [Fact p.Prime]
     {G : Type*} [Group G] [Finite G]
     (hbad : ∃ (K : Subgroup G) (N : Subgroup K) (hN : N.Normal),
-      letI : N.Normal := hN
+      let : N.Normal := hN
       ¬ pStable p (K ⧸ N)) :
     ∃ (K : Subgroup G) (N : Subgroup K) (hN : N.Normal),
-      letI : N.Normal := hN
+      let : N.Normal := hN
       ¬ pStable p (K ⧸ N) ∧
         ∀ (A : Subgroup (K ⧸ N)) (B : Subgroup A) [B.Normal],
           Nat.card (A ⧸ B) < Nat.card (K ⧸ N) → pStable p (A ⧸ B) := by
@@ -835,7 +836,7 @@ and subgroup witnesses. -/
 public theorem qd_involved_of_not_pStable_subquotient {p : ℕ} [Fact p.Prime]
     (hpodd : p ≠ 2) {G : Type*} [Group G] [Finite G] :
     (∃ (K : Subgroup G) (N : Subgroup K) (hN : N.Normal),
-        letI : N.Normal := hN
+        let : N.Normal := hN
         ¬ pStable p (K ⧸ N)) →
       Involved (Qd p) G := by
   intro hbad
@@ -877,19 +878,5 @@ public theorem lemma6_3 {p : ℕ} [Fact p.Prime] (hpodd : p ≠ 2) {G : Type*} [
     have hstab : pStable p (K ⧸ N) := hb K N
     have hqd : pStable p (Qd p) := (pStable_iso (G := K ⧸ N) (G' := Qd p) e).1 hstab
     exact qd_not_pStable hpodd hqd
-
--- Axiom audit: the minimal-counterexample implication, Lemma 6.2 application,
--- `qd_not_pStable`, and the isomorphism/involvement plumbing are all sorry-free.
--- The exported theorem chain uses only `propext`, `Classical.choice`, and `Quot.sound`.
-#print axioms qd_not_pStable
-#print axioms lemma6_2_application
-#print axioms qd_involved_of_not_pStable_subquotient
-#print axioms lemma6_3
-#print axioms pStable_iso
-#print axioms pStableLocal_iso
-#print axioms Involved_iff_of_mulEquiv
-#print axioms involved_self
-#print axioms involved_of_subgroup
-#print axioms involved_of_involved_subgroup
 
 end Glauberman

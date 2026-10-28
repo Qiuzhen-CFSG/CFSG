@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section4.SecondCaseA7UInterMCardExactUnconditional
 import Mathlib.Tactic
 
+
 /-!
 # An order-three witness in the alternating second-case intersection
 
@@ -30,7 +31,7 @@ public theorem secondCase_a7_u_inter_m_exists_order_three
   classical
   let M : Subgroup G := w.M
   let O : Subgroup M := pPrimeCore 2 M
-  letI : O.Normal := by
+  let : O.Normal := by
     dsimp [O]
     infer_instance
   let q : M →* M ⧸ O := QuotientGroup.mk' O
