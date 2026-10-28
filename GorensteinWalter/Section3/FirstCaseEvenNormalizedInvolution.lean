@@ -91,7 +91,7 @@ public theorem exists_centralizing_involution_of_even_normalized
     have hba : b = a := by
       calc
         b = 1 * b := by simp
-        _ = (a * b) * b := by simpa [hw]
+        _ = (a * b) * b := by simp [hw]
         _ = a * (b * b) := by simp [mul_assoc]
         _ = a := by rw [hb2]; simp
     have hfix : y * a * y⁻¹ = a := by simpa [b, bD, hba]
@@ -128,4 +128,3 @@ public theorem exists_centralizing_involution_of_even_normalized
 
 
 end GorensteinWalter
-

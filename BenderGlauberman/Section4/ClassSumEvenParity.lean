@@ -16,7 +16,6 @@ noncomputable section
 
 namespace BenderGlauberman
 
-open Theory.Character
 
 attribute [local instance] Fintype.ofFinite
 
@@ -29,7 +28,7 @@ public theorem classSumScalar_congruent_zero_of_odd_degree_and_even_class
     (hdegree : Odd (Module.finrank ℂ V))
     (hclass : Even (Nat.card (ConjClasses.mk g).carrier)) :
     CongruentModTwo
-      (Theory.Character.classSumScalar (ρ := rho) (ConjClasses.mk g)) 0 := by
+      (classSumScalar (ρ := rho) (ConjClasses.mk g)) 0 := by
   classical
   let s : ℂ := classSumScalar (ρ := rho) (ConjClasses.mk g)
   let n : ℕ := Module.finrank ℂ V

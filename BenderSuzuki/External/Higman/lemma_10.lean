@@ -16,6 +16,7 @@ namespace Higman
 universe u
 
 set_option maxHeartbeats 800000 in
+-- The Chevalley--Warning dimension argument needs additional algebra heartbeats.
 /-- A quadratic map of binary vector spaces has a nonzero zero whenever the
 source dimension is larger than twice the target dimension. This is the
 Chevalley--Warning core used in Higman's Lemma 10. -/
@@ -155,10 +156,12 @@ public theorem lemma10_exists_nonzero_quadratic_zero
     have halpha_basis : alphaOf x = ∑ j, x j • bV j := by
       simp [alphaOf]
     rw [hq_eq, halpha_basis]
-    simp [f, map_sum, smul_eq_mul, mul_comm, mul_left_comm]
+    simp only [f, map_sum, map_smul, LinearMap.coe_sum, LinearMap.coe_smul,
+      Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
     apply Finset.sum_congr rfl
     intro j _hj
     rw [Finset.mul_sum]
+    simp [mul_comm, mul_left_comm]
   have hnonzero_solution :
       ∃ x : Fin (Module.finrank (ZMod 2) V) → ZMod 2,
         x ≠ 0 ∧ ∀ i, MvPolynomial.eval x (f i) = 0 := by
@@ -193,7 +196,7 @@ public theorem lemma10_exists_nonzero_quadratic_zero
     have hcard_gt_one : 1 < Nat.card S := by
       obtain ⟨N, hN⟩ := hdiv
       omega
-    letI : Nontrivial S :=
+    let : Nontrivial S :=
       Finite.one_lt_card_iff_nontrivial.mp hcard_gt_one
     obtain ⟨w, hw⟩ := exists_ne z
     refine ⟨w.1, ?_, w.2⟩

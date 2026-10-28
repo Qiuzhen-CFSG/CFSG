@@ -212,11 +212,11 @@ public theorem hypothesis2_of_subset {G : Type u} [Group G] [Finite G]
 
 @[expose] public def virtualCharacterOn {G : Type u} [Group G] [Finite G]
     (L : Subgroup G) [Finite L] (A : Set G) (α : Section1.ClassFunction L) : Prop :=
-  Theory.Character.IsVirtualCharacter α ∧ ∀ l : L, (l : G) ∉ A → α l = 0
+  IsVirtualCharacter α ∧ ∀ l : L, (l : G) ∉ A → α l = 0
 
 @[expose] public def virtualCharacterOfG {G : Type u} [Group G] [Finite G]
     (χ : Section1.ClassFunction G) : Prop :=
-  Theory.Character.IsVirtualCharacter χ
+  IsVirtualCharacter χ
 
 @[expose] public def dadeSupport {G : Type u} [Group G]
     (A : Set G) (H : G → Subgroup G) : Set G :=

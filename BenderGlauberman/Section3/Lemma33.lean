@@ -10,9 +10,10 @@ public import BenderGlauberman.Section3.Theorem32
 public import BenderGlauberman.Lemma19
 import all BenderGlauberman.Lemma19
 public import BenderGlauberman.ClassFunction
-import FeitThompson.SubgroupConjAction
+import Theory.GroupAction.SubgroupConjugation
 public import Theory.Character.Divisibility
 public import GorensteinWalter.Defs
+
 
 /-!
 # Bender--Glauberman: Section 3 — Lemma 3.3
@@ -30,9 +31,8 @@ open scoped Pointwise
 namespace BenderGlauberman
 
 open GorensteinWalter
-open Theory.Character
 
--- Local instances matching `Theory.Character`'s subgroup-sum convention; see
+-- Local instances matching `Character`'s subgroup-sum convention; see
 -- `BenderGlauberman/ClassFunction.lean`.
 attribute [local instance] Fintype.ofFinite
 attribute [local instance] Classical.propDecidable
@@ -180,7 +180,7 @@ private lemma theta_pair_scalar_H0 (c : Hyp11 G) (h12 : Hyp12 c)
         rw [hx]
       rw [h1, h2]
     rw [hθ₁, hθ₂]
-    simp [map_add, add_mul, mul_add, mul_assoc, mul_left_comm, mul_comm]
+    simp [add_mul, mul_add]
     ring
   change (Nat.card (↥c.H0) : ℂ)⁻¹ * (∑ y : ↥c.H0,
       (inducedFromSub (h12.H0_normal_in_H).1 ν₁) ⟨(y : G), (h12.H0_normal_in_H).1 y.2⟩ *
@@ -191,8 +191,7 @@ private lemma theta_pair_scalar_H0 (c : Hyp11 G) (h12 : Hyp12 c)
 set_option maxHeartbeats 20000000 in
 private lemma theta_pair_scalar_H (c : Hyp11 G) (h12 : Hyp12 c)
     (hH0index : (c.H0.subgroupOf c.H).index = 2)
-    {ν₁ ν₂ : ClassFunction (↥c.H0)} (hν₁ : IsIrreducibleCharacter ν₁)
-    (hν₂ : IsIrreducibleCharacter ν₂) :
+    (ν₁ ν₂ : ClassFunction (↥c.H0)) :
     scalarProduct (↥c.H) (inducedFromSub (h12.H0_normal_in_H).1 ν₁)
         (inducedFromSub (h12.H0_normal_in_H).1 ν₂) =
       (2 : ℂ)⁻¹ * scalarProduct (↥c.H0)
@@ -302,7 +301,7 @@ private lemma theta_pair_scalar_H' (c : Hyp11 G) (h12 : Hyp12 c)
         scalarProduct (↥c.H0) (conjChar c.H0 (s_normalizes_H0 c h12) ν₁)
           (conjChar c.H0 (s_normalizes_H0 c h12) ν₂)) := by
   classical
-  rw [theta_pair_scalar_H c h12 hH0index hν₁ hν₂]
+  rw [theta_pair_scalar_H c h12 hH0index ν₁ ν₂]
   rw [theta_pair_scalar_H0 c h12 hH0index hν₁ hν₂]
 
 private lemma theta_norm (c : Hyp11 G) (h12 : Hyp12 c)
@@ -372,12 +371,12 @@ private lemma orbit_eq_of_mem (c : Hyp11 G) [Fintype ↥(LambdaHom c.H0 c.U)]
     refine Finset.mem_image.mpr ⟨l * l₀, Finset.mem_univ _, ?_⟩
     rw [← hEq₀]
     ext x
-    simp [LambdaChar, map_mul, mul_assoc]
+    simp [LambdaChar, mul_assoc]
   · intro hψ
     rcases (Finset.mem_image.mp hψ) with ⟨l, hl, rfl⟩
     refine Finset.mem_image.mpr ⟨l * l₀⁻¹, Finset.mem_univ _, ?_⟩
     ext x
-    simp [LambdaChar, map_mul, map_inv, Units.val_inv, mul_assoc]
+    simp [LambdaChar, mul_assoc]
     have hμx : μ x = (l₀.1 x : ℂ) * ν x := (congrFun hEq₀ x).symm
     rw [hμx]
     have hne : (l₀.1 x : ℂ) ≠ 0 := unit_val_ne_zero (l₀.1 x)
@@ -423,8 +422,6 @@ private lemma orbit_subset_conjChar (c : Hyp11 G) (h12 : Hyp12 c)
   rcases (Finset.mem_image.mp hμ) with ⟨l, hl, rfl⟩
   refine Finset.mem_image.mpr ⟨conjLambda c h12 l, Finset.mem_univ _, ?_⟩
   ext x
-  change (LambdaChar (conjLambda c h12 l).1 * conjChar c.H0 (s_normalizes_H0 c h12) ν) x =
-    (conjChar c.H0 (s_normalizes_H0 c h12) (LambdaChar l.1 * ν)) x
   simp [conjChar, conjLambda, LambdaChar]
 
 private lemma conjChar_conjChar (c : Hyp11 G) (h12 : Hyp12 c)
@@ -474,7 +471,7 @@ private lemma scalarProduct_star_comm' {G : Type u} [Group G] [Fintype G]
     star (scalarProduct G φ ψ) = scalarProduct G ψ φ := by
   classical
   unfold scalarProduct
-  simp [map_sum, map_mul, map_star, mul_comm, mul_left_comm, mul_assoc]
+  simp [mul_comm]
 
 private lemma theta_pair_orth (c : Hyp11 G) (h12 : Hyp12 c)
     (hH0index : (c.H0.subgroupOf c.H).index = 2)
@@ -1157,7 +1154,7 @@ private lemma fixed_orbit_delta_norm (c : Hyp11 G) (h12 : Hyp12 c)
   rw [theta_norm c h12 (H0_index c h12) ν.2]
   norm_num [hfix, hμs]
 
-private lemma fixed_orbit_delta_degree_zero (c : Hyp11 G) (h12 : Hyp12 c)
+private lemma fixed_orbit_delta_degree_zero (c : Hyp11 G)
     {ν : Irr (↥c.H0)} {μ : ClassFunction (↥c.H0)}
     (hμL : μ ∈ orbit c.H0 c.U ν.1) :
     inducedClassFunction c.H0 (μ - ν.1) 1 = 0 := by
@@ -1228,13 +1225,10 @@ private lemma fixed_orbit_delta_orthogonal (c : Hyp11 G) (h12 : Hyp12 c)
     {ν₁ ν₂ : Irr (↥c.H0)}
     (hν₁B : ν₁ ∈ BOf c h12 χ) (hν₂B : ν₂ ∈ BOf c h12 χ)
     (hν₁fix : conjChar c.H0 (s_normalizes_H0 c h12) ν₁.1 = ν₁.1)
-    (hν₂fix : conjChar c.H0 (s_normalizes_H0 c h12) ν₂.1 = ν₂.1)
     (hν₁ν₂ : ν₁ ≠ ν₂)
     {μ₁ μ₂ : ClassFunction (↥c.H0)}
     (hμ₁L : μ₁ ∈ orbit c.H0 c.U ν₁.1)
-    (hμ₂L : μ₂ ∈ orbit c.H0 c.U ν₂.1)
-    (hμ₁s : conjChar c.H0 (s_normalizes_H0 c h12) μ₁ ≠ μ₁)
-    (hμ₂s : conjChar c.H0 (s_normalizes_H0 c h12) μ₂ ≠ μ₂) :
+    (hμ₂L : μ₂ ∈ orbit c.H0 c.U ν₂.1) :
     scalarProduct G (inducedClassFunction c.H0 (μ₁ - ν₁.1))
         (inducedClassFunction c.H0 (μ₂ - ν₂.1)) = 0 := by
   classical
@@ -1511,7 +1505,7 @@ private lemma b_mem_fixedSubgroup' (c : Hyp11 G) {b : G} (hbB : b ∈ c.B) :
     have ht1S : t1S ∉ (c.S0 : Subgroup G).subgroupOf (c.S : Subgroup G) := by
       exact fun h => c.t1_not_mem_S0 (Subgroup.mem_subgroupOf.mp h)
     have hmul : aS * t1S ∈ (c.S0 : Subgroup G).subgroupOf (c.S : Subgroup G) := by
-      exact (Subgroup.mul_mem_iff_of_index_two (S0_index c)).2 (by simpa [haS, ht1S])
+      exact (Subgroup.mul_mem_iff_of_index_two (S0_index c)).2 (by simp [haS, ht1S])
     have hrS0 : (a : G) * c.t1 ∈ (c.S0 : Subgroup G) := by
       simpa [aS, t1S, Subgroup.coe_mul] using (Subgroup.mem_subgroupOf.mp hmul)
     rcases (Subgroup.mem_zpowers_iff.mp (by simpa [c.S0_eq_zpowers] using hrS0)) with
@@ -1693,7 +1687,7 @@ private lemma fixed_full_orbit_restrict (c : Hyp11 G) (h12 : Hyp12 c) (hSC : Sec
     intro hle
     exact (orbitOfAlpha_fixed_iff c h12 hSC α).1 hfixorb hle
   have hstab : stabilizerS c α = (c.S : Subgroup G) := by
-    rcases (stabilizerS_not_le_S0_iff c h12 hSC α).1 hnotle with h | h
+    rcases (stabilizerS_not_le_S0_iff c hSC α).1 hnotle with h | h
     · exact h.2
     · exfalso
       omega
@@ -1767,8 +1761,8 @@ private lemma odd_degree_one (c : Hyp11 G) (α : Irr (↥c.U)) :
     ∃ d : ℕ, Odd d ∧ (d : ℂ) = α.1 (1 : ↥c.U) := by
   exact irr_degree_odd (U_coprime_two c) α
 
+omit [Fintype G] in
 private lemma chi_one_half_int_of_congruence {ν₁₁ ν₂₁ : ℂ} (χ : ClassFunction G)
-    (hχ : IsPMIrr G χ)
     (hχ1 : ∃ m : ℤ, (χ 1 : ℂ) = (m : ℂ))
     (hcong : CongruentModTwo (χ 1) (ν₁₁ + ν₂₁))
     (hν₁₁ : ∃ a₁ : ℤ, (ν₁₁ : ℂ) = (a₁ : ℂ))
@@ -1814,7 +1808,7 @@ private lemma chi_one_half_int_of_congruence {ν₁₁ ν₂₁ : ℂ} (χ : Cla
   norm_num
 
 private lemma not_F_congruent_zero_on_B (c : Hyp11 G) (h12 : Hyp12 c) (hSC : Section3Hyp c)
-    {χ : ClassFunction G} (hχ : IsPMIrr G χ)
+    {χ : ClassFunction G}
     (hBOfle : (BOf c h12 χ).card ≤ 3)
     {ν : Irr (↥c.H0)} (hνB : ν ∈ BOf c h12 χ) (hνnotF : ν ∉ F c h12 χ)
     {ν₁ ν₂ : Irr (↥c.H0)}
@@ -1954,7 +1948,7 @@ private lemma chi_congruent_sum_two_on_B (c : Hyp11 G) (h12 : Hyp12 c) (hSC : Se
     intro ν hν
     by_cases hF : ν ∈ F c h12 χ
     · simpa [hF] using CongruentModTwo.refl (ν.1 ⟨(b.1.1 : G), hbH0⟩)
-    · have hz := not_F_congruent_zero_on_B c h12 hSC hχ hBOfle hν hF hν₁F hν₂F hν₁ν₂ b.1 b.2 hbH0
+    · have hz := not_F_congruent_zero_on_B c h12 hSC hBOfle hν hF hν₁F hν₂F hν₁ν₂ b.1 b.2 hbH0
       simp [hF, hz]
   have hsum1 : CongruentModTwo (∑ ν ∈ BOf c h12 χ, ν.1 ⟨(b.1.1 : G), hbH0⟩)
       (∑ ν ∈ BOf c h12 χ, if ν ∈ F c h12 χ then ν.1 ⟨(b.1.1 : G), hbH0⟩ else 0) := by
@@ -2137,7 +2131,7 @@ private lemma exists_not_congruent_zero_on_B (c : Hyp11 G) (h12 : Hyp12 c) (hSC 
         · intro hEq
           apply hβne
           have hβi : β i = β₁.1 := by simp [β, hi]
-          have hβj : β j = β₂.1 := by simp [β, hj, hmem, hν₁ν₂.symm]
+          have hβj : β j = β₂.1 := by simp [β, hmem, hν₁ν₂.symm]
           rw [hβi, hβj] at hEq
           exact Subtype.ext hEq
     · by_cases hj : j.1 = ν₁
@@ -2149,7 +2143,7 @@ private lemma exists_not_congruent_zero_on_B (c : Hyp11 G) (h12 : Hyp12 c) (hSC 
         · exact False.elim (hi hmem)
         · intro hEq
           apply hβne
-          have hβi : β i = β₂.1 := by simp [β, hi, hmem, hν₁ν₂.symm]
+          have hβi : β i = β₂.1 := by simp [β, hmem, hν₁ν₂.symm]
           have hβj : β j = β₁.1 := by simp [β, hj]
           rw [hβi, hβj] at hEq
           exact Subtype.ext hEq.symm
@@ -2187,7 +2181,7 @@ private lemma exists_not_congruent_zero_on_B (c : Hyp11 G) (h12 : Hyp12 c) (hSC 
         simp
     rw [huniv]
     rw [Finset.sum_pair (f := fun i : I => coef i * β i b)]
-    · simp [coef, β, hν₁ν₂, hν₁ν₂.symm]
+    · simp [coef, β, hν₁ν₂.symm]
     · intro hEq
       exact hν₁ν₂ (by simpa using congrArg Subtype.val hEq)
   have h0 : ∀ b : ↥(fixedSubgroup (c.S : Subgroup G) c.U),
@@ -2230,7 +2224,7 @@ private lemma not_exactly_two_fixed (c : Hyp11 G) (h12 : Hyp12 c) (hSC : Section
     have hb := hcongB (1 : ↥(fixedSubgroup (c.S : Subgroup G) c.U))
     simpa using hb
   have hhalf : ∃ k : ℤ, (χ 1 : ℂ) / 2 = (k : ℂ) :=
-    chi_one_half_int_of_congruence χ hχ hχ1int hcong1 (irr_one_int α₁) (irr_one_int α₂)
+    chi_one_half_int_of_congruence χ hχ1int hcong1 (irr_one_int α₁) (irr_one_int α₂)
       (odd_degree_one c α₁) (odd_degree_one c α₂)
   have hzero : ∀ b : ↥(fixedSubgroup (c.S : Subgroup G) c.U),
       CongruentModTwo (χ (b.1.1 : G)) 0 := by
@@ -2242,7 +2236,7 @@ private lemma not_exactly_two_fixed (c : Hyp11 G) (h12 : Hyp12 c) (hSC : Section
   exact hb (hzero b)
 
 private lemma not_three_fixed_of_S_ge_eight (c : Hyp11 G) (h12 : Hyp12 c)
-    (hSC : Section3Hyp c) {χ : ClassFunction G} (hχ : IsPMIrr G χ)
+    {χ : ClassFunction G} (hχ : IsPMIrr G χ)
     (hFcard : ((BOf c h12 χ).filter (fun ν : Irr (↥c.H0) =>
       conjChar c.H0 (s_normalizes_H0 c h12) ν.1 = ν.1 ∧
         (orbit c.H0 c.U ν.1).card = (c.U.subgroupOf c.H0).index)).card = 3)
@@ -2305,20 +2299,20 @@ private lemma not_three_fixed_of_S_ge_eight (c : Hyp11 G) (h12 : Hyp12 c)
   have hnorm₃ : normSq G δ₃ = 3 := by
     simpa [δ₃] using fixed_orbit_delta_norm c h12 hν₃fix hμ₃L hμ₃s
   have hdeg₁ : δ₁ 1 = 0 := by
-    simpa [δ₁] using fixed_orbit_delta_degree_zero c h12 hμ₁L
+    simpa [δ₁] using fixed_orbit_delta_degree_zero c hμ₁L
   have hdeg₂ : δ₂ 1 = 0 := by
-    simpa [δ₂] using fixed_orbit_delta_degree_zero c h12 hμ₂L
+    simpa [δ₂] using fixed_orbit_delta_degree_zero c hμ₂L
   have hdeg₃ : δ₃ 1 = 0 := by
-    simpa [δ₃] using fixed_orbit_delta_degree_zero c h12 hμ₃L
+    simpa [δ₃] using fixed_orbit_delta_degree_zero c hμ₃L
   have hpair₁ := fixed_orbit_delta_pairing c h12 hχ hν₁B hν₁fix hμ₁L hμ₁s
   have hpair₂ := fixed_orbit_delta_pairing c h12 hχ hν₂B hν₂fix hμ₂L hμ₂s
   have hpair₃ := fixed_orbit_delta_pairing c h12 hχ hν₃B hν₃fix hμ₃L hμ₃s
-  have horth₁₂ := fixed_orbit_delta_orthogonal c h12 hχ hν₁B hν₂B hν₁fix hν₂fix h12ne
-    hμ₁L hμ₂L hμ₁s hμ₂s
-  have horth₁₃ := fixed_orbit_delta_orthogonal c h12 hχ hν₁B hν₃B hν₁fix hν₃fix h13ne
-    hμ₁L hμ₃L hμ₁s hμ₃s
-  have horth₂₃ := fixed_orbit_delta_orthogonal c h12 hχ hν₂B hν₃B hν₂fix hν₃fix h23ne
-    hμ₂L hμ₃L hμ₂s hμ₃s
+  have horth₁₂ := fixed_orbit_delta_orthogonal c h12 hχ hν₁B hν₂B hν₁fix h12ne
+    hμ₁L hμ₂L
+  have horth₁₃ := fixed_orbit_delta_orthogonal c h12 hχ hν₁B hν₃B hν₁fix h13ne
+    hμ₁L hμ₃L
+  have horth₂₃ := fixed_orbit_delta_orthogonal c h12 hχ hν₂B hν₃B hν₂fix h23ne
+    hμ₂L hμ₃L
   have horth₂₁ : scalarProduct G δ₂ δ₁ = 0 := by
     apply star_inj.mp
     rw [scalarProduct_star_comm']
@@ -2373,7 +2367,7 @@ private lemma not_three_fixed_of_S_ge_eight (c : Hyp11 G) (h12 : Hyp12 c)
     have ha1s : a₁ * a₁ = 1 := by rcases ha₁ with h | h <;> simp [h]
     have ha2s : a₂ * a₂ = 1 := by rcases ha₂ with h | h <;> simp [h]
     have ha3s : a₃ * a₃ = 1 := by rcases ha₃ with h | h <;> simp [h]
-    simp [ha1star, ha2star, ha3star, ha1s, ha2s, ha3s]
+    simp [ha1star, ha2star, ha3star]
     ring_nf
     simp [pow_two, ha1s, ha2s, ha3s]
     norm_num
@@ -2461,7 +2455,7 @@ public theorem lemma_3_3 (c : Hyp11 G) (h12 : Hyp12 c) (hSC : Section3Hyp c)
         conjChar c.H0 (s_normalizes_H0 c h12) ν.1 = ν.1 ∧
           (orbit c.H0 c.U ν.1).card = (c.U.subgroupOf c.H0).index)).card = 3 := by
         simpa [F] using hFcard3
-      exact not_three_fixed_of_S_ge_eight c h12 hSC hχ hFcard3' hSge
+      exact not_three_fixed_of_S_ge_eight c h12 hχ hFcard3' hSge
 
 end Section3
 

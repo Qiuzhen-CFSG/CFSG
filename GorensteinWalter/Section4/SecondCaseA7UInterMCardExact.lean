@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section4.SecondCaseA7UInterMCardCases
 public import GorensteinWalter.Section4.SecondCaseA7UInterMCardThree
 
+
 /-!
 # Exact order-three endpoint for the odd intersection image
 

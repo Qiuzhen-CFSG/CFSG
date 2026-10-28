@@ -81,7 +81,7 @@ private theorem pgl_two_pretransitive (K : Type*) [Field K] [Finite K] :
               _ = (Matrix.GeneralLinearGroup.toLin.symm g) • v := by
                 rw [Matrix.GeneralLinearGroup.toLin_apply]
                 rfl
-          simpa only [hvact] }
+          simp only [hvact] }
   exact @MulAction.IsPretransitive.of_embedding _ _ _ _ _ _ _ _ q f (Fin 2)
     Function.surjective_id inferInstance
 

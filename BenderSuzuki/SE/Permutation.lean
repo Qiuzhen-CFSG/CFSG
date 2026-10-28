@@ -2,6 +2,7 @@ module
 
 public import BenderSuzuki.SE.Interfaces
 
+
 /-!
 # Permutation-group lemmas for Theorem SE
 
@@ -66,7 +67,7 @@ public theorem normalizerFixedPointAction_twoPretransitive
       normalizerFixedPointAction X Omega P
     MulAction.IsMultiplyPretransitive (Subgroup.normalizer (P : Set X))
       {omega : Omega // omega ∈ fixedPointsOfSubgroup X Omega P} 2 := by
-  letI : MulAction (Subgroup.normalizer (P : Set X))
+  let : MulAction (Subgroup.normalizer (P : Set X))
       {omega : Omega // omega ∈ fixedPointsOfSubgroup X Omega P} :=
     normalizerFixedPointAction X Omega P
   rw [MulAction.is_two_pretransitive_iff]
@@ -128,7 +129,7 @@ public theorem witt_normalizer_fixedPoint_transporter
           (MulAction.stabilizer G a).subtype : Subgroup G) : Set G),
       (n : G) • a = d := by
   classical
-  letI : Fact (Nat.Prime p) := ⟨hp⟩
+  let : Fact (Nat.Prime p) := ⟨hp⟩
   let D : Subgroup G := MulAction.stabilizer G a
   let P : Subgroup G := (S : Subgroup D).map D.subtype
   let Q : Subgroup G := P.map (MulAut.conj g⁻¹).toMonoidHom
@@ -212,7 +213,7 @@ public theorem witt_normalizer_pretransitive_core
     IsTransitiveOn (Subgroup.normalizer (P : Set G))
       (fixedPointsOfSubgroup G A P) := by
   classical
-  letI : Fact (Nat.Prime p) := ⟨hp⟩
+  let : Fact (Nat.Prime p) := ⟨hp⟩
   let D : Subgroup G := MulAction.stabilizer G a
   let P : Subgroup G := (S : Subgroup D).map D.subtype
   dsimp only
@@ -396,7 +397,7 @@ public theorem exists_larger_normalizer_pSubgroup
       IsPGroup p R₁ ∧ P < R₁ ∧ R₁ ≤ R ∧
         R₁ ≤ Subgroup.normalizer (P : Set G) := by
   classical
-  letI : Fact (Nat.Prime p) := ⟨hp⟩
+  let : Fact (Nat.Prime p) := ⟨hp⟩
   let PR : Subgroup R := P.subgroupOf R
   have hPRtop : PR < ⊤ := by
     rw [lt_top_iff_ne_top]
@@ -406,9 +407,9 @@ public theorem exists_larger_normalizer_pSubgroup
     let xR : R := ⟨x, hxR⟩
     have hxPR : xR ∈ PR := by rw [htop]; trivial
     exact hxPR
-  letI : Group.IsNilpotent R := hRp.isNilpotent
+  let : Group.IsNilpotent R := hRp.isNilpotent
   have hPRnorm : PR < Subgroup.normalizer (PR : Set R) :=
-    normalizerCondition_of_isNilpotent PR hPRtop
+    Group.normalizerCondition_of_isNilpotent PR hPRtop
   let NR : Subgroup R := Subgroup.normalizer (PR : Set R)
   let R₁ : Subgroup G := NR.map R.subtype
   have hPR₁ : P ≤ R₁ := by
@@ -618,7 +619,7 @@ private theorem bender_normalizer_pretransitive
     IsTransitiveOn (Subgroup.normalizer (P : Set G))
       (fixedPointsOfSubgroup G Omega P) := by
   classical
-  letI : Fact (Nat.Prime p) := ⟨hp⟩
+  let : Fact (Nat.Prime p) := ⟨hp⟩
   let FixedP := {omega : Omega //
     omega ∈ fixedPointsOfSubgroup G Omega P}
   have hFixedPpos : 0 < Nat.card FixedP :=
@@ -658,8 +659,8 @@ private theorem bender_normalizer_pretransitive
       hmax hRp hPRlt hb hRa
   let FixedR := {omega : Omega //
     omega ∈ fixedPointsOfSubgroup G Omega R}
-  letI : Nonempty FixedR := ⟨⟨a, hRa⟩⟩
-  letI : Subsingleton FixedR := ⟨by
+  let : Nonempty FixedR := ⟨⟨a, hRa⟩⟩
+  let : Subsingleton FixedR := ⟨by
     intro x y
     apply Subtype.ext
     exact (hRunique x.property).trans (hRunique y.property).symm⟩
@@ -814,8 +815,8 @@ private theorem bender_normalizer_pointStabilizer_pretransitive
       {omega : Omega |
         omega ∈ fixedPointsOfSubgroup G Omega P ∧ omega ≠ a} := by
   classical
-  letI : MulAction.IsMultiplyPretransitive G Omega 2 := htwo
-  letI : MulAction.IsPretransitive G Omega :=
+  let : MulAction.IsMultiplyPretransitive G Omega 2 := htwo
+  let : MulAction.IsPretransitive G Omega :=
     MulAction.isPretransitive_of_is_two_pretransitive
   let A : Subgroup G := MulAction.stabilizer G a
   let PA : Subgroup A := P.subgroupOf A
@@ -888,8 +889,8 @@ public theorem chapter1_bender_normalizer_pointStabilizer_pretransitive_of_local
       {omega : Omega |
         omega ∈ fixedPointsOfSubgroup G Omega P ∧ omega ≠ a} := by
   classical
-  letI : MulAction.IsMultiplyPretransitive G Omega 2 := htwo
-  letI : MulAction.IsPretransitive G Omega :=
+  let : MulAction.IsMultiplyPretransitive G Omega 2 := htwo
+  let : MulAction.IsPretransitive G Omega :=
     MulAction.isPretransitive_of_is_two_pretransitive
   let A : Subgroup G := MulAction.stabilizer G a
   let PA : Subgroup A := P.subgroupOf A

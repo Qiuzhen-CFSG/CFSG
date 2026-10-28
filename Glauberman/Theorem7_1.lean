@@ -10,6 +10,7 @@ public import Mathlib.GroupTheory.Index
 public import Mathlib.NumberTheory.Padics.PadicVal.Basic
 public import Mathlib.Tactic
 
+
 /-!
 # Glauberman, "A Characteristic Subgroup of a p-Stable Group" — Theorem 7.1
 
@@ -461,7 +462,7 @@ public theorem theorem7_1 [Finite G] (p : ℕ) [Fact p.Prime]
                 rw [hyx']
           rw [hxeq]
           refine Subgroup.mem_map.mpr ⟨(h : ↥M)⁻¹ * y * (h : ↥M), hyh, ?_⟩
-          · simp [Subgroup.coe_subtype, mul_assoc]
+          · simp [mul_assoc]
     · -- g = c·h in G
       exact congrArg (fun y : ↥M => (y : G)) hgh
   -- (7.2): N ⊓ M = A ⊔ B

@@ -2,6 +2,7 @@ module
 
 public import FeitThompson.BGsection12.theorem_12_7_d
 
+
 open scoped Pointwise
 
 section Section12
@@ -112,7 +113,7 @@ public theorem theorem_12_7_e
           have hZsub_p : IsPGroup q.val ((Subgroup.zpowers z).subgroupOf E) :=
             hZp.of_equiv
               (Subgroup.subgroupOfEquivOfLe (H := Subgroup.zpowers z) (K := E) hZE).symm
-          haveI : (E₃.subgroupOf E).Normal := hE3norm.2
+          have : (E₃.subgroupOf E).Normal := hE3norm.2
           exact section12_pSubgroup_le_normal_hall_of_prime_mem hHallE3 hqτ3 hZsub_p
         have hzsub : (⟨z, hzE⟩ : E) ∈ (Subgroup.zpowers z).subgroupOf E := by
           simp [Subgroup.mem_subgroupOf]
@@ -128,7 +129,7 @@ public theorem section12_E2_global_hall_of_abelian_sylow_pre
     (_hAS : A ≤ (S : Subgroup G)) (hScomm : IsMulCommutative (S : Subgroup G)) :
     IsHallSubgroup (section12Tau2Primes M) E₂ := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   have hE2HallIn :
       section12HallSubgroupIn (section12Tau2Primes M) E₂ E :=
     section12_E2_hall_in_E hE.2.1 hE.2.2.2.1
@@ -150,10 +151,10 @@ public theorem section12_E2_global_hall_of_abelian_sylow_pre
         section12_exists_rankTwo_in_E_of_tau2
           (G := G) (M := M) (E := E) (E₁₂ := E₁₂) (E₁ := E₁)
           (E₂ := E₂) (E₃ := E₃) hM hE hqτ2
-      haveI : Fact q.val.Prime := ⟨q.2⟩
+      have : Fact q.val.Prime := ⟨q.2⟩
       have hBq : IsPGroup q.val B := by
         have hElem := (section12_rankTwo_elementary hB).2
-        haveI : IsElementaryAbelian q.val B := hElem
+        have : IsElementaryAbelian q.val B := hElem
         exact IsElementaryAbelian.isPGroup q.val B
       obtain ⟨Q, hB_le_Q⟩ :=
         IsPGroup.exists_le_sylow (G := G) (p := q.val) hBq
@@ -172,7 +173,7 @@ public theorem section12_E2_global_hall_of_abelian_sylow_pre
         obtain ⟨g, hg⟩ := MulAction.exists_smul_eq G S Q
         have hconj_comm :
             IsMulCommutative ((g • S : Sylow p.val G) : Subgroup G) := by
-          letI : IsMulCommutative (S : Subgroup G) := hScomm
+          let : IsMulCommutative (S : Subgroup G) := hScomm
           rw [Sylow.coe_subgroup_smul]
           exact Subgroup.map_isMulCommutative
             (f := (MulAut.conj g).toMonoidHom) (H := (S : Subgroup G))
@@ -207,7 +208,7 @@ public theorem section12_tau2_sylow_comm_of_abelian_sylow_pre
     (hq : q ∈ section12Tau2Primes M) :
     IsMulCommutative (Q : Subgroup G) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   by_contra hQnoncomm
   obtain ⟨B, hB⟩ :=
     section12_exists_rankTwo_in_E_of_tau2
@@ -226,7 +227,7 @@ public theorem section12_tau2_sylow_comm_of_abelian_sylow_pre
   obtain ⟨g, hg⟩ := MulAction.exists_smul_eq G S Q
   have hconj_comm :
       IsMulCommutative ((g • S : Sylow p.val G) : Subgroup G) := by
-    letI : IsMulCommutative (S : Subgroup G) := hScomm
+    let : IsMulCommutative (S : Subgroup G) := hScomm
     rw [Sylow.coe_subgroup_smul]
     exact Subgroup.map_isMulCommutative
       (f := (MulAut.conj g).toMonoidHom) (H := (S : Subgroup G))

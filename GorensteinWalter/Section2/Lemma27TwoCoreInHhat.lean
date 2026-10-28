@@ -15,6 +15,7 @@ import GorensteinWalter.Section1
 import FeitThompson.FinalTheorem
 import Mathlib.Tactic
 
+
 /-!
 # `O₂(M)` sits inside `O₂(Ĥ)` for Lemma 2.7
 

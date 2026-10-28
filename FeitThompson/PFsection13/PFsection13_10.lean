@@ -5,6 +5,7 @@ import FeitThompson.PFsection8.PFsection8_5_a
 import FeitThompson.PFsection5.PFsection5_9
 import FeitThompson.PFsection8.PFsection8_5_a
 
+
 /-!
 # Peterfalvi, Section 13: PFsection13_10
 -/
@@ -121,7 +122,7 @@ private theorem section13_theorem_13_10_q_card_formula_of_hypothesis
     ⟨_hhyp92, _hH0, _hcent, _hqPrime, _hpPrime, _hho, hquot,
       _hCcent, _hUbar, _hirr, _hfield, _hcop, _hdvd⟩
   rcases hquot with ⟨hnormal, hcardQuot⟩
-  letI : ((⊥ : Subgroup G).subgroupOf Q).Normal := hnormal
+  let : ((⊥ : Subgroup G).subgroupOf Q).Normal := hnormal
   have hbot : ((⊥ : Subgroup G).subgroupOf Q) = (⊥ : Subgroup Q) := by
     ext x
     simp
@@ -692,8 +693,8 @@ private theorem section13_supportEnergy_conjugatesOfSetBySet_eq_index_mul
   let Ω := Quotient (QuotientGroup.rightRel N)
   let X0 := {x : G // x ∈ X}
   let C0 := {z : G // z ∈ section16ConjugatesOfSetBySet X Set.univ}
-  letI : Fintype X0 := Fintype.ofFinite X0
-  letI : Fintype C0 := Fintype.ofFinite C0
+  let : Fintype X0 := Fintype.ofFinite X0
+  let : Fintype C0 := Fintype.ofFinite C0
   let f : Ω × X0 → C0 := fun qx =>
     let a : G := Quotient.out qx.1
     ⟨a⁻¹ * qx.2.1 * a, ⟨qx.2.1, qx.2.2, a⁻¹, Set.mem_univ _, by simp [mul_assoc]⟩⟩
@@ -1046,7 +1047,7 @@ private theorem section13_theorem_13_10_fitting_punctured_normalizer_eq_of_sourc
     section13_theorem_13_2_global_isMinCE_of_sourceContext
       Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT p q u v c d
       _hsource
-  haveI : IsMinCE G := hMin
+  have : IsMinCE G := hMin
   rcases _hsource with
     ⟨hcase, hptypeS, _hptypeT, _hp, _hq, _hC, _hD, _hc, _hd, _hUcard,
       _hVcard, _hSfam, _hTfam, _hDadeS, _hDadeT, _hnotation⟩
@@ -1518,7 +1519,7 @@ private theorem section13_theorem_13_10_lambdaTotalNormPieceSourceData_of_source
   have htotal :
       Section7.supportEnergy Set.univ lamτ / (Nat.card G : ℝ) ≤ 1 := by
     rw [section13_supportEnergy_univ_div_card_eq_cfNormSq, hlamτ_cfNorm]
-  have hlamτ_virtual : Theory.Character.IsVirtualCharacter lamτ := by
+  have hlamτ_virtual : IsVirtualCharacter lamτ := by
     rw [hlamτ_eq]
     exact hcoh.2.1 lam (Section5.integerSpan_of_mem Sfam hlam_mem)
   have hlamτ_signed : Section3.IsSignedIrreducibleCharacter lamτ :=
@@ -1862,7 +1863,7 @@ private theorem section13_theorem_13_10_Hsharp_disjoint_Qsharp_conjugates_of_sou
   rcases h2T with
     ⟨_hMF, _hType, _hTypeIf, _hVcomm, _hFrob, hQelem, _hQcard,
       _hvBound, _hcoh, _hTI, _hTau, _hNorm⟩
-  letI : IsMulCommutative Q := IsElementaryAbelian.toIsMulCommutative q
+  let : IsMulCommutative Q := IsElementaryAbelian.toIsMulCommutative q
   have hQcent : Q.conjBy g ≤ Subgroup.centralizer ({x} : Set G) :=
     section13_conjBy_le_centralizer_singleton_of_mem_comm Q hyQ.1 hx_eq
   have hcentS : Subgroup.centralizer ({x} : Set G) ≤ Smax :=
@@ -1952,9 +1953,9 @@ private theorem section13_theorem_13_10_etaTotalNormPieceSourceData_of_sourceCon
   have hω_class : Section1.IsClassFunction (ω 1 0) := by
     rw [hωeq 1 0 h1q h0p]
     exact hωFin.is_class i1 j0
-  have hvirtW : Theory.Character.IsVirtualCharacter (ω 1 0) :=
+  have hvirtW : IsVirtualCharacter (ω 1 0) :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup hω_irred
-  have hvirtG : Theory.Character.IsVirtualCharacter (σ (ω 1 0)) :=
+  have hvirtG : IsVirtualCharacter (σ (ω 1 0)) :=
     hσmap.2.1 (ω 1 0) hvirtW
   have hself : Section1.scalarProduct G (σ (ω 1 0)) (σ (ω 1 0)) = 1 := by
     calc

@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section3.FirstCaseKleinCentralizer
 import Mathlib.Tactic
 
+
 /-!
 # The normalizer of the Klein-four two-core
 

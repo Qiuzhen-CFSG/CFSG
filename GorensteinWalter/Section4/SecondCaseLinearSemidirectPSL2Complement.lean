@@ -4,6 +4,7 @@ public import GorensteinWalter.PSL2CoprimePrimeCentralizer
 public import GorensteinWalter.Section4.SecondCaseLinearSemidirectComplement
 import Mathlib.Tactic
 
+
 noncomputable section
 
 namespace GorensteinWalter
@@ -25,7 +26,7 @@ public theorem secondCase_linear_semidirect_psl2_normal_complement
     (hNnormal : N.Normal)
     (hNelem : IsElementaryAbelian r N)
     (hNcard_dvd : Nat.card N ∣ Nat.card F)
-    (hCcyc : IsCyclic C) (hdisj : Disjoint N C)
+    (hCcyc : IsCyclic C)
     (hjoin : N ⊔ C = ⊤) (hXleC : X ≤ C)
     (hXcard : Nat.card X = p) (hXne : X ≠ ⊥)
     (hNcyc : IsCyclic (Subgroup.normalizer (X : Set H))) :
@@ -89,7 +90,7 @@ public theorem secondCase_linear_semidirect_psl2_normal_complement
       (haorder := hnorderAmbient) (hborder := hxorderAmbient)
       (hcomm := hcommAmbient)).elim
   have hbase := normal_complement_of_semidirect_cyclic_normalizer
-    N C X hNnormal hCcyc hdisj hjoin hXleC hNnorm
+    N C X hNnormal hCcyc hjoin hXleC hNnorm
   refine ⟨hbase.1, hbase.2.1, hbase.2.2.1, hbase.2.2.2, ?_⟩
   exact hNcard_dvd
 

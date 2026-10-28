@@ -5,6 +5,7 @@ public import BenderSuzuki.SE.Section11Lemma113Callbacks
 public import BenderSuzuki.SE.StrongEmbeddingCounting
 public import BenderSuzuki.SE.Corollary713
 
+
 /-!
 # Section 11, Lemma 11.3: the disjoint branch
 
@@ -157,9 +158,9 @@ public theorem lemma113_invariant_sylow_two_forces_core_card
     exact dvd_trans (by norm_num : 2 ∣ 4) hfourC
   have hSne : S0 ≠ ⊥ := by
     simpa [S0] using S.ne_bot_of_dvd_card htwoC
-  letI : Nontrivial S0 :=
+  let : Nontrivial S0 :=
     (Subgroup.nontrivial_iff_ne_bot S0).2 hSne
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hCenterNontrivial : Nontrivial (Subgroup.center S0) := by
     simpa [S0] using S.isPGroup'.center_nontrivial
   have hCenterTwo : IsPGroup 2 (Subgroup.center S0) := by
@@ -189,17 +190,17 @@ public theorem lemma113_invariant_sylow_two_forces_core_card
     IsInvolution.map_of_injective hzInvC C.subtype
       C.subtype_injective
   have hzM : z ∈ M := hCM zC.property
-  letI : Subgroup.Normalizes H C :=
+  let : Subgroup.Normalizes H C :=
     ⟨by simpa [C] using hHnormC⟩
   have hSinv' : IsInvariant H C S0 := by
     simpa [C, S0] using hSinv
-  letI : IsInvariant H C S0 := hSinv'
-  letI : IsInvariant H S0 (Subgroup.center S0) := center_isInvariant
+  let : IsInvariant H C S0 := hSinv'
+  let : IsInvariant H S0 (Subgroup.center S0) := center_isInvariant
   let ZS : Subgroup C := (Subgroup.center S0).map S0.subtype
   have hZSinv : IsInvariant H C ZS := by
     simpa [ZS] using
       (isInvariant_map_subtype S0 (Subgroup.center S0))
-  letI : IsInvariant H C ZS := hZSinv
+  let : IsInvariant H C ZS := hZSinv
   have hzZS : zC ∈ ZS := by
     exact Subgroup.mem_map.mpr ⟨zS, z0.property, rfl⟩
   have hInvolutionsLeZS :
@@ -239,13 +240,13 @@ public theorem lemma113_invariant_sylow_two_forces_core_card
     have hZScomm : IsMulCommutative ZS := by
       dsimp [ZS]
       infer_instance
-    letI : IsMulCommutative ZS := hZScomm
+    let : IsMulCommutative ZS := hZScomm
     refine ⟨⟨?_⟩⟩
     intro x y
     let xZ : ZS := ⟨x, by rw [hZSeq]; exact Subgroup.mem_top x⟩
     let yZ : ZS := ⟨y, by rw [hZSeq]; exact Subgroup.mem_top y⟩
     exact congrArg Subtype.val (hZScomm.is_comm.comm xZ yZ)
-  letI : IsMulCommutative C := hCcomm
+  let : IsMulCommutative C := hCcomm
   have hsqC : ∀ x : C, x ^ 2 = 1 := by
     intro x
     have hxcore : x ∈ involutionCore C := by
@@ -308,10 +309,9 @@ public theorem lemma113_invariant_sylow_two_forces_core_card
     calc
       Nat.card Z = Nat.card Csharp := Nat.card_congr eZC
       _ = Nat.card C - 1 := by
-        letI : Fintype C := Fintype.ofFinite C
-        letI : Fintype Csharp := Fintype.ofFinite Csharp
-        simpa [Csharp, Nat.card_eq_fintype_card] using
-          (Fintype.card_subtype_compl (fun c : C => c = 1))
+        let : Fintype C := Fintype.ofFinite C
+        let : Fintype Csharp := Fintype.ofFinite Csharp
+        simp [Csharp, Nat.card_eq_fintype_card]
   have hIcard : Nat.card {k : X // k ∈ peterfalviKSet
       (M ⊓ rightConjugate M t) t} = 2 ^ b - 1 := by
     calc

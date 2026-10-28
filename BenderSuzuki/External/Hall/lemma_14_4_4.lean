@@ -47,7 +47,7 @@ needed to generate `H` together with `H₀`. -/
     subst H₀
     exact hallTransferModulus_subgroupOf_normal p H H₁ hH_le_H₁
       (hallTransferModulus_le_of_inf p H₁ G₀ H hG₀ hH)
-  letI : (H₀.subgroupOf H).Normal := hH₀_normal
+  let : (H₀.subgroupOf H).Normal := hH₀_normal
   have hcomm : commutator H ≤ H₀.subgroupOf H := by
     intro x hx
     have hxmap : H.subtype x ∈ (commutator H).map H.subtype :=
@@ -57,7 +57,7 @@ needed to generate `H` together with `H₀`. -/
       rw [hH₀]
       exact le_sup_right.trans le_sup_left
     exact hC ((Subgroup.commutator_mono le_rfl hH_le_H₁) hxmap)
-  letI : IsMulCommutative (H ⧸ H₀.subgroupOf H) :=
+  let : IsMulCommutative (H ⧸ H₀.subgroupOf H) :=
     (Subgroup.Normal.quotient_commutative_iff_commutator_le).2 hcomm
   letI : CommGroup (H ⧸ H₀.subgroupOf H) := IsMulCommutative.instCommGroup
   let HG₀ : Subgroup G₀ := H.subgroupOf G₀
@@ -164,7 +164,7 @@ private theorem hall_lemma_14_4_4_sylow_le_defect_closure
     (hH_le_G₀ : H ≤ G₀) (hP_le_H : P ≤ H) (hH₀_le_H : H₀ ≤ H)
     [hH₀_normal : (H₀.subgroupOf H).Normal]
     (hcomm : commutator H ≤ H₀.subgroupOf H) :
-    letI : IsMulCommutative (H ⧸ H₀.subgroupOf H) :=
+    let : IsMulCommutative (H ⧸ H₀.subgroupOf H) :=
       (Subgroup.Normal.quotient_commutative_iff_commutator_le).2 hcomm
     letI : CommGroup (H ⧸ H₀.subgroupOf H) := IsMulCommutative.instCommGroup
     ∀ dstar : H → H,
@@ -176,9 +176,10 @@ private theorem hall_lemma_14_4_4_sylow_le_defect_closure
             ((Subgroup.subgroupOfEquivOfLe hH_le_G₀).symm u)) →
       P ≤ H₀ ⊔ Subgroup.closure
         {x : G | ∃ u : H, (u : G) ∈ P ∧ x = (dstar u : G)} := by
-  letI : IsMulCommutative (H ⧸ H₀.subgroupOf H) :=
+  dsimp only
+  let : IsMulCommutative (H ⧸ H₀.subgroupOf H) :=
     (Subgroup.Normal.quotient_commutative_iff_commutator_le).2 hcomm
-  letI : CommGroup (H ⧸ H₀.subgroupOf H) := IsMulCommutative.instCommGroup
+  let : CommGroup (H ⧸ H₀.subgroupOf H) := IsMulCommutative.instCommGroup
   intro dstar hdstar
   let HG₀ : Subgroup G₀ := H.subgroupOf G₀
   let eH : HG₀ ≃* H := Subgroup.subgroupOfEquivOfLe hH_le_G₀
@@ -327,7 +328,7 @@ private theorem hall_lemma_14_4_4_generation_core
     (hH_le_G₀ : H ≤ G₀) (hP_le_H : P ≤ H) (hH₀_le_H : H₀ ≤ H)
     [hH₀_normal : (H₀.subgroupOf H).Normal]
     (hcomm : commutator H ≤ H₀.subgroupOf H) :
-    letI : IsMulCommutative (H ⧸ H₀.subgroupOf H) :=
+    let : IsMulCommutative (H ⧸ H₀.subgroupOf H) :=
       (Subgroup.Normal.quotient_commutative_iff_commutator_le).2 hcomm
     letI : CommGroup (H ⧸ H₀.subgroupOf H) := IsMulCommutative.instCommGroup
     ∀ dstar : H → H,
@@ -339,9 +340,10 @@ private theorem hall_lemma_14_4_4_generation_core
             ((Subgroup.subgroupOfEquivOfLe hH_le_G₀).symm u)) →
       H ≤ H₀ ⊔ Subgroup.closure
         {x : G | ∃ u : H, (u : G) ∈ P ∧ x = (dstar u : G)} := by
-  letI : IsMulCommutative (H ⧸ H₀.subgroupOf H) :=
+  dsimp only
+  let : IsMulCommutative (H ⧸ H₀.subgroupOf H) :=
     (Subgroup.Normal.quotient_commutative_iff_commutator_le).2 hcomm
-  letI : CommGroup (H ⧸ H₀.subgroupOf H) := IsMulCommutative.instCommGroup
+  let : CommGroup (H ⧸ H₀.subgroupOf H) := IsMulCommutative.instCommGroup
   intro dstar hdstar
   let HG₀ : Subgroup G₀ := H.subgroupOf G₀
   let eH : HG₀ ≃* H := Subgroup.subgroupOfEquivOfLe hH_le_G₀
@@ -437,7 +439,7 @@ public theorem hall_lemma_14_4_4_generated_by_diagonal_defects
     subst H₀
     exact hallTransferModulus_subgroupOf_normal p H H₁ hH_le_H₁
       (hallTransferModulus_le_of_inf p H₁ G₀ H hG₀ hH)
-  letI : (H₀.subgroupOf H).Normal := hH₀_normal
+  let : (H₀.subgroupOf H).Normal := hH₀_normal
   have hcomm : commutator H ≤ H₀.subgroupOf H := by
     intro x hx
     have hxmap : H.subtype x ∈ (commutator H).map H.subtype :=
@@ -447,9 +449,9 @@ public theorem hall_lemma_14_4_4_generated_by_diagonal_defects
       rw [hH₀]
       exact le_sup_right.trans le_sup_left
     exact hC ((Subgroup.commutator_mono le_rfl hH_le_H₁) hxmap)
-  letI : IsMulCommutative (H ⧸ H₀.subgroupOf H) :=
+  let : IsMulCommutative (H ⧸ H₀.subgroupOf H) :=
     (Subgroup.Normal.quotient_commutative_iff_commutator_le).2 hcomm
-  letI : CommGroup (H ⧸ H₀.subgroupOf H) := IsMulCommutative.instCommGroup
+  let : CommGroup (H ⧸ H₀.subgroupOf H) := IsMulCommutative.instCommGroup
   let HG₀ : Subgroup G₀ := H.subgroupOf G₀
   let eH : HG₀ ≃* H := Subgroup.subgroupOfEquivOfLe hH_le_G₀
   let π : H →* H ⧸ H₀.subgroupOf H := QuotientGroup.mk' (H₀.subgroupOf H)
@@ -466,7 +468,6 @@ public theorem hall_lemma_14_4_4_generated_by_diagonal_defects
 
 end External
 end BenderSuzuki
-
 
 
 

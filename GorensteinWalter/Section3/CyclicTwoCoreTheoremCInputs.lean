@@ -17,6 +17,7 @@ public import GorensteinWalter.Section1
 import all BenderGlauberman.Defs
 import Mathlib.Tactic
 
+
 /-!
 # Cyclic first case: the five Theorem-C A₇-model inputs
 
@@ -320,7 +321,7 @@ public theorem firstCase_cyclic_a7_theoremC_data_of_a7model
         _ = qCoreOf U 3 ⊔ ⊥ := by rw [hQ3bot]
         _ = qCoreOf U 3 := by simp
         _ = P := hP3eq.symm
-    have hCsolv : IsSolvable (↥U) := odd_order_theorem U hUodd
+    have hCsolv : Group.IsSolvable (↥U) := odd_order_theorem U hUodd
     have hCleF := fact_1_2_centralizer_fitting_le_fitting U hCsolv
     have hFU2 : fittingSubgroupOf U = P := hFUeq.symm.trans hFUeq_P
     have hCleP : U ⊓ Subgroup.centralizer (P : Set G) ≤ P := by

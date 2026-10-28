@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.DGroupQuotientNotTwoGroup
 import BenderSuzuki.External.Huppert.IV.ComplementTransfer
 
+
 /-!
 # Dihedral Sylow subgroups from the D-group quotient clause
 

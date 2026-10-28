@@ -6,6 +6,7 @@ public import GorensteinWalter.Section2.Basic
 public import GorensteinWalter.Section1
 import Mathlib.Tactic
 
+
 /-!
 # The quotient bound behind restriction (6)
 

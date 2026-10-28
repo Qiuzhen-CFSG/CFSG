@@ -6,6 +6,7 @@ public import FeitThompson.BGsection5.theorem_5_3
 public import FeitThompson.BGsection5.theorem_5_5_a
 public import FeitThompson.BGsection4.corollary_4_19
 
+
 /-! # Theorem 5.7 from BG Section 5 -/
 
 open scoped commutatorElement
@@ -93,7 +94,7 @@ private theorem chiefFactor_derived_conj_image_isPGroup_of_pCore_action
     {p : ℕ} [Fact p.Prime] (cf : ChiefFactor G) (hcf_p : cf.IsPFactor p)
     (hcfU : cf.U ≤ fittingSubgroup G)
     (hderR_p : IsPGroup p ((derivedSubgroup G).map (MulAut.conjNormal (H := pCore p G)))) :
-    letI : cf.V.Normal := cf.isChief.normal_K
+    let : cf.V.Normal := cf.isChief.normal_K
     let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
     let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
     let φ : (G ⧸ cf.V) →* MulAut Uq := by
@@ -101,7 +102,7 @@ private theorem chiefFactor_derived_conj_image_isPGroup_of_pCore_action
           Uq.Normal ∧ Uq ≠ ⊥ ∧
             (∀ K : Subgroup (G ⧸ cf.V), K.Normal → K ≤ Uq → K ≠ ⊥ → K = Uq) := by
         simpa [π, Uq] using chiefFactor_quotient_minimal (G := G) cf
-      letI : Uq.Normal := hmin.1
+      let : Uq.Normal := hmin.1
       exact MulAut.conjNormal (H := Uq)
     IsPGroup p ((derivedSubgroup G).map (φ.comp π)) := by
   classical
@@ -288,7 +289,7 @@ private theorem chiefFactor_derived_conj_image_isPGroup_of_pCore_action
 private theorem chiefFactor_conj_range_pCore_eq_bot
     {G : Type*} [Group G] [Finite G] [Group.IsSolvable G]
     {p : ℕ} [Fact p.Prime] (cf : ChiefFactor G) (hcf_p : cf.IsPFactor p) :
-    letI : cf.V.Normal := cf.isChief.normal_K
+    let : cf.V.Normal := cf.isChief.normal_K
     let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
     let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
     let φ : (G ⧸ cf.V) →* MulAut Uq := by
@@ -296,7 +297,7 @@ private theorem chiefFactor_conj_range_pCore_eq_bot
           Uq.Normal ∧ Uq ≠ ⊥ ∧
             (∀ K : Subgroup (G ⧸ cf.V), K.Normal → K ≤ Uq → K ≠ ⊥ → K = Uq) := by
         simpa [π, Uq] using chiefFactor_quotient_minimal (G := G) cf
-      letI : Uq.Normal := hmin.1
+      let : Uq.Normal := hmin.1
       exact MulAut.conjNormal (H := Uq)
     pCore p φ.range = ⊥ := by
   classical

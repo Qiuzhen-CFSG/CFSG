@@ -6,6 +6,7 @@ public import GorensteinWalter.FittingNormalizerGrowth
 public import GorensteinWalter.Section2.Bender1970_18
 import Mathlib.Tactic
 
+
 /-! # Second-case conjugator  (source: refs/bender-dihedral-sylow.tex L691) -/
 
 noncomputable section

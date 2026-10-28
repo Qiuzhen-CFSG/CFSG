@@ -1,6 +1,7 @@
 module
 
 public import BenderSuzuki.External.Huppert.XI.theorem_3_3
+public import Theory.SpecificGroups.Suzuki.BorelSolvable
 import Mathlib.GroupTheory.IsPerfect
 
 /-!
@@ -286,95 +287,7 @@ private theorem suzukiMatrixGroup_pointStabilizer_isSolvable
     let U : Subgroup (SuzukiMatrixGroup m) :=
       B.comap (SuzukiMatrixGroup m).subtype
     Group.IsSolvable U := by
-  classical
-  let K := BinaryGaloisField (2 * m + 1)
-  let pi : K ≃+* K := iterateFrobeniusEquiv K 2 (m + 1)
-  have hpi : ∀ x : K, pi x = x ^ (2 ^ (m + 1)) := by
-    intro x
-    exact iterateFrobeniusEquiv_def K 2 (m + 1) x
-  have hpi_sq : ∀ x : K, pi (pi x) = x ^ 2 :=
-    binaryGaloisField_tits_formula_sq m pi hpi
-  let F : Subgroup (GL (Fin 4) K) :=
-    Subgroup.closure {A | ∃ a b : K, A = SuzukiRootGL m a b}
-  let H : Subgroup (GL (Fin 4) K) :=
-    Subgroup.closure {A | ∃ u : Kˣ, A = SuzukiTorusGL m u}
-  let B : Subgroup (GL (Fin 4) K) := F ⊔ H
-  let U : Subgroup (SuzukiMatrixGroup m) :=
-    B.comap (SuzukiMatrixGroup m).subtype
-  change Group.IsSolvable U
-  rcases huppert_blackburn_XI_3_1 m hm pi hpi_sq with
-    ⟨_, _, hF_pgroup, _, _, _, _, _, _, _, _, htorus_equiv, _, _, _⟩
-  obtain ⟨e, _⟩ := htorus_equiv
-  let _ : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-  have hF_nilpotent : Group.IsNilpotent F := hF_pgroup.isNilpotent
-  have hF_solvable : Group.IsSolvable F := by
-    let _ : Group.IsNilpotent F := hF_nilpotent
-    infer_instance
-  have hH_solvable : Group.IsSolvable H := by
-    let _ : Group.IsSolvable Kˣ := inferInstance
-    exact Group.isSolvable_of_isSolvable_injective
-      (f := e.symm.toMonoidHom) e.symm.injective
-  have hnormalizer : H ≤ Subgroup.normalizer F :=
-    suzukiTorusClosure_le_normalizer_rootClosure m pi hpi_sq hpi
-  have hF_le_B : F ≤ B := le_sup_left
-  have hH_le_B : H ≤ B := le_sup_right
-  let FB : Subgroup B := F.subgroupOf B
-  have hB_le_normalizer : B ≤ Subgroup.normalizer F :=
-    sup_le Subgroup.le_normalizer hnormalizer
-  let _ : FB.Normal :=
-    Subgroup.normal_subgroupOf_of_le_normalizer hB_le_normalizer
-  have hFB_solvable : Group.IsSolvable FB := by
-    let eFB : FB ≃* F := Subgroup.subgroupOfEquivOfLe hF_le_B
-    let _ : Group.IsSolvable F := hF_solvable
-    exact Group.isSolvable_of_isSolvable_injective
-      (f := eFB.toMonoidHom) eFB.injective
-  let quotientFromH : H →* B ⧸ FB :=
-    (QuotientGroup.mk' FB).comp (Subgroup.inclusion hH_le_B)
-  have hquotientFromH_surjective : Function.Surjective quotientFromH := by
-    intro z
-    obtain ⟨w, rfl⟩ := QuotientGroup.mk'_surjective FB z
-    have hw_product :
-        (w : GL (Fin 4) K) ∈
-          (F : Set (GL (Fin 4) K)) * (H : Set (GL (Fin 4) K)) := by
-      rw [← Subgroup.coe_mul_of_right_le_normalizer_left F H hnormalizer]
-      exact w.property
-    rcases hw_product with ⟨f, hf, h, hh, hfh⟩
-    let hH : H := ⟨h, hh⟩
-    refine ⟨hH, ?_⟩
-    let fB : B := ⟨f, hF_le_B hf⟩
-    let hB : B := ⟨h, hH_le_B hh⟩
-    change QuotientGroup.mk' FB hB = QuotientGroup.mk' FB w
-    have hfh_B : fB * hB = w := Subtype.ext hfh
-    rw [← hfh_B, map_mul]
-    have hf_FB : fB ∈ FB := hf
-    have hmk_fB : QuotientGroup.mk' FB fB = 1 :=
-      (QuotientGroup.eq_one_iff _).2 hf_FB
-    rw [hmk_fB, one_mul]
-  have hquotient_solvable : Group.IsSolvable (B ⧸ FB) := by
-    let _ : Group.IsSolvable H := hH_solvable
-    exact Group.isSolvable_of_surjective
-      (f := quotientFromH) hquotientFromH_surjective
-  have hB_solvable : Group.IsSolvable B := by
-    let _ : Group.IsSolvable FB := hFB_solvable
-    let _ : Group.IsSolvable (B ⧸ FB) := hquotient_solvable
-    exact Group.isSolvable_of_ker_le_range FB.subtype (QuotientGroup.mk' FB) (by
-      rw [QuotientGroup.ker_mk', Subgroup.range_subtype])
-  have hF_le_S : F ≤ SuzukiMatrixSubgroup m := by
-    change Subgroup.closure {A | ∃ a b : K, A = SuzukiRootGL m a b} ≤
-      Subgroup.closure (SuzukiMatrixGeneratorSet m)
-    rw [Subgroup.closure_le]
-    intro A hA
-    exact Subgroup.subset_closure (Or.inl hA)
-  have hH_le_S : H ≤ SuzukiMatrixSubgroup m := by
-    change Subgroup.closure {A | ∃ u : Kˣ, A = SuzukiTorusGL m u} ≤
-      Subgroup.closure (SuzukiMatrixGeneratorSet m)
-    rw [Subgroup.closure_le]
-    intro A hA
-    exact Subgroup.subset_closure (Or.inr (Or.inl hA))
-  have hB_le_S : B ≤ SuzukiMatrixSubgroup m := sup_le hF_le_S hH_le_S
-  let eU : U ≃* B := Subgroup.subgroupOfEquivOfLe hB_le_S
-  let _ : Group.IsSolvable B := hB_solvable
-  exact Group.isSolvable_of_isSolvable_injective (f := eU.toMonoidHom) eU.injective
+  exact suzukiBorelSubgroup_isSolvable m hm
 
 /-- The faithful two-transitive ovoid action and its solvable point stabilizer
 force the concrete perfect Suzuki group to be simple. -/
@@ -588,6 +501,13 @@ public theorem huppert_blackburn_XI_3_6 (m : ℕ) (hm : 0 < m) :
   have h_card : ¬ 3 ∣ Nat.card (SuzukiMatrixGroup m) := by
     exact suzukiMatrixGroup_card_not_dvd_three m hm
   exact ⟨h_simple, h_card⟩
+
+/-- The nondegenerate concrete Suzuki groups are nonsolvable. -/
+public theorem suzukiMatrixGroup_not_isSolvable (m : ℕ) (hm : 0 < m) :
+    ¬ Group.IsSolvable (SuzukiMatrixGroup m) := by
+  let := (huppert_blackburn_XI_3_6 m hm).1
+  let := suzukiMatrixGroup_isPerfect m hm
+  exact Group.IsPerfect.not_isSolvable _
 
 end External
 end BenderSuzuki

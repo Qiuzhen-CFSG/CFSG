@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section3.FirstCaseKleinRestrictionSixOrderThree
 import Mathlib.Tactic
 
+
 noncomputable section
 
 open scoped Pointwise

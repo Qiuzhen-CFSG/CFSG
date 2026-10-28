@@ -4,6 +4,7 @@ public import GorensteinWalter.Defs
 public import GorensteinWalter.Section2.Bender1970API
 public import FeitThompson.PCore.PCore
 
+
 /-!
 # Conjugation transport for ambient p-cores
 -/

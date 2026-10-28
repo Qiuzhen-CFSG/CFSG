@@ -13,7 +13,6 @@ finite sum, but may synthesize different `Fintype` enumerations from a
 
 namespace GorensteinWalter
 
-open Theory.Character
 
 universe u
 
@@ -24,7 +23,7 @@ public theorem section1_scalarProduct_eq_theory
     (phi psi : ClassFunction G) :
     Section1.scalarProduct G phi psi = scalarProduct G phi psi := by
   classical
-  unfold Section1.scalarProduct Theory.Character.scalarProduct
+  unfold Section1.scalarProduct scalarProduct
   congr 1
   apply Finset.sum_congr
   · ext g

@@ -14,6 +14,7 @@ namespace BenderSuzuki
 namespace PFAppendixIII
 
 set_option maxHeartbeats 800000 in
+-- The Frobenius-coordinate expansion needs additional elaboration heartbeats.
 /-- Every binary bilinear map on a binary Galois field has a unique expansion
 in products of Frobenius conjugates. -/
 public theorem frobeniusBilinear_expansion
@@ -54,7 +55,7 @@ public theorem frobeniusBilinear_expansion
   have hfinrank_linear : Module.finrank K (K →ₗ[ZMod 2] K) = n := by
     rw [Module.finrank_linearMap, GaloisField.finrank 2 hn.ne']
     simp
-  letI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+  let : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
   let basis : Module.Basis (Fin n) K (K →ₗ[ZMod 2] K) :=
     basisOfLinearIndependentOfCardEqFinrank hfrob (by
       simpa using hfinrank_linear.symm)
@@ -124,6 +125,7 @@ public theorem frobeniusBilinear_expansion
 
 set_option backward.isDefEq.respectTransparency false in
 set_option maxHeartbeats 800000 in
+-- The equivariant Frobenius-coordinate expansion needs additional elaboration heartbeats.
 /-- An equivariant binary bilinear map has Frobenius coefficients supported
 only on the corresponding character relation. -/
 public theorem frobeniusBilinear_expansion_with_support_of_equivariant

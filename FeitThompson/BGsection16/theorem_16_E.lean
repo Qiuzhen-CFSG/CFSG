@@ -91,7 +91,7 @@ public theorem theorem_16_E_2
   · intro q
     constructor
     · intro hq
-      haveI : Fact q.val.Prime := ⟨q.property⟩
+      have : Fact q.val.Prime := ⟨q.property⟩
       let P : Sylow q.val G := Classical.choice (Sylow.nonempty (p := q.val) (G := G))
       have hPne : (P : Subgroup G) ≠ ⊥ := by
         intro hPbot

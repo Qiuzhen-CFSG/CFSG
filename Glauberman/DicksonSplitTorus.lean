@@ -295,7 +295,10 @@ public theorem huppert_II_8_3_split_torus_reflection_data
       (hw_sq : w * w = 1) (hw_not_mem : w ∉ T) :
       Nat.card (Subgroup.zpowers w) = 2 ∧
         Disjoint T (Subgroup.zpowers w) ∧
-        Nat.card (T ⊔ (Subgroup.zpowers w : Subgroup (PSL2MatrixGroup F)) : Subgroup (PSL2MatrixGroup F)) = 2 * Nat.card T := by
+        Nat.card
+            (T ⊔ (Subgroup.zpowers w : Subgroup (PSL2MatrixGroup F)) :
+              Subgroup (PSL2MatrixGroup F)) =
+          2 * Nat.card T := by
     let Z : Subgroup (PSL2MatrixGroup F) := Subgroup.zpowers w
     have hw_ne_one : w ≠ 1 := by
       intro hw_one
@@ -425,7 +428,9 @@ public theorem huppert_II_8_3_split_torus_reflection_data
     have hq :
         qSL (splitTorusSL b) = qSL (A * splitTorusSL a * A⁻¹) := by
       simpa [splitTorus, qSL, ← ha] using hb
-    rcases (QuotientGroup.mk'_eq_mk' (Subgroup.center (Matrix.SpecialLinearGroup (Fin 2) F))).mp hq with
+    rcases
+        (QuotientGroup.mk'_eq_mk'
+          (Subgroup.center (Matrix.SpecialLinearGroup (Fin 2) F))).mp hq with
       ⟨z, hz, hzeq⟩
     have hzeqA :
         splitTorusSL b * z * A = A * splitTorusSL a := by

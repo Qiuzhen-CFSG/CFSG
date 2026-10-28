@@ -4,6 +4,7 @@ public import FeitThompson.BGsection10.lemma_10_8_c
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
 
+
 open scoped Pointwise commutatorElement
 
 /-!

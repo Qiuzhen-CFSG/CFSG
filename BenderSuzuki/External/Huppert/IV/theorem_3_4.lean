@@ -324,7 +324,7 @@ private theorem huppert_IV_3_4_transfer_to_grun_quotient_kernel_inf_sylow_le_gru
     -- Huppert IV.3.4, lines 21538-21541: choose a counterexample of
     -- smallest possible order.
     classical
-    letI : Nonempty {y : Q // y ∈ bad} := hbad_nonempty.to_subtype
+    let : Nonempty {y : Q // y ∈ bad} := hbad_nonempty.to_subtype
     obtain ⟨u, hu⟩ :=
       Finite.exists_min (fun y : {y : Q // y ∈ bad} => orderOf (y : Q))
     exact ⟨u, u.property, fun y hy => hu ⟨y, hy⟩⟩
@@ -365,7 +365,7 @@ private theorem huppert_IV_3_4_transfer_to_grun_quotient_kernel_inf_sylow_le_gru
       simpa [hy_order] using hU₀_min y hy_bad
     exact (not_lt_of_ge hle) hlt
   let Ω : Type u := Quotient (MulAction.orbitRel (Subgroup.zpowers U₀) (Q ⧸ P))
-  haveI : Fintype Ω := by
+  have : Fintype Ω := by
     exact Fintype.ofFinite Ω
   let cycleRep : Ω → Q := fun ω => ω.out.out
   let cycleLength : Ω → ℕ := fun ω =>
@@ -383,7 +383,7 @@ private theorem huppert_IV_3_4_transfer_to_grun_quotient_kernel_inf_sylow_le_gru
       (MonoidHom.transfer_eq_prod_quotient_orbitRel_zpowers_quot
         (ϕ := πD) (H := P) (g := U₀))
   let Δ : Type u := Quotient (MulAction.orbitRel P (Q ⧸ P))
-  haveI : Fintype Δ := Fintype.ofFinite Δ
+  have : Fintype Δ := Fintype.ofFinite Δ
   have hzpowers_le_P : Subgroup.zpowers U₀ ≤ P := by
     intro z hz
     rcases Subgroup.mem_zpowers_iff.mp hz with ⟨n, rfl⟩
@@ -520,11 +520,11 @@ private theorem huppert_IV_3_4_transfer_to_grun_quotient_kernel_inf_sylow_le_gru
         refine ⟨⟨(z : Q), hzpowers_le_P (show (z : Q) ∈ Subgroup.zpowers U₀ from z.2)⟩, ?_⟩
         exact hz
       let blockOrbit : Type u := MulAction.orbit P δ.out
-      haveI : Fintype blockOrbit := Fintype.ofFinite _
+      have : Fintype blockOrbit := Fintype.ofFinite _
       have hblockPower_eq_card : blockPower = Nat.card blockOrbit := by
         let fineBlockSigma : Type u :=
           Σ ω : blockCycles, MulAction.orbit (Subgroup.zpowers U₀) ω.1.out
-        haveI : Fintype fineBlockSigma := Fintype.ofFinite _
+        have : Fintype fineBlockSigma := Fintype.ofFinite _
         let blockFiberEquiv : fineBlockSigma ≃ blockOrbit := by
           let f : fineBlockSigma → blockOrbit := fun x =>
             ⟨(x.2 : Q ⧸ P), by
@@ -613,7 +613,7 @@ private theorem huppert_IV_3_4_transfer_to_grun_quotient_kernel_inf_sylow_le_gru
               intro ω
               exact Finite.of_equiv (ZMod (cycleLength ω.1))
                 (MulAction.orbitZPowersEquiv U₀ ω.1.out).symm
-            haveI : ∀ ω : blockCycles,
+            have : ∀ ω : blockCycles,
                 Finite (MulAction.orbit (Subgroup.zpowers U₀) ω.1.out) := hfinite_fibers
             rw [Nat.card_sigma]
           _ = Nat.card blockOrbit := by
@@ -710,7 +710,7 @@ private theorem huppert_IV_3_4_transfer_to_grun_quotient_kernel_inf_sylow_le_gru
           ∀ ω : blockCycles, ∃ n : ℕ, cycleLength ω.1 = q ^ n := by
         intro ω
         let fineOrbit : Type u := MulAction.orbit (Subgroup.zpowers U₀) ω.1.out
-        haveI : Fintype fineOrbit := Fintype.ofFinite _
+        have : Fintype fineOrbit := Fintype.ofFinite _
         have hzp_isP : IsPGroup q (Subgroup.zpowers U₀) := by
           have hP_isPGroup : IsPGroup q P := by
             simpa [P] using S.2
@@ -734,7 +734,7 @@ private theorem huppert_IV_3_4_transfer_to_grun_quotient_kernel_inf_sylow_le_gru
           change (Quotient.mk'' δ.out : Δ) = δ
           exact Quotient.out_eq' δ
         exact ⟨⟨(Quotient.mk'' δ.out : Ω), hωδ_block⟩⟩
-      letI : Nonempty blockCycles := hblockCycles_nonempty
+      let : Nonempty blockCycles := hblockCycles_nonempty
       obtain ⟨baseCycle, hbaseCycle_min⟩ :=
         Finite.exists_min (fun ω : blockCycles => cycleLength ω.1)
       let g : Q := cycleRep baseCycle.1

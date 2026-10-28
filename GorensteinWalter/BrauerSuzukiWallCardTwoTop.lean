@@ -6,6 +6,7 @@ public import GorensteinWalter.LinearThree
 import GorensteinWalter.LinearThreeEquiv
 import Mathlib.Tactic
 
+
 /-!
 # The top-normalizer case in the order-two branch
 

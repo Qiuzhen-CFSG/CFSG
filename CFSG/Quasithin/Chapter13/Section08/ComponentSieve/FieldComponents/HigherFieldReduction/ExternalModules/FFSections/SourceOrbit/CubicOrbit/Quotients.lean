@@ -1,0 +1,428 @@
+module
+
+public import CFSG.Quasithin.Chapter13.Section08.ComponentSieve.FieldComponents.HigherFieldReduction.ExternalModules.FFSections.SectionCoordinates
+public import CFSG.Quasithin.Chapter13.Section08.ComponentSieve.FieldComponents.HigherFieldReduction.ExternalModules.FFSections.SourceOrbit.Selection
+public import CFSG.Quasithin.Chapter13.Section08.ComponentSieve.FieldComponents.HigherFieldReduction.SeedAction
+
+/-!
+# Selected central quotients and canonical multiplicity coordinates
+
+The literal inclusion I → W induces the injection I/C_I(K) → W/C_W(K),
+compatible with the ambient central quotient map. If W is the sum of I
+and an actual right conjugate, these images span its central quotient.
+
+Compose the inclusion with the inverse of the canonical pair coordinates.
+One projection is nonzero, hence injective by irreducibility. The spanning
+pair bounds the dimension and makes that projection surjective. This proves
+an equivariant identification of the selected central quotient with the
+canonical multiplicity space without identifying I with an inverter-fixed
+subspace. Tensor coordinates retain both the component and S₃ actions.
+
+The orbit identity is an explicit input of these coordinate constructors;
+CubicOrbit.Orbit derives it from group generation. Its source application
+must also discharge that generation, as described in CubicOrbit.
+
+Source: Aschbacher–Smith, proof of 13.8.20(a), printed pp.954–955;
+A.1.40–42, pp.31–32, combined manuscript of 1 March 2004.
+-/
+
+@[expose] public noncomputable section
+
+open Subgroup Representation Representation.BinaryOffender InvertedCubicTensor
+open scoped TensorProduct IsMulCommutative
+open CFSG.Quasithin.Chapter15.Section03.AbelianAmalgam.GenerationOne.RepresentationReduction.SourceRestrictions.Cases
+
+namespace CFSG.Quasithin.Chapter13.Section08.ComponentSieve.FieldComponents.HigherFieldReduction.ExternalModules.FFSections.SourceOrbit
+
+variable {G V : Type*} [Group G] [AddCommGroup V] [Module (ZMod 2) V]
+  (ρ : Representation (ZMod 2) G V) (L : Subgroup G) [L.Normal]
+  (s : S₃ →* G) (hs : ∀ (k : L) g, Commute (k : G) (s g))
+
+/-- The fixed-space quotient map on the chosen constituent, followed by its
+literal inclusion into the orbit quotient.  This is the actual map used to
+compare `I / C_I(K*)` with the canonical multiplicity coordinates. -/
+noncomputable def selectedCentralImageMap
+    (I : Submodule (ZMod 2) V) (_hI : L ≤ subspaceStabilizer ρ I)
+    (W : Subrepresentation ρ) (hIW : I ≤ W.toSubmodule) :
+    centralQuotient ρ L I →ₗ[ZMod 2]
+      (W.toSubmodule ⧸ (fixedSpace ρ L).comap W.toSubmodule.subtype) :=
+  ((fixedSpace ρ L).comap I.subtype).liftQ
+    (((fixedSpace ρ L).comap W.toSubmodule.subtype).mkQ.comp
+      (Submodule.inclusion hIW)) (by
+        intro v hv
+        apply (Submodule.Quotient.mk_eq_zero _).mpr
+        exact hv)
+
+omit [L.Normal] in
+theorem selectedCentralImageMap_injective
+    (I : Submodule (ZMod 2) V) (_hI : L ≤ subspaceStabilizer ρ I)
+    (W : Subrepresentation ρ) (hIW : I ≤ W.toSubmodule)
+    : Function.Injective (selectedCentralImageMap ρ L I _hI W hIW) := by
+  apply (injective_iff_map_eq_zero _).mpr
+  intro q hq
+  induction q using Submodule.Quotient.induction_on with
+  | _ v =>
+    apply (Submodule.Quotient.mk_eq_zero _).mpr
+    have hq' := hq
+    change ((fixedSpace ρ L).comap W.toSubmodule.subtype).mkQ
+        ⟨v, hIW v.property⟩ = 0 at hq'
+    have hvW : (⟨v, hIW v.property⟩ : W.toSubmodule) ∈
+        (fixedSpace ρ L).comap W.toSubmodule.subtype := by
+      apply (Submodule.Quotient.mk_eq_zero _).mp
+      exact hq'
+    exact hvW
+
+/-- The selected constituent quotient is linearly equivalent to its actual
+image inside the central quotient of the literal orbit. -/
+noncomputable def selectedCentralImageEquiv
+    (I : Submodule (ZMod 2) V) (hI : L ≤ subspaceStabilizer ρ I)
+    (W : Subrepresentation ρ) (hIW : I ≤ W.toSubmodule) :
+    centralQuotient ρ L I ≃ₗ[ZMod 2]
+      LinearMap.range (selectedCentralImageMap ρ L I hI W hIW) :=
+  LinearEquiv.ofBijective
+    ((selectedCentralImageMap ρ L I hI W hIW).codRestrict _
+      (fun x => LinearMap.mem_range_self _ x))
+    ⟨(by
+      intro x y hxy
+      apply selectedCentralImageMap_injective ρ L I hI W hIW
+      exact congrArg Subtype.val hxy), by
+      rintro ⟨_, ⟨v, rfl⟩⟩
+      exact ⟨v, rfl⟩⟩
+
+theorem selectedCentralImageMap_equivariant
+    (I : Submodule (ZMod 2) V) (hI : L ≤ subspaceStabilizer ρ I)
+    (W : Subrepresentation ρ) (hIW : I ≤ W.toSubmodule)
+    (k : L) (v : centralQuotient ρ L I) :
+    selectedCentralImageMap ρ L I hI W hIW
+        (centralQuotientRepresentation ρ L I hI k v) =
+      (sectionRepresentation ρ
+        { toSubmodule := fixedSpace ρ L
+          apply_mem_toSubmodule g v hv :=
+            (fixedSpace_stable_of_normal ρ L (Subgroup.mem_top g) v).mpr hv }
+        W) k (selectedCentralImageMap ρ L I hI W hIW v) := by
+  induction v using Submodule.Quotient.induction_on with
+  | _ v => rfl
+
+/-- The literal upper space generated by the selected constituent. -/
+noncomputable def selectedOrbitUpper
+    (I : Submodule (ZMod 2) V) : Subrepresentation ρ where
+  toSubmodule := orbitSpan ρ ⊤ I
+  apply_mem_toSubmodule g v hv :=
+    (orbitSpan_invariant ρ ⊤ I (Subgroup.mem_top g) v).mpr hv
+
+/-- The actual fixed lower space used in the central quotient of the orbit. -/
+noncomputable def selectedOrbitLower : Subrepresentation ρ where
+  toSubmodule := fixedSpace ρ L
+  apply_mem_toSubmodule g v hv :=
+    (fixedSpace_stable_of_normal ρ L (Subgroup.mem_top g) v).mpr hv
+
+/-- The canonical pair coordinates on the literal selected orbit section. -/
+noncomputable def selectedOrbitPairEquiv
+    (I : Submodule (ZMod 2) V)
+    (hgen : subspaceCommutator ρ ⊤ ((alternatingGroup (Fin 3)).map s) = ⊤) :
+    (SectionMultiplicity ρ s
+        (selectedOrbitLower ρ L) (selectedOrbitUpper ρ I) ×
+      SectionMultiplicity ρ s
+        (selectedOrbitLower ρ L) (selectedOrbitUpper ρ I)) ≃ₗ[ZMod 2]
+      SectionSpace ρ (selectedOrbitLower ρ L) (selectedOrbitUpper ρ I) :=
+  sectionPairEquiv ρ s (selectedOrbitLower ρ L)
+    (selectedOrbitUpper ρ I) hgen
+
+include hs in
+theorem selectedOrbitPairEquiv_equivariant
+    (I : Submodule (ZMod 2) V)
+    (hgen : subspaceCommutator ρ ⊤ ((alternatingGroup (Fin 3)).map s) = ⊤)
+    (k : L)
+    (a b : SectionMultiplicity ρ s
+      (selectedOrbitLower ρ L) (selectedOrbitUpper ρ I)) :
+    selectedOrbitPairEquiv (ρ := ρ) (L := L) (s := s) I hgen
+        (sectionMultiplicityAction ρ L.subtype s hs
+          (selectedOrbitLower ρ L) (selectedOrbitUpper ρ I) k a,
+          sectionMultiplicityAction ρ L.subtype s hs
+            (selectedOrbitLower ρ L) (selectedOrbitUpper ρ I) k b) =
+      sectionRepresentation ρ (selectedOrbitLower ρ L) (selectedOrbitUpper ρ I)
+        (L.subtype k)
+        (selectedOrbitPairEquiv (ρ := ρ) (L := L) (s := s) I hgen (a,b)) :=
+  sectionPairEquiv_equivariant ρ L.subtype s hs
+    (selectedOrbitLower ρ L) (selectedOrbitUpper ρ I) hgen k a b
+
+/-- The canonical tensor coordinates on the literal selected orbit section. -/
+noncomputable def selectedOrbitTensorEquiv
+    (I : Submodule (ZMod 2) V)
+    (hgen : subspaceCommutator ρ ⊤ ((alternatingGroup (Fin 3)).map s) = ⊤) :
+    SectionMultiplicity ρ s
+        (selectedOrbitLower ρ L) (selectedOrbitUpper ρ I) ⊗[ZMod 2]
+        BinaryPermutation.core (Fin 3) ≃ₗ[ZMod 2]
+      SectionSpace ρ (selectedOrbitLower ρ L) (selectedOrbitUpper ρ I) :=
+  sectionTensorEquiv ρ s (selectedOrbitLower ρ L) (selectedOrbitUpper ρ I) hgen
+
+include hs in
+theorem selectedOrbitTensorEquiv_equivariant
+    (I : Submodule (ZMod 2) V)
+    (hgen : subspaceCommutator ρ ⊤ ((alternatingGroup (Fin 3)).map s) = ⊤)
+    (k : L) (g : S₃)
+    (z : SectionMultiplicity ρ s
+      (selectedOrbitLower ρ L) (selectedOrbitUpper ρ I) ⊗[ZMod 2]
+      BinaryPermutation.core (Fin 3)) :
+    selectedOrbitTensorEquiv (ρ := ρ) (L := L) (s := s) I hgen
+        (Representation.HigherFieldBorelFixedSpaces.externalTensor
+          (sectionMultiplicityAction ρ L.subtype s hs
+            (selectedOrbitLower ρ L) (selectedOrbitUpper ρ I))
+          (BinaryPermutation.coreRepresentation (Fin 3)) (k,g) z) =
+      sectionRepresentation ρ (selectedOrbitLower ρ L) (selectedOrbitUpper ρ I)
+        (L.subtype k * s g)
+        (selectedOrbitTensorEquiv (ρ := ρ) (L := L) (s := s) I hgen z) :=
+  sectionTensorEquiv_equivariant ρ L.subtype s hs
+    (selectedOrbitLower ρ L) (selectedOrbitUpper ρ I) hgen k g z
+
+
+
+/-- The inclusion of the literal orbit quotient into the ambient central quotient. -/
+def selectedOrbitAmbientMap (I : Submodule (ZMod 2) V) :
+    SectionSpace ρ (selectedOrbitLower ρ L) (selectedOrbitUpper ρ I) →ₗ[ZMod 2]
+      V ⧸ fixedSpace ρ L :=
+  ((fixedSpace ρ L).comap (orbitSpan ρ ⊤ I).subtype).liftQ
+    ((fixedSpace ρ L).mkQ.comp (orbitSpan ρ ⊤ I).subtype) (by
+      intro v hv
+      exact (Submodule.Quotient.mk_eq_zero _).mpr hv)
+
+theorem selectedOrbitAmbientMap_injective (I : Submodule (ZMod 2) V) :
+    Function.Injective (selectedOrbitAmbientMap ρ L I) := by
+  apply (injective_iff_map_eq_zero _).mpr
+  intro q hq
+  induction q using Submodule.Quotient.induction_on with
+  | _ v =>
+    exact (Submodule.Quotient.mk_eq_zero _).mpr
+      ((Submodule.Quotient.mk_eq_zero (fixedSpace ρ L)).mp hq)
+
+/-- The two explicit quotient maps commute with the original inclusion of I. -/
+theorem selectedCentralImageMap_ambient
+    (I : Submodule (ZMod 2) V) (hI : L ≤ subspaceStabilizer ρ I)
+    (q : centralQuotient ρ L I) :
+    selectedOrbitAmbientMap ρ L I
+        (selectedCentralImageMap ρ L I hI (selectedOrbitUpper ρ I)
+          (le_orbitSpan ρ ⊤ I) q) =
+      (centralQuotientImageEquiv ρ L I q).val := by
+  induction q using Submodule.Quotient.induction_on with
+  | _ v => rfl
+
+private theorem irreducible_equiv_of_pair_bound
+    {K A M Q : Type*} [Group K]
+    [AddCommGroup A] [Module (ZMod 2) A] [FiniteDimensional (ZMod 2) A]
+    [AddCommGroup M] [Module (ZMod 2) M] [FiniteDimensional (ZMod 2) M]
+    [AddCommGroup Q] [Module (ZMod 2) Q] [FiniteDimensional (ZMod 2) Q]
+    (α : Representation (ZMod 2) K A) [IsIrreducible α]
+    (μ : Representation (ZMod 2) K M) (β : Representation (ZMod 2) K Q)
+    (e : (M × M) ≃ₗ[ZMod 2] Q)
+    (he : ∀ k a b, e (μ k a, μ k b) = β k (e (a,b)))
+    (f : A →ₗ[ZMod 2] Q) (hf : Function.Injective f)
+    (hfe : ∀ k a, f (α k a) = β k (f a))
+    (d : (A × A) →ₗ[ZMod 2] Q) (hd : Function.Surjective d) :
+    ∃ j : α.Equiv μ,
+      (∀ a, j a = (e.symm (f a)).1) ∨
+      (∀ a, j a = (e.symm (f a)).2) := by
+  let _ := Subrepresentation.irreducible_module_nontrivial α
+  let f₁ : IntertwiningMap α μ :=
+    ((LinearMap.fst (ZMod 2) M M).comp (e.symm.toLinearMap.comp f)).intertwiningMap_of_isIntertwiningMap α μ (by
+        intro k a
+        have h : e.symm (f (α k a)) =
+            (μ k (e.symm (f a)).1, μ k (e.symm (f a)).2) := by
+          apply e.injective
+          rw [e.apply_symm_apply, he, e.apply_symm_apply, hfe]
+        exact congrArg Prod.fst h)
+  let f₂ : IntertwiningMap α μ :=
+    ((LinearMap.snd (ZMod 2) M M).comp (e.symm.toLinearMap.comp f)).intertwiningMap_of_isIntertwiningMap α μ (by
+        intro k a
+        have h : e.symm (f (α k a)) =
+            (μ k (e.symm (f a)).1, μ k (e.symm (f a)).2) := by
+          apply e.injective
+          rw [e.apply_symm_apply, he, e.apply_symm_apply, hfe]
+        exact congrArg Prod.snd h)
+  have hbound : Module.finrank (ZMod 2) M ≤ Module.finrank (ZMod 2) A := by
+    have h := LinearMap.finrank_le_finrank_of_surjective hd
+    have hdim := e.finrank_eq
+    rw [Module.finrank_prod] at h hdim
+    omega
+  have make (j : IntertwiningMap α μ) (hj : Function.Injective j) :
+      Function.Bijective j := by
+    refine ⟨hj, ?_⟩
+    apply (LinearMap.injective_iff_surjective_of_finrank_eq_finrank
+      (le_antisymm (LinearMap.finrank_le_finrank_of_injective hj) hbound)).mp hj
+  rcases IsIrreducible.injective_or_eq_zero f₁ with h₁ | h₁
+  · exact ⟨f₁.ofBijective (make f₁ h₁), Or.inl (fun _ => rfl)⟩
+  rcases IsIrreducible.injective_or_eq_zero f₂ with h₂ | h₂
+  · exact ⟨f₂.ofBijective (make f₂ h₂), Or.inr (fun _ => rfl)⟩
+  exfalso
+  obtain ⟨a, ha⟩ := exists_ne (0 : A)
+  apply ha
+  apply hf
+  apply e.symm.injective
+  rw [map_zero, map_zero]
+  apply Prod.ext
+  · exact congrArg (fun j : IntertwiningMap α μ => j a) h₁
+  · exact congrArg (fun j : IntertwiningMap α μ => j a) h₂
+
+/-- The central quotient is spanned by the chosen constituent and its actual
+right conjugate. The map uses inclusion into W and the quotient action of t⁻¹. -/
+def selectedCentralPairMap (I : Submodule (ZMod 2) V)
+    (hI : L ≤ subspaceStabilizer ρ I) (t : G) :
+    (centralQuotient ρ L I × centralQuotient ρ L I) →ₗ[ZMod 2]
+      SectionSpace ρ (selectedOrbitLower ρ L) (selectedOrbitUpper ρ I) :=
+  let f := selectedCentralImageMap ρ L I hI (selectedOrbitUpper ρ I)
+    (le_orbitSpan ρ ⊤ I)
+  f.coprod ((sectionRepresentation ρ (selectedOrbitLower ρ L)
+    (selectedOrbitUpper ρ I) t⁻¹).comp f)
+
+theorem selectedCentralPairMap_surjective (I : Submodule (ZMod 2) V)
+    (hI : L ≤ subspaceStabilizer ρ I) (t : G)
+    (horbit : orbitSpan ρ ⊤ I = I ⊔ rightConjugate ρ I t) :
+    Function.Surjective (selectedCentralPairMap ρ L I hI t) := by
+  intro q
+  induction q using Submodule.Quotient.induction_on with
+  | _ v =>
+    have hv : v.val ∈ I ⊔ rightConjugate ρ I t := horbit ▸ v.property
+    obtain ⟨a, ha, b, ⟨c,hc,rfl⟩, hab⟩ := Submodule.mem_sup.mp hv
+    refine ⟨(Submodule.Quotient.mk (⟨a,ha⟩ : I),
+      Submodule.Quotient.mk (⟨c,hc⟩ : I)), ?_⟩
+    change Submodule.Quotient.mk
+        (⟨a,le_orbitSpan ρ ⊤ I ha⟩ : orbitSpan ρ ⊤ I) +
+      Submodule.Quotient.mk
+        (⟨ρ t⁻¹ c,(selectedOrbitUpper ρ I).apply_mem_toSubmodule t⁻¹
+          (le_orbitSpan ρ ⊤ I hc)⟩ : orbitSpan ρ ⊤ I) = ((fixedSpace ρ L).comap (orbitSpan ρ ⊤ I).subtype).mkQ v
+    rw [← Submodule.Quotient.mk_add]
+    congr 1
+    exact Subtype.ext hab
+
+include hs in
+/-- A nonzero canonical coordinate of the selected constituent is a component
+equivalence. The two-conjugate identity is explicit here; the source generation
+argument supplying it is separate. No fixation of I by the marked inverter is used. -/
+theorem exists_selectedMultiplicityEquiv [FiniteDimensional (ZMod 2) V]
+    (I : Submodule (ZMod 2) V) (hI : IsIrrPlus ρ L I) (t : G)
+    (horbit : orbitSpan ρ ⊤ I = I ⊔ rightConjugate ρ I t)
+    (hgen : subspaceCommutator ρ ⊤ ((alternatingGroup (Fin 3)).map s) = ⊤) :
+    ∃ e : (centralQuotientRepresentation ρ L I hI.choose).Equiv
+        (sectionMultiplicityAction ρ L.subtype s hs
+          (selectedOrbitLower ρ L) (selectedOrbitUpper ρ I)),
+      (∀ q, e q = ((selectedOrbitPairEquiv ρ L s I hgen).symm
+        (selectedCentralImageMap ρ L I hI.choose (selectedOrbitUpper ρ I)
+          (le_orbitSpan ρ ⊤ I) q)).1) ∨
+      (∀ q, e q = ((selectedOrbitPairEquiv ρ L s I hgen).symm
+        (selectedCentralImageMap ρ L I hI.choose (selectedOrbitUpper ρ I)
+          (le_orbitSpan ρ ⊤ I) q)).2) := by
+  let _ := hI.choose_spec.2
+  exact irreducible_equiv_of_pair_bound
+    (centralQuotientRepresentation ρ L I hI.choose)
+    (sectionMultiplicityAction ρ L.subtype s hs
+      (selectedOrbitLower ρ L) (selectedOrbitUpper ρ I))
+    ((sectionRepresentation ρ (selectedOrbitLower ρ L)
+      (selectedOrbitUpper ρ I)).comp L.subtype)
+    (selectedOrbitPairEquiv ρ L s I hgen)
+    (selectedOrbitPairEquiv_equivariant ρ L s hs I hgen)
+    (selectedCentralImageMap ρ L I hI.choose (selectedOrbitUpper ρ I)
+      (le_orbitSpan ρ ⊤ I))
+    (selectedCentralImageMap_injective ρ L I hI.choose (selectedOrbitUpper ρ I)
+      (le_orbitSpan ρ ⊤ I))
+    (selectedCentralImageMap_equivariant ρ L I hI.choose (selectedOrbitUpper ρ I)
+      (le_orbitSpan ρ ⊤ I))
+    (selectedCentralPairMap ρ L I hI.choose t)
+    (selectedCentralPairMap_surjective ρ L I hI.choose t horbit)
+
+include hs in
+/-- The constructed component equivalence from the selected central quotient
+to the canonical multiplicity representation on the literal orbit section. -/
+def selectedMultiplicityEquiv [FiniteDimensional (ZMod 2) V]
+    (I : Submodule (ZMod 2) V) (hI : IsIrrPlus ρ L I) (t : G)
+    (horbit : orbitSpan ρ ⊤ I = I ⊔ rightConjugate ρ I t)
+    (hgen : subspaceCommutator ρ ⊤ ((alternatingGroup (Fin 3)).map s) = ⊤) :
+    (centralQuotientRepresentation ρ L I hI.choose).Equiv
+      (sectionMultiplicityAction ρ L.subtype s hs
+        (selectedOrbitLower ρ L) (selectedOrbitUpper ρ I)) :=
+  (exists_selectedMultiplicityEquiv ρ L s hs I hI t horbit hgen).choose
+
+include hs in
+theorem selectedMultiplicityEquiv_equivariant [FiniteDimensional (ZMod 2) V]
+    (I : Submodule (ZMod 2) V) (hI : IsIrrPlus ρ L I) (t : G)
+    (horbit : orbitSpan ρ ⊤ I = I ⊔ rightConjugate ρ I t)
+    (hgen : subspaceCommutator ρ ⊤ ((alternatingGroup (Fin 3)).map s) = ⊤)
+    (k : L) (q : centralQuotient ρ L I) :
+    selectedMultiplicityEquiv ρ L s hs I hI t horbit hgen
+        (centralQuotientRepresentation ρ L I hI.choose k q) =
+      sectionMultiplicityAction ρ L.subtype s hs
+        (selectedOrbitLower ρ L) (selectedOrbitUpper ρ I) k
+        (selectedMultiplicityEquiv ρ L s hs I hI t horbit hgen q) :=
+  (selectedMultiplicityEquiv ρ L s hs I hI t horbit hgen).toIntertwiningMap.isIntertwining _ _ k q
+
+include hs in
+/-- The chosen equivalence is one of the two canonical coordinate projections
+of the literal inclusion; this specifies its compatibility with the quotient maps. -/
+theorem selectedMultiplicityEquiv_coordinate [FiniteDimensional (ZMod 2) V]
+    (I : Submodule (ZMod 2) V) (hI : IsIrrPlus ρ L I) (t : G)
+    (horbit : orbitSpan ρ ⊤ I = I ⊔ rightConjugate ρ I t)
+    (hgen : subspaceCommutator ρ ⊤ ((alternatingGroup (Fin 3)).map s) = ⊤) :
+    (∀ q, selectedMultiplicityEquiv ρ L s hs I hI t horbit hgen q =
+      ((selectedOrbitPairEquiv ρ L s I hgen).symm
+        (selectedCentralImageMap ρ L I hI.choose (selectedOrbitUpper ρ I)
+          (le_orbitSpan ρ ⊤ I) q)).1) ∨
+    (∀ q, selectedMultiplicityEquiv ρ L s hs I hI t horbit hgen q =
+      ((selectedOrbitPairEquiv ρ L s I hgen).symm
+        (selectedCentralImageMap ρ L I hI.choose (selectedOrbitUpper ρ I)
+          (le_orbitSpan ρ ⊤ I) q)).2) :=
+  (exists_selectedMultiplicityEquiv ρ L s hs I hI t horbit hgen).choose_spec
+
+include hs in
+/-- Tensor coordinates using the selected I/C_I(K), transported through the
+proved multiplicity equivalence and the canonical tensor map on W/C_W(K). -/
+def selectedCentralTensorEquiv [FiniteDimensional (ZMod 2) V]
+    (I : Submodule (ZMod 2) V) (hI : IsIrrPlus ρ L I) (t : G)
+    (horbit : orbitSpan ρ ⊤ I = I ⊔ rightConjugate ρ I t)
+    (hgen : subspaceCommutator ρ ⊤ ((alternatingGroup (Fin 3)).map s) = ⊤) :
+    centralQuotient ρ L I ⊗[ZMod 2] BinaryPermutation.core (Fin 3) ≃ₗ[ZMod 2]
+      SectionSpace ρ (selectedOrbitLower ρ L) (selectedOrbitUpper ρ I) :=
+  (TensorProduct.congr
+    (selectedMultiplicityEquiv ρ L s hs I hI t horbit hgen).toLinearEquiv
+    (LinearEquiv.refl _ _)).trans (selectedOrbitTensorEquiv ρ L s I hgen)
+
+include hs in
+set_option backward.isDefEq.respectTransparency false in
+theorem selectedCentralTensorEquiv_equivariant [FiniteDimensional (ZMod 2) V]
+    (I : Submodule (ZMod 2) V) (hI : IsIrrPlus ρ L I) (t : G)
+    (horbit : orbitSpan ρ ⊤ I = I ⊔ rightConjugate ρ I t)
+    (hgen : subspaceCommutator ρ ⊤ ((alternatingGroup (Fin 3)).map s) = ⊤)
+    (k : L) (g : S₃)
+    (z : centralQuotient ρ L I ⊗[ZMod 2] BinaryPermutation.core (Fin 3)) :
+    selectedCentralTensorEquiv ρ L s hs I hI t horbit hgen
+        (Representation.HigherFieldBorelFixedSpaces.externalTensor
+          (centralQuotientRepresentation ρ L I hI.choose)
+          (BinaryPermutation.coreRepresentation (Fin 3)) (k,g) z) =
+      sectionRepresentation ρ (selectedOrbitLower ρ L) (selectedOrbitUpper ρ I)
+        (k.val * s g) (selectedCentralTensorEquiv ρ L s hs I hI t horbit hgen z) := by
+  let e := selectedMultiplicityEquiv ρ L s hs I hI t horbit hgen
+  have ht : TensorProduct.congr e.toLinearEquiv (LinearEquiv.refl _ _)
+      (Representation.HigherFieldBorelFixedSpaces.externalTensor
+        (centralQuotientRepresentation ρ L I hI.choose)
+        (BinaryPermutation.coreRepresentation (Fin 3)) (k,g) z) =
+    Representation.HigherFieldBorelFixedSpaces.externalTensor
+      (sectionMultiplicityAction ρ L.subtype s hs
+        (selectedOrbitLower ρ L) (selectedOrbitUpper ρ I))
+      (BinaryPermutation.coreRepresentation (Fin 3)) (k,g)
+      (TensorProduct.congr e.toLinearEquiv (LinearEquiv.refl _ _) z) := by
+    induction z using TensorProduct.induction_on with
+    | zero => simp only [map_zero]
+    | tmul a n =>
+      simp only [Representation.HigherFieldBorelFixedSpaces.externalTensor,
+        Representation.tprod_apply, MonoidHom.comp_apply,
+        TensorProduct.map_tmul, TensorProduct.congr_tmul, LinearEquiv.refl_apply,
+        MonoidHom.coe_fst, MonoidHom.coe_snd]
+      rw [show e.toLinearEquiv (centralQuotientRepresentation ρ L I hI.choose k a) =
+        sectionMultiplicityAction ρ L.subtype s hs
+          (selectedOrbitLower ρ L) (selectedOrbitUpper ρ I) k (e a) from
+        selectedMultiplicityEquiv_equivariant ρ L s hs I hI t horbit hgen k a]
+      rfl
+    | add x y hx hy => simp only [map_add, hx, hy]
+  exact (congrArg (selectedOrbitTensorEquiv ρ L s I hgen) ht).trans
+    (selectedOrbitTensorEquiv_equivariant ρ L s hs I hgen k g _)
+
+end CFSG.Quasithin.Chapter13.Section08.ComponentSieve.FieldComponents.HigherFieldReduction.ExternalModules.FFSections.SourceOrbit
+
+end

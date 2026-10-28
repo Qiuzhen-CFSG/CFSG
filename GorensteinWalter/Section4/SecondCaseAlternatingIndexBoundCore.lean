@@ -257,7 +257,7 @@ public theorem secondCase_index_le_seven_of_involution_fibers
         exact hbound ω (Finset.mem_erase.mp _hω).1
       _ = 21 * s.card := by
         rw [Finset.sum_const]
-        simp [nsmul_eq_mul, mul_comm]
+        simp [mul_comm]
       _ ≤ 21 * (Nat.card Ω - 1) :=
         Nat.mul_le_mul_left 21 hs_le
   have hbaseSum :
@@ -331,7 +331,7 @@ private theorem base_fiber_card_eq
 of the involutions in the coset `M·y`. -/
 private theorem nonbase_fiber_card_eq
     {G : Type u} [Group G] [Finite G] (M : Subgroup G)
-    {y : G} (hy : IsInvolution y) (hyM : y ∉ M) :
+    {y : G} (_hy : IsInvolution y) (_hyM : y ∉ M) :
     Nat.card {x : G // IsInvolution x ∧
         QuotientGroup.mk (s := M) (x⁻¹ : G) =
           QuotientGroup.mk (s := M) (y⁻¹ : G)} =

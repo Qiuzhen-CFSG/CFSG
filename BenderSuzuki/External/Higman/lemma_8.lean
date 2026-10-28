@@ -2,10 +2,11 @@ module
 
 public import BenderSuzuki.External.Higman.lemma_1
 public import BenderSuzuki.External.Higman.lemma_6
-import FeitThompson.GroupAction.Defs
-import FeitThompson.GroupAction.Quotient
-import FeitThompson.Frattini.Core
+import Theory.GroupAction.Defs
+import Theory.GroupAction.Quotient
+public import Theory.Frattini.PGroup
 import Mathlib.LinearAlgebra.FixedSubmodule
+
 
 /-!
 # Higman Lemma 8

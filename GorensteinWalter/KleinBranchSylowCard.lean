@@ -4,6 +4,7 @@ public import GorensteinWalter.CardSupOfDisjointNormalizer
 public import GorensteinWalter.Section2.Theorem26
 import Mathlib.Tactic
 
+
 /-!
 # Sylow order in the Klein-four / D6 centralizer branch
 -/

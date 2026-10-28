@@ -1,5 +1,7 @@
 module
 
+public import Theory.Character.Peterfalvi2
+
 public import FeitThompson.PFsection2.PFsection2_5
 public import FeitThompson.PFsection2.PFsection2_1
 public import FeitThompson.PFsection2.PFsection2_7
@@ -94,13 +96,13 @@ private theorem uliftRepresentation_character
 private theorem isVirtualCharacter_of_isCharacter
     {G : Type u} [Group G] [Finite G]
     (χ : Section1.ClassFunction G) (hχ : Section1.IsCharacter χ) :
-    Theory.Character.IsVirtualCharacter χ := by
+    IsVirtualCharacter χ := by
   rcases hχ with ⟨V, _hadd, _hmod, _hfd, ρ, rfl⟩
   classical
   refine ⟨1, (fun _ : Fin 1 => (1 : ℤ)), fun _ : Fin 1 => Module.finrank ℂ V,
     fun _ : Fin 1 => standardizeRepresentation ρ, ?_⟩
   ext g
-  simp [Theory.Character.virtualCharacterOfRepresentations,
+  simp [virtualCharacterOfRepresentations,
     standardizeRepresentation_character]
 
 
@@ -116,9 +118,9 @@ private theorem character_cast_nat
 
 private theorem isVirtualCharacter_add
     {G : Type u} [Group G] {χ ψ : G → ℂ}
-    (hχ : Theory.Character.IsVirtualCharacter χ)
-    (hψ : Theory.Character.IsVirtualCharacter ψ) :
-    Theory.Character.IsVirtualCharacter (χ + ψ) := by
+    (hχ : IsVirtualCharacter χ)
+    (hψ : IsVirtualCharacter ψ) :
+    IsVirtualCharacter (χ + ψ) := by
   classical
   rcases hχ with ⟨r, m, n, ρ, rfl⟩
   rcases hψ with ⟨s, m', n', σ, rfl⟩
@@ -141,35 +143,35 @@ private theorem isVirtualCharacter_add
           (σ j))
   refine ⟨r + s, mrs, nrs, ρrs, ?_⟩
   ext g
-  simp only [Pi.add_apply, Theory.Character.virtualCharacterOfRepresentations,
+  simp only [Pi.add_apply, virtualCharacterOfRepresentations,
     mrs, nrs, ρrs, Fin.sum_univ_add]
   simp [Fin.addCases_left, Fin.addCases_right, character_cast_nat]
 
 private theorem isVirtualCharacter_zsmul
     {G : Type u} [Group G] (n : ℤ) {χ : G → ℂ}
-    (hχ : Theory.Character.IsVirtualCharacter χ) :
-    Theory.Character.IsVirtualCharacter (n • χ) := by
+    (hχ : IsVirtualCharacter χ) :
+    IsVirtualCharacter (n • χ) := by
   classical
   rcases hχ with ⟨r, m, k, ρ, rfl⟩
   refine ⟨r, fun i => n * m i, k, ρ, ?_⟩
   ext g
-  simp [Theory.Character.virtualCharacterOfRepresentations, Finset.mul_sum, mul_assoc]
+  simp [virtualCharacterOfRepresentations, Finset.mul_sum, mul_assoc]
 
 private theorem isVirtualCharacter_finset_sum
     {G : Type u} [Group G] {ι : Type*} [Fintype ι]
     (s : Finset ι) (χ : ι → G → ℂ)
-    (hχ : ∀ i ∈ s, Theory.Character.IsVirtualCharacter (χ i)) :
-    Theory.Character.IsVirtualCharacter (fun g => ∑ i ∈ s, χ i g) := by
+    (hχ : ∀ i ∈ s, IsVirtualCharacter (χ i)) :
+    IsVirtualCharacter (fun g => ∑ i ∈ s, χ i g) := by
   classical
   induction s using Finset.induction_on with
   | empty =>
       refine ⟨0, (fun i : Fin 0 => nomatch i), (fun i : Fin 0 => nomatch i),
         (fun i : Fin 0 => nomatch i), ?_⟩
       ext g
-      simp [Theory.Character.virtualCharacterOfRepresentations]
+      simp [virtualCharacterOfRepresentations]
   | @insert i s hi hs =>
       have htail :
-          Theory.Character.IsVirtualCharacter (fun g => ∑ j ∈ s, χ j g) := by
+          IsVirtualCharacter (fun g => ∑ j ∈ s, χ j g) := by
         exact hs (by
           intro j hj
           exact hχ j (by simp [hj]))
@@ -183,12 +185,12 @@ private theorem isVirtualCharacter_finset_sum
 private theorem isVirtualCharacter_isClassFunction
     {G : Type u} [Group G] [Finite G]
     {χ : Section1.ClassFunction G}
-    (hχ : Theory.Character.IsVirtualCharacter χ) :
+    (hχ : IsVirtualCharacter χ) :
     Section1.IsClassFunction χ := by
   classical
   rcases hχ with ⟨r, m, n, ρ, rfl⟩
   intro x g
-  unfold Theory.Character.virtualCharacterOfRepresentations
+  unfold virtualCharacterOfRepresentations
   refine Finset.sum_congr rfl ?_
   intro i _hi
   have hchar :
@@ -199,8 +201,8 @@ private theorem isVirtualCharacter_isClassFunction
 private theorem scalarProduct_isVirtualCharacter_eq_int
     {G : Type u} [Group G] [Finite G]
     {χ ψ : Section1.ClassFunction G}
-    (hχ : Theory.Character.IsVirtualCharacter χ)
-    (hψ : Theory.Character.IsVirtualCharacter ψ) :
+    (hχ : IsVirtualCharacter χ)
+    (hψ : IsVirtualCharacter ψ) :
     ∃ z : ℤ, Section1.scalarProduct G χ ψ = (z : ℂ) := by
   classical
   rcases hχ with ⟨r, m, n, ρ, rfl⟩
@@ -236,8 +238,8 @@ private theorem scalarProduct_isVirtualCharacter_eq_int
     ring
   calc
     Section1.scalarProduct G
-        (Theory.Character.virtualCharacterOfRepresentations r m n ρ)
-        (Theory.Character.virtualCharacterOfRepresentations s m' n' σ)
+        (virtualCharacterOfRepresentations r m n ρ)
+        (virtualCharacterOfRepresentations s m' n' σ)
         =
           Section1.scalarProduct G
             (fun g => ∑ i : Fin r, (m i : ℂ) * (ρ i).character g)
@@ -251,13 +253,13 @@ private theorem scalarProduct_isVirtualCharacter_eq_int
 private theorem isVirtualCharacter_comp_monoidHom
     {G K : Type u} [Group G] [Group K]
     (φ : K →* G) {χ : Section1.ClassFunction G}
-    (hχ : Theory.Character.IsVirtualCharacter χ) :
-    Theory.Character.IsVirtualCharacter (fun k : K => χ (φ k)) := by
+    (hχ : IsVirtualCharacter χ) :
+    IsVirtualCharacter (fun k : K => χ (φ k)) := by
   classical
   rcases hχ with ⟨r, m, n, ρ, rfl⟩
   refine ⟨r, m, n, fun i => (ρ i).comp φ, ?_⟩
   ext k
-  simp [Theory.Character.virtualCharacterOfRepresentations, Representation.character]
+  simp [virtualCharacterOfRepresentations, Representation.character]
 
 private theorem CFOn_of_virtualCharacterOn
     {G : Type u} [Group G] [Finite G]
@@ -280,59 +282,6 @@ private theorem dadeTransform_add
   · simp [dadeTransform, hg]
   · simp [dadeTransform, hg]
 
-
-public theorem inducedCF_isVirtualCharacter_of_virtualCharacter
-    {G : Type u} [Group G] [Finite G]
-    (S : Subgroup G) [Finite S] {ψ : Section1.ClassFunction S}
-    (hψ : Theory.Character.IsVirtualCharacter ψ) :
-    Theory.Character.IsVirtualCharacter (Section1.inducedCF S ψ) := by
-  classical
-  rcases hψ with ⟨r, m, n, ρ, rfl⟩
-  refine ⟨r, m, fun i => Module.finrank ℂ (Representation.IndV S.subtype (ρ i)),
-    fun i => standardizeRepresentation (Representation.ind S.subtype (ρ i)), ?_⟩
-  ext g
-  change Section1.inducedCF S
-      (Theory.Character.virtualCharacterOfRepresentations r m n ρ) g =
-    ∑ i : Fin r, (m i : ℂ) *
-      (standardizeRepresentation (Representation.ind S.subtype (ρ i))).character g
-  have hvirtual :
-      Theory.Character.virtualCharacterOfRepresentations r m n ρ =
-        Section1.weightedFamilySum (fun i : Fin r => (m i : ℂ))
-          (fun i : Fin r => (ρ i).character) := by
-    funext g
-    have huniv :
-        (@Finset.univ (Fin r) (Fin.fintype r)) =
-          (@Finset.univ (Fin r) (Fintype.ofFinite (Fin r))) := by
-      ext i
-      simp
-    unfold Theory.Character.virtualCharacterOfRepresentations Section1.weightedFamilySum
-    simp
-    rw [huniv]
-  calc
-    Section1.inducedCF S (Theory.Character.virtualCharacterOfRepresentations r m n ρ) g =
-        Section1.weightedFamilySum (fun i : Fin r => (m i : ℂ))
-          (fun i : Fin r => Section1.inducedCF S ((ρ i).character)) g := by
-          have hlin :
-              Section1.inducedCF S (Theory.Character.virtualCharacterOfRepresentations r m n ρ) =
-                Section1.weightedFamilySum (fun i : Fin r => (m i : ℂ))
-                  (fun i : Fin r => Section1.inducedCF S ((ρ i).character)) := by
-            rw [hvirtual]
-            exact Section1.inducedCF_weightedFamilySum S
-              (fun i : Fin r => (m i : ℂ)) (fun i : Fin r => (ρ i).character)
-          simpa using congrFun hlin g
-    _ = ∑ i : Fin r, (m i : ℂ) *
-          (standardizeRepresentation (Representation.ind S.subtype (ρ i))).character g := by
-          have huniv :
-              (@Finset.univ (Fin r) (Fin.fintype r)) =
-                (@Finset.univ (Fin r) (Fintype.ofFinite (Fin r))) := by
-            ext i
-            simp
-          rw [Section1.weightedFamilySum]
-          rw [huniv]
-          refine Finset.sum_congr rfl ?_
-          intro i hi
-          simp [standardizeRepresentation_character,
-            Section1.inducedCF_eq_representation_character]
 
 public theorem MOfSet_isInternalSemidirectProduct
     {G : Type u} [Group G] [Finite G]
@@ -675,8 +624,8 @@ public theorem alphaBFromProjection_isVirtualCharacter
     (A : Set G) (L : Subgroup G) (H : G → Subgroup G)
     (h : Hypothesis2 A L H) {B : Set G} (hB : B.Nonempty) (hBA : B ⊆ A)
     (α : Section1.ClassFunction L)
-    (hα : Theory.Character.IsVirtualCharacter α) :
-    Theory.Character.IsVirtualCharacter (alphaBFromProjection A L H h hB hBA α) := by
+    (hα : IsVirtualCharacter α) :
+    IsVirtualCharacter (alphaBFromProjection A L H h hB hBA α) := by
   exact isVirtualCharacter_comp_monoidHom
     (MOfSetProjectionToL A L H h hB hBA) hα
 
@@ -736,12 +685,12 @@ private theorem dadeInclusionExclusionSum_isVirtualCharacter
     (reps : Finset (Set G))
     (αB : (B : Set G) → Section1.ClassFunction (MOfSet H L B))
     (hαB : ∀ B ∈ reps,
-      Theory.Character.IsVirtualCharacter (αB B)) :
-    Theory.Character.IsVirtualCharacter (dadeInclusionExclusionSum L H reps αB) := by
+      IsVirtualCharacter (αB B)) :
+    IsVirtualCharacter (dadeInclusionExclusionSum L H reps αB) := by
   classical
   have hterm :
       ∀ B ∈ reps,
-        Theory.Character.IsVirtualCharacter
+        IsVirtualCharacter
           (((-1 : ℤ) ^ Nat.card B) •
             Section1.inducedCF (MOfSet H L B) (αB B)) := by
     intro B hB
@@ -749,7 +698,7 @@ private theorem dadeInclusionExclusionSum_isVirtualCharacter
       (inducedCF_isVirtualCharacter_of_virtualCharacter
         (MOfSet H L B) (hαB B hB))
   have hsum :
-      Theory.Character.IsVirtualCharacter
+      IsVirtualCharacter
         (fun g : G =>
           ∑ B ∈ reps, ((-1 : ℤ) ^ Nat.card B : ℂ) *
             Section1.inducedCF (MOfSet H L B) (αB B) g) := by
@@ -1057,7 +1006,7 @@ private theorem conjBy_mem_H_of_mem_elementCentralizer'
     conjBy g u ∈ H a := by
   let C := elementCentralizer a
   have hprod := h.centralizer_eq_product ha
-  haveI : ((H a).subgroupOf C).Normal := by
+  have : ((H a).subgroupOf C).Normal := by
     simpa [C] using internalSemidirectProduct_left_normal hprod
   have hmem :=
     Subgroup.Normal.conj_mem (show ((H a).subgroupOf C).Normal from inferInstance)
@@ -1236,13 +1185,13 @@ private theorem conjugateImage_cosetProduct_eq_of_nonempty_inter
 
 private theorem isVirtualCharacter_neg
     {G : Type u} [Group G]
-    {χ : G → ℂ} (hχ : Theory.Character.IsVirtualCharacter χ) :
-    Theory.Character.IsVirtualCharacter (-χ) := by
+    {χ : G → ℂ} (hχ : IsVirtualCharacter χ) :
+    IsVirtualCharacter (-χ) := by
   classical
   rcases hχ with ⟨r, m, n, ρ, rfl⟩
   refine ⟨r, fun i => -m i, n, ρ, ?_⟩
   ext g
-  simp [Theory.Character.virtualCharacterOfRepresentations]
+  simp [virtualCharacterOfRepresentations]
 
 private theorem conjugateIn_refl {G : Type u} [Group G] (g : G) :
     conjugateIn g g := by
@@ -1498,9 +1447,9 @@ private theorem support_piece_filter_sum_eq_transporter_card_sum
     ∃ b : G, b ∈ normalizerIn L B ∧ conjugateInSubgroup L a b ∧
       x⁻¹ * g * x ∈ rightTranslateSet (HInter H B : Set G) b
   let idx : Type u := {b : G // b ∈ normalizerIn L B ∧ conjugateInSubgroup L a b}
-  letI : DecidableEq G := Classical.decEq G
-  letI : DecidableEq idx := Classical.decEq idx
-  letI : Fintype idx := Fintype.ofFinite idx
+  let : DecidableEq G := Classical.decEq G
+  let : DecidableEq idx := Classical.decEq idx
+  let : Fintype idx := Fintype.ofFinite idx
   let fiber : idx → Finset G := fun b =>
     (transporterSet g
       (rightTranslateSet (HInter H B : Set G) (b : G))).toFinset
@@ -1606,7 +1555,7 @@ public theorem inducedCF_alphaB_support_piece_formula
   classical
   let αa : ℂ := α ⟨a, hAL a ha⟩
   let idx : Type u := {b : G // b ∈ normalizerIn L B ∧ conjugateInSubgroup L a b}
-  letI : Fintype idx := Fintype.ofFinite idx
+  let : Fintype idx := Fintype.ofFinite idx
   have hαproof : α ⟨a, h.subset_L a ha⟩ = αa := by
     simp [αa]
   have hfilter :=
@@ -1869,7 +1818,7 @@ private theorem scalarProduct_dadeAveraging_eq_restrict_of_constant
       exact hα.2 l hlA)
     (by
       intro l hlA
-      letI : Fintype (H (l : G)) := Fintype.ofFinite (H (l : G))
+      let : Fintype (H (l : G)) := Fintype.ofFinite (H (l : G))
       have hsum :
           (∑ x : H (l : G), χ ((l : G) * (x : G))) =
             (Nat.card (H (l : G)) : ℂ) * χ (l : G) := by
@@ -1939,12 +1888,12 @@ private theorem exists_representative_system_for_nonempty_subsets
             intro B C D hBC hCD
             exact hrel_trans.trans B C D hBC hCD } }
   let Q := Quotient s
-  haveI : Finite Q := by
+  have : Finite Q := by
     refine Finite.of_surjective (Quotient.mk s) ?_
     intro q
     refine ⟨Quotient.out q, ?_⟩
     exact Quotient.out_eq q
-  letI : Fintype Q := Fintype.ofFinite Q
+  let : Fintype Q := Fintype.ofFinite Q
   let reps : Finset (Set G) := (Finset.univ : Finset Q).image fun q =>
     ((Quotient.out q : S) : Set G)
   refine ⟨reps, ?_⟩
@@ -2323,12 +2272,12 @@ private theorem exists_representative_system_for_lconjugate_elements
             intro a b c hab hbc
             exact hrel_trans.trans a b c hab hbc } }
   let Q := Quotient s
-  haveI : Finite Q := by
+  have : Finite Q := by
     refine Finite.of_surjective (Quotient.mk s) ?_
     intro q
     refine ⟨Quotient.out q, ?_⟩
     exact Quotient.out_eq q
-  letI : Fintype Q := Fintype.ofFinite Q
+  let : Fintype Q := Fintype.ofFinite Q
   let reps : Finset G := (Finset.univ : Finset Q).image fun q =>
     ((Quotient.out q : S) : G)
   refine ⟨reps, ?_⟩
@@ -2379,8 +2328,8 @@ private theorem dadeAveragingFunction_eq_of_lconj
   have hH :
       H (conjBy (x : G) a) = conjugateSubgroup (x : G) (H a) := by
     simpa [hx] using (proposition_2_4 A L H).1 h ha x.2
-  letI : Fintype (H a) := Fintype.ofFinite (H a)
-  letI : Fintype (H (conjBy (x : G) a)) := Fintype.ofFinite (H (conjBy (x : G) a))
+  let : Fintype (H a) := Fintype.ofFinite (H a)
+  let : Fintype (H (conjBy (x : G) a)) := Fintype.ofFinite (H (conjBy (x : G) a))
   let e : H a ≃ H (conjBy (x : G) a) := by
     refine
       { toFun := fun y => ⟨conjBy (x : G) (y : G), ?_⟩
@@ -2550,7 +2499,7 @@ private theorem ncard_conjAct_orbit_mul_card_setNormalizer
     Nat.card (MulAction.orbit (ConjAct G) S) * Nat.card (setNormalizer S) =
       Nat.card G := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   have hsurj :
       Function.Surjective
         (fun x : ConjAct G =>
@@ -2561,12 +2510,12 @@ private theorem ncard_conjAct_orbit_mul_card_setNormalizer
     refine ⟨x, ?_⟩
     ext g
     simp [hx]
-  haveI : Finite (MulAction.orbit (ConjAct G) S) :=
+  have : Finite (MulAction.orbit (ConjAct G) S) :=
     Finite.of_surjective
       (fun x : ConjAct G =>
         (⟨x • S, by exact ⟨x, rfl⟩⟩ :
           MulAction.orbit (ConjAct G) S)) hsurj
-  letI : Fintype (MulAction.orbit (ConjAct G) S) :=
+  let : Fintype (MulAction.orbit (ConjAct G) S) :=
     Fintype.ofFinite (MulAction.orbit (ConjAct G) S)
   have hcard :=
     MulAction.card_orbit_mul_card_stabilizer_eq_card_group
@@ -2590,13 +2539,13 @@ private theorem conjugateImage_sum_eq
     {G : Type u} [Group G] [Finite G]
     (S : Set G) (x : G) (χ : Section1.ClassFunction G)
     (hχ : Section1.IsClassFunction χ) :
-    (letI : Fintype (conjugateImage S x) := Fintype.ofFinite (conjugateImage S x)
+    (let : Fintype (conjugateImage S x) := Fintype.ofFinite (conjugateImage S x)
       ∑ g : (conjugateImage S x), χ (g : G)) =
-      (letI : Fintype S := Fintype.ofFinite S
+      (let : Fintype S := Fintype.ofFinite S
         ∑ g : S, χ (g : G)) := by
   classical
-  letI : Fintype S := Fintype.ofFinite S
-  letI : Fintype (conjugateImage S x) := Fintype.ofFinite (conjugateImage S x)
+  let : Fintype S := Fintype.ofFinite S
+  let : Fintype (conjugateImage S x) := Fintype.ofFinite (conjugateImage S x)
   let f : S → conjugateImage S x := fun s =>
     ⟨conjBy x (s : G), ⟨s, s.2, rfl⟩⟩
   have hf : Function.Bijective f := by
@@ -2624,8 +2573,8 @@ private theorem sum_cosetProduct_eq_sum_subgroup
     ∑ g : cosetProduct a K, f (g : G) =
       ∑ k : K, f (a * (k : G)) := by
   classical
-  letI : Fintype K := Fintype.ofFinite K
-  letI : Fintype (cosetProduct a K) := Fintype.ofFinite (cosetProduct a K)
+  let : Fintype K := Fintype.ofFinite K
+  let : Fintype (cosetProduct a K) := Fintype.ofFinite (cosetProduct a K)
   let toCoset : K → cosetProduct a K := fun k =>
     ⟨a * (k : G), ⟨a, by simp, (k : G), k.2, rfl⟩⟩
   have hbij : Function.Bijective toCoset := by
@@ -2652,10 +2601,10 @@ private theorem sum_toFinset_eq_subtype
     {G : Type u} [Finite G] {M : Type*} [AddCommMonoid M]
     (S : Set G) (f : G → M) :
     ∑ g ∈ S.toFinset, f g =
-      (letI : Fintype S := Fintype.ofFinite S
+      (let : Fintype S := Fintype.ofFinite S
         ∑ g : S, f (g : G)) := by
   classical
-  letI : Fintype S := Fintype.ofFinite S
+  let : Fintype S := Fintype.ofFinite S
   simp [Set.toFinset]
 
 
@@ -2735,8 +2684,8 @@ private theorem sum_conjugateSet_cosetProduct_eq_orbit
     (@Finset.univ (conjugateImage S x)
       (Fintype.ofFinite (conjugateImage S x))).sum
       (fun g => χ (g : G))
-  letI : Fintype S := Fintype.ofFinite S
-  letI : Fintype (conjugateSet S) := Fintype.ofFinite (conjugateSet S)
+  let : Fintype S := Fintype.ofFinite S
+  let : Fintype (conjugateSet S) := Fintype.ofFinite (conjugateSet S)
   change (∑ g : conjugateSet S, χ (g : G)) =
       (Nat.card (MulAction.orbit (ConjAct G) S) : ℂ) *
         (∑ g : S, χ (g : G))
@@ -2749,11 +2698,11 @@ private theorem sum_conjugateSet_cosetProduct_eq_orbit
     refine ⟨x, ?_⟩
     ext g
     simp [hx]
-  haveI : Finite (MulAction.orbit (ConjAct G) S) :=
+  have : Finite (MulAction.orbit (ConjAct G) S) :=
     Finite.of_surjective
       (fun x : ConjAct G =>
         (⟨x • S, by exact ⟨x, rfl⟩⟩ : MulAction.orbit (ConjAct G) S)) hsurj
-  letI : Fintype (MulAction.orbit (ConjAct G) S) :=
+  let : Fintype (MulAction.orbit (ConjAct G) S) :=
     Fintype.ofFinite (MulAction.orbit (ConjAct G) S)
   let pieces : MulAction.orbit (ConjAct G) S → Finset G := fun T =>
     letI : Fintype (T : Set G) := Fintype.ofFinite (T : Set G)
@@ -2883,7 +2832,7 @@ private theorem sum_orbit_conjAct_eq_card_mul
     ∑ b : MulAction.orbit (ConjAct L) a, ψ (b : L) =
       (Nat.card (MulAction.orbit (ConjAct L) a) : ℂ) * ψ a := by
   classical
-  letI : Fintype (MulAction.orbit (ConjAct L) a) :=
+  let : Fintype (MulAction.orbit (ConjAct L) a) :=
     Fintype.ofFinite (MulAction.orbit (ConjAct L) a)
   have hconst : ∀ b : MulAction.orbit (ConjAct L) a, ψ (b : L) = ψ a := by
     intro b
@@ -3018,9 +2967,9 @@ private theorem sum_conjugateSet_cosetProduct_star_eq_orbit_h_avg
         (Nat.card (H a) : ℂ) *
           star (dadeAveragingFunction L H χ ⟨a, hAL a ha⟩) := by
   classical
-  letI : Fintype (conjugateSet (cosetProduct a (H a))) :=
+  let : Fintype (conjugateSet (cosetProduct a (H a))) :=
     Fintype.ofFinite (conjugateSet (cosetProduct a (H a)))
-  letI : Fintype (cosetProduct a (H a)) :=
+  let : Fintype (cosetProduct a (H a)) :=
     Fintype.ofFinite (cosetProduct a (H a))
   let χstar : Section1.ClassFunction G := fun g => star (χ g)
   have hχstarclass : Section1.IsClassFunction χstar := by
@@ -3466,8 +3415,8 @@ private theorem dadeInductionFormulaTerm_setConjugateBy_eq
         exact (conjugateInSubgroup_conjBy_iff x).2 hcconj
       · apply Subtype.ext
         simpa [f] using hcz.symm
-  letI : Fintype idx := Fintype.ofFinite idx
-  letI : Fintype idxc := Fintype.ofFinite idxc
+  let : Fintype idx := Fintype.ofFinite idx
+  let : Fintype idxc := Fintype.ofFinite idxc
   have hsum_idx :
       ∑ b : idxc,
           (Nat.card
@@ -3549,8 +3498,8 @@ private theorem dadeInductionFormulaTerm_lconj_left_eq
         conjugateInSubgroup_trans hac b.2.2⟩, ?_⟩
       apply Subtype.ext
       rfl
-  letI : Fintype idxa := Fintype.ofFinite idxa
-  letI : Fintype idxc := Fintype.ofFinite idxc
+  let : Fintype idxa := Fintype.ofFinite idxa
+  let : Fintype idxc := Fintype.ofFinite idxc
   have hsum :
       ∑ b : idxc,
           (Nat.card
@@ -3843,7 +3792,7 @@ private theorem sum_orbit_if_mem_normalizer_eq_subtype
         f (b : G) := by
   classical
   let orbit := MulAction.orbit (ConjAct L) aL
-  letI : Fintype orbit := Fintype.ofFinite orbit
+  let : Fintype orbit := Fintype.ofFinite orbit
   let p : orbit → Prop := fun b => ((b : L) : G) ∈ normalizerIn L B
   let e := normalizerConjugateEquivOrbitNormalizer (L := L) aL B
   have hfilter :
@@ -3893,7 +3842,7 @@ private theorem lSubsetOrbitFinset_card_mul_card_normalizerIn
       Nat.card L := by
   classical
   let toG : ConjAct L → G := fun x => ((ConjAct.ofConjAct x : L) : G)
-  letI : MulAction (ConjAct L) (Set G) := {
+  let : MulAction (ConjAct L) (Set G) := {
     smul := fun x B => setConjugateBy (toG x) B
     one_smul := by
       intro B
@@ -4632,7 +4581,7 @@ private theorem weighted_nonemptySubsets_dadeInductionFormulaTerm_support_cancel
             if a ∈ normalizerIn L B then fixedContribution B else 0) := by
     classical
     let orbit := MulAction.orbit (ConjAct L) (⟨a, hAL a ha⟩ : L)
-    letI : Fintype orbit := Fintype.ofFinite orbit
+    let : Fintype orbit := Fintype.ofFinite orbit
     let contribution : Set G → G → ℂ := fun B b =>
       ((-1 : ℂ) ^ Nat.card B) *
         (Nat.card (HInter H B) : ℂ)⁻¹ *
@@ -4690,7 +4639,7 @@ private theorem weighted_nonemptySubsets_dadeInductionFormulaTerm_support_cancel
         normalizer_card_mul_dadeInductionFormulaTerm_eq
           (A := A) (L := L) (H := H) h hAL
           (α := α) (g := g) ha hBprops.1 hBprops.2
-      letI : Fintype {b : G // b ∈ normalizerIn L B ∧ conjugateInSubgroup L a b} :=
+      let : Fintype {b : G // b ∈ normalizerIn L B ∧ conjugateInSubgroup L a b} :=
         Fintype.ofFinite _
       have horbit :
           (∑ b : orbit,
@@ -4946,11 +4895,11 @@ private theorem weighted_nonemptySubsets_dadeInductionFormulaTerm_support_cancel
         (Nat.card (elementCentralizer a) : ℂ) =
           (Nat.card (H a) : ℂ) * (Nat.card (centralizerIn L a) : ℂ) := by
       exact_mod_cast centralizer_card_eq_mul (A := A) (L := L) (H := H) h ha
-    haveI : Nonempty (H a) := ⟨⟨1, (H a).one_mem⟩⟩
+    have : Nonempty (H a) := ⟨⟨1, (H a).one_mem⟩⟩
     have hHneNat : Nat.card (H a) ≠ 0 := Nat.card_pos.ne'
     have hHne : (Nat.card (H a) : ℂ) ≠ 0 := by
       exact_mod_cast hHneNat
-    haveI : Nonempty (centralizerIn L a) := ⟨⟨1, by simp [centralizerIn]⟩⟩
+    have : Nonempty (centralizerIn L a) := ⟨⟨1, by simp [centralizerIn]⟩⟩
     have hCneNat : Nat.card (centralizerIn L a) ≠ 0 := Nat.card_pos.ne'
     have hCne : (Nat.card (centralizerIn L a) : ℂ) ≠ 0 := by
       exact_mod_cast hCneNat
@@ -5128,7 +5077,7 @@ public theorem theorem_2_6_inner_product_core
               dadeTransform H hAL α (g : G) * star (χ (g : G)) := by
           refine Finset.sum_congr rfl ?_
           intro a ha
-          letI : Fintype (conjugateSet (cosetProduct a (H a))) :=
+          let : Fintype (conjugateSet (cosetProduct a (H a))) :=
             Subtype.fintype _
           rw [show
               ∑ g ∈ piece a, dadeTransform H hAL α g * star (χ g) =
@@ -5542,7 +5491,7 @@ private theorem theorem_2_6_virtual_closure_core
           IsRepresentativeSystemForNonemptySubsets A L reps ∧
             (∀ B ∈ reps, alphaBSpec H α B (αB B)) ∧
             (∀ B ∈ reps,
-              Theory.Character.IsVirtualCharacter (αB B)) ∧
+              IsVirtualCharacter (αB B)) ∧
             dadeTransform H hAL α =
               dadeInclusionExclusionSum L H reps αB := by
     -- PF (2.9): choose representatives and define `α_B` by the semidirect
@@ -5561,7 +5510,7 @@ private theorem theorem_2_6_virtual_closure_core
       rw [dif_pos hBprops]
       exact alphaBFromProjection_spec A L H h hBprops.1 hBprops.2 α
     have hαBvirt :
-        ∀ B ∈ reps, Theory.Character.IsVirtualCharacter (αB B) := by
+        ∀ B ∈ reps, IsVirtualCharacter (αB B) := by
       intro B hBmem
       have hBprops : B.Nonempty ∧ B ⊆ A := hreps.1 B hBmem
       dsimp [αB]

@@ -1,0 +1,147 @@
+module
+public import Theory.GroupTheory.Recognition.JankoFour.SourceRecognition.FullCubicSplitting
+public import Theory.GroupTheory.Recognition.JankoFour.SourceRecognition.HexadOuterComplement
+public import Theory.GroupTheory.Recognition.JankoFour.SourceRecognition.ToddSplitting
+public import Theory.GroupTheory.Recognition.JankoFour.SourceRecognition.InvariantPoint.Hexad
+public import Theory.GroupTheory.Recognition.JankoFour.SourceRecognition.InvariantPoint.Intersection
+public import Theory.GroupTheory.Recognition.JankoFour.SourceRecognition.PlaneOverlaps
+
+/-!
+# PointData from an actual marked cocode normalizer
+
+The marked cocode action determines the exact point-plane order and its
+hexad preimage in every supplied cubic quotient. The proved full cubic
+centralizer and normalizer theorems construct the order-2160 hexad actor.
+Its invariant elementary core preimage is transverse to Q intersect E;
+Gaschütz then extends the resulting overlap complement to the whole
+normalizer. The resulting Todd isomorphism preserves both original markings.
+
+These are explicit earlier algebraic hypotheses, not an assumed splitting
+or local-data package. Native.PointData constructs them for the literal
+matrix model; the original Mathieu branch has its independently checked
+application in MathieuJ4RecognitionApplication.PointData.
+
+Source: Aschbacher--Segev, The uniqueness of groups of type J4, Invent.
+Math. 105 (1991), (4.8)--(4.9), pp.598--599, DOI 10.1007/BF01232280.
+-/
+
+public noncomputable section
+open Subgroup
+open scoped IsMulCommutative Pointwise
+namespace Theory.GroupTheory.Recognition.JankoFour.SourceRecognition
+open Sporadic.Mathieu Sporadic.Mathieu.M24LocalGeometry MathieuCode
+open LocalGeometry LocalGeometry.LocalSubgroups
+variable {G : Type*} [Group G] [Finite G]
+variable (W : Subgroup G) [IsElementaryAbelian 2 W]
+    (f : normalizer (W : Set G) →* M24) (hf : Function.Surjective f)
+    (hk : f.ker = W.subgroupOf (normalizer (W : Set G)))
+    (E : Additive W ≃ₗ[ZMod 2] Cocode)
+    (hE : ∀ n v, E (Additive.ofMul (W.normalizerMonoidHom n v)) =
+      cocodeRepresentation (f n) (E (Additive.ofMul v)))
+    (z : W) (S : Sextet) (hz : E (Additive.ofMul z) = sextetVector S)
+    (h : IsTypeJ4 (z : G))
+
+include hf hk hE hz h
+/-- Construct the point group and its actual Todd splitting, retaining both markings. -/
+theorem marked_pointData
+    (cubic : CubicAutomorphismQuotient (centralizer (z : G) ⧸ core (z : G))) :
+    ∃ data : PointData (z : G),
+      data.cubic=cubic ∧ data.E=W ∧ ∃ hm : data.M=normalizer (W : Set G),
+        (∀ x, f (MulEquiv.subgroupCongr hm (data.toddEquiv x))=x.right) ∧
+        (∀ w : W, (data.toddEquiv (SemidirectProduct.inl
+          (Multiplicative.ofAdd (E (Additive.ofMul w))))).val=w.val) := by
+  obtain ⟨X⟩ := (inferInstance : Nonempty (Sylow 3 (CubicLift.subgroup cubic)))
+  have ht := h
+  have hWcard : Nat.card W = 2048 := by
+    change Nat.card (Additive W) = _
+    rw [Nat.card_congr E.toEquiv,Module.natCard_eq_pow_finrank (K := ZMod 2),
+      finrank_cocode,Nat.card_zmod]
+    norm_num
+  have hplane := marked_cocode_plane_card W f hf
+    hk hWcard E hE z S hz
+  obtain ⟨B,hB,_,hpre⟩ := marked_pointPlane_hexad ht cubic (normalizer (W : Set G)) hplane
+  let := marked_fullCubicCentralizer_perfect W f hf hk E hE z S hz h cubic X
+  obtain ⟨s,hs,hso,_⟩ := marked_fullCubicNormalizer_split W f hf hk E hE z S hz h cubic X
+  obtain ⟨A,v,t,hAc,_,_,him,_,_,_,htp,hvt,hv,hvo,hvA,hJc,_,_,hJN,hXJ,hJM⟩ :=
+    fullCubic_hexad_outer_complement ht cubic X s (hs ▸ pow_orderOf_eq_one s) hso hB
+      (normalizer (W : Set G)) hpre
+  let J := A.map (fullCubicCentralizer cubic X).subtype ⊔ zpowers v.val
+  let C := Subgroup.centralizer ({(z : G)} : Set G)
+  let W0 := W.subgroupOf C
+  let N := W0 ⊔ core (z : G)
+  have hW0 : IsPGroup 2 W0 :=
+    (IsElementaryAbelian.isPGroup (p := 2) (G := W)).comap_subtype
+  let := ht.extraspecial
+  have hN : IsPGroup 2 N := hW0.to_sup_of_normal_right
+    (IsExtraspecial.isPGroup 2 (core (z : G)))
+  have hJW : J ≤ normalizer (W0 : Set C) :=
+    hJM.trans (Subgroup.le_normalizer_comap C.subtype)
+  have hJnorm : J ≤ normalizer (N : Set C) :=
+    (le_inf hJW le_normalizer_of_normal).trans
+      (normalizer_inf_normalizer_le_normalizer_sup W0 (core (z : G)))
+  have hdis := fullCubic_hexad_disjoint_normal_two ht cubic X hB A hAc him v hv hvo hvA N hN hXJ hJnorm
+  have hWC : W ≤ C := by
+    intro w hw
+    exact mem_centralizer_singleton_iff.mpr
+      (((Commute.all (⟨w,hw⟩ : W) z).map W.subtype).eq)
+  let ec := subgroupOfEquivOfLe hWC
+  let : IsElementaryAbelian 2 W0 := IsElementaryAbelian.of_injective ec.toMonoidHom ec.injective
+  have hWc : Nat.card W0=2048 := by
+    rw [Nat.card_congr ec.toEquiv]
+    change Nat.card (Additive W)=_
+    rw [Nat.card_congr E.toEquiv,Module.natCard_eq_pow_finrank (K := ZMod 2),
+      finrank_cocode,Nat.card_zmod]
+    norm_num
+  have hZU : center C ≤ W0 := by
+    intro x hx
+    have hh : x.val ∈ (center C).map C.subtype := mem_map_of_mem _ hx
+    rw [←core_center_eq_centralizer_center ht,LocalGeometry.core_center_image ht] at hh
+    exact (zpowers_le.mpr z.property) hh
+  have hF := hE
+  obtain ⟨hle,_,hkc,_⟩ := marked_cocode_core_image_and_lifts W f hf hk E hF z S hz ht cubic
+  let q := f.comp (coreNormalizerInclusion W hle)
+  have hker : q.ker=(W0 ⊓ core (z : G)).subgroupOf
+      (core (z : G)) := by
+    ext x
+    change f (coreNormalizerInclusion W hle x)=1 ↔
+      x.val ∈ W0 ⊓ core (z : G)
+    rw [←MonoidHom.mem_ker,hk]
+    exact ⟨fun hx => ⟨hx,x.property⟩,fun hx => hx.1⟩
+  have hIc : Nat.card (W0 ⊓ core (z : G) : Subgroup C)=128 := by
+    rw [hker,Nat.card_congr (subgroupOfEquivOfLe inf_le_right).toEquiv] at hkc
+    exact hkc
+  have hWim := InvariantPoint.cocode_design_image cubic W0
+    ((normalizer (W : Set G)).subgroupOf C) hW0 hWc hIc
+    (fun w hw => W.le_normalizer hw) (Subgroup.le_normalizer_comap C.subtype) hB hpre
+  obtain ⟨P,hPQ,hP,hPc,_,hJP,hEP⟩ := InvariantPoint.exists_original_pointCore_transverse
+    ht cubic X W0 J hZU hB hWim _
+    (Classical.choose_spec (exists_m22Hexad_complementary_point hB))
+    (InvariantPoint.hexad_actor_fixes_point ht cubic X hB A him v t htp hvt)
+  let := hP
+  obtain ⟨equiv,heq,hew⟩ := marked_cocode_todd_of_invariant_preimage W f hf hk E hF z S hz ht
+    cubic X J P hJc hXJ hJN hJM hdis hPQ hPc hEP hJP
+  let data : LocalGeometry.LocalSubgroups.PointData (z : G) := {
+    cubic := cubic
+    M := normalizer (W : Set G)
+    toddEquiv := equiv
+    hexad := B
+    hexad_mem := hB
+    overlap := hpre }
+  have hew' (w : W) : data.vectorEmbedding
+      (Multiplicative.ofAdd (E (Additive.ofMul w)))=w.val := hew w
+  have hEW : data.E=W := by
+    apply le_antisymm
+    · rintro x ⟨u,rfl⟩
+      obtain ⟨w,hw⟩ := E.surjective u.toAdd
+      have heu : Multiplicative.ofAdd (E w)=u := congrArg Multiplicative.ofAdd hw
+      rw [←heu]
+      have hew0 := hew' (Additive.toMul w)
+      change data.vectorEmbedding (Multiplicative.ofAdd (E w))=(Additive.toMul w).val at hew0
+      rw [hew0]
+      exact (Additive.toMul w).property
+    · intro w hw
+      exact ⟨Multiplicative.ofAdd (E (Additive.ofMul (⟨w,hw⟩ : W))),hew' ⟨w,hw⟩⟩
+  exact ⟨data,rfl,hEW,rfl,heq,hew⟩
+
+
+end Theory.GroupTheory.Recognition.JankoFour.SourceRecognition

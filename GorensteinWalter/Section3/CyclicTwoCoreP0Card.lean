@@ -7,6 +7,7 @@ import GorensteinWalter.KleinFourQuotientOddKernel
 import GorensteinWalter.CentralizerMap
 import Mathlib.Tactic
 
+
 /-!
 # The cyclic first-case `A₇` endpoint `|P₀| = 3`
 

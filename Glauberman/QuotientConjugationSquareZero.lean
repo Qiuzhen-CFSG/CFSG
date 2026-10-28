@@ -2,6 +2,7 @@ module
 
 public import Glauberman.MinimalNormalPSubgroupGLAction
 
+
 /-!
 # Quadratic commutators as square-zero linear perturbations
 -/

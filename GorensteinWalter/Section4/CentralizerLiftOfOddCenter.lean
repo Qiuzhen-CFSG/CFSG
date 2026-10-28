@@ -1,10 +1,11 @@
 module
 
 public import GorensteinWalter.OddCenterOfOddQuotientKernel
-public import FeitThompson.SubgroupConjAction
-public import FeitThompson.GroupAction.Quotient
+public import Theory.GroupAction.SubgroupConjugation
+public import Theory.GroupAction.Quotient
 import Mathlib.GroupTheory.GroupAction.Quotient
 import Mathlib.Tactic
+
 
 /-!
 # Lifting a quotient centralizer across an odd center
@@ -147,8 +148,9 @@ public theorem centralizer_lift_of_odd_center
       simp [hfix]
   let cocycle : A → Z := fun a =>
     ⟨(x : G)⁻¹ * (a : G) * (x : G) * (a : G)⁻¹, hdefect a⟩
-  have hcocycle : @IsCocycle₁ (↑A) (↑Z) _ _
-      (Subgroup.conjMulDistribMulActionOfLeNormalizer A Z hAZ) cocycle := by
+  have hcocycle : IsCocycle₁ (A := (↑A)) (N := (↑Z)) cocycle := by
+    let : MulDistribMulAction (↑A) (↑Z) :=
+      Subgroup.conjMulDistribMulActionOfLeNormalizer A Z hAZ
     intro a b
     apply Subtype.ext
     let : MulDistribMulAction (↑A) (↑Z) :=
@@ -228,3 +230,4 @@ public theorem centralizer_lift_of_odd_center
     _ = (z : G) * (x : G) := by group
 
 end GorensteinWalter
+

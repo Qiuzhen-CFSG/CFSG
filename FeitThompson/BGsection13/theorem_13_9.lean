@@ -1,9 +1,10 @@
 module
 
 public import FeitThompson.BGsection13.lemma_13_8
-import FeitThompson.HallSubgroups.Conjugacy
+public import Theory.GroupTheory.Hall.Conjugacy
 import Mathlib.Data.Finset.NatDivisors
 import Mathlib.GroupTheory.Schreier
+
 
 open scoped Pointwise
 
@@ -215,7 +216,7 @@ private theorem section13_exists_E_invariant_msigma_sylow
     (hE : section12EData M E E₁₂ E₁ E₂ E₃)
     (hqσ : q ∈ section10SigmaPrimes M) :
     ∃ hEσ : Subgroup.Normalizes E (section10Msigma M),
-      letI : Subgroup.Normalizes E (section10Msigma M) := hEσ
+      let : Subgroup.Normalizes E (section10Msigma M) := hEσ
       ∃ S : Sylow q.val (section10Msigma M),
         IsInvariant (↥E) (↥(section10Msigma M))
           (S : Subgroup (section10Msigma M)) := by
@@ -272,7 +273,7 @@ public theorem section13_exists_E_invariant_msigma_centralizer_sylow
     (hE_norm_Q : E ≤ Subgroup.normalizer (Q : Set G))
     (hqC : q ∈ subgroupPrimeSet (subgroupCentralizerIn (section10Msigma M) Q)) :
     ∃ hEC : Subgroup.Normalizes E (subgroupCentralizerIn (section10Msigma M) Q),
-      letI : Subgroup.Normalizes E (subgroupCentralizerIn (section10Msigma M) Q) := hEC
+      let : Subgroup.Normalizes E (subgroupCentralizerIn (section10Msigma M) Q) := hEC
       ∃ S : Sylow q.val (subgroupCentralizerIn (section10Msigma M) Q),
         IsInvariant (↥E) (↥(subgroupCentralizerIn (section10Msigma M) Q))
           (S : Subgroup (subgroupCentralizerIn (section10Msigma M) Q)) := by

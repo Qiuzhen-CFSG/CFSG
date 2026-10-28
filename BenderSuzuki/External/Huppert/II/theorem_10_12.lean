@@ -24,7 +24,7 @@ stabilizers, and matrix-coordinate maps are written inline.
 namespace BenderSuzuki
 namespace External
 
-open MatrixGroups
+open _root_.BenderSuzuki.MatrixGroups
 open scoped LinearAlgebra.Projectivization
 open scoped Matrix
 open scoped commutatorElement
@@ -39,12 +39,12 @@ private theorem hermitian_unitary_preserves_self_pairing
         (J.form.mulVec (Mmat.mulVec v)) =
       dotProduct (fun i => J.conj (v i)) (J.form.mulVec v) := by
   dsimp only
-  letI : Star K := ⟨J.conj⟩
-  letI : InvolutiveStar K := ⟨J.conj_involutive⟩
-  letI : StarMul K := ⟨fun r s => by
+  let : Star K := ⟨J.conj⟩
+  let : InvolutiveStar K := ⟨J.conj_involutive⟩
+  let : StarMul K := ⟨fun r s => by
     change J.conj (r * s) = J.conj s * J.conj r
     rw [map_mul, mul_comm]⟩
-  letI : StarRing K := ⟨fun r s => by
+  let : StarRing K := ⟨fun r s => by
     change J.conj (r + s) = J.conj r + J.conj s
     rw [map_add]⟩
   let Mmat := ((M : GL (Fin n) K) : Matrix (Fin n) (Fin n) K)
@@ -171,6 +171,8 @@ public theorem hermitianUnipotent_commutator
       hermitianUnipotentMatrix J z :=
   rfl
 
+-- This exhaustive `Fin 3` coordinate proof intentionally uses broad matrix simplification.
+set_option linter.flexible false in
 @[expose] public def hermitianUnipotentSU
     {K : Type u} [Field K] (J : HermitianForm 3 K)
     (hJstandard : J.form = !![0, 0, 1; 0, 1, 0; 1, 0, 0]) :
@@ -305,6 +307,8 @@ public theorem hermitianUnipotent_commutator
       z.1.2 * (J.conj (k : K))⁻¹ * (k : K)⁻¹ :=
   rfl
 
+-- This exhaustive `Fin 3` coordinate proof intentionally uses broad matrix simplification.
+set_option linter.flexible false in
 /-- The diagonal torus acts on the Heisenberg coordinates by the displayed
 formula from Huppert II.10.12. -/
 public theorem hermitianTorusGL_mul_unipotent
@@ -328,6 +332,8 @@ public theorem hermitianTorusGL_mul_unipotent
   all_goals try rw [J.conj_involutive]
   all_goals field_simp [hk, hconjk]
 
+-- This exhaustive `Fin 3` coordinate proof intentionally uses broad matrix simplification.
+set_option linter.flexible false in
 @[expose] public def hermitianTorusSU
     {K : Type u} [Field K] (J : HermitianForm 3 K)
     (hJstandard : J.form = !![0, 0, 1; 0, 1, 0; 1, 0, 0]) :
@@ -542,6 +548,8 @@ public theorem hermitianWeylPSU_mul_unipotent_mul_weyl
         (hermitianUnipotentGL J (hermitianBruhatRight J z hz))
   simpa only [map_mul] using congrArg Matrix.ProjGenLinGroup.mk hGL
 
+-- This coordinate comparison intentionally uses broad simplification of diagonal matrices.
+set_option linter.flexible false in
 /-- A nontrivial projective norm-one torus element.  The cube condition is
 recorded explicitly because it is exactly what makes the Corollary 2 root
 element noncentral. -/
@@ -555,7 +563,7 @@ public theorem exists_hermitian_norm_one_torus_cube_ne_one
     ∃ k : Kˣ, (k : K) ^ (q + 1) = 1 ∧ (k : K) ^ 3 ≠ 1 ∧
       hermitianTorusPSU J hJstandard k ≠ 1 ∧
         J.conj (k : K) = (k : K)⁻¹ := by
-  letI : IsCyclic Kˣ := inferInstance
+  let : IsCyclic Kˣ := inferInstance
   have hcardUnits : Nat.card Kˣ = q ^ 2 - 1 := by
     rw [Nat.card_units, hKcard]
   have hfactor : q ^ 2 - 1 = (q - 1) * (q + 1) := by
@@ -569,7 +577,7 @@ public theorem exists_hermitian_norm_one_torus_cube_ne_one
   have hthree_lt : 3 < Nat.card (rootsOfUnity (q + 1) K) := by
     rw [hnormRootsCard]
     omega
-  letI : IsCyclic (rootsOfUnity (q + 1) K) := inferInstance
+  let : IsCyclic (rootsOfUnity (q + 1) K) := inferInstance
   obtain ⟨k0, hkthree⟩ :=
     exists_pow_ne_one_of_isCyclic (G := rootsOfUnity (q + 1) K)
       (by decide : (3 : ℕ) ≠ 0) hthree_lt
@@ -661,16 +669,16 @@ public theorem hermitianTorusPSU_commute_unipotent_of_sq_eq_one
     by_contra hz_fst_ne
     apply hermitianUnipotentPSU_ne_one_of_snd_ne_zero
       J hJstandard (z ^ 2) at hzsq_root
-    apply hzsq_root
-    rw [pow_two]
-    change z.1.2 + z.1.2 - z.1.1 * J.conj z.1.1 ≠ 0
-    have htwo : (2 : K) = 0 := by
-      simpa using CharP.cast_eq_zero K 2
-    have hadd : z.1.2 + z.1.2 = 0 := by
-      linear_combination z.1.2 * htwo
-    rw [hadd, zero_sub]
-    exact neg_ne_zero.mpr
-      (mul_ne_zero hz_fst_ne ((map_ne_zero J.conj).2 hz_fst_ne))
+    · apply hzsq_root
+    · rw [pow_two]
+      change z.1.2 + z.1.2 - z.1.1 * J.conj z.1.1 ≠ 0
+      have htwo : (2 : K) = 0 := by
+        simpa using CharP.cast_eq_zero K 2
+      have hadd : z.1.2 + z.1.2 = 0 := by
+        linear_combination z.1.2 * htwo
+      rw [hadd, zero_sub]
+      exact neg_ne_zero.mpr
+        (mul_ne_zero hz_fst_ne ((map_ne_zero J.conj).2 hz_fst_ne))
   have haction : hermitianTorusAction J k z = z := by
     apply Subtype.ext
     apply Prod.ext
@@ -859,8 +867,11 @@ public theorem exists_hermitianPSU_corollary_two_seed
     exact hermitianTorusPSU_commute_unipotent_of_sq_eq_one
       J hJstandard k hkconj w hxsq
 
+-- The full coordinate construction intentionally uses broad simplification at matrix boundaries.
+set_option linter.flexible false in
 set_option backward.isDefEq.respectTransparency false in
 set_option maxHeartbeats 800000 in
+-- The full unitary-action construction needs additional elaboration heartbeats.
 /-- Huppert II.10.12, the natural `PSU(3,q^2)` action and point stabilizer. -/
 public theorem huppert_II_10_12
     {K : Type u} [Field K] [Finite K]
@@ -1027,7 +1038,7 @@ public theorem huppert_II_10_12
             ((e.symm (some z) : Omega) : P) =
               Projectivization.mk K (vaff z) (hvaff z) := by
     classical
-    letI : Fintype K := Fintype.ofFinite K
+    let : Fintype K := Fintype.ofFinite K
     have h1012_trace_fiber_card (a : K) :
         Nat.card {b : K //
           b + J.conj b + a * J.conj a = 0} = q := by
@@ -1039,7 +1050,7 @@ public theorem huppert_II_10_12
         exact Nat.card_pos
       have hfinrank : Module.finrank k0 K = 2 :=
         huppert_II_10_4_fixedField_finrank_two J q hKcard hfixed_card
-      letI : Fintype k0 := Fintype.ofFinite k0
+      let : Fintype k0 := Fintype.ofFinite k0
       have hpow : ∀ x : K, x ^ q = J.conj x := fun x =>
         (huppert_II_10_4_conj_eq_frobenius
           J q hKcard hfixed_card x).symm
@@ -1190,7 +1201,6 @@ public theorem huppert_II_10_12
                   simpa [vinf, vaff] using hc2
                 subst c
                 simp [vinf, vaff] at hc0
-
         | some z =>
             cases w with
             | none =>
@@ -1301,7 +1311,7 @@ public theorem huppert_II_10_12
               (Matrix.GeneralLinearGroup.toLin
                 (M : GL (Fin 3) K)).toLinearEquiv • (z : P)) := by
     classical
-    letI : MulAction (GL (Fin 3) K) P :=
+    let : MulAction (GL (Fin 3) K) P :=
       MulAction.compHom P Matrix.GeneralLinearGroup.toLin.toMonoidHom
     have hscalar (u : Kˣ) (x : P) :
         Matrix.GeneralLinearGroup.scalar (Fin 3) u • x = x := by
@@ -1319,7 +1329,7 @@ public theorem huppert_II_10_12
           ext i
           simp [Matrix.GeneralLinearGroup.scalar, Matrix.mulVecLin,
             Matrix.mulVec_diagonal]
-    letI : MulAction (Matrix.ProjGenLinGroup (Fin 3) K) P :=
+    let : MulAction (Matrix.ProjGenLinGroup (Fin 3) K) P :=
       Matrix.ProjGenLinGroup.mulActionOfGL hscalar
     have h1012_unitary_preserves_isotropic
         (M : J.specialSubgroup) (v : Fin 3 → K) :
@@ -1352,8 +1362,8 @@ public theorem huppert_II_10_12
         exact hiso
     let smulOmega (g : G) (z : Omega) : Omega :=
       ⟨(g : Matrix.ProjGenLinGroup (Fin 3) K) • (z : P), hA_smul g z.2⟩
-    letI : SMul G Omega := ⟨smulOmega⟩
-    letI : MulAction G Omega :=
+    let : SMul G Omega := ⟨smulOmega⟩
+    let : MulAction G Omega :=
       { one_smul := by
           intro z
           apply Subtype.ext
@@ -1373,7 +1383,7 @@ public theorem huppert_II_10_12
         exact Finite.one_lt_card
       have hfinrank : Module.finrank k0 K = 2 :=
         huppert_II_10_4_fixedField_finrank_two J q hKcard hfixed_card
-      letI : Fintype k0 := Fintype.ofFinite k0
+      let : Fintype k0 := Fintype.ofFinite k0
       have hpow : ∀ x : K, x ^ q = J.conj x := fun x =>
         (huppert_II_10_4_conj_eq_frobenius
           J q hKcard hfixed_card x).symm
@@ -1399,7 +1409,7 @@ public theorem huppert_II_10_12
       have htrker_gt : 1 < Nat.card tr.toAddMonoidHom.ker := by
         rw [htrker_card]
         exact hq
-      letI : Nontrivial tr.toAddMonoidHom.ker :=
+      let : Nontrivial tr.toAddMonoidHom.ker :=
         Finite.one_lt_card_iff_nontrivial.mp htrker_gt
       obtain ⟨ku, hku⟩ := exists_ne (0 : tr.toAddMonoidHom.ker)
       let k : K := ku
@@ -1424,7 +1434,7 @@ public theorem huppert_II_10_12
           (b + k) + J.conj (b + k) + 1 = 0 := by
         rw [map_add]
         linear_combination hbtrace + hktrace
-      letI : FaithfulSMul G Omega := faithfulSMul_iff.mpr (by
+      let : FaithfulSMul G Omega := faithfulSMul_iff.mpr (by
         intro g hg
         rcases g.property with ⟨M, hM, hMg⟩
         let Mmat : Matrix (Fin 3) (Fin 3) K := M
@@ -2021,7 +2031,7 @@ public theorem huppert_II_10_12
         ∃! r : R, rho (r : G) a = b := by
     let e := hOmegaEquiv.choose
     have heinf : e pinf = none := hOmegaEquiv.choose_spec.1
-    letI : Fintype S := Fintype.ofFinite S
+    let : Fintype S := Fintype.ofFinite S
     intro a b ha hb
     have haSome : ∃ wa : S, e a = some wa := by
       cases hea : e a with
@@ -2155,7 +2165,7 @@ public theorem huppert_II_10_12
       simp [torusMatrix, hermitianTorusMatrix, vinf,
         Matrix.mulVec]
   have hHcyclic : IsCyclic H := by
-    letI : IsCyclic Kˣ := inferInstance
+    let : IsCyclic Kˣ := inferInstance
     exact isCyclic_of_surjective torusHom.rangeRestrict
       torusHom.rangeRestrict_surjective
   have htorusMemKerIff (k : Kˣ) :
@@ -2351,7 +2361,7 @@ public theorem huppert_II_10_12
         constructor
         · simpa using congrArg Units.val hqpow
         · simpa using congrArg Units.val hthree
-    letI : IsCyclic Kˣ := inferInstance
+    let : IsCyclic Kˣ := inferInstance
     have hcardUnits : Nat.card Kˣ = q ^ 2 - 1 := by
       rw [Nat.card_units, hKcard]
     have hd : Nat.gcd (q + 1) 3 ∣ q ^ 2 - 1 := by
@@ -2618,7 +2628,7 @@ public theorem huppert_II_10_12
   have hHnormal : H ≤ Subgroup.normalizer R := by
     rcases hRcoordinates with ⟨coordR, hcoordRMatrix⟩
     intro h hh
-    letI : Finite R := Finite.of_injective
+    let : Finite R := Finite.of_injective
       coordR.symm coordR.symm.injective
     refine Subgroup.mem_normalizer_fintype ?_
     intro r hr
@@ -2755,7 +2765,7 @@ public theorem huppert_II_10_12
     have hsup_sub : R.subgroupOf U ⊔ H.subgroupOf U = ⊤ := by
       simpa [hRsupH] using
         (Subgroup.subgroupOf_sup (A := R) (A' := H) (B := U) hRle hHle).symm
-    letI : (R.subgroupOf U).Normal :=
+    let : (R.subgroupOf U).Normal :=
       Subgroup.normal_subgroupOf_of_le_normalizer hRnormal
     have hcomp : (R.subgroupOf U).IsComplement' (H.subgroupOf U) := by
       refine Subgroup.isComplement'_of_disjoint_and_mul_eq_univ hdisj_sub ?_
@@ -2779,7 +2789,8 @@ public theorem huppert_II_10_12
       exact dvd_mul_of_dvd_right (Nat.gcd_dvd_left (q + 1) 3) _
     calc
       Nat.card U = q ^ 3 * ((q ^ 2 - 1) / Nat.gcd (q + 1) 3) := by
-        simpa [hRsub_card, hHsub_card, hRcard, hHcard] using hcomp.card_mul.symm
+        simpa [hRsub_card, hHsub_card, hRcard, hHcard] using
+          hcomp.card_mul_card.symm
       _ = q ^ 3 * (q ^ 2 - 1) / Nat.gcd (q + 1) 3 := by
         rw [← Nat.mul_div_assoc _ hdq2]
   have hstabilizer :
@@ -2908,13 +2919,13 @@ public theorem huppert_II_10_12
         _ = d := (rho gc).symm_apply_apply d
   have hGcard : Nat.card G =
       (q ^ 3 + 1) * q ^ 3 * (q ^ 2 - 1) / Nat.gcd 3 (q + 1) := by
-    letI : MulAction G Omega := MulAction.compHom Omega rho
+    let : MulAction G Omega := MulAction.compHom Omega rho
     have htwo' : MulAction.IsMultiplyPretransitive G Omega 2 := by
       rw [MulAction.is_two_pretransitive_iff]
       intro a b c d hab hcd
       exact htwo_transitive a b c d hab hcd
-    letI : MulAction.IsMultiplyPretransitive G Omega 2 := htwo'
-    letI : MulAction.IsPretransitive G Omega :=
+    let : MulAction.IsMultiplyPretransitive G Omega 2 := htwo'
+    let : MulAction.IsPretransitive G Omega :=
       MulAction.isPretransitive_of_is_two_pretransitive
     have hUeq : U = MulAction.stabilizer G pinf := rfl
     have hUindex : U.index = Nat.card Omega := by
@@ -2953,14 +2964,14 @@ public theorem huppert_II_10_12
       exact dvd_mul_left (q + 1) (q - 1)
     have hnormRootsCard :
         Nat.card (rootsOfUnity (q + 1) K) = q + 1 := by
-      letI : IsCyclic Kˣ := inferInstance
+      let : IsCyclic Kˣ := inferInstance
       rw [rootsOfUnity_eq_ker, IsCyclic.card_powMonoidHom_ker,
         hcardUnits, Nat.gcd_eq_right hdq1]
     have hthree_lt :
         3 < Nat.card (rootsOfUnity (q + 1) K) := by
       rw [hnormRootsCard]
       omega
-    letI : IsCyclic (rootsOfUnity (q + 1) K) := inferInstance
+    let : IsCyclic (rootsOfUnity (q + 1) K) := inferInstance
     obtain ⟨k, hkthree⟩ :=
       exists_pow_ne_one_of_isCyclic (G := rootsOfUnity (q + 1) K)
         (by decide : (3 : ℕ) ≠ 0) hthree_lt

@@ -4,8 +4,9 @@ public import BenderSuzuki.RightNearField
 public import Mathlib.FieldTheory.Finite.Basic
 public import Mathlib.Algebra.Module.ZMod
 
-public import FeitThompson.ElementaryAbelian
+public import Theory.ElementaryAbelian.VectorSpace
 public import Mathlib.RepresentationTheory.Maschke
+
 /-!
 # Linear algebra of finite right near-fields
 
@@ -95,16 +96,16 @@ public theorem rightNearField_natCard_eq_addOrderOf_one_pow
     ∃ n : ℕ, Nat.card F = addOrderOf (1 : F) ^ n := by
   let p := addOrderOf (1 : F)
   have hp : Nat.Prime p := rightNearField_addOrderOf_one_prime
-  letI : Fact (Nat.Prime p) := ⟨hp⟩
-  letI : Module (ZMod p) F := rightNearFieldZModModule F
-  letI : Fintype F := Fintype.ofFinite F
+  let : Fact (Nat.Prime p) := ⟨hp⟩
+  let : Module (ZMod p) F := rightNearFieldZModModule F
+  let : Fintype F := Fintype.ofFinite F
   have hcard := Module.card_eq_pow_finrank (K := ZMod p) (V := F)
   refine ⟨Module.finrank (ZMod p) F, ?_⟩
   change Nat.card F = p ^ Module.finrank (ZMod p) F
-
   simpa [Nat.card_eq_fintype_card] using hcard
 
-/-- The additive group of a finite right near-field, in multiplicative notation, is elementary abelian of its additive characteristic. -/
+/-- The additive group of a finite right near-field, in multiplicative notation, is elementary
+abelian of its additive characteristic. -/
 public theorem rightNearFieldMultiplicativeIsElementaryAbelian
     {F : Type u} [RightNearField F] :
     IsElementaryAbelian (addOrderOf (1 : F)) (Multiplicative F) :=

@@ -1,0 +1,60 @@
+module
+
+public import Theory.AlgebraicGroup.Borel.OppositeBigCell
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.ActualRootGenerationPositiveSystemWitness
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.ChevalleyVersions
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.RootDatumMorphismRealization
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.RootDatumIsogenyLift
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.RootSystemModelTransport
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.RootSystemType
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.TypeASLRootDatum
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.IsogenyRootDataTransportCore
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.InvariantRootList
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.InvariantOrderedRootSubgroupProduct
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.ActualRootGenerationBorelWitnesses
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.theorem_1_9_5_a
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.theorem_1_9_5_b
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.theorem_1_9_5_d
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.theorem_1_9_5_e
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.theorem_1_9_5_f
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.theorem_1_9_5_g
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.theorem_1_9_5_h
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.theorem_1_9_5_i
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.theorem_1_10_1_a
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.theorem_1_10_1_b
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.theorem_1_10_3_d
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.theorem_1_10_4_a
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.theorem_1_10_4_b
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.theorem_1_10_4_c
+public import Theory.AlgebraicGroup.RootSystems.OddSpinIsogeny
+public import Theory.AlgebraicGroup.RootSystems.SymplecticAlgebraicQuotient
+public import Theory.AlgebraicGroup.RootSystems.SymplecticSemisimpleCarrier
+public import Theory.AlgebraicGroup.RootSystems.SymplecticRootSubgroups
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.EvenOrthogonalSpinAction
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.EvenOrthogonalSpinCarrier
+public import Theory.AlgebraicGroup.RootSystems.CliffordSplitCentralizer
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.EvenSpinActionKernel
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.EvenSpinDerivedRange
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.EvenSpinIsogeny
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.EvenOrthogonalOmegaConnected
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.EvenOrthogonalNaturalIrreducibility
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.EvenOrthogonalOmegaSemisimple
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.EvenOrthogonalOmegaModel
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.EvenOrthogonalRootRealization
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.EvenOrthogonalProjectiveRootRealization
+public import Theory.AlgebraicGroup.RootSystems.EvenOrthogonalCarrier
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.ProjectiveOmegaQuotient
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.ProductRootPairing
+public import Theory.AlgebraicGroup.RootSystems.OrthogonalRootSubgroupsCommute
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.ProductExtremeVersions
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.theorem_1_10_6
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.theorem_1_10_7_a
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.theorem_1_10_7_b
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.theorem_1_10_7_c
+public import Theory.AlgebraicGroup.RootSystems.AlgebraicGroups.theorem_1_10_7_d
+
+/-!
+Assembly module for the declarations formerly stored together in `Theory.AlgebraicGroup.RootSystems.AlgebraicGroups`.
+The focused imports isolate unresolved results while this compatibility boundary
+preserves the original public import path and declaration order.
+-/

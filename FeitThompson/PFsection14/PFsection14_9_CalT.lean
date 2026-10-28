@@ -3,6 +3,7 @@ module
 public import FeitThompson.PFsection14.PFsection14_9_Delta
 import FeitThompson.PFsection8.PFsection8_15
 
+
 /-!
 # Peterfalvi, Section 14: theorem (14.9), calT construction
 -/
@@ -389,7 +390,7 @@ public theorem section14_hypothesis_5_2_a_of_kernelInducedFamily_self
     (hS : Section9.kernelInducedFamily M N N Y S) :
     Section5.hypothesis_5_2_a_statement S := by
   classical
-  letI : (N.subgroupOf M).Normal := hNnormal
+  let : (N.subgroupOf M).Normal := hNnormal
   have hclosed :
       ∀ χ : Section1.ClassFunction M, χ ∈ S →
         Section1.conjugateCharacter χ ∈ S :=
@@ -488,11 +489,11 @@ public theorem section14_typeP_quotient_commutative_of_sup
   let K : Subgroup Tmax := (Q ⊔ V).subgroupOf Tmax
   let N : Subgroup K := (Q.subgroupOf Tmax).subgroupOf K
   let H : Subgroup K := (V.subgroupOf Tmax).subgroupOf K
-  haveI : N.Normal := by
+  have : N.Normal := by
     dsimp [N, K]
     exact hQnormal.subgroupOf ((Q ⊔ V).subgroupOf Tmax)
   have hHcomm : IsMulCommutative H := by
-    letI : IsMulCommutative V := hVcomm
+    let : IsMulCommutative V := hVcomm
     dsimp [H]
     infer_instance
   have hK_eq : K = Q.subgroupOf Tmax ⊔ V.subgroupOf Tmax := by
@@ -542,7 +543,7 @@ public theorem section14_typeP_quotient_card_eq_card_V_of_sup
     intro x hx
     exact Subgroup.mem_subgroupOf.mpr
       ((le_sup_right : V ≤ Q ⊔ V) (Subgroup.mem_subgroupOf.mp hx))
-  haveI : QK.Normal := by
+  have : QK.Normal := by
     dsimp [QK, Qsub, K]
     exact hQnormal.subgroupOf ((Q ⊔ V).subgroupOf Tmax)
   have hK_eq : K = Qsub ⊔ Vsub := by
@@ -640,7 +641,7 @@ public noncomputable def section14_typeP_quotientMulEquiv
     ↥(V ⊔ W2) ≃* (Tmax ⧸ Q.subgroupOf Tmax) := by
   classical
   let N : Subgroup Tmax := Q.subgroupOf Tmax
-  letI : N.Normal := hQnormal
+  let : N.Normal := hQnormal
   let qT : Tmax →* Tmax ⧸ N := QuotientGroup.mk' N
   let Sg : Subgroup G := V ⊔ W2
   have hSleT : Sg ≤ Tmax := sup_le hVleT hW2leT
@@ -741,7 +742,7 @@ public theorem section14_typeP_frobeniusQuotientWithKernel_of_frobeniusJoin
       ((Q ⊔ V).subgroupOf Tmax) (Q.subgroupOf Tmax) := by
   classical
   let N : Subgroup Tmax := Q.subgroupOf Tmax
-  letI : N.Normal := hQnormal
+  let : N.Normal := hQnormal
   let qT : Tmax →* Tmax ⧸ N := QuotientGroup.mk' N
   let K : Subgroup Tmax := (Q ⊔ V).subgroupOf Tmax
   let R : Subgroup Tmax := W2.subgroupOf Tmax
@@ -1036,7 +1037,7 @@ public theorem section14_theorem_14_9_late_type_T1_calt_nonempty_of_context
     · exact bot_le
   have hQltK : Q.subgroupOf Tmax < (Q ⊔ V).subgroupOf Tmax :=
     lt_of_le_of_ne hQleK hQneK
-  letI : ((Q.subgroupOf Tmax).subgroupOf
+  let : ((Q.subgroupOf Tmax).subgroupOf
       ((Q ⊔ V).subgroupOf Tmax)).Normal :=
     hQnormal.subgroupOf ((Q ⊔ V).subgroupOf Tmax)
   have hS6 :
@@ -1078,7 +1079,7 @@ public theorem section14_linearCharacter_orbit_card_eq_div
     Nat.card (Section10.nonidentityOrbitQuotient A (Q →* ℂˣ)) =
       (Nat.card Q - 1) / Nat.card A := by
   classical
-  letI : MulDistribMulAction A (Q →* ℂˣ) :=
+  let : MulDistribMulAction A (Q →* ℂˣ) :=
     Section10.characterGroupContragredientMulDistribMulAction A Q
   have hfreeChar :
       ∀ a : A, a ≠ 1 → ∀ χ : Q →* ℂˣ, a • χ = χ → χ = 1 := by
@@ -1094,8 +1095,8 @@ public theorem section14_linearCharacter_orbit_card_eq_div
       χ hχfix
   have horbit := Section10.nonidentityOrbitQuotient_card_eq_div
     (A := A) (G := Q →* ℂˣ) hfreeChar
-  letI : CommGroup Q := IsMulCommutative.instCommGroup
-  haveI : HasEnoughRootsOfUnity ℂ (Monoid.exponent Q) :=
+  let : CommGroup Q := IsMulCommutative.instCommGroup
+  have : HasEnoughRootsOfUnity ℂ (Monoid.exponent Q) :=
     Section1.complex_hasEnoughRootsOfUnity (Monoid.exponent Q)
   have hchars : Nat.card (Q →* ℂˣ) = Nat.card Q := by
     exact CommGroup.card_monoidHom_of_hasEnoughRootsOfUnity Q ℂ
@@ -1112,7 +1113,7 @@ public theorem section14_linearCharacter_orbit_card_mul_eq_sub_one
       Nat.card (Section10.nonidentityOrbitQuotient A (Q →* ℂˣ)) =
         Nat.card Q - 1 := by
   classical
-  letI : MulDistribMulAction A (Q →* ℂˣ) :=
+  let : MulDistribMulAction A (Q →* ℂˣ) :=
     Section10.characterGroupContragredientMulDistribMulAction A Q
   have hfreeChar :
       ∀ a : A, a ≠ 1 → ∀ χ : Q →* ℂˣ, a • χ = χ → χ = 1 := by
@@ -1128,8 +1129,8 @@ public theorem section14_linearCharacter_orbit_card_mul_eq_sub_one
       χ hχfix
   have horbit := Section10.nonidentityOrbitQuotient_card_mul_eq_sub_one
     (A := A) (G := Q →* ℂˣ) hfreeChar
-  letI : CommGroup Q := IsMulCommutative.instCommGroup
-  haveI : HasEnoughRootsOfUnity ℂ (Monoid.exponent Q) :=
+  let : CommGroup Q := IsMulCommutative.instCommGroup
+  have : HasEnoughRootsOfUnity ℂ (Monoid.exponent Q) :=
     Section1.complex_hasEnoughRootsOfUnity (Monoid.exponent Q)
   have hchars : Nat.card (Q →* ℂˣ) = Nat.card Q := by
     exact CommGroup.card_monoidHom_of_hasEnoughRootsOfUnity Q ℂ
@@ -1146,7 +1147,7 @@ public theorem section14_typeP_quotient_fixed_eq_one_of_W2_ne_one
     (a : W2.subgroupOf Tmax) (ha : a ≠ 1) :
     let K : Subgroup Tmax := (Q ⊔ V).subgroupOf Tmax
     let N : Subgroup K := (Q.subgroupOf Tmax).subgroupOf K
-    letI : K.Normal := by
+    let : K.Normal := by
       rcases hTtypeP with
         ⟨_hQMF, _hW2cyc, _hW2ne, _hW2Hall, _hTcomp, _hVleDer,
           _hVnil, _hW2norm, hDerComp, _hQnoncyc, _hSecond, _hFit,
@@ -1155,7 +1156,7 @@ public theorem section14_typeP_quotient_fixed_eq_one_of_W2_ne_one
           ((ambientDerivedSubgroup Tmax).subgroupOf Tmax).Normal :=
         (section12_normalIn_ambientDerivedSubgroup (G := G) (E := Tmax)).2
       simpa [K, hDerComp.2.2.1] using hDerNormal
-    letI : N.Normal := hQnormal.subgroupOf K
+    let : N.Normal := hQnormal.subgroupOf K
     let hNinv : IsInvariant (W2.subgroupOf Tmax) K N := by
       have hW2normK : W2.subgroupOf Tmax ≤ Subgroup.normalizer (K : Set Tmax) :=
         Subgroup.le_normalizer_of_normal (H := K)
@@ -1167,7 +1168,7 @@ public theorem section14_typeP_quotient_fixed_eq_one_of_W2_ne_one
         exact Subgroup.mem_subgroupOf.mpr
           ((le_sup_left : Q ≤ Q ⊔ V) (Subgroup.mem_subgroupOf.mp hx))
       exact isInvariant_subgroupOf_of_le_normalizer hW2normK hW2normQ hQleK
-    letI : IsInvariant (W2.subgroupOf Tmax) K N := hNinv
+    let : IsInvariant (W2.subgroupOf Tmax) K N := hNinv
     letI : MulDistribMulAction (W2.subgroupOf Tmax) (K ⧸ N) :=
       quotientMulDistribMulAction (A := W2.subgroupOf Tmax) (G := K) N hNinv
     ∀ q : K ⧸ N, a • q = q → q = 1 := by
@@ -1189,12 +1190,12 @@ public theorem section14_typeP_quotient_fixed_eq_one_of_W2_ne_one
         ((ambientDerivedSubgroup Tmax).subgroupOf Tmax).Normal :=
       (section12_normalIn_ambientDerivedSubgroup (G := G) (E := Tmax)).2
     simpa [K, hDerEq] using hDerNormal
-  letI : K.Normal := hKnormal
+  let : K.Normal := hKnormal
   let Qsub : Subgroup Tmax := Q.subgroupOf Tmax
   let VsubT : Subgroup Tmax := V.subgroupOf Tmax
-  letI : Qsub.Normal := hQnormal
+  let : Qsub.Normal := hQnormal
   have hNnormal : N.Normal := hQnormal.subgroupOf K
-  letI : N.Normal := hNnormal
+  let : N.Normal := hNnormal
   have hW2normK : W2.subgroupOf Tmax ≤ Subgroup.normalizer (K : Set Tmax) :=
     Subgroup.le_normalizer_of_normal (H := K)
   have hW2normQ :
@@ -1206,15 +1207,15 @@ public theorem section14_typeP_quotient_fixed_eq_one_of_W2_ne_one
       ((le_sup_left : Q ≤ Q ⊔ V) (Subgroup.mem_subgroupOf.mp hx))
   have hNinv : IsInvariant (W2.subgroupOf Tmax) K N :=
     isInvariant_subgroupOf_of_le_normalizer hW2normK hW2normQ hQleK
-  letI : IsInvariant (W2.subgroupOf Tmax) K N := hNinv
-  letI : MulDistribMulAction (W2.subgroupOf Tmax) (K ⧸ N) :=
+  let : IsInvariant (W2.subgroupOf Tmax) K N := hNinv
+  let : MulDistribMulAction (W2.subgroupOf Tmax) (K ⧸ N) :=
     quotientMulDistribMulAction (A := W2.subgroupOf Tmax) (G := K) N hNinv
   let Sg : Subgroup G := V ⊔ W2
   let VsubS : Subgroup Sg := V.subgroupOf Sg
   let WsubS : Subgroup Sg := W2.subgroupOf Sg
   have hfrobS : IsFrobeniusGroupWithKernelComplement VsubS WsubS := by
     simpa [section12FrobeniusJoinWithKernel, Sg, VsubS, WsubS] using hfrobVW2
-  haveI : VsubS.Normal := hfrobS.normal
+  have : VsubS.Normal := hfrobS.normal
   have hcentW :
       ∀ r : WsubS, r ≠ 1 → elementCentralizerIn VsubS (r : Sg) = ⊥ :=
     (lemma_3_1 (G := Sg) VsubS WsubS
@@ -1381,7 +1382,7 @@ public theorem section14_quotientCharacterInflation_conjugate_kernel_eq
     rfl
   have hq : (y : K ⧸ H.subgroupOf K) =
       ((x : K) : K ⧸ H.subgroupOf K) := by
-    letI : CommGroup (K ⧸ H.subgroupOf K) := IsMulCommutative.instCommGroup
+    let : CommGroup (K ⧸ H.subgroupOf K) := IsMulCommutative.instCommGroup
     rw [hy]
     change QuotientGroup.mk' (H.subgroupOf K) (k * x * k⁻¹) =
       QuotientGroup.mk' (H.subgroupOf K) x
@@ -1399,9 +1400,9 @@ public theorem section14_typeP_quotientCharacterInflation_smul_eq_conjugateOnNor
       ((Q.subgroupOf Tmax).subgroupOf ((Q ⊔ V).subgroupOf Tmax))) :
     let K : Subgroup Tmax := (Q ⊔ V).subgroupOf Tmax
     let N : Subgroup K := (Q.subgroupOf Tmax).subgroupOf K
-    letI : K.Normal := hKnormal
-    letI : N.Normal := hQnormal.subgroupOf K
-    letI : IsInvariant (W2.subgroupOf Tmax) K N := hNinv
+    let : K.Normal := hKnormal
+    let : N.Normal := hQnormal.subgroupOf K
+    let : IsInvariant (W2.subgroupOf Tmax) K N := hNinv
     letI : MulDistribMulAction (W2.subgroupOf Tmax) (K ⧸ N) :=
       quotientMulDistribMulAction (A := W2.subgroupOf Tmax) (G := K) N hNinv
     letI : MulDistribMulAction (W2.subgroupOf Tmax) ((K ⧸ N) →* ℂˣ) :=
@@ -1417,12 +1418,12 @@ public theorem section14_typeP_quotientCharacterInflation_smul_eq_conjugateOnNor
   dsimp only
   let K : Subgroup Tmax := (Q ⊔ V).subgroupOf Tmax
   let N : Subgroup K := (Q.subgroupOf Tmax).subgroupOf K
-  letI : K.Normal := hKnormal
-  letI : N.Normal := hQnormal.subgroupOf K
-  letI : IsInvariant (W2.subgroupOf Tmax) K N := hNinv
-  letI : MulDistribMulAction (W2.subgroupOf Tmax) (K ⧸ N) :=
+  let : K.Normal := hKnormal
+  let : N.Normal := hQnormal.subgroupOf K
+  let : IsInvariant (W2.subgroupOf Tmax) K N := hNinv
+  let : MulDistribMulAction (W2.subgroupOf Tmax) (K ⧸ N) :=
     quotientMulDistribMulAction (A := W2.subgroupOf Tmax) (G := K) N hNinv
-  letI : MulDistribMulAction (W2.subgroupOf Tmax) ((K ⧸ N) →* ℂˣ) :=
+  let : MulDistribMulAction (W2.subgroupOf Tmax) ((K ⧸ N) →* ℂˣ) :=
     Section10.characterGroupContragredientMulDistribMulAction
       (W2.subgroupOf Tmax) (K ⧸ N)
   intro a ψ
@@ -1443,9 +1444,9 @@ public theorem section14_typeP_inducedCF_quotientCharacterInflation_smul_eq
       ((Q.subgroupOf Tmax).subgroupOf ((Q ⊔ V).subgroupOf Tmax))) :
     let K : Subgroup Tmax := (Q ⊔ V).subgroupOf Tmax
     let N : Subgroup K := (Q.subgroupOf Tmax).subgroupOf K
-    letI : K.Normal := hKnormal
-    letI : N.Normal := hQnormal.subgroupOf K
-    letI : IsInvariant (W2.subgroupOf Tmax) K N := hNinv
+    let : K.Normal := hKnormal
+    let : N.Normal := hQnormal.subgroupOf K
+    let : IsInvariant (W2.subgroupOf Tmax) K N := hNinv
     letI : MulDistribMulAction (W2.subgroupOf Tmax) (K ⧸ N) :=
       quotientMulDistribMulAction (A := W2.subgroupOf Tmax) (G := K) N hNinv
     letI : MulDistribMulAction (W2.subgroupOf Tmax) ((K ⧸ N) →* ℂˣ) :=
@@ -1461,12 +1462,12 @@ public theorem section14_typeP_inducedCF_quotientCharacterInflation_smul_eq
   dsimp only
   let K : Subgroup Tmax := (Q ⊔ V).subgroupOf Tmax
   let N : Subgroup K := (Q.subgroupOf Tmax).subgroupOf K
-  letI : K.Normal := hKnormal
-  letI : N.Normal := hQnormal.subgroupOf K
-  letI : IsInvariant (W2.subgroupOf Tmax) K N := hNinv
-  letI : MulDistribMulAction (W2.subgroupOf Tmax) (K ⧸ N) :=
+  let : K.Normal := hKnormal
+  let : N.Normal := hQnormal.subgroupOf K
+  let : IsInvariant (W2.subgroupOf Tmax) K N := hNinv
+  let : MulDistribMulAction (W2.subgroupOf Tmax) (K ⧸ N) :=
     quotientMulDistribMulAction (A := W2.subgroupOf Tmax) (G := K) N hNinv
-  letI : MulDistribMulAction (W2.subgroupOf Tmax) ((K ⧸ N) →* ℂˣ) :=
+  let : MulDistribMulAction (W2.subgroupOf Tmax) ((K ⧸ N) →* ℂˣ) :=
     Section10.characterGroupContragredientMulDistribMulAction
       (W2.subgroupOf Tmax) (K ⧸ N)
   intro a ψ
@@ -1500,9 +1501,9 @@ public theorem section14_typeP_inducedCF_quotientCharacterInflation_eq_of_orbitR
       ((Q.subgroupOf Tmax).subgroupOf ((Q ⊔ V).subgroupOf Tmax))) :
     let K : Subgroup Tmax := (Q ⊔ V).subgroupOf Tmax
     let N : Subgroup K := (Q.subgroupOf Tmax).subgroupOf K
-    letI : K.Normal := hKnormal
-    letI : N.Normal := hQnormal.subgroupOf K
-    letI : IsInvariant (W2.subgroupOf Tmax) K N := hNinv
+    let : K.Normal := hKnormal
+    let : N.Normal := hQnormal.subgroupOf K
+    let : IsInvariant (W2.subgroupOf Tmax) K N := hNinv
     letI : MulDistribMulAction (W2.subgroupOf Tmax) (K ⧸ N) :=
       quotientMulDistribMulAction (A := W2.subgroupOf Tmax) (G := K) N hNinv
     letI : MulDistribMulAction (W2.subgroupOf Tmax) ((K ⧸ N) →* ℂˣ) :=
@@ -1522,15 +1523,15 @@ public theorem section14_typeP_inducedCF_quotientCharacterInflation_eq_of_orbitR
   dsimp only
   let K : Subgroup Tmax := (Q ⊔ V).subgroupOf Tmax
   let N : Subgroup K := (Q.subgroupOf Tmax).subgroupOf K
-  letI : K.Normal := hKnormal
-  letI : N.Normal := hQnormal.subgroupOf K
-  letI : IsInvariant (W2.subgroupOf Tmax) K N := hNinv
-  letI : MulDistribMulAction (W2.subgroupOf Tmax) (K ⧸ N) :=
+  let : K.Normal := hKnormal
+  let : N.Normal := hQnormal.subgroupOf K
+  let : IsInvariant (W2.subgroupOf Tmax) K N := hNinv
+  let : MulDistribMulAction (W2.subgroupOf Tmax) (K ⧸ N) :=
     quotientMulDistribMulAction (A := W2.subgroupOf Tmax) (G := K) N hNinv
-  letI : MulDistribMulAction (W2.subgroupOf Tmax) ((K ⧸ N) →* ℂˣ) :=
+  let : MulDistribMulAction (W2.subgroupOf Tmax) ((K ⧸ N) →* ℂˣ) :=
     Section10.characterGroupContragredientMulDistribMulAction
       (W2.subgroupOf Tmax) (K ⧸ N)
-  letI : MulAction (W2.subgroupOf Tmax)
+  let : MulAction (W2.subgroupOf Tmax)
       {ψ : (K ⧸ N) →* ℂˣ // ψ ≠ 1} :=
     Section10.nonidentitySubMulAction (W2.subgroupOf Tmax) ((K ⧸ N) →* ℂˣ)
   intro ψ η hrel
@@ -1559,10 +1560,10 @@ public theorem section14_typeP_orbitRel_of_inducedCF_quotientCharacterInflation_
           (Q.subgroupOf Tmax).subgroupOf ((Q ⊔ V).subgroupOf Tmax))) :
     let K : Subgroup Tmax := (Q ⊔ V).subgroupOf Tmax
     let N : Subgroup K := (Q.subgroupOf Tmax).subgroupOf K
-    letI : K.Normal := hKnormal
-    letI : N.Normal := hQnormal.subgroupOf K
-    letI : IsMulCommutative (K ⧸ N) := hquotComm
-    letI : IsInvariant (W2.subgroupOf Tmax) K N := hNinv
+    let : K.Normal := hKnormal
+    let : N.Normal := hQnormal.subgroupOf K
+    let : IsMulCommutative (K ⧸ N) := hquotComm
+    let : IsInvariant (W2.subgroupOf Tmax) K N := hNinv
     letI : MulDistribMulAction (W2.subgroupOf Tmax) (K ⧸ N) :=
       quotientMulDistribMulAction (A := W2.subgroupOf Tmax) (G := K) N hNinv
     letI : MulDistribMulAction (W2.subgroupOf Tmax) ((K ⧸ N) →* ℂˣ) :=
@@ -1584,16 +1585,16 @@ public theorem section14_typeP_orbitRel_of_inducedCF_quotientCharacterInflation_
   let N : Subgroup K := (Q.subgroupOf Tmax).subgroupOf K
   let R : Subgroup Tmax := W2.subgroupOf Tmax
   have hNnormal : N.Normal := hQnormal.subgroupOf K
-  letI : K.Normal := hKnormal
-  letI : N.Normal := hNnormal
-  letI : IsMulCommutative (K ⧸ N) := hquotComm
-  letI : IsInvariant (W2.subgroupOf Tmax) K N := hNinv
-  letI : MulDistribMulAction (W2.subgroupOf Tmax) (K ⧸ N) :=
+  let : K.Normal := hKnormal
+  let : N.Normal := hNnormal
+  let : IsMulCommutative (K ⧸ N) := hquotComm
+  let : IsInvariant (W2.subgroupOf Tmax) K N := hNinv
+  let : MulDistribMulAction (W2.subgroupOf Tmax) (K ⧸ N) :=
     quotientMulDistribMulAction (A := W2.subgroupOf Tmax) (G := K) N hNinv
-  letI : MulDistribMulAction (W2.subgroupOf Tmax) ((K ⧸ N) →* ℂˣ) :=
+  let : MulDistribMulAction (W2.subgroupOf Tmax) ((K ⧸ N) →* ℂˣ) :=
     Section10.characterGroupContragredientMulDistribMulAction
       (W2.subgroupOf Tmax) (K ⧸ N)
-  letI : MulAction (W2.subgroupOf Tmax)
+  let : MulAction (W2.subgroupOf Tmax)
       {ψ : (K ⧸ N) →* ℂˣ // ψ ≠ 1} :=
     Section10.nonidentitySubMulAction (W2.subgroupOf Tmax) ((K ⧸ N) →* ℂˣ)
   intro ψ η hInd
@@ -1686,14 +1687,16 @@ public theorem section14_theorem_14_9_late_type_T1_calt1_card_source_bridge
           Section8.typeVDefinitionData Tmax Q) →
         Section8.typePDefinitionData Tmax Q V W2 W1 →
           (hQnormal : (Q.subgroupOf Tmax).Normal) →
-            letI : ((Q.subgroupOf Tmax).subgroupOf
+            let : ((Q.subgroupOf Tmax).subgroupOf
                 ((Q ⊔ V).subgroupOf Tmax)).Normal :=
               hQnormal.subgroupOf ((Q ⊔ V).subgroupOf Tmax)
             ∀ T1T : Finset (Section1.ClassFunction Tmax),
               Section9.kernelInducedFamily Tmax (Q ⊔ V) (Q ⊔ V) Q T1T →
                 ((v - 1 : ℕ) : ℝ) / (p : ℝ) ≤ (T1T.card : ℝ) := by
   classical
-  intro hctx hLateType hTtypeP hQnormal T1T hCalT1
+  intro hctx hLateType hTtypeP hQnormal
+  dsimp only
+  intro T1T hCalT1
   have hVcard :
       Nat.card V = v :=
     section14_v_card_eq_of_late_type_context
@@ -1726,9 +1729,9 @@ public theorem section14_theorem_14_9_late_type_T1_calt1_card_source_bridge
         ((ambientDerivedSubgroup Tmax).subgroupOf Tmax).Normal :=
       (section12_normalIn_ambientDerivedSubgroup (G := G) (E := Tmax)).2
     simpa [K, hDerEq] using hDerNormal
-  letI : K.Normal := hKnormal
+  let : K.Normal := hKnormal
   have hNnormal : N.Normal := hQnormal.subgroupOf K
-  letI : N.Normal := hNnormal
+  let : N.Normal := hNnormal
   have hW2normK : W2.subgroupOf Tmax ≤ Subgroup.normalizer (K : Set Tmax) :=
     Subgroup.le_normalizer_of_normal (H := K)
   have hW2normQ :
@@ -1740,19 +1743,19 @@ public theorem section14_theorem_14_9_late_type_T1_calt1_card_source_bridge
       ((le_sup_left : Q ≤ Q ⊔ V) (Subgroup.mem_subgroupOf.mp hx))
   have hNinv : IsInvariant (W2.subgroupOf Tmax) K N :=
     isInvariant_subgroupOf_of_le_normalizer hW2normK hW2normQ hQleK
-  letI : IsInvariant (W2.subgroupOf Tmax) K N := hNinv
-  letI : MulDistribMulAction (W2.subgroupOf Tmax) (K ⧸ N) :=
+  let : IsInvariant (W2.subgroupOf Tmax) K N := hNinv
+  let : MulDistribMulAction (W2.subgroupOf Tmax) (K ⧸ N) :=
     quotientMulDistribMulAction (A := W2.subgroupOf Tmax) (G := K) N hNinv
-  letI : MulDistribMulAction (W2.subgroupOf Tmax) ((K ⧸ N) →* ℂˣ) :=
+  let : MulDistribMulAction (W2.subgroupOf Tmax) ((K ⧸ N) →* ℂˣ) :=
     Section10.characterGroupContragredientMulDistribMulAction
       (W2.subgroupOf Tmax) (K ⧸ N)
-  letI : MulAction (W2.subgroupOf Tmax) {ψ : (K ⧸ N) →* ℂˣ // ψ ≠ 1} :=
+  let : MulAction (W2.subgroupOf Tmax) {ψ : (K ⧸ N) →* ℂˣ // ψ ≠ 1} :=
     Section10.nonidentitySubMulAction (W2.subgroupOf Tmax) ((K ⧸ N) →* ℂˣ)
   have hquotComm :
       IsMulCommutative (K ⧸ N) := by
     dsimp [K, N]
     exact section14_typeP_quotient_commutative_of_sup hQleT hVleT hQnormal hVcomm
-  letI : IsMulCommutative (K ⧸ N) := hquotComm
+  let : IsMulCommutative (K ⧸ N) := hquotComm
   have hfree :
       ∀ a : W2.subgroupOf Tmax, a ≠ 1 →
         ∀ x : K ⧸ N, a • x = x → x = 1 := by
@@ -1931,14 +1934,16 @@ public theorem section14_theorem_14_9_late_type_T1_calt1_hypothesis_5_2_b_source
           Section8.typeVDefinitionData Tmax Q) →
         Section8.typePDefinitionData Tmax Q V W2 W1 →
           (hQnormal : (Q.subgroupOf Tmax).Normal) →
-            letI : ((Q.subgroupOf Tmax).subgroupOf
+            let : ((Q.subgroupOf Tmax).subgroupOf
                 ((Q ⊔ V).subgroupOf Tmax)).Normal :=
               hQnormal.subgroupOf ((Q ⊔ V).subgroupOf Tmax)
             ∀ T1T : Finset (Section1.ClassFunction Tmax),
               Section9.kernelInducedFamily Tmax (Q ⊔ V) (Q ⊔ V) Q T1T →
                 T1T.Nonempty →
                   Section5.hypothesis_5_2_b_statement T1T τT := by
-  intro hctx hLateType hTtypeP hQnormal T1T hCalT1 hne
+  intro hctx hLateType hTtypeP hQnormal
+  dsimp only
+  intro T1T hCalT1 hne
   have hSection8 :
       Section8.section8InducedNonkernelFamily Tmax (Q ⊔ V) T1T :=
     section14_theorem_14_9_late_type_T1_section8InducedNonkernel_of_calt
@@ -1975,14 +1980,16 @@ public theorem section14_theorem_14_9_late_type_T1_calt_core_source_character_in
           Section8.typeVDefinitionData Tmax Q) →
         Section8.typePDefinitionData Tmax Q V W2 W1 →
           (hQnormal : (Q.subgroupOf Tmax).Normal) →
-            letI : ((Q.subgroupOf Tmax).subgroupOf
+            let : ((Q.subgroupOf Tmax).subgroupOf
                 ((Q ⊔ V).subgroupOf Tmax)).Normal :=
               hQnormal.subgroupOf ((Q ⊔ V).subgroupOf Tmax)
             ∀ T1T : Finset (Section1.ClassFunction Tmax),
               Section9.kernelInducedFamily Tmax (Q ⊔ V) (Q ⊔ V) Q T1T →
                 ((v - 1 : ℕ) : ℝ) / (p : ℝ) ≤ (T1T.card : ℝ) ∧
                   Section5.hypothesis_5_2_b_statement T1T τT := by
-  intro hctx hLateType hTtypeP hQnormal T1T hCalT1
+  intro hctx hLateType hTtypeP hQnormal
+  dsimp only
+  intro T1T hCalT1
   have hcard :
       ((v - 1 : ℕ) : ℝ) / (p : ℝ) ≤ (T1T.card : ℝ) :=
     section14_theorem_14_9_late_type_T1_calt1_card_source_bridge
@@ -2013,7 +2020,7 @@ public theorem section14_theorem_14_9_late_type_T1_calt_core_source_remaining_in
           Section8.typeVDefinitionData Tmax Q) →
         Section8.typePDefinitionData Tmax Q V W2 W1 →
           (hQnormal : (Q.subgroupOf Tmax).Normal) →
-            letI : ((Q.subgroupOf Tmax).subgroupOf
+            let : ((Q.subgroupOf Tmax).subgroupOf
                 ((Q ⊔ V).subgroupOf Tmax)).Normal :=
               hQnormal.subgroupOf ((Q ⊔ V).subgroupOf Tmax)
             ∀ T1T : Finset (Section1.ClassFunction Tmax),
@@ -2022,7 +2029,9 @@ public theorem section14_theorem_14_9_late_type_T1_calt_core_source_remaining_in
                   Section5.hypothesis_5_2_b_statement T1T τT ∧
                   Section6.frobeniusQuotientWithKernel
                     ((Q ⊔ V).subgroupOf Tmax) (Q.subgroupOf Tmax) := by
-  intro hctx hLateType hTtypeP hQnormal T1T hCalT1
+  intro hctx hLateType hTtypeP hQnormal
+  dsimp only
+  intro T1T hCalT1
   rcases section14_theorem_14_9_late_type_T1_calt_core_source_character_inputs_bridge
       Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT p q u v c d
       hctx hLateType hTtypeP hQnormal T1T hCalT1 with
@@ -2073,7 +2082,7 @@ public theorem section14_theorem_14_9_late_type_T1_calt_core_source_inputs_bridg
           Section8.typeVDefinitionData Tmax Q) →
         Section8.typePDefinitionData Tmax Q V W2 W1 →
           (hQnormal : (Q.subgroupOf Tmax).Normal) →
-            letI : ((Q.subgroupOf Tmax).subgroupOf
+            let : ((Q.subgroupOf Tmax).subgroupOf
                 ((Q ⊔ V).subgroupOf Tmax)).Normal :=
               hQnormal.subgroupOf ((Q ⊔ V).subgroupOf Tmax)
             ∀ T1T : Finset (Section1.ClassFunction Tmax),
@@ -2085,7 +2094,9 @@ public theorem section14_theorem_14_9_late_type_T1_calt_core_source_inputs_bridg
                       (Q.subgroupOf Tmax).subgroupOf ((Q ⊔ V).subgroupOf Tmax)) ∧
                   Section6.frobeniusQuotientWithKernel
                     ((Q ⊔ V).subgroupOf Tmax) (Q.subgroupOf Tmax) := by
-  intro hctx hLateType hTtypeP hQnormal T1T hCalT1
+  intro hctx hLateType hTtypeP hQnormal
+  dsimp only
+  intro T1T hCalT1
   have hT13 :=
     Section13.theorem_13_2 Tmax Smax W W2 W1 Q P V U D C
       Tfam Sfam τT τS q p v u d c
@@ -2205,7 +2216,7 @@ public theorem section14_theorem_14_9_late_type_T1_calt_core_source_bridge
     · exact bot_le
   have hQltK : Q.subgroupOf Tmax < (Q ⊔ V).subgroupOf Tmax :=
     lt_of_le_of_ne hQleK hQneK
-  letI : ((Q.subgroupOf Tmax).subgroupOf
+  let : ((Q.subgroupOf Tmax).subgroupOf
       ((Q ⊔ V).subgroupOf Tmax)).Normal :=
     hQnormal.subgroupOf ((Q ⊔ V).subgroupOf Tmax)
   have hS6 :
@@ -2340,7 +2351,7 @@ public theorem section14_theorem_14_9_late_type_T1_sigma_orth_of_53b_extra
       Section1.IsIrreducibleCharacterOnGroup ξ →
         Section1.scalarProduct G (σ ξ) (τT1 ζ) = 0 := by
   classical
-  letI : Fintype Tmax := Fintype.ofFinite Tmax
+  let : Fintype Tmax := Fintype.ofFinite Tmax
   rcases hpack with ⟨R, hsetup, h52a, h52b, h52c, h52d, h52e, hExtra⟩
   intro ζ hζ ξ hξ
   let X : T1T := ⟨ζ, hζ⟩

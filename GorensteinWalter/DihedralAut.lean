@@ -112,7 +112,7 @@ private lemma reflection_image_spec (m : ℕ) (hm : 2 ≤ m) (f : MulAut (D m)) 
 
 private lemma restriction_apply_coe (m : ℕ) (hm : 2 ≤ m)
     (f : MulAut (D m)) (x : R m) :
-    ((letI : (R m).Characteristic := rotation_characteristic m hm
+    ((let : (R m).Characteristic := rotation_characteristic m hm
       MulAut.characteristic (R m) f) x : D m) = f (x : D m) := by
   let : (R m).Characteristic := rotation_characteristic m hm
   rfl
@@ -127,7 +127,7 @@ private lemma reflection_image_mul (m : ℕ) (hm : 2 ≤ m)
     (f g : MulAut (D m)) :
     reflection_image m hm (f * g) =
       reflection_image m hm f *
-        ((letI : (R m).Characteristic := rotation_characteristic m hm
+        ((let : (R m).Characteristic := rotation_characteristic m hm
           MulAut.characteristic (R m) f) (reflection_image m hm g)) := by
   let : (R m).Characteristic := rotation_characteristic m hm
   apply Subtype.ext
@@ -166,7 +166,7 @@ private lemma semidirect_card (m : ℕ) (hm : 2 ≤ m) :
 
 private noncomputable def encode (m : ℕ) (hm : 2 ≤ m) :
     MulAut (D m) →* (R m ⋊[MonoidHom.id (MulAut (↥(R m)))] MulAut (↥(R m))) := by
-  letI : (R m).Characteristic := rotation_characteristic m hm
+  let : (R m).Characteristic := rotation_characteristic m hm
   let ρ : MulAut (D m) →* MulAut (↥(R m)) := MulAut.characteristic (R m)
   let b : MulAut (D m) → R m := reflection_image m hm
   exact
@@ -175,7 +175,7 @@ private noncomputable def encode (m : ℕ) (hm : 2 ≤ m) :
         apply SemidirectProduct.ext
         · apply reflection_image_unique m (1 : MulAut (D m))
           · simpa [b] using reflection_image_spec m hm (1 : MulAut (D m))
-          · simpa [b] using reflection_image_spec m hm (1 : MulAut (D m))
+          · simp
         · simp [ρ]
       map_mul' := by
         intro f g

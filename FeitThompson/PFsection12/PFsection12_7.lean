@@ -5,7 +5,7 @@ import FeitThompson.PFsection12.PFsection12_4
 import FeitThompson.PFsection12.PFsection12_6
 import FeitThompson.PFsection12.PFsection12_9
 import FeitThompson.PFsection12.PFsection12_16
-import FeitThompson.GroupAction.MinimalNormal
+import Theory.GroupAction.MinimalNormal
 import FeitThompson.PFsection5.RealVirtualParity
 import FeitThompson.PFsection6.PFsection6_5_a
 import FeitThompson.PFsection7.PFsection7_3
@@ -99,7 +99,7 @@ public theorem theorem_12_17_representative_normalizer_mf_eq
     (hM : M ∈ Ms) :
     Subgroup.normalizer ((MF M : Subgroup G) : Set G) = M := by
   classical
-  letI : IsMinCE G := hmin
+  let : IsMinCE G := hmin
   have hReps16 : section16MaximalConjugacyRepresentatives (G := G) Ms := by
     simpa [Section8.representativeSystemData] using hRepSystem.1
   have hMmax9 : M ∈ section9MaximalSubgroups G := hReps16.1 M hM
@@ -385,7 +385,7 @@ public theorem theorem_12_17_representative_system_card_ge_two_source_leaf
     (hRepSystem : theorem_12_17_representative_system_data Ms MF) :
     2 ≤ Fintype.card (Fin Ms.length) := by
   classical
-  letI : IsMinCE G := hmin
+  let : IsMinCE G := hmin
   have hReps16 : section16MaximalConjugacyRepresentatives (G := G) Ms := by
     simpa [Section8.representativeSystemData] using hRepSystem.1
   rw [Fintype.card_fin]
@@ -393,7 +393,7 @@ public theorem theorem_12_17_representative_system_card_ge_two_source_leaf
   have hbot_ne_top : (⊥ : Subgroup G) ≠ ⊤ := by
     intro hbot
     apply IsMinCE.not_solvable (G := G)
-    apply isSolvable_of_comm
+    apply Group.isSolvable_of_comm
     intro x y
     have hx : x = 1 := Subgroup.mem_bot.mp (by simp [hbot])
     have hy : y = 1 := Subgroup.mem_bot.mp (by simp [hbot])
@@ -479,7 +479,7 @@ public theorem theorem_12_17_centralizer_le_of_all_typeI_source_leaf
       a ∈ Section7.puncturedSubgroupSet H →
         Section2.elementCentralizer a ≤ L := by
   classical
-  letI : IsMinCE G := hmin
+  let : IsMinCE G := hmin
   intro a ha
   by_contra hcent_not_le
   have ha_ne_one : a ≠ 1 := ha.2
@@ -582,7 +582,7 @@ public theorem theorem_12_17_conjugate_kernel_cover_nonidentity_source_leaf
           Section2.conjugateSet
             (Section7.puncturedSubgroupSet (MF (Ms.get i))) := by
   classical
-  letI : IsMinCE G := hmin
+  let : IsMinCE G := hmin
   have hReps : section16MaximalConjugacyRepresentatives (G := G) Ms := by
     simpa [Section8.representativeSystemData] using hRepSystem.1
   have hNoP : ∀ P : Subgroup G, ¬ section16MaximalTypeP P := by
@@ -730,7 +730,7 @@ public theorem theorem_12_17_lowerBoundData_source_leaf
       (Set.univ \ ⋃ i : I, Section2.conjugateSet (Section7.puncturedSubgroupSet (H i)))) :
     Section7.theorem_7_10_lowerBoundData L H ({1} : Set G) := by
   classical
-  letI : IsMinCE G := hmin
+  let : IsMinCE G := hmin
   let A : I → Set G := fun i => Section7.puncturedSubgroupSet (H i)
   have hAeq (i : I) : typeIASet (L i) (H i) = A i := by
     simpa [A, Section7.puncturedSubgroupSet,
@@ -765,12 +765,12 @@ public theorem theorem_12_17_lowerBoundData_source_leaf
         ζ ∈ S i ∧ Section1.IsIrreducibleCharacterOnGroup ζ ∧
           Section1.degree ζ = ((H i).relIndex (L i) : ℂ) := by
     rcases (hMF i).1 with ⟨hHL, _hHnormal, hHnil, _hHall⟩
-    letI : Group.IsNilpotent (H i) := hHnil
-    haveI : IsSolvable (H i) := IsNilpotent.to_isSolvable
+    let : Group.IsNilpotent (H i) := hHnil
+    have : Group.IsSolvable (H i) := IsNilpotent.to_isSolvable
     let e : (H i).subgroupOf (L i) ≃* H i :=
       Subgroup.subgroupOfEquivOfLe hHL
-    have hKsolv : IsSolvable ((H i).subgroupOf (L i)) :=
-      solvable_of_solvable_injective (f := e.toMonoidHom) e.injective
+    have hKsolv : Group.IsSolvable ((H i).subgroupOf (L i)) :=
+      Group.isSolvable_of_isSolvable_injective (f := e.toMonoidHom) e.injective
     rcases hTypeI i with ⟨_U, _U1, _U0, hF, _hcases⟩
     have hHne : H i ≠ ⊥ := hF.2.2.2.1.ne'
     have hsub_ne : (H i).subgroupOf (L i) ≠ ⊥ := by
@@ -852,13 +852,13 @@ public theorem theorem_12_17_lowerBoundData_source_leaf
     ⟨i1, _hi1, hi1min⟩
   have hh (i : I) : 0 < Nat.card (H i) := Nat.card_pos
   have he (i : I) : 0 < (H i).relIndex (L i) := by
-    haveI : ((H i).subgroupOf (L i)).FiniteIndex := inferInstance
+    have : ((H i).subgroupOf (L i)).FiniteIndex := inferInstance
     exact Nat.pos_of_ne_zero (by
       simpa [Subgroup.relIndex] using
         (Subgroup.FiniteIndex.index_ne_zero (H := (H i).subgroupOf (L i))))
   have he1 (i : I) : 1 < (H i).relIndex (L i) := by
     rcases hFrob i with ⟨_hHL, hHnormal, C, hcomp, _hHne, hCne, _hcent⟩
-    haveI : ((H i).subgroupOf (L i)).Normal := hHnormal
+    have : ((H i).subgroupOf (L i)).Normal := hHnormal
     have hindex : (H i).relIndex (L i) = Nat.card C := by
       rw [Subgroup.relIndex, hcomp.symm.index_eq_card]
     rw [hindex]
@@ -936,10 +936,10 @@ public theorem theorem_12_17_lowerBoundData_source_leaf
     Section6.theorem_6_8_coherentExtension_mem_signedIrreducible
       (hν i) (hζ i).1 (hζ i).2.1
   have hγvirt (i : I) :
-      Theory.Character.IsVirtualCharacter (ν i (ζ i)) :=
+      IsVirtualCharacter (ν i (ζ i)) :=
     Section3.isVirtualCharacter_of_signedIrreducible_pf35 (hγsigned i)
   have hβvirt (i : I) :
-      Theory.Character.IsVirtualCharacter
+      IsVirtualCharacter
         (Section7.theorem_7_8_beta (L i) (H i) (τ i) (ζ i)) :=
     Section7.theorem_7_8_beta_virtual (h76 i) (hAgree i) (h78 i)
   have hsignedSumNorm :
@@ -997,7 +997,7 @@ public theorem theorem_12_17_lowerBoundData_source_leaf
   have hγconj (i : I) :
       Section1.conjugateCharacter (ν i (ζ i)) =
         ν i (Section1.conjugateCharacter (ζ i)) := by
-    letI : Fintype (L i) := Fintype.ofFinite (L i)
+    let : Fintype (L i) := Fintype.ofFinite (L i)
     let X : S i := ⟨ζ i, (hζ i).1⟩
     rcases h52 i with ⟨hsetup, h52a, h52b, h52c, h52d, h52e⟩
     have hζbar : Section1.conjugateCharacter (ζ i) ∈ S i := by
@@ -1193,7 +1193,7 @@ public theorem theorem_12_17_lowerBoundData_source_leaf
     have hdiffi : rFamilyDiffData (SX i ⟨χi, hχi⟩) (τ i)
         (Rfun i ⟨χi, hχi⟩) :=
       rFamilyDiffData_of_hypothesis12_rFamilyData (h12 i) (hSX i) hRi
-    have hψvirt : Theory.Character.IsVirtualCharacter
+    have hψvirt : IsVirtualCharacter
         (τ j (χj - Section1.conjugateCharacter χj)) :=
       isVirtualCharacter_tau_sub_conjugate_of_hypothesis12
         (L j) (H j) (S j) (SX j) (R j) (τ j) (h12 j) (hSX j) hχj
@@ -1222,7 +1222,7 @@ public theorem theorem_12_17_lowerBoundData_source_leaf
       hαsigned hψvirt hψskew hdiffzero
   have hνSubset (i : I) (χ : Section1.ClassFunction (L i)) (hχ : χ ∈ S i) :
       Section5.isSubsetSumOf (Rfun i ⟨χ, hχ⟩) (ν i χ) := by
-    letI : Fintype (L i) := Fintype.ofFinite (L i)
+    let : Fintype (L i) := Fintype.ofFinite (L i)
     rcases h52 i with ⟨hsetup, h52a, h52b, h52c, h52d, h52e⟩
     let X : S i := ⟨χ, hχ⟩
     have hχbar : Section1.conjugateCharacter χ ∈ S i := by
@@ -1310,7 +1310,7 @@ public theorem theorem_12_17_lowerBoundData_source_leaf
       (hχdeg : Section1.degree χ = ((H i).relIndex (L i) : ℂ)) :
       Section2.CFOn (L i) (typeIASet (L i) (H i))
         (Section7.theorem_7_8_betaInput (L i) (H i) χ) := by
-    letI : ((H i).subgroupOf (L i)).Normal :=
+    let : ((H i).subgroupOf (L i)).Normal :=
       section16MFSubgroup_subgroupOf_normal (hMF i)
     rcases (hS i χ).mp hχ with ⟨θ, _hθirr, _hθne, hχeq⟩
     have hprincipalClass :
@@ -1405,7 +1405,7 @@ public theorem theorem_12_17_lowerBoundData_source_leaf
       Section1.conjugateCharacter (β i) =
         τ i (Section7.theorem_7_8_betaInput (L i) (H i)
           (Section1.conjugateCharacter (ζ i))) := by
-    letI : ((H i).subgroupOf (L i)).Normal :=
+    let : ((H i).subgroupOf (L i)).Normal :=
       section16MFSubgroup_subgroupOf_normal (hMF i)
     have hζchar : Section1.IsCharacter (ζ i) :=
       isCharacter_of_isIrreducibleCharacterOnGroup (hζ i).2.1
@@ -1523,7 +1523,7 @@ public theorem theorem_12_17_lowerBoundData_source_leaf
         simp [Section1.conjugateCharacter, Pi.add_apply]
   let Δ : I → Section1.ClassFunction G := fun i =>
     β i + γ i - Section1.principalCharacter G
-  have hΔvirt (i : I) : Theory.Character.IsVirtualCharacter (Δ i) := by
+  have hΔvirt (i : I) : IsVirtualCharacter (Δ i) := by
     exact Section3.isVirtualCharacter_sub
       (Section3.isVirtualCharacter_add (by simpa [β] using hβvirt i)
         (by simpa [γ] using hγvirt i))
@@ -1942,7 +1942,7 @@ public theorem theorem_12_17_lowerBoundData_source_leaf
       simp [Q, hζnePrincipal.symm, hprincipalT]
     let iβ : Fin n := restEquiv.symm
       ⟨Section7.principalInducedCharacter (L k) (H k), hprincipalQ⟩
-    letI : Nonempty (Fin n) := ⟨iβ⟩
+    let : Nonempty (Fin n) := ⟨iβ⟩
     have hiβ :
         η (Fin.succ iβ) =
           Section7.principalInducedCharacter (L k) (H k) := by
@@ -2311,9 +2311,9 @@ public theorem theorem_12_17_lowerBoundData_source_leaf
     simp [Section1.principalCharacter]
   have hχone : 1 ≤ Complex.normSq (χ 1) := by
     rcases hχirr with ⟨n, ρ, hρ, hχeq⟩
-    haveI : Representation.IsIrreducible ρ := hρ
-    haveI : Nontrivial (Fin n → ℂ) :=
-      Theory.Character.irreducible_nontrivial (ρ := ρ)
+    have : Representation.IsIrreducible ρ := hρ
+    have : Nontrivial (Fin n → ℂ) :=
+      irreducible_nontrivial (ρ := ρ)
     have hdim_pos : 0 < Module.finrank ℂ (Fin n → ℂ) :=
       (Module.finrank_pos_iff (R := ℂ) (M := Fin n → ℂ)).2 inferInstance
     have hn : 0 < n := by simpa using hdim_pos
@@ -2450,7 +2450,7 @@ public theorem theorem_12_17_lowerBoundData_source_leaf
   have hspanCF (i : I) (α : Section1.ClassFunction (L i))
       (hα : Section5.integerSpanOn (S i) Section5.puncturedSet α) :
       Section2.CFOn (L i) (typeIASet (L i) (H i)) α := by
-    letI : ((H i).subgroupOf (L i)).Normal :=
+    let : ((H i).subgroupOf (L i)).Normal :=
       section16MFSubgroup_subgroupOf_normal (hMF i)
     refine CFOn_typeIASet_of_integerSpanOn_punctured_of_generators
       (L i) (H i) (S i) ?_ ?_ α hα
@@ -2829,7 +2829,7 @@ public theorem theorem_12_17_all_typeI_contradiction
     rcases hTypeI (Ms.get i) hM with ⟨hMF, hBGTypeI, hTypeI_data⟩
     rcases hTypeI_data with ⟨U, U1, U0, hF, hCases⟩
     rcases hCases with hTI16 | hCases
-    · haveI : IsMinCE G := hmin
+    · have : IsMinCE G := hmin
       rcases hF with
         ⟨_hsolv, _hodd, hMF_from_typeF, hHgt, _hHlt, _hUne, _hcomp,
           _hU1le, _hU1comm, _hU1norm, _hcent, _hU0le, _hexp, _hfrob⟩
@@ -2842,7 +2842,7 @@ public theorem theorem_12_17_all_typeI_contradiction
     ·
       -- prove every `x ∈ H_i#` has `C_G(x) ≤ L_i` by contradiction with
       -- `(12.7)`, then invoke PF `(2.3)` and the Section 8 support facts.
-      haveI : IsMinCE G := hmin
+      have : IsMinCE G := hmin
       have hTypeI_LH : Section8.typeIDefinitionData (L i) (H i) :=
         ⟨U, U1, U0, hF, Or.inr hCases⟩
       rcases hF with

@@ -11,6 +11,7 @@ import GorensteinWalter.CentralizerSetupFittingNormal
 import GorensteinWalter.Section1
 import Mathlib.Tactic
 
+
 /-!
 # Section 4, equation (7): the prime-support half for the `PSL₂` branch
 
@@ -117,7 +118,7 @@ private theorem commute_of_coprime_orderOf_of_nilpotent
     x * y = y * x := by
   classical
   revert x y
-  apply @nilpotent_center_quotient_ind _ G _ _ <;> clear! G
+  apply @Group.nilpotent_center_quotient_ind _ G _ _ <;> clear! G
   · intro H _ _ x y hcop
     exact Subsingleton.elim _ _
   · intro H _ _ ih x y hcop
@@ -279,7 +280,7 @@ public theorem secondCase_equationSevenPrime_primeFactors_FU_subset_K0
     (c : CentralizerSetup G) (w : SecondCaseWitness c)
     (d : SecondCaseComponentData w)
     (Kinv K0 F : Subgroup G) (s : d.E)
-    (hKinv_carrier : (Kinv : Set G) = invertedElements (c.U ⊓ w.M) (s : G))
+    (_hKinv_carrier : (Kinv : Set G) = invertedElements (c.U ⊓ w.M) (s : G))
     (hKinv_cyclic : IsCyclic Kinv)
     (hK0_def : K0 = fittingSubgroupOf c.U ⊓ Kinv)
     (hF_eq : F = centralizerIn (fittingSubgroupOf c.U ⊓ w.M) (s : G))
@@ -457,7 +458,7 @@ public theorem secondCase_equationSevenPrime_oddPrimeFactors_fittingSubgroupOf_M
     (c : CentralizerSetup G) (w : SecondCaseWitness c)
     (d : SecondCaseComponentData w)
     (Kinv K0 F : Subgroup G) (s : d.E)
-    (hKinv_carrier : (Kinv : Set G) = invertedElements (c.U ⊓ w.M) (s : G))
+    (_hKinv_carrier : (Kinv : Set G) = invertedElements (c.U ⊓ w.M) (s : G))
     (hKinv_cyclic : IsCyclic Kinv)
     (hK0_def : K0 = fittingSubgroupOf c.U ⊓ Kinv)
     (hF_eq : F = centralizerIn (fittingSubgroupOf c.U ⊓ w.M) (s : G))
@@ -684,7 +685,7 @@ private theorem eq7prime_K0_intersection_center_eq_bot
     rcases (Nat.dvd_prime Nat.prime_two).mp h2 with h1 | h2'
     · exact orderOf_eq_one_iff.mp h1
     · exfalso
-      exact (Odd.not_two_dvd_nat hxodd) (by simpa [h2'])
+      exact (Odd.not_two_dvd_nat hxodd) (by simp [h2'])
   exact hx1
 
 /-- The quotient map `E → E/Z(E)` is injective on `K₀`. -/
@@ -732,9 +733,9 @@ private theorem eq7prime_K0_image_le_torus
     (c : CentralizerSetup G) (w : SecondCaseWitness c)
     (d : SecondCaseComponentData w)
     (s : d.E) (Kinv K0 : Subgroup G)
-    (hKinv_carrier : (Kinv : Set G) = invertedElements (c.U ⊓ w.M) (s : G))
+    (_hKinv_carrier : (Kinv : Set G) = invertedElements (c.U ⊓ w.M) (s : G))
     (hK0_def : K0 = fittingSubgroupOf c.U ⊓ Kinv)
-    (hK0leE : K0 ≤ d.E)
+    (_hK0leE : K0 ≤ d.E)
     (T : Subgroup (d.E ⧸ Subgroup.center d.E))
     (hTcontain : ∀ X : Subgroup (d.E ⧸ Subgroup.center d.E),
       (∀ x : d.E ⧸ Subgroup.center d.E, x ∈ X → Odd (orderOf x)) →

@@ -1,0 +1,15 @@
+module
+
+public import Theory.SpecificGroups.G2.MultiplierThree.CubicExtension.OctonionComparison.PresentationBound.LocalOrder.Base
+
+/-! Generated kernel certificate; reproduce with `Theory/SpecificGroups/G2/MultiplierThree/CubicExtension/OctonionComparison/PresentationBound/LocalOrder/source/Generate.py`.
+Source: the seven literal local words; see `../source/README.md`. -/
+
+@[expose] public section
+namespace Atlas.G2.FiniteCover.MultiplierThree.CubicExtension.OctonionComparison.PresentationBound.LocalOrder
+open Subgroup.CosetWordCertificate
+
+def outputNode5120 : Nat → Nat :=
+  (lookupBranch 5152 (lookupBranch 5136 (lookupBranch 5128 (lookupBranch 5124 (lookupBranch 5122 (lookupBranch 5121 (fun _ => 65360) (fun _ => 80550)) (lookupBranch 5123 (fun _ => 27034) (fun _ => 71001))) (lookupBranch 5126 (lookupBranch 5125 (fun _ => 84508) (fun _ => 79722)) (lookupBranch 5127 (fun _ => 32661) (fun _ => 81259)))) (lookupBranch 5132 (lookupBranch 5130 (lookupBranch 5129 (fun _ => 84850) (fun _ => 85569)) (lookupBranch 5131 (fun _ => 84766) (fun _ => 84769))) (lookupBranch 5134 (lookupBranch 5133 (fun _ => 82443) (fun _ => 85570)) (lookupBranch 5135 (fun _ => 82462) (fun _ => 63211))))) (lookupBranch 5144 (lookupBranch 5140 (lookupBranch 5138 (lookupBranch 5137 (fun _ => 30727) (fun _ => 76102)) (lookupBranch 5139 (fun _ => 71994) (fun _ => 85183))) (lookupBranch 5142 (lookupBranch 5141 (fun _ => 76003) (fun _ => 30728)) (lookupBranch 5143 (fun _ => 76104) (fun _ => 30730)))) (lookupBranch 5148 (lookupBranch 5146 (lookupBranch 5145 (fun _ => 30736) (fun _ => 75886)) (lookupBranch 5147 (fun _ => 30731) (fun _ => 75889))) (lookupBranch 5150 (lookupBranch 5149 (fun _ => 53410) (fun _ => 76007)) (lookupBranch 5151 (fun _ => 76008) (fun _ => 76010)))))) (lookupBranch 5168 (lookupBranch 5160 (lookupBranch 5156 (lookupBranch 5154 (lookupBranch 5153 (fun _ => 31712) (fun _ => 84550)) (lookupBranch 5155 (fun _ => 84395) (fun _ => 84397))) (lookupBranch 5158 (lookupBranch 5157 (fun _ => 84572) (fun _ => 31713)) (lookupBranch 5159 (fun _ => 31715) (fun _ => 84267)))) (lookupBranch 5164 (lookupBranch 5162 (lookupBranch 5161 (fun _ => 84313) (fun _ => 85571)) (lookupBranch 5163 (fun _ => 31718) (fun _ => 31716))) (lookupBranch 5166 (lookupBranch 5165 (fun _ => 84825) (fun _ => 84271)) (lookupBranch 5167 (fun _ => 84317) (fun _ => 31719))))) (lookupBranch 5176 (lookupBranch 5172 (lookupBranch 5170 (lookupBranch 5169 (fun _ => 85411) (fun _ => 72532)) (lookupBranch 5171 (fun _ => 85412) (fun _ => 85413))) (lookupBranch 5174 (lookupBranch 5173 (fun _ => 85362) (fun _ => 80454)) (lookupBranch 5175 (fun _ => 85363) (fun _ => 85364)))) (lookupBranch 5180 (lookupBranch 5178 (lookupBranch 5177 (fun _ => 85223) (fun _ => 85572)) (lookupBranch 5179 (fun _ => 85224) (fun _ => 85225))) (lookupBranch 5182 (lookupBranch 5181 (fun _ => 85464) (fun _ => 84851)) (lookupBranch 5183 (fun _ => 85465) (fun _ => 85466)))))))
+
+end Atlas.G2.FiniteCover.MultiplierThree.CubicExtension.OctonionComparison.PresentationBound.LocalOrder

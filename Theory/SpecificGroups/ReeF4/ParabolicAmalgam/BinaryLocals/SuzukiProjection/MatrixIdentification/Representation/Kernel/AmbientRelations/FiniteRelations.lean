@@ -1,0 +1,483 @@
+module
+
+public import Theory.SpecificGroups.ReeF4.ParabolicAmalgam.BinaryLocals.SuzukiProjection.MatrixIdentification.Representation.Kernel.AmbientRelations.RowArithmetic
+
+/-!
+# Full-matrix word certificates for the binary A₅ chain
+
+Every intermediate product below is checked on all 52 packed rows by Lean's
+kernel. The resulting equations prove the Coxeter and recovery identities for
+the explicitly tabulated matrices. They do not assert the still-separate
+comparison with the actual Geck root curves.
+
+Source context: Aschbacher–Smith F.1.12(I)(5), printed pp.263–264 of
+`refs/quasithin.pdf`; the words are fixed in `Kernel.Words`.
+-/
+
+set_option Elab.async false
+
+@[expose] public section
+namespace ReeF4.Parabolics.BinarySuzuki.MatrixIdentification.KernelProof.AmbientComputation
+
+
+private def rows0 : Array ℕ :=
+  #[1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288, 1048576, 2097152, 4194304, 8388608, 16777216, 33554432, 67108864, 134217728, 268435456, 536870912, 1073741824, 2147483648, 4294967296, 8589934592, 17179869184, 34359738368, 68719476736, 137438953472, 274877906944, 549755813888, 1099511627776, 2199023255552, 4398046511104, 8796093022208, 17592186044416, 35184372088832, 70368744177664, 140737488355328, 281474976710656, 562949953421312, 1125899906842624, 2251799813685248]
+private abbrev rows1 : Array ℕ := generatorRows 0
+private abbrev rows2 : Array ℕ := generatorRows 1
+private abbrev rows3 : Array ℕ := generatorRows 2
+private abbrev rows4 : Array ℕ := generatorRows 3
+private def rows5 : Array ℕ :=
+  #[1, 83886082, 134217732, 8, 16, 32, 96, 192, 320, 832, 1024, 2048, 6144, 14336, 24576, 32768, 98304, 229376, 393216, 524288, 1572864, 3145728, 5242880, 13631488, 16777216, 50331648, 83886080, 184549376, 402653194, 620756993, 2013265930, 2684354560, 4294967296, 12884901888, 25769803776, 42949672960, 111669149696, 137438953472, 412316860416, 962072674304, 1649267441664, 2199023255552, 6597069766656, 15393162788864, 26388279066624, 35184372088832, 70368744177664, 211106232532992, 422212465065984, 703687441776640, 1829587348619264, 2251799813685248]
+private def rows6 : Array ℕ :=
+  #[1, 83886082, 50331652, 8, 16, 32, 96, 160, 288, 832, 1024, 2048, 4096, 14336, 22528, 32768, 65536, 229376, 360448, 524288, 1572864, 2621440, 4718592, 13631488, 16777216, 33554432, 67108864, 184549376, 369098752, 620756993, 1560281099, 2231369729, 4294967296, 12884901888, 21474836480, 38654705664, 111669149696, 137438953472, 274877906944, 962072674304, 1511828488192, 2199023255552, 4398046511104, 15393162788864, 24189255811072, 35184372088832, 70368744177664, 211106232532992, 351843720888320, 633318697598976, 1829587348619264, 2251799813685248]
+private def rows7 : Array ℕ :=
+  #[1, 2, 268435470, 8, 16, 32, 256, 384, 320, 512, 1024, 4096, 6144, 16384, 24576, 65536, 98304, 262144, 393216, 524288, 4194304, 6291456, 5242880, 8388608, 67108864, 100663296, 83886080, 268435456, 402653194, 2147483648, 3221225472, 2684354560, 4294967296, 34359738368, 51539607552, 42949672960, 68719476736, 274877906944, 412316860416, 1099511627776, 1649267441664, 4398046511104, 6597069766656, 17592186044416, 26388279066624, 35184372088832, 70368744177664, 562949953421312, 844424930131968, 703687441776640, 1125899906842624, 2251799813685248]
+private def rows8 : Array ℕ :=
+  #[1, 2147483650, 268435470, 8, 16, 288, 256, 384, 832, 512, 1024, 4096, 22528, 16384, 24576, 65536, 360448, 262144, 393216, 4718592, 4194304, 6291456, 13631488, 8388608, 67108864, 369098752, 2231369729, 268435456, 3623878666, 2147483648, 3221225472, 2684354560, 38654705664, 34359738368, 51539607552, 111669149696, 68719476736, 274877906944, 1511828488192, 1099511627776, 1649267441664, 4398046511104, 24189255811072, 17592186044416, 26388279066624, 35184372088832, 633318697598976, 562949953421312, 844424930131968, 1829587348619264, 1125899906842624, 2251799813685248]
+private def rows9 : Array ℕ :=
+  #[1, 2147483650, 3355443204, 8, 16, 288, 576, 704, 832, 512, 1024, 18432, 22528, 8192, 24576, 294912, 360448, 131072, 393216, 4718592, 9437184, 11534336, 13631488, 8388608, 2164260865, 2466250753, 2231369729, 1207959552, 3623878666, 536870912, 1610612736, 2684354560, 38654705664, 77309411328, 94489280512, 111669149696, 68719476736, 1236950581248, 1511828488192, 549755813888, 1649267441664, 19791209299968, 24189255811072, 8796093022208, 26388279066624, 35184372088832, 633318697598976, 1266637395197952, 1548112371908608, 1829587348619264, 1125899906842624, 2251799813685248]
+private def rows10 : Array ℕ :=
+  #[1, 2147483650, 2147483652, 8, 16, 288, 576, 128, 256, 512, 1024, 18432, 4096, 8192, 16384, 294912, 65536, 131072, 262144, 4718592, 9437184, 2097152, 4194304, 8388608, 2164260865, 301989888, 67108864, 1207959552, 268435456, 536870912, 1073741824, 2147483648, 38654705664, 77309411328, 17179869184, 34359738368, 68719476736, 1236950581248, 274877906944, 549755813888, 1099511627776, 19791209299968, 4398046511104, 8796093022208, 17592186044416, 35184372088832, 633318697598976, 1266637395197952, 281474976710656, 562949953421312, 1125899906842624, 2251799813685248]
+private def rows11 : Array ℕ :=
+  #[1, 2, 134217742, 8, 16, 32, 320, 192, 64, 512, 1024, 6144, 2048, 24576, 8192, 98304, 32768, 393216, 131072, 524288, 5242880, 3145728, 1048576, 8388608, 83886080, 50331648, 16777216, 402653194, 134217728, 2684354560, 1610612736, 536870912, 4294967296, 42949672960, 25769803776, 8589934592, 68719476736, 412316860416, 137438953472, 1649267441664, 549755813888, 6597069766656, 2199023255552, 26388279066624, 8796093022208, 35184372088832, 70368744177664, 703687441776640, 422212465065984, 140737488355328, 1125899906842624, 2251799813685248]
+private def rows12 : Array ℕ :=
+  #[1, 16777218, 134217742, 8, 16, 32, 352, 192, 64, 576, 1024, 6144, 2048, 26624, 8192, 98304, 32768, 425984, 131072, 524288, 5767168, 3145728, 1048576, 9437184, 83886080, 50331648, 16777216, 452984842, 134217728, 2701131777, 1744830464, 536870912, 4294967296, 47244640256, 25769803776, 8589934592, 77309411328, 412316860416, 137438953472, 1786706395136, 549755813888, 6597069766656, 2199023255552, 28587302322176, 8796093022208, 35184372088832, 70368744177664, 774056185954304, 422212465065984, 140737488355328, 1266637395197952, 2251799813685248]
+private def rows13 : Array ℕ :=
+  #[1, 16777218, 318767108, 8, 16, 32, 352, 416, 288, 576, 1024, 6144, 4096, 26624, 18432, 98304, 65536, 425984, 294912, 524288, 5767168, 6815744, 4718592, 9437184, 83886080, 100663296, 67108864, 452984842, 301989888, 2701131777, 3372220417, 2164260865, 4294967296, 47244640256, 55834574848, 38654705664, 77309411328, 412316860416, 274877906944, 1786706395136, 1236950581248, 6597069766656, 4398046511104, 28587302322176, 19791209299968, 35184372088832, 70368744177664, 774056185954304, 914793674309632, 633318697598976, 1266637395197952, 2251799813685248]
+private def rows14 : Array ℕ :=
+  #[1, 16777218, 16777220, 8, 16, 32, 64, 128, 288, 576, 1024, 2048, 4096, 8192, 18432, 32768, 65536, 131072, 294912, 524288, 1048576, 2097152, 4718592, 9437184, 16777216, 33554432, 67108864, 134217728, 301989888, 536870912, 1207959552, 2164260865, 4294967296, 8589934592, 17179869184, 38654705664, 77309411328, 137438953472, 274877906944, 549755813888, 1236950581248, 2199023255552, 4398046511104, 8796093022208, 19791209299968, 35184372088832, 70368744177664, 140737488355328, 281474976710656, 633318697598976, 1266637395197952, 2251799813685248]
+private def rows15 : Array ℕ :=
+  #[1, 67108867, 4, 8, 16, 96, 32, 128, 768, 256, 1024, 2048, 12288, 4096, 16384, 32768, 196608, 65536, 262144, 1572864, 524288, 2097152, 12582912, 4194304, 16777216, 167772160, 603979777, 33554432, 1342177280, 67108864, 268435456, 2147483648, 12884901888, 4294967296, 17179869184, 103079215104, 34359738368, 137438953472, 824633720832, 274877906944, 1099511627776, 2199023255552, 13194139533312, 4398046511104, 17592186044416, 35184372088832, 211106232532992, 70368744177664, 281474976710656, 1688849860263936, 562949953421312, 2251799813685248]
+private def rows16 : Array ℕ :=
+  #[1, 536870915, 4, 8, 16, 64, 96, 128, 512, 768, 1024, 2048, 8192, 12288, 16384, 32768, 131072, 196608, 262144, 1048576, 1572864, 2097152, 8388608, 12582912, 16777216, 134217728, 536870912, 167772160, 1073741824, 603979777, 1342177280, 2147483648, 8589934592, 12884901888, 17179869184, 68719476736, 103079215104, 137438953472, 549755813888, 824633720832, 1099511627776, 2199023255552, 8796093022208, 13194139533312, 17592186044416, 35184372088832, 140737488355328, 211106232532992, 281474976710656, 1125899906842624, 1688849860263936, 2251799813685248]
+private def rows17 : Array ℕ :=
+  #[1, 16777218, 50331652, 8, 16, 32, 64, 160, 288, 608, 1024, 2048, 4096, 10240, 22528, 32768, 65536, 163840, 360448, 524288, 1048576, 2621440, 4718592, 9961472, 16777216, 33554432, 67108864, 150994944, 369098752, 553648128, 1258291211, 2231369729, 4294967296, 8589934592, 21474836480, 38654705664, 81604378624, 137438953472, 274877906944, 687194767360, 1511828488192, 2199023255552, 4398046511104, 10995116277760, 24189255811072, 35184372088832, 70368744177664, 140737488355328, 351843720888320, 633318697598976, 1337006139375616, 2251799813685248]
+private def rows18 : Array ℕ :=
+  #[1, 2214592514, 2147483652, 8, 16, 288, 864, 128, 256, 768, 1024, 18432, 4096, 12288, 16384, 294912, 65536, 196608, 262144, 4718592, 14155776, 2097152, 4194304, 12582912, 2164260865, 301989888, 67108864, 1509949440, 268435456, 603979777, 1342177280, 2147483648, 38654705664, 115964116992, 17179869184, 34359738368, 103079215104, 1236950581248, 274877906944, 824633720832, 1099511627776, 19791209299968, 4398046511104, 13194139533312, 17592186044416, 35184372088832, 633318697598976, 1899956092796928, 281474976710656, 562949953421312, 1688849860263936, 2251799813685248]
+private def rows19 : Array ℕ :=
+  #[1, 83886082, 16777220, 8, 16, 32, 96, 128, 288, 864, 1024, 2048, 4096, 12288, 18432, 32768, 65536, 196608, 294912, 524288, 1572864, 2097152, 4718592, 14155776, 16777216, 33554432, 67108864, 167772160, 301989888, 603979777, 1509949440, 2164260865, 4294967296, 12884901888, 17179869184, 38654705664, 115964116992, 137438953472, 274877906944, 824633720832, 1236950581248, 2199023255552, 4398046511104, 13194139533312, 19791209299968, 35184372088832, 70368744177664, 211106232532992, 281474976710656, 633318697598976, 1899956092796928, 2251799813685248]
+private def rows20 : Array ℕ :=
+  #[1, 536870915, 50331652, 8, 16, 64, 96, 160, 608, 832, 1024, 2048, 10240, 14336, 22528, 32768, 163840, 229376, 360448, 1048576, 1572864, 2621440, 9961472, 13631488, 16777216, 150994944, 553648128, 184549376, 1258291211, 620756993, 1560281099, 2231369729, 8589934592, 12884901888, 21474836480, 81604378624, 111669149696, 137438953472, 687194767360, 962072674304, 1511828488192, 2199023255552, 10995116277760, 15393162788864, 24189255811072, 35184372088832, 140737488355328, 211106232532992, 351843720888320, 1337006139375616, 1829587348619264, 2251799813685248]
+private def rows21 : Array ℕ :=
+  #[1, 83886083, 184549380, 8, 16, 96, 32, 224, 864, 320, 1024, 2048, 12288, 6144, 30720, 32768, 196608, 98304, 491520, 1572864, 524288, 3670016, 14155776, 5242880, 16777216, 167772160, 603979777, 50331648, 2113929217, 83886080, 486539274, 2768240640, 12884901888, 4294967296, 30064771072, 115964116992, 42949672960, 137438953472, 824633720832, 412316860416, 2061584302080, 2199023255552, 13194139533312, 6597069766656, 32985348833280, 35184372088832, 211106232532992, 70368744177664, 492581209243648, 1899956092796928, 703687441776640, 2251799813685248]
+private def rows22 : Array ℕ :=
+  #[1, 2684354562, 2147483652, 8, 16, 864, 576, 128, 768, 512, 1024, 18432, 12288, 8192, 16384, 294912, 196608, 131072, 262144, 14155776, 9437184, 2097152, 12582912, 8388608, 2164260865, 1509949440, 603979777, 1207959552, 1342177280, 536870912, 1073741824, 2147483648, 115964116992, 77309411328, 17179869184, 103079215104, 68719476736, 1236950581248, 824633720832, 549755813888, 1099511627776, 19791209299968, 13194139533312, 8796093022208, 17592186044416, 35184372088832, 1899956092796928, 1266637395197952, 281474976710656, 1688849860263936, 1125899906842624, 2251799813685248]
+private def rows23 : Array ℕ :=
+  #[1, 553648130, 16777220, 8, 16, 96, 64, 128, 864, 576, 1024, 2048, 12288, 8192, 18432, 32768, 196608, 131072, 294912, 1572864, 1048576, 2097152, 14155776, 9437184, 16777216, 167772160, 603979777, 134217728, 1509949440, 536870912, 1207959552, 2164260865, 12884901888, 8589934592, 17179869184, 115964116992, 77309411328, 137438953472, 824633720832, 549755813888, 1236950581248, 2199023255552, 13194139533312, 8796093022208, 19791209299968, 35184372088832, 211106232532992, 140737488355328, 281474976710656, 1899956092796928, 1266637395197952, 2251799813685248]
+private def rows24 : Array ℕ :=
+  #[1, 83886083, 318767109, 8, 16, 288, 864, 416, 32, 320, 1024, 18432, 4096, 30720, 6144, 294912, 65536, 491520, 98304, 4718592, 14155776, 6815744, 524288, 5242880, 2164260865, 301989888, 67108864, 3674210305, 100663296, 2768240640, 486539274, 83886080, 38654705664, 115964116992, 55834574848, 4294967296, 42949672960, 1236950581248, 274877906944, 2061584302080, 412316860416, 19791209299968, 4398046511104, 32985348833280, 6597069766656, 35184372088832, 633318697598976, 1899956092796928, 914793674309632, 70368744177664, 703687441776640, 2251799813685248]
+private def rows25 : Array ℕ :=
+  #[1, 2147483651, 2248146949, 8, 16, 256, 800, 160, 288, 832, 1024, 20480, 4096, 14336, 22528, 327680, 65536, 229376, 360448, 4194304, 13107200, 2621440, 4718592, 13631488, 2214592512, 335544320, 67108864, 1442840587, 369098752, 620756993, 1560281099, 2231369729, 34359738368, 107374182400, 21474836480, 38654705664, 111669149696, 1374389534720, 274877906944, 962072674304, 1511828488192, 21990232555520, 4398046511104, 15393162788864, 24189255811072, 35184372088832, 562949953421312, 1759218604441600, 351843720888320, 633318697598976, 1829587348619264, 2251799813685248]
+private def rows26 : Array ℕ :=
+  #[1, 67108866, 33554436, 8, 16, 32, 96, 160, 256, 800, 1024, 2048, 4096, 14336, 20480, 32768, 65536, 229376, 327680, 524288, 1572864, 2621440, 4194304, 13107200, 16777216, 33554432, 67108864, 184549376, 335544320, 620756993, 1442840587, 2214592512, 4294967296, 12884901888, 21474836480, 34359738368, 107374182400, 137438953472, 274877906944, 962072674304, 1374389534720, 2199023255552, 4398046511104, 15393162788864, 21990232555520, 35184372088832, 70368744177664, 211106232532992, 351843720888320, 562949953421312, 1759218604441600, 2251799813685248]
+private def rows27 : Array ℕ :=
+  #[1, 2147483651, 2147483653, 8, 16, 256, 512, 128, 288, 576, 1024, 16384, 4096, 8192, 18432, 262144, 65536, 131072, 294912, 4194304, 8388608, 2097152, 4718592, 9437184, 2147483648, 268435456, 67108864, 1073741824, 301989888, 536870912, 1207959552, 2164260865, 34359738368, 68719476736, 17179869184, 38654705664, 77309411328, 1099511627776, 274877906944, 549755813888, 1236950581248, 17592186044416, 4398046511104, 8796093022208, 19791209299968, 35184372088832, 562949953421312, 1125899906842624, 281474976710656, 633318697598976, 1266637395197952, 2251799813685248]
+private def rows28 : Array ℕ :=
+  #[1, 16777219, 16777221, 8, 16, 288, 576, 128, 32, 64, 1024, 18432, 4096, 8192, 2048, 294912, 65536, 131072, 32768, 4718592, 9437184, 2097152, 524288, 1048576, 2164260865, 301989888, 67108864, 1207959552, 33554432, 536870912, 134217728, 16777216, 38654705664, 77309411328, 17179869184, 4294967296, 8589934592, 1236950581248, 274877906944, 549755813888, 137438953472, 19791209299968, 4398046511104, 8796093022208, 2199023255552, 35184372088832, 633318697598976, 1266637395197952, 281474976710656, 70368744177664, 140737488355328, 2251799813685248]
+private def rows29 : Array ℕ :=
+  #[1, 553648131, 16777220, 8, 16, 64, 96, 128, 576, 864, 1024, 2048, 8192, 12288, 18432, 32768, 131072, 196608, 294912, 1048576, 1572864, 2097152, 9437184, 14155776, 16777216, 134217728, 536870912, 167772160, 1207959552, 603979777, 1509949440, 2164260865, 8589934592, 12884901888, 17179869184, 77309411328, 115964116992, 137438953472, 549755813888, 824633720832, 1236950581248, 2199023255552, 8796093022208, 13194139533312, 19791209299968, 35184372088832, 140737488355328, 211106232532992, 281474976710656, 1266637395197952, 1899956092796928, 2251799813685248]
+private def rows30 : Array ℕ :=
+  #[1, 3, 134217732, 8, 16, 64, 32, 192, 512, 320, 1024, 2048, 8192, 6144, 24576, 32768, 131072, 98304, 393216, 1048576, 524288, 3145728, 8388608, 5242880, 16777216, 134217728, 536870912, 50331648, 1610612736, 83886080, 402653194, 2684354560, 8589934592, 4294967296, 25769803776, 68719476736, 42949672960, 137438953472, 549755813888, 412316860416, 1649267441664, 2199023255552, 8796093022208, 6597069766656, 26388279066624, 35184372088832, 140737488355328, 70368744177664, 422212465065984, 1125899906842624, 703687441776640, 2251799813685248]
+private def rows31 : Array ℕ :=
+  #[1, 536870915, 134217732, 8, 16, 64, 96, 192, 512, 832, 1024, 2048, 8192, 14336, 24576, 32768, 131072, 229376, 393216, 1048576, 1572864, 3145728, 8388608, 13631488, 16777216, 134217728, 536870912, 184549376, 1610612736, 620756993, 2013265930, 2684354560, 8589934592, 12884901888, 25769803776, 68719476736, 111669149696, 137438953472, 549755813888, 962072674304, 1649267441664, 2199023255552, 8796093022208, 15393162788864, 26388279066624, 35184372088832, 140737488355328, 211106232532992, 422212465065984, 1125899906842624, 1829587348619264, 2251799813685248]
+private def rows32 : Array ℕ :=
+  #[1, 67108867, 33554437, 8, 16, 256, 800, 160, 32, 96, 1024, 20480, 4096, 14336, 2048, 327680, 65536, 229376, 32768, 4194304, 13107200, 2621440, 524288, 1572864, 2214592512, 335544320, 67108864, 1442840587, 33554432, 620756993, 184549376, 16777216, 34359738368, 107374182400, 21474836480, 4294967296, 12884901888, 1374389534720, 274877906944, 962072674304, 137438953472, 21990232555520, 4398046511104, 15393162788864, 2199023255552, 35184372088832, 562949953421312, 1759218604441600, 351843720888320, 70368744177664, 211106232532992, 2251799813685248]
+private def rows33 : Array ℕ :=
+  #[1, 2214592515, 2449473541, 8, 16, 256, 544, 416, 288, 864, 1024, 20480, 4096, 30720, 18432, 327680, 65536, 491520, 294912, 4194304, 8912896, 6815744, 4718592, 14155776, 2214592512, 335544320, 67108864, 3321888779, 301989888, 2768240640, 3674210305, 2164260865, 34359738368, 73014444032, 55834574848, 38654705664, 115964116992, 1374389534720, 274877906944, 2061584302080, 1236950581248, 21990232555520, 4398046511104, 32985348833280, 19791209299968, 35184372088832, 562949953421312, 1196268651020288, 914793674309632, 633318697598976, 1899956092796928, 2251799813685248]
+private def rows34 : Array ℕ :=
+  #[1, 83886082, 318767108, 8, 16, 32, 320, 416, 288, 864, 1024, 6144, 4096, 30720, 18432, 98304, 65536, 491520, 294912, 524288, 5242880, 6815744, 4718592, 14155776, 83886080, 100663296, 67108864, 486539274, 301989888, 2768240640, 3674210305, 2164260865, 4294967296, 42949672960, 55834574848, 38654705664, 115964116992, 412316860416, 274877906944, 2061584302080, 1236950581248, 6597069766656, 4398046511104, 32985348833280, 19791209299968, 35184372088832, 70368744177664, 703687441776640, 914793674309632, 633318697598976, 1899956092796928, 2251799813685248]
+private def rows35 : Array ℕ :=
+  #[1, 67108866, 268435460, 8, 16, 32, 352, 384, 256, 768, 1024, 6144, 4096, 28672, 16384, 98304, 65536, 458752, 262144, 524288, 5767168, 6291456, 4194304, 12582912, 83886080, 100663296, 67108864, 503316490, 268435456, 2751463425, 3489660928, 2147483648, 4294967296, 47244640256, 51539607552, 34359738368, 103079215104, 412316860416, 274877906944, 1924145348608, 1099511627776, 6597069766656, 4398046511104, 30786325577728, 17592186044416, 35184372088832, 70368744177664, 774056185954304, 844424930131968, 562949953421312, 1688849860263936, 2251799813685248]
+
+private theorem decode_identity : decode rows0 = 1 := by
+  ext i j
+  have h : rows0[i.val]! = 2 ^ i.val := by revert i; decide +kernel
+  change bit rows0[i.val]! j.val = _
+  rw [h]
+  simp [bit, Nat.testBit_two_pow, Matrix.one_apply, Fin.ext_iff]
+
+private theorem product_000 : decode rows1 * decode rows2 = decode rows5 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_001 : decode rows2 * decode rows5 = decode rows6 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_002 : decode rows4 * decode rows2 = decode rows7 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_003 : decode rows3 * decode rows7 = decode rows8 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_004 : decode rows4 * decode rows8 = decode rows9 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_005 : decode rows2 * decode rows9 = decode rows10 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_006 : decode rows2 * decode rows4 = decode rows11 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_007 : decode rows1 * decode rows11 = decode rows12 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_008 : decode rows2 * decode rows12 = decode rows13 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_009 : decode rows4 * decode rows13 = decode rows14 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_010 : decode rows1 * decode rows1 = decode rows0 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_011 : decode rows1 * decode rows3 = decode rows15 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_012 : decode rows15 * decode rows15 = decode rows16 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_013 : decode rows16 * decode rows15 = decode rows0 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_014 : decode rows1 * decode rows6 = decode rows17 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_015 : decode rows17 * decode rows17 = decode rows0 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_016 : decode rows1 * decode rows10 = decode rows18 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_017 : decode rows18 * decode rows18 = decode rows0 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_018 : decode rows1 * decode rows14 = decode rows19 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_019 : decode rows19 * decode rows19 = decode rows0 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_020 : decode rows3 * decode rows1 = decode rows16 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_021 : decode rows16 * decode rows16 = decode rows15 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_022 : decode rows15 * decode rows16 = decode rows0 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_023 : decode rows3 * decode rows3 = decode rows0 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_024 : decode rows3 * decode rows6 = decode rows20 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_025 : decode rows20 * decode rows20 = decode rows21 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_026 : decode rows21 * decode rows20 = decode rows0 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_027 : decode rows3 * decode rows10 = decode rows22 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_028 : decode rows22 * decode rows22 = decode rows0 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_029 : decode rows3 * decode rows14 = decode rows23 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_030 : decode rows23 * decode rows23 = decode rows0 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_031 : decode rows6 * decode rows1 = decode rows17 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_032 : decode rows6 * decode rows3 = decode rows21 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_033 : decode rows21 * decode rows21 = decode rows20 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_034 : decode rows20 * decode rows21 = decode rows0 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_035 : decode rows6 * decode rows6 = decode rows0 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_036 : decode rows6 * decode rows10 = decode rows24 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_037 : decode rows24 * decode rows24 = decode rows25 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_038 : decode rows25 * decode rows24 = decode rows0 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_039 : decode rows6 * decode rows14 = decode rows26 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_040 : decode rows26 * decode rows26 = decode rows0 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_041 : decode rows10 * decode rows1 = decode rows18 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_042 : decode rows10 * decode rows3 = decode rows22 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_043 : decode rows10 * decode rows6 = decode rows25 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_044 : decode rows25 * decode rows25 = decode rows24 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_045 : decode rows24 * decode rows25 = decode rows0 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_046 : decode rows10 * decode rows10 = decode rows0 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_047 : decode rows10 * decode rows14 = decode rows27 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_048 : decode rows27 * decode rows27 = decode rows28 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_049 : decode rows28 * decode rows27 = decode rows0 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_050 : decode rows14 * decode rows1 = decode rows19 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_051 : decode rows14 * decode rows3 = decode rows23 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_052 : decode rows14 * decode rows6 = decode rows26 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_053 : decode rows14 * decode rows10 = decode rows28 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_054 : decode rows28 * decode rows28 = decode rows27 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_055 : decode rows27 * decode rows28 = decode rows0 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_056 : decode rows14 * decode rows14 = decode rows0 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_057 : decode rows3 * decode rows19 = decode rows29 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_058 : decode rows6 * decode rows29 = decode rows30 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_059 : decode rows1 * decode rows30 = decode rows31 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_060 : decode rows3 * decode rows31 = decode rows5 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_061 : decode rows1 * decode rows5 = decode rows2 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_062 : decode rows14 * decode rows25 = decode rows32 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_063 : decode rows6 * decode rows32 = decode rows33 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_064 : decode rows10 * decode rows33 = decode rows34 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_065 : decode rows6 * decode rows34 = decode rows35 := by
+  apply decode_mul
+  decide +kernel
+
+private theorem product_066 : decode rows1 * decode rows35 = decode rows4 := by
+  apply decode_mul
+  decide +kernel
+
+/-- The five explicit full-matrix chain elements, evaluated from the published words. -/
+def chain (i : Fin 5) : Matrix (Fin 52) (Fin 52) (ZMod 2) :=
+  ((chainWord i).map generator).prod
+
+/-- The tabulated chain is the evaluation of the published words. -/
+theorem chain_word (i : Fin 5) : ((chainWord i).map generator).prod = chain i := rfl
+
+private theorem chain_eval (i : Fin 5) :
+    chain i = ![decode rows1, decode rows3, decode rows6, decode rows10, decode rows14] i := by
+  fin_cases i
+  · change (decode rows1 * 1) = decode rows1
+    rw [mul_one]
+  · change (decode rows3 * 1) = decode rows3
+    rw [mul_one]
+  · change (decode rows2 * (decode rows1 * (decode rows2 * 1))) = decode rows6
+    rw [mul_one, product_000, product_001]
+  · change (decode rows2 * (decode rows4 * (decode rows3 * (decode rows4 * (decode rows2 * 1))))) = decode rows10
+    rw [mul_one, product_002, product_003, product_004, product_005]
+  · change (decode rows4 * (decode rows2 * (decode rows1 * (decode rows2 * (decode rows4 * 1))))) = decode rows14
+    rw [mul_one, product_006, product_007, product_008, product_009]
+
+/-- All Coxeter equations hold on the full 52-dimensional binary matrices. -/
+theorem chain_liftable : (CoxeterMatrix.A 5).IsLiftable chain := by
+  intro i j
+  rw [chain_eval, chain_eval]
+  fin_cases i <;> fin_cases j
+  · change (decode rows1 * decode rows1) ^ 1 = 1
+    simp only [pow_succ, pow_zero, one_mul]
+    rw [product_010, decode_identity]
+  · change (decode rows1 * decode rows3) ^ 3 = 1
+    simp only [pow_succ, pow_zero, one_mul]
+    rw [product_011, product_012, product_013, decode_identity]
+  · change (decode rows1 * decode rows6) ^ 2 = 1
+    simp only [pow_succ, pow_zero, one_mul]
+    rw [product_014, product_015, decode_identity]
+  · change (decode rows1 * decode rows10) ^ 2 = 1
+    simp only [pow_succ, pow_zero, one_mul]
+    rw [product_016, product_017, decode_identity]
+  · change (decode rows1 * decode rows14) ^ 2 = 1
+    simp only [pow_succ, pow_zero, one_mul]
+    rw [product_018, product_019, decode_identity]
+  · change (decode rows3 * decode rows1) ^ 3 = 1
+    simp only [pow_succ, pow_zero, one_mul]
+    rw [product_020, product_021, product_022, decode_identity]
+  · change (decode rows3 * decode rows3) ^ 1 = 1
+    simp only [pow_succ, pow_zero, one_mul]
+    rw [product_023, decode_identity]
+  · change (decode rows3 * decode rows6) ^ 3 = 1
+    simp only [pow_succ, pow_zero, one_mul]
+    rw [product_024, product_025, product_026, decode_identity]
+  · change (decode rows3 * decode rows10) ^ 2 = 1
+    simp only [pow_succ, pow_zero, one_mul]
+    rw [product_027, product_028, decode_identity]
+  · change (decode rows3 * decode rows14) ^ 2 = 1
+    simp only [pow_succ, pow_zero, one_mul]
+    rw [product_029, product_030, decode_identity]
+  · change (decode rows6 * decode rows1) ^ 2 = 1
+    simp only [pow_succ, pow_zero, one_mul]
+    rw [product_031, product_015, decode_identity]
+  · change (decode rows6 * decode rows3) ^ 3 = 1
+    simp only [pow_succ, pow_zero, one_mul]
+    rw [product_032, product_033, product_034, decode_identity]
+  · change (decode rows6 * decode rows6) ^ 1 = 1
+    simp only [pow_succ, pow_zero, one_mul]
+    rw [product_035, decode_identity]
+  · change (decode rows6 * decode rows10) ^ 3 = 1
+    simp only [pow_succ, pow_zero, one_mul]
+    rw [product_036, product_037, product_038, decode_identity]
+  · change (decode rows6 * decode rows14) ^ 2 = 1
+    simp only [pow_succ, pow_zero, one_mul]
+    rw [product_039, product_040, decode_identity]
+  · change (decode rows10 * decode rows1) ^ 2 = 1
+    simp only [pow_succ, pow_zero, one_mul]
+    rw [product_041, product_017, decode_identity]
+  · change (decode rows10 * decode rows3) ^ 2 = 1
+    simp only [pow_succ, pow_zero, one_mul]
+    rw [product_042, product_028, decode_identity]
+  · change (decode rows10 * decode rows6) ^ 3 = 1
+    simp only [pow_succ, pow_zero, one_mul]
+    rw [product_043, product_044, product_045, decode_identity]
+  · change (decode rows10 * decode rows10) ^ 1 = 1
+    simp only [pow_succ, pow_zero, one_mul]
+    rw [product_046, decode_identity]
+  · change (decode rows10 * decode rows14) ^ 3 = 1
+    simp only [pow_succ, pow_zero, one_mul]
+    rw [product_047, product_048, product_049, decode_identity]
+  · change (decode rows14 * decode rows1) ^ 2 = 1
+    simp only [pow_succ, pow_zero, one_mul]
+    rw [product_050, product_019, decode_identity]
+  · change (decode rows14 * decode rows3) ^ 2 = 1
+    simp only [pow_succ, pow_zero, one_mul]
+    rw [product_051, product_030, decode_identity]
+  · change (decode rows14 * decode rows6) ^ 2 = 1
+    simp only [pow_succ, pow_zero, one_mul]
+    rw [product_052, product_040, decode_identity]
+  · change (decode rows14 * decode rows10) ^ 3 = 1
+    simp only [pow_succ, pow_zero, one_mul]
+    rw [product_053, product_054, product_055, decode_identity]
+  · change (decode rows14 * decode rows14) ^ 1 = 1
+    simp only [pow_succ, pow_zero, one_mul]
+    rw [product_056, decode_identity]
+
+/-- The published recovery words recover all four explicit full matrices. -/
+theorem chain_recovery (i : Fin 4) :
+    ((recoveryWord i).map chain).prod = generator i := by
+  simp only [funext chain_eval]
+  fin_cases i
+  · change (decode rows1 * 1) = decode rows1
+    rw [mul_one]
+  · change (decode rows1 * (decode rows3 * (decode rows1 * (decode rows6 * (decode rows3 * (decode rows1 * (decode rows14 * 1))))))) = decode rows2
+    rw [mul_one, product_018, product_057, product_058, product_059, product_060, product_061]
+  · change (decode rows3 * 1) = decode rows3
+    rw [mul_one]
+  · change (decode rows1 * (decode rows6 * (decode rows10 * (decode rows6 * (decode rows14 * (decode rows10 * (decode rows6 * 1))))))) = decode rows4
+    rw [mul_one, product_043, product_062, product_063, product_064, product_065, product_066]
+
+end ReeF4.Parabolics.BinarySuzuki.MatrixIdentification.KernelProof.AmbientComputation

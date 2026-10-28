@@ -70,7 +70,7 @@ public theorem psl2_sylow_isCyclic_of_coprime_field_card
         Nat.card (⊤ : Subgroup (PSL2MatrixGroup K)) :=
       Subgroup.card_dvd_of_le le_top
     exact dvd_trans hrdivR (by simpa using hcarddiv)
-  letI : Nontrivial (R : Type _) :=
+  let : Nontrivial (R : Type _) :=
     Finite.one_lt_card_iff_nontrivial.mp hRcard_gt
   have hcenterNontrivial :
       Nontrivial (Subgroup.center (R : Subgroup (PSL2MatrixGroup K))) :=
@@ -314,7 +314,7 @@ public theorem psl2_sylow_isCyclic_of_coprime_field_card
     have hTcyclic : IsCyclic T := by
       rw [hg]
       exact (MulEquiv.subgroupMap (MulAut.conj g) U).isCyclic.mp hUc
-    letI : IsCyclic T := hTcyclic
+    let : IsCyclic T := hTcyclic
     exact Subgroup.isCyclic_of_le
       (BenderSuzuki.lemma114_odd_subgroup_le_of_normalizer_card_two hRnorm hRodd hTnormcard)
 
@@ -452,7 +452,7 @@ public theorem psl2_sylow_isCyclic_of_coprime_field_card
     have hTcyclic : IsCyclic T := by
       rw [hg]
       exact (MulEquiv.subgroupMap (MulAut.conj g) S).isCyclic.mp hSc
-    letI : IsCyclic T := hTcyclic
+    let : IsCyclic T := hTcyclic
     exact Subgroup.isCyclic_of_le
       (BenderSuzuki.lemma114_odd_subgroup_le_of_normalizer_card_two hRnorm hRodd hTnormcard)
 

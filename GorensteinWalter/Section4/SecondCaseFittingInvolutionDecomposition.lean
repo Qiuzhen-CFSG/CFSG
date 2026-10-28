@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section4.SecondCaseInvolutionDecomposition
 import Mathlib.Tactic
 
+
 /-!
 # Section 4, equation (3): the Fitting-subgroup restriction
 

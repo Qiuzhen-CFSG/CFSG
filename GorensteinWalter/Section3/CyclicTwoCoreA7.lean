@@ -35,7 +35,7 @@ public theorem oddCore_le_centralizer_U_of_H_eq_US
     (hHUS : U ⊔ S = H)
     (hUnorm : IsNormalIn U H)
     (hS2 : IsPGroup 2 S)
-    (hSleH : S ≤ H)
+    (_hSleH : S ≤ H)
     (hB : B = U ⊓ Subgroup.centralizer (S : Set G))
     (hOleH : O ≤ H)
     (hOodd : Odd (Nat.card O))

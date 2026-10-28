@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section4.SecondCaseA7UInterMCardThree
 import Mathlib.Tactic
 
+
 /-!
 # The order-three image of the component intersection
 

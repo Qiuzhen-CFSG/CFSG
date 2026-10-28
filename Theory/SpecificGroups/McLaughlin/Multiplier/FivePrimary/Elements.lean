@@ -1,0 +1,167 @@
+module
+public import Theory.SpecificGroups.LeechRelated.AtlasCarriers.McL.ThreeRank.Elements
+public import Mathlib.GroupTheory.Commutator.Basic
+
+/-!
+# A Sylow-five pair and simultaneous inverter in the McL permutation carrier
+
+The elements are words in the exact degree-275 ATLAS generators. Packed
+permutations certify their membership and the Heisenberg and inversion
+relations on all 275 letters. GAP discovers the words only; Lean's kernel
+checks every identity, using the left-action commutator convention.
+
+Source: ATLAS McLG1-p275B0, with original data and conventions in the
+imported carrier module. The retained discovery script and word tables are
+in `source/`. These relations supply a direct local alternative to the
+U3(5) argument on p.31 of Griess, Arch. Math. 48 (1987),
+doi:10.1007/BF01196350.
+-/
+
+@[expose] public section
+namespace Theory.SpecificGroups.McLaughlin.Multiplier.FivePrimary.Elements
+open Sporadic.LeechRelated.McL
+open Sporadic.LeechRelated.McL.ThreeRank (a b allFin)
+open scoped commutatorElement
+set_option maxRecDepth 100000
+
+def xMapPacked : Nat := 4815811966081023180331202995647150113843384023999782578261357939997255352777670630615808959216957547727852943175716897793269686988923405650002455382526544478628912721684652338771753477431859074869483641260286875533545162796954207637350389686579247488565146427703505057043262799724274642241309659758761794436483803158371443480296454441887690003808791622185934881268853717585825904991544518697439072714523574498271013185403036746813985156657749284388187024752178577983247016918444180395574846545370335730282453557017904526243420358916718029734612509159714951612018617922014645284173547262733746210267476401750346049737112688566254341522863434954889797806758149096339531216287207083184012130676629008383613306632628479719663998793610127786569725952
+
+def xMap (i : Fin 275) : Fin 275 :=
+  ⟨(xMapPacked >>> (9 * i.val)) % 512 % 275, Nat.mod_lt _ (by decide)⟩
+
+def xInvMapPacked : Nat := 4004022609365216038924409434621185854099366085955445770236508402883734107079478286138548924591090431628122764453296828003973964538253824989626011843007048332961758359136888521623190626988046344453783444038162387757400084675654076802161727125108496784471042806846258452208987978074699854575350921427117883864314526765830906650114009047050433168521230369313792349929905837917367301053770376280856869918997974510194135894555074201237158000857980503487964274942008869475574377941713339577749910155791753417428034280165715582921244665531941515671803311687533037187300241106652685916938398080147322073173754802753192037588710591565019507196292387960900361043466945180854315908589207314327820119797671588679174371328529256402202472399420312016635615744
+
+def xInvMap (i : Fin 275) : Fin 275 :=
+  ⟨(xInvMapPacked >>> (9 * i.val)) % 512 % 275, Nat.mod_lt _ (by decide)⟩
+
+theorem xLeft : ∀ i, xInvMap (xMap i) = i := by
+  apply allFin
+  decide +kernel
+
+def xPerm : Equiv.Perm (Fin 275) :=
+  Theory.GroupTheory.tablePerm xMap xInvMap xLeft
+    (Theory.GroupTheory.rightInverse_of_leftInverse_fin xLeft)
+
+def xWord : Carrier := b⁻¹ * a⁻¹ * (b⁻¹ ^ 2) * a⁻¹ * b⁻¹ * a⁻¹ * (b ^ 2) * a * b * a * (b ^ 2) * a * b⁻¹ * a * (b ^ 2) * a * (b⁻¹ ^ 2) * a * (b⁻¹ ^ 2) * a⁻¹ * b⁻¹ * a⁻¹ * b⁻¹ * a⁻¹ * b * a⁻¹ * (b⁻¹ ^ 2) * a⁻¹ * (b⁻¹ ^ 2) * a⁻¹ * (b ^ 2) * a * b⁻¹ * a * b⁻¹ * a⁻¹ * (b⁻¹ ^ 2) * a⁻¹ * b⁻¹ * a⁻¹ * (b⁻¹ ^ 2) * a⁻¹ * b⁻¹ * a⁻¹ * b⁻¹ * a * b⁻¹ * a * (b ^ 2) * a * (b ^ 2) * a * b * a * b * a * b⁻¹ * a * b⁻¹ * a * (b ^ 2) * a
+
+theorem xPerm_eq_word : xPerm = (xWord : Equiv.Perm (Fin 275)) := by
+  apply Equiv.ext
+  apply allFin
+  decide +kernel
+
+def x : Carrier := ⟨xPerm, xPerm_eq_word.symm ▸ xWord.property⟩
+
+def yMapPacked : Nat := 1756944598741194779366115422774448580778184573407784036182419667145261429358253548523311068268723810220352914042198655381175609451247274590921652872623830462704282285280673291108365695932361056918264043936270838982118873068404948819438002553022999716979335029876964793878574487913556933728560525468893144426169358250332167543238104736618813041029392029589018726540871206999594759617745989047231867928131305585891078709587451151253376799432061377263156372975701058600283111125098853843474722805218615371066818292428771297688061896239399995525818310195375228279061475744538087681778038649526980005795839621090743221661839249664044193460321348321988525882924429226884839228662728587923972014351255701749599579178322282105396923612436596050587556504
+
+def yMap (i : Fin 275) : Fin 275 :=
+  ⟨(yMapPacked >>> (9 * i.val)) % 512 % 275, Nat.mod_lt _ (by decide)⟩
+
+def yInvMapPacked : Nat := 856564857111381943546751031059080108572746427787970799038247206095581053074786951307508974230432179765705684821522493061368999525109287520139523120253608841545012666915327640735616705889788082058225240412038513640781099393382127662400385777846497984473327627926681238700233686944995488187745383233950328462736669476645080892376553376508898876194746427806218302396431772318302124180643325533075562186830444140335285067973380328936279484343596086780865460103717886436788045260950832432902657938400779793469995666057181338968956868942332387184724456511964150309251569088630891306671755556851914271365761191552693023453266200919636447044623563785061495179318491621419036546251403331805436215168211963510758909974379049620812565908318429062733572099
+
+def yInvMap (i : Fin 275) : Fin 275 :=
+  ⟨(yInvMapPacked >>> (9 * i.val)) % 512 % 275, Nat.mod_lt _ (by decide)⟩
+
+theorem yLeft : ∀ i, yInvMap (yMap i) = i := by
+  apply allFin
+  decide +kernel
+
+def yPerm : Equiv.Perm (Fin 275) :=
+  Theory.GroupTheory.tablePerm yMap yInvMap yLeft
+    (Theory.GroupTheory.rightInverse_of_leftInverse_fin yLeft)
+
+def yWord : Carrier := b * a * (b⁻¹ ^ 2) * a * b⁻¹ * a * b * a * (b⁻¹ ^ 3) * a⁻¹ * b⁻¹ * a * b⁻¹ * a * b * a * b⁻¹ * a * (b ^ 2) * a * (b ^ 2) * a * (b⁻¹ ^ 2) * a * b⁻¹ * a * b * a * b * a * (b ^ 2) * a * b * a * b * a * (b ^ 2) * a * (b ^ 3) * a⁻¹ * b * a⁻¹ * b⁻¹ * (a⁻¹ ^ 2) * (b ^ 2) * a⁻¹ * (b⁻¹ ^ 2) * a⁻¹ * b⁻¹ * a⁻¹ * b⁻¹ * a⁻¹ * (b⁻¹ ^ 2) * a⁻¹ * b * a * b⁻¹ * a * (b⁻¹ ^ 2) * a * (b⁻¹ ^ 2) * a * b⁻¹ * a * (b ^ 2) * a * b
+
+theorem yPerm_eq_word : yPerm = (yWord : Equiv.Perm (Fin 275)) := by
+  apply Equiv.ext
+  apply allFin
+  decide +kernel
+
+def y : Carrier := ⟨yPerm, yPerm_eq_word.symm ▸ yWord.property⟩
+
+def rMapPacked : Nat := 1584499646685889507070841140906386722014466406328388078788411549447643361239138651945502204981641690202886505753873808716770478401447643539424877892699959912033760056646819552842047536021827006780609525476800081480728861153037719473416914621581756030579112760511514858305684866526791073785678138190675988057019915727495668673781044915725667194147555240455386064340084610417170671492887896084820406466520816793357290068967542843435354212087122762380210123265779998697172938619306169500900805753449242244824203826282076959418568915435441600494060935834895401750243944672002389601578962804440279212824394541006211945568868033216493295150856247899447775925784905143220438977931022551237808512583741411463806945206416671707187461349088623732107522048
+
+def rMap (i : Fin 275) : Fin 275 :=
+  ⟨(rMapPacked >>> (9 * i.val)) % 512 % 275, Nat.mod_lt _ (by decide)⟩
+
+def rInvMapPacked : Nat := 1584499646685889507070841140906386722014466406328388078788411549447643361239138651945502204981641690202886505753873808716770478401447643539424877892699959912033760056646819552842047536021827006780609525476800081480728861153037719473416914621581756030579112760511514858305684866526791073785678138190675988057019915727495668673781044915725667194147555240455386064340084610417170671492887896084820406466520816793357290068967542843435354212087122762380210123265779998697172938619306169500900805753449242244824203826282076959418568915435441600494060935834895401750243944672002389601578962804440279212824394541006211945568868033216493295150856247899447775925784905143220438977931022551237808512583741411463806945206416671707187461349088623732107522048
+
+def rInvMap (i : Fin 275) : Fin 275 :=
+  ⟨(rInvMapPacked >>> (9 * i.val)) % 512 % 275, Nat.mod_lt _ (by decide)⟩
+
+theorem rLeft : ∀ i, rInvMap (rMap i) = i := by
+  apply allFin
+  decide +kernel
+
+def rPerm : Equiv.Perm (Fin 275) :=
+  Theory.GroupTheory.tablePerm rMap rInvMap rLeft
+    (Theory.GroupTheory.rightInverse_of_leftInverse_fin rLeft)
+
+def rWord : Carrier := b⁻¹ * a * b * a * b⁻¹ * a * b * a * (b ^ 2) * a * (b⁻¹ ^ 2) * a * (b ^ 2) * a * (b⁻¹ ^ 2) * a * (b ^ 2) * a * (b ^ 2) * a * (b ^ 3) * a * b * a * b⁻¹ * a * (b⁻¹ ^ 2) * a * (b ^ 2) * a * b * a * b⁻¹ * a * (b⁻¹ ^ 3) * a * (b⁻¹ ^ 2) * a * b * a * (b ^ 2) * a * b * a * b * a * b⁻¹ * a * (b⁻¹ ^ 2) * a * (b⁻¹ ^ 2) * a * (b ^ 2) * a * (b ^ 2) * (a ^ 2) * b⁻¹ * a * b⁻¹ * a * b⁻¹ * a * b * a * b * a * b * a * (b⁻¹ ^ 3) * a⁻¹ * b⁻¹ * a⁻¹ * (b⁻¹ ^ 2) * a⁻¹
+
+theorem rPerm_eq_word : rPerm = (rWord : Equiv.Perm (Fin 275)) := by
+  apply Equiv.ext
+  apply allFin
+  decide +kernel
+
+def r : Carrier := ⟨rPerm, rPerm_eq_word.symm ▸ rWord.property⟩
+
+theorem x_fifth : x ^ 5 = 1 := by
+  apply Subtype.ext
+  apply Equiv.ext
+  apply allFin
+  decide +kernel
+
+theorem y_fifth : y ^ 5 = 1 := by
+  apply Subtype.ext
+  apply Equiv.ext
+  apply allFin
+  decide +kernel
+
+theorem commutator_fifth : ⁅x, y⁆ ^ 5 = 1 := by
+  apply Subtype.ext
+  apply Equiv.ext
+  apply allFin
+  decide +kernel
+
+theorem x_commute_commutator : Commute x ⁅x, y⁆ := by
+  apply Subtype.ext
+  apply Equiv.ext
+  apply allFin
+  decide +kernel
+
+theorem y_commute_commutator : Commute y ⁅x, y⁆ := by
+  apply Subtype.ext
+  apply Equiv.ext
+  apply allFin
+  decide +kernel
+
+theorem r_inverts_x : r * x * r⁻¹ = x⁻¹ := by
+  apply Subtype.ext
+  apply Equiv.ext
+  apply allFin
+  decide +kernel
+
+theorem r_inverts_y : r * y * r⁻¹ = y⁻¹ := by
+  apply Subtype.ext
+  apply Equiv.ext
+  apply allFin
+  decide +kernel
+
+theorem r_commute_commutator : Commute r ⁅x, y⁆ := by
+  apply Subtype.ext
+  apply Equiv.ext
+  apply allFin
+  decide +kernel
+
+theorem xy_ne_yx : x * y ≠ y * x := by
+  intro h
+  have he := congrArg (fun g : Carrier => (g : Equiv.Perm (Fin 275)) 0) h
+  have hn : ((x * y : Carrier) : Equiv.Perm (Fin 275)) 0 ≠
+      ((y * x : Carrier) : Equiv.Perm (Fin 275)) 0 := by decide +kernel
+  exact hn he
+
+theorem commutator_ne_one : ⁅x, y⁆ ≠ 1 := by
+  intro h
+  exact xy_ne_yx (commutatorElement_eq_one_iff_mul_comm.mp h)
+
+end Theory.SpecificGroups.McLaughlin.Multiplier.FivePrimary.Elements

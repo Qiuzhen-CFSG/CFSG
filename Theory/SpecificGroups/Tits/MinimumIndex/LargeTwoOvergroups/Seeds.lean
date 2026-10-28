@@ -1,0 +1,162 @@
+module
+
+public import Theory.SpecificGroups.Tits.ExceptionalParabolics
+
+/-!
+# Candidate order-64 subgroups in the marked Tits Sylow subgroup
+
+Each row is a list of indices in the certified Parrott normal forms. Its
+closure is therefore an actual subgroup of `Atlas1600Group`, contained in
+the marked Sylow subgroup. GAP finds 122 Sylow-conjugacy classes of subgroups
+of order 64. The rows below are candidate representatives from that discovery;
+this module does not assert their orders or exhaustiveness.
+
+The untrusted enumeration and its 64-element rows are preserved in `source/`.
+Only the containment theorem below is asserted here. A separate certificate
+must prove coverage before these candidates can discharge the large-two-part
+branch of the minimum-index theorem.
+
+Source: Parrott (1972), §5, p.683, with the actual normal-form convention in
+`Atlas1600SylowTwoEnumeration`; primary ATLAS Tits subgroup entry,
+https://brauer.maths.qmul.ac.uk/Atlas/exc/TF42/.
+-/
+
+namespace Tits.MinimumIndex.LargeTwoOvergroups
+
+/-- Candidate generator indices, in the existing mixed-radix normal forms. -/
+@[expose] public def seedIndices : Fin 122 → List (Fin 2048) :=
+  ![[1, 2, 4, 16, 64],
+    [1, 2, 4, 16, 160],
+    [1, 2, 4, 16, 192],
+    [1, 2, 8, 16, 64, 164],
+    [1, 2, 8, 16, 64, 512],
+    [1, 2, 8, 16, 68, 164],
+    [1, 10, 16, 34, 130],
+    [1, 10, 16, 64, 130, 546],
+    [1, 10, 16, 64, 164, 512],
+    [1, 10, 16, 64, 164, 514],
+    [1, 10, 16, 64, 164, 548],
+    [2, 9, 16, 36, 128],
+    [2, 9, 16, 37, 128],
+    [2, 9, 16, 65, 128, 512],
+    [2, 9, 16, 65, 128, 513],
+    [2, 9, 16, 65, 128, 548],
+    [2, 9, 16, 65, 128, 1797],
+    [2, 9, 16, 65, 129, 513],
+    [2, 9, 16, 65, 129, 517],
+    [2, 9, 16, 65, 164, 512],
+    [2, 9, 16, 65, 164, 513],
+    [2, 9, 16, 65, 165, 512],
+    [2, 9, 16, 65, 165, 513],
+    [2, 9, 16, 65, 288],
+    [2, 9, 16, 65, 289],
+    [2, 16, 65, 128, 269],
+    [2, 16, 65, 137, 548, 1321],
+    [2, 16, 65, 137, 557, 1312],
+    [3, 4, 16, 64, 129],
+    [3, 4, 16, 65, 128],
+    [3, 8, 16, 65, 128, 513],
+    [3, 8, 16, 65, 128, 545],
+    [3, 8, 16, 65, 165, 512],
+    [3, 8, 16, 65, 165, 513],
+    [3, 8, 16, 65, 165, 548],
+    [3, 8, 16, 65, 512, 1313],
+    [3, 8, 16, 65, 512, 1412],
+    [3, 24, 65, 164, 520, 1313],
+    [3, 24, 65, 164, 520, 1321],
+    [8, 19, 65, 164, 512, 1313],
+    [8, 19, 65, 164, 512, 1314],
+    [9, 16, 65, 130, 262],
+    [9, 16, 65, 130, 548, 1312],
+    [9, 18, 65, 130, 548, 1314],
+    [9, 18, 65, 130, 550, 1312],
+    [9, 18, 65, 130, 550, 1314],
+    [11, 16, 36, 128, 512],
+    [11, 16, 36, 128, 514],
+    [11, 16, 36, 128, 515],
+    [11, 16, 36, 129, 513],
+    [11, 16, 36, 129, 514],
+    [11, 16, 36, 129, 515],
+    [11, 16, 37, 128, 513],
+    [11, 16, 37, 128, 514],
+    [11, 16, 37, 128, 515],
+    [11, 16, 37, 128, 1797],
+    [11, 16, 38, 130, 512],
+    [11, 16, 38, 130, 514],
+    [11, 16, 38, 131, 514],
+    [11, 16, 39, 128, 1797],
+    [11, 16, 39, 128, 1799],
+    [11, 16, 39, 130, 514],
+    [11, 16, 65, 128, 261],
+    [11, 16, 65, 128, 290],
+    [11, 16, 65, 128, 513, 1286],
+    [11, 16, 65, 128, 515, 1284],
+    [11, 16, 65, 128, 515, 1285],
+    [11, 16, 65, 128, 515, 1286],
+    [11, 16, 65, 128, 515, 1287],
+    [11, 16, 65, 128, 548, 1312],
+    [11, 16, 65, 128, 548, 1314],
+    [11, 16, 65, 128, 550, 1312],
+    [11, 16, 65, 129, 514, 1284],
+    [11, 16, 65, 129, 514, 1314],
+    [11, 16, 65, 164, 515, 1313],
+    [11, 16, 65, 164, 515, 1314],
+    [11, 16, 65, 166, 549, 1284],
+    [11, 16, 65, 166, 549, 1285],
+    [11, 16, 65, 167, 515, 1313],
+    [11, 16, 65, 167, 515, 1314],
+    [11, 16, 65, 167, 548, 1284],
+    [11, 16, 65, 167, 548, 1285],
+    [11, 16, 65, 288, 1061],
+    [11, 16, 65, 291, 1057],
+    [11, 17, 32, 129, 518],
+    [11, 17, 33, 129, 518],
+    [11, 17, 34, 130, 513],
+    [11, 17, 35, 130, 513],
+    [11, 18, 65, 128, 548, 1312],
+    [11, 18, 65, 128, 550, 1314],
+    [11, 65, 128, 290, 1040],
+    [11, 65, 144, 260, 1079],
+    [11, 65, 144, 288, 1042],
+    [11, 65, 144, 306, 1024],
+    [16, 37, 128, 513, 1293],
+    [16, 37, 128, 522, 1286],
+    [16, 37, 139, 260],
+    [16, 37, 139, 271],
+    [16, 46, 128, 522, 1286],
+    [16, 65, 128, 288, 1026],
+    [16, 65, 128, 290, 1024],
+    [16, 65, 128, 297, 1035],
+    [16, 65, 139, 260, 1068],
+    [16, 65, 139, 271, 1063],
+    [16, 65, 139, 297, 1035],
+    [27, 38, 137, 268],
+    [27, 39, 139, 515, 1284],
+    [27, 44, 128, 515, 1295],
+    [27, 44, 128, 520, 1284],
+    [27, 45, 137, 268],
+    [27, 65, 128, 260, 1063],
+    [27, 65, 128, 271, 1068],
+    [27, 65, 128, 290, 1035],
+    [27, 65, 128, 297, 1024],
+    [27, 65, 139, 288, 1026],
+    [27, 65, 139, 288, 1033],
+    [27, 65, 139, 290, 1026],
+    [27, 65, 139, 297, 1024],
+    [27, 65, 139, 297, 1033],
+    [27, 65, 139, 297, 1035],
+    [27, 65, 139, 299, 1026],
+    [27, 65, 139, 299, 1033]]
+
+/-- A candidate subgroup generated by actual Parrott normal forms. -/
+@[expose] public def seed (i : Fin 122) : Subgroup Atlas1600Group :=
+  Subgroup.closure {x | ∃ n ∈ seedIndices i, atlas1600SylowTwoNormalForm n = x}
+
+/-- Every candidate is contained in the marked Sylow subgroup. This does not
+assert that the candidate list exhausts subgroups of any given order. -/
+public theorem seed_le_sylow (i : Fin 122) : seed i ≤ atlas1600SylowTwoSubgroup := by
+  apply (Subgroup.closure_le _).mpr
+  rintro x ⟨n, _, rfl⟩
+  exact atlas1600SylowTwoNormalForm_mem n
+
+end Tits.MinimumIndex.LargeTwoOvergroups

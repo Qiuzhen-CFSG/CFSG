@@ -3,8 +3,8 @@ module
 public import BenderSuzuki.SE.ConjugateAction
 public import BenderSuzuki.SE.Compat
 public import BenderSuzuki.External.Hall.Basic
-public import FeitThompson.GroupAction.Lemmas
-public import FeitThompson.SubgroupConj
+public import Theory.GroupAction.Lemmas
+public import Theory.GroupTheory.SubgroupConjugation
 import BenderSuzuki.SE.InvolutionCore
 import BenderSuzuki.SE.StrongEmbeddingIntersections
 public import BenderSuzuki.SE.StrongEmbeddingCounting
@@ -14,6 +14,7 @@ import BenderSuzuki.PFchapter1section1.proposition_4_c
 import FeitThompson.BGsection1.proposition_1_5
 import FeitThompson.BGsection7.Defs
 import FeitThompson.FinalTheorem
+
 
 /-!
 # Theorem 4(b): source-facing contract
@@ -293,9 +294,9 @@ public theorem theorem4b_exists_invariant_sylow_containing
   have hA_normP : A ≤ Subgroup.normalizer (P : Set X) := by
     rw [Subgroup.zpowers_le]
     exact hzNormP
-  letI : Subgroup.Normalizes A D := ⟨hA_normD⟩
+  let : Subgroup.Normalizes A D := ⟨hA_normD⟩
   let p' : Nat.Primes := ⟨p, hp⟩
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hPsub_p : IsPGroup p (P.subgroupOf D) :=
     hPp.of_equiv (Subgroup.subgroupOfEquivOfLe hPD).symm
   have hPpi : IsPiSubgroup (G := D) ({p'} : Set Nat.Primes)
@@ -303,7 +304,7 @@ public theorem theorem4b_exists_invariant_sylow_containing
     isPiSubgroup_singleton_of_isPGroup hPsub_p
   have hPinv : IsInvariant (↥A) (↥D) (P.subgroupOf D) :=
     isInvariant_subgroupOf_of_le_normalizer hA_normD hA_normP hPD
-  have hsolvD : IsSolvable D := odd_order_theorem D hDodd
+  have hsolvD : Group.IsSolvable D := odd_order_theorem D hDodd
   have hzOrder : orderOf z = 2 :=
     (orderOf_eq_prime_iff).2 ⟨hz.sq_eq_one, hz.ne_one⟩
   have hAcard : Nat.card A = 2 := by
@@ -321,7 +322,7 @@ public theorem theorem4b_exists_invariant_sylow_containing
     exact (hHHall.p_in_pi_of_p_dvd_index p' hpIndex) (by simp)
   let S : Sylow p D := IsPGroup.toSylow (p := p) hHp hp_not_dvd_index
   have hS_eq : (S : Subgroup D) = H := by
-    simpa [S] using IsPGroup.toSylow_coe hHp hp_not_dvd_index
+    simp [S]
   let Q : Subgroup X := H.map D.subtype
   have hPQ : P ≤ Q := by
     intro x hxP
@@ -330,7 +331,7 @@ public theorem theorem4b_exists_invariant_sylow_containing
       change x ∈ P
       exact hxP
     exact ⟨⟨x, hPD hxP⟩, hPsub_le_H hxPD, rfl⟩
-  letI : IsInvariant (↥A) (↥D) H := hHinv
+  let : IsInvariant (↥A) (↥D) H := hHinv
   have hA_normQ : A ≤ Subgroup.normalizer (Q : Set X) := by
     refine subgroup_le_normalizer_of_conj_mem Q A ?_
     intro a x hxQ
@@ -363,7 +364,7 @@ public theorem theorem4b_exists_centralizer_sylow_le_of_invariant_sylow
         (D ⊓ Subgroup.centralizer ({t} : Set X)) ∧
       S ≤ Q := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let C : Subgroup X := D ⊓ Subgroup.centralizer ({t} : Set X)
   let S0 : Sylow p C := default
   let S : Subgroup X := (S0 : Subgroup C).map C.subtype
@@ -396,7 +397,7 @@ public theorem theorem4b_exists_centralizer_sylow_le_of_invariant_sylow
   have hA_normD : A ≤ Subgroup.normalizer (D : Set X) := by
     rw [Subgroup.zpowers_le]
     exact htNormD
-  letI : Subgroup.Normalizes A D := ⟨hA_normD⟩
+  let : Subgroup.Normalizes A D := ⟨hA_normD⟩
   have hA_normQ : A ≤ Subgroup.normalizer (Q : Set X) := by
     rw [Subgroup.zpowers_le]
     exact htNormQ
@@ -444,7 +445,7 @@ public theorem theorem4b_exists_centralizer_sylow_le_of_invariant_sylow
     have hqp : q = p' := by simpa using hq
     subst q
     simpa [p'] using Rd.not_dvd_index
-  have hsolvD : IsSolvable D := odd_order_theorem D hDodd
+  have hsolvD : Group.IsSolvable D := odd_order_theorem D hDodd
   have htOrder : orderOf t = 2 :=
     (orderOf_eq_prime_iff).2 ⟨ht.sq_eq_one, ht.ne_one⟩
   have hAcard : Nat.card A = 2 := by
@@ -532,7 +533,7 @@ public theorem theorem4bInvertedCard_conjBy
         refine ⟨φ x, ?_, ?_⟩
         · exact Subgroup.mem_map.mpr ⟨x, x.property.1, rfl⟩
         · have hzg : rightConjugateElem z g = φ z := by
-            simp [φ, rightConjugateElem, MulAut.conj_apply]
+            simp [φ, rightConjugateElem]
           rw [hzg]
           change φ z * φ x * (φ z)⁻¹ = (φ x)⁻¹
           simpa using congrArg φ x.property.2
@@ -544,7 +545,7 @@ public theorem theorem4bInvertedCard_conjBy
             exact φ.symm_apply_apply y
           simpa [hxy] using hy
         · have hzg : rightConjugateElem z g = φ z := by
-            simp [φ, rightConjugateElem, MulAut.conj_apply]
+            simp [φ, rightConjugateElem]
           have hxprop : φ z * (x : X) * (φ z)⁻¹ = (x : X)⁻¹ := by
             rw [← hzg]
             exact x.property.2
@@ -591,7 +592,7 @@ private theorem theorem4b_inf_rightConjugate_centralizer_index_eq
       simpa only [mul_inv_rev, inv_inv] using this
   let CM : Subgroup M := C.subgroupOf M
   let DM : Subgroup M := D.subgroupOf M
-  letI : MulAction.IsPretransitive DM (M ⧸ CM) := by
+  let : MulAction.IsPretransitive DM (M ⧸ CM) := by
     constructor
     intro q₁ q₂
     have hbase (q : M ⧸ CM) :
@@ -686,7 +687,7 @@ public theorem IsStronglyEmbedded.theorem4b_inf_rightConjugate_invertedCard_le_p
     (htNormP : t ∈ Subgroup.normalizer (P : Set X)) :
     theorem4bInvertedCard t P ≤ theorem4bPrimeShare M z p := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let D : Subgroup X := M ⊓ rightConjugate M t
   let Ct : Subgroup X := Subgroup.centralizer ({t} : Set X)
   let C : Subgroup X := D ⊓ Ct
@@ -822,7 +823,7 @@ public theorem IsStronglyEmbedded.theorem4b_inf_rightConjugate_invertedCard_eq_p
     (htNormP : t ∈ Subgroup.normalizer (P : Set X)) :
     theorem4bInvertedCard t P = theorem4bPrimeShare M z p := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let D : Subgroup X := M ⊓ rightConjugate M t
   let Ct : Subgroup X := Subgroup.centralizer ({t} : Set X)
   let C : Subgroup X := D ⊓ Ct
@@ -994,8 +995,7 @@ public theorem IsStronglyEmbedded.theorem4b_invertedCard_le_primeShare_of_stabil
             (MulAut.conj g⁻¹) x := by
         have hzz : z * z = 1 := by
           simpa [pow_two] using hz.sq_eq_one
-        simp [t, rightConjugateElem, MulAut.conj_apply, hz.inv_eq_self,
-          hzz, mul_assoc]
+        simp [t, rightConjugateElem, hz.inv_eq_self, mul_assoc]
         calc
           z * (z * (x * (z * (z * g)))) =
               (z * z) * x * (z * z) * g := by group
@@ -1144,7 +1144,7 @@ public theorem IsStronglyEmbedded.theorem4b_primeShare_le_invertedCard_of_sylow
   let C : Subgroup X := Subgroup.centralizer ({z} : Set X)
   let HD : Subgroup X := D ⊓ C
   let CP : Subgroup X := P ⊓ C
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   rcases hPSylow with ⟨Q, hPQ⟩
   have hPD : P ≤ D := by
     rw [hPQ]
@@ -1254,7 +1254,7 @@ public theorem IsStronglyEmbedded.theorem4b_proposition38cAtBase
   let C : Subgroup X := Subgroup.centralizer ({z} : Set X)
   let CD : Subgroup X := D ⊓ C
   let CE : Subgroup X := E ⊓ C
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hDodd : Odd (Nat.card D) := by
     simpa [D] using hM.base_inf_stabilizer_card_odd hbeta
   have hEodd : Odd (Nat.card E) :=
@@ -1452,7 +1452,7 @@ public theorem exists_prime_order_inverted_of_mem_odd_subgroup
     simpa using orderOf_dvd_natCard (⟨x, hxW⟩ : W)
   have horder_odd : Odd (orderOf x) := hWodd.of_dvd_nat horder_dvd
   obtain ⟨p, hp, hpdiv⟩ := Nat.exists_prime_and_dvd horder_ne
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let H : Subgroup X := Subgroup.zpowers x
   have hcardH : Nat.card H = orderOf x := Nat.card_zpowers x
   have hpdivH : p ∣ Nat.card H := by simpa [hcardH] using hpdiv
@@ -1530,11 +1530,11 @@ public theorem commutator_zpowers_eq_of_inverts_prime
   let P : Subgroup X := Subgroup.zpowers y
   let A : Subgroup X := Subgroup.zpowers z
   have hPcard : Nat.card P = orderOf y := by simp [P]
-  letI : Fact (Nat.card P).Prime := ⟨by simpa [hPcard] using hp⟩
+  let : Fact (Nat.card P).Prime := ⟨by simpa [hPcard] using hp⟩
   have hA_norm_P : A ≤ Subgroup.normalizer (P : Set X) := by
     rw [Subgroup.zpowers_le]
     simpa [P] using theorem4b_mem_normalizer_zpowers_of_inverts hz hzy
-  letI : Subgroup.Normalizes A P := ⟨hA_norm_P⟩
+  let : Subgroup.Normalizes A P := ⟨hA_norm_P⟩
   have hcommAction_ne_bot : commutatorAction (A := A) (G := P) ≠ ⊥ := by
     intro hbot
     let hyP : P := ⟨y, Subgroup.mem_zpowers y⟩
@@ -1629,11 +1629,11 @@ public theorem not_Theorem4bAtBase_iff_nonempty_counterexample
   constructor
   · intro h
     rw [Theorem4bAtBase] at h
-    push_neg at h
+    push Not at h
     rcases h with ⟨z, W, hz, hzM, hWodd, hWM, hzNorm, hnot, hcard⟩
     have hbase := theorem4b_baseCoset_mem_fixedPoints hWM
     let p : theorem4bFixedPoints M W := ⟨QuotientGroup.mk 1, hbase⟩
-    letI : Nonempty (theorem4bFixedPoints M W) := ⟨p⟩
+    let : Nonempty (theorem4bFixedPoints M W) := ⟨p⟩
     have hpos : 0 < Nat.card (theorem4bFixedPoints M W) := Nat.card_pos
     have htwo : 2 ≤ Nat.card (theorem4bFixedPoints M W) := by
       exact Nat.one_lt_iff_ne_zero_and_ne_one.mpr
@@ -1649,7 +1649,7 @@ public theorem not_Theorem4bAtBase_iff_nonempty_counterexample
 public theorem Theorem4bSixA.not_Theorem4bAtBase
     {X : Type u} [Group X] [Finite X] {M : Subgroup X}
     (d : Theorem4bSixA M) : ¬ Theorem4bAtBase M := by
-  letI : Fact d.p.Prime := ⟨d.hp⟩
+  let : Fact d.p.Prime := ⟨d.hp⟩
   obtain ⟨n, hcard⟩ := d.hWp.exists_card_eq
   have hWodd : Odd (Nat.card d.W) := by
     rw [hcard]
@@ -1722,7 +1722,7 @@ public theorem Theorem4bSixA.exists_nonbase_fixedPoint
   let alpha : theorem4bFixedPoints M d.W :=
     ⟨QuotientGroup.mk 1, theorem4b_baseCoset_mem_fixedPoints d.hWM⟩
   by_contra h
-  push_neg at h
+  push Not at h
   have hcardOne : Nat.card (theorem4bFixedPoints M d.W) = 1 := by
     apply Nat.card_eq_one_iff_exists.mpr
     refine ⟨alpha, ?_⟩
@@ -1768,7 +1768,7 @@ public theorem Theorem4bSixA.closure_invertedSet_eq
   have hA_norm_W : A ≤ Subgroup.normalizer (d.W : Set X) := by
     rw [Subgroup.zpowers_le]
     exact d.hzNorm
-  letI : Subgroup.Normalizes A d.W := ⟨hA_norm_W⟩
+  let : Subgroup.Normalizes A d.W := ⟨hA_norm_W⟩
   let az : A := ⟨d.z, Subgroup.mem_zpowers d.z⟩
   have horder : orderOf d.z = 2 :=
     (orderOf_eq_prime_iff).2 ⟨d.hz.sq_eq_one, d.hz.ne_one⟩
@@ -1845,14 +1845,14 @@ public theorem Theorem4bSixA.two_le_card_invertedSet
     simp [Theorem4bSixA.invertedSet]
   have hKne : ∃ k : X, k ∈ d.invertedSet ∧ k ≠ 1 := by
     by_contra h
-    push_neg at h
+    push Not at h
     have hclosureBot : Subgroup.closure d.invertedSet = ⊥ :=
       Subgroup.closure_eq_bot_iff.mpr (fun k hk => by simp [h k hk])
     exact d.hWne (d.closure_invertedSet_eq.symm.trans hclosureBot)
   rcases hKne with ⟨k, hk, hkne⟩
   let oneK : {x : X // x ∈ d.invertedSet} := ⟨1, hKone⟩
   let kK : {x : X // x ∈ d.invertedSet} := ⟨k, hk⟩
-  letI : Nonempty {x : X // x ∈ d.invertedSet} := ⟨oneK⟩
+  let : Nonempty {x : X // x ∈ d.invertedSet} := ⟨oneK⟩
   have hcardPos : 0 < Nat.card {x : X // x ∈ d.invertedSet} := Nat.card_pos
   apply Nat.one_lt_iff_ne_zero_and_ne_one.mpr
   refine ⟨Nat.ne_of_gt hcardPos, ?_⟩
@@ -1876,7 +1876,7 @@ public theorem exists_theorem4bSixA_of_normalized_pSubgroup
     ∃ e : Theorem4bSixA M,
       Nat.card {x : X // x ∈ e.invertedSet} =
         theorem4bInvertedCard z P := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let I : Set X := {x : X | x ∈ P ∧ z * x * z⁻¹ = x⁻¹}
   let W : Subgroup X := Subgroup.closure I
   let A : Subgroup X := Subgroup.zpowers z
@@ -2171,7 +2171,7 @@ public theorem theorem4bProposition63Residual_map_le_twoPrimeCore_of_image_isPGr
       (twoPrimeCore L).map L.subtype := by
   let f := theorem4bProposition63CoreQuotientMap hcoreL
   let fr : involutionCore M →* f.range := f.rangeRestrict
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hresKer : External.hallPResidual 2 (involutionCore M) ≤ fr.ker :=
     External.hallPResidual_le_ker_of_isPGroup fr himage
   intro y hy
@@ -2328,7 +2328,7 @@ public theorem theorem4bCorollary57_exists_normalized_sylow
     ⟨QuotientGroup.mk 1, hRbaseFixed⟩
   have hexistsOther : ∃ x : theorem4bFixedPoints M R, x ≠ rbase := by
     by_contra h
-    push_neg at h
+    push Not at h
     have hcardOne : Nat.card (theorem4bFixedPoints M R) = 1 :=
       Nat.card_eq_one_iff_exists.mpr ⟨rbase, fun x => h x⟩
     omega
@@ -2665,7 +2665,7 @@ public theorem mem_theorem4bProposition63Residual_of_odd_order_inverted
       _ = 1 := by simp
   have sq_mem_core {a : M} (haSq : a ^ 2 = 1) : a ∈ involutionCore M := by
     by_cases haOne : a = 1
-    · simpa [haOne] using (involutionCore M).one_mem
+    · simp [haOne]
     · rw [involutionCore_eq_closure]
       exact Subgroup.subset_closure ⟨haOne, haSq⟩
   have hsCore : sM ∈ involutionCore M := by
@@ -2696,7 +2696,7 @@ public theorem Theorem4bSixA.invertedSet_subset_theorem4bProposition63Residual
     d.invertedSet ⊆
       ((theorem4bProposition63Residual M).map M.subtype : Set X) := by
   intro x hx
-  letI : Fact d.p.Prime := ⟨d.hp⟩
+  let : Fact d.p.Prime := ⟨d.hp⟩
   have hWodd : Odd (Nat.card d.W) := by
     obtain ⟨n, hn⟩ := d.hWp.exists_card_eq
     rw [hn]
@@ -2796,13 +2796,13 @@ public theorem IsStronglyEmbedded.theorem4bProposition63_not_twoTransitive
       eq_bot_iff.mpr (by simpa [C, hCbot] using hYXcore)
     have hYbot : Y = ⊥ := by
       apply Subgroup.map_injective (f := M.subtype) Subtype.val_injective
-      simpa [YX, hYXbot]
+      simp [YX, hYXbot]
     exact d.theorem4bProposition63Residual_ne_bot hYbot
   · apply hM.1
     apply top_unique
     have hCleM : C ≤ M := by
       rw [show M = MulAction.stabilizer X alpha by
-        simpa [alpha] using (baseCoset_stabilizer M).symm]
+        simp [alpha]]
       exact (le_pointStabilizerCore_iff.mp le_rfl) alpha
     simpa [C, hCtop] using hCleM
 
@@ -2849,7 +2849,7 @@ public theorem theorem4bProposition63_involution_image_mem_twoCore
     (hzM : z ∈ M) (hz : IsInvolution z) :
     QuotientGroup.mk' (theorem4bProposition63Residual M) ⟨z, hzM⟩ ∈
       pCore 2 (M ⧸ theorem4bProposition63Residual M) := by
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   let K : Subgroup M := involutionCore M
   let Y : Subgroup M := theorem4bProposition63Residual M
   let q : M →* M ⧸ Y := QuotientGroup.mk' Y
@@ -2860,7 +2860,7 @@ public theorem theorem4bProposition63_involution_image_mem_twoCore
     apply (QuotientGroup.eq_one_iff (N := Y) (x : M)).mpr
     dsimp [Y, theorem4bProposition63Residual, H, K]
     exact Subgroup.mem_map.mpr ⟨x, hxH, rfl⟩
-  letI : H.Normal := External.hallPResidual_normal 2 K
+  let : H.Normal := External.hallPResidual_normal 2 K
   let f : (K ⧸ H) →* (M ⧸ Y) :=
     QuotientGroup.lift H qK hHker
   have hquot : IsPGroup 2 (K ⧸ H) :=
@@ -2906,8 +2906,8 @@ public theorem theorem4bProposition63_normalizes_sup_residual
     z ∈ Subgroup.normalizer
       ((P ⊔ (theorem4bProposition63Residual M).map M.subtype :
         Subgroup X) : Set X) := by
-  letI : Fact q.Prime := ⟨hq⟩
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact q.Prime := ⟨hq⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   let Y : Subgroup M := theorem4bProposition63Residual M
   let qM : M →* M ⧸ Y := QuotientGroup.mk' Y
   let RM : Subgroup M := R.subgroupOf M
@@ -2988,7 +2988,7 @@ public theorem theorem4bProposition63_exists_maximal_pSubgroup
         s • (QuotientGroup.mk 1 : conjugateCosetSpace M) =
           QuotientGroup.mk 1 := by
   classical
-  letI : Fact q.Prime := ⟨hq⟩
+  let : Fact q.Prime := ⟨hq⟩
   let O : Subgroup D := twoPrimeCore D
   let P₀ : Sylow q O := default
   let PD : Subgroup D := (P₀ : Subgroup O).map O.subtype
@@ -3088,7 +3088,7 @@ public theorem IsStronglyEmbedded.theorem4bProposition63_exists_sylow_normalized
           (theorem4bProposition63Residual M).map M.subtype :
           Subgroup X) : Set X) := by
   classical
-  letI : Fact q.Prime := ⟨hq⟩
+  let : Fact q.Prime := ⟨hq⟩
   let D : Subgroup X := M ⊓ rightConjugate M t
   let beta : conjugateCosetSpace M := QuotientGroup.mk t
   have hDM : D ≤ M := inf_le_left
@@ -3179,7 +3179,7 @@ public theorem iSup_selected_sylow_eq_top
   · by_cases hd : p ∈ (Nat.card G).primeFactors
     · let q : (Nat.card G).primeFactors.attach :=
         ⟨⟨p, hd⟩, Finset.mem_attach _ _⟩
-      letI : Fact p.Prime := ⟨hp⟩
+      let : Fact p.Prime := ⟨hp⟩
       let Q : Sylow p G := P q
       have hQle : (Q : Subgroup G) ≤ S := by
         exact le_iSup (fun r : (Nat.card G).primeFactors.attach =>
@@ -3229,7 +3229,7 @@ public theorem not_twoRankAtLeastTwo_sup_odd_involution
   have hcop : Nat.Coprime (Nat.card O) (Nat.card Z) := by
     rw [hZcard]
     exact hOodd.coprime_two_left.symm
-  have hinf : O ⊓ Z = ⊥ := Subgroup.inf_eq_bot_of_coprime hcop
+  have hinf : O ⊓ Z = ⊥ := (Subgroup.disjoint_of_coprime_natCard hcop).eq_bot
   have hHcard : Nat.card H = Nat.card O * 2 := by
     simpa [H, hZcard] using
       appendixC_sup_natCard_eq_mul_of_inf_eq_bot_of_le_normalizer

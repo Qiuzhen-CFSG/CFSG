@@ -1,0 +1,330 @@
+module
+public import CFSG.Quasithin.Chapter14.Section06.SourceParabolicGeneration
+public import CFSG.Quasithin.Chapter14.Section06.SourceResidualCentralizer
+public import Theory.GroupAction.MaximalCosetOrbit
+public import Theory.GroupTheory.SymmetricThreeTwoCoreStructure
+public import Theory.GroupTheory.PResidual.Restriction
+public import Theory.GroupTheory.PResidual.SylowSupplement
+
+/-!
+# Fixed-core placement in the rank-five natural-six branch
+
+A nonzero vector fixed by the original parabolic group first forces its Sylow
+intersection to be Tᵤ. Indeed, if the intersection is T₀, both original S₃
+quotients give index two for the first parabolic in LT. Its two-residual is
+therefore all of L, contradicting the proved C_T(L)=1.
+
+For the six-letter permutation core, its all-ones vector is fixed by the whole
+parabolic group. If u lies outside that core, the commutator map to the central
+point corrects this vector by either 1 or u to give a nonzero T₀-fixed vector.
+Its centralizer contains the original group and has a larger intersection with
+T, contradicting the source maximality. The theorem retains only the actual
+fixed-vector marks, to be supplied by the full-module coordinate producer.
+
+Source: Aschbacher–Smith, original 14.6.10(5), printed pp.1029–1030.
+-/
+
+public section
+open Subgroup Theory.GroupTheory
+open scoped commutatorElement
+namespace CFSG.Quasithin.Chapter14.Section06.RankFiveNaturalSixPlacement
+variable {G : Type*} [Group G] [Finite G]
+variable {D : ChapterF.Section09.Setup G} (h : D.Hypothesis)
+
+/-- The central correction in the original rank-five argument. -/
+theorem fixed_central_correction (u a : G) (hu : u ∈ D.UH) (ha : a ∈ D.UH)
+    (haT : suitableCentralizer (D := D) u ≤ centralizer ({a} : Set G))
+    (hi : (suitableCentralizer (D := D) u).relIndex (suitableQuotientCentralizer h u) = 2)
+    (hgen : suitableQuotientCentralizer h u = D.QH ⊔ suitableCentralizer (D := D) u)
+    (hmove : ¬ D.QH ≤ centralizer ({u} : Set G)) :
+    suitableQuotientCentralizer h u ≤ centralizer ({a} : Set G) ∨
+    suitableQuotientCentralizer h u ≤ centralizer ({a * u} : Set G) := by
+  obtain ⟨q,hq,hqu⟩ := SetLike.not_le_iff_exists.mp hmove
+  have hTu0 : suitableCentralizer (D := D) u ≤ suitableQuotientCentralizer h u := by
+    rw [hgen]; exact le_sup_right
+  have hq0 : q ∈ suitableQuotientCentralizer h u := by
+    rw [hgen]; exact mem_sup_left hq
+  have hqn : q ∉ suitableCentralizer (D := D) u := fun hq' => hqu hq'.2
+  have htop := sup_zpowers_eq_of_relIndex_prime hTu0 Nat.prime_two hi hq0 hqn
+  by_cases hqa : q ∈ centralizer ({a} : Set G)
+  · exact Or.inl (htop ▸ sup_le haT (zpowers_le.mpr hqa))
+  · right
+    have haZ : ⁅a,q⁆ ∈ D.V₁ := h.commutator_UH_QH_le_point (commutator_mem_commutator ha hq)
+    have huZ : ⁅u,q⁆ ∈ D.V₁ := h.commutator_UH_QH_le_point (commutator_mem_commutator hu hq)
+    have han : (⟨⁅a,q⁆,haZ⟩ : D.V₁) ≠ 1 := by
+      intro hz
+      apply hqa
+      apply mem_centralizer_singleton_iff.mpr
+      exact (commutatorElement_eq_one_iff_mul_comm.mp (congrArg Subtype.val hz)).symm
+    have hun : (⟨⁅u,q⁆,huZ⟩ : D.V₁) ≠ 1 := by
+      intro hz
+      apply hqu
+      apply mem_centralizer_singleton_iff.mpr
+      exact (commutatorElement_eq_one_iff_mul_comm.mp (congrArg Subtype.val hz)).symm
+    obtain ⟨z,_,hz⟩ := (Nat.card_eq_two_iff' (1 : D.V₁)).mp h.point_card
+    have he : ⁅u,q⁆ = ⁅a,q⁆ := congrArg Subtype.val ((hz _ hun).trans (hz _ han).symm)
+    have hsq : ⁅a,q⁆ * ⁅a,q⁆ = 1 := by
+      have hh := pow_card_eq_one' (x := (⟨⁅a,q⁆,haZ⟩ : D.V₁))
+      rw [h.point_card,pow_two] at hh
+      exact congrArg Subtype.val hh
+    have hprod : q ∈ centralizer ({a * u} : Set G) := by
+      apply mem_centralizer_singleton_iff.mpr
+      apply (commutatorElement_eq_one_iff_mul_comm.mp ?_).symm
+      rw [commutatorElement_mul_left_eq_conj_mul,he,
+        ←h.H_centralizes (h.UH_le_H ha) _ haZ,mul_inv_cancel_right]
+      exact hsq
+    have hTu : suitableCentralizer (D := D) u ≤ centralizer ({a * u} : Set G) := by
+      intro t ht
+      apply mem_centralizer_singleton_iff.mpr
+      have hta := mem_centralizer_singleton_iff.mp (haT ht)
+      have htu := mem_centralizer_singleton_iff.mp ht.2
+      calc
+        t * (a * u) = (t * a) * u := (mul_assoc _ _ _).symm
+        _ = (a * t) * u := congrArg (· * u) hta
+        _ = a * (t * u) := mul_assoc _ _ _
+        _ = a * (u * t) := congrArg (a * ·) htu
+        _ = (a * u) * t := (mul_assoc _ _ _).symm
+    exact htop ▸ sup_le hTu (zpowers_le.mpr hprod)
+
+/-- The two-residual of the original modulo-point kernel actually centralizes
+u. This transports the source centralizer condition to the generated I₀. -/
+theorem residual_kernel_centralizes (u : G) (hu : u ∈ D.UH)
+    (J : Subgroup G) (hJ : J ≤ h.kernel (zpowers u)) :
+    (pResidual 2 J).map J.subtype ≤ centralizer ({u} : Set G) := by
+  have hJH : J ≤ D.H := fun x hx =>
+    ((h.mem_kernel_iff (zpowers_le.mpr (h.UH_le_H hu))).mp (hJ hx)).1
+  let f : J →* D.V₁ := {
+    toFun := fun j => ⟨⁅u,(j:G)⁆,
+      ((h.mem_kernel_iff (zpowers_le.mpr (h.UH_le_H hu))).mp (hJ j.property)).2
+        u (mem_zpowers u)⟩
+    map_one' := Subtype.ext (by simp)
+    map_mul' := fun a b => by
+      apply Subtype.ext
+      change ⁅u,(a:G)*(b:G)⁆ = ⁅u,(a:G)⁆ * ⁅u,(b:G)⁆
+      have hb := ((h.mem_kernel_iff (zpowers_le.mpr (h.UH_le_H hu))).mp
+        (hJ b.property)).2 u (mem_zpowers u)
+      rw [commutatorElement_mul_right_eq_mul_conj]
+      calc
+        _ = ⁅u,(a:G)⁆ * ((a:G)*⁅u,(b:G)⁆) * (a:G)⁻¹ := by group
+        _ = _ := by rw [←h.H_centralizes (hJH a.property) _ hb]; group }
+  have htwo : IsPGroup 2 D.V₁ := IsPGroup.of_card (n := 1) (by simpa using h.point_card)
+  have hk := pResidual_le_ker_of_isPGroup 2 f htwo
+  rintro x ⟨a,ha,rfl⟩
+  exact mem_centralizer_singleton_iff.mpr
+    (commutatorElement_eq_one_iff_mul_comm.mp (congrArg Subtype.val (hk ha))).symm
+
+omit [Finite G] in
+private theorem centralizer_mem_H_of_nontrivial_two_element
+    {U : Subgroup G} (hU : IsPGroup 2 U) {v : G} (hv : v ∈ U) (hne : v ≠ 1) :
+    centralizer ({v} : Set G) ∈ Chapter1.H G := by
+  let A := zpowers v
+  let C := centralizer ({v} : Set G)
+  have hAC : A ≤ C := zpowers_le.mpr (mem_centralizer_singleton_iff.mpr rfl)
+  have hCA : C ≤ normalizer (A : Set G) := by
+    have he : centralizer (A : Set G) = C := by
+      change centralizer (zpowers v : Set G) = centralizer ({v} : Set G)
+      rw [zpowers_eq_closure,centralizer_closure]
+    rw [← he]
+    exact Subgroup.centralizer_le_normalizer _
+  have hAp := hU.to_le (zpowers_le.mpr hv)
+  have hcore := le_pCoreIn_of_normalizes hAp hAC hCA
+  intro hz
+  have hh : v ∈ (⊥ : Subgroup G) := hz ▸ hcore (mem_zpowers v)
+  exact hne hh
+
+/-- If a core vector fixed by the component lies in the original H-module,
+maximality forces the suitable involution into that same core. -/
+theorem involution_mem_of_fixed_core_vector (u a : G)
+    (hu : u ∈ D.UH) (ha : a ∈ D.UH) (ha1 : a ≠ 1)
+    (W I M Mc : Subgroup G) (haW : a ∈ W)
+    (hI : I ∈ IStar (D.T : Subgroup G) (outsideOvergroups (Chapter1.H G)
+      (suitableCentralizer (D := D) u) Mc M))
+    (hTI : (D.T : Subgroup G) ⊓ I = suitableCentralizer (D := D) u)
+    (hIa : I ≤ centralizer ({a} : Set G))
+    (hIu : I ≤ centralizer ({u} : Set G))
+    (hi : (suitableCentralizer (D := D) u).relIndex (suitableQuotientCentralizer h u) = 2)
+    (hgen : suitableQuotientCentralizer h u = D.QH ⊔ suitableCentralizer (D := D) u)
+    (hmove : ¬ D.QH ≤ centralizer ({u} : Set G)) : u ∈ W := by
+  by_contra huW
+  have hTuI : suitableCentralizer (D := D) u ≤ I := hI.1.2.1
+  have contradiction (v : G) (hv : v ∈ D.UH) (hne : v ≠ 1)
+      (hIv : I ≤ centralizer ({v} : Set G))
+      (h0v : suitableQuotientCentralizer h u ≤ centralizer ({v} : Set G)) : False := by
+    have hTu0 : suitableCentralizer (D := D) u ≤ suitableQuotientCentralizer h u := by
+      rw [hgen]; exact le_sup_right
+    have hJ : centralizer ({v} : Set G) ∈ Chapter1.H G :=
+      centralizer_mem_H_of_nontrivial_two_element h.g2_hypothesis.U_isPGroup hv hne
+    have he := (lemma14_6_5 hI hIv hJ).2
+    have h0Tu : suitableQuotientCentralizer h u ≤ suitableCentralizer (D := D) u := by
+      rw [← hTI,← he]
+      exact le_inf inf_le_left h0v
+    have hi1 := relIndex_eq_one.mpr h0Tu
+    omega
+  rcases fixed_central_correction h u a hu ha (hTuI.trans hIa) hi hgen hmove with hfix | hfix
+  · exact contradiction a ha ha1 hIa hfix
+  · apply contradiction (a*u) (D.UH.mul_mem ha hu) ?_ ?_ hfix
+    · intro hz
+      have he : u = a⁻¹ := by
+        calc u = a⁻¹ * (a*u) := by group
+             _ = a⁻¹ := by rw [hz,mul_one]
+      exact huW (he ▸ W.inv_mem haW)
+    · intro t ht
+      apply mem_centralizer_singleton_iff.mpr
+      have hta := mem_centralizer_singleton_iff.mp (hIa ht)
+      have htu := mem_centralizer_singleton_iff.mp (hIu ht)
+      calc
+        t * (a*u) = (t*a)*u := (mul_assoc _ _ _).symm
+        _ = (a*t)*u := congrArg (· * u) hta
+        _ = a*(t*u) := mul_assoc _ _ _
+        _ = a*(u*t) := congrArg (a * ·) htu
+        _ = (a*u)*t := (mul_assoc _ _ _).symm
+/-- At index two in the Sylow subgroup, the first S₃ parabolic contains
+the whole ambient two-residual. -/
+private theorem residual_eq_of_sylow_index_two (T : Sylow 2 G) (L R S : Subgroup G)
+    (hL : IsPPerfect 2 L) (hR : IsPPerfect 2 R)
+    (hTL : (T : Subgroup G) ≤ normalizer (L : Set G))
+    (hSR : S ≤ normalizer (R : Set G)) (hRL : R ≤ L)
+    (hST : S ≤ (T : Subgroup G)) (hi : S.relIndex (T : Subgroup G) = 2)
+    (hS : Chapter1.IsSylowIn 2 S (R ⊔ S))
+    (eL : ((L ⊔ (T : Subgroup G) : Subgroup G) ⧸ pCore 2 (L ⊔ (T : Subgroup G) : Subgroup G)) ≃*
+      Equiv.Perm (Fin 3))
+    (eR : ((R ⊔ S : Subgroup G) ⧸ pCore 2 (R ⊔ S : Subgroup G)) ≃* Equiv.Perm (Fin 3)) : R = L := by
+  let J := L ⊔ (T : Subgroup G)
+  let P := R ⊔ S
+  have hPJ : P ≤ J := sup_le (hRL.trans le_sup_left) (hST.trans le_sup_right)
+  have hTindex : (T : Subgroup G).relIndex J = 3 := by
+    have hh := SymmetricThreeTwoCore.sylow_index_three eL (T.subtype le_sup_right)
+    exact hh
+  have hSindex : S.relIndex P = 3 := by
+    obtain ⟨SP,hSP⟩ := hS
+    have hh := SymmetricThreeTwoCore.sylow_index_three eR SP
+    have he : S.subgroupOf P = (SP : Subgroup P) := by
+      exact (congrArg (fun A : Subgroup G => A.subgroupOf P) hSP).symm.trans
+        (comap_map_eq_self_of_injective P.subtype_injective _)
+    change (S.subgroupOf P).index = 3
+    rw [he]
+    exact hh
+  have hpi : P.relIndex J = 2 := by
+    have h1 := relIndex_mul_relIndex S (T : Subgroup G) J hST le_sup_right
+    have h2 := relIndex_mul_relIndex S P J le_sup_right hPJ
+    rw [hi,hTindex] at h1
+    rw [hSindex] at h2
+    omega
+  let PN := P.subgroupOf J
+  let : PN.Normal := normal_of_index_eq_two hpi
+  have hpq : IsPGroup 2 (J ⧸ PN) := IsPGroup.of_card (n := 1) (by
+    change Nat.card (J ⧸ P.subgroupOf J) = 2^1
+    rw [←index_eq_card]
+    exact hpi)
+  have hres : (pResidual 2 J).map J.subtype ≤ P := by
+    rintro x ⟨j,hj,rfl⟩
+    exact (show pResidual 2 J ≤ PN from sInf_le ⟨inferInstance,hpq⟩) hj
+  have hr := embedded_pResidual_eq_of_le_of_residual_le 2 hPJ hres
+  rw [embedded_pResidual_join_pGroup R S hR (T.isPGroup'.to_le hST) hSR,
+    embedded_pResidual_join_pGroup L (T : Subgroup G) hL T.isPGroup' hTL] at hr
+  exact hr
+
+
+
+open Chapter12.Section08 SourcePreliminaries Chapter15.Section03 ChapterA.Section05To06
+
+variable (hG : IsSimpleQTKE KnownSimple.IsKnownSimple G)
+    (T : Sylow 2 G) (hempty : MainForward.faithfulLocalComponents T = ∅)
+    {M Mc : Subgroup G} (hM : IsOrderingMaximal T M)
+    (hunique : maximalTwoLocalOvergroups (centralizer (centralInvolutions T : Set G)) = {Mc})
+    (hmany : 1 < (maximalTwoLocalOvergroups (T : Subgroup G)).ncard)
+    (hcard : Nat.card (localModule T M) = 4)
+    (e : (M ⧸ (centralizer (localModule T M : Set G)).subgroupOf M) ≃* Equiv.Perm (Fin 3))
+    (hab : IsMulCommutative (conjugateSpanBy (localModule T M) Mc))
+    (H : Subgroup G) (hH : H ∈ Chapter1.HOutside G (T : Set G) (M : Set G))
+    (u : G) (hu : u ∈ conjugateSpanBy (localModule T M) H)
+    (hindex : (suitableQuotientCentralizer
+      (source_rankTwo_f9_hypothesis hG T hempty hM hunique hmany hcard e hab H hH) u).relIndex
+        (T : Subgroup G) = 2)
+    (hmove : ¬ Mc.pCoreIn 2 ≤ centralizer ({u} : Set G))
+    (hproduct : ∀ t ∈ (T : Subgroup G), t ∉ suitableQuotientCentralizer
+      (source_rankTwo_f9_hypothesis hG T hempty hM hunique hmany hcard e hab H hH) u →
+        ¬ Mc.pCoreIn 2 ≤ centralizer ({u * (MulAut.conj t⁻¹) u} : Set G))
+    (hU3 : Mc ⊓ normalizer (suitableQuotientCentralizer
+      (source_rankTwo_f9_hypothesis hG T hempty hM hunique hmany hcard e hab H hH) u : Set G) =
+        (T : Subgroup G))
+    (hlocal : Chapter1.IsSylowIn 2 ((T : Subgroup G) ⊓ centralizer ({u} : Set G))
+      (H ⊓ centralizer ({u} : Set G)))
+
+include hG hempty hM hunique hmany hcard e hab H hH hu hindex hmove hproduct hU3 hlocal
+
+/-- The original rank-five placement step. The marked all-ones core vector
+rules out T_I=T₀ and then forces u into W. -/
+theorem source_fixed_core_vector_placement
+    (I W : Subgroup G)
+    (hI : I ∈ IStar (T : Subgroup G) (outsideOvergroups (Chapter1.H G)
+      ((T : Subgroup G) ⊓ centralizer ({u} : Set G)) Mc M))
+    (hout : ¬ I ⊓ M ≤ Mc)
+    (hpreferred : (T : Subgroup G) ⊓ I = (T : Subgroup G) ⊓ centralizer ({u} : Set G) →
+      I ≤ centralizer ({u} : Set G))
+    (a : G) (ha : a ∈ conjugateSpanBy (localModule T M) H) (haW : a ∈ W)
+    (ha1 : a ≠ 1) (hIa : I ≤ centralizer ({a} : Set G)) :
+    (T : Subgroup G) ⊓ I = (T : Subgroup G) ⊓ centralizer ({u} : Set G) ∧
+      I ≤ centralizer ({u} : Set G) ∧ u ∈ W := by
+  let h := source_rankTwo_f9_hypothesis hG T hempty hM hunique hmany hcard e hab H hH
+  let L := sourceResidual M Mc
+  let R := (pResidual 2 (L ⊓ I : Subgroup G)).map (L ⊓ I).subtype
+  let S := (T : Subgroup G) ⊓ I
+  let Tu := (T : Subgroup G) ⊓ centralizer ({u} : Set G)
+  let T0 := suitableQuotientCentralizer h u
+  have hi := source_lemma_14_6_3_1 hG T hempty hM hunique hmany hcard e hab H hH
+    u hu hindex hmove hproduct
+  have hSTu : Tu ≤ S := le_inf inf_le_left hI.1.2.1
+  have hS0 := source_suitable_intersection_le_quotientCentralizer hG T hempty hM hunique
+    hmany hcard e hab H hH u hu hindex hmove hproduct hU3 hlocal I hI.1
+  have hS : Chapter1.IsSylowIn 2 S I :=
+    (source_suitable_intersection_sylow hG T hempty hM hunique hmany hcard e hab H hH
+      u hu hindex hmove hproduct hU3 hlocal I hI.1).1
+  have hRL : R ≤ L := (map_subtype_le _).trans inf_le_left
+  have hRI : R ≤ I := (map_subtype_le _).trans inf_le_right
+  have hRnormal : S ≤ normalizer (R : Set G) :=
+    ((le_inf (inf_le_left.trans h.normalizes_L)
+      (inf_le_right.trans I.le_normalizer)).trans inf_normalizer_le_normalizer_inf).trans
+      (normalizer_le_normalizer_characteristic_image _ (pResidual 2 (L ⊓ I : Subgroup G)))
+  have hnot : S ≠ T0 := by
+    intro hST0
+    have hSindex : S.relIndex (T : Subgroup G) = 2 := hST0 ▸ hindex
+    have hcover := (source_lemma_14_6_6_3 hG T hempty hM hunique hmany hcard e hab H hH
+      u hu hindex hmove hproduct I hI.1.2.1 hout).1
+    obtain ⟨eR⟩ := (source_intersection_parabolic_data hG T hempty hM hunique hmany hcard e
+      hab H hH u hu hindex hmove hproduct I hI.1.2.1 hS hcover).1
+    obtain ⟨eL⟩ := (Section02.source_residualSylow_quotient hG T hempty hM hunique
+      hmany hcard e).2
+    have he : R = L := residual_eq_of_sylow_index_two T L R S
+      ((pResidual_eq_top_iff 2 L).mp h.residual) (isPPerfect_embedded_pResidual 2 (L ⊓ I))
+      h.normalizes_L hRnormal hRL inf_le_left hSindex
+      (hS.restrict le_sup_right (sup_le hRI inf_le_right)) eL eR
+    have haT : a ∈ (T : Subgroup G) := h.QH_le_T (h.UH_le_QH ha)
+    have haL : a ∈ centralizer (L : Set G) := by
+      intro l hl
+      exact mem_centralizer_singleton_iff.mp (hIa (hRI (he.symm ▸ hl)))
+    have hz := source_residual_sylow_centralizer_eq_bot hG T hempty hM hunique hmany hcard e
+    exact ha1 (show a ∈ (⊥ : Subgroup G) from hz ▸ ⟨haT,haL⟩)
+  have hSTuEq : S = Tu := by
+    have hm := relIndex_mul_relIndex Tu S T0 hSTu hS0
+    have htwo : Tu.relIndex T0 = 2 := hi.1
+    rw [htwo] at hm
+    rcases (Nat.dvd_prime Nat.prime_two).mp (show Tu.relIndex S ∣ 2 from ⟨_,hm.symm⟩) with hs | hs
+    · exact le_antisymm (relIndex_eq_one.mp hs) hSTu
+    · have hz : S.relIndex T0 = 1 := by rw [hs] at hm; omega
+      exact (hnot (le_antisymm hS0 (relIndex_eq_one.mp hz))).elim
+  have hIu := hpreferred hSTuEq
+  refine ⟨hSTuEq,hIu,?_⟩
+  exact involution_mem_of_fixed_core_vector h u a hu ha ha1 W I M Mc haW hI hSTuEq
+    hIa hIu hi.1 hi.2.2.2.1 (by
+      intro hh
+      have hTu0 : T0 ≤ Tu := by
+        change suitableQuotientCentralizer h u ≤ Tu
+        rw [hi.2.2.2.1]
+        exact sup_le (le_inf (h.QH_le_T) hh) le_rfl
+      have hz := relIndex_eq_one.mpr hTu0
+      have ht : Tu.relIndex T0 = 2 := hi.1
+      rw [ht] at hz
+      exact (by omega : (2:ℕ) ≠ 1) hz)
+
+end CFSG.Quasithin.Chapter14.Section06.RankFiveNaturalSixPlacement

@@ -1,0 +1,196 @@
+module
+
+public import Stellmacher.SectionTen.OpeningData
+public import Stellmacher.SectionTen.TenOneGeneratedContainment
+public import Stellmacher.SectionTen.TenOneGeneratedElementary
+public import Stellmacher.SectionTen.TenOneGeneratedQuotient
+public import Stellmacher.SectionTen.TenOneCommonIntersection
+public import Stellmacher.SectionTen.TenOneSmallDerived
+public import Stellmacher.SectionTen.TenOneFirstCoreNoncontainment
+public import Stellmacher.SectionTen.TenOneSmallCoreIndex
+public import Stellmacher.SectionTen.TenOneSmallNeighborhoodCard
+public import Stellmacher.SectionTen.TenOneSmallCommonConclusions
+public import Stellmacher.SectionTen.TenOneSmallCommonCoreElementary
+public import Stellmacher.SectionTen.TenOneMiddleCenterDerived
+public import Stellmacher.SectionTen.TenOneMiddleCoreResidualCommutator
+public import Stellmacher.SectionTen.TenOneMiddleResidualNeighborhood
+public import Stellmacher.SectionTen.TenOneSmallNeighborhoodQuotient
+public import Stellmacher.SectionTen.TenOneSmallNeighborhoodQuotientAction
+public import Stellmacher.SectionTen.TenOneCoreNeighborhoodNontrivial
+public import Stellmacher.SectionTen.TenOneSmallCoreNeighborhoodLine
+public import Stellmacher.SectionTen.TenOneSmallModuleResidualCore
+public import Stellmacher.SectionTen.TenOneResidualActionSaturation
+public import Stellmacher.SectionTen.TenOneSmallResidualQuotientElementary
+public import Stellmacher.SectionTen.TenOneSmallResidualQuotientCard
+public import Stellmacher.SectionTen.TenOneSmallResidualClassTwo
+public import Stellmacher.SectionTen.TenOneSmallResidualQuotientAction
+public import Stellmacher.SectionTen.TenOneSmallResidualCenter
+public import Stellmacher.SectionTen.TenOneSmallResidualQuaternionProduct
+public import Stellmacher.SectionTen.TenOneSmallSylowUpper
+public import Stellmacher.SectionTen.TenOneSmallResidualExtraspecial
+public import Stellmacher.SectionTen.TenOneSmallCommutatorActor
+public import Stellmacher.SectionTen.TenOneTransvectionCases
+public import Stellmacher.SectionTen.TenOneWreathExclusion
+public import Stellmacher.SectionTen.TenOneTransvectionSmallFirst
+public import Stellmacher.SectionTen.TenOneLargeDerived
+public import Stellmacher.SectionTen.TenOneLargeNeighborhoodBounds
+public import Stellmacher.SectionTen.TenOneCommonDerivedIndex
+public import Stellmacher.SectionTen.TenOneDihedralConfiguration
+public import Stellmacher.SectionTen.TenOneDihedralCoatomEscape
+public import Stellmacher.SectionTen.LemmaTenOne
+public import Stellmacher.SectionTen.TenOneSmallMiddleCoreClassTwo
+public import Stellmacher.SectionTen.TenOneDisplacementNormalization
+public import Stellmacher.SectionTen.TenOneLargeCyclicThreeExclusion
+public import Stellmacher.SectionTen.TenOneLargeCommonConclusions
+public import Stellmacher.SectionTen.TenOneLargeTerminalStructure
+public import Stellmacher.SectionTen.TenOneLargeNoncentralChiefFactor
+public import Stellmacher.SectionTen.TenOneSmallMiddleCoreCard
+public import Stellmacher.SectionTen.TenOneSmallMiddleCoreFrattini
+public import Stellmacher.SectionTen.TenOneSmallAmbientCentralizerCore
+public import Stellmacher.SectionTen.TenOneLargeFirstResidualIndex
+public import Stellmacher.SectionTen.TenOneLargeMutualCentralizers
+public import Stellmacher.SectionTen.TenOneSmallOrder32Normalizer
+public import Stellmacher.SectionTen.TenOneSmallResidualCentralDisplacement
+public import Stellmacher.SectionTen.TenOneSmallPrimitiveCentralizer
+public import Stellmacher.SectionTen.TenOneSmallOrder64Normalizer
+public import Stellmacher.SectionTen.TenOneSmallCenterNormalizer
+public import Stellmacher.SectionTen.TenOneSmallResidualIntersectionPrimitive
+public import Stellmacher.SectionTen.TenOneSmallCentralizerEdgeNoncentral
+public import Stellmacher.SectionTen.TenOneSmallEdgeDihedral
+public import Stellmacher.SectionTen.TenOneLargeCoreAction
+public import Stellmacher.SectionTen.TenOneLargeCentralizerAction
+public import Stellmacher.SectionTen.TenOneLargeTerminalIrreducible
+public import Stellmacher.SectionTen.TenOneLargeCentralizerSetup
+public import Stellmacher.SectionTen.TenOneNeighborhoodSmallDisplacement
+public import Stellmacher.SectionTen.TenOneCenterPointCentralizerType
+public import Stellmacher.SectionTen.TenOneSmallCentralizerNormalizer
+public import Stellmacher.SectionTen.TenOneSmallCentralizerOddCore
+public import Stellmacher.SectionTen.TenOneSmallLocalCentralizerCore
+public import Stellmacher.SectionTen.TenOneSmallSolvableCentralizer
+public import Stellmacher.SectionTen.TenOneLargeTerminalResidualCentralizer
+
+public import Stellmacher.SectionTen.TenOneSmallNeighborMaximalElementary
+
+public import Stellmacher.SectionTen.TenOneSmallTerminalCenterFusionExclusion
+
+public import Stellmacher.SectionTen.TenOneSmallCommonCorePointFixed
+
+public import Stellmacher.SectionTen.TenOneSmallEdgeInvolutionCore
+
+public import Stellmacher.SectionTen.TenOneSmallTerminalCorePacket
+
+public import Stellmacher.SectionTen.TenOneSmallFourPathCenters
+
+public import Stellmacher.SectionTen.TenOneSmallEightPath
+
+public import Stellmacher.SectionTen.TenOneSmallEightPathCenterObstruction
+
+public import Stellmacher.SectionTen.TenOneSmallFinalPathContradiction
+
+public import Stellmacher.SectionTen.TenOneOmegaMiddleResidual
+
+public import Stellmacher.SectionTen.TenOneLargeOmegaFixedComponent
+
+public import Stellmacher.SectionTen.TenOneLargeOmegaFixedContradiction
+
+public import Stellmacher.SectionTen.TenOneSmallTerminalCoreCentralizer
+
+public import Stellmacher.SectionTen.TenOneSmallInvolutionEdgeNormalization
+
+public import Stellmacher.SectionTen.TenOneLargeOmegaCenter
+
+public import Stellmacher.SectionTen.TenOneLargeGeneratedResidualEscape
+
+public import Stellmacher.SectionTen.TenOneSmallTerminalInvolutionOrbit
+
+public import Stellmacher.SectionTen.TenOneSmallInvolutionConjugacy
+
+public import Stellmacher.SectionTen.TenOneSmallTerminalCenterFusion
+
+public import Stellmacher.SectionTen.TenOneSmallNonsolvableCentralizer
+
+public import Stellmacher.SectionTen.TenOneSmallAlternative
+
+public import Stellmacher.SectionTen.TenOneLargeResidualQuotientElementary
+
+public import Stellmacher.SectionTen.TenOneLargeResidualNormalClosure
+
+public import Stellmacher.SectionTen.TenOneLargeFullSupportSixteen
+
+public import Stellmacher.SectionTen.TenOneLargeNeighborhoodAction
+
+public import Stellmacher.SectionTen.TenOneLargeResidualJoinIndex
+
+public import Stellmacher.SectionTen.TenOneLargeResidualDerived
+
+public import Stellmacher.SectionTen.TenOneFiveResidualSmallCommutator
+
+public import Stellmacher.SectionTen.TenOneLargeTerminalCoreFixed
+
+public import Stellmacher.SectionTen.TenOneLargeFirstCentralizerAction
+public import Stellmacher.SectionTen.TenOneLargeFirstIrreducible
+public import Stellmacher.SectionTen.TenOneLargeFirstQuotientFour
+public import Stellmacher.SectionTen.TenOneLargeNineComplement
+public import Stellmacher.SectionTen.TenOneLargeNineFixedFactors
+public import Stellmacher.SectionTen.TenOneLargeNineNativeTerminalFactors
+public import Stellmacher.SectionTen.TenOneLargeNineCoreAction
+public import Stellmacher.SectionTen.TenOneLargeNineCoreFixedFactors
+public import Stellmacher.SectionTen.TenOneLargeNineResidualExclusion
+public import Stellmacher.SectionTen.TenOneLargeResidualCentralizerFinal
+public import Stellmacher.SectionTen.TenOneLargeResidualCoreCentralizer
+public import Stellmacher.SectionTen.TenOneLargeCoreCentralizerSupplement
+public import Stellmacher.SectionTen.TenOneLargeCentralLayerContainment
+public import Stellmacher.SectionTen.TenOneLargeFirstFrobenius
+
+public import Stellmacher.SectionTen.TenOneLargeFirstCoreContainment
+public import Stellmacher.SectionTen.TenOneLargePredecessorSelection
+public import Stellmacher.SectionTen.TenOneLargePredecessorIndex
+public import Stellmacher.SectionTen.TenOneLargeCoreDerivedContainment
+public import Stellmacher.SectionTen.TenOneMiddleResidualQuotientThree
+
+public import Stellmacher.SectionTen.TenOneLargePredecessorFirstCentralizer
+public import Stellmacher.SectionTen.TenOneLargeTerminalResidualIrreducible
+public import Stellmacher.SectionTen.TenOneLargeCommonModuleCentralizerAction
+public import Stellmacher.SectionTen.TenOneLargeMiddleResidualEscape
+
+public import Stellmacher.SectionTen.TenOneLargePredecessorCentralLayer
+public import Stellmacher.SectionTen.TenOneLargeTerminalCoreBound
+
+public import Stellmacher.SectionTen.TenOneLargeSylowBounds
+public import Stellmacher.SectionTen.TenOneLargeMiddleQuotientBound
+public import Stellmacher.SectionTen.TenOneLargeMiddleResidualIndex
+
+public import Stellmacher.SectionTen.TenOneLargeAlternative
+public import Stellmacher.SectionTen.AmbientTenOne
+
+/-!
+# Stellmacher Section Ten
+
+This assembly exports the complete terminal classification (10.1) for
+commuting critical centers at distance three, together with its native
+ambient interface and the original identity-embedding wrapper. The prescribed
+W, W0 and Wnext retain their defining equations, derived-intersection equality
+and common quotient orders. Local subgroups stay in the graph group, while
+an involution's nonsolvable centralizer stays in the original ambient group.
+
+The transvection branch gives the small alternative: both local quotients
+are SL₂(2), the Sylow order is between64 and128, and the residual cores have
+the stated C4×C4 and extraspecial structures. Its ambient centralizer
+obstruction follows from the native involution reduction, fusion exclusion
+and nonbacktracking path argument.
+
+In the large branch, the residual action and fixed-factor analysis give the
+first Frobenius20 quotient, elementary residual quotient of order16, and the
+exact derived subgroup. The valid omega-center and neighborhood-action
+calculations give the common indices. The full terminal residual-core
+centralizer is the center line. Binary pairing, predecessor selection and
+the native commutator-family argument then bound the terminal core index by2,
+yielding the original Sylow interval2^11 through2^12. The middle residual
+image has order4: a genuine cubic action makes its small quotient elementary
+or quaternion, the graph excludes the quaternion case, and coprime orbit
+counting gives the remaining index. The small and large assemblies combine
+without a model, index or classification assumption beyond the original context.
+
+Source: Stellmacher, Journal of Algebra190 (1997), Section Ten, printed
+pp.59–65 of `refs/files/stellmacher-n-group.pdf`.
+-/

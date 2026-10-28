@@ -133,7 +133,7 @@ public theorem isTwoTransitiveOn_of_regularOn_compl_singleton
     intro gamma hgamma
     by_cases hgammaAlpha : gamma = alpha
     · refine ⟨1, ?_⟩
-      simpa [hgammaAlpha]
+      simp [hgammaAlpha]
     · obtain ⟨s, hs, _hsuniq⟩ :=
         hreg ⟨hbeta, hbetaNe⟩ ⟨hgamma, hgammaAlpha⟩
       let f : F := ⟨(s : X) * t, F.mul_mem (hSF s.property) htF⟩
@@ -284,7 +284,7 @@ public theorem normalizer_eq_mul_normalizerIn_of_twoTransitiveOn
       N ⊓ MulAction.stabilizer X alpha ⊓
           MulAction.stabilizer X beta = normalizerIn D Y := by
     rw [show MulAction.stabilizer X alpha = M by
-      simpa [alpha] using baseCoset_stabilizer M]
+      simp [alpha]]
     rw [show MulAction.stabilizer X beta = rightConjugate M t by
       simpa [beta, ht.inv_eq_self] using conjugateCoset_stabilizer M t]
     ext x
@@ -357,7 +357,7 @@ public theorem normalizerIn_eq_mul_normalizerIn_of_regularOn
   have hSfix : S ≤ MulAction.stabilizer X alpha := by
     intro s hs
     rw [show MulAction.stabilizer X alpha = M by
-      simpa [alpha] using baseCoset_stabilizer M]
+      simp [alpha]]
     exact (hSle hs).1
   have hstable : ∀ (n : N) ⦃omega : conjugateCosetSpace M⦄,
       omega ∈ A → (n : X) • omega ∈ A := by
@@ -379,7 +379,7 @@ public theorem normalizerIn_eq_mul_normalizerIn_of_regularOn
         simpa [A, alpha] using hreg)
   have hpoint : N ⊓ MulAction.stabilizer X alpha = normalizerIn M Y := by
     rw [show MulAction.stabilizer X alpha = M by
-      simpa [alpha] using baseCoset_stabilizer M]
+      simp [alpha]]
     ext x
     change (x ∈ N ∧ x ∈ M) ↔ (x ∈ M ∧ x ∈ N)
     exact and_comm
@@ -387,7 +387,7 @@ public theorem normalizerIn_eq_mul_normalizerIn_of_regularOn
       N ⊓ MulAction.stabilizer X alpha ⊓
           MulAction.stabilizer X beta = normalizerIn D Y := by
     rw [show MulAction.stabilizer X alpha = M by
-      simpa [alpha] using baseCoset_stabilizer M]
+      simp [alpha]]
     rw [show MulAction.stabilizer X beta = rightConjugate M t by
       simpa [beta, ht.inv_eq_self] using conjugateCoset_stabilizer M t]
     ext x
@@ -412,7 +412,7 @@ public theorem regularOn_compHom_of_subgroup_bijective
     {A : Set Omega} (hreg : IsRegularOn R A) :
     letI : MulAction G Omega := MulAction.compHom Omega f
     IsRegularOn S A := by
-  letI : MulAction G Omega := MulAction.compHom Omega f
+  let : MulAction G Omega := MulAction.compHom Omega f
   intro a b ha hb
   obtain ⟨r, hr, huniq⟩ := hreg ha hb
   have hrmap : (r : Q) ∈ S.map f := by
@@ -454,7 +454,7 @@ public theorem coset_isRegularOn_of_surjective
     IsRegularOn S
       {q : G ⧸ B | q ≠ QuotientGroup.mk 1} := by
   let Omega := Q ⧸ B.map f
-  letI : MulAction G Omega := MulAction.compHom Omega f
+  let : MulAction G Omega := MulAction.compHom Omega f
   have hregPull : IsRegularOn S
       {q : Omega | q ≠ QuotientGroup.mk 1} :=
     regularOn_compHom_of_subgroup_bijective f S R hmap hinj hreg
@@ -483,7 +483,7 @@ public theorem regularOn_orbit_of_coset
     IsRegularOn (S.map F.subtype)
       {omega : Omega |
         InOrbit F alpha omega ∧ omega ≠ alpha} := by
-  letI : MulAction F Omega := MulAction.compHom Omega F.subtype
+  let : MulAction F Omega := MulAction.compHom Omega F.subtype
   intro a b ha hb
   rcases ha.1 with ⟨fa, hfa⟩
   rcases hb.1 with ⟨fb, hfb⟩

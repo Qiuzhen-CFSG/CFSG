@@ -1,6 +1,7 @@
 module
 
 public import GorensteinWalter.Section4.SecondCaseLinearEquationEightDefs
+public import GorensteinWalter.Section4.SecondCaseLinearOmegaFixedPart
 import FeitThompson.GroupAction.Cardinalities
 import Mathlib.GroupTheory.FixedPointFree
 import Mathlib.Tactic
@@ -82,55 +83,7 @@ public theorem secondCase_linear_omega_P_le_A
   rw [od.A_eq]
   exact le_sup_left
 
-/-- Elements of `F(U)` of `p`-th power one are exactly the elements of `P`,
-when `F` is the full `s`-fixed subgroup of `F(U)`. -/
-public theorem secondCase_linear_omega_F_order_p_eq_P
-    {G : Type u} [Group G] [Finite G]
-    (c : CentralizerSetup G) (w : SecondCaseWitness c)
-    (d : SecondCaseComponentData w) (od : SecondCaseLinearOmegaData c w d)
-    (hF_full : od.F = centralizerIn c.FU (od.s : G)) :
-    {x : G | x ∈ od.F ∧ x ^ od.p = 1} = (od.P : Set G) := by
-  classical
-  let S : Set G := {x : G | x ∈ od.F ∧ x ^ od.p = 1}
-  letI : Fintype (↥od.F) := Fintype.ofFinite (↥od.F)
-  letI : IsCyclic (↥od.F) := od.F_cyclic
-  have hp_pos : 0 < od.p := od.hp_prime.pos
-  have hPsubS : (od.P : Set G) ⊆ S := by
-    intro x hx
-    exact ⟨od.P_le_F hx,
-      (orderOf_dvd_iff_pow_eq_one (x := x) (n := od.p)).mp (by
-        simpa [od.P_card] using (Subgroup.orderOf_dvd_natCard od.P hx))⟩
-  have hScard : Nat.card {x : G // x ∈ S} = od.p := by
-    apply le_antisymm
-    · let e : {x : G // x ∈ S} ≃ {a : (↥od.F) // a ^ od.p = 1} :=
-        { toFun := fun x => ⟨⟨x.1, x.2.1⟩, by
-            apply Subtype.ext
-            simpa using x.2.2⟩
-          invFun := fun a => ⟨(a.1 : G), ⟨a.1.2, by
-            exact congrArg Subtype.val a.2⟩⟩
-          left_inv := by intro x; rfl
-          right_inv := by intro a; rfl }
-      calc
-        Nat.card {x : G // x ∈ S} = Nat.card {a : (↥od.F) // a ^ od.p = 1} :=
-          Nat.card_congr e
-        _ = #{a : (↥od.F) | a ^ od.p = 1} := by
-          rw [Nat.card_eq_fintype_card, Fintype.card_subtype]
-        _ ≤ od.p := IsCyclic.card_pow_eq_one_le (α := (↥od.F)) (n := od.p) hp_pos
-    · have hle : Nat.card od.P ≤ Nat.card {x : G // x ∈ S} :=
-        Nat.card_le_card_of_injective (fun x : od.P => ⟨(x : G), hPsubS x.2⟩) (by
-          intro a b h
-          simpa using congrArg Subtype.val h)
-      rw [od.P_card] at hle
-      exact hle
-  have hcard : Nat.card {x : G // x ∈ S} ≤ Nat.card {x : G // x ∈ (od.P : Set G)} := by
-    exact le_of_eq (by
-      change Nat.card {x : G // x ∈ S} = Nat.card (↥od.P)
-      rw [hScard, od.P_card])
-  letI : Fintype (↥od.P) := Fintype.ofFinite (↥od.P)
-  simpa [S] using (Set.eq_of_subset_of_card_le hPsubS (by
-    rw [← Nat.card_eq_fintype_card, ← Nat.card_eq_fintype_card]
-    exact hcard)).symm
-
+set_option linter.unusedVariables false in
 /-- The `s`-fixed elements of `Q` lie in `P`. -/
 public theorem secondCase_linear_omega_F_inter_QG_le_P
     {G : Type u} [Group G] [Finite G]
@@ -145,7 +98,7 @@ public theorem secondCase_linear_omega_F_inter_QG_le_P
         (n := od.p)).mp (by rw [secondCase_linear_omega_QG_exponent c w d od]) ⟨x, hx.2⟩
     exact congrArg Subtype.val hq
   have hxS : x ∈ {x : G | x ∈ od.F ∧ x ^ od.p = 1} := ⟨hx.1, hxpow⟩
-  rw [secondCase_linear_omega_F_order_p_eq_P c w d od hF_full] at hxS
+  rw [secondCase_linear_omega_F_order_p_eq_P c w d od] at hxS
   exact hxS
 
 /-- `P ∩ Q = 1` whenever `P` is not contained in `Q`. -/
@@ -189,7 +142,7 @@ public theorem secondCase_linear_omega_normalizer_P_eq
       Nat.card FQ = Nat.card od.P :=
         Nat.card_congr (Subgroup.subgroupOfEquivOfLe hPleQ).toEquiv
       _ = od.p := od.P_card
-  letI : Fact (Nat.Prime od.p) := ⟨od.hp_prime⟩
+  let : Fact (Nat.Prime od.p) := ⟨od.hp_prime⟩
   have hFQneTop : FQ ≠ ⊤ := by
     intro htop
     have hQGcard : Nat.card QG = od.p := by
@@ -200,7 +153,7 @@ public theorem secondCase_linear_omega_normalizer_P_eq
     exact secondCase_linear_omega_QG_not_cyclic c w d od
       (isCyclic_of_prime_card (p := od.p) hQGcard)
   have hQGp : IsPGroup od.p QG := secondCase_linear_omega_QG_isPGroup c w d od
-  letI : Group.IsNilpotent QG := hQGp.isNilpotent
+  let : Group.IsNilpotent QG := hQGp.isNilpotent
   have hlt : FQ < Subgroup.normalizer (FQ : Set QG) :=
     Group.normalizerCondition_of_isNilpotent FQ (lt_top_iff_ne_top.mpr hFQneTop)
   let NQ : Subgroup QG := Subgroup.normalizer (FQ : Set QG)
@@ -247,8 +200,7 @@ public theorem secondCase_linear_omega_normalizer_P_eq
         have h : od.p < 1 := by simpa using hgt
         omega
       · exfalso
-        have h : od.p < od.p := by simpa using hgt
-        omega
+        simp at hgt
       · rfl
     simpa [hk2] using heq
   have hNGeqA : NG = od.A :=

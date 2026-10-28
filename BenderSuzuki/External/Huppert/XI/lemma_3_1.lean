@@ -126,6 +126,8 @@ private theorem suzukiRootGL_injective
           0 2)) h
     simpa [SuzukiRootGL, SuzukiRootMatrix] using h02
 
+-- This exhaustive `Fin 4` coordinate proof intentionally uses broad matrix simplification.
+set_option linter.flexible false in
 /-- The multiplication formula for the Suzuki root matrices. -/
 private theorem suzukiRootGL_mul
     (m : ℕ)
@@ -536,7 +538,8 @@ private theorem suzukiRootClosure_typeA
     exact suzukiRootGL_injective m a b a' b' h
   · exact suzukiRootGL_mul m pi hpi_sq hpi_formula
 
-/-- Two Suzuki root elements commute exactly when their first coordinates satisfy the twisted bilinear relation. -/
+/-- Two Suzuki root elements commute exactly when their first coordinates
+satisfy the twisted bilinear relation. -/
 private theorem suzukiRootGL_commute_iff
     (m : ℕ)
     (pi : BinaryGaloisField (2 * m + 1) ≃+*
@@ -560,7 +563,8 @@ private theorem suzukiRootGL_commute_iff
     · exact add_comm a c
     · linear_combination hcoord
 
-/-- The center of the Suzuki root subgroup consists exactly of the root elements with first coordinate zero. -/
+/-- The center of the Suzuki root subgroup consists exactly of the root elements
+with first coordinate zero. -/
 private theorem suzukiRootClosure_mem_center_iff
     (m : ℕ) (hm : 0 < m)
     (pi : BinaryGaloisField (2 * m + 1) ≃+*
@@ -1001,6 +1005,7 @@ private theorem suzukiTorusCoordinatesMulEquiv (m : ℕ) :
   rfl
 
 set_option maxHeartbeats 800000 in
+-- The torus conjugation calculation needs additional matrix-normalization heartbeats.
 /-- Conjugation by a torus matrix scales the two root coordinates. -/
 public theorem suzukiTorusGL_conj_root
     (m : ℕ)

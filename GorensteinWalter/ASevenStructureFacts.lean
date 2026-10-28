@@ -11,6 +11,7 @@ public import GorensteinWalter.Defs
 public import FeitThompson.ChiefFactors.Core
 import Mathlib.Tactic
 
+
 open scoped Pointwise
 
 set_option maxHeartbeats 0
@@ -342,7 +343,7 @@ private theorem a7V_isKleinFour : IsKleinFour a7V := by
       change x.1 = 1 ∨ x.1 = a7t ∨ x.1 = a7u ∨ x.1 = a7t * a7u at hx
       rcases hx with hx1 | hxt | hxu | hxtu
       · apply Subtype.ext
-        simpa [hx1] using (by decide : (1 : A7) ^ 2 = 1)
+        simp [hx1]
       · apply Subtype.ext
         simpa [hxt] using (by decide : (a7t : A7) ^ 2 = 1)
       · apply Subtype.ext
@@ -391,7 +392,7 @@ private theorem a7S_le_centralizer_t :
   rw [a7S_mem_iff] at hx
   simp [a7SList] at hx
   rcases hx with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
-  all_goals rw [Subgroup.mem_centralizer_singleton_iff] <;> decide
+  all_goals rw [Subgroup.mem_centralizer_singleton_iff]; decide
 
 private theorem a7US_le_centralizer_t :
     a7US ≤ Subgroup.centralizer ({a7t} : Set A7) := by

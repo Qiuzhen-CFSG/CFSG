@@ -5,6 +5,7 @@ public import BenderSuzuki.External.Huppert.V.Semidirect
 public import BenderSuzuki.External.Huppert.V.SamePrime
 public import BenderSuzuki.External.Huppert.V.ComplementTransfer
 
+
 /-!
 # Thompson fixed-point-free nilpotence interfaces
 
@@ -194,7 +195,7 @@ private theorem hkt_pCore_sup_zpowers_comm_mod_core_of_generator
     ⁅w, n⁆ ∈ pCore q Q := by
   classical
   let N : Subgroup Q := pCore q Q
-  letI : N.Normal := by
+  let : N.Normal := by
     simpa [N] using (pCore_normal (G := Q) (p := q))
   let π : Q →* Q ⧸ N := QuotientGroup.mk' N
   let C : Subgroup Q :=
@@ -425,12 +426,12 @@ private theorem hkt_nilpotent_of_odd_prime_period_product_identity_not_two_group
       exact hproper_invariant_quotient_nil (Subgroup.center R)
         hcenter_ne_bot (hkt_center_ne_top_of_not_nilpotent hnon_nilR)
         (hkt_center_invariant ψ)
-    have hnot_solvable : ¬ IsSolvable R :=
+    have hnot_solvable : ¬ Group.IsSolvable R :=
       hkt_nonsolvable_of_minimal_branch ψ hprime hp2 hperiodR hprodR hnon_nilR
         hproper_invariant_subgroup_nil hproper_invariant_quotient_nil hcenter_bot
     rcases hkt_exists_invariant_odd_sylow_of_not_two_group ψ hprime hp2 hperiodR hnot_twoR with
       ⟨q, hqprime, hq2, hq_dvd, S, hSψ⟩
-    letI : Fact q.Prime := ⟨hqprime⟩
+    let : Fact q.Prime := ⟨hqprime⟩
     let N : Subgroup R :=
       Subgroup.normalizer (thompsonSubgroup (G := R) (S : Subgroup R) : Set R)
     let C : Subgroup R :=
@@ -531,8 +532,8 @@ private theorem hkt_nilpotent_of_odd_prime_period_product_identity_not_two_group
         have hAZp : IsPGroup q AZ :=
           IsPGroup.to_le (H := AZ) (K := (S : Subgroup R))
             S.isPGroup' hAZ_le_S
-        letI : Fact (IsPGroup q A) := ⟨hAp⟩
-        letI : IsMulCommutative A := hA.2.1
+        let : Fact (IsPGroup q A) := ⟨hAp⟩
+        let : IsMulCommutative A := hA.2.1
         let A' : Subgroup AZ := A.subgroupOf AZ
         let eA : A' ≃* A :=
           Subgroup.subgroupOfEquivOfLe (H := A) (K := AZ) le_sup_left
@@ -588,7 +589,7 @@ private theorem hkt_nilpotent_of_odd_prime_period_product_identity_not_two_group
           rwa [hcore_top] at hpcore_q
         have hR_q : IsPGroup q R :=
           htop_q.of_equiv (Subgroup.topEquiv : (⊤ : Subgroup R) ≃* R)
-        haveI : Group.IsNilpotent R := hR_q.isNilpotent
+        have : Group.IsNilpotent R := hR_q.isNilpotent
         exact hnot_solvable IsNilpotent.to_isSolvable
     have hnormalizer_rank_ne_bot : Nrank ≠ ⊥ := by
       intro hNbot
@@ -624,7 +625,7 @@ private theorem hkt_nilpotent_of_odd_prime_period_product_identity_not_two_group
           · intro x hx
             rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
             exact (hSψ y).mp (hB.1 hy)
-          · letI : IsMulCommutative B := hB.2.1
+          · let : IsMulCommutative B := hB.2.1
             exact Subgroup.map_isMulCommutative
               (H := B) ψ.toMonoidHom
           · intro C hC_le_S hC_comm
@@ -635,7 +636,7 @@ private theorem hkt_nilpotent_of_odd_prime_period_product_identity_not_two_group
               exact (hSψ_symm y).mp (hC_le_S hy)
             have hCmap_comm :
                 IsMulCommutative (C.map ψ.symm.toMonoidHom) := by
-              letI : IsMulCommutative C := hC_comm
+              let : IsMulCommutative C := hC_comm
               exact Subgroup.map_isMulCommutative
                 (H := C) ψ.symm.toMonoidHom
             have hBmax := hB.2.2
@@ -657,7 +658,7 @@ private theorem hkt_nilpotent_of_odd_prime_period_product_identity_not_two_group
             · intro x hx
               rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
               exact (hSψ_symm y).mp (hA.1 hy)
-            · letI : IsMulCommutative A := hA.2.1
+            · let : IsMulCommutative A := hA.2.1
               exact Subgroup.map_isMulCommutative
                 (H := A) ψ.symm.toMonoidHom
             · intro C hC_le_S hC_comm
@@ -668,7 +669,7 @@ private theorem hkt_nilpotent_of_odd_prime_period_product_identity_not_two_group
                 exact (hSψ y).mp (hC_le_S hy)
               have hCmap_comm :
                   IsMulCommutative (C.map ψ.toMonoidHom) := by
-                letI : IsMulCommutative C := hC_comm
+                let : IsMulCommutative C := hC_comm
                 exact Subgroup.map_isMulCommutative
                   (H := C) ψ.toMonoidHom
               have hAmax := hA.2.2
@@ -797,7 +798,7 @@ private theorem hkt_nilpotent_of_period_two_product_identity
       simpa [mul_inv_rev] using hinv_eq
     apply inv_injective
     simpa [mul_inv_rev] using hswap_inv
-  letI : CommGroup Q := { (inferInstance : Group Q) with mul_comm := hcomm }
+  let : CommGroup Q := { (inferInstance : Group Q) with mul_comm := hcomm }
   infer_instance
 
 /--
@@ -893,13 +894,13 @@ public theorem thompson_fixedPointFree_automorphism_subgroup_nilpotent
     (hfixed : ∀ φ : A, φ ≠ 1 → ∀ q : Q, (φ : MulAut Q) q = q → q = 1) :
     Group.IsNilpotent Q := by
   classical
-  haveI : Finite A := inferInstance
+  have : Finite A := inferInstance
   by_cases hcard : Nat.card A = 1
   · have hsub : Subsingleton A := (Nat.card_eq_one_iff_unique.mp hcard).1
     rcases hA_nontrivial with ⟨φ, hφ⟩
     exact False.elim (hφ (Subsingleton.elim φ 1))
   · obtain ⟨p, hp, hpdvd⟩ := Nat.exists_prime_and_dvd hcard
-    letI : Fact (Nat.Prime p) := ⟨hp⟩
+    let : Fact (Nat.Prime p) := ⟨hp⟩
     obtain ⟨φ, hφorder⟩ := exists_prime_orderOf_dvd_card' (G := A) p hpdvd
     have hφneA : φ ≠ 1 := by
       intro hφeq

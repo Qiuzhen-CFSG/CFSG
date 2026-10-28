@@ -1,0 +1,2 @@
+module
+public import CFSG.Quasithin.Chapter11.ChosenNaturalSource.LocalGeometry.Normalizers.PointCohomology.Complete

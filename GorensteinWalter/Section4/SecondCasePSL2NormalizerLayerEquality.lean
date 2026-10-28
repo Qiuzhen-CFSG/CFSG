@@ -9,6 +9,7 @@ public import GorensteinWalter.ComponentLayerPerfect
 import FeitThompson.FinalTheorem
 import Mathlib.Tactic
 
+
 /-!
 # Equality of controlled normalizer layers in the PSL₂ branch
 

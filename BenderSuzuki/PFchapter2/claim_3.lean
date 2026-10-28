@@ -9,10 +9,12 @@ import BenderSuzuki.External.Huppert.V.theorem_8_15
 import BenderSuzuki.PFAppendixII.proposition_2
 import FeitThompson.BGsection3.Remaining
 import FeitThompson.BGsection3.lemma_3_1
-import FeitThompson.HallSubgroups.Core
+public import Theory.GroupTheory.Hall.Basic
 import FeitThompson.PFsection6.PFsection6_5_a
 import Theory.Representation.SubrepresentationLattice
 import FeitThompson.Wielandt.FixedPointProduct
+open Representation
+
 
 namespace BenderSuzuki
 namespace PFchapter2
@@ -227,9 +229,9 @@ private theorem claim3_fixedPointSubgroup_exists_injective_to_quotient_QP
     (core : Subgroup (Subgroup.centralizer (P : Set G))) [core.Normal]
     (hcore_le_DP : core ≤
       D.comap (Subgroup.centralizer (P : Set G)).subtype) :
-    letI : IsInvariant L Q1 (R : Subgroup Q1) := hRinv
-    letI : IsInvariant L R M := hMinv
-    letI : IsInvariant L M N := hNinv
+    let : IsInvariant L Q1 (R : Subgroup Q1) := hRinv
+    let : IsInvariant L R M := hMinv
+    let : IsInvariant L M N := hNinv
     let PL : Subgroup L := P.subgroupOf L
     letI : MulDistribMulAction PL N :=
       MulDistribMulAction.compHom N PL.subtype
@@ -321,16 +323,16 @@ private theorem claim3_fixedPointSubgroup_card_eq_prime_of_propositionOneConclus
         (QuotientGroup.mk' core)) F)
     (hr_two : r ≠ 2)
     (hfixed_nontrivial :
-      letI : IsInvariant L Q1 (R : Subgroup Q1) := hRinv
-      letI : IsInvariant L R M := hMinv
-      letI : IsInvariant L M N := hNinv
+      let : IsInvariant L Q1 (R : Subgroup Q1) := hRinv
+      let : IsInvariant L R M := hMinv
+      let : IsInvariant L M N := hNinv
       let PL : Subgroup L := P.subgroupOf L
       letI : MulDistribMulAction PL N :=
         MulDistribMulAction.compHom N PL.subtype
       Nontrivial (fixedPointSubgroup PL N)) :
-    letI : IsInvariant L Q1 (R : Subgroup Q1) := hRinv
-    letI : IsInvariant L R M := hMinv
-    letI : IsInvariant L M N := hNinv
+    let : IsInvariant L Q1 (R : Subgroup Q1) := hRinv
+    let : IsInvariant L R M := hMinv
+    let : IsInvariant L M N := hNinv
     let PL : Subgroup L := P.subgroupOf L
     letI : MulDistribMulAction PL N :=
       MulDistribMulAction.compHom N PL.subtype
@@ -388,10 +390,10 @@ private theorem clifford_prime_finrank_restriction
   obtain ⟨W, hWirr⟩ :=
     Subrepresentation.irreducible_subrepresentation_of_finite_dimensional rhoK
   obtain ⟨n, g, hInternal, hUirr, hConj, _hMultiplicity⟩ :=
-    Theory.Representation.isaacs_theorem_6_5.{uF, uL, uV, uV}
+    Representation.isaacs_theorem_6_5.{uF, uL, uV, uV}
       rho K hrho W hWirr
   let U : Fin n → Subrepresentation rhoK := fun i =>
-    Theory.Representation.conjugateSubrepresentation rho K W (g i)
+    Representation.conjugateSubrepresentation rho K W (g i)
   change DirectSum.IsInternal (fun i => (U i).toSubmodule) at hInternal
   have hUdim (i : Fin n) :
       Module.finrank F (U i).toSubmodule =
@@ -453,19 +455,19 @@ private theorem elementaryAbelian_clifford_prime_finrank_restriction
     [MulDistribMulAction L N]
     (K : Subgroup L) [K.Normal]
     (hrho : Representation.IsIrreducible
-      (Theory.Representation.ofElementaryAbelianAction (A := L) (G := N) (p := r)))
+      (Representation.ofElementaryAbelianAction (A := L) (G := N) (p := r)))
     (hp : Nat.Prime p)
     (hdim : Module.finrank (ZMod r) (Additive N) = p) :
     (∃ W : Subrepresentation
-        ((Theory.Representation.ofElementaryAbelianAction
+        ((Representation.ofElementaryAbelianAction
           (A := L) (G := N) (p := r)).comp K.subtype),
         Representation.IsIrreducible W.toRepresentation ∧
           Module.finrank (ZMod r) W.toSubmodule = 1) ∨
       Representation.IsIrreducible
-        ((Theory.Representation.ofElementaryAbelianAction
+        ((Representation.ofElementaryAbelianAction
           (A := L) (G := N) (p := r)).comp K.subtype) := by
   exact clifford_prime_finrank_restriction
-    (Theory.Representation.ofElementaryAbelianAction (A := L) (G := N) (p := r))
+    (Representation.ofElementaryAbelianAction (A := L) (G := N) (p := r))
     K hrho hp hdim
 
 
@@ -1188,14 +1190,14 @@ private theorem claim3_minimal_invariant_subgroup_representation_irreducible
     (N : Subgroup M) (hNinv : IsInvariant L M N) (hNne : N ≠ ⊥)
     (hmin : ∀ T : Subgroup M, T.Normal → IsInvariant L M T →
       T ≠ ⊥ → T ≤ N → T = N) :
-    letI : IsInvariant L M N := hNinv
-    letI : IsElementaryAbelian r N := claim3_isElementaryAbelian_subgroup N
+    let : IsInvariant L M N := hNinv
+    let : IsElementaryAbelian r N := claim3_isElementaryAbelian_subgroup N
     Representation.IsIrreducible
-      (Theory.Representation.ofElementaryAbelianAction (A := L) (G := N) (p := r)) := by
+      (Representation.ofElementaryAbelianAction (A := L) (G := N) (p := r)) := by
   let : IsInvariant L M N := hNinv
   let : IsElementaryAbelian r N := claim3_isElementaryAbelian_subgroup N
   let : Nontrivial N := (Subgroup.nontrivial_iff_ne_bot N).2 hNne
-  let rho := Theory.Representation.ofElementaryAbelianAction (A := L) (G := N) (p := r)
+  let rho := Representation.ofElementaryAbelianAction (A := L) (G := N) (p := r)
   change IsSimpleOrder (Subrepresentation rho)
   refine
     { toNontrivial := inferInstance
@@ -1208,7 +1210,7 @@ private theorem claim3_minimal_invariant_subgroup_representation_irreducible
       have hx' : Additive.ofMul x ∈ S.toSubmodule := by
         simpa [T0, Submodule.mem_toAddSubgroup] using hx
       have hx'' := S.apply_mem_toSubmodule a hx'
-      simpa [rho, Theory.Representation.ofElementaryAbelianAction_apply_ofMul] using hx''
+      simpa [rho, Representation.ofElementaryAbelianAction_apply_ofMul] using hx''
     refine { invariant := ?_ }
     intro a x
     constructor
@@ -1274,9 +1276,9 @@ private theorem claim3_exists_minimal_invariant_elementaryAbelian
     letI : MulDistribMulAction L Q1 :=
       Subgroup.conjMulDistribMulActionOfLeNormalizer L Q1 hLnorm
     ∃ R : Sylow r Q1, ∃ hRinv : IsInvariant L Q1 (R : Subgroup Q1),
-      letI : IsInvariant L Q1 (R : Subgroup Q1) := hRinv
+      let : IsInvariant L Q1 (R : Subgroup Q1) := hRinv
       ∃ M : Subgroup R, ∃ hMinv : IsInvariant L R M,
-        letI : IsInvariant L R M := hMinv
+        let : IsInvariant L R M := hMinv
         ∃ N : Subgroup M, ∃ _hNinv : IsInvariant L M N,
           IsElementaryAbelian r M ∧ IsElementaryAbelian r N ∧ N ≠ ⊥ ∧
             ∀ T : Subgroup M, T.Normal → IsInvariant L M T →
@@ -1360,12 +1362,13 @@ private theorem claim3_K_acts_fixedPointFree
     (hRinv : IsInvariant L Q1 (R : Subgroup Q1))
     (M : Subgroup R) (hMinv : IsInvariant L R M)
     (N : Subgroup M) (hNinv : IsInvariant L M N) :
-    letI : IsInvariant L Q1 (R : Subgroup Q1) := hRinv
-    letI : IsInvariant L R M := hMinv
-    letI : IsInvariant L M N := hNinv
+    let : IsInvariant L Q1 (R : Subgroup Q1) := hRinv
+    let : IsInvariant L R M := hMinv
+    let : IsInvariant L M N := hNinv
     letI : MulDistribMulAction (K.subgroupOf L) N :=
       MulDistribMulAction.compHom N (K.subgroupOf L).subtype
     ∀ a : K.subgroupOf L, a ≠ 1 → ∀ x : N, a • x = x → x = 1 := by
+  dsimp only
   let : IsInvariant L Q1 (R : Subgroup Q1) := hRinv
   let : IsInvariant L R M := hMinv
   let : IsInvariant L M N := hNinv
@@ -1452,7 +1455,7 @@ private theorem claim3_fixedPointSubgroup_nontrivial_of_dimension_formula
     [MulDistribMulAction L N]
     (P : Subgroup L) (hNne : Nontrivial N)
     (hformula :
-      let rho := Theory.Representation.ofElementaryAbelianAction
+      let rho := Representation.ofElementaryAbelianAction
         (A := L) (G := N) (p := r)
       Module.finrank (ZMod r) (Additive N) =
         Nat.card P * Module.finrank (ZMod r) (rho.fixedSubspace P)) :
@@ -1462,7 +1465,7 @@ private theorem claim3_fixedPointSubgroup_nontrivial_of_dimension_formula
   let : MulDistribMulAction P N :=
     MulDistribMulAction.compHom N P.subtype
   let : Nontrivial N := hNne
-  let rho := Theory.Representation.ofElementaryAbelianAction
+  let rho := Representation.ofElementaryAbelianAction
     (A := L) (G := N) (p := r)
   by_contra hnon
   have : Subsingleton (fixedPointSubgroup P N) :=
@@ -1492,13 +1495,13 @@ private theorem claim3_fixedSubspace_finrank_eq_one_of_fixedPointSubgroup_card_e
       letI : MulDistribMulAction P N :=
         MulDistribMulAction.compHom N P.subtype
       Nat.card (fixedPointSubgroup P N) = r) :
-    let rho := Theory.Representation.ofElementaryAbelianAction
+    let rho := Representation.ofElementaryAbelianAction
       (A := L) (G := N) (p := r)
     Module.finrank (ZMod r) (rho.fixedSubspace P) = 1 := by
   classical
   let : MulDistribMulAction P N :=
     MulDistribMulAction.compHom N P.subtype
-  let rho := Theory.Representation.ofElementaryAbelianAction
+  let rho := Representation.ofElementaryAbelianAction
     (A := L) (G := N) (p := r)
   let e := Wielandt.fixedPointSubgroup_fixedSubspaceEquiv
     (A := L) (M := N) (p := r) P
@@ -1532,10 +1535,10 @@ private theorem claim3_isaacs_dimension_formula
     (hKfix :
       letI : MulDistribMulAction K N := MulDistribMulAction.compHom N K.subtype
       fixedPointSubgroup K N = ⊥) :
-    let rho := Theory.Representation.ofElementaryAbelianAction (A := L) (G := N) (p := r)
+    let rho := Representation.ofElementaryAbelianAction (A := L) (G := N) (p := r)
     Module.finrank (ZMod r) (Additive N) =
       Nat.card P * Module.finrank (ZMod r) (rho.fixedSubspace P) := by
-  let rho := Theory.Representation.ofElementaryAbelianAction (A := L) (G := N) (p := r)
+  let rho := Representation.ofElementaryAbelianAction (A := L) (G := N) (p := r)
   let : FiniteDimensional (ZMod r) (Additive N) := Module.Finite.of_finite
   have hfixedK : rho.fixedSubspace K = ⊥ :=
     theorem_3_7_fixedSubspace_eq_bot_of_fixedPointSubgroup_eq_bot K hKfix
@@ -1714,7 +1717,7 @@ private theorem claim3_irreducible_semilinear_core
     [Field F2] [Finite F2] [CharP F2 2] [Algebra (ZMod 2) F2]
     (K P : Subgroup L) [K.Normal] [IsCyclic K] [FaithfulSMul K N]
     (hIrrK : Representation.IsIrreducible
-      ((Theory.Representation.ofElementaryAbelianAction
+      ((Representation.ofElementaryAbelianAction
         (A := L) (G := N) (p := r)).comp K.subtype))
     (act : P →* MulAut K) (hact : Function.Injective act)
     (hact_coe : ∀ (a : P) (k : K),
@@ -1732,13 +1735,13 @@ private theorem claim3_irreducible_semilinear_core
   let : Representation.IsIrreducible
       (AppendixIRepresentationOfT (p := r) (E := N) T) := by
     let rhoK : Representation (ZMod r) K (Additive N) :=
-      Theory.Representation.ofElementaryAbelianAction (A := K) (G := N) (p := r)
+      Representation.ofElementaryAbelianAction (A := K) (G := N) (p := r)
     have hrhoK : rhoK =
-        (Theory.Representation.ofElementaryAbelianAction
+        (Representation.ofElementaryAbelianAction
           (A := L) (G := N) (p := r)).comp K.subtype := by
       ext k x
       simp only [rhoK, MonoidHom.comp_apply,
-        Theory.Representation.ofElementaryAbelianAction_apply]
+        Representation.ofElementaryAbelianAction_apply]
       rfl
     have hIrrK' : Representation.IsIrreducible rhoK := by
       rw [hrhoK]
@@ -1752,7 +1755,7 @@ private theorem claim3_irreducible_semilinear_core
         rhoK.comp T.subtype := by
       ext k x
       simp only [AppendixIRepresentationOfT, rhoK, MonoidHom.comp_apply,
-        Theory.Representation.ofElementaryAbelianAction_apply]
+        Representation.ofElementaryAbelianAction_apply]
       rfl
     rw [htopRep]
     exact htopIrr
@@ -1772,17 +1775,17 @@ private theorem claim3_irreducible_semilinear_core
   obtain ⟨scalarR, hFrCard, hscalarR,
     hscalarSet_closure, hscalar_conj⟩ := hscalarPackage
   have hscalar_conj' : ∀ (a : P) (k : K) (x : Additive N),
-      (Theory.Representation.ofElementaryAbelianAction
+      (Representation.ofElementaryAbelianAction
           (A := L) (G := N) (p := r)) (a : L) ((scalarR k : Fr) • x) =
         (scalarR ((act a) k) : Fr) •
-          (Theory.Representation.ofElementaryAbelianAction
+          (Representation.ofElementaryAbelianAction
             (A := L) (G := N) (p := r)) (a : L) x := by
     intro a k x
     change
-      (Theory.Representation.ofElementaryAbelianAction
+      (Representation.ofElementaryAbelianAction
           (A := L) (G := N) (p := r)) (a : L) ((scalarR k : Fr).1 x) =
         (scalarR ((act a) k) : Fr).1
-          ((Theory.Representation.ofElementaryAbelianAction
+          ((Representation.ofElementaryAbelianAction
             (A := L) (G := N) (p := r)) (a : L) x)
     exact hscalar_conj a k x
   have hNcard : Nat.card (Additive N) = r ^ p := by
@@ -1915,7 +1918,7 @@ private theorem chapter2_claim3_irreducible_branch
       (P.subgroupOf (K ⊔ P : Subgroup G)))
     (hNdim : Module.finrank (ZMod r) (Additive N) = p)
     (hIrrK : Representation.IsIrreducible
-      ((Theory.Representation.ofElementaryAbelianAction
+      ((Representation.ofElementaryAbelianAction
         (A := ↥(K ⊔ P : Subgroup G)) (G := N) (p := r)).comp
           (K.subgroupOf (K ⊔ P : Subgroup G)).subtype)) :
     (∃ i : Nat, i ≤ p - 1 ∧ r ≡ 2 ^ i [MOD 2 ^ p - 1]) ∧ r ≠ p := by
@@ -2009,7 +2012,7 @@ private theorem chapter2_claim3_irreducible_branch
     rw [natCard_subgroupOf_eq P L (show P ≤ L from le_sup_right)]
     exact hP_card
   have hIrrK' : Representation.IsIrreducible
-      ((Theory.Representation.ofElementaryAbelianAction
+      ((Representation.ofElementaryAbelianAction
         (A := L) (G := N) (p := r)).comp Ksub.subtype) := by
     simpa [Ksub, L] using hIrrK
   exact claim3_irreducible_semilinear_core hr hp hrodd Ksub Psub hIrrK'
@@ -2095,7 +2098,7 @@ private theorem chapter2_claim3_prime_divisors_Q1
   have hKfix : fixedPointSubgroup Ksub N = ⊥ :=
     claim3_fixedPointSubgroup_eq_bot_of_fixedPointFree hKfree
   have hformula :
-      let rho := Theory.Representation.ofElementaryAbelianAction
+      let rho := Representation.ofElementaryAbelianAction
         (A := L) (G := N) (p := r)
       Module.finrank (ZMod r) (Additive N) =
         Nat.card Psub * Module.finrank (ZMod r) (rho.fixedSubspace Psub) :=
@@ -2145,7 +2148,7 @@ private theorem chapter2_claim3_prime_divisors_Q1
       (HP.map (QuotientGroup.mk' core))
       (DP.map (QuotientGroup.mk' core)) hPO hr_two hfixed_nontrivial
   have hfixedDim :
-      let rho := Theory.Representation.ofElementaryAbelianAction
+      let rho := Representation.ofElementaryAbelianAction
         (A := L) (G := N) (p := r)
       Module.finrank (ZMod r) (rho.fixedSubspace Psub) = 1 :=
     claim3_fixedSubspace_finrank_eq_one_of_fixedPointSubgroup_card_eq_prime
@@ -2155,13 +2158,13 @@ private theorem chapter2_claim3_prime_divisors_Q1
       Module.finrank (ZMod r) (Additive N) =
           Nat.card Psub *
             Module.finrank (ZMod r)
-              ((Theory.Representation.ofElementaryAbelianAction
+              ((Representation.ofElementaryAbelianAction
                 (A := L) (G := N) (p := r)).fixedSubspace Psub) := hformula
       _ = p * 1 := by
         rw [natCard_subgroupOf_eq P L le_sup_right, hch.B1.P_card, hfixedDim]
       _ = p := by simp
   have hirrL : Representation.IsIrreducible
-      (Theory.Representation.ofElementaryAbelianAction
+      (Representation.ofElementaryAbelianAction
         (A := L) (G := N) (p := r)) :=
     claim3_minimal_invariant_subgroup_representation_irreducible
       N hNinv hNne hNmin
@@ -2169,7 +2172,7 @@ private theorem chapter2_claim3_prime_divisors_Q1
     Ksub hirrL hch.B1.p_prime hNdim
   obtain hOne | hIrrK := hsplit
   · rcases hOne with ⟨X, hXirr, hXdim⟩
-    let rhoL := Theory.Representation.ofElementaryAbelianAction
+    let rhoL := Representation.ofElementaryAbelianAction
       (A := L) (G := N) (p := r)
     let rhoK := rhoL.comp Ksub.subtype
     have hfreeVec : ∀ k : Ksub, k ≠ 1 →

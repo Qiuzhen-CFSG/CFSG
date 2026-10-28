@@ -3,7 +3,8 @@ module
 public import BenderSuzuki.SE.StrongEmbedding
 public import BenderSuzuki.SE.Compat
 import FeitThompson.BGsection1.proposition_1_16
-import FeitThompson.SubgroupConj
+import Theory.GroupTheory.SubgroupConjugation
+
 
 /-!
 # Odd-core control from a four-group in a strongly embedded subgroup
@@ -23,23 +24,6 @@ open PFAppendixIII PFchapter1section1
 
 universe u
 
-private theorem isMulCommutative_of_forall_sq_one
-    {A : Type*} [Group A] (hA : ∀ x : A, x ^ 2 = 1) :
-    IsMulCommutative A := by
-  refine IsMulCommutative.mk <| Std.Commutative.mk ?_
-  intro a b
-  have hinv : ∀ x : A, x⁻¹ = x := by
-    intro x
-    have hx : x * x = 1 := by
-      simpa [pow_two] using hA x
-    calc
-      x⁻¹ = x⁻¹ * 1 := by simp
-      _ = x⁻¹ * (x * x) := by rw [hx]
-      _ = x := by simp
-  calc
-    a * b = (a * b)⁻¹ := (hinv (a * b)).symm
-    _ = b⁻¹ * a⁻¹ := by simp
-    _ = b * a := by rw [hinv a, hinv b]
 
 private theorem noncyclic_of_card_four_and_sq_one
     {A : Type*} [Group A] [Finite A]
@@ -67,13 +51,13 @@ public theorem fourGroup_odd_subgroup_le_stronglyEmbedded
     (hWodd : Odd (Nat.card W)) :
     W ≤ M := by
   classical
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-  letI : IsMulCommutative U := isMulCommutative_of_forall_sq_one hUsq
-  letI : CommGroup U := IsMulCommutative.instCommGroup
-  haveI : Fact (IsPGroup 2 U) := by
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : IsMulCommutative U := isMulCommutative_of_forall_sq_one hUsq
+  let : CommGroup U := IsMulCommutative.instCommGroup
+  have : Fact (IsPGroup 2 U) := by
     refine ⟨IsPGroup.of_card (p := 2) (G := U) (n := 2) ?_⟩
     norm_num [hUcard]
-  haveI : Subgroup.Normalizes U W := ⟨hUnormW⟩
+  have : Subgroup.Normalizes U W := ⟨hUnormW⟩
   have hUnoncyclic : ¬ IsCyclic U :=
     noncyclic_of_card_four_and_sq_one hUcard hUsq
   have hWcop : Nat.Coprime 2 (Nat.card W) :=

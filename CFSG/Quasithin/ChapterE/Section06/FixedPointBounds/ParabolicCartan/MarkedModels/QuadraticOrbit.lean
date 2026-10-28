@@ -1,0 +1,93 @@
+module
+public import CFSG.Quasithin.ChapterE.Section06.FixedPointBounds.ParabolicCartan.MarkedModels.PolarOrbit
+public import Mathlib.LinearAlgebra.QuadraticForm.Basic
+
+/-!
+# Singular coordinate vectors in the marked Borel realization
+
+The spanning projective orbit is an actual orbit of the fixed seed. An
+invariant quadratic form vanishing on that seed therefore vanishes on
+every coordinate vector of the uniform polar realization. This retains
+the square information needed to identify the center in the normal row
+of Aschbacher–Smith 14.2.16/F.1.12.
+-/
+
+public section
+open Subgroup Module
+namespace CFSG.Quasithin.ChapterE.Section06.FixedPointBounds.ParabolicCartan.MarkedModels
+variable {G P Ω W : Type*} [Group G] [Group P] [MulAction P Ω]
+variable [AddCommGroup W] [Module (ZMod 2) W]
+
+theorem ModelBorelPair.orbit_quadratic_realization [Finite Ω]
+    (M K S : Subgroup G) [K.Normal] (hgen : K ⊔ S = ⊤) (hSM : S ≤ M)
+    (o : Ω) (hm : ModelBorelPair M K (MulAction.stabilizer P o))
+    (htwo : MulAction.IsMultiplyPretransitive P Ω 2)
+    (ρ : Representation (ZMod 2) G W) (v : W)
+    (hfix : ∀ g ∈ M, ρ g v = v)
+    (hspan : Submodule.span (ZMod 2) (Set.range (fun g : G => ρ g v)) = ⊤)
+    (B : LinearMap.BilinForm (ZMod 2) W) (hB : B.IsAlt) (hne : B ≠ 0)
+    (hinv : ∀ g x y, B (ρ g x) (ρ g y) = B x y)
+    (Q : QuadraticForm (ZMod 2) W) (hseed : Q v = 0)
+    (hQinv : ∀ g x, Q (ρ g x) = Q x) :
+    ∃ f : UniformBinaryPolar.V (Nat.card Ω) →ₗ[ZMod 2] W,
+      Function.Surjective f ∧ B.comp f f = UniformBinaryPolar.form (Nat.card Ω) ∧
+        (∀ i, Q (f (Pi.single i 1)) = 0) := by
+  classical
+  let : Fintype Ω := Fintype.ofFinite Ω
+  let : MulAction.IsMultiplyPretransitive P Ω 2 := htwo
+  let : MulAction.IsPretransitive P Ω := MulAction.isPretransitive_of_is_two_pretransitive
+  have htrans (x : Ω) : ∃ g : P, g • o = x := MulAction.exists_smul_eq P o x
+  obtain ⟨π,b,hπ,hbo,hbe,hsp⟩ := hm.spanning_orbit M K S hgen hSM o htrans ρ v hfix hspan
+  let eΩ : Fin (Fintype.card Ω) ≃ Ω := (Fintype.equivFin Ω).symm
+  let w (i : Fin (Fintype.card Ω)) := b (eΩ i)
+  let f := Fintype.linearCombination (ZMod 2) w
+  have hspw : Submodule.span (ZMod 2) (Set.range w) = ⊤ := by
+    apply top_unique
+    rw [←hsp]
+    apply Submodule.span_mono
+    rintro _ ⟨x,rfl⟩
+    obtain ⟨i,rfl⟩ := eΩ.surjective x
+    exact ⟨i,rfl⟩
+  have hf : Function.Surjective f :=
+    (span_range_eq_top_iff_surjective_fintypeLinearCombination (ZMod 2) w).mp hspw
+  have hcoeff (i : Fin (Fintype.card Ω)) : f (Pi.single i 1) = b (eΩ i) := by simp [f,w]
+  have hzero (x : Ω) : Q (b x) = 0 := by
+    obtain ⟨g,hg⟩ := htrans x
+    obtain ⟨k,rfl⟩ := hπ g
+    rw [←hg,hbo,hQinv,hseed]
+  have hp (i j i' j' : Fin (Fintype.card Ω)) (hij : i ≠ j) (hij' : i' ≠ j') :
+      B (f (Pi.single i 1)) (f (Pi.single j 1)) =
+        B (f (Pi.single i' 1)) (f (Pi.single j' 1)) := by
+    simp only [hcoeff]
+    exact BinaryBorelOrbit.orbit_pairing_constant π hπ (ρ.comp K.subtype) B
+      (fun k => hinv k.val) htwo b hbe (eΩ.injective.ne hij) (eΩ.injective.ne hij')
+  have he := UniformBinaryPolar.pullback_eq_uniform B hB hne f hf hp
+  have hh : ∃ f : UniformBinaryPolar.V (Fintype.card Ω) →ₗ[ZMod 2] W,
+      Function.Surjective f ∧ B.comp f f = UniformBinaryPolar.form (Fintype.card Ω) ∧
+        (∀ i, Q (f (Pi.single i 1)) = 0) :=
+    ⟨f,hf,he,fun i => by rw [hcoeff]; exact hzero _⟩
+  have hc : Nat.card Ω = Fintype.card Ω := Nat.card_eq_fintype_card
+  rw [hc]
+  exact hh
+
+theorem ModelBorelPair.linear_quadratic_realization
+    {F : Type*} [Field F] [Finite F] [CharP F 2]
+    (M K S : Subgroup G) [K.Normal] (hgen : K ⊔ S = ⊤) (hSM : S ≤ M)
+    (n : ℕ) (hF : Nat.card F = 2^n)
+    (hm : ModelBorelPair M K (BenderSuzuki.Converse.PBorel F))
+    (ρ : Representation (ZMod 2) G W) (v : W)
+    (hfix : ∀ g ∈ M, ρ g v = v)
+    (hspan : Submodule.span (ZMod 2) (Set.range (fun g : G => ρ g v)) = ⊤)
+    (B : LinearMap.BilinForm (ZMod 2) W) (hB : B.IsAlt) (hne : B ≠ 0)
+    (hinv : ∀ g x y, B (ρ g x) (ρ g y) = B x y)
+    (Q : QuadraticForm (ZMod 2) W) (hseed : Q v = 0)
+    (hQinv : ∀ g x, Q (ρ g x) = Q x) :
+    ∃ f : UniformBinaryPolar.V (2^n+1) →ₗ[ZMod 2] W,
+      Function.Surjective f ∧ B.comp f f = UniformBinaryPolar.form (2^n+1) ∧
+        (∀ i, Q (f (Pi.single i 1)) = 0) := by
+  have hc : Nat.card (BenderSuzuki.Converse.P1 F) = 2^n+1 := by
+    rw [Projectivization.card_of_finrank_two F (Fin 2 → F) (by simp),hF]
+  have hh := hm.orbit_quadratic_realization M K S hgen hSM (BenderSuzuki.Converse.pInf F)
+    (BenderSuzuki.Converse.psl2_two_pretransitive (F := F)) ρ v hfix hspan B hB hne hinv Q hseed hQinv
+  rwa [hc] at hh
+end CFSG.Quasithin.ChapterE.Section06.FixedPointBounds.ParabolicCartan.MarkedModels

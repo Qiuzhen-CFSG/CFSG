@@ -1,0 +1,232 @@
+module
+
+public import BenderSuzuki.ZD.Recognition.ResidualEmbedding.Generation.LinearRecognition.Centralizers.Contracts
+public import BenderSuzuki.ZD.Recognition.ResidualEmbedding.LocalResidual.NormalComplements.RankOne.LocalRecognition.Counts.Models
+public import Theory.GroupTheory.InvolutionGeneratedOddKernel
+
+/-!
+# Quotient recognition for an element centralizing the residual subgroup
+
+For a nonidentity element centralizing `L`, the distinguished closure `Lᵥ`
+is proper and contains `A` and `L`. Local strong embedding applies inside
+`Lᵥ`. The four-group in `A` puts its odd core in `M`; the residual action
+centralizes that core. SE then recognizes the literal odd-core quotient.
+Counting the involutions in its Borel identifies its field parameter with
+`|A|`. Involution generation also makes the covering group perfect.
+
+Source: GLS4, Chapter 2, Corollary 7.13 and the first part of Lemma 12.3.
+The classification of the actual unitary cover is a separate input.
+-/
+
+noncomputable section
+namespace BenderSuzuki.ZD
+open Theory.GroupTheory PFAppendixIII PFchapter1section1 Subgroup
+universe u
+variable {G : Type u} [Group G] [Finite G] {Z : Set G} {M : Subgroup G}
+
+private theorem stronglyEmbedded_of_top (N : Subgroup G)
+    (hs : IsStronglyEmbedded (N.comap (⊤ : Subgroup G).subtype)) :
+    IsStronglyEmbedded N := by
+  refine ⟨?_, ?_, ?_⟩
+  · intro hn
+    exact hs.ne_top (by rw [hn, comap_top])
+  · obtain ⟨x, hx, hi⟩ := hs.exists_involution
+    exact ⟨x, hx, IsInvolution.map_of_injective hi
+      (⊤ : Subgroup G).subtype Subtype.val_injective⟩
+  · intro g hg x hx hxg hi
+    let g' : (⊤ : Subgroup G) := ⟨g, mem_top _⟩
+    let x' : (⊤ : Subgroup G) := ⟨x, mem_top _⟩
+    have hxg' : x' ∈ rightConjugate (N.comap (⊤ : Subgroup G).subtype) g' := by
+      rw [rightConjugate, Subgroup.conjBy, mem_map] at hxg ⊢
+      obtain ⟨y, hy, he⟩ := hxg
+      exact ⟨⟨y, mem_top _⟩, hy, Subtype.ext he⟩
+    exact hs.2.2 (g := g') hg (x := x') hx hxg' (IsInvolution.subtype hi _)
+
+private theorem centralizing_local
+    (h : IsProductDisconnected Z M) (r : SimpleReduction Z M)
+    {z t v : G} (hz : z ∈ Z) (hzM : z ∈ M) (ht : t ∈ Z) (htM : t ∉ M)
+    (hvL : v ∈ centralizer (residualGenerated M z t : Set G)) (hv : v ≠ 1) :
+    centralizerClosure Z v ≠ ⊤ ∧
+      IsStronglyEmbedded (M.comap (centralizerClosure Z v).subtype) := by
+  let F := centralizerClosure Z v
+  have hLF := residualGenerated_le_centralizerClosure_of_centralizes h hz ht hvL
+  have hzF : z ∈ F := hLF ((show zpowers z ≤ residualGenerated M z t from le_sup_left.trans le_sup_left) (mem_zpowers z))
+  have htF : t ∈ F := hLF ((show zpowers t ≤ residualGenerated M z t from le_sup_right.trans le_sup_left) (mem_zpowers t))
+  have hF : F ≠ ⊤ := by
+    intro he
+    have hc : centralizer ({v} : Set G) = ⊤ :=
+      top_le_iff.mp (he ▸ centralizerClosure_le Z v)
+    have hvc : v ∈ center G := centralizer_eq_top_iff_subset.mp hc (Set.mem_singleton v)
+    rcases r.simple.eq_bot_or_eq_top_of_normal (center G) inferInstance with hb | ht
+    · exact hv (mem_bot.mp (hb ▸ hvc))
+    · apply h.proper
+      apply top_le_iff.mp
+      intro x _
+      exact h.centralizer_le hz hzM (mem_centralizer_singleton_iff.mpr
+        (mem_center_iff.mp (ht ▸ mem_top z) x))
+  have hs := r.local_embedding F hF (fun hFM => htM (hFM htF)) ⟨z, hz, hzF, hzM⟩
+  rw [centralizerClosure_local_generation] at hs
+  exact ⟨hF, stronglyEmbedded_of_top _ hs⟩
+
+private theorem centralizing_involutions
+    (h : IsProductDisconnected Z M) {v z : G} (hz : z ∈ Z)
+    (hzF : z ∈ centralizerClosure Z v)
+    (hs : IsStronglyEmbedded (M.comap (centralizerClosure Z v).subtype))
+    (x : centralizerClosure Z v) (hi : PFAppendixIII.IsInvolution x) : (x : G) ∈ Z := by
+  obtain ⟨g, hg⟩ := hs.involutions_conjugate
+    (IsInvolution.subtype (h.involutions z hz) hzF) hi
+  have hg' : MulAut.conj ((g : G)⁻¹) z = (x : G) := by
+    simpa only [rightConjugateElem, MulAut.conj_apply, inv_inv,
+      Subgroup.coe_mul, Subgroup.coe_inv] using congrArg Subtype.val hg
+  exact hg' ▸ h.invariant _ _ hz
+
+private theorem oddCore_central_of_action
+    (ha : ResidualAction Z M) (F : Subgroup G)
+    (hs : IsStronglyEmbedded (M.comap F.subtype))
+    (hgen : involutionCore F = ⊤) {z t : G}
+    (hz : z ∈ Z) (hzM : z ∈ M) (hzF : z ∈ F)
+    (hzi : PFAppendixIII.IsInvolution z) (htM : t ∉ M) (htF : t ∈ F)
+    (hNB : pPrimeCore 2 F ≤ M.comap F.subtype) :
+    pPrimeCore 2 F = center F := by
+  apply le_antisymm
+  · apply hs.twoPrimeCore_le_center_of_involutionCore_eq_top
+      (IsInvolution.subtype hzi hzF) ?_ hgen
+    let N := pPrimeCore 2 F
+    let W := N.map F.subtype
+    have hWF : W ≤ F := map_subtype_le N
+    have hWsub : W.subgroupOf F = N := comap_map_eq_self_of_injective Subtype.val_injective N
+    have hWnormal : (W.subgroupOf F).Normal := by rw [hWsub]; infer_instance
+    have hnorm : F ≤ normalizer (W : Set G) :=
+      (normal_subgroupOf_iff_le_normalizer hWF).mp hWnormal
+    have hWM : W ≤ M := map_le_iff_le_comap.mpr hNB
+    have hodd : Odd (Nat.card W) := by
+      rw [show Nat.card W = Nat.card N from card_map_of_injective Subtype.val_injective]
+      exact Nat.coprime_two_left.mp pPrimeCore_coprime_card
+    have hWz : W ≤ centralizer ({z} : Set G) := by
+      rcases ha.odd_normalizer z hz hzM W hodd hWM (hnorm hzF) with hc | hfix
+      · exact hc
+      · exfalso
+        have hbeta : W ≤ MulAction.stabilizer G (QuotientGroup.mk t : G ⧸ M) := by
+          rw [conjugateCoset_stabilizer]
+          intro w hw
+          rw [rightConjugate, Subgroup.conjBy, mem_map]
+          have htinv : t⁻¹ ∈ normalizer (W : Set G) :=
+            (normalizer (W : Set G)).inv_mem (hnorm htF)
+          have hw' : t⁻¹ * w * t ∈ W := by
+            simpa only [inv_inv] using (mem_normalizer_iff.mp htinv w).mp hw
+          exact ⟨t⁻¹ * w * t, hWM hw', by simp [mul_assoc]⟩
+        have heq := (hfix (QuotientGroup.mk t) hbeta).symm
+        exact htM (by simpa using QuotientGroup.eq.mp heq)
+    intro x hx
+    apply mem_centralizer_singleton_iff.mpr
+    apply Subtype.ext
+    exact mem_centralizer_singleton_iff.mp (hWz (mem_map_of_mem F.subtype hx))
+  · obtain ⟨z, hzB, hz⟩ := hs.exists_involution
+    have hcB : center F ≤ M.comap F.subtype := fun x hx => hs.centralizer_le hzB hz
+      (mem_centralizer_singleton_iff.mpr (mem_center_iff.mp hx z).symm)
+    exact le_sSup ⟨inferInstance, Nat.coprime_two_left.mpr (hs.normal_le_card_odd hcB)⟩
+
+private theorem centralizing_borel_count
+    (h : IsProductDisconnected Z M) {v z : G} (hz : z ∈ Z)
+    (hzF : z ∈ centralizerClosure Z v)
+    (hs : IsStronglyEmbedded (M.comap (centralizerClosure Z v).subtype))
+    (hAF : closure (Z ∩ (M : Set G)) ≤ centralizerClosure Z v)
+    (hZ : Z ∩ (M : Set G) = (closure (Z ∩ (M : Set G)) : Set G) \ {1}) :
+    Nat.card {x : M.comap (centralizerClosure Z v).subtype // PFAppendixIII.IsInvolution x} =
+      Nat.card (closure (Z ∩ (M : Set G))) - 1 := by
+  let A := closure (Z ∩ (M : Set G))
+  let B := M.comap (centralizerClosure Z v).subtype
+  let f : {x : B // PFAppendixIII.IsInvolution x} → {a : A // a ≠ 1} := fun x =>
+    ⟨⟨x.val.val, by
+      have hxZ := centralizing_involutions h hz hzF hs x.val.val
+        (IsInvolution.map_of_injective x.property B.subtype B.subtype_injective)
+      exact subset_closure ⟨hxZ, x.val.property⟩⟩,
+      fun he => x.property.ne_one (Subtype.ext (Subtype.ext (congrArg (fun a : A => (a : G)) he)))⟩
+  have hf : Function.Bijective f := by
+    constructor
+    · intro x y he
+      exact Subtype.ext (Subtype.ext (Subtype.ext
+        (congrArg (fun a : {a : A // a ≠ 1} => (a.val : G)) he)))
+    · intro a
+      have ha1 : (a.val : G) ≠ 1 := fun he => a.property (Subtype.ext he)
+      have haZM : (a.val : G) ∈ Z ∩ (M : Set G) := by
+        rw [hZ]
+        exact ⟨a.val.property, ha1⟩
+      let b : B := ⟨⟨a.val, hAF a.val.property⟩, haZM.2⟩
+      have hi : PFAppendixIII.IsInvolution b :=
+        ⟨fun he => ha1 (congrArg (fun b : B => ((b : centralizerClosure Z v) : G)) he),
+          Subtype.ext (Subtype.ext (h.involutions _ haZM.1).sq_eq_one)⟩
+      exact ⟨⟨b, hi⟩, rfl⟩
+  rw [Nat.card_congr (Equiv.ofBijective f hf)]
+  change Nat.card ↥(({1} : Set A)ᶜ) = Nat.card A - 1
+  rw [Nat.card_coe_set_eq, Set.ncard_compl, Set.ncard_singleton]
+
+/-- Corollary 7.13 for the literal closure of a nonidentity centralizing
+ element. The recognized quotient has the same exponent as `A`; no cover
+ recognition or global strong embedding is assumed. -/
+public theorem proper_centralizing_quotient_atExponent
+    (h : MinimalCounterexample Z M) (r : SimpleReduction Z M)
+    (ha : ResidualAction Z M) {z t v : G}
+    (hz : z ∈ Z) (hzM : z ∈ M) (ht : t ∈ Z) (htM : t ∉ M)
+    (hL : residualGenerated M z t ≠ ⊤)
+    (heven : Even (Nat.card (residualPairStabilizer M t)))
+    (hvL : v ∈ centralizer (residualGenerated M z t : Set G)) (hv : v ≠ 1)
+    {n : ℕ} (hn : 2 ≤ n) (hcard : Nat.card (closure (Z ∩ (M : Set G))) = 2 ^ n) :
+    let F := centralizerClosure Z v
+    pPrimeCore 2 F = center F ∧ commutator F = ⊤ ∧
+      IsSimpleBenderGroupAtExponent n (F ⧸ pPrimeCore 2 F) := by
+  let F := centralizerClosure Z v
+  let B := M.comap F.subtype
+  let N := pPrimeCore 2 F
+  let q := QuotientGroup.mk' N
+  let BQ := B.map q
+  have hLF := residualGenerated_le_centralizerClosure_of_centralizes h.disconnected hz ht hvL
+  have hzF : z ∈ F := hLF ((show zpowers z ≤ residualGenerated M z t from le_sup_left.trans le_sup_left) (mem_zpowers z))
+  obtain ⟨_, hs⟩ := centralizing_local h.disconnected r hz hzM ht htM hvL hv
+  obtain ⟨k, hk, hmodels, hAL, hDN, hlocal, hcore, hnormal, hA, hcA, hZ, hrest⟩ :=
+    proper_residualGenerated_structure h r ha hz hzM ht htM hL heven
+  have hAF := hAL.trans hLF
+  have hgen := centralizerClosure_involutionCore_eq_top h.disconnected v
+  have hNB : N ≤ B := by
+    intro x hx
+    exact oddCore_le_of_distinguishedClosure_le h r F hAF (mem_map_of_mem F.subtype hx)
+  have htF : t ∈ F := hLF ((show zpowers t ≤ residualGenerated M z t from
+    le_sup_right.trans le_sup_left) (mem_zpowers t))
+  have hcenter : N = center F := oddCore_central_of_action ha F hs hgen hz hzM hzF
+    (h.disconnected.involutions _ hz) htM htF hNB
+  have hodd : Odd (Nat.card N) := Nat.coprime_two_left.mp pPrimeCore_coprime_card
+  have hsQ : IsStronglyEmbedded BQ := hs.map_quotient_of_odd_kernel hNB hodd
+  have hsimple : IsSimpleGroup (F ⧸ N) := hs.isSimpleGroup_quotient_twoPrimeCore hgen
+  have hgenQ : involutionCore (F ⧸ N) = ⊤ := hsQ.involutionCore_eq_top_of_isSimple hsimple
+  have hrQ := simpleStronglyEmbeddedRankTwo BQ hsimple hsQ
+  let e : (F ⧸ N) ≃* involutionCore (F ⧸ N) :=
+    Subgroup.topEquiv.symm.trans (MulEquiv.subgroupCongr hgenQ).symm
+  have hr := hrQ.map_of_injective e.toMonoidHom e.injective
+  obtain ⟨hmodel, hBorel⟩ := recognition_borel_of_simple_theoremSEBenderConclusion BQ hsQ hsimple
+    ((theorem_SE BQ hsQ).resolve_left (not_not.mpr hr))
+  obtain ⟨j, hj, hmodel⟩ := hmodel.exists_exponent
+  have hcount := bender_borel_involution_card_atExponent hj hmodel hBorel
+  have htransfer := involution_card_map_of_central_odd_kernel q (QuotientGroup.mk'_surjective N)
+    (by rwa [QuotientGroup.ker_mk']) (by rw [QuotientGroup.ker_mk', hcenter]) B
+    (by rwa [QuotientGroup.ker_mk'])
+  have hcountB := centralizing_borel_count h.disconnected hz hzF hs hAF hZ
+  have hjn : j = n := by
+    have hjpos : 0 < (2 : ℕ) ^ j := by positivity
+    have hnpos : 0 < (2 : ℕ) ^ n := by positivity
+    rw [hcount] at htransfer
+    rw [hcard] at hcountB
+    have he : 2 ^ j - 1 = 2 ^ n - 1 := htransfer.symm.trans hcountB
+    have he' : (2 : ℕ) ^ j = 2 ^ n := by omega
+    exact Nat.pow_right_injective (by decide : 2 ≤ 2) he'
+  subst j
+  refine ⟨hcenter, ?_, hmodel⟩
+  have hNC : N ≤ commutator F := le_commutator_of_odd_of_involution_generated
+    (centralizerClosure_local_generation (Z := Z) v)
+    (fun x hx => (IsInvolution.subtype (h.disconnected.involutions _ hx) x.property).sq_eq_one)
+    N hodd
+  have hperfect := commutator_sup_zpowers_eq_top_of_surjective q
+    (QuotientGroup.mk'_surjective N) (by rwa [QuotientGroup.ker_mk']) (1 : F)
+    (by simpa using hmodel.isPerfect hn)
+  simpa using hperfect
+
+end BenderSuzuki.ZD

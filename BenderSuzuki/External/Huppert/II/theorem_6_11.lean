@@ -161,7 +161,7 @@ private noncomputable def huppert611_projectivePairBasis
   let E := Module.Basis.sumExtendIndex hv
   letI : Fintype (Fin 2 ⊕ E) :=
     bs.fintypeIndexOfRankLtAleph0 (by simp)
-  letI : Finite E := Finite.of_injective
+  let : Finite E := Finite.of_injective
     (fun x : E => (Sum.inr x : Fin 2 ⊕ E))
     (fun _ _ h => Sum.inr.inj h)
   letI : Fintype E := Fintype.ofFinite E
@@ -332,3 +332,4 @@ public theorem huppert_II_6_11_projective_action
 
 end External
 end BenderSuzuki
+

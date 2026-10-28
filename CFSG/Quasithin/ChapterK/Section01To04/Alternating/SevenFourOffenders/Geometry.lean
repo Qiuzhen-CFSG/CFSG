@@ -1,0 +1,203 @@
+module
+public import CFSG.Quasithin.ChapterK.Section01To04.Alternating.SevenFourOffenders.Core
+
+/-!
+# The exact Klein-four offender family in K.1.2
+
+The even part of the standard S₇ Sylow subgroup has order eight and is a
+Sylow subgroup of A₇. Its only elementary four-groups are R₁ and R₂.
+The fixed-space calculation excludes R₂, so Sylow conjugacy inside A₇
+exhausts all offenders and proves uniqueness in every Sylow subgroup.
+The regular group is identified with the closure of the source's literal
+Klein generators. Simplicity then identifies the generated offender
+subgroup with A₇.
+
+Source: Aschbacher–Smith, combined manuscript of 1 March 2004,
+K.1.2, printed p.452/PDF p.463, giving B.4.2(7).
+-/
+
+@[expose] public section
+open Subgroup Representation Representation.BinaryOffender
+namespace CFSG.Quasithin.ChapterK.Alternating.SevenFourOffenders
+open Representation.AlternatingSevenConjugatePair ElementaryGeometry FixedFamily
+
+local instance (g : S7) : Decidable (g ∈ alternatingGroup (Fin 7)) :=
+  inferInstanceAs (Decidable (Equiv.Perm.sign g = 1))
+
+/-- The literal even part of the standard sixteen-element Sylow subgroup of S₇. -/
+abbrev standardTwo : Subgroup A7 := sylowTwo.subgroupOf A7
+
+private theorem standardTwo_card : Nat.card standardTwo = 8 := by
+  let f : sylowTwo →* ℤˣ := Equiv.Perm.sign.comp sylowTwo.subtype
+  have hf : Function.Surjective f := by
+    intro u
+    rcases Int.units_eq_one_or u with rfl | rfl
+    · exact ⟨1, map_one f⟩
+    · exact ⟨⟨swap45, pairElementary_le_sylowTwo swap45_mem_pairElementary⟩,
+        by change Equiv.Perm.sign swap45 = -1; decide +kernel⟩
+  have hi : f.ker.index = 2 := by
+    rw [Subgroup.index_ker, MonoidHom.range_eq_top.mpr hf,
+      Nat.card_congr (Subgroup.topEquiv (G := ℤˣ)).toEquiv, Nat.card_eq_fintype_card]
+    decide
+  have hc := f.ker.card_mul_index
+  rw [hi, sylowTwo_card] at hc
+  let e : standardTwo ≃ f.ker := {
+    toFun x := ⟨⟨x.val.val, x.property⟩, x.val.property⟩
+    invFun x := ⟨⟨x.val.val, x.property⟩, x.val.property⟩
+    left_inv _ := rfl
+    right_inv _ := rfl }
+  rw [Nat.card_congr e]
+  omega
+
+/-- An A₇ Sylow subgroup, so all subsequent conjugators belong to A₇ itself. -/
+noncomputable def standardSylowA7 : Sylow 2 A7 :=
+  (ElementaryGeometry.standardSylow.isPGroup'.comap_subtype (K := A7)).toSylow (by
+    have h := standardTwo.card_mul_index
+    have hc : Nat.card A7 = 2520 := by
+      change Nat.card (alternatingGroup (Fin 7)) = 2520
+      rw [nat_card_alternatingGroup]
+      norm_num [Nat.factorial]
+    rw [standardTwo_card, hc] at h
+    have hi : standardTwo.index = 315 := by omega
+    change ¬ 2 ∣ standardTwo.index
+    rw [hi]; decide)
+
+theorem R1_le_standardTwo : R1 ≤ standardTwo := fun _ hx =>
+  fourTwoElementary_le_sylowTwo hx.1
+
+theorem standard_four_group_coverage {A : Subgroup A7}
+    (hA : IsElementaryTwo A) (hAT : A ≤ standardTwo) (hr : rank A = 2) :
+    A = R2 ∨ A = R1 := by
+  let _ := hA.2
+  have he : IsElementaryTwo (A.map A7.subtype) := ⟨by
+    intro h
+    exact hA.1 ((A.map_eq_bot_iff_of_injective A7.subtype_injective).mp h),
+    IsElementaryAbelian.map _⟩
+  have ht : A.map A7.subtype ≤ sylowTwo := by
+    rintro _ ⟨a, ha, rfl⟩
+    exact hAT ha
+  have hr' : rank (A.map A7.subtype) = 2 :=
+    (rank_map_injective A7.subtype A7.subtype_injective A).trans hr
+  have hR1 : R1.map A7.subtype = regularFour := Subgroup.map_subgroupOf_eq_of_le inf_le_right
+  have hR2 : R2.map A7.subtype = pairFour := Subgroup.map_subgroupOf_eq_of_le inf_le_right
+  rcases four_group_coverage _ he ht (Subgroup.map_subtype_le A) hr' with h | h
+  · exact Or.inl (Subgroup.map_injective A7.subtype_injective (h.trans hR2.symm))
+  · exact Or.inr (Subgroup.map_injective A7.subtype_injective (h.trans hR1.symm))
+
+/-- The coordinate four-group is exactly the source's pair of Klein generators. -/
+theorem R1_map_eq_source : R1.map A7.subtype =
+    Subgroup.closure {ChapterB.Offenders.kleinFirst 7 (by decide),
+      ChapterB.Offenders.kleinSecond 7 (by decide)} := by
+  rw [Subgroup.map_subgroupOf_eq_of_le (show regularFour ≤ A7 from inf_le_right)]
+  change regularFour = Subgroup.closure {centralInvolution, crossSwap}
+  apply le_antisymm
+  · rintro _ ⟨⟨v, rfl⟩, hv⟩
+    have hz : v.2.2 = 0 := (by decide +kernel : ∀ v : Triple,
+      secondWord v ∈ alternatingGroup (Fin 7) → v.2.2 = 0) v hv
+    have he : secondWord v = centralInvolution ^ v.1.val * crossSwap ^ v.2.1.val := by
+      have hall : ∀ v : Triple, v.2.2 = 0 → secondWord v =
+          centralInvolution ^ v.1.val * crossSwap ^ v.2.1.val := by decide +kernel
+      exact hall v hz
+    rw [he]
+    exact Subgroup.mul_mem _
+      (Subgroup.pow_mem _ (Subgroup.subset_closure (by simp)) _)
+      (Subgroup.pow_mem _ (Subgroup.subset_closure (by simp)) _)
+  · apply (Subgroup.closure_le _).mpr
+    intro x hx
+    rcases (Set.mem_insert_iff.mp hx) with rfl | hx
+    · exact centralInvolution_mem.2
+    · exact (Set.mem_singleton_iff.mp hx) ▸ crossSwap_mem_regularFour
+
+/-- The second source four-group is generated by `(01)(23)` and `(01)(45)`. -/
+theorem R2_map_eq_source : R2.map A7.subtype =
+    Subgroup.closure {ChapterB.Offenders.kleinFirst 7 (by decide),
+      Equiv.swap (0 : Fin 7) 1 * Equiv.swap 4 5} := by
+  rw [Subgroup.map_subgroupOf_eq_of_le (show pairFour ≤ A7 from inf_le_right)]
+  change pairFour = Subgroup.closure {centralInvolution, pairInvolution}
+  apply le_antisymm
+  · rintro _ ⟨⟨v, rfl⟩, hv⟩
+    have he : firstWord v = centralInvolution ^ v.2.1.val * pairInvolution ^ v.2.2.val :=
+      (by decide +kernel : ∀ v : Triple, firstWord v ∈ alternatingGroup (Fin 7) →
+        firstWord v = centralInvolution ^ v.2.1.val * pairInvolution ^ v.2.2.val) v hv
+    rw [he]
+    exact Subgroup.mul_mem _
+      (Subgroup.pow_mem _ (Subgroup.subset_closure (by simp)) _)
+      (Subgroup.pow_mem _ (Subgroup.subset_closure (by simp)) _)
+  · apply (Subgroup.closure_le _).mpr
+    intro x hx
+    rcases (Set.mem_insert_iff.mp hx) with rfl | hx
+    · exact centralInvolution_mem.1
+    · exact (Set.mem_singleton_iff.mp hx) ▸ pairInvolution_mem
+
+variable {V : Type*} [AddCommGroup V] [Module (ZMod 2) V]
+  [FiniteDimensional (ZMod 2) V]
+  (ρ : Representation (ZMod 2) A7 V) (hρ : Function.Injective ρ)
+  (hdim : Module.finrank (ZMod 2) V = 4)
+
+include hρ hdim
+
+theorem standard_offender_unique {A : Subgroup A7} (hA : IsOffender ρ A)
+    (hAT : A ≤ standardTwo) : A = R1 := by
+  rcases standard_four_group_coverage hA.1 hAT (offender_rank_codim ρ hρ hdim hA).1 with h | h
+  · exact (R2_codim_ne_two ρ hρ hdim (h ▸ (offender_rank_codim ρ hρ hdim hA).2)).elim
+  · exact h
+
+omit hρ hdim in
+private theorem conjugate_cancel (A : Subgroup A7) (g : A7) :
+    (A.map (MulAut.conj g).toMonoidHom).map (MulAut.conj g⁻¹).toMonoidHom = A := by
+  rw [Subgroup.map_map]
+  convert Subgroup.map_id A using 1
+  congr 1
+  ext x
+  simp [MulAut.conj_apply, mul_assoc]
+
+/-- Every offender is an A₇-conjugate of the source's regular four-group. -/
+theorem offender_conjugate {A : Subgroup A7} (hA : IsOffender ρ A) :
+    ∃ g : A7, A = R1.map (MulAut.conj g).toMonoidHom := by
+  let _ := hA.1.2
+  obtain ⟨P, hAP⟩ := (IsElementaryAbelian.isPGroup 2 A).exists_le_sylow
+  obtain ⟨g, hg⟩ := MulAction.exists_smul_eq A7 P standardSylowA7
+  have hT : (P : Subgroup A7).map (MulAut.conj g).toMonoidHom = standardTwo :=
+    congrArg Sylow.toSubgroup hg
+  have hA' : IsOffender ρ (A.map (MulAut.conj g).toMonoidHom) :=
+    ⟨hA.1.map_conj g, by rw [fixedCodim_map_conj, rank_map_conj]; exact hA.2⟩
+  have he := standard_offender_unique ρ hρ hdim hA' (hT ▸ Subgroup.map_mono hAP)
+  refine ⟨g⁻¹, ?_⟩
+  have hh := congrArg (fun B : Subgroup A7 => B.map (MulAut.conj g⁻¹).toMonoidHom) he
+  rwa [conjugate_cancel] at hh
+
+/-- The exact FF-offender family; best and ordinary offenders coincide here. -/
+theorem best_iff_conjugate (A : Subgroup A7) : IsBestOffender ρ A ↔
+    ∃ g : A7, A = R1.map (MulAut.conj g).toMonoidHom := by
+  constructor
+  · intro hA
+    exact offender_conjugate ρ hρ hdim (hA.isOffender ρ)
+  · rintro ⟨g, rfl⟩
+    exact (R1_best ρ hρ hdim).map_conj ρ g
+
+/-- In each Sylow subgroup there is precisely one FF-offender. -/
+theorem exists_unique_offender (T : Sylow 2 A7) :
+    ∃! A : Subgroup A7, A ≤ (T : Subgroup A7) ∧ IsOffender ρ A := by
+  obtain ⟨g, hg⟩ := MulAction.exists_smul_eq A7 T standardSylowA7
+  have hT : (T : Subgroup A7).map (MulAut.conj g).toMonoidHom = standardTwo :=
+    congrArg Sylow.toSubgroup hg
+  let A := R1.map (MulAut.conj g⁻¹).toMonoidHom
+  have hAT : A ≤ (T : Subgroup A7) := by
+    have := Subgroup.map_mono (f := (MulAut.conj g⁻¹).toMonoidHom)
+      (show R1 ≤ (T : Subgroup A7).map (MulAut.conj g).toMonoidHom from hT ▸ R1_le_standardTwo)
+    rwa [conjugate_cancel] at this
+  refine ⟨A, ⟨hAT, ((R1_best ρ hρ hdim).map_conj ρ g⁻¹).isOffender ρ⟩, ?_⟩
+  rintro B ⟨hBT, hB⟩
+  have hB' : IsOffender ρ (B.map (MulAut.conj g).toMonoidHom) :=
+    ⟨hB.1.map_conj g, by rw [fixedCodim_map_conj, rank_map_conj]; exact hB.2⟩
+  have he := standard_offender_unique ρ hρ hdim hB' (hT ▸ Subgroup.map_mono hBT)
+  have hh := congrArg (fun C : Subgroup A7 => C.map (MulAut.conj g⁻¹).toMonoidHom) he
+  rwa [conjugate_cancel] at hh
+
+/-- Simplicity and the exhibited offender give the entire actor group. -/
+theorem offenderSubgroup_eq_top : offenderSubgroup ρ = ⊤ := by
+  let _ : IsSimpleGroup A7 := alternatingGroup.isSimpleGroup (by simp : 5 ≤ Nat.card (Fin 7))
+  exact (offenderSubgroup_normal ρ).eq_bot_or_eq_top.resolve_left
+    (offenderSubgroup_ne_bot_of_ff ρ ⟨R1, (R1_best ρ hρ hdim).isOffender ρ⟩)
+
+end CFSG.Quasithin.ChapterK.Alternating.SevenFourOffenders

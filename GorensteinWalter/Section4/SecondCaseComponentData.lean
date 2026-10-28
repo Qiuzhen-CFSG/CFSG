@@ -13,6 +13,7 @@ public import GorensteinWalter.Section2.NormalOfLinearDerivedModel
 import FeitThompson.FinalTheorem
 import Mathlib.Tactic
 
+
 /-!
 # Section 4: the component selected in the second case
 

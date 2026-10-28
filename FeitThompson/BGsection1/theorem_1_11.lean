@@ -2,6 +2,7 @@ module
 
 public import FeitThompson.BGsection1.proposition_1_10
 
+
 open scoped Pointwise IsMulCommutative commutatorElement
 
 universe uG uA

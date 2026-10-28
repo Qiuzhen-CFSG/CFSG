@@ -1,0 +1,16 @@
+module
+
+public import Theory.SpecificGroups.J2HSMultipliers.J2UpperBound.LocalCentralizer.OrderBound.Base
+
+/-! Kernel-checked coset certificate for the normalized J₂ centralizer presentation, the trivial subgroup.
+Generated from `source/compact.json` by `source/generate.py`.
+The data are untrusted; `Scan.chunk_sound` supplies actual subgroup witnesses. -/
+
+@[expose] public section
+namespace Theory.SpecificGroups.J2HSMultipliers.J2.LocalCentralizerPresentation.OrderBound
+open Subgroup.CosetWordCertificate
+
+def scanRightPage6144 : Nat → Nat :=
+  (branch 6154 (branch 6149 (branch 6146 (branch 6145 (fun _ => 0x4ffda669d161c97a44bd11fb38690434761c398e1c0413e5fe704a6011b008e2094f08f9082fc72305ae64c8da7f313fa09f714c13160ccb07487f526d50b3b032be6e4a16710e1e07114389e1950074403a3c82712a4c23b211d8c8ec34c9127f353f969fcc) (fun _ => 0x4ffd270591e84971e4b8e244a922649131475d1193c4bf014eb0a79097fc8cc48ec34c9127f3540c0a0624fff270391e8497364b9a244a12264912f475b119344bf0836b0a7f2184c8cc48ebf4760a3b0132389fcc)) (branch 6147 (fun _ => 0x5030a817d3f9c9fd3) (branch 6148 (fun _ => 0x5031a817d3f969fd2) (fun _ => 0x501727b952fda97ea45ae0ebc04444221f1b251cfc8631e1c6a077281dc40ef00ef00e46a188ca66295714ebc28085403ea0205021a81093be0967d470f238708b7425aa0a63853084b42364e1b349e6b03f1c1134089c87e446d905904437d245693adaa020)))) (branch 6151 (branch 6150 (fun _ => 0x5013a762d24fa9263461e230e51972913e489e133e4591079310c9aa069c9a2e915a4eb6a808140d8a06e5015a764924fa92644621230e91972914d48a5933ec591019200c938b2449a2e915e4ebba8095404ca021) (fun _ => 0x5036a81ad403ea024)) (branch 6152 (fun _ => 0x5037a81ad4044a025) (branch 6153 (fun _ => 0x5027a792127f893f94834122c04f24278d1b388d9a05bc0735206ce81ae40d7c0da00d050b8089df892ee4ef2281014088a01f4eb6245650df659031b6387e40227011350fc79cfbca606364d12d005304299025ab22dda386d1c3a967e4ef7a8105407ea040) (fun _ => 0x502727d112de496ec47daa3e7d1f4696754b38954c065f01d350e9e0cbfcaa86967e4ef7a810540f0a07a502927cf92de496ee47d2a3e791f46966f4b34954b865f0847f0ea4217f4aa86967a4b3e259ed3bcaa040))))) (branch 6159 (branch 6156 (branch 6155 (fun _ => 0x503ca81dd4084a047) (fun _ => 0x503da81dd407ea046)) (branch 6157 (fun _ => 0x140ca9fd6502d281793ef2986846bc26dd13efea055) (branch 6158 (fun _ => 0x140be9fd0502a281593efa986e46bea6de93ef6a05d) (fun _ => 0x140faa04a5039281d9404e9d884ac027b81405aa06d)))) (branch 6161 (branch 6160 (fun _ => 0x5045281913ff49c1447971c2484e50699c0e3f1b8f4bfd25e46104e8477423c85ff217e9989f924de9d8d5014281bd40dca06d5035a80893af295702998216d839180eef03bb81dc81dcc1c6b18c81e6c46c92221e11118ebc516ba97e94bf727b91405aa06d) (fun _ => 0x14106a0584fbca61acb4908043115f9a5f4340e19f916f197918413a11dd08f217fc85fa6627e4937a76354050a06f)) (branch 6162 (fun _ => 0x5047a822d40dca073) (branch 6163 (fun _ => 0x5048a822d40e0a075) (fun _ => 0x140eea0445036281b940569d8f4ac327b9d4052a075))))))
+
+end Theory.SpecificGroups.J2HSMultipliers.J2.LocalCentralizerPresentation.OrderBound

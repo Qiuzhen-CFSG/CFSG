@@ -21,6 +21,7 @@ import FeitThompson.PCore.PPrimeCore
 import FeitThompson.FinalTheorem
 import Mathlib.Tactic
 
+
 /-!
 # The linear model case of the Fact 1.10(ii) normalizer centralization
 
@@ -255,7 +256,7 @@ private theorem secondCase_psl2_linear_quotient_centralization_of_model
   have hEleN : d.E ≤ N := hforward.trans hLleN
   have hOodd : Odd (Nat.card O) :=
     Nat.coprime_two_left.mp (pPrimeCore_coprime_card (p := 2) (G := N))
-  have hOsolv : IsSolvable O := odd_order_theorem O hOodd
+  have hOsolv : Group.IsSolvable O := odd_order_theorem O hOodd
   have hOamb_odd : Odd (Nat.card Oamb) := by
     have hcard : Nat.card Oamb = Nat.card O :=
       Subgroup.card_map_of_injective (f := N.subtype) N.subtype_injective
@@ -552,7 +553,7 @@ private theorem secondCase_psl2_linear_quotient_centralization_of_model
         rwa [← hz]
       exact hsbar_not_cent hsbar_mem_Ebar hzZ'
     · have hz1 : (z : N ⧸ O) = (w : N ⧸ O) := hwz.symm
-      simpa [hz1, hw]
+      simp [hz1, hw]
   -- the layer centralizes the odd core
   have hLcentO : L ≤ Subgroup.centralizer (Oamb : Set G) :=
     layer_centralizes_oddCore N

@@ -1,0 +1,342 @@
+module
+public import Theory.Representation.Mathieu.M24DegreeSpectrum.AbsoluteSpectrum.LargeModels.NativeSubquotient.Largest1792.GeneratorB.Batch36
+public import Theory.Representation.Mathieu.M24DegreeSpectrum.AbsoluteSpectrum.LargeModels.NativeSubquotient.Largest1792.GeneratorB.Batch37
+
+/-!
+# Literal generatorB matrix identity
+
+Separate mask and product checks run in bounded sequential batches.
+The saved witness is unchanged; see source/README.md for provenance.
+-/
+
+set_option Elab.async false
+@[expose] public section
+namespace Representation.Mathieu.M24DegreeSpectrum.AbsoluteSpectrum.LargeModels.NativeSubquotient.Largest1792
+open Degree220Pair.NativeActions.CertificatePacked Packed
+open Degree320Pair.MatrixCertificates.TraceRows
+
+private theorem rows : ∀ i : Fin 2420,
+    combine mapRows ambientB[i.val]! = combine targetB mapRows[i.val]! := by
+  have hall : ∀ i : Fin (303*8),
+      combine mapRows ambientB[i.val]! = combine targetB mapRows[i.val]! := by
+    apply forall_batches (blocks := 303) (size := 8) (by decide)
+      (fun i => combine mapRows ambientB[i]! = combine targetB mapRows[i]!)
+    intro b j
+    have h : checkEqualProducts mapRows targetB
+        ((ambientB.drop (b.val*8)).take 8) ((mapRows.drop (b.val*8)).take 8) = true := by
+      fin_cases b
+      · exact GeneratorBChecks.block000
+      · exact GeneratorBChecks.block001
+      · exact GeneratorBChecks.block002
+      · exact GeneratorBChecks.block003
+      · exact GeneratorBChecks.block004
+      · exact GeneratorBChecks.block005
+      · exact GeneratorBChecks.block006
+      · exact GeneratorBChecks.block007
+      · exact GeneratorBChecks.block008
+      · exact GeneratorBChecks.block009
+      · exact GeneratorBChecks.block010
+      · exact GeneratorBChecks.block011
+      · exact GeneratorBChecks.block012
+      · exact GeneratorBChecks.block013
+      · exact GeneratorBChecks.block014
+      · exact GeneratorBChecks.block015
+      · exact GeneratorBChecks.block016
+      · exact GeneratorBChecks.block017
+      · exact GeneratorBChecks.block018
+      · exact GeneratorBChecks.block019
+      · exact GeneratorBChecks.block020
+      · exact GeneratorBChecks.block021
+      · exact GeneratorBChecks.block022
+      · exact GeneratorBChecks.block023
+      · exact GeneratorBChecks.block024
+      · exact GeneratorBChecks.block025
+      · exact GeneratorBChecks.block026
+      · exact GeneratorBChecks.block027
+      · exact GeneratorBChecks.block028
+      · exact GeneratorBChecks.block029
+      · exact GeneratorBChecks.block030
+      · exact GeneratorBChecks.block031
+      · exact GeneratorBChecks.block032
+      · exact GeneratorBChecks.block033
+      · exact GeneratorBChecks.block034
+      · exact GeneratorBChecks.block035
+      · exact GeneratorBChecks.block036
+      · exact GeneratorBChecks.block037
+      · exact GeneratorBChecks.block038
+      · exact GeneratorBChecks.block039
+      · exact GeneratorBChecks.block040
+      · exact GeneratorBChecks.block041
+      · exact GeneratorBChecks.block042
+      · exact GeneratorBChecks.block043
+      · exact GeneratorBChecks.block044
+      · exact GeneratorBChecks.block045
+      · exact GeneratorBChecks.block046
+      · exact GeneratorBChecks.block047
+      · exact GeneratorBChecks.block048
+      · exact GeneratorBChecks.block049
+      · exact GeneratorBChecks.block050
+      · exact GeneratorBChecks.block051
+      · exact GeneratorBChecks.block052
+      · exact GeneratorBChecks.block053
+      · exact GeneratorBChecks.block054
+      · exact GeneratorBChecks.block055
+      · exact GeneratorBChecks.block056
+      · exact GeneratorBChecks.block057
+      · exact GeneratorBChecks.block058
+      · exact GeneratorBChecks.block059
+      · exact GeneratorBChecks.block060
+      · exact GeneratorBChecks.block061
+      · exact GeneratorBChecks.block062
+      · exact GeneratorBChecks.block063
+      · exact GeneratorBChecks.block064
+      · exact GeneratorBChecks.block065
+      · exact GeneratorBChecks.block066
+      · exact GeneratorBChecks.block067
+      · exact GeneratorBChecks.block068
+      · exact GeneratorBChecks.block069
+      · exact GeneratorBChecks.block070
+      · exact GeneratorBChecks.block071
+      · exact GeneratorBChecks.block072
+      · exact GeneratorBChecks.block073
+      · exact GeneratorBChecks.block074
+      · exact GeneratorBChecks.block075
+      · exact GeneratorBChecks.block076
+      · exact GeneratorBChecks.block077
+      · exact GeneratorBChecks.block078
+      · exact GeneratorBChecks.block079
+      · exact GeneratorBChecks.block080
+      · exact GeneratorBChecks.block081
+      · exact GeneratorBChecks.block082
+      · exact GeneratorBChecks.block083
+      · exact GeneratorBChecks.block084
+      · exact GeneratorBChecks.block085
+      · exact GeneratorBChecks.block086
+      · exact GeneratorBChecks.block087
+      · exact GeneratorBChecks.block088
+      · exact GeneratorBChecks.block089
+      · exact GeneratorBChecks.block090
+      · exact GeneratorBChecks.block091
+      · exact GeneratorBChecks.block092
+      · exact GeneratorBChecks.block093
+      · exact GeneratorBChecks.block094
+      · exact GeneratorBChecks.block095
+      · exact GeneratorBChecks.block096
+      · exact GeneratorBChecks.block097
+      · exact GeneratorBChecks.block098
+      · exact GeneratorBChecks.block099
+      · exact GeneratorBChecks.block100
+      · exact GeneratorBChecks.block101
+      · exact GeneratorBChecks.block102
+      · exact GeneratorBChecks.block103
+      · exact GeneratorBChecks.block104
+      · exact GeneratorBChecks.block105
+      · exact GeneratorBChecks.block106
+      · exact GeneratorBChecks.block107
+      · exact GeneratorBChecks.block108
+      · exact GeneratorBChecks.block109
+      · exact GeneratorBChecks.block110
+      · exact GeneratorBChecks.block111
+      · exact GeneratorBChecks.block112
+      · exact GeneratorBChecks.block113
+      · exact GeneratorBChecks.block114
+      · exact GeneratorBChecks.block115
+      · exact GeneratorBChecks.block116
+      · exact GeneratorBChecks.block117
+      · exact GeneratorBChecks.block118
+      · exact GeneratorBChecks.block119
+      · exact GeneratorBChecks.block120
+      · exact GeneratorBChecks.block121
+      · exact GeneratorBChecks.block122
+      · exact GeneratorBChecks.block123
+      · exact GeneratorBChecks.block124
+      · exact GeneratorBChecks.block125
+      · exact GeneratorBChecks.block126
+      · exact GeneratorBChecks.block127
+      · exact GeneratorBChecks.block128
+      · exact GeneratorBChecks.block129
+      · exact GeneratorBChecks.block130
+      · exact GeneratorBChecks.block131
+      · exact GeneratorBChecks.block132
+      · exact GeneratorBChecks.block133
+      · exact GeneratorBChecks.block134
+      · exact GeneratorBChecks.block135
+      · exact GeneratorBChecks.block136
+      · exact GeneratorBChecks.block137
+      · exact GeneratorBChecks.block138
+      · exact GeneratorBChecks.block139
+      · exact GeneratorBChecks.block140
+      · exact GeneratorBChecks.block141
+      · exact GeneratorBChecks.block142
+      · exact GeneratorBChecks.block143
+      · exact GeneratorBChecks.block144
+      · exact GeneratorBChecks.block145
+      · exact GeneratorBChecks.block146
+      · exact GeneratorBChecks.block147
+      · exact GeneratorBChecks.block148
+      · exact GeneratorBChecks.block149
+      · exact GeneratorBChecks.block150
+      · exact GeneratorBChecks.block151
+      · exact GeneratorBChecks.block152
+      · exact GeneratorBChecks.block153
+      · exact GeneratorBChecks.block154
+      · exact GeneratorBChecks.block155
+      · exact GeneratorBChecks.block156
+      · exact GeneratorBChecks.block157
+      · exact GeneratorBChecks.block158
+      · exact GeneratorBChecks.block159
+      · exact GeneratorBChecks.block160
+      · exact GeneratorBChecks.block161
+      · exact GeneratorBChecks.block162
+      · exact GeneratorBChecks.block163
+      · exact GeneratorBChecks.block164
+      · exact GeneratorBChecks.block165
+      · exact GeneratorBChecks.block166
+      · exact GeneratorBChecks.block167
+      · exact GeneratorBChecks.block168
+      · exact GeneratorBChecks.block169
+      · exact GeneratorBChecks.block170
+      · exact GeneratorBChecks.block171
+      · exact GeneratorBChecks.block172
+      · exact GeneratorBChecks.block173
+      · exact GeneratorBChecks.block174
+      · exact GeneratorBChecks.block175
+      · exact GeneratorBChecks.block176
+      · exact GeneratorBChecks.block177
+      · exact GeneratorBChecks.block178
+      · exact GeneratorBChecks.block179
+      · exact GeneratorBChecks.block180
+      · exact GeneratorBChecks.block181
+      · exact GeneratorBChecks.block182
+      · exact GeneratorBChecks.block183
+      · exact GeneratorBChecks.block184
+      · exact GeneratorBChecks.block185
+      · exact GeneratorBChecks.block186
+      · exact GeneratorBChecks.block187
+      · exact GeneratorBChecks.block188
+      · exact GeneratorBChecks.block189
+      · exact GeneratorBChecks.block190
+      · exact GeneratorBChecks.block191
+      · exact GeneratorBChecks.block192
+      · exact GeneratorBChecks.block193
+      · exact GeneratorBChecks.block194
+      · exact GeneratorBChecks.block195
+      · exact GeneratorBChecks.block196
+      · exact GeneratorBChecks.block197
+      · exact GeneratorBChecks.block198
+      · exact GeneratorBChecks.block199
+      · exact GeneratorBChecks.block200
+      · exact GeneratorBChecks.block201
+      · exact GeneratorBChecks.block202
+      · exact GeneratorBChecks.block203
+      · exact GeneratorBChecks.block204
+      · exact GeneratorBChecks.block205
+      · exact GeneratorBChecks.block206
+      · exact GeneratorBChecks.block207
+      · exact GeneratorBChecks.block208
+      · exact GeneratorBChecks.block209
+      · exact GeneratorBChecks.block210
+      · exact GeneratorBChecks.block211
+      · exact GeneratorBChecks.block212
+      · exact GeneratorBChecks.block213
+      · exact GeneratorBChecks.block214
+      · exact GeneratorBChecks.block215
+      · exact GeneratorBChecks.block216
+      · exact GeneratorBChecks.block217
+      · exact GeneratorBChecks.block218
+      · exact GeneratorBChecks.block219
+      · exact GeneratorBChecks.block220
+      · exact GeneratorBChecks.block221
+      · exact GeneratorBChecks.block222
+      · exact GeneratorBChecks.block223
+      · exact GeneratorBChecks.block224
+      · exact GeneratorBChecks.block225
+      · exact GeneratorBChecks.block226
+      · exact GeneratorBChecks.block227
+      · exact GeneratorBChecks.block228
+      · exact GeneratorBChecks.block229
+      · exact GeneratorBChecks.block230
+      · exact GeneratorBChecks.block231
+      · exact GeneratorBChecks.block232
+      · exact GeneratorBChecks.block233
+      · exact GeneratorBChecks.block234
+      · exact GeneratorBChecks.block235
+      · exact GeneratorBChecks.block236
+      · exact GeneratorBChecks.block237
+      · exact GeneratorBChecks.block238
+      · exact GeneratorBChecks.block239
+      · exact GeneratorBChecks.block240
+      · exact GeneratorBChecks.block241
+      · exact GeneratorBChecks.block242
+      · exact GeneratorBChecks.block243
+      · exact GeneratorBChecks.block244
+      · exact GeneratorBChecks.block245
+      · exact GeneratorBChecks.block246
+      · exact GeneratorBChecks.block247
+      · exact GeneratorBChecks.block248
+      · exact GeneratorBChecks.block249
+      · exact GeneratorBChecks.block250
+      · exact GeneratorBChecks.block251
+      · exact GeneratorBChecks.block252
+      · exact GeneratorBChecks.block253
+      · exact GeneratorBChecks.block254
+      · exact GeneratorBChecks.block255
+      · exact GeneratorBChecks.block256
+      · exact GeneratorBChecks.block257
+      · exact GeneratorBChecks.block258
+      · exact GeneratorBChecks.block259
+      · exact GeneratorBChecks.block260
+      · exact GeneratorBChecks.block261
+      · exact GeneratorBChecks.block262
+      · exact GeneratorBChecks.block263
+      · exact GeneratorBChecks.block264
+      · exact GeneratorBChecks.block265
+      · exact GeneratorBChecks.block266
+      · exact GeneratorBChecks.block267
+      · exact GeneratorBChecks.block268
+      · exact GeneratorBChecks.block269
+      · exact GeneratorBChecks.block270
+      · exact GeneratorBChecks.block271
+      · exact GeneratorBChecks.block272
+      · exact GeneratorBChecks.block273
+      · exact GeneratorBChecks.block274
+      · exact GeneratorBChecks.block275
+      · exact GeneratorBChecks.block276
+      · exact GeneratorBChecks.block277
+      · exact GeneratorBChecks.block278
+      · exact GeneratorBChecks.block279
+      · exact GeneratorBChecks.block280
+      · exact GeneratorBChecks.block281
+      · exact GeneratorBChecks.block282
+      · exact GeneratorBChecks.block283
+      · exact GeneratorBChecks.block284
+      · exact GeneratorBChecks.block285
+      · exact GeneratorBChecks.block286
+      · exact GeneratorBChecks.block287
+      · exact GeneratorBChecks.block288
+      · exact GeneratorBChecks.block289
+      · exact GeneratorBChecks.block290
+      · exact GeneratorBChecks.block291
+      · exact GeneratorBChecks.block292
+      · exact GeneratorBChecks.block293
+      · exact GeneratorBChecks.block294
+      · exact GeneratorBChecks.block295
+      · exact GeneratorBChecks.block296
+      · exact GeneratorBChecks.block297
+      · exact GeneratorBChecks.block298
+      · exact GeneratorBChecks.block299
+      · exact GeneratorBChecks.block300
+      · exact GeneratorBChecks.block301
+      · exact GeneratorBChecks.block302
+    have he := checkEqualProducts_sound _ _ _ _ h j.val
+    simpa only [chunk_entry _ _ _ _ j.isLt] using he
+  intro i
+  exact hall ⟨i.val, by omega⟩
+
+/-- The saved intertwiner in the literal rectangular matrix coordinates. -/
+theorem generatorB :
+    matrix 2420 2420 ambientB * matrix 2420 1792 mapRows =
+      matrix 2420 1792 mapRows * matrix 1792 1792 targetB :=
+  matrix_equal_products_of_rows _ _ _ _ (by decide +kernel) (by decide +kernel) rows
+
+end Representation.Mathieu.M24DegreeSpectrum.AbsoluteSpectrum.LargeModels.NativeSubquotient.Largest1792

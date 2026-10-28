@@ -195,6 +195,7 @@ def evalExceptionalCode {G : Type*} [Group G] (X Y : G) : Nat → Nat → G
 
 set_option maxRecDepth 100000 in
 set_option maxHeartbeats 2000000 in
+-- Elaborating the cached 120-entry exceptional image table needs the larger heartbeat budget.
 def exceptionalImageTable : Nat → ExceptionalSL9
   | 45 => ⟨!![0, 2 + ω; 2 + 2 * ω, 0], by decide⟩
   | 46 => ⟨!![2, 0; 1, 2], by decide⟩
@@ -329,6 +330,7 @@ theorem exceptional_source_word : ∀ g : ExceptionalSL5,
 
 set_option maxRecDepth 100000 in
 set_option maxHeartbeats 2000000 in
+-- Kernel-checking the exhaustive multiplication certificate needs the larger heartbeat budget.
 theorem exceptional_direct_certificate : ∀ g : ExceptionalSL5,
     exceptionalFn (g * exceptionalX5) = exceptionalFn g * exceptionalX9 ∧
     exceptionalFn (g * exceptionalY5) = exceptionalFn g * exceptionalY9 ∧
@@ -403,6 +405,10 @@ public theorem exceptionalHom_injective : Function.Injective exceptionalHom := b
   ext g
   simp only [MonoidHom.mem_ker, Subgroup.mem_bot]
   exact exceptionalFn_eq_one_iff g
+
+/-- The exceptional embedding preserves the central involution. -/
+public theorem exceptionalHom_neg_one : exceptionalHom (-1) = -1 := by
+  decide
 
 theorem exceptionalHom_X : exceptionalHom exceptionalX5 = exceptionalX9 := by
   have h := exceptionalFn_mul_X (1 : ExceptionalSL5)

@@ -41,7 +41,9 @@ public theorem secondCase_linear_kleinFour_centralizer_le_M
   let VE : Subgroup d.E := V.subgroupOf d.E
   have hVE2 : IsPGroup 2 VE := by
     apply IsPGroup.of_equiv (G := V)
-      (IsPGroup.of_card (n := 2) (by simpa using hVK.card_four))
+      (IsPGroup.of_card (n := 2) (by
+        rw [hVK.card_four]
+        norm_num))
       (Subgroup.subgroupOfEquivOfLe hVleE).symm
   have hSE2 : IsPGroup 2 ((c.S : Subgroup G).subgroupOf d.E) :=
     c.S.isPGroup'.comap_subtype

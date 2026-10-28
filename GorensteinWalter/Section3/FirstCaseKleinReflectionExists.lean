@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section3.FirstCaseKleinReflectionHall
 import Mathlib.Tactic
 
+
 /-!
 # A reflection outside the Klein four two-core
 -/

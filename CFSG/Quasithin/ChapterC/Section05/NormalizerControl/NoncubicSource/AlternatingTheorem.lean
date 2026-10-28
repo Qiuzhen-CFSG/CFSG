@@ -1,0 +1,36 @@
+module
+public import CFSG.Quasithin.ChapterC.Section05.NormalizerControl.NoncubicSource.BlockRecognition.Matching.Alternating
+public import CFSG.Quasithin.ChapterC.Section05.NormalizerControl.NoncubicSource.OriginalNormalizer
+/-!
+# The original alternating case of C.5.13
+
+The genuine normalizer calculation and the finite five-letter restriction
+matching give both assertions on the original auxiliary span. The enlarged
+block is the ordinary A₇ type, as required for the original A₅ block.
+The universal earlier A.3.12 classification remains explicit.
+Source: Aschbacher–Smith C.5.13, printed pp.162–163.
+-/
+public section
+open Subgroup Stellmacher
+namespace CFSG.Quasithin.ChapterC.Section05.NormalizerControl
+open ConjugateSource ConjugateSource.RankOne Chapter1.Section02
+universe u
+variable {G : Type u} [Group G] [Finite G]
+theorem alternating_source_theorem_5_13 {𝒦 : GroupClass.{u}} (hG : IsSimpleQTKE 𝒦 G)
+    (hA312 : ∀ (H : Type u) [Group H] [Finite H],
+      IsSQTK 𝒦 H → pCore 2 H = ⊥ → ∀ (S : Sylow 2 H) (B : Subgroup H),
+      B ∈ ChapterA.Section03.localCComponents S → A312Conclusion B)
+    {K T J : Subgroup G} (h : AlternatingPairSetup T K J)
+    (hTK : T ≤ normalizer (K : Set G))
+    (P : Sylow 2 (K ⊔ T : Subgroup G))
+    (hP : (P : Subgroup (K ⊔ T : Subgroup G)).map (K ⊔ T).subtype = T)
+    (X : Subgroup G) (hA : K ⊔ T ∈ Chapter1.He G) (hAX : K ⊔ T ≤ X) (hX : X ∈ Chapter1.He G)
+    (S : Sylow 2 X) (hS : (S : Subgroup X).map X.subtype = T)
+    {x : G} (hx : x ∈ normalizer (T : Set G))
+    (hnc : ¬ (sourceModule K).map (MulAut.conj x⁻¹).toMonoidHom ≤ centralizer (sourceModule K : Set G)) :
+    let L := conjugateSpanBy K (X ⊓ normalizer ((K ⊔ T).pCoreIn 2 : Set G))
+    ((X ⊓ normalizer ((K ⊔ T).pCoreIn 2 : Set G)) ⊓ normalizer (T : Set G) ≤
+      normalizer (sourceModule K : Set G)) ∧ (L = K ∨ IsAlternatingBlock L 7) := by
+  exact ⟨alternating_source_normalizer_control hG hA312 h hTK P hP X hA hAX hX S hS hx hnc,
+    Matching.alternating_source_matched_block hG hA312 h hTK P hP X hA hAX hX S hS hx hnc⟩
+end CFSG.Quasithin.ChapterC.Section05.NormalizerControl

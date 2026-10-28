@@ -29,6 +29,7 @@ import Mathlib.Algebra.DirectSum.LinearMap
 import Mathlib.LinearAlgebra.Trace
 import FeitThompson.PFsection1.PFsection1_1
 
+
 /-!
 # Bender--Glauberman: Theorem C
 
@@ -53,9 +54,8 @@ open scoped Pointwise
 namespace BenderGlauberman
 
 open GorensteinWalter
-open Theory.Character
 
--- Local instances matching `Theory.Character`'s subgroup-sum convention; see
+-- Local instances matching `Character`'s subgroup-sum convention; see
 -- `BenderGlauberman/ClassFunction.lean`.
 attribute [local instance] Fintype.ofFinite
 attribute [local instance] Classical.propDecidable
@@ -1246,7 +1246,7 @@ private lemma theoremC_restrict_alpha_inv_eq (c : Hyp11 G) [Hyp11KData c] {x : G
 /-- Conjugation action of `U` on `K`. -/
 @[reducible] private noncomputable instance theoremC_KU_action (c : Hyp11 G) [Hyp11KData c] :
     MulDistribMulAction (↥c.U) (↥(theoremC_KU c)) :=
-  letI : (theoremC_KU c).Normal := theoremC_KU_normal c
+  let : (theoremC_KU c).Normal := theoremC_KU_normal c
   MulDistribMulAction.compHom (↥(theoremC_KU c))
     (MulAut.conjNormal (G := ↥c.U) (H := theoremC_KU c))
 
@@ -1283,7 +1283,7 @@ private lemma theoremC_KU_orbit_odd (c : Hyp11 G) [Hyp11KData c] (β : IrrBG19 (
   exact Nat.coprime_two_left.mp hcopOrbit
 
 /-- The character of an arbitrary finite-dimensional complex representation is
-a `Theory.Character.IsCharacter`. -/
+a `IsCharacter`. -/
 private lemma theoremC_isCharacter_of_representation {K : Type u} [Group K] [Fintype K]
     {M : Type v} [AddCommGroup M] [Module ℂ M] [FiniteDimensional ℂ M]
     (σ : Representation ℂ K M) : IsCharacter σ.character := by
@@ -1311,7 +1311,7 @@ group gives an `IrrBG19` character (always linear). -/
 private noncomputable def theoremC_charOfIrrRep {K : Type u} [CommGroup K] [Fintype K]
     {M : Type v} [AddCommGroup M] [Module ℂ M] [FiniteDimensional ℂ M]
     (σ : Representation ℂ K M) (hσ : σ.IsIrreducible) : IrrBG19 K := by
-  letI : Representation.IsIrreducible σ := hσ
+  let : Representation.IsIrreducible σ := hσ
   have hchar : IsCharacter σ.character := theoremC_isCharacter_of_representation σ
   have hnorm : scalarProductInv K σ.character σ.character = 1 := by
     have hnon : Nonempty (σ.Equiv σ) := ⟨Representation.Equiv.refl σ⟩
@@ -1327,31 +1327,31 @@ private lemma theoremC_clifford_restrict_char_sum (c : Hyp11 G) [Hyp11KData c] {
     (W : Subrepresentation (ρ.comp H.subtype)) (hW : W.toRepresentation.IsIrreducible) :
     ∃ (n : ℕ) (g : Fin n → ↥c.U),
       DirectSum.IsInternal
-        (fun i : Fin n => (Theory.Representation.conjugateSubrepresentation ρ H W (g i)).toSubmodule) ∧
+        (fun i : Fin n => (Representation.conjugateSubrepresentation ρ H W (g i)).toSubmodule) ∧
       (∀ i : Fin n,
-        (Theory.Representation.conjugateSubrepresentation ρ H W (g i)).toRepresentation.IsIrreducible) ∧
+        (Representation.conjugateSubrepresentation ρ H W (g i)).toRepresentation.IsIrreducible) ∧
       (∀ i : Fin n,
         Nonempty
-          ((Theory.Representation.conjugateSubrepresentation ρ H W (g i)).toRepresentation ≃ₗ
-            Theory.Representation.conjugateRep W.toRepresentation (g i))) ∧
+          ((Representation.conjugateSubrepresentation ρ H W (g i)).toRepresentation ≃ₗ
+            Representation.conjugateRep W.toRepresentation (g i))) ∧
       ∀ k : H, ρ.character (k : ↥c.U) =
         ∑ i : Fin n,
-          ((Theory.Representation.conjugateSubrepresentation ρ H W (g i)).toRepresentation).character k := by
+          ((Representation.conjugateSubrepresentation ρ H W (g i)).toRepresentation).character k := by
   classical
-  rcases Theory.Representation.isaacs_theorem_6_5 ρ H hρ W hW with ⟨n, g, hsum, hirr, hequiv, heq⟩
+  rcases Representation.isaacs_theorem_6_5 ρ H hρ W hW with ⟨n, g, hsum, hirr, hequiv, heq⟩
   let _ := @heq (Fin 0 → ℂ) (by infer_instance) (by infer_instance)
   have hsum' : DirectSum.IsInternal
-      (fun i : Fin n => (Theory.Representation.conjugateSubrepresentation ρ H W (g i)).toSubmodule) := by
+      (fun i : Fin n => (Representation.conjugateSubrepresentation ρ H W (g i)).toSubmodule) := by
     change DirectSum.IsInternal
-      (fun i : Fin n => (Theory.Representation.conjugateSubrepresentation ρ H W (g i)).asSubmodule) at hsum
+      (fun i : Fin n => (Representation.conjugateSubrepresentation ρ H W (g i)).asSubmodule) at hsum
     exact hsum
   refine ⟨n, g, hsum', hirr, hequiv, ?_⟩
   intro k
   let N : Fin n → Submodule ℂ V := fun i =>
-    (Theory.Representation.conjugateSubrepresentation ρ H W (g i)).toSubmodule
+    (Representation.conjugateSubrepresentation ρ H W (g i)).toSubmodule
   have hf : ∀ i : Fin n, Set.MapsTo (ρ (k : ↥c.U)) (N i) (N i) := by
     intro i x hx
-    exact (Theory.Representation.conjugateSubrepresentation ρ H W (g i)).apply_mem_toSubmodule k hx
+    exact (Representation.conjugateSubrepresentation ρ H W (g i)).apply_mem_toSubmodule k hx
   have htr := LinearMap.trace_eq_sum_trace_restrict (R := ℂ) (M := V) (N := N) hsum' (f := ρ (k : ↥c.U)) hf
   change LinearMap.trace ℂ V (ρ (k : ↥c.U)) =
     ∑ i : Fin n, LinearMap.trace ℂ (N i) ((ρ (k : ↥c.U)).restrict (hf i))
@@ -1385,26 +1385,26 @@ private lemma theoremC_constituents_conjugate (c : Hyp11 G) [Hyp11KData c] (α :
   let : MulAction (↥c.U) (IrrBG19 (↥(theoremC_KU c))) := theoremC_KU_irr_action c
   have hchar' : ∀ k : ↥(theoremC_KU c), α.1 (k : ↥c.U) =
       ∑ i : Fin n0,
-        ((Theory.Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation).character k := by
+        ((Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation).character k := by
     intro k
     rw [hαeq]
     exact hchar k
   have hfun : (fun k : ↥(theoremC_KU c) => α.1 (k : ↥c.U)) =
       ∑ i : Fin n0,
-        ((Theory.Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation).character := by
+        ((Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation).character := by
     funext k
     simpa using hchar' k
   have hsummand_orbit (i : Fin n0) :
       theoremC_charOfIrrRep
-        ((Theory.Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation) (hirr i) ∈
+        ((Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation) (hirr i) ∈
         MulAction.orbit (↥c.U) β0 := by
     have hχi : theoremC_charOfIrrRep
-        ((Theory.Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation) (hirr i) =
+        ((Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation) (hirr i) =
         (((g i : ↥c.U)⁻¹) • β0) := by
       apply Subtype.ext
       ext k
       have he := Classical.choice (hequiv i)
-      have heRep := Theory.Representation.RepEquiv.toRepresentationEquiv he
+      have heRep := Representation.RepEquiv.toRepresentationEquiv he
       have hchars := Representation.char_iso heRep
       have hchar_smul : (((g i : ↥c.U)⁻¹) • β0).1 =
           fun u : ↥(theoremC_KU c) => β0.1 ((((g i : ↥c.U)⁻¹)⁻¹) • u) := rfl
@@ -1420,23 +1420,23 @@ private lemma theoremC_constituents_conjugate (c : Hyp11 G) [Hyp11KData c] (α :
     have hsp_sum : scalarProduct (↥(theoremC_KU c))
         (fun k : ↥(theoremC_KU c) => α.1 (k : ↥c.U)) γ.1 =
         ∑ i : Fin n0, scalarProduct (↥(theoremC_KU c))
-          ((Theory.Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation).character γ.1 := by
+          ((Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation).character γ.1 := by
       rw [hfun, scalarProduct_sum_left]
     have hcoeff (i : Fin n0) :
         scalarProduct (↥(theoremC_KU c))
-          ((Theory.Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation).character γ.1 =
+          ((Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation).character γ.1 =
           if (theoremC_charOfIrrRep
-            ((Theory.Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation) (hirr i)).1 = γ.1
+            ((Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation) (hirr i)).1 = γ.1
           then 1 else 0 := by
-      have hχ : ((Theory.Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation).character =
+      have hχ : ((Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation).character =
           (theoremC_charOfIrrRep
-            ((Theory.Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation) (hirr i)).1 := rfl
+            ((Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation) (hirr i)).1 := rfl
       rw [hχ]
       exact scalarProduct_irr_ite
         (theoremC_charOfIrrRep
-          ((Theory.Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation) (hirr i)).2 γ.2
+          ((Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation) (hirr i)).2 γ.2
     have hex : ∃ i : Fin n0, (theoremC_charOfIrrRep
-        ((Theory.Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation) (hirr i)).1 = γ.1 := by
+        ((Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation) (hirr i)).1 = γ.1 := by
       by_contra hnone
       push Not at hnone
       have hsp0 : scalarProduct (↥(theoremC_KU c))
@@ -1445,7 +1445,7 @@ private lemma theoremC_constituents_conjugate (c : Hyp11 G) [Hyp11KData c] (α :
         refine Finset.sum_eq_zero ?_
         intro i hi
         have hne' : (theoremC_charOfIrrRep
-            ((Theory.Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation) (hirr i)).1 ≠ γ.1 := by
+            ((Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation) (hirr i)).1 ≠ γ.1 := by
           intro h
           exact hnone i h
         rw [hcoeff i]
@@ -1453,10 +1453,10 @@ private lemma theoremC_constituents_conjugate (c : Hyp11 G) [Hyp11KData c] (α :
       exact hγ hsp0
     rcases hex with ⟨i, hi⟩
     have hmem : theoremC_charOfIrrRep
-        ((Theory.Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation) (hirr i) ∈
+        ((Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation) (hirr i) ∈
         MulAction.orbit (↥c.U) β0 := hsummand_orbit i
     have hiSub : theoremC_charOfIrrRep
-        ((Theory.Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation) (hirr i) = γ :=
+        ((Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation) (hirr i) = γ :=
       Subtype.ext hi
     rwa [hiSub] at hmem
   intro γ hγ
@@ -1708,49 +1708,49 @@ private lemma theoremC_reflection_fixed_char_kills_K (c : Hyp11 G) [Hyp11KData c
       exact (isMulCommutative_iff.mp (theoremC_KU_comm c)) a b }
   have hchar' : ∀ k0 : ↥(theoremC_KU c), α.1 (k0 : ↥c.U) =
       ∑ i : Fin n0,
-        ((Theory.Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation).character k0 := by
+        ((Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation).character k0 := by
     intro k0
     rw [hαeq]
     exact hchar k0
   have hfun : (fun k0 : ↥(theoremC_KU c) => α.1 (k0 : ↥c.U)) =
       ∑ i : Fin n0,
-        ((Theory.Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation).character := by
+        ((Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation).character := by
     funext k0
     simpa using hchar' k0
   have hsummand_trivial (i : Fin n0) :
-      ((Theory.Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation).character =
+      ((Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation).character =
         (1 : ClassFunction (↥(theoremC_KU c))) := by
     let βi : IrrBG19 (↥(theoremC_KU c)) :=
       theoremC_charOfIrrRep
-        ((Theory.Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation) (hirr i)
+        ((Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation) (hirr i)
     have hβi : scalarProduct (↥(theoremC_KU c))
         (fun k0 : ↥(theoremC_KU c) => α.1 (k0 : ↥c.U)) βi.1 ≠ 0 := by
       have hsp : scalarProduct (↥(theoremC_KU c))
           (fun k0 : ↥(theoremC_KU c) => α.1 (k0 : ↥c.U)) βi.1 =
           ∑ j : Fin n0, (if (theoremC_charOfIrrRep
-            ((Theory.Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g j)).toRepresentation) (hirr j)).1 = βi.1
+            ((Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g j)).toRepresentation) (hirr j)).1 = βi.1
             then (1 : ℂ) else 0) := by
         rw [hfun, scalarProduct_sum_left]
         refine Finset.sum_congr rfl ?_
         intro j hj
-        have hχj : ((Theory.Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g j)).toRepresentation).character =
+        have hχj : ((Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g j)).toRepresentation).character =
             (theoremC_charOfIrrRep
-              ((Theory.Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g j)).toRepresentation) (hirr j)).1 := rfl
+              ((Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g j)).toRepresentation) (hirr j)).1 := rfl
         rw [hχj]
         exact scalarProduct_irr_ite
           (theoremC_charOfIrrRep
-            ((Theory.Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g j)).toRepresentation) (hirr j)).2
+            ((Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g j)).toRepresentation) (hirr j)).2
           βi.2
       rw [hsp]
       refine theoremC_sum_ite_ne_zero_of_mem i ?_
       change (theoremC_charOfIrrRep
-        ((Theory.Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation) (hirr i)).1 =
+        ((Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation) (hirr i)).1 =
         (theoremC_charOfIrrRep
-          ((Theory.Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation) (hirr i)).1
+          ((Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation) (hirr i)).1
       rfl
     have hβi_triv := theoremC_fixed_alpha_constituents_trivial c hxS hxnot α hfix βi hβi
     have hval : (theoremC_charOfIrrRep
-        ((Theory.Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation) (hirr i)).1 =
+        ((Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation) (hirr i)).1 =
         (1 : ClassFunction (↥(theoremC_KU c))) := by
       have hsub := congrArg Subtype.val hβi_triv
       simpa [βi, theoremC_trivial_irr] using hsub
@@ -1759,14 +1759,14 @@ private lemma theoremC_reflection_fixed_char_kills_K (c : Hyp11 G) [Hyp11KData c
   let kU : ↥(theoremC_KU c) :=
     ⟨⟨k, theoremC_K_le_U c hk⟩, Subgroup.mem_subgroupOf.mpr hk⟩
   have hαk : α.1 (kU : ↥c.U) = ∑ i : Fin n0,
-      ((Theory.Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation).character kU :=
+      ((Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation).character kU :=
     hchar' kU
   have hsum : (∑ i : Fin n0,
-      ((Theory.Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation).character kU) =
+      ((Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation).character kU) =
       (n0 : ℂ) := by
     calc
       (∑ i : Fin n0,
-          ((Theory.Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation).character kU)
+          ((Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation).character kU)
           = ∑ i : Fin n0, (1 : ℂ) := by
             refine Finset.sum_congr rfl ?_
             intro i hi
@@ -1776,11 +1776,11 @@ private lemma theoremC_reflection_fixed_char_kills_K (c : Hyp11 G) [Hyp11KData c
   have hα1 : α.1 (1 : ↥c.U) = (n0 : ℂ) := by
     have h1 := hchar (1 : ↥(theoremC_KU c))
     have hsum1 : (∑ i : Fin n0,
-        ((Theory.Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation).character
+        ((Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation).character
           (1 : ↥(theoremC_KU c))) = (n0 : ℂ) := by
       calc
         (∑ i : Fin n0,
-            ((Theory.Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation).character
+            ((Representation.conjugateSubrepresentation ρ (theoremC_KU c) W (g i)).toRepresentation).character
               (1 : ↥(theoremC_KU c)))
             = ∑ i : Fin n0, (1 : ℂ) := by
               refine Finset.sum_congr rfl ?_
@@ -2373,19 +2373,6 @@ private theorem theoremC_B_not_le_Uprime (c : Hyp11 G) [Hyp11KData c]
     simpa [hk1] using hEq1
   exact hb_eq ▸ hbpB'
 
-/-- Lemma 3.6, specialized to the theorem-C situation as a direct application
-of `BenderGlauberman.Section3.Lemma36.lemma_3_6`. -/
-private theorem theoremC_lemma36 (c : Hyp11 G) [Hyp11KData c] (h12 : Hyp12 c) (hSC : Section3Hyp c)
-    (χ : Irr G) (hB : (BOf c h12 χ.1).Nonempty)
-    (hK : ¬ c.K ≤ charKernel (isCharacter_of_isIrreducibleCharacter χ.2))
-    (hνs : ∀ ν : Irr (↥c.H0), ν ∈ BOf c h12 χ.1 →
-      conjChar c.H0 (s_normalizes_H0 c h12) ν.1 ∈ orbit c.H0 c.U ν.1) :
-    ∃ α : Irr (↥c.U),
-      ¬ c.K ≤ (charKernel (isCharacter_of_isIrreducibleCharacter α.2)).map
-          (Subgroup.subtype c.U) ∧
-        (2 * (c.U.subgroupOf c.H0).index : ℝ) * (α.1 1).re < (χ.1 1).re := by
-  exact lemma_3_6 c h12 hSC χ hB hK hνs
-
 /-- The integer degree consequence of Lemma 3.6 used for equation (7):
 with `m = |H0 : U| ≥ 4`, the strict real bound `2m·a < b` on character
 degrees gives `b ≥ 8a + 1`. -/
@@ -2588,8 +2575,7 @@ private lemma theoremC_B_ne_bot (c : Hyp11 G) [Hyp11KData c] (hB' : ⁅c.B, c.B�
 `U = B`; Remark 3.5 and Theorem B then identify simple `G` with `A₅`, whose
 involution centralizers have order four.  The odd subgroup `U ≤ H` would be
 trivial, contradicting `B' ≠ B`. -/
-private theorem theoremC_K_ne_one_of_U_eq_BK (c : Hyp11 G) [Hyp11KData c] (h12 : Hyp12 c)
-    (hSC : Section3Hyp c)
+private theorem theoremC_K_ne_one_of_U_eq_BK (c : Hyp11 G) [Hyp11KData c]
     (hUBK : c.U = c.B ⊔ c.K)
     (hB' : ⁅c.B, c.B⁆ ≠ c.B)
     (hsimple : IsSimpleGroup G) : c.K ≠ ⊥ := by
@@ -2619,7 +2605,7 @@ private theorem theoremC_K_ne_one_of_U_eq_BK (c : Hyp11 G) [Hyp11KData c] (h12 :
     rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal c.U hnormal with hbot | htop
     · exact hUneBot hbot
     · exact hUneTop htop
-  rcases remark_3_5 c h12 hSC hUB hUnormal with
+  rcases remark_3_5 c hUB hUnormal with
     ⟨hNproper, hHN, hNclass⟩
   rcases theorem_B c (normalizerB c) hNproper hHN hNclass with ⟨eQ⟩
   have h2S : 2 ∣ Nat.card (↥(c.S : Subgroup G)) := by
@@ -2651,13 +2637,12 @@ private theorem theoremC_K_ne_one_of_U_eq_BK (c : Hyp11 G) [Hyp11KData c] (h12 :
 
 /-- In the four-group branch, `U = BK`, so the preceding general endpoint
 gives the required nontriviality of `K`. -/
-private theorem theoremC_K_ne_one_of_S4 (c : Hyp11 G) [Hyp11KData c] (h12 : Hyp12 c)
-    (hSC : Section3Hyp c)
+private theorem theoremC_K_ne_one_of_S4 (c : Hyp11 G) [Hyp11KData c]
     (hU : c.U = (c.B1 ⊓ c.K2) ⊔ (c.B ⊔ c.K))
     (hB' : ⁅c.B, c.B⁆ ≠ c.B)
     (hsimple : IsSimpleGroup G)
     (hS4 : Nat.card (↥(c.S : Subgroup G)) = 4) : c.K ≠ ⊥ := by
-  exact theoremC_K_ne_one_of_U_eq_BK c h12 hSC
+  exact theoremC_K_ne_one_of_U_eq_BK c
     (theoremC_U_eq_BK_of_S4 c hU hS4) hB' hsimple
 
 /-- When `U = BK`, every element of `U` has the normal form `b·k` with
@@ -2980,7 +2965,7 @@ private lemma theoremC_deltaAdjacent_symm (c : Hyp11 G) [Hyp11KData c] (h12 : Hy
   exact ⟨hε, hδ, hne.symm, by
     intro h'
     apply hdis
-    unfold Theory.Character.Disjoint at h' ⊢
+    unfold ClassFunction.Disjoint at h' ⊢
     intro χ hχ hχδ
     by_contra hχε
     exact hχδ (h' χ hχ hχε)⟩
@@ -3080,13 +3065,13 @@ private theorem theoremC_finite_order_eq_one_of_trace_eq_finrank
       LinearMap.trace ℂ V f =
         ∑ μ : f.Eigenvalues, (μ : ℂ) * (m μ : ℂ) := by
     simpa [m] using
-      (Theory.Representation.trace_pow_eq_sum_eigenvalues
+      (Representation.trace_pow_eq_sum_eigenvalues
         (f := f) (n := n) (k := 1) hn hpow)
   have htrace_zero :
       (Module.finrank ℂ V : ℂ) =
         ∑ μ : f.Eigenvalues, (m μ : ℂ) := by
     have h0 :=
-      Theory.Representation.trace_pow_eq_sum_eigenvalues
+      Representation.trace_pow_eq_sum_eigenvalues
         (f := f) (n := n) (k := 0) hn hpow
     simpa [m, LinearMap.trace_id] using h0
   have hsum_complex :
@@ -3104,7 +3089,7 @@ private theorem theoremC_finite_order_eq_one_of_trace_eq_finrank
         (μ : ℂ).re * m μ ≤ (1 : ℝ) * m μ := by
     intro μ _hμ
     have hμpow : (μ : ℂ) ^ n = 1 :=
-      Theory.Representation.eigenvalue_pow_eq_one_of_pow_eq_one hpow μ.property
+      Representation.eigenvalue_pow_eq_one_of_pow_eq_one hpow μ.property
     have hnorm : ‖(μ : ℂ)‖ = 1 := by
       have hpowAbs : ‖(μ : ℂ)‖ ^ n = (1 : ℝ) := by
         simpa [hμpow] using (norm_pow (μ : ℂ) n).symm
@@ -3142,7 +3127,7 @@ private theorem theoremC_finite_order_eq_one_of_trace_eq_finrank
       have h := heq_each μ
       nlinarith
     have hμpow : (μ : ℂ) ^ n = 1 :=
-      Theory.Representation.eigenvalue_pow_eq_one_of_pow_eq_one hpow μ.property
+      Representation.eigenvalue_pow_eq_one_of_pow_eq_one hpow μ.property
     have hnorm : ‖(μ : ℂ)‖ = 1 := by
       have hpowAbs : ‖(μ : ℂ)‖ ^ n = (1 : ℝ) := by
         simpa [hμpow] using (norm_pow (μ : ℂ) n).symm
@@ -3163,9 +3148,9 @@ private theorem theoremC_finite_order_eq_one_of_trace_eq_finrank
     exact Complex.ext (by simp [hre_eq]) (by simp [him])
   have htop : f.eigenspace (1 : ℂ) = ⊤ := by
     have hsemi : f.IsSemisimple :=
-      Theory.Representation.end_isSemisimple_of_pow_eq_one f hn hpow
+      Representation.end_isSemisimple_of_pow_eq_one f hn hpow
     have hiSup :=
-      Theory.Representation.eigenspace_iSup_eq_top_over_eigenvalues
+      Representation.eigenspace_iSup_eq_top_over_eigenvalues
         (f := f) hsemi
     apply top_unique
     rw [← hiSup]
@@ -3845,7 +3830,7 @@ private lemma theoremC_kappa_orbit_card (c : Hyp11 G) [Hyp11KData c] (h12 : Hyp1
     (orbit c.H0 c.U (kappa c κ1 l)).card = (c.U.subgroupOf c.H0).index := by
   classical
   have h := orbit_card_mul_stab c.H0 c.U (kappa c κ1 l)
-  rw [theoremC_kappa_stab_one c h12 (kappa_isLinear c h12 hκ1lin l), mul_one] at h
+  rw [theoremC_kappa_stab_one c h12 (kappa_isLinear c hκ1lin l), mul_one] at h
   rw [← Nat.card_eq_fintype_card, lambda_card_eq_index c h12] at h
   exact h
 
@@ -3859,12 +3844,12 @@ private lemma theoremC_kappa_decomp (c : Hyp11 G) [Hyp11KData c] (h12 : Hyp12 c)
     ∃ χ1 χ2 χ3 : ClassFunction G,
       IsPMIrr G χ1 ∧ IsPMIrr G χ2 ∧ IsPMIrr G χ3 ∧
         tildeNu c h12 ⟨κ1, hκ1lin.1⟩ = χ1 + χ2 ∧
-        tildeNu c h12 ⟨kappa c κ1 l3, (kappa_isLinear c h12 hκ1lin l3).1⟩ = χ3 ∧
+        tildeNu c h12 ⟨kappa c κ1 l3, (kappa_isLinear c hκ1lin l3).1⟩ = χ3 ∧
         scalarProduct G χ1 (tildeNu c h12 ⟨κ1, hκ1lin.1⟩) = 1 ∧
         scalarProduct G χ2 (tildeNu c h12 ⟨κ1, hκ1lin.1⟩) = 1 := by
   classical
   let κ1Irr : Irr (↥c.H0) := ⟨κ1, hκ1lin.1⟩
-  let κ3Irr : Irr (↥c.H0) := ⟨kappa c κ1 l3, (kappa_isLinear c h12 hκ1lin l3).1⟩
+  let κ3Irr : Irr (↥c.H0) := ⟨kappa c κ1 l3, (kappa_isLinear c hκ1lin l3).1⟩
   have hκ1fix : conjChar c.H0 (s_normalizes_H0 c h12) κ1 = κ1 :=
     kappaOne_fixed_by_s c h12 hκ1lin hκ1S0 hκ1comm
   have hnorm1 : normSq G (tildeNu c h12 κ1Irr) = 2 := by
@@ -3939,15 +3924,15 @@ private lemma theoremC_chi3_facts (c : Hyp11 G) [Hyp11KData c] (h12 : Hyp12 c) (
     (hκ1comm : ∀ x : ↥c.H0, (x : G) ∈ ⁅(c.S : Subgroup G), c.U⁆ → κ1 x = 1)
     (l3 : LambdaHom c.H0 c.U) (hl3 : l3 ^ 2 ≠ 1)
     {χ3 : ClassFunction G} (hχ3eq : tildeNu c h12
-      ⟨kappa c κ1 l3, (kappa_isLinear c h12 hκ1lin l3).1⟩ = χ3)
+      ⟨kappa c κ1 l3, (kappa_isLinear c hκ1lin l3).1⟩ = χ3)
     (hχ3 : IsPMIrr G χ3) :
     BOf c h12 χ3 =
-        {⟨kappa c κ1 l3, (kappa_isLinear c h12 hκ1lin l3).1⟩,
-          conjIrr c h12 ⟨kappa c κ1 l3, (kappa_isLinear c h12 hκ1lin l3).1⟩} ∧
+        {⟨kappa c κ1 l3, (kappa_isLinear c hκ1lin l3).1⟩,
+          conjIrr c h12 ⟨kappa c κ1 l3, (kappa_isLinear c hκ1lin l3).1⟩} ∧
       (χ3 c.t = 2 ∨ χ3 c.t = -2) := by
   classical
   let κ3Irr : Irr (↥c.H0) :=
-    ⟨kappa c κ1 l3, (kappa_isLinear c h12 hκ1lin l3).1⟩
+    ⟨kappa c κ1 l3, (kappa_isLinear c hκ1lin l3).1⟩
   have hκ3s : conjChar c.H0 (s_normalizes_H0 c h12) κ3Irr.1 ≠ κ3Irr.1 := by
     have hiff := kappa_conj_fixed_iff c h12 hκ1lin hκ1S0 hκ1comm l3
     intro hfix
@@ -4214,7 +4199,7 @@ private lemma theoremC_reflection_fixed_data_of_conj_mem_orbit
     (orbitOfAlpha_fixed_iff c h12 hSC α).mp hfixedOrbit
   have hreflection :
       conjIrrS c c.t1_mem_S α = α ∨ conjIrrS c c.t2_mem_S α = α := by
-    rcases (stabilizerS_not_le_S0_iff c h12 hSC α).mp hnotle with
+    rcases (stabilizerS_not_le_S0_iff c hSC α).mp hnotle with
       hfull | hpair
     · omega
     · rcases hpair with ⟨_hcard2, hstab1 | hstab2⟩
@@ -4294,10 +4279,10 @@ private lemma theoremC_chi1_kappaTwo_not_mem (c : Hyp11 G) [Hyp11KData c] (h12 :
     (horbitκ1 : (orbit c.H0 c.U κ1).card = (c.U.subgroupOf c.H0).index)
     (hS8 : Nat.card (↥(c.S : Subgroup G)) ≠ 4) :
     ⟨kappa c κ1 (lambdaTwo c h12),
-      (kappa_isLinear c h12 hκ1lin (lambdaTwo c h12)).1⟩ ∉ BOf c h12 χ1 := by
+      (kappa_isLinear c hκ1lin (lambdaTwo c h12)).1⟩ ∉ BOf c h12 χ1 := by
   classical
   let κ2Irr : Irr (↥c.H0) :=
-    ⟨kappa c κ1 (lambdaTwo c h12), (kappa_isLinear c h12 hκ1lin (lambdaTwo c h12)).1⟩
+    ⟨kappa c κ1 (lambdaTwo c h12), (kappa_isLinear c hκ1lin (lambdaTwo c h12)).1⟩
   intro hκ2B
   have hκ2fix : conjChar c.H0 (s_normalizes_H0 c h12) (kappa c κ1 (lambdaTwo c h12)) =
       kappa c κ1 (lambdaTwo c h12) :=
@@ -4879,7 +4864,7 @@ private lemma scalarProduct_irr_decomp_local
 private lemma scalarProduct_eq_zero_of_disjoint_local
     {G : Type u} [Group G] [Finite G] {φ ψ : ClassFunction G}
     (hφ : IsGeneralizedCharacter φ) (hψ : IsGeneralizedCharacter ψ)
-    (h : Theory.Character.Disjoint φ ψ) : scalarProduct G φ ψ = 0 := by
+    (h : ClassFunction.Disjoint φ ψ) : scalarProduct G φ ψ = 0 := by
   classical
   rcases char_decomp_generalized hφ with ⟨ι₁, _, χs, ms, hirr, hdist, hφsum⟩
   rcases char_decomp_generalized hψ with ⟨ι₂, _, ηs, ns, hirr₂, hdist₂, hψsum⟩
@@ -4905,7 +4890,7 @@ private lemma tildeNu_sub_one_eq_zero_of_orbit
     (tildeNu c h12 ν - tildeNu c h12 μ) 1 = 0 := by
   have hdeg : μ.1 1 = ν.1 1 := orbit_mem_degree_eq c hμL
   have hzero : inducedClassFunction c.H0 (μ.1 - ν.1) 1 = 0 :=
-    inducedFromSub_one_eq c h12 hdeg
+    inducedFromSub_one_eq c hdeg
   have hind := congrFun (tildeNu_ind c h12 hμL) (1 : G)
   rw [hzero] at hind
   change tildeNu c h12 ν 1 - tildeNu c h12 μ 1 = 0
@@ -5986,15 +5971,15 @@ private lemma theoremC_kappaOne_tilde_t_eq_two (c : Hyp11 G) [Hyp11KData c] (h12
     (hκ1S0 : ∀ x : ↥c.H0, (x : G) ∈ c.S0 → κ1 x = 1)
     (l3 : LambdaHom c.H0 c.U) (_hl3 : l3 ^ 2 ≠ 1)
     {χ3 : ClassFunction G} (_hχ3 : IsPMIrr G χ3)
-    (_hκ3tilde : tildeNu c h12 ⟨kappa c κ1 l3, (kappa_isLinear c h12 hκ1lin l3).1⟩ = χ3)
+    (_hκ3tilde : tildeNu c h12 ⟨kappa c κ1 l3, (kappa_isLinear c hκ1lin l3).1⟩ = χ3)
     (hκ3tilde_t : tildeNu c h12
-      ⟨kappa c κ1 l3, (kappa_isLinear c h12 hκ1lin l3).1⟩ c.t =
+      ⟨kappa c κ1 l3, (kappa_isLinear c hκ1lin l3).1⟩ c.t =
         2 * (kappa c κ1 l3) (tH0 c)) :
     tildeNu c h12 ⟨κ1, hκ1lin.1⟩ c.t = (2 : ℂ) := by
   classical
   let κ1Irr : Irr (↥c.H0) := ⟨κ1, hκ1lin.1⟩
   let κ3Irr : Irr (↥c.H0) :=
-    ⟨kappa c κ1 l3, (kappa_isLinear c h12 hκ1lin l3).1⟩
+    ⟨kappa c κ1 l3, (kappa_isLinear c hκ1lin l3).1⟩
   have hEq : κ1Irr.1 ∈ orbit c.H0 c.U κ3Irr.1 := by
     dsimp [κ3Irr]
     refine Finset.mem_image.mpr ⟨l3⁻¹, Finset.mem_univ _, ?_⟩
@@ -6067,9 +6052,9 @@ private lemma theoremC_chi1_add_chi2_t_eq_two (c : Hyp11 G) [Hyp11KData c] (h12 
     {χ1 χ2 χ3 : ClassFunction G} (_hχ1 : IsPMIrr G χ1) (_hχ2 : IsPMIrr G χ2)
     (hχ3 : IsPMIrr G χ3)
     (hκ1tilde : tildeNu c h12 ⟨κ1, hκ1lin.1⟩ = χ1 + χ2)
-    (hκ3tilde : tildeNu c h12 ⟨kappa c κ1 l3, (kappa_isLinear c h12 hκ1lin l3).1⟩ = χ3)
+    (hκ3tilde : tildeNu c h12 ⟨kappa c κ1 l3, (kappa_isLinear c hκ1lin l3).1⟩ = χ3)
     (hκ3tilde_t : tildeNu c h12
-      ⟨kappa c κ1 l3, (kappa_isLinear c h12 hκ1lin l3).1⟩ c.t =
+      ⟨kappa c κ1 l3, (kappa_isLinear c hκ1lin l3).1⟩ c.t =
         2 * (kappa c κ1 l3) (tH0 c)) :
     χ1 c.t + χ2 c.t = (2 : ℂ) := by
   have hκ1tilde_t := theoremC_kappaOne_tilde_t_eq_two c h12 hκ1lin hκ1S0 l3 hl3 hχ3 hκ3tilde hκ3tilde_t
@@ -6091,7 +6076,7 @@ private lemma theoremC_delta_equation (c : Hyp11 G) [Hyp11KData c] (h12 : Hyp12 
   let κ1Irr : Irr (↥c.H0) := ⟨κ1, hκ1lin.1⟩
   let κ2Irr : Irr (↥c.H0) :=
     ⟨kappa c κ1 (lambdaTwo c h12),
-      (kappa_isLinear c h12 hκ1lin (lambdaTwo c h12)).1⟩
+      (kappa_isLinear c hκ1lin (lambdaTwo c h12)).1⟩
   have hEq : κ1Irr.1 ∈ orbit c.H0 c.U κ2Irr.1 := by
     dsimp [κ2Irr, κ1Irr]
     refine Finset.mem_image.mpr ⟨(lambdaTwo c h12)⁻¹, Finset.mem_univ _, ?_⟩
@@ -6168,7 +6153,7 @@ private lemma theoremC_irreducible_involution_int
   have hpow : f ^ 2 = 1 := by
     change (ρ t) ^ 2 = 1
     rw [← map_pow, ht.2, map_one]
-  have htrace := Theory.Representation.trace_pow_eq_sum_eigenvalues
+  have htrace := Representation.trace_pow_eq_sum_eigenvalues
     (f := f) (n := 2) (k := 1) (by norm_num) hpow
   simp only [pow_one] at htrace
   let m : f.Eigenvalues → ℤ := fun μ =>
@@ -6179,7 +6164,7 @@ private lemma theoremC_irreducible_involution_int
   refine Finset.sum_congr rfl ?_
   intro μ _hμ
   have hμpow : (μ : ℂ) ^ 2 = 1 :=
-    Theory.Representation.eigenvalue_pow_eq_one_of_pow_eq_one hpow μ.property
+    Representation.eigenvalue_pow_eq_one_of_pow_eq_one hpow μ.property
   rcases sq_eq_one_iff.mp hμpow with hμ | hμ
   · simp [m, hμ]
   · have hne : (μ : ℂ) ≠ 1 := by rw [hμ]; norm_num
@@ -6538,7 +6523,7 @@ private lemma theoremC_not_disjoint_of_pmIrr_pairings
     {psi delta epsilon : ClassFunction G} (hpsi : IsPMIrr G psi)
     (hdelta : scalarProduct G psi delta ≠ 0)
     (hepsilon : scalarProduct G psi epsilon ≠ 0) :
-    ¬ Theory.Character.Disjoint delta epsilon := by
+    ¬ ClassFunction.Disjoint delta epsilon := by
   intro hdisjoint
   rcases hpsi with hpsi | hpsi
   · exact hepsilon (hdisjoint psi hpsi hdelta)
@@ -7191,15 +7176,17 @@ private lemma theoremC_irr_lemma36_degree_data
     (hB : (BOf c h12 psi).Nonempty)
     (horbit : ∀ nu : Irr (↥c.H0), nu ∈ BOf c h12 psi →
       conjChar c.H0 (s_normalizes_H0 c h12) nu.1 ∈ orbit c.H0 c.U nu.1) :
+    letI : Fintype (↥c.U) := c.U.instFintypeSubtypeMemOfDecidablePred
     ∃ alpha : Irr (↥c.U), ∃ a : ℕ,
       ¬ c.K ≤ (charKernel
         (isCharacter_of_isIrreducibleCharacter alpha.2)).map
           (Subgroup.subtype c.U) ∧
       1 ≤ a ∧ (alpha.1 1).re = (a : ℝ) ∧
       (8 * (a : ℝ) + 1) ≤ (psi 1).re := by
+  let : Fintype (↥c.U) := c.U.instFintypeSubtypeMemOfDecidablePred
   let chi : Irr G := ⟨psi, hpsi⟩
   have hkernel := theoremC_simple_K_not_le_charKernel c hKbot hsimple chi hpsiOne
-  rcases theoremC_lemma36 c h12 hSC chi hB hkernel horbit with
+  rcases lemma_3_6 c h12 hSC chi hB hkernel horbit with
     ⟨alpha, hKalpha, hbound⟩
   rcases alpha.2 with ⟨a, sigma, hsigma, halpha⟩
   have halphaC : alpha.1 1 = (a : ℂ) := by
@@ -7239,6 +7226,7 @@ private lemma theoremC_pmIrr_lemma36_degree_data
     (hB : (BOf c h12 psi).Nonempty)
     (horbit : ∀ nu : Irr (↥c.H0), nu ∈ BOf c h12 psi →
       conjChar c.H0 (s_normalizes_H0 c h12) nu.1 ∈ orbit c.H0 c.U nu.1) :
+    letI : Fintype (↥c.U) := c.U.instFintypeSubtypeMemOfDecidablePred
     ∃ alpha : Irr (↥c.U), ∃ a : ℕ,
       ¬ c.K ≤ (charKernel
         (isCharacter_of_isIrreducibleCharacter alpha.2)).map
@@ -7547,6 +7535,7 @@ private lemma theoremC_S4_irr_degree_re_ge_five (c : Hyp11 G) [Hyp11KData c]
     (hchiOne : chi.1 ≠ (1 : ClassFunction G)) :
     (5 : ℝ) ≤ (chi.1 1).re := by
   classical
+  let : Fintype (↥c.U) := c.U.instFintypeSubtypeMemOfDecidablePred
   have hkappaBPrime : kappa ∈ BPrimeOf c h12 chi.1 := by
     rw [BPrime_mem_iff_scalar]
     exact ⟨hkappas, hkappat, hpair⟩
@@ -7570,8 +7559,9 @@ private lemma theoremC_S4_irr_degree_re_ge_five (c : Hyp11 G) [Hyp11KData c]
     ext x
     simp [LambdaChar]
   have hkernel := theoremC_simple_K_not_le_charKernel c hK hsimple chi hchiOne
-  rcases theoremC_lemma36 c h12 hSC chi hB hkernel horbit with
-    ⟨alpha, _hKalpha, hbound⟩
+  let result := lemma_3_6 c h12 hSC chi hB hkernel horbit
+  let alpha := Classical.choose result
+  have hbound := (Classical.choose_spec result).2
   have hindex : (c.U.subgroupOf c.H0).index = 2 := by
     have hS0card : Nat.card (↥(c.S0 : Subgroup G)) = 2 := by
       have h := c.S_index_two
@@ -7580,10 +7570,10 @@ private lemma theoremC_S4_irr_degree_re_ge_five (c : Hyp11 G) [Hyp11KData c]
       omega
     rw [U_index_eq_S0_card c h12, hS0card]
   have halpha : (1 : ℝ) ≤ (alpha.1 1).re := theoremC_irr_degree_re_ge_one alpha
+  have hindexR : ((c.U.subgroupOf c.H0).index : ℝ) = 2 := by
+    exact_mod_cast hindex
   have hfour : (4 : ℝ) < (chi.1 1).re := by
-    rw [hindex] at hbound
-    norm_num at hbound
-    nlinarith
+    nlinarith [hbound, hindexR]
   rcases chi.2 with ⟨n, rho, hrho, hchi⟩
   have hdegree : chi.1 1 = (n : ℂ) := by
     rw [hchi, Representation.char_one]
@@ -7745,13 +7735,13 @@ private lemma theoremC_eq6 (c : Hyp11 G) [Hyp11KData c] (h12 : Hyp12 c)
     {χ1 χ2 χ3 : ClassFunction G} (hχ1 : IsPMIrr G χ1)
     (hχ2 : IsPMIrr G χ2) (hχ3 : IsPMIrr G χ3)
     (hκ1tilde : tildeNu c h12 ⟨κ1, hκ1lin.1⟩ = χ1 + χ2)
-    (hκ3tilde : tildeNu c h12 ⟨kappa c κ1 l3, (kappa_isLinear c h12 hκ1lin l3).1⟩ = χ3) :
+    (hκ3tilde : tildeNu c h12 ⟨kappa c κ1 l3, (kappa_isLinear c hκ1lin l3).1⟩ = χ3) :
     (2 * c.k ^ 2 : ℂ) / (c.H.index : ℂ) =
       χ1 c.t ^ 2 / χ1 1 + χ2 c.t ^ 2 / χ2 1 - χ3 c.t ^ 2 / χ3 1 := by
   classical
   let κ1Irr : Irr (↥c.H0) := ⟨κ1, hκ1lin.1⟩
   let κ3Irr : Irr (↥c.H0) :=
-    ⟨kappa c κ1 l3, (kappa_isLinear c h12 hκ1lin l3).1⟩
+    ⟨kappa c κ1 l3, (kappa_isLinear c hκ1lin l3).1⟩
   have hEq : κ1Irr.1 ∈ orbit c.H0 c.U κ3Irr.1 := by
     dsimp [κ3Irr]
     refine Finset.mem_image.mpr ⟨l3⁻¹, Finset.mem_univ _, ?_⟩
@@ -7936,16 +7926,16 @@ private lemma theoremC_card_three_false
     (hχ1 : IsPMIrr G χ1) (hχ2 : IsPMIrr G χ2)
     (hκ1tilde : tildeNu c h12 ⟨κ1, hκ1lin.1⟩ = χ1 + χ2)
     (hκ3tilde : tildeNu c h12
-      ⟨kappa c κ1 l3, (kappa_isLinear c h12 hκ1lin l3).1⟩ = χ3)
+      ⟨kappa c κ1 l3, (kappa_isLinear c hκ1lin l3).1⟩ = χ3)
     (hpair1 : scalarProduct G χ1 (tildeNu c h12 ⟨κ1, hκ1lin.1⟩) = 1)
     (hpair2 : scalarProduct G χ2 (tildeNu c h12 ⟨κ1, hκ1lin.1⟩) = 1)
     (hκ1fix : conjChar c.H0 (s_normalizes_H0 c h12) κ1 = κ1)
     (horbitκ1 : (orbit c.H0 c.U κ1).card =
       (c.U.subgroupOf c.H0).index)
     (hB3 : BOf c h12 χ3 =
-      {⟨kappa c κ1 l3, (kappa_isLinear c h12 hκ1lin l3).1⟩,
+      {⟨kappa c κ1 l3, (kappa_isLinear c hκ1lin l3).1⟩,
         conjIrr c h12
-          ⟨kappa c κ1 l3, (kappa_isLinear c h12 hκ1lin l3).1⟩})
+          ⟨kappa c κ1 l3, (kappa_isLinear c hκ1lin l3).1⟩})
     (hχ3t : χ3 c.t = 2 ∨ χ3 c.t = -2)
     {x : ℝ}
     (hχ1t : χ1 c.t = 1 + (x : ℂ))
@@ -7957,7 +7947,7 @@ private lemma theoremC_card_three_false
   classical
   let κ1Irr : Irr (↥c.H0) := ⟨κ1, hκ1lin.1⟩
   let κ3Irr : Irr (↥c.H0) :=
-    ⟨kappa c κ1 l3, (kappa_isLinear c h12 hκ1lin l3).1⟩
+    ⟨kappa c κ1 l3, (kappa_isLinear c hκ1lin l3).1⟩
   have hκ1B : κ1Irr ∈ BOf c h12 χ1 := by
     rw [BOf_mem_iff]
     simpa [κ1Irr] using (show scalarProduct G χ1
@@ -8057,13 +8047,13 @@ private theorem theoremC_S_ge_8 (c : Hyp11 G) [Hyp11KData c] (h12 : Hyp12 c) (hS
       simp [kappa, LambdaChar]
     simpa [hk1] using h
   have hκ2not : ⟨kappa c κ1 (lambdaTwo c h12),
-      (kappa_isLinear c h12 hκ1lin (lambdaTwo c h12)).1⟩ ∉ BOf c h12 χ1 :=
+      (kappa_isLinear c hκ1lin (lambdaTwo c h12)).1⟩ ∉ BOf c h12 χ1 :=
     theoremC_chi1_kappaTwo_not_mem c h12 hSC hκ1lin hκ1S0 hκ1comm hχ1 hκ1B hκ1fix
       horbitκ1 hS8
   rcases theoremC_chi3_facts c h12 hSC hκ1lin hκ1S0 hκ1comm l3 hl3 hκ3tilde hχ3 with
     ⟨hB3, hχ3t⟩
   let κ3Irr : Irr (↥c.H0) :=
-    ⟨kappa c κ1 l3, (kappa_isLinear c h12 hκ1lin l3).1⟩
+    ⟨kappa c κ1 l3, (kappa_isLinear c hκ1lin l3).1⟩
   have hκ3B : κ3Irr ∈ BOf c h12 χ3 := by
     rw [hB3]
     simp [κ3Irr]
@@ -8096,7 +8086,7 @@ private theorem theoremC_S_ge_8 (c : Hyp11 G) [Hyp11KData c] (h12 : Hyp12 c) (hS
     hκ1tilde hκ3tilde
   let κ2Irr : Irr (↥c.H0) :=
     ⟨kappa c κ1 (lambdaTwo c h12),
-      (kappa_isLinear c h12 hκ1lin (lambdaTwo c h12)).1⟩
+      (kappa_isLinear c hκ1lin (lambdaTwo c h12)).1⟩
   have hcardle3 : (BOf c h12 χ1).card ≤ 3 := theorem_3_2 c h12 hSC hχ1
   have hcardne3 : (BOf c h12 χ1).card ≠ 3 := by
     intro hcard
@@ -8106,7 +8096,7 @@ private theorem theoremC_S_ge_8 (c : Hyp11 G) [Hyp11KData c] (h12 : Hyp12 c) (hS
   have hcardle2 : (BOf c h12 χ1).card ≤ 2 := by omega
   have hK : c.K ≠ ⊥ := by
     by_cases hUBK : c.U = c.B ⊔ c.K
-    · exact theoremC_K_ne_one_of_U_eq_BK c h12 hSC hUBK hB' hsimple
+    · exact theoremC_K_ne_one_of_U_eq_BK c hUBK hB' hsimple
     · exact (hFrob hUBK).2.2
   have hκ1B2 : κ1Irr ∈ BOf c h12 χ2 := by
     rw [BOf_mem_iff]
@@ -8341,7 +8331,7 @@ private theorem theoremC_case_S4 (c : Hyp11 G) [Hyp11KData c] (h12 : Hyp12 c) (h
     theoremC_k_eq_two_mul_K_of_S4 c hU hUint hS4
   have hk12 : c.k1 = c.k2 := theoremC_k1_eq_k2_of_S4 c hU hS4
   have hK : c.K ≠ ⊥ :=
-    theoremC_K_ne_one_of_S4 c h12 hSC hU hB' hsimple hS4
+    theoremC_K_ne_one_of_S4 c hU hB' hsimple hS4
   have hBnotU' : ¬ c.B ≤ ⁅c.U, c.U⁆ := theoremC_B_not_le_Uprime c hU hUint hB'
   rcases exists_kappaOne_ne_one c h12 hBnotU' with
     ⟨κ1, hκ1lin, hκ1ne, hκ1S0, hκ1comm⟩

@@ -9,6 +9,7 @@ import FeitThompson.PFsection12.PFsection12_7
 public import FeitThompson.PFsection14.PFsection14_1
 public import FeitThompson.PFsection14.PFsection14_Conclusion
 
+
 /-!
 # Final odd-order theorem wiring
 
@@ -263,7 +264,7 @@ public theorem section8_source_type_fields_of_case_b_data_core
           (∃ g : G, M = Tmax.conjBy g) ∨
             ∃ MF : Subgroup G, section16MFSubgroup M MF ∧
               Section8.typeIDefinitionData M MF) := by
-  letI : IsMinCE G := hmin
+  let : IsMinCE G := hmin
   exact Section8.theorem_8_8_source_type_fields_of_case_b_data hcase
 
 /-- In a complement decomposition, if the left factor is Hall then the right
@@ -276,7 +277,7 @@ public theorem section12ComplementIn_right_isHall_of_left_hall_for_final
     (hHHall : section16HallSubgroupOf H M) :
     section16HallSubgroupOf K M := by
   classical
-  letI : (H.subgroupOf M).Normal := hHnormal
+  let : (H.subgroupOf M).Normal := hHnormal
   rcases hcomp with ⟨hHM, hKM, hsup, hdisj⟩
   have hcomp' : (K.subgroupOf M).IsComplement' (H.subgroupOf M) := by
     have hsup_local : K.subgroupOf M ⊔ H.subgroupOf M = ⊤ := by
@@ -640,7 +641,7 @@ public theorem natCard_coprime_of_section12InternalDirectProduct_cyclic
     hcent.trans (centralizer_le_normalizer W2)
   let W1J : Subgroup J := W1.subgroupOf J
   let W2J : Subgroup J := W2.subgroupOf J
-  haveI : W2J.Normal := by
+  have : W2J.Normal := by
     simpa [J, W2J] using
       (Subgroup.normal_subgroupOf_sup_of_le_normalizer
         (H := W1) (N := W2) hW1_norm_W2)
@@ -713,7 +714,7 @@ public theorem natCard_coprime_of_section12InternalDirectProduct_cyclic
     simpa [j] using congrArg Subtype.val hxy
   let e : W1 × W2 ≃* W := MulEquiv.ofBijective f ⟨hf_inj, hf_surj⟩
   have hprodcyc : IsCyclic (W1 × W2) := e.isCyclic.mpr hcyc
-  letI : IsCyclic (W1 × W2) := hprodcyc
+  let : IsCyclic (W1 × W2) := hprodcyc
   simpa [Nat.card_eq_fintype_card] using coprime_card_of_isCyclic_prod W1 W2
 
 /-- The Section 12 internal-direct-product package is symmetric in its two
@@ -784,7 +785,7 @@ public theorem bg16_final_alternative_of_isMinCE
     {G : Type u} [Group G] [Finite G]
     (hmin : IsMinCE G) :
     bg16AllMaximalTypeI G ∨ bg16CaseBData G := by
-  letI : IsMinCE G := hmin
+  let : IsMinCE G := hmin
   simpa [bg16AllMaximalTypeI, bg16CaseBData, Section8.theorem_8_8_case_b_data]
     using (theorem_16_I (G := G)).2
 
@@ -898,7 +899,7 @@ public theorem section12ComplementIn_left_isHall_of_right_hall_for_final
     (hKHall : section16HallSubgroupOf K M) :
     IsHallSubgroup (subgroupPrimeSet H) (H.subgroupOf M) := by
   classical
-  letI : (H.subgroupOf M).Normal := hHnormal
+  let : (H.subgroupOf M).Normal := hHnormal
   have hcomp' : (K.subgroupOf M).IsComplement' (H.subgroupOf M) :=
     section12ComplementIn_isComplement'_subgroupOf_for_final
       (M := M) (H := H) (K := K) hcomp
@@ -1008,7 +1009,7 @@ public theorem section12_exists_primeOrderSubgroup_of_ne_bot_for_final
     intro hcard
     exact hHne ((Subgroup.card_eq_one (H := H)).1 hcard)
   rcases Nat.exists_prime_and_dvd hcard_ne_one with ⟨p, hpprime, hpdiv⟩
-  haveI : Fact p.Prime := ⟨hpprime⟩
+  have : Fact p.Prime := ⟨hpprime⟩
   rcases exists_prime_orderOf_dvd_card' (G := H) p hpdiv with ⟨zH, hzH_order⟩
   let z : G := zH
   refine ⟨Subgroup.zpowers z, ?_⟩
@@ -1026,7 +1027,7 @@ public theorem isHallSubgroup_sylow_map_to_overgroup_sylow_for_final
     (P : Sylow p.val K) :
     ∃ PH : Sylow p.val H, (PH : Subgroup H) = (P : Subgroup K).map K.subtype := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let Psub : Subgroup H := (P : Subgroup K).map K.subtype
   have hPsubp : IsPGroup p.val Psub :=
     IsPGroup.map (p := p.val) (H := (P : Subgroup K)) P.isPGroup' K.subtype
@@ -1048,9 +1049,9 @@ public theorem primeRank_le_one_of_cyclic_sylow_for_final
     {p : ℕ} {R : Type*} [Group R] [Finite R] [Fact p.Prime]
     (S : Sylow p R) (hS_cyc : IsCyclic (S : Subgroup R)) :
     primeRank p R ≤ 1 := by
-  rw [primeRank]
+  rw [primeRank_eq_sSup_generatorRank]
   refine csSup_le ?_ ?_
-  · letI : IsCyclic (S : Subgroup R) := hS_cyc
+  · let : IsCyclic (S : Subgroup R) := hS_cyc
     refine ⟨0, ?_⟩
     exact ⟨(S : Subgroup R), S.isPGroup', inferInstance, by simp⟩
   · intro n hn
@@ -1080,13 +1081,13 @@ public theorem primeRank_le_one_of_cyclic_hall_subgroup_for_final
     (hKcyc : IsCyclic K) :
     primeRank p.val R ≤ 1 := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let PK : Sylow p.val K := Classical.choice (Sylow.nonempty (p := p.val) (G := K))
   rcases isHallSubgroup_sylow_map_to_overgroup_sylow_for_final
       (H := R) (K := K) hKHall hpπ PK with
     ⟨PR, hPReq⟩
   have hPKcyclic : IsCyclic (PK : Subgroup K) := by
-    letI : IsCyclic K := hKcyc
+    let : IsCyclic K := hKcyc
     exact Subgroup.isCyclic_of_le (show (PK : Subgroup K) ≤ ⊤ from le_top)
   let Pmap : Subgroup R := (PK : Subgroup K).map K.subtype
   have hPmapCyclic : IsCyclic Pmap := by
@@ -1109,7 +1110,7 @@ public theorem natCard_eq_of_section12ComplementIn_same_normal_left_for_final
     (hKcomp : section12ComplementIn M K D) :
     Nat.card H = Nat.card K := by
   classical
-  letI : (D.subgroupOf M).Normal := hDnormal
+  let : (D.subgroupOf M).Normal := hDnormal
   have hKcompSymm : section12ComplementIn M D K := by
     refine ⟨hKcomp.2.1, hKcomp.1, ?_, hKcomp.2.2.2.symm⟩
     rw [sup_comm]
@@ -1151,7 +1152,7 @@ public theorem section12ComplementIn_right_isHall_compl_of_left_hall_for_final
     calc
       R = K ⊔ U := hsup
       _ = U ⊔ K := sup_comm K U
-  letI : (U.subgroupOf R).Normal := hUnormal.2
+  let : (U.subgroupOf R).Normal := hUnormal.2
   have hcompLocal : (K.subgroupOf R).IsComplement' (U.subgroupOf R) :=
     section12ComplementIn_isComplement'_subgroupOf_for_final
       (M := R) (H := U) (K := K) hcompSymm
@@ -1191,7 +1192,7 @@ public theorem section16TypeCommon_of_source_typeP_with_T6
       (M := M) (H := ambientDerivedSubgroup M) (K := W1)
       hMcomp hDnormal hW1Hall
   have hW1card : Nat.card W1 = (ambientDerivedSubgroup M).relIndex M := by
-    letI : ((ambientDerivedSubgroup M).subgroupOf M).Normal := hDnormal
+    let : ((ambientDerivedSubgroup M).subgroupOf M).Normal := hDnormal
     have hcomp' : (W1.subgroupOf M).IsComplement'
         ((ambientDerivedSubgroup M).subgroupOf M) :=
       section12ComplementIn_isComplement'_subgroupOf_for_final
@@ -1282,7 +1283,7 @@ public theorem source_typeP_MF_eq_msigma_of_not_le_msigma
     (hUnotσ : ¬ U ≤ section10Msigma M)
     (hsourceP : Section8.typePDefinitionData M MF U W1 W2) :
     MF = section10Msigma M := by
-  letI : IsMinCE G := hmin
+  let : IsMinCE G := hmin
   rcases hsourceP with
     ⟨_hMFsource, _hW1cyc, _hW1ne, _hW1Hall, _hMcomp, hUleD,
       _hUnil, _hW1norm, _hDercomp, _hMFnotcyc, _hSecond, _hFit,
@@ -1530,7 +1531,7 @@ public theorem source_typeP_tau13_of_W1_prime_for_final
     (hX : X ∈ section10PrimeOrderSubgroupsIn p W1) :
     p ∈ section12Tau1Primes M ∪ section12Tau3Primes M := by
   classical
-  letI : IsMinCE G := hmin
+  let : IsMinCE G := hmin
   rcases hsourceP with
     ⟨_hMFsource, hW1cyc, _hW1ne, hW1Hall, hMcomp, _hUleD,
       _hUnil, _hW1norm, _hDercomp, _hMFnotcyc, _hSecond, _hFit,
@@ -1550,7 +1551,7 @@ public theorem source_typeP_tau13_of_W1_prime_for_final
     natCard_subgroupOf_eq W1 M hW1M
   have hDnormal : ((ambientDerivedSubgroup M).subgroupOf M).Normal := by
     simpa using (section12_normalIn_ambientDerivedSubgroup (G := G) (E := M)).2
-  letI : ((ambientDerivedSubgroup M).subgroupOf M).Normal := hDnormal
+  let : ((ambientDerivedSubgroup M).subgroupOf M).Normal := hDnormal
   have hCompLocal : (W1.subgroupOf M).IsComplement'
       ((ambientDerivedSubgroup M).subgroupOf M) :=
     section12ComplementIn_isComplement'_subgroupOf_for_final
@@ -1631,7 +1632,7 @@ public theorem source_typeP_msigma_centralizer_ne_bot_of_W1_prime_for_final
       _hUnil, _hW1norm, _hDercomp, _hMFnotcyc, _hSecond, _hFit,
       _hFitDer, hW2leInf, _hW2cyc, hW2ne, hCent, _hNorm⟩
   rcases hX with ⟨hXW1, _hXcard⟩
-  haveI : Nontrivial W2 := (Subgroup.nontrivial_iff_ne_bot W2).2 hW2ne
+  have : Nontrivial W2 := (Subgroup.nontrivial_iff_ne_bot W2).2 hW2ne
   obtain ⟨yW2, hyW2ne⟩ := exists_ne (1 : W2)
   let y : G := yW2
   have hyW2 : y ∈ W2 := yW2.property
@@ -1716,7 +1717,7 @@ public theorem source_typeP_W1_KUData_hard_fields_core
     (hsourceP : Section8.typePDefinitionData M MF U W1 W2) :
     section12HallSubgroupIn (section14KappaPrimes M) W1 M := by
   classical
-  letI : IsMinCE G := hmin
+  let : IsMinCE G := hmin
   have hMP : M ∈ section14MFamilyP G :=
     source_typeP_MFamilyP_of_msigma_eq_for_final hmin hM hMFeq hsourceP
   rcases section15_exists_KUData_for_maximal (G := G) (M := M) hM with
@@ -1759,7 +1760,7 @@ public theorem source_typeP_exists_KUData_of_not_le_msigma_core
       hmin hM hMF hUne hUnotσ hMFeq hsourceP
   have hUHall : section12HallSubgroupIn
       ((section14KappaPrimes M ∪ section10SigmaPrimes M)ᶜ) U M :=
-    letI : IsMinCE G := hmin
+    let : IsMinCE G := hmin
     source_typeP_U_hall_from_W1_kappa_hall hM hMFeq hsourceP hW1Hallκ
   rcases source_typeP_W1_KUData_structural_fields hMFeq hsourceP with
     ⟨hcompW1USigma, hcompSigmaW1U, hUSigmaNormal, hUnormal⟩
@@ -1785,7 +1786,7 @@ public theorem source_typeP_T6_of_not_le_msigma_core
           section16ConjugateSubgroupsIn ⊤ A0 A1 →
             ¬ section16ConjugateSubgroupsIn M A0 A1 →
               subgroupCentralizerIn MF A0 = ⊥ ∨ subgroupCentralizerIn MF A1 = ⊥ := by
-  letI : IsMinCE G := hmin
+  let : IsMinCE G := hmin
   rcases source_typeP_exists_KUData_of_not_le_msigma_core
       hmin hM hMF hUne hUnotσ hsourceP with
     ⟨K, hKU⟩
@@ -1810,7 +1811,7 @@ public theorem source_typeP_T6_of_U_ne_bot_core
           section16ConjugateSubgroupsIn ⊤ A0 A1 →
             ¬ section16ConjugateSubgroupsIn M A0 A1 →
               subgroupCentralizerIn MF A0 = ⊥ ∨ subgroupCentralizerIn MF A1 = ⊥ := by
-  letI : IsMinCE G := hmin
+  let : IsMinCE G := hmin
   by_cases hUσ : U ≤ section10Msigma M
   · rcases section15_exists_KUData_for_maximal (G := G) (M := M) hM with
       ⟨K, U0, hKU15⟩
@@ -1849,7 +1850,7 @@ public theorem not_bg16AllMaximalTypeI_of_isMinCE
     {G : Type u} [Group G] [Finite G] :
     IsMinCE G → bg16AllMaximalTypeI G → False := by
   intro hmin hAll
-  letI : IsMinCE G := hmin
+  let : IsMinCE G := hmin
   exact Section12.theorem_12_17_all_typeI_contradiction hmin (by
     intro M hM
     rcases hAll M hM with ⟨MF, hMF, hTypeI⟩
@@ -1914,8 +1915,8 @@ public theorem minimalCounterexampleReduction_theorem :
     exact ⟨Nat.card G, G, hG, hfin, rfl, hodd, hnotSolv⟩
   let n := Nat.find hBadExists
   rcases Nat.find_spec hBadExists with ⟨G, hG, hfin, hcardG, hoddG, hnotSolvG⟩
-  letI : Group G := hG
-  letI : Finite G := hfin
+  let : Group G := hG
+  let : Finite G := hfin
   have hminimal : ∀ {H : Type u} [Group H] [Finite H],
       Nat.card H < Nat.card G → Odd (Nat.card H) → Group.IsSolvable H := by
     intro H hHgroup hHfin hlt hoddH
@@ -1933,10 +1934,10 @@ public theorem minimalCounterexampleReduction_theorem :
       (Odd.of_dvd_nat hoddG (Subgroup.card_subgroup_dvd_card H))
   have hnontrivial : Nontrivial G := by
     by_contra hnt
-    haveI : Subsingleton G := not_nontrivial_iff_subsingleton.mp hnt
+    have : Subsingleton G := not_nontrivial_iff_subsingleton.mp hnt
     exact hnotSolvG (inferInstance : Group.IsSolvable G)
   have hsimple : IsSimpleGroup G := by
-    letI : Nontrivial G := hnontrivial
+    let : Nontrivial G := hnontrivial
     refine ⟨?_⟩
     intro N hNnormal
     by_cases hNbot : N = ⊥
@@ -1944,7 +1945,7 @@ public theorem minimalCounterexampleReduction_theorem :
     · by_cases hNtop : N = ⊤
       · exact Or.inr hNtop
       · exfalso
-        letI : N.Normal := hNnormal
+        let : N.Normal := hNnormal
         have hNsolv : Group.IsSolvable N := by
           have hNlt : N < ⊤ := lt_top_iff_ne_top.2 hNtop
           exact hproper_solvable N hNlt
@@ -2026,7 +2027,7 @@ public theorem pfSection14StatementBridge_theorem_of_isMinCE
     {G : Type u} [Group G] [Finite G]
     (hmin : IsMinCE G) :
     pfSection14StatementBridge G := by
-  letI : IsMinCE G := hmin
+  let : IsMinCE G := hmin
   intro Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT p q u v c d
     _h13 _h14_1 hctx
   exact Section14.theorem_14_2_from_minCE (G := G)
@@ -2062,8 +2063,8 @@ public theorem odd_order_theorem_of_minimalCounterexampleReduction
     oddOrderTheorem.{u} := by
   by_contra hnot
   rcases hreduction hnot with ⟨G, hG, hfin, hmin⟩
-  letI : Group G := hG
-  letI : Finite G := hfin
+  let : Group G := hG
+  let : Finite G := hfin
   exact not_isMinCE_of_pfSection14FinalData (hpf14 hmin) hmin
 
 /-- The odd order theorem follows from the explicit final local-analysis bridge. -/

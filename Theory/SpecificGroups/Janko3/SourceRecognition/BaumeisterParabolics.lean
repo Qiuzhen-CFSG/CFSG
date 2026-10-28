@@ -1,0 +1,4 @@
+module
+public import Theory.SpecificGroups.Janko3.SourceRecognition.BaumeisterParabolics.Point
+public import Theory.SpecificGroups.Janko3.SourceRecognition.BaumeisterParabolics.PointCentralizer
+public import Theory.SpecificGroups.Janko3.SourceRecognition.BaumeisterParabolics.PairCentralizer

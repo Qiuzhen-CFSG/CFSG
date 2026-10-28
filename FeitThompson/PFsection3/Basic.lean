@@ -84,8 +84,8 @@ public theorem cyclicTISet_mem_iff {G : Type u} [Group G]
 @[expose] public def MapsVirtualCharacters
     {G H : Type u} [Group G] [Group H]
     (T : Section1.ClassFunction H →ₗ[ℂ] Section1.ClassFunction G) : Prop :=
-  ∀ α : Section1.ClassFunction H, Theory.Character.IsVirtualCharacter α →
-    Theory.Character.IsVirtualCharacter (T α)
+  ∀ α : Section1.ClassFunction H, IsVirtualCharacter α →
+    IsVirtualCharacter (T α)
 
 @[expose] public def MapsClassFunctions
     {G H : Type u} [Group G] [Group H]

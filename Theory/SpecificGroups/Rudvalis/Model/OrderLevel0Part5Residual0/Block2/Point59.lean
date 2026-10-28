@@ -1,0 +1,1039 @@
+module
+
+public import Theory.SpecificGroups.Rudvalis.Model.OrderLevel0Part5Residual0.Words
+import Mathlib.Tactic.FinCases
+
+/-!
+# Rudvalis part-5 residual 59
+
+The prescribed transition is verified on all 4060 points by 203 twenty-point
+kernel checks, then transferred by `point59_ofSlices`. Source:
+`OrderLevel0Data` and `Part5Residual.target`; extracted from the certificate
+produced by `OrderCertificate/GenerateLevel0Part5Residual0.py`.
+-/
+
+namespace Rudvalis.OrderCertificate.ForwardReduction.Part5Residual.Residual0Checks
+set_option maxRecDepth 30000
+set_option Elab.async false
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice0 : slice 1 left59 right59 factor59 0 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice1 : slice 1 left59 right59 factor59 1 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice2 : slice 1 left59 right59 factor59 2 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice3 : slice 1 left59 right59 factor59 3 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice4 : slice 1 left59 right59 factor59 4 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice5 : slice 1 left59 right59 factor59 5 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice6 : slice 1 left59 right59 factor59 6 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice7 : slice 1 left59 right59 factor59 7 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice8 : slice 1 left59 right59 factor59 8 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice9 : slice 1 left59 right59 factor59 9 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice10 : slice 1 left59 right59 factor59 10 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice11 : slice 1 left59 right59 factor59 11 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice12 : slice 1 left59 right59 factor59 12 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice13 : slice 1 left59 right59 factor59 13 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice14 : slice 1 left59 right59 factor59 14 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice15 : slice 1 left59 right59 factor59 15 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice16 : slice 1 left59 right59 factor59 16 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice17 : slice 1 left59 right59 factor59 17 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice18 : slice 1 left59 right59 factor59 18 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice19 : slice 1 left59 right59 factor59 19 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice20 : slice 1 left59 right59 factor59 20 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice21 : slice 1 left59 right59 factor59 21 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice22 : slice 1 left59 right59 factor59 22 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice23 : slice 1 left59 right59 factor59 23 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice24 : slice 1 left59 right59 factor59 24 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice25 : slice 1 left59 right59 factor59 25 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice26 : slice 1 left59 right59 factor59 26 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice27 : slice 1 left59 right59 factor59 27 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice28 : slice 1 left59 right59 factor59 28 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice29 : slice 1 left59 right59 factor59 29 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice30 : slice 1 left59 right59 factor59 30 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice31 : slice 1 left59 right59 factor59 31 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice32 : slice 1 left59 right59 factor59 32 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice33 : slice 1 left59 right59 factor59 33 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice34 : slice 1 left59 right59 factor59 34 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice35 : slice 1 left59 right59 factor59 35 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice36 : slice 1 left59 right59 factor59 36 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice37 : slice 1 left59 right59 factor59 37 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice38 : slice 1 left59 right59 factor59 38 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice39 : slice 1 left59 right59 factor59 39 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice40 : slice 1 left59 right59 factor59 40 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice41 : slice 1 left59 right59 factor59 41 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice42 : slice 1 left59 right59 factor59 42 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice43 : slice 1 left59 right59 factor59 43 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice44 : slice 1 left59 right59 factor59 44 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice45 : slice 1 left59 right59 factor59 45 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice46 : slice 1 left59 right59 factor59 46 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice47 : slice 1 left59 right59 factor59 47 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice48 : slice 1 left59 right59 factor59 48 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice49 : slice 1 left59 right59 factor59 49 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice50 : slice 1 left59 right59 factor59 50 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice51 : slice 1 left59 right59 factor59 51 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice52 : slice 1 left59 right59 factor59 52 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice53 : slice 1 left59 right59 factor59 53 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice54 : slice 1 left59 right59 factor59 54 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice55 : slice 1 left59 right59 factor59 55 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice56 : slice 1 left59 right59 factor59 56 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice57 : slice 1 left59 right59 factor59 57 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice58 : slice 1 left59 right59 factor59 58 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice59 : slice 1 left59 right59 factor59 59 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice60 : slice 1 left59 right59 factor59 60 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice61 : slice 1 left59 right59 factor59 61 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice62 : slice 1 left59 right59 factor59 62 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice63 : slice 1 left59 right59 factor59 63 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice64 : slice 1 left59 right59 factor59 64 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice65 : slice 1 left59 right59 factor59 65 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice66 : slice 1 left59 right59 factor59 66 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice67 : slice 1 left59 right59 factor59 67 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice68 : slice 1 left59 right59 factor59 68 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice69 : slice 1 left59 right59 factor59 69 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice70 : slice 1 left59 right59 factor59 70 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice71 : slice 1 left59 right59 factor59 71 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice72 : slice 1 left59 right59 factor59 72 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice73 : slice 1 left59 right59 factor59 73 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice74 : slice 1 left59 right59 factor59 74 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice75 : slice 1 left59 right59 factor59 75 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice76 : slice 1 left59 right59 factor59 76 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice77 : slice 1 left59 right59 factor59 77 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice78 : slice 1 left59 right59 factor59 78 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice79 : slice 1 left59 right59 factor59 79 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice80 : slice 1 left59 right59 factor59 80 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice81 : slice 1 left59 right59 factor59 81 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice82 : slice 1 left59 right59 factor59 82 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice83 : slice 1 left59 right59 factor59 83 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice84 : slice 1 left59 right59 factor59 84 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice85 : slice 1 left59 right59 factor59 85 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice86 : slice 1 left59 right59 factor59 86 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice87 : slice 1 left59 right59 factor59 87 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice88 : slice 1 left59 right59 factor59 88 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice89 : slice 1 left59 right59 factor59 89 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice90 : slice 1 left59 right59 factor59 90 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice91 : slice 1 left59 right59 factor59 91 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice92 : slice 1 left59 right59 factor59 92 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice93 : slice 1 left59 right59 factor59 93 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice94 : slice 1 left59 right59 factor59 94 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice95 : slice 1 left59 right59 factor59 95 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice96 : slice 1 left59 right59 factor59 96 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice97 : slice 1 left59 right59 factor59 97 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice98 : slice 1 left59 right59 factor59 98 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice99 : slice 1 left59 right59 factor59 99 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice100 : slice 1 left59 right59 factor59 100 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice101 : slice 1 left59 right59 factor59 101 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice102 : slice 1 left59 right59 factor59 102 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice103 : slice 1 left59 right59 factor59 103 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice104 : slice 1 left59 right59 factor59 104 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice105 : slice 1 left59 right59 factor59 105 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice106 : slice 1 left59 right59 factor59 106 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice107 : slice 1 left59 right59 factor59 107 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice108 : slice 1 left59 right59 factor59 108 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice109 : slice 1 left59 right59 factor59 109 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice110 : slice 1 left59 right59 factor59 110 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice111 : slice 1 left59 right59 factor59 111 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice112 : slice 1 left59 right59 factor59 112 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice113 : slice 1 left59 right59 factor59 113 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice114 : slice 1 left59 right59 factor59 114 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice115 : slice 1 left59 right59 factor59 115 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice116 : slice 1 left59 right59 factor59 116 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice117 : slice 1 left59 right59 factor59 117 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice118 : slice 1 left59 right59 factor59 118 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice119 : slice 1 left59 right59 factor59 119 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice120 : slice 1 left59 right59 factor59 120 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice121 : slice 1 left59 right59 factor59 121 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice122 : slice 1 left59 right59 factor59 122 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice123 : slice 1 left59 right59 factor59 123 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice124 : slice 1 left59 right59 factor59 124 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice125 : slice 1 left59 right59 factor59 125 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice126 : slice 1 left59 right59 factor59 126 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice127 : slice 1 left59 right59 factor59 127 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice128 : slice 1 left59 right59 factor59 128 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice129 : slice 1 left59 right59 factor59 129 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice130 : slice 1 left59 right59 factor59 130 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice131 : slice 1 left59 right59 factor59 131 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice132 : slice 1 left59 right59 factor59 132 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice133 : slice 1 left59 right59 factor59 133 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice134 : slice 1 left59 right59 factor59 134 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice135 : slice 1 left59 right59 factor59 135 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice136 : slice 1 left59 right59 factor59 136 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice137 : slice 1 left59 right59 factor59 137 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice138 : slice 1 left59 right59 factor59 138 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice139 : slice 1 left59 right59 factor59 139 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice140 : slice 1 left59 right59 factor59 140 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice141 : slice 1 left59 right59 factor59 141 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice142 : slice 1 left59 right59 factor59 142 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice143 : slice 1 left59 right59 factor59 143 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice144 : slice 1 left59 right59 factor59 144 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice145 : slice 1 left59 right59 factor59 145 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice146 : slice 1 left59 right59 factor59 146 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice147 : slice 1 left59 right59 factor59 147 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice148 : slice 1 left59 right59 factor59 148 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice149 : slice 1 left59 right59 factor59 149 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice150 : slice 1 left59 right59 factor59 150 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice151 : slice 1 left59 right59 factor59 151 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice152 : slice 1 left59 right59 factor59 152 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice153 : slice 1 left59 right59 factor59 153 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice154 : slice 1 left59 right59 factor59 154 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice155 : slice 1 left59 right59 factor59 155 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice156 : slice 1 left59 right59 factor59 156 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice157 : slice 1 left59 right59 factor59 157 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice158 : slice 1 left59 right59 factor59 158 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice159 : slice 1 left59 right59 factor59 159 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice160 : slice 1 left59 right59 factor59 160 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice161 : slice 1 left59 right59 factor59 161 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice162 : slice 1 left59 right59 factor59 162 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice163 : slice 1 left59 right59 factor59 163 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice164 : slice 1 left59 right59 factor59 164 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice165 : slice 1 left59 right59 factor59 165 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice166 : slice 1 left59 right59 factor59 166 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice167 : slice 1 left59 right59 factor59 167 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice168 : slice 1 left59 right59 factor59 168 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice169 : slice 1 left59 right59 factor59 169 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice170 : slice 1 left59 right59 factor59 170 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice171 : slice 1 left59 right59 factor59 171 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice172 : slice 1 left59 right59 factor59 172 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice173 : slice 1 left59 right59 factor59 173 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice174 : slice 1 left59 right59 factor59 174 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice175 : slice 1 left59 right59 factor59 175 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice176 : slice 1 left59 right59 factor59 176 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice177 : slice 1 left59 right59 factor59 177 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice178 : slice 1 left59 right59 factor59 178 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice179 : slice 1 left59 right59 factor59 179 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice180 : slice 1 left59 right59 factor59 180 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice181 : slice 1 left59 right59 factor59 181 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice182 : slice 1 left59 right59 factor59 182 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice183 : slice 1 left59 right59 factor59 183 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice184 : slice 1 left59 right59 factor59 184 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice185 : slice 1 left59 right59 factor59 185 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice186 : slice 1 left59 right59 factor59 186 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice187 : slice 1 left59 right59 factor59 187 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice188 : slice 1 left59 right59 factor59 188 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice189 : slice 1 left59 right59 factor59 189 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice190 : slice 1 left59 right59 factor59 190 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice191 : slice 1 left59 right59 factor59 191 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice192 : slice 1 left59 right59 factor59 192 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice193 : slice 1 left59 right59 factor59 193 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice194 : slice 1 left59 right59 factor59 194 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice195 : slice 1 left59 right59 factor59 195 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice196 : slice 1 left59 right59 factor59 196 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice197 : slice 1 left59 right59 factor59 197 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice198 : slice 1 left59 right59 factor59 198 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice199 : slice 1 left59 right59 factor59 199 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice200 : slice 1 left59 right59 factor59 200 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice201 : slice 1 left59 right59 factor59 201 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point59slice202 : slice 1 left59 right59 factor59 202 = true := by
+  decide +kernel
+
+public theorem point59 : residualCheck 59 := by
+  apply point59_ofSlices
+  intro c
+  fin_cases c
+  · exact point59slice0
+  · exact point59slice1
+  · exact point59slice2
+  · exact point59slice3
+  · exact point59slice4
+  · exact point59slice5
+  · exact point59slice6
+  · exact point59slice7
+  · exact point59slice8
+  · exact point59slice9
+  · exact point59slice10
+  · exact point59slice11
+  · exact point59slice12
+  · exact point59slice13
+  · exact point59slice14
+  · exact point59slice15
+  · exact point59slice16
+  · exact point59slice17
+  · exact point59slice18
+  · exact point59slice19
+  · exact point59slice20
+  · exact point59slice21
+  · exact point59slice22
+  · exact point59slice23
+  · exact point59slice24
+  · exact point59slice25
+  · exact point59slice26
+  · exact point59slice27
+  · exact point59slice28
+  · exact point59slice29
+  · exact point59slice30
+  · exact point59slice31
+  · exact point59slice32
+  · exact point59slice33
+  · exact point59slice34
+  · exact point59slice35
+  · exact point59slice36
+  · exact point59slice37
+  · exact point59slice38
+  · exact point59slice39
+  · exact point59slice40
+  · exact point59slice41
+  · exact point59slice42
+  · exact point59slice43
+  · exact point59slice44
+  · exact point59slice45
+  · exact point59slice46
+  · exact point59slice47
+  · exact point59slice48
+  · exact point59slice49
+  · exact point59slice50
+  · exact point59slice51
+  · exact point59slice52
+  · exact point59slice53
+  · exact point59slice54
+  · exact point59slice55
+  · exact point59slice56
+  · exact point59slice57
+  · exact point59slice58
+  · exact point59slice59
+  · exact point59slice60
+  · exact point59slice61
+  · exact point59slice62
+  · exact point59slice63
+  · exact point59slice64
+  · exact point59slice65
+  · exact point59slice66
+  · exact point59slice67
+  · exact point59slice68
+  · exact point59slice69
+  · exact point59slice70
+  · exact point59slice71
+  · exact point59slice72
+  · exact point59slice73
+  · exact point59slice74
+  · exact point59slice75
+  · exact point59slice76
+  · exact point59slice77
+  · exact point59slice78
+  · exact point59slice79
+  · exact point59slice80
+  · exact point59slice81
+  · exact point59slice82
+  · exact point59slice83
+  · exact point59slice84
+  · exact point59slice85
+  · exact point59slice86
+  · exact point59slice87
+  · exact point59slice88
+  · exact point59slice89
+  · exact point59slice90
+  · exact point59slice91
+  · exact point59slice92
+  · exact point59slice93
+  · exact point59slice94
+  · exact point59slice95
+  · exact point59slice96
+  · exact point59slice97
+  · exact point59slice98
+  · exact point59slice99
+  · exact point59slice100
+  · exact point59slice101
+  · exact point59slice102
+  · exact point59slice103
+  · exact point59slice104
+  · exact point59slice105
+  · exact point59slice106
+  · exact point59slice107
+  · exact point59slice108
+  · exact point59slice109
+  · exact point59slice110
+  · exact point59slice111
+  · exact point59slice112
+  · exact point59slice113
+  · exact point59slice114
+  · exact point59slice115
+  · exact point59slice116
+  · exact point59slice117
+  · exact point59slice118
+  · exact point59slice119
+  · exact point59slice120
+  · exact point59slice121
+  · exact point59slice122
+  · exact point59slice123
+  · exact point59slice124
+  · exact point59slice125
+  · exact point59slice126
+  · exact point59slice127
+  · exact point59slice128
+  · exact point59slice129
+  · exact point59slice130
+  · exact point59slice131
+  · exact point59slice132
+  · exact point59slice133
+  · exact point59slice134
+  · exact point59slice135
+  · exact point59slice136
+  · exact point59slice137
+  · exact point59slice138
+  · exact point59slice139
+  · exact point59slice140
+  · exact point59slice141
+  · exact point59slice142
+  · exact point59slice143
+  · exact point59slice144
+  · exact point59slice145
+  · exact point59slice146
+  · exact point59slice147
+  · exact point59slice148
+  · exact point59slice149
+  · exact point59slice150
+  · exact point59slice151
+  · exact point59slice152
+  · exact point59slice153
+  · exact point59slice154
+  · exact point59slice155
+  · exact point59slice156
+  · exact point59slice157
+  · exact point59slice158
+  · exact point59slice159
+  · exact point59slice160
+  · exact point59slice161
+  · exact point59slice162
+  · exact point59slice163
+  · exact point59slice164
+  · exact point59slice165
+  · exact point59slice166
+  · exact point59slice167
+  · exact point59slice168
+  · exact point59slice169
+  · exact point59slice170
+  · exact point59slice171
+  · exact point59slice172
+  · exact point59slice173
+  · exact point59slice174
+  · exact point59slice175
+  · exact point59slice176
+  · exact point59slice177
+  · exact point59slice178
+  · exact point59slice179
+  · exact point59slice180
+  · exact point59slice181
+  · exact point59slice182
+  · exact point59slice183
+  · exact point59slice184
+  · exact point59slice185
+  · exact point59slice186
+  · exact point59slice187
+  · exact point59slice188
+  · exact point59slice189
+  · exact point59slice190
+  · exact point59slice191
+  · exact point59slice192
+  · exact point59slice193
+  · exact point59slice194
+  · exact point59slice195
+  · exact point59slice196
+  · exact point59slice197
+  · exact point59slice198
+  · exact point59slice199
+  · exact point59slice200
+  · exact point59slice201
+  · exact point59slice202
+
+end Rudvalis.OrderCertificate.ForwardReduction.Part5Residual.Residual0Checks

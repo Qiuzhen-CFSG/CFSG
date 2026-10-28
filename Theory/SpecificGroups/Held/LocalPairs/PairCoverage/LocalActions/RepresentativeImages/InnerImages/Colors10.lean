@@ -1,0 +1,49 @@
+module
+
+public import Theory.SpecificGroups.Held.LocalPairs.PairCoverage.LocalActions.RepresentativeImages.InnerImages.Words
+public import Theory.SpecificGroups.Held.LocalPairs.PairCoverage.IntervalNormalizer.Inner.Local.RepresentativeGeometry.CoreKernel.TwoTables10
+import Mathlib.Tactic.FinCases
+
+/-!
+# Orbit-color witnesses for Held pair (true,0)
+
+The four two-generators preserve the displayed coloring of the 2058 letters.
+Each marked odd generator takes its witness between two colors. Among all
+nine elements of the plane, only that generator and its inverse can connect
+those colors. Thus a color-preserving conjugator preserving the odd subgroup
+must preserve each marked axis. These are kernel-checked finite certificates,
+using the previously certified two- and odd-generator permutation tables.
+Sources: ATLAS HeG1-p2058B0; GLS3 Table 5.3p. See source/README.md.
+-/
+
+@[expose] public section
+namespace Held.LocalPairs.PairCoverage.LocalActions.RepresentativeImages.InnerImages.Colors10
+
+/-- An invariant point coloring; exact orbit equality is not needed. -/
+def color (x : Fin 2058) : ℕ :=
+  (0x4288c8241040208b49084578ca2288440004490844108a628812134436884522962219653088628c85a91cd28c425ac443004b2088a1d04b59c024104b5896e214c913ca290cb522d6628a8420c50234ed81440228c569c22128c6134a220c65128c4a08421806019442134c21000511062588a52858b294d2288a2580a281865114a321444728c49184451443208a21904b1d4cb3c97468802218e488954a004f8b5682888b11482588c8609853941422c6029522150425888235043108ab914c00388b314a2b00ab109b410c05295a510ca21889490c421084a589c014083694a4a8c421104522c543122b1884a02c42b2c4c188a211565588851488591c63128a3198626086259c822088282882115545884e109a520ce25817201884901c22888629084108431c940015cd714e2294e5388d01144315107111c534403216028314511c45234a215287299707196241047110a081175a088912522338a200002284a9112e49188230a47590cb14923008b0910852a84b10887300e25a8c268960188a031444108a59124c9118642c85508421188410882234c41096a2946a2884528845288a8288562cc8b38c67308a40acab914676b40a134a4588552884b00088210b43144712e82394ad294a59144410846298821188c2084312c8252da224848145a391062309643016a290532885320c0438842214a2110e212882228541a88a2884d002a561c462999028c64296049486a10c8420844038ad10968688c4688ad29c451492b21006128a22a86a32c02588079128d12c43100a261044148451180220d66208a4118032084010974308e222c40588441257500c42112a62ac8d2b4a4144852900b230425804029e42114b40114515045a8074a54a2a08439504210146282031448200845008427349780c84588125d09215482299651888201aa2138a31194714002808a298c82201423148b488b3709c220e4b31c4229ce431842208922acd433607355825d16c0180028ce0239aa301a22808911000014a2214a2254622104420864120ad2924a198422c88329882148821080b31686588872088caac1480050250430244505085714aa2084528c0055214228876380b1084429e02a98e290844210062548c1954610842210c33d4a521c43028431086224d55128a0388a430c4208a258484b102825d4ad008e03108a11851809ca310c4a9dc2a0aa25d083908eb29ca2290423019212c840b88c114c2915052a866a2c62b08a2109621549228d34289621010210cc2134a314842208a37116223887a11625084238845100f4190ab188aba34c41888e109441828220a831d09228964296436ae4b5d0cda084412d6220882808805086c1568431283188a428162310056a85229044208c5118051384228040694ab58842594641107438c82108a400c9212cc220882910c2610a53084da8cc2680822504413454019621108611c4231a0c0088c2885219ea03144522a15688422484c20c450086431d6b80d5010a8011940150a593444118ad1caa2682a200d4229a8d8906758a02588cd04804208a51148522c4a2b445308871014312c4b110842922a12c4d1540303082008851008a100721184430891150800384019813588a018845688652c96218963139cd10c62509350165069c4b2356ca08852d2923980519c424504510c46644d33096228a4551480318876b4452b564118c5388461344a8956290e420122500d842984c211c52ae0b28485310ca7b966134a32b0c9190871096c589635250629ca5114a6298a418820 >>> (5 * x.val)) % 32
+
+def witness (k : Fin 2) : Fin 2058 := if k = 0 then 17 else 17
+
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 2400000 in
+theorem generator_preserves (k : Fin 4) :
+    ∀ x, color (representation (twoGenerator true 0 k) x) = color x := by
+  have he := Held.LocalPairs.PairCoverage.IntervalNormalizer.Inner.RepresentativeGeometry.CoreKernel.TwoTables10.representation_generator k
+  change representation (twoGenerator true 0 k) = _ at he
+  rw [he]
+  fin_cases k <;> apply allLetters <;> decide +kernel
+
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 2400000 in
+theorem coordinate_test (k : Fin 2) : ∀ (x : Fin 2058) (v : Plane),
+    color x = color (witness k) →
+    color (representation (markedEmbedding true 0 v) x) =
+      color (representation (basisGenerator true 0 k) (witness k)) →
+    v = coordinateVector k ∨ v = (coordinateVector k)⁻¹ := by
+  simp only [markedEmbedding, MonoidHom.comp_apply, oddEmbedding_apply,
+    basisGenerator, map_mul, map_pow,
+    ← Held.LocalPairs.PairCoverage.LocalActions.RepresentativeImages.Pair10.odd0_eq, ← Held.LocalPairs.PairCoverage.LocalActions.RepresentativeImages.Pair10.odd1_eq]
+  fin_cases k <;> apply allLetters <;> decide +kernel
+
+end Held.LocalPairs.PairCoverage.LocalActions.RepresentativeImages.InnerImages.Colors10

@@ -428,7 +428,7 @@ public theorem theorem_13_18_eta_virtual_of_notation
     hypothesis_13_1_characterNotationDataFor Smax Tmax W W1 W2 p q
         ω η μ ν μsum νsum δ δ' σ →
       ∀ i k : ℕ, i < q → k < p →
-        Theory.Character.IsVirtualCharacter (η i k) := by
+        IsVirtualCharacter (η i k) := by
   intro hnotation i k hi hk
   rcases hnotation with
     ⟨hωData, hσmap, hη, _hδ, _hδ', _hμirr, _hνirr, _hμzero_nonprincipal, _hνzero_nonprincipal,
@@ -441,7 +441,7 @@ public theorem theorem_13_18_eta_virtual_of_notation
   let fk : Fin p := ⟨k, hk⟩
   have hηik : η i k = σ (ωFin fi fk) := by
     rw [hη i k hi hk, hωNat i k hi hk]
-  have hωvirt : Theory.Character.IsVirtualCharacter (ωFin fi fk) :=
+  have hωvirt : IsVirtualCharacter (ωFin fi fk) :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup (hωFin.irreducible fi fk)
   rw [hηik]
   exact hσvirt (ωFin fi fk) hωvirt
@@ -1054,7 +1054,7 @@ private theorem theorem_13_18_beta_virtual_of_notation
     hypothesis_13_1_characterNotationDataFor Smax Tmax W W1 W2 p q
         ω η μ ν μsum νsum δ δ' σ →
       theorem_13_18_hypothesis Smax P W1 (μ 0 j) βS j p →
-        Theory.Character.IsVirtualCharacter βS := by
+        IsVirtualCharacter βS := by
   intro hnotation hβhyp
   rcases hnotation with
     ⟨hωData, _hσmap, _hη, _hδ, _hδ', hμirr, _hνirr, _hμzero_nonprincipal,
@@ -1062,14 +1062,14 @@ private theorem theorem_13_18_beta_virtual_of_notation
   rcases hωData with ⟨_h31, hqpos, _hppos, _ωFin, _hωFin, _hωNat⟩
   rcases hβhyp with ⟨_hj0, hjp, hβdef⟩
   have hindVirt :
-      Theory.Character.IsVirtualCharacter
+      IsVirtualCharacter
         (Section1.inducedCF ((P ⊔ W1).subgroupOf Smax)
           (Section1.principalCharacter ((P ⊔ W1).subgroupOf Smax))) :=
     Section2.inducedCF_isVirtualCharacter_of_virtualCharacter
       ((P ⊔ W1).subgroupOf Smax)
       (Section3.isVirtualCharacter_principalCharacter
         (G := ((P ⊔ W1).subgroupOf Smax)))
-  have hμvirt : Theory.Character.IsVirtualCharacter (μ 0 j) :=
+  have hμvirt : IsVirtualCharacter (μ 0 j) :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup
       (hμirr 0 j hqpos hjp)
   rw [hβdef]
@@ -1137,13 +1137,13 @@ private theorem theorem_13_18_beta_tau_virtual_of_AZero
         theorem_13_18_hypothesis Smax P W1 (μ 0 j) βS j p →
           Section2.CFOn Smax (typePFAZeroSet Smax W1 W2 P) βS →
             βτ = τS βS →
-              Theory.Character.IsVirtualCharacter βτ := by
+              IsVirtualCharacter βτ := by
   intro hsource hnotation hβhyp hβCFOn hβτ
   rcases theorem_13_18_typeP_AZero_dade_source_bridge
       Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT p q u v c d
       hsource with
     ⟨A0book, R, hA0MG, hA0sub, hτDade⟩
-  have hβvirt : Theory.Character.IsVirtualCharacter βS :=
+  have hβvirt : IsVirtualCharacter βS :=
     theorem_13_18_beta_virtual_of_notation
       Smax Tmax W W1 W2 P ω η μ ν μsum νsum δ δ' σ βS j p q
       hnotation hβhyp
@@ -1205,19 +1205,19 @@ private theorem theorem_13_18_decomposition_X_eta_coeff_integer
     theorem_13_18_beta_CFOn_of_AZero
       Smax Tmax W W1 W2 P ω η μ ν μsum νsum δ δ' σ βS j p q
       hnotationFull hβhypFull hβA0
-  have hβτvirt : Theory.Character.IsVirtualCharacter βτ :=
+  have hβτvirt : IsVirtualCharacter βτ :=
     theorem_13_18_beta_tau_virtual_of_AZero
       Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT
       ω η μ ν μsum νsum δ δ' σ βS βτ j p q u v c d
       hsource hnotationFull hβhypFull hβCFOn hβτ
   have hprincipalVirt :
-      Theory.Character.IsVirtualCharacter (Section1.principalCharacter G) :=
+      IsVirtualCharacter (Section1.principalCharacter G) :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup
       (Section3.principalCharacter_isIrreducibleCharacterOnGroup (G := G))
-  have hηvirt : Theory.Character.IsVirtualCharacter (η 0 j) :=
+  have hηvirt : IsVirtualCharacter (η 0 j) :=
     theorem_13_18_eta_virtual_of_notation Smax Tmax W W1 W2 p q
       ω η μ ν μsum νsum δ δ' σ hnotationFull 0 j hqpos hjp
-  have hΓvirt : Theory.Character.IsVirtualCharacter Γ := by
+  have hΓvirt : IsVirtualCharacter Γ := by
     rw [hΓ]
     exact Section3.isVirtualCharacter_add
       (Section3.isVirtualCharacter_sub hβτvirt hprincipalVirt) hηvirt
@@ -2149,7 +2149,7 @@ public theorem theorem_13_18
                       Γ = βτk - Section1.principalCharacter G + η 0 k) ∧
                 Section1.scalarProduct G Γ (Section1.principalCharacter G) = 0 ∧
                 Γ = Section1.conjugateCharacter Γ ∧
-                Theory.Character.IsVirtualCharacter Γ ∧
+                IsVirtualCharacter Γ ∧
                 Γ = X + Y ∧
                 theorem_13_18_decompositionData p q η X Y ∧
                 Section5.cfNormSq Y ≤ ((u - 1 : ℕ) : ℝ) / (q : ℝ) := by
@@ -2187,20 +2187,20 @@ public theorem theorem_13_18
     theorem_13_18_beta_CFOn_of_AZero
       Smax Tmax W W1 W2 P ω η μ ν μsum νsum δ δ' σ βS j p q
       hnotationFull hβhypFull hβA0
-  have hβτvirt : Theory.Character.IsVirtualCharacter βτ :=
+  have hβτvirt : IsVirtualCharacter βτ :=
     theorem_13_18_beta_tau_virtual_of_AZero
       Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT
       ω η μ ν μsum νsum δ δ' σ βS βτ j p q u v c d
       hsource hnotationFull hβhypFull hβCFOn hβτ
   have hprincipalVirt :
-      Theory.Character.IsVirtualCharacter (Section1.principalCharacter G) :=
+      IsVirtualCharacter (Section1.principalCharacter G) :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup
       (Section3.principalCharacter_isIrreducibleCharacterOnGroup (G := G))
-  have hηvirt : Theory.Character.IsVirtualCharacter η0j := by
+  have hηvirt : IsVirtualCharacter η0j := by
     rw [show η0j = η 0 j by rfl]
     exact theorem_13_18_eta_virtual_of_notation Smax Tmax W W1 W2 p q
       ω η μ ν μsum νsum δ δ' σ hnotationFull 0 j hqpos hjp
-  have hΓvirt : Theory.Character.IsVirtualCharacter Γ := by
+  have hΓvirt : IsVirtualCharacter Γ := by
     rw [hΓdef]
     exact Section3.isVirtualCharacter_add
       (Section3.isVirtualCharacter_sub hβτvirt hprincipalVirt) hηvirt

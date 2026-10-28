@@ -5,6 +5,7 @@ public import GorensteinWalter.Section2.Lemma27Infra
 public import GorensteinWalter.Section1
 import Mathlib.Tactic
 
+
 /-!
 # The equation-(7) two-core centralizes U
 
@@ -68,7 +69,7 @@ public theorem secondCase_a7_twoCore_inter_centralizes_U
   have hUodd : Odd (Nat.card c.U) := by
     change Odd (Nat.card (oddCoreOf c.H))
     exact odd_card_oddCoreOf c.H
-  have hUsolv : IsSolvable c.U := odd_order_theorem c.U hUodd
+  have hUsolv : Group.IsSolvable c.U := odd_order_theorem c.U hUodd
   have hself : c.U ⊓ Subgroup.centralizer (c.FU : Set G) ≤ c.FU := by
     change c.U ⊓ Subgroup.centralizer
         (((fittingSubgroup c.U).map c.U.subtype : Subgroup G) : Set G) ≤

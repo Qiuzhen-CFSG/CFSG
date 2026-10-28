@@ -4,6 +4,7 @@ public import GorensteinWalter.Section3.CyclicTwoCoreP0Card
 public import GorensteinWalter.ASevenInvolutionCentralizerOddPart
 import Mathlib.Tactic
 
+
 /-!
 # The cyclic first-case decomposition `U ∩ M = P₀ × (B ∩ M)`
 
@@ -173,7 +174,7 @@ private theorem firstCase_cyclic_P0_commutator_oddCore_eq_bot_of_a7
     rw [hcard]
     exact Nat.coprime_two_left.mp
       (pPrimeCore_coprime_card (p := 2) (G := ↥M))
-  have hOsolv : IsSolvable O := odd_order_theorem O hOodd
+  have hOsolv : Group.IsSolvable O := odd_order_theorem O hOodd
   have hOnorm : IsNormalIn O M := by
     refine ⟨hOleM, ?_⟩
     intro m hm o ho

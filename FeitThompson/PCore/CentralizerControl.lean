@@ -1,23 +1,25 @@
 module
 
 public import FeitThompson.BGsection1.CentralizerLemmas
-import FeitThompson.Burnside.NormalComplement
-import FeitThompson.Commutator.ActionTriviality
-import FeitThompson.Frattini.CoprimeAction
-import FeitThompson.Commutator.CyclicSylow
-import FeitThompson.Commutator.Core
-import FeitThompson.ElementaryAbelian
+import Theory.GroupAction.NormalComplement
+import Theory.GroupTheory.Commutator.ActionTriviality
+import Theory.Frattini.CoprimeAction
+import Theory.GroupTheory.Commutator.CyclicSylow
+import Theory.GroupTheory.Commutator.Basic
+import Theory.ElementaryAbelian.VectorSpace
 import FeitThompson.Fitting.Centralizer
 import FeitThompson.Fitting.Core
 import FeitThompson.Fitting.Faithful
 import FeitThompson.GroupAction.CentralizerCondition
-import FeitThompson.GroupAction.CoprimeHall
-import FeitThompson.GroupAction.Lemmas
-import FeitThompson.PGroup.NormalSubgroups
-import FeitThompson.SubgroupConjAction
+import Theory.GroupAction.CoprimeHall
+import Theory.GroupAction.Lemmas
+public import Theory.GroupTheory.PGroup.NormalSubgroups
+import Theory.GroupAction.SubgroupConjugation
 import Mathlib.GroupTheory.SpecificGroups.ZGroup
-import FeitThompson.HallSubgroups.Core
+public import Theory.GroupTheory.Hall.Basic
 import FeitThompson.ChiefFactors.BaerCore
+
+
 
 open scoped Pointwise
 
@@ -350,8 +352,8 @@ theorem pPrimeCore_centralizer_pSubgroup_eq_bot_of_pPrimeCore_eq_bot
         fixedPointSubgroup (↥Q) (↥N ⧸ KN.subgroupOf N) =
           (fixedPointSubgroup (↥Q) ↥N).map (QuotientGroup.mk' (KN.subgroupOf N)) := by
       simpa using
-        fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
-          (G := ↥N) (A := ↥Q) hNsolv hQcopN (π := ∅) (KN.subgroupOf N) hKNinv
+        fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
+          (G := ↥N) (A := ↥Q) hNsolv hQcopN (KN.subgroupOf N) hKNinv
     have hsupN :
         fixedPointSubgroup (↥Q) ↥N ⊔ KN.subgroupOf N = ⊤ := by
       refine sup_eq_top_of_fixed_quotient (A := ↥Q) (H := KN.subgroupOf N) ?_ hfixedN

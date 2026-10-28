@@ -5,6 +5,7 @@ public import BenderGlauberman.Section3.Basic
 public import GorensteinWalter.Defs
 import all BenderGlauberman.Defs
 
+
 /-!
 # Bender--Glauberman: Section 3 — Remark 3.5
 
@@ -28,9 +29,8 @@ open scoped Pointwise
 namespace BenderGlauberman
 
 open GorensteinWalter
-open Theory.Character
 
--- Local instances matching `Theory.Character`'s subgroup-sum convention; see
+-- Local instances matching `Character`'s subgroup-sum convention; see
 -- `BenderGlauberman/ClassFunction.lean`.
 attribute [local instance] Fintype.ofFinite
 attribute [local instance] Classical.propDecidable
@@ -322,8 +322,7 @@ private lemma mem_normalizer_of_conj_t_in_S (c : Hyp11 G) (hUB : c.U = c.B)
           Fintype.card ↥(c.B : Subgroup G) := orderOf_dvd_card
       have hordB : orderOf b ∣ Fintype.card ↥(c.B : Subgroup G) := by
         have hEq : orderOf b = orderOf (⟨b, hb⟩ : ↥(c.B : Subgroup G)) := by
-          simpa using (orderOf_injective (c.B : Subgroup G).subtype
-            (Subgroup.subtype_injective (c.B : Subgroup G)) ⟨b, hb⟩).symm
+          simp
         rwa [← hEq] at hord_sub
       have hcard : Fintype.card ↥(c.B : Subgroup G) = Nat.card ↥(c.B : Subgroup G) :=
         Nat.card_eq_fintype_card.symm
@@ -525,7 +524,7 @@ private lemma one_involution_class_in_normalizerB (c : Hyp11 G) (hUB : c.U = c.B
 
 /-- Remark 3.5: if `U = B ⋬ G`, then `G1 := N_G(B)` is as in Theorem B
 (i.e., a proper subgroup containing `H` with one class of involutions). -/
-public theorem remark_3_5 (c : Hyp11 G) (h12 : Hyp12 c) (hSC : Section3Hyp c)
+public theorem remark_3_5 (c : Hyp11 G)
     (hUB : c.U = c.B) (hUnormal : ¬ IsNormalIn c.U ⊤) :
     normalizerB c ≠ ⊤ ∧ c.H ≤ normalizerB c ∧
       (∀ x y : G, IsInvolution x → IsInvolution y → x ∈ normalizerB c →

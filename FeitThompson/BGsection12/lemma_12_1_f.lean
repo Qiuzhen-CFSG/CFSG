@@ -2,6 +2,7 @@ module
 
 public import FeitThompson.BGsection12.lemma_12_1_e
 
+
 open scoped Pointwise
 
 /-!
@@ -42,7 +43,7 @@ public theorem lemma_12_1_f
   apply Subgroup.card_eq_one.mp
   apply section12_card_eq_one_of_no_prime_dvd
   intro p hpdiv
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   have hpC : p.val ∣ Nat.card C := by
     rwa [hCcard]
   have hpE3 : p.val ∣ Nat.card E₃ := by

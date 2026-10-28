@@ -1,0 +1,167 @@
+module
+public import CFSG.Quasithin.ChapterF.Section01.SourceRecognition.DGS85.LocalStructure.BinaryObstruction
+
+/-!
+# The binary 6.5 obstruction in the original F1.11 amalgam
+
+The reduced quotient markings come from the original starred parabolics.
+Both 6.5 conclusions are proved without a normality, noncentrality, or
+Frattini premise. The reduced closure embeds onto the closure generated
+under the original full endpoint: the full Borel normalizes the seed and
+the reduced endpoint, so adjoining it leaves the closure unchanged.
+
+All cores are actual two-cores. The original full Borel, original S and
+the reduced completion remain distinct. The field at the first endpoint
+is unrestricted; the neighboring field has order two.
+Source: DGS, Groups and Graphs (1985), reduction p.95 and 6.5, pp.121--122;
+Aschbacher--Smith F.1.9, pp.261--262.
+-/
+open Subgroup Theory.GroupTheory
+open scoped MatrixGroups
+public noncomputable section
+namespace CFSG.Quasithin.ChapterF.Source.DGS85.Reduction
+open Theory.GroupTheory.AmalgamGraph Subgroup.CosetGeometry.RankTwo
+variable {G : Type*} [Group G] {L : Fin 2 → Subgroup G} {S : Subgroup G}
+variable {F K : Type*} [Field F] [Finite F] [CharP F 2] [Field K] [Finite K] [CharP K 2]
+
+/-- The original quotient markings discharge every local premise of the binary reduced 6.5 obstruction. -/
+theorem reduced_binary_adjacent_core_obstruction (h : HypothesisF11 L S) (i : Fin 2)
+    (e : (L (other i) ⧸ pCore 2 (L (other i))) ≃* PSL(2,F))
+    (eδ : (L i ⧸ pCore 2 (L i)) ≃* PSL(2,K)) (hF : Nat.card F = 2) :
+    let P := fun k => (P₀ L S k).subgroupOf (G₀ L S)
+    (¬ localEnlargement (Classical.choice ((reduced_triple h).local_data (other i))) ≤
+      normalizer (↑((P i).pCoreIn 2 ⊓ (P (other i)).pCoreIn 2) : Set (G₀ L S))) ∧
+    ¬ ∃ T : Sylow 2 (conjugateSpanBy ((P i).pCoreIn 2) (P (other i))),
+      (T : Subgroup (conjugateSpanBy ((P i).pCoreIn 2) (P (other i)))).map
+        (conjugateSpanBy ((P i).pCoreIn 2) (P (other i))).subtype = (P i).pCoreIn 2 := by
+  let d := Classical.choice ((reduced_triple h).local_data (other i))
+  let f := reduced_linearEnlargementQuotient h (other i) d e
+  let q := f.toMonoidHom.comp (QuotientGroup.mk' (pCore 2 (localEnlargement d)))
+  have hq : Function.Surjective q := f.surjective.comp (QuotientGroup.mk'_surjective _)
+  have hk : q.ker = pCore 2 (localEnlargement d) := by
+    rw [MonoidHom.ker_comp_of_injective _ _ f.injective,QuotientGroup.ker_mk']
+  let eSL : SL(2,K) ≃* PSL(2,K) := MulEquiv.ofBijective (BenderSuzuki.Converse.pi K)
+    ⟨BenderSuzuki.Converse.pi_injective,BenderSuzuki.Converse.pi_surjective⟩
+  fin_cases i
+  · exact source_binary_adjacent_core_obstruction (reduced_triple h) (reduced_borel_core_sylow h)
+      (reduced_vertex_sylow h) false d q hq hk hF ((reduced_graphLinearQuotient h false eδ).trans eSL.symm)
+  · exact source_binary_adjacent_core_obstruction (reduced_triple h) (reduced_borel_core_sylow h)
+      (reduced_vertex_sylow h) true d q hq hk hF ((reduced_graphLinearQuotient h true eδ).trans eSL.symm)
+
+private theorem reduced_endpoint_le_generated (i : Fin 2) : P₀ L S i ≤ G₀ L S := by
+  fin_cases i
+  · exact le_sup_left
+  · exact le_sup_right
+
+private theorem reduced_core_image (h : HypothesisF11 L S) (i : Fin 2) :
+    (((P₀ L S i).subgroupOf (G₀ L S)).pCoreIn 2).map (G₀ L S).subtype =
+      (parabolic L S i).pCoreIn 2 := by
+  rw [map_pCoreIn_of_injective 2 _ _ (G₀ L S).subtype_injective,
+    map_subgroupOf_eq_of_le (reduced_endpoint_le_generated i),P₀_core h i]
+
+/-- The literal reduced closure has the same image as closure under the original full endpoint. -/
+theorem reduced_core_closure_full_image (h : HypothesisF11 L S) (i : Fin 2) :
+    (conjugateSpanBy (((P₀ L S i).subgroupOf (G₀ L S)).pCoreIn 2)
+      ((P₀ L S (other i)).subgroupOf (G₀ L S))).map (G₀ L S).subtype =
+      conjugateSpanBy ((parabolic L S i).pCoreIn 2) (parabolic L S (other i)) := by
+  rw [map_conjugateSpanBy,reduced_core_image h i,
+    map_subgroupOf_eq_of_le (reduced_endpoint_le_generated (other i))]
+  have hs : P₀ L S (other i) ⊔ commonBorel L S = parabolic L S (other i) := by
+    rw [P₀,sup_assoc,sup_eq_right.mpr (B₀_le h)]
+    exact h.starredParabolic_supplement (other i)
+  rw [←hs]
+  symm
+  apply conjugateSpanBy_sup_of_normalizes_seed
+  · exact (commonBorel_le_parabolic (L := L) (S := S) i).trans
+      ((parabolic L S i).le_normalizer.trans
+        (normalizer_le_normalizer_characteristic_image _ (pCore 2 (parabolic L S i))))
+  · exact (commonBorel_le_parabolic (L := L) (S := S) (other i)).trans
+      ((normal_subgroupOf_iff_le_normalizer (P₀_le h (other i))).mp (P₀_normal h (other i)))
+
+/-- The two binary 6.5 obstructions on the original parabolic cores and full-endpoint closure. -/
+theorem original_binary_adjacent_core_obstruction (h : HypothesisF11 L S) (i : Fin 2)
+    (e : (L (other i) ⧸ pCore 2 (L (other i))) ≃* PSL(2,F))
+    (eδ : (L i ⧸ pCore 2 (L i)) ≃* PSL(2,K)) (hF : Nat.card F = 2) :
+    (¬ enlargedEndpoint L S (other i) ≤ normalizer
+      (↑((parabolic L S i).pCoreIn 2 ⊓ (parabolic L S (other i)).pCoreIn 2) : Set G)) ∧
+    (¬ parabolic L S (other i) ≤ normalizer
+      (↑((parabolic L S i).pCoreIn 2 ⊓ (parabolic L S (other i)).pCoreIn 2) : Set G)) ∧
+    ¬ ∃ T : Sylow 2 (conjugateSpanBy ((parabolic L S i).pCoreIn 2) (parabolic L S (other i))),
+      (T : Subgroup (conjugateSpanBy ((parabolic L S i).pCoreIn 2) (parabolic L S (other i)))).map
+        (conjugateSpanBy ((parabolic L S i).pCoreIn 2) (parabolic L S (other i))).subtype =
+          (parabolic L S i).pCoreIn 2 := by
+  let P := fun k => (P₀ L S k).subgroupOf (G₀ L S)
+  let d := Classical.choice ((reduced_triple h).local_data (other i))
+  obtain ⟨hn0,hs0⟩ := reduced_binary_adjacent_core_obstruction h i e eδ hF
+  have hD : (((P i).pCoreIn 2 ⊓ (P (other i)).pCoreIn 2) : Subgroup (G₀ L S)).map
+      (G₀ L S).subtype = (parabolic L S i).pCoreIn 2 ⊓ (parabolic L S (other i)).pCoreIn 2 := by
+    rw [Subgroup.map_inf _ _ _ (G₀ L S).subtype_injective,reduced_core_image h i,
+      reduced_core_image h (other i)]
+  have hn : ¬ enlargedEndpoint L S (other i) ≤ normalizer
+      (↑((parabolic L S i).pCoreIn 2 ⊓ (parabolic L S (other i)).pCoreIn 2) : Set G) := by
+    intro hh
+    apply hn0
+    intro x hx
+    have hxl : (x : G) ∈ enlargedEndpoint L S (other i) := by
+      rw [←reduced_localEnlargement_image h (other i) d]
+      exact mem_map_of_mem (G₀ L S).subtype hx
+    have hxn := le_normalizer_comap (G₀ L S).subtype (hh hxl)
+    rwa [←hD,comap_map_eq_self_of_injective (G₀ L S).subtype_injective] at hxn
+  have hEP : enlargedEndpoint L S (other i) ≤ parabolic L S (other i) :=
+    sup_le (starredParabolic_le (other i)) ((pCoreIn_le 2 (commonBorel L S)).trans
+      (commonBorel_le_parabolic (L := L) (S := S) (other i)))
+  refine ⟨hn,(fun hh => hn (hEP.trans hh)),?_⟩
+  intro hs
+  let X := conjugateSpanBy ((P i).pCoreIn 2) (P (other i))
+  have hX := reduced_core_closure_full_image h i
+  let f := (G₀ L S).subtype
+  let eX : X ≃* conjugateSpanBy ((parabolic L S i).pCoreIn 2) (parabolic L S (other i)) :=
+    (X.equivMapOfInjective f (G₀ L S).subtype_injective).trans (MulEquiv.subgroupCongr hX)
+  let := (Classical.choice ((reduced_triple h).local_data (other i))).finite_P
+  have hAP : (P i).pCoreIn 2 ≤ P (other i) :=
+    (source_core_le_borel (Classical.choice ((reduced_triple h).local_data i))).trans
+      (le_sup_right.trans (Classical.choice ((reduced_triple h).local_data (other i))).supplement.le)
+  let : Finite X := Finite.of_injective (inclusion (conjugateSpanBy_le_self hAP))
+    (inclusion_injective _)
+  let : Finite (conjugateSpanBy ((parabolic L S i).pCoreIn 2) (parabolic L S (other i))) :=
+    Finite.of_equiv X eX.toEquiv
+  obtain ⟨T,hT⟩ := hs
+  let T0 := T.mapSurjective (f := eX.symm.toMonoidHom) eX.symm.surjective
+  apply hs0
+  refine ⟨T0,?_⟩
+  apply map_injective (G₀ L S).subtype_injective
+  rw [reduced_core_image h i,map_map]
+  have hm := congrArg (Subgroup.map
+    (conjugateSpanBy ((parabolic L S i).pCoreIn 2) (parabolic L S (other i))).subtype)
+    (show (T0 : Subgroup X).map eX.toMonoidHom = (T : Subgroup _) from by
+      change ((T : Subgroup _).map eX.symm.toMonoidHom).map eX.toMonoidHom = _
+      rw [map_map]
+      simp)
+  rw [map_map,hT] at hm
+  exact hm
+
+/-- The normal-center-product conclusion 6.6 on the actual reduced binary edge, with 6.5 discharged. -/
+theorem reduced_binary_normal_center_product (h : HypothesisF11 L S) (j : Bool)
+    (e : (L (other (if j then 1 else 0)) ⧸ pCore 2 (L (other (if j then 1 else 0)))) ≃* PSL(2,F))
+    (eδ : (family L j ⧸ pCore 2 (family L j)) ≃* PSL(2,K)) (hF : Nat.card F = 2)
+    (hn : stabilizer (reducedFamily L S) (base (reducedFamily L S) (!j)) ≤ normalizer
+      (↑(Z (reducedFamily L S) (base (reducedFamily L S) j) ⊔
+        Z (reducedFamily L S) (base (reducedFamily L S) (!j))) : Set (G₀ L S))) :
+    (∀ T : Sylow 2 (stabilizer (reducedFamily L S) (base (reducedFamily L S) j)),
+      Z (reducedFamily L S) (base (reducedFamily L S) j) = omegaCenterIn
+        ((T : Subgroup (stabilizer (reducedFamily L S) (base (reducedFamily L S) j))).map
+          (stabilizer (reducedFamily L S) (base (reducedFamily L S) j)).subtype)) ∧
+      Z (reducedFamily L S) (base (reducedFamily L S) j) ≤
+        Z (reducedFamily L S) (base (reducedFamily L S) (!j)) := by
+  have hadj : (graph (reducedFamily L S)).Adj (base (reducedFamily L S) j)
+      (base (reducedFamily L S) (!j)) :=
+    ⟨by cases j <;> exact Bool.noConfusion,Subgroup.CosetGeometry.incident_base _ _ _⟩
+  apply reduced_normal_center_product h hadj hn
+  intro hh
+  simp only [Q,stabilizer,Subgroup.CosetGeometry.stabilizer_base] at hh
+  cases j
+  · exact (reduced_binary_adjacent_core_obstruction h 0 e eδ hF).1
+      ((localEnlargement_le _).trans hh)
+  · exact (reduced_binary_adjacent_core_obstruction h 1 e eδ hF).1
+      ((localEnlargement_le _).trans hh)
+end CFSG.Quasithin.ChapterF.Source.DGS85.Reduction

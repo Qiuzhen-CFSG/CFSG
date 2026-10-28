@@ -5,6 +5,7 @@ public import GorensteinWalter.Section2.Bender1970API
 public import GorensteinWalter.Section2.ControlCore
 public import GorensteinWalter.Section2.FStarSubnormal
 
+
 /-!
 # Bender (1970) Statement 1.7 — centralizer and F\*-commutation helpers
 
@@ -166,7 +167,6 @@ public theorem centralizer_qCoreOf_S_le_A
     (hsimple : IsSimpleGroup G)
     (A S : Subgroup G) (hA : IsCoatom A)
     (hSF : S ≤ generalizedFittingSubgroupOf A)
-    (hSsub : (S.subgroupOf (generalizedFittingSubgroupOf A)).IsSubnormal)
     (hCS : generalizedFittingSubgroupOf A ⊓ Subgroup.centralizer (S : Set G) ≤ S)
     {p : ℕ} (hp : p.Prime)
     (hpF : p ∈ primesOfOrder (fittingSubgroupOf A)) :
@@ -176,7 +176,7 @@ public theorem centralizer_qCoreOf_S_le_A
   let Z : Subgroup G := (Subgroup.center (↥P)).map P.subtype
   have hZleQ : Z ≤ qCoreOf S p := by
     simpa [Z, P] using (fstar_center_qCoreOf_fitting_le_qCoreOf_S A S
-      hSF hSsub hCS p hp hpF)
+      hSF hCS p hp)
   have hNZ : Subgroup.normalizer (Z : Set G) = A := by
     simpa [Z, P] using (fstar_normalizer_center_qCoreOf_fitting_eq_A
       hsimple A hA hp hpF)
@@ -194,11 +194,10 @@ public theorem bender1970_1_7_centralizer_qCoreOf_S_le_A
     (A : Subgroup G) (hA : IsCoatom A)
     (S : Subgroup G)
     (hSF : S ≤ generalizedFittingSubgroupOf A)
-    (hSsub : (S.subgroupOf (generalizedFittingSubgroupOf A)).IsSubnormal)
     (hCS : generalizedFittingSubgroupOf A ⊓ Subgroup.centralizer (S : Set G) ≤ S)
     (p : ℕ) (hp : p.Prime) (hpF : p ∈ primesOfOrder (fittingSubgroupOf A)) :
     Subgroup.centralizer ((qCoreOf S p : Subgroup G) : Set G) ≤ A := by
-  exact centralizer_qCoreOf_S_le_A hsimple A S hA hSF hSsub hCS hp hpF
+  exact centralizer_qCoreOf_S_le_A hsimple A S hA hSF hCS hp hpF
 
 /-! ## `O^p(F*(A))` centralizes `O_p(A)` -/
 

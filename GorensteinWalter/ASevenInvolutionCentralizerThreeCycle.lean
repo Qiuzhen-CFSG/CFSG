@@ -4,6 +4,7 @@ public import GorensteinWalter.ASevenInvolutionCentralizerOddPart
 public import GorensteinWalter.ASevenStructureFacts
 import Mathlib.Tactic
 
+
 /-!
 # The odd part of the concrete involution centralizer in `A₇`
 

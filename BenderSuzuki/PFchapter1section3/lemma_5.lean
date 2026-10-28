@@ -10,10 +10,13 @@ import BenderSuzuki.PFAppendixIII.theorem
 import BenderSuzuki.PFAppendixIII.lemma_1
 import BenderSuzuki.External.Higman.lemma_1
 import BenderSuzuki.External.Huppert.II.theorem_8_27
-import FeitThompson.GroupAction.CoprimeHall
+import Theory.GroupAction.CoprimeHall
 import Theory.Representation.ElementaryAbelianAction
 import Theory.Representation.TwoDimensionalOddOrder
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
+open Representation
+
+
 
 namespace BenderSuzuki
 namespace PFchapter1section3
@@ -60,7 +63,7 @@ private theorem lemma_5_twoRank_Q0_of_suzuki
   have hxy0 : x0 ≠ y0 := fun h => hxy (by
     apply Subtype.ext
     simpa [x0, y0] using congrArg Subtype.val h)
-  letI : Fintype Q0 := Fintype.ofFinite Q0
+  let : Fintype Q0 := Fintype.ofFinite Q0
   have hcard_gt : 2 < Nat.card Q0 := by
     simpa [Nat.card_eq_fintype_card] using
       (Fintype.two_lt_card_iff.mpr
@@ -138,7 +141,7 @@ private theorem lemma_5_D_inf_centralizer_Q_eq_bot
     D ⊓ Subgroup.centralizer (Q : Set G) = ⊥ := by
   have hcore :=
     (PFchapter1section1.proposition_4_c H D Q t s hA.A1 hsH hsI hsStructure).1
-  rw [← hcore, eq_bot_iff]
+  rw [← hcore, _root_.eq_bot_iff]
   intro x hxCore
   have hfix : ∀ omega : Ω, x • omega = omega := by
     have hxAll : ∀ point : Ω, x ∈ MulAction.stabilizer G point := by
@@ -146,7 +149,7 @@ private theorem lemma_5_D_inf_centralizer_Q_eq_bot
     intro omega
     exact MulAction.mem_stabilizer_iff.mp (hxAll omega)
   have hxOne : x = 1 := (faithfulSMul_iff.mp hA.A2) x hfix
-  simpa [hxOne]
+  simp [hxOne]
 
 private theorem lemma_5_centralizer_eq_Q0_of_classification
     {G : Type*} [Group G] [Finite G]
@@ -297,14 +300,14 @@ private theorem lemma_5_cubic_line_root_card
     QuotientGroup.mk' (Subgroup.center S)
   let Plane : Subgroup S := T.comap qmap
   let q := Nat.card (Subgroup.center S)
-  letI : MulDistribMulAction K (S ⧸ Subgroup.center S) := quotientAction
+  let : MulDistribMulAction K (S ⧸ Subgroup.center S) := quotientAction
   have hPlaneInv : IsInvariant K S Plane := by
     refine ⟨?_⟩
     intro k x
     change qmap x ∈ T ↔ qmap (k • x) ∈ T
     rw [← hquotientAction k x]
     exact hTinv k (qmap x)
-  letI : IsInvariant K S Plane := hPlaneInv
+  let : IsInvariant K S Plane := hPlaneInv
   have hPlaneCard : Nat.card Plane = q ^ 2 := by
     have hcardQuotPlane :
         Nat.card (Plane ⧸ qmap.ker.subgroupOf Plane) = Nat.card T := by
@@ -344,9 +347,9 @@ private theorem lemma_5_cubic_line_root_card
     exact (Nat.card_congr centerToPlane).symm
   let NoncentralPlane := {x : Plane // (x : S) ∉ Subgroup.center S}
   have hNoncentralCard : Nat.card NoncentralPlane = q ^ 2 - q := by
-    letI : Fintype Plane := Fintype.ofFinite Plane
-    letI : Fintype CenterPlane := Fintype.ofFinite CenterPlane
-    letI : Fintype NoncentralPlane := Fintype.ofFinite NoncentralPlane
+    let : Fintype Plane := Fintype.ofFinite Plane
+    let : Fintype CenterPlane := Fintype.ofFinite CenterPlane
+    let : Fintype NoncentralPlane := Fintype.ofFinite NoncentralPlane
     have hsplit := Fintype.card_subtype_compl
       (fun x : Plane => (x : S) ∈ Subgroup.center S)
     rw [Fintype.card_eq_nat_card, Fintype.card_eq_nat_card,
@@ -422,7 +425,6 @@ private theorem lemma_5_cubic_line_root_card
       simp [smul_smul]
   have horbitRight : Function.RightInverse unorbitRoot orbitRoot := by
     intro x
-    change orbitRoot (unorbitRoot x) = x
     apply Subtype.ext
     apply Subtype.ext
     change squareActor x • (squareActor x)⁻¹ • (x.1 : S) = (x.1 : S)
@@ -483,7 +485,7 @@ private theorem lemma_5_Q0_order_four_subgroup
     ∃ E0 : Subgroup G, E0 ≤ Q0 ∧ Nat.card E0 = 4 ∧
       ∀ x : E0, x ^ 2 = 1 := by
   classical
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   obtain ⟨E0, hE0card, hE0sq⟩ :=
     TwoRankAtLeastTwo.exists_subgroup hsec.hA.A3
   have hE0p : IsPGroup 2 E0 := by
@@ -650,20 +652,20 @@ private theorem cyclic_and_card_dvd_of_projective_stabilizers_bot
         simpa using hbMem
       exact haOne.trans hbOne.symm
     exact not_subsingleton W hsub
-  letI : Representation.IsIrreducible rho := hrhoIrreducible
+  let : Representation.IsIrreducible rho := hrhoIrreducible
   have hWcomm : IsMulCommutative W :=
     theorem_2_6_a hWodd hdim hrhoInjective hcharNotDvd
   have hcenterCyclic : IsCyclic (Subgroup.center W) :=
     center_cyclic_of_representation_faithful_irreducible rho hrhoInjective
   have hWcyclic : IsCyclic W := by
-    letI : IsMulCommutative W := hWcomm
+    let : IsMulCommutative W := hWcomm
     have hcenterTop : Subgroup.center W = ⊤ := by
       ext x; constructor
       · intro hx; exact Subgroup.mem_top x
       · intro hx
         rw [Subgroup.mem_center_iff]
         intro y
-        haveI : IsMulCommutative W := hWcomm
+        have : IsMulCommutative W := hWcomm
         exact mul_comm y x
     have htopCyclic : IsCyclic (⊤ : Subgroup W) := by
       rw [← hcenterTop]
@@ -700,16 +702,16 @@ public theorem quotient_scalar_coordinates_of_isomorphic_summands
           (((eK k : BinaryGaloisField n) * (eQ x).toAdd.1,
             (eK k : BinaryGaloisField n) * (eQ x).toAdd.2)) := by
   classical
-  letI : IsMulCommutative E := hEcomm
-  letI : CommGroup E := IsMulCommutative.instCommGroup
+  let : IsMulCommutative E := hEcomm
+  let : CommGroup E := IsMulCommutative.instCommGroup
   have hq_gt : 1 < q := by
     have hpos : 0 < Nat.card K := Nat.card_pos
     omega
-  letI : Nontrivial U :=
+  let : Nontrivial U :=
     Finite.one_lt_card_iff_nontrivial.mp (by simpa [hUcard] using hq_gt)
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-  letI : IsInvariant K E U := ⟨hUinv⟩
-  letI : IsElementaryAbelian 2 U := by
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : IsInvariant K E U := ⟨hUinv⟩
+  let : IsElementaryAbelian 2 U := by
     refine
       { toIsMulCommutative := inferInstance
         exponent_dvd_p :=
@@ -719,7 +721,7 @@ public theorem quotient_scalar_coordinates_of_isomorphic_summands
     exact hEsq (u : E)
   obtain ⟨g, hg⟩ := IsCyclic.exists_generator (α := K)
   let rhoU :=
-    Theory.Representation.ofElementaryAbelianAction (A := K) (G := U) (p := 2)
+    Representation.ofElementaryAbelianAction (A := K) (G := U) (p := 2)
   let rhoEquiv : K →* (Additive U ≃ₗ[ZMod 2] Additive U) :=
     (LinearMap.GeneralLinearGroup.generalLinearEquiv
       (ZMod 2) (Additive U)).toMonoidHom.comp rhoU.asGroupHom
@@ -727,7 +729,7 @@ public theorem quotient_scalar_coordinates_of_isomorphic_summands
   have hrho_val (k : K) (v : Additive U) :
       rhoEquiv k v = Additive.ofMul (k • v.toMul) := by
     change rhoU k v = Additive.ofMul (k • v.toMul)
-    exact Theory.Representation.ofElementaryAbelianAction_apply k v
+    exact Representation.ofElementaryAbelianAction_apply k v
   have hT_val (v : Additive U) :
       T v = Additive.ofMul (g • v.toMul) := by
     exact hrho_val g v
@@ -973,7 +975,7 @@ public theorem quotient_scalar_coordinates_of_isomorphic_summands
   let eU : U ≃* Multiplicative F :=
     MulEquiv.toMultiplicative_toAdditive.symm.trans
       uCoordinates.symm.toAddEquiv.toMultiplicative
-  letI : IsInvariant K E V := ⟨hVinv⟩
+  let : IsInvariant K E V := ⟨hVinv⟩
   let eV : V ≃* Multiplicative F := e.symm.trans eU
   have heU_pow (j : ℕ) (u : U) :
       (eU (g ^ j • u)).toAdd =
@@ -1004,7 +1006,7 @@ public theorem quotient_scalar_coordinates_of_isomorphic_summands
       (eV (k • v)).toAdd =
         ((eK k : F) * (eV v).toAdd) := by
     simpa [eV, he_symm_subtype] using heU_action k (e.symm v)
-  letI : U.Normal := Subgroup.normal_of_isMulCommutative U
+  let : U.Normal := Subgroup.normal_of_isMulCommutative U
   have hUVdisjoint : Disjoint U V :=
     disjoint_iff.mpr hUVinf
   have hUVmul : (U : Set E) * (V : Set E) = Set.univ := by
@@ -1101,7 +1103,7 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
           Subgroup.conjMulDistribMulActionOfLeNormalizer K Q hKnormQ
         Theorem1IsomorphicSummands K Q) := by
   classical
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hQp : IsPGroup 2 Q :=
     External.Higman.isPGroup_of_isSuzukiTwoGroup hQ
   obtain ⟨P2, hS_eq⟩ := hsec.section2.S_sylow_in_Q
@@ -1115,13 +1117,13 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
       exact q.property
     · intro hq
       exact ⟨⟨q, hq⟩, trivial, rfl⟩
-  letI : (Q.subgroupOf H).Normal := hsec.section2.hA.A1.Q_normal_in_H
+  let : (Q.subgroupOf H).Normal := hsec.section2.hA.A1.Q_normal_in_H
   have hHnormQ : H ≤ Subgroup.normalizer (Q : Set G) :=
     Subgroup.le_normalizer_of_normal_subgroupOf hsec.section2.hA.A1.Q_le_H
   have hKnormQ : K ≤ Subgroup.normalizer (Q : Set G) :=
     hsec.section2.K_le_D.trans
       (hsec.section2.hA.A1.D_le_H.trans hHnormQ)
-  letI : Subgroup.Normalizes K Q := ⟨hKnormQ⟩
+  let : Subgroup.Normalizes K Q := ⟨hKnormQ⟩
   have hKcyclic : IsCyclic K :=
     (PFchapter1section2.proposition_2
       H D Q K V W Q0 S Q1 t hsec.section2).1
@@ -1129,7 +1131,7 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
       D ⊓ Subgroup.centralizer (Q : Set G) = ⊥ := by
     have hcore := (PFchapter1section1.proposition_4_c H D Q t s
       hsec.section2.hA.A1 hsec.s_mem_H hsec.s_involution hsec.s_conjugate).1
-    rw [← hcore, eq_bot_iff]
+    rw [← hcore, _root_.eq_bot_iff]
     intro x hxCore
     have hfix : ∀ omega : Ω, x • omega = omega := by
       have hxAll : ∀ point : Ω, x ∈ MulAction.stabilizer G point := by
@@ -1138,7 +1140,7 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
       exact MulAction.mem_stabilizer_iff.mp (hxAll omega)
     have hxOne : x = 1 :=
       (faithfulSMul_iff.mp hsec.section2.hA.A2) x hfix
-    simpa [hxOne]
+    simp [hxOne]
   have hKfaithful : FaithfulSMul K Q := by
     rw [faithfulSMul_iff]
     intro k hkfix
@@ -1260,7 +1262,7 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
     constructor
     · intro hxCenter
       by_cases hxOne : x = 1
-      · simpa [Q0Q, hxOne]
+      · simp [Q0Q, hxOne]
       · have hxInv : x ∈ involutions Q := by
           rw [hInvCenter]
           exact ⟨hxCenter, hxOne⟩
@@ -1270,7 +1272,7 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
             congrArg (fun z : Q => (z : G)) hxInv.sq_eq_one⟩⟩
     · intro hxQ0
       by_cases hxOne : x = 1
-      · simpa [hxOne]
+      · simp [hxOne]
       · have hxQ0G : (x : G) ∈ Q0 := hxQ0
         have hxData := (hsec.section2.Q0_def (x : G)).mp hxQ0G
         have hxInvG : IsInvolution (x : G) := by
@@ -1294,11 +1296,11 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
     ⟨quotientAction, U, T, hquotientAction,
       hUinv, hTinv, hUcard, hTcard, hUTinf, hUTsup⟩
   let E := Q ⧸ Subgroup.center Q
-  letI : IsInvariant K Q (Subgroup.center Q) := center_isInvariant
+  let : IsInvariant K Q (Subgroup.center Q) := center_isInvariant
   let quotientActionK : MulDistribMulAction K E :=
     quotientMulDistribMulAction (A := K) (G := Q) (Subgroup.center Q)
       (inferInstance : IsInvariant K Q (Subgroup.center Q))
-  letI : MulDistribMulAction K E := quotientActionK
+  let : MulDistribMulAction K E := quotientActionK
   have hquotientActionK : ∀ k : K, ∀ x : Q,
       k • QuotientGroup.mk' (Subgroup.center Q) x =
         QuotientGroup.mk' (Subgroup.center Q) (k • x) := by
@@ -1324,12 +1326,12 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
   have hWleD : W ≤ D := hsec.section2.W_le_V.trans hVleD
   have hWnormQ : W ≤ Subgroup.normalizer (Q : Set G) :=
     hWleD.trans (hsec.section2.hA.A1.D_le_H.trans hHnormQ)
-  letI : Subgroup.Normalizes W Q := ⟨hWnormQ⟩
-  letI : IsInvariant W Q (Subgroup.center Q) := center_isInvariant
+  let : Subgroup.Normalizes W Q := ⟨hWnormQ⟩
+  let : IsInvariant W Q (Subgroup.center Q) := center_isInvariant
   let quotientActionW : MulDistribMulAction W E :=
     quotientMulDistribMulAction (A := W) (G := Q) (Subgroup.center Q)
       (inferInstance : IsInvariant W Q (Subgroup.center Q))
-  letI : MulDistribMulAction W E := quotientActionW
+  let : MulDistribMulAction W E := quotientActionW
   have hquotientActionW : ∀ w : W, ∀ x : Q,
       w • QuotientGroup.mk' (Subgroup.center Q) x =
         QuotientGroup.mk' (Subgroup.center Q) (w • x) := by
@@ -1380,7 +1382,7 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
     let p := (Nat.card U0).minFac
     have hp : Nat.Prime p :=
       Nat.minFac_prime (U0.one_lt_card_iff_ne_bot.mpr hU0).ne'
-    letI : Fact (Nat.Prime p) := ⟨hp⟩
+    let : Fact (Nat.Prime p) := ⟨hp⟩
     obtain ⟨x, hx⟩ :=
       exists_prime_orderOf_dvd_card' p (Nat.minFac_dvd (Nat.card U0))
     refine ⟨Subgroup.zpowers (x : G), p,
@@ -1443,7 +1445,7 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
         exact ((Subgroup.mem_centralizer_iff.mp hqR.1) x hxP).symm
       apply False.elim
       apply hPne
-      rw [eq_bot_iff]
+      rw [_root_.eq_bot_iff]
       intro x hxP
       rw [← hD_faithful_on_Q]
       exact ⟨hWleD (hPW hxP), hPcentralizesQ hxP⟩
@@ -1489,25 +1491,15 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
         left_inv := by intro x; rfl
         right_inv := by intro z; rfl }
     have hZSharpCard : Nat.card ZSharp = q - 1 := by
-      letI : Fintype (Subgroup.center Q) := Fintype.ofFinite _
-      letI : Fintype {z : Subgroup.center Q // (z : Q) = 1} :=
+      let : Fintype (Subgroup.center Q) := Fintype.ofFinite _
+      let : Fintype {z : Subgroup.center Q // (z : Q) = 1} :=
         Fintype.ofFinite _
-      letI : Fintype ZSharp := Fintype.ofFinite ZSharp
+      let : Fintype ZSharp := Fintype.ofFinite ZSharp
       have hsplit := Fintype.card_subtype_compl
         (fun z : Subgroup.center Q => (z : Q) = 1)
       have honeCard :
           Nat.card {z : Subgroup.center Q // (z : Q) = 1} = 1 := by
-        let oneEquiv :
-            {z : Subgroup.center Q // (z : Q) = 1} ≃ PUnit.{u} :=
-          { toFun := fun _ => PUnit.unit
-            invFun := fun _ => ⟨1, rfl⟩
-            left_inv := by
-              intro z
-              apply Subtype.ext
-              apply Subtype.ext
-              exact z.property.symm
-            right_inv := by intro z; cases z; rfl }
-        simpa using Nat.card_congr oneEquiv
+        simp
       rw [Fintype.card_eq_nat_card, Fintype.card_eq_nat_card,
         Fintype.card_eq_nat_card, honeCard] at hsplit
       omega
@@ -1524,12 +1516,12 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
     intro k hk x hkx
     by_contra hxOne
     let A : Subgroup K := Subgroup.zpowers k
-    letI : MulDistribMulAction A Q := inferInstance
-    letI : IsInvariant A Q (Subgroup.center Q) := center_isInvariant
+    let : MulDistribMulAction A Q := inferInstance
+    let : IsInvariant A Q (Subgroup.center Q) := center_isInvariant
     let quotientActionA : MulDistribMulAction A E :=
       quotientMulDistribMulAction (A := A) (G := Q) (Subgroup.center Q)
         (inferInstance : IsInvariant A Q (Subgroup.center Q))
-    letI : MulDistribMulAction A E := quotientActionA
+    let : MulDistribMulAction A E := quotientActionA
     have hgenAction :
         (⟨k, Subgroup.mem_zpowers k⟩ : A) • x = x := by
       obtain ⟨y, rfl⟩ := QuotientGroup.mk'_surjective (Subgroup.center Q) x
@@ -1573,11 +1565,11 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
       rcases hQcardPow with ⟨m, hm⟩
       rw [hm]
       exact hAodd.coprime_two_right.pow_right m
-    letI : Group.IsNilpotent Q := hQp.isNilpotent
+    let : Group.IsNilpotent Q := hQp.isNilpotent
     have hQsolvable : Group.IsSolvable Q := by infer_instance
     have hfixedEq :=
-      fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
-        (G := Q) (A := A) hQsolvable hcoprime (∅ : Set Nat.Primes)
+      fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
+        (G := Q) (A := A) hQsolvable hcoprime
         (Subgroup.center Q) (inferInstance : IsInvariant A Q (Subgroup.center Q))
     have hxMap : x ∈ (fixedPointSubgroup A Q).map
         (QuotientGroup.mk' (Subgroup.center Q)) := by
@@ -1687,7 +1679,6 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
         (fun a : A => (⟨a, hAle a.property⟩ : L))
         (fun x y h => by
           apply Subtype.ext
-          change (x : E) = (y : E)
           exact congrArg (fun z : L => (z : E)) h)
     have hAcard : Nat.card A = Nat.card L := by omega
     exact Subgroup.eq_of_le_of_card_ge hAle hAcard.ge
@@ -1700,9 +1691,9 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
                 ¬ ∀ c : P, (⟨(c : G), hPW c.property⟩ : W) • L = L := by
     intro P p hPW hp hPcard L hLinv hLcard hPfixL
     let pToW : P →* W := Subgroup.inclusion hPW
-    letI : MulDistribMulAction P Q :=
+    let : MulDistribMulAction P Q :=
       MulDistribMulAction.compHom Q pToW
-    letI : MulDistribMulAction P E :=
+    let : MulDistribMulAction P E :=
       MulDistribMulAction.compHom E pToW
     have hPcentralizesS : P ≤ Subgroup.centralizer ({s} : Set G) := by
       intro c hcP
@@ -1738,7 +1729,7 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
           apply hPfixL c⁻¹
         rw [hfixInv] at this
         simpa [smul_smul] using this
-    letI : IsInvariant P Q Plane := hPlaneInv
+    let : IsInvariant P Q Plane := hPlaneInv
     let Root : SubMulAction P Plane :=
       { carrier := {r : Plane | (r : Q) ^ 2 = sQ}
         smul_mem' := by
@@ -1772,7 +1763,7 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
     have hpOdd : Odd p := hsec.section2.hA.A1.D_odd.of_dvd_nat hpDvdD
     have hpNeTwo : p ≠ 2 := by
       intro hpTwo
-      exact hpOdd.not_two_dvd_nat (by simpa [hpTwo])
+      exact hpOdd.not_two_dvd_nat (by simp [hpTwo])
     obtain ⟨n, hqPow⟩ :=
       (hQp.to_subgroup (Subgroup.center Q)).exists_card_eq
     have hpNotDvdRoot : ¬ p ∣ Nat.card Root := by
@@ -1784,7 +1775,7 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
       rcases (Nat.dvd_prime Nat.prime_two).mp hpTwo with hpOne | hpTwo
       · exact hp.ne_one hpOne
       · exact hpNeTwo hpTwo
-    letI : Fact (Nat.Prime p) := ⟨hp⟩
+    let : Fact (Nat.Prime p) := ⟨hp⟩
     have hPpgroup : IsPGroup p P :=
       IsPGroup.of_card (n := 1) (by simpa using hPcard)
     rcases hPpgroup.nonempty_fixed_point_of_prime_not_dvd_card
@@ -1829,7 +1820,7 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
           (fun z : Subgroup.center Q => (((z : Subgroup.center Q) : Q) : G))
           hrSqOne
   by_cases hWbot : W = ⊥
-  · haveI : Subsingleton W := by
+  · have : Subsingleton W := by
       constructor
       intro x y
       apply Subtype.ext
@@ -1866,8 +1857,6 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
     apply congrArg (QuotientGroup.mk' (Subgroup.center Q))
     apply Subtype.ext
     simp only [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe]
-    change (k : G) * ((w : G) * (y : G) * (w : G)⁻¹) * (k : G)⁻¹ =
-      (w : G) * ((k : G) * (y : G) * (k : G)⁻¹) * (w : G)⁻¹
     calc
       (k : G) * ((w : G) * (y : G) * (w : G)⁻¹) * (k : G)⁻¹ =
           ((k : G) * (w : G)) * (y : G) *
@@ -1938,9 +1927,9 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
     exact hcWU hUVeq.symm
   have hEdata := higmanTheorem_center_quotient_orders_and_exponent hQ
   have hEcomm : IsMulCommutative E := by simpa [E] using hEdata.1
-  letI : IsMulCommutative E := hEcomm
-  letI : CommGroup E := IsMulCommutative.instCommGroup
-  letI : U.Normal := Subgroup.normal_of_isMulCommutative U
+  let : IsMulCommutative E := hEcomm
+  let : CommGroup E := IsMulCommutative.instCommGroup
+  let : U.Normal := Subgroup.normal_of_isMulCommutative U
   have hUTcompl : U.IsComplement' T := by
     refine Subgroup.isComplement'_of_disjoint_and_mul_eq_univ ?_ ?_
     · rw [disjoint_iff]
@@ -1952,10 +1941,10 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
         ⟨u, hu, v, hv, huv⟩
       exact ⟨u, hu, v, hv, huv⟩
   have hEcard : Nat.card E = q ^ 2 := by
-    have hmul := hUTcompl.card_mul
+    have hmul := hUTcompl.card_mul_card
     rw [hUcard, hTcard] at hmul
     simpa [E, q, pow_two] using hmul.symm
-  letI : Vline.Normal := Subgroup.normal_of_isMulCommutative Vline
+  let : Vline.Normal := Subgroup.normal_of_isMulCommutative Vline
   have hUVcomp : U.IsComplement' Vline :=
     Subgroup.isComplement'_of_card_mul_and_disjoint
       (by rw [hUcard, hVcard, hEcard, pow_two])
@@ -2041,7 +2030,7 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
         change w • (Additive.toMul x * Additive.toMul y) =
           w • Additive.toMul x * w • Additive.toMul y
         exact smul_mul' w (Additive.toMul x) (Additive.toMul y) }
-  letI : DistribMulAction W (Additive E) := instWAddAction
+  let : DistribMulAction W (Additive E) := instWAddAction
   let instWAction : DistribMulAction W X :=
     { smul := fun w x => eAdd.symm (w • eAdd x)
       one_smul := by
@@ -2065,7 +2054,7 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
           eAdd.symm (w • eAdd x) + eAdd.symm (w • eAdd y)
         apply eAdd.injective
         simp [smul_add] }
-  letI : DistribMulAction W X := instWAction
+  let : DistribMulAction W X := instWAction
   have hWAction : ∀ w : W, ∀ x : X,
       eAdd (w • x) = Additive.ofMul (w • Additive.toMul (eAdd x)) := by
     intro w x
@@ -2114,7 +2103,7 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
           rw [hWAction w x]
           simp
         _ = eAdd (a • (w • x)) := (hscalarE a ha (w • x)).symm
-  letI : SMulCommClass W F X := ⟨hWscalar⟩
+  let : SMulCommClass W F X := ⟨hWscalar⟩
   let rho : Representation F W X :=
     Representation.ofDistribMulAction F W X
   have hdim : Module.finrank F X = 2 := by
@@ -2135,7 +2124,7 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
       invFun := fun y =>
         ⟨eQ.symm (Multiplicative.ofAdd (y : X)), by
           change (eQ (eQ.symm (Multiplicative.ofAdd (y : X)))).toAdd ∈ z.submodule
-          simpa using y.property⟩
+          simp⟩
       left_inv := by intro x; apply Subtype.ext; simp
       right_inv := by intro y; apply Subtype.ext; simp }
   have hlineKinv : ∀ z : ℙ F X,
@@ -2203,7 +2192,7 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
     have hStabGne : StabG ≠ ⊥ := by
       intro hbot
       apply hstab
-      rw [eq_bot_iff]
+      rw [_root_.eq_bot_iff]
       intro w hw
       have hwMap : (w : G) ∈ StabG := ⟨w, hw, rfl⟩
       rw [hbot] at hwMap
@@ -2215,7 +2204,7 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
       intro g hg
       have hgStab : g ∈ StabG := hPStab hg
       rcases hgStab with ⟨w, _hw, hwg⟩
-      simpa [← hwg] using w.property
+      simp [← hwg]
     have hPfixLine : ∀ c : P0,
         (⟨(c : G), hP0W c.property⟩ : W) • line z = line z := by
       intro c
@@ -2230,7 +2219,7 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
       simpa [cW0, hwcW] using hlineFixed w z hwFix
     exact hprimeMovesLine P0 p0 hP0W hp0 hP0card
       (line z) (hlineKinv z) (hlineCard z) hPfixLine
-  letI : Nontrivial W := (Subgroup.nontrivial_iff_ne_bot W).2 hWbot
+  let : Nontrivial W := (Subgroup.nontrivial_iff_ne_bot W).2 hWbot
   have hcycDiv := cyclic_and_card_dvd_of_projective_stabilizers_bot
     hdim hWodd hcharNotDvd hprojectiveStabilizer
   have hqQ0 : q = Nat.card Q0 := hcenterCard

@@ -4,6 +4,7 @@ public import FeitThompson.BGsection4.theorem_4_12_b
 public import FeitThompson.BGsection4.lemma_4_5_a
 public import FeitThompson.BGsection4.lemma_4_10
 
+
 open scoped FixedPoints
 
 /-! # Infrastructure for Theorem 4.12(c) from BG Section 4 -/

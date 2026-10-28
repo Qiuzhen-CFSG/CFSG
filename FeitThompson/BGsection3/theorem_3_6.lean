@@ -4,6 +4,8 @@ public import FeitThompson.Fitting.Centralizer
 public import FeitThompson.BGsection3.Defs
 public import FeitThompson.BGsection3.theorem_3_4
 public import FeitThompson.BGsection3.theorem_3_5
+open Representation
+
 
 open scoped commutatorElement
 
@@ -974,7 +976,7 @@ public theorem theorem_3_6_invariant_complement_in_fitting_preimage
     simpa [K] using isInvariant_map_subtype (A := ↥R) (G := ↥H) U K0
   let : IsInvariant (↥R) (↥H) K := hK_inv
   have hNK_inv : IsInvariant (↥R) (↥H) (Subgroup.normalizer K) := by
-    simpa using isInvariant_normalizer_of_isInvariant (A := ↥R) (G := ↥H) K
+    simpa using isInvariant_normalizer (A := ↥R) (G := ↥H) K
   exact ⟨K, hK_le_U, hVK_sup, hVK_disj, hK_inv, hNK_inv⟩
 
 private theorem map_subgroupOf_map_conjNormal_eq
@@ -2412,7 +2414,7 @@ public theorem theorem_3_6_r0_centralizing_complement_forces_cyclic
     exact hK_fix_H (by simpa [Subgroup.mem_subgroupOf] using hx)
   have hK_triv_NK :
       ActsTriviallyOnSubgroup (A := ↥R₀) (G := ↥NK) (K.subgroupOf NK) :=
-    actsTriviallyOnSubgroup_of_le_fixedPointSubgroup (A := ↥R₀) (G := ↥NK) hK_fix_NK
+    actsTriviallyOnSubgroup_of_le_fixedPoints_subgroup (A := ↥R₀) (G := ↥NK) hK_fix_NK
   have hKsub_inv₀ : IsInvariant (↥R₀) (↥NK) (K.subgroupOf NK) := by
     refine ⟨?_⟩
     intro a x
@@ -2601,7 +2603,7 @@ public theorem theorem_3_6_r0_commutator_nontrivial
     rw [← hmap_top]
     exact hcommHq_le
   let : IsInvariant (↥R) (↥H) NK := hNK_inv
-  -- letI : MulDistribMulAction (↥R) (↥NK) := instMulDistribMulAction_subtype (A := ↥R) (G := ↥H) NK
+  -- let : MulDistribMulAction (↥R) (↥NK) := instMulDistribMulAction_subtype (A := ↥R) (G := ↥H) NK
   have hNK_map_top : NK.map q = ⊤ := by
     apply top_unique
     intro x _
@@ -2682,7 +2684,7 @@ public theorem theorem_3_6_r0_commutator_nontrivial
         symm
         exact Subgroup.map_top_of_surjective φ hφ_surj
   let : IsInvariant (↥R) (↥H) K := hK_inv
-  -- letI : MulDistribMulAction (↥R) (↥K) := instMulDistribMulAction_subtype (A := ↥R) (G := ↥H) K
+  -- let : MulDistribMulAction (↥R) (↥K) := instMulDistribMulAction_subtype (A := ↥R) (G := ↥H) K
   let ρ : R →* MulAut K := MulDistribMulAction.toMulAut (G := ↥R) (M := ↥K)
   let ψ : NK →* MulAut K := by
     change Subgroup.normalizer (K : Set H) →* MulAut K
@@ -2786,7 +2788,7 @@ public theorem theorem_3_6_centralizer_KR₀_on_fitting_eq_bot
     let _ : Vg.Normal := by
       dsimp [Vg]
       exact ConjAct.normal_of_characteristic_of_normal
-    haveI : Subgroup.Normalizes KR₀ Vg := ⟨Subgroup.le_normalizer_of_normal (H := Vg)⟩
+    have : Subgroup.Normalizes KR₀ Vg := ⟨Subgroup.le_normalizer_of_normal (H := Vg)⟩
     actionCentralizerIn (A := ↥KR₀) (G := ↥Vg) (⊤ : Subgroup KR₀) = ⊥ := by
   let hRnormH : R ≤ Subgroup.normalizer H := Subgroup.le_normalizer_of_normal (H := H)
   dsimp
@@ -5230,7 +5232,7 @@ public theorem theorem_3_6_K_quotient_commutator_fixed_eq_bot
       X < K →
       ⁅X, normalizerSubtypeMap K P⁆ = ⊥) →
     let Psub : Subgroup H := normalizerSubtypeMap K P
-    haveI : Subgroup.Normalizes Psub K :=
+    have : Subgroup.Normalizes Psub K :=
       ⟨by
         simpa [Psub, normalizerOf, normalizerSubtypeMap] using (Subgroup.map_subtype_le P)⟩
     let hKcomm_inv : IsInvariant (↥Psub) (↥K) (commutator (↥K)) :=
@@ -5420,7 +5422,7 @@ public theorem theorem_3_6_K_quotient_commutator_p_faithful
       X < K →
       ⁅X, normalizerSubtypeMap K P⁆ = ⊥) →
     let Psub : Subgroup H := normalizerSubtypeMap K P
-    haveI : Subgroup.Normalizes Psub K :=
+    have : Subgroup.Normalizes Psub K :=
       ⟨by
         simpa [Psub, normalizerOf, normalizerSubtypeMap] using (Subgroup.map_subtype_le P)⟩
     let hKcomm_inv : IsInvariant (↥Psub) (↥K) (commutator (↥K)) :=
@@ -8307,9 +8309,9 @@ private theorem theorem_3_6_fixedPointSubgroup_sup_eq_bot_of_disjoint
     (hfixW : fixedPointSubgroup A (↥W) = ⊥) :
     fixedPointSubgroup A (↥(U ⊔ W)) = ⊥ := by
   let S : Subgroup M := U ⊔ W
-  -- letI : MulDistribMulAction A (↥U) := instMulDistribMulAction_subtype (A := A) (G := M) U
-  -- letI : MulDistribMulAction A (↥W) := instMulDistribMulAction_subtype (A := A) (G := M) W
-  -- letI : MulDistribMulAction A (↥S) := instMulDistribMulAction_subtype (A := A) (G := M) S
+  -- let : MulDistribMulAction A (↥U) := instMulDistribMulAction_subtype (A := A) (G := M) U
+  -- let : MulDistribMulAction A (↥W) := instMulDistribMulAction_subtype (A := A) (G := M) W
+  -- let : MulDistribMulAction A (↥S) := instMulDistribMulAction_subtype (A := A) (G := M) S
   apply bot_unique
   intro x hx
   rw [FixedPoints.mem_subgroup] at hx
@@ -9839,7 +9841,7 @@ private theorem theorem_3_6_final_contradiction
     let : CommGroup (MulAut ↥(F Y)) :=
       MonoidHom.commGroupOfInjective eAut.toMonoidHom eAut.injective
     have hψker : ψ.ker = CY := by
-      simp [ψ, CY, actionCentralizerIn, fixingSubgroupOf_univ_eq_ker_toMulAut]
+      simp [ψ, CY, actionCentralizerIn, fixingSubgroup_univ_eq_ker_toMulAut]
     have hιR_smul_K (a : R) (g : K) : (ιR a : Sg) • g = (a : R) • g := by
       apply Subtype.ext
       apply H.subtype_injective
@@ -10093,7 +10095,7 @@ private theorem theorem_3_6_final_contradiction
     let : CommGroup (MulAut ↥(F Y)) :=
       MonoidHom.commGroupOfInjective eAut.toMonoidHom eAut.injective
     have hψker : ψ.ker = CY := by
-      simp [ψ, CY, actionCentralizerIn, fixingSubgroupOf_univ_eq_ker_toMulAut]
+      simp [ψ, CY, actionCentralizerIn, fixingSubgroup_univ_eq_ker_toMulAut]
     have hP_transport (a : Psub) (g : K) (x : V) :
         ((a • g : K) • (a • x : V) : V) = (a : Psub) • ((g : K) • x : V) := by
       apply Subtype.ext

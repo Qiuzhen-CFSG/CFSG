@@ -62,7 +62,7 @@ private lemma qi_sq {p : ℕ} [Fact p.Prime] :
   ext i j
   change ((!![(0 : ZMod p), -1; 1, 0] : Matrix (Fin 2) (Fin 2) (ZMod p)) ^ 2) i j = _
   fin_cases i <;> fin_cases j <;>
-    simp [qi, pow_two, Matrix.mul_apply, Fin.sum_univ_two]
+    simp [pow_two, Matrix.mul_apply, Fin.sum_univ_two]
 
 private lemma qj_sq {p : ℕ} [Fact p.Prime]
     (a b : ZMod p) (hab : a ^ 2 + b ^ 2 = -1) :
@@ -71,7 +71,7 @@ private lemma qj_sq {p : ℕ} [Fact p.Prime]
   ext i j
   change ((!![a, b; b, -a] : Matrix (Fin 2) (Fin 2) (ZMod p)) ^ 2) i j = _
   fin_cases i <;> fin_cases j <;>
-    simp [qj, pow_two, Matrix.mul_apply, Fin.sum_univ_two] <;>
+    simp [pow_two, Matrix.mul_apply, Fin.sum_univ_two] <;>
     ring_nf <;>
     simpa [pow_two, add_comm] using hab
 
@@ -85,7 +85,7 @@ private lemma qi_mul_qj {p : ℕ} [Fact p.Prime]
     -(((!![a, b; b, -a] : Matrix (Fin 2) (Fin 2) (ZMod p)) *
       (!![(0 : ZMod p), -1; 1, 0] : Matrix (Fin 2) (Fin 2) (ZMod p))) i j)
   fin_cases i <;> fin_cases j <;>
-    simp [qi, qj, Matrix.mul_apply, Fin.sum_univ_two]
+    simp [Matrix.mul_apply, Fin.sum_univ_two]
 
 private lemma neg_one_ne_one_qdSL {p : ℕ} [Fact p.Prime]
     (hpodd : p ≠ 2) : -(1 : qdSL p) ≠ 1 := by
@@ -140,7 +140,7 @@ private lemma qi_order {p : ℕ} [Fact p.Prime] (hpodd : p ≠ 2) :
 private lemma pow_val_add_eq {D : Type*} [Group D] [Finite D]
     {ρ : D} {n : ℕ} (hn : orderOf ρ = n)
     (i j : ZMod n) : ρ ^ ((i + j).val) = ρ ^ i.val * ρ ^ j.val := by
-  haveI : NeZero n := ⟨by rw [← hn]; exact (orderOf_pos ρ).ne'⟩
+  have : NeZero n := ⟨by rw [← hn]; exact (orderOf_pos ρ).ne'⟩
   have hcong : (i.val + j.val) % n ≡ i.val + j.val [MOD n] :=
     Nat.mod_modEq (i.val + j.val) n
   have hx : ρ ^ n = 1 := by rw [← hn]; exact pow_orderOf_eq_one ρ
@@ -153,7 +153,7 @@ private lemma pow_val_add_eq {D : Type*} [Group D] [Finite D]
 private lemma pow_val_sub_zpow {D : Type*} [Group D] [Finite D]
     {ρ : D} {n : ℕ} (hn : orderOf ρ = n)
     (i j : ZMod n) : ρ ^ ((j - i).val) = ρ ^ ((j.val : ℤ) - (i.val : ℤ)) := by
-  haveI : NeZero n := ⟨by rw [← hn]; exact (orderOf_pos ρ).ne'⟩
+  have : NeZero n := ⟨by rw [← hn]; exact (orderOf_pos ρ).ne'⟩
   have hji : (i + (j - i) : ZMod n) = j := by
     simp [sub_eq_add_neg]
   have hval : j.val = (i.val + (j - i).val) % n := by
@@ -354,7 +354,7 @@ private lemma quaternionToQdSL_injective {p : ℕ} [Fact p.Prime]
 private lemma quaternionGroupTwo_not_isMulCommutative :
     ¬ IsMulCommutative (QuaternionGroup 2) := by
   intro h
-  letI : IsMulCommutative (QuaternionGroup 2) := h
+  let : IsMulCommutative (QuaternionGroup 2) := h
   have hcomm := (IsMulCommutative.is_comm
     (M := QuaternionGroup 2)).comm
       (QuaternionGroup.a 1 : QuaternionGroup 2)
@@ -379,7 +379,7 @@ private theorem hasAbelianSylow_of_involved
     ∀ T : Sylow 2 H, IsMulCommutative (T : Subgroup H) := by
   classical
   rcases hInv with ⟨K, N, hN, ⟨e⟩⟩
-  letI : N.Normal := hN
+  let : N.Normal := hN
   have hK : ∀ P : Sylow 2 K, IsMulCommutative (P : Subgroup K) := by
     intro P
     obtain ⟨R, hRP⟩ := Sylow.exists_comap_subtype_eq P
@@ -392,13 +392,13 @@ private theorem hasAbelianSylow_of_involved
     intro Q
     obtain ⟨P, hPQ⟩ := Sylow.mapSurjective_surjective
       (f := QuotientGroup.mk' N) (hf := QuotientGroup.mk'_surjective N) 2 Q
-    letI : IsMulCommutative (P : Subgroup K) := hK P
+    let : IsMulCommutative (P : Subgroup K) := hK P
     rw [← hPQ]
     exact Subgroup.map_isMulCommutative (P : Subgroup K) (QuotientGroup.mk' N)
   intro T
   obtain ⟨Q, hQT⟩ := Sylow.mapSurjective_surjective
     (f := e.toMonoidHom) (hf := e.surjective) 2 T
-  letI : IsMulCommutative (Q : Subgroup (K ⧸ N)) := hKN Q
+  let : IsMulCommutative (Q : Subgroup (K ⧸ N)) := hKN Q
   rw [← hQT]
   exact Subgroup.map_isMulCommutative (Q : Subgroup (K ⧸ N)) e.toMonoidHom
 
@@ -430,7 +430,7 @@ private theorem qdSL_not_hasAbelianSylowTwo
   let eφ : QuaternionGroup 2 ≃* φ.range :=
     MulEquiv.ofBijective φ.rangeRestrict
       ⟨(fun _ _ hxy => hφinj (congrArg Subtype.val hxy)), φ.rangeRestrict_surjective⟩
-  letI : IsMulCommutative φ.range := hRcomm
+  let : IsMulCommutative φ.range := hRcomm
   have hQcomm : IsMulCommutative (QuaternionGroup 2) := by
     refine ⟨⟨fun x y => ?_⟩⟩
     apply eφ.injective
@@ -448,7 +448,7 @@ public theorem qd_not_involved_of_abelian_sylow_two {p : ℕ} [Fact p.Prime]
     ¬ Involved (Qd p) G := by
   intro hQd
   rcases hQd with ⟨K, N, hN, ⟨e⟩⟩
-  letI : N.Normal := hN
+  let : N.Normal := hN
   let L : Subgroup (Qd p) :=
     (SemidirectProduct.inr : qdSL p →* Qd p).range
   let eSL : qdSL p ≃* L :=
@@ -474,7 +474,7 @@ public theorem qd_not_involved_of_abelian_sylow_two {p : ℕ} [Fact p.Prime]
       rw [← hQP]
       exact Subgroup.comap_injective_isMulCommutative
         (H := (P : Subgroup G)) K.subtype_injective
-    letI : IsMulCommutative (Q : Subgroup K) := hQcomm
+    let : IsMulCommutative (Q : Subgroup K) := hQcomm
     rw [← hQT]
     exact Subgroup.map_isMulCommutative (Q : Subgroup K) (QuotientGroup.mk' N)
   have hSLabel : ∀ S : Sylow 2 (qdSL p),

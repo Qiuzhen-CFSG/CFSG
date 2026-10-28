@@ -1,0 +1,198 @@
+module
+public import CFSG.Quasithin.ChapterB.Section06To07.Structure.CoreOdd
+public import Theory.GroupTheory.GeneralizedFitting.ChiefComponents
+public import Theory.GroupTheory.Fitting.Core
+public import Theory.GroupTheory.SolvableRadical
+public import Theory.GroupTheory.GeneralizedFitting.ComponentLayerStructure
+import all CFSG.Quasithin.ChapterB.Section06To07.Structure
+
+/-!
+# The chief residual and Fitting alternatives in B.6.8(3)
+
+The original core `J` is solvable: its two-core kernel and its odd nilpotent
+image give a solvable extension. Normal-subgroup correspondence then shows
+that the residual of the literal star quotient `H/J` is a minimal normal
+subgroup. If `H` is nonsolvable, this residual is nonsolvable and hence
+nonabelian; the chief-component theorem makes its intrinsic layer the whole
+residual.
+
+In `H/O₂(H)`, the odd nilpotent image of `J` is the Fitting subgroup.
+Otherwise the normal-subgroup dichotomy would put the nonsolvable residual
+inside a nilpotent subgroup. The same argument gives `J = O∞(H)`.
+Applying the dichotomy to the layer of `H/O₂(H)` gives the two source
+alternatives: its generalized Fitting subgroup is the image of `J`, or its
+quotient by the layer is a two-group. All equalities downstairs are pulled
+back by the literal quotient map.
+
+Source: Aschbacher–Smith, *The Classification of Quasithin Groups*, B.6.8(3),
+printed pp.114–115. The transitive simple-factor family and its local
+normalizer/automizer assertions are separate remaining source arguments.
+-/
+
+public section
+noncomputable section
+namespace CFSG.Quasithin.ChapterB
+open Subgroup
+open scoped IsMulCommutative
+variable {H : Type*} [Group H] [Finite H]
+
+/-- The original core is solvable, although it need not have odd order. -/
+theorem minimalParabolic_core_solvable (T : Sylow 2 H)
+    (hP : IsMinimalParabolicOver T ⊤) : Group.IsSolvable (minimalParabolicCore T hP) := by
+  let J := minimalParabolicCore T hP
+  let Q := pCore 2 H
+  let : Group.IsNilpotent (minimalParabolicCoreImage T hP) :=
+    minimalParabolic_coreImage_nilpotent T hP
+  let e := quotientSubgroupRangeEquiv J Q
+  let : Group.IsSolvable (J ⧸ Q.subgroupOf J) :=
+    Group.isSolvable_of_surjective (f := e.symm.toMonoidHom) e.symm.surjective
+  let : Group.IsNilpotent (Q.subgroupOf J) :=
+    (pCore_isPGroup (p := 2) (G := H)).comap_subtype.isNilpotent
+  exact (Group.isSolvable_iff_subgroup_quotient (Q.subgroupOf J)).mpr
+    ⟨inferInstance, inferInstance⟩
+
+/-- Every nontrivial normal subgroup of the literal star quotient contains its residual. -/
+theorem minimalParabolic_star_normal_dichotomy (T : Sylow 2 H)
+    (hP : IsMinimalParabolicOver T ⊤)
+    (N : Subgroup (minimalParabolicStarQuotient T hP)) [N.Normal] :
+    N = ⊥ ∨ pResidual 2 (minimalParabolicStarQuotient T hP) ≤ N := by
+  let J := minimalParabolicCore T hP
+  let q := QuotientGroup.mk' J
+  have hq := QuotientGroup.mk'_surjective J
+  obtain hn | hn := minimalParabolic_normal_subgroup_residual_dichotomy T hP (N.comap q)
+  · left
+    apply le_bot_iff.mp
+    have hh := map_mono (f := q) hn
+    simpa only [q, J, map_comap_eq_self_of_surjective hq, QuotientGroup.map_mk'_self] using hh
+  · right
+    rw [← minimalParabolic_residual_star_image T hP]
+    exact map_le_iff_le_comap.mpr hn
+
+/-- The residual in `H/J` is a genuine chief subgroup, normal in that quotient. -/
+theorem minimalParabolic_star_residual_chief (T : Sylow 2 H)
+    (hP : IsMinimalParabolicOver T ⊤) :
+    ChiefFactor.IsChief (pResidual 2 (minimalParabolicStarQuotient T hP)) ⊥ := by
+  refine ⟨inferInstance, inferInstance,
+    bot_lt_iff_ne_bot.mpr (minimalParabolic_residual_star_ne_bot T hP), ?_⟩
+  intro N hn _ hN
+  let := hn
+  obtain he | he := minimalParabolic_star_normal_dichotomy T hP N
+  · exact Or.inl he
+  · exact Or.inr (le_antisymm hN he)
+
+/-- Nonsolvability survives in the residual of the star quotient. -/
+theorem minimalParabolic_nonsolvable_star_residual (T : Sylow 2 H)
+    (hP : IsMinimalParabolicOver T ⊤) (hs : ¬ Group.IsSolvable H) :
+    ¬ Group.IsSolvable (pResidual 2 (minimalParabolicStarQuotient T hP)) := by
+  intro hr
+  let := hr
+  let G := minimalParabolicStarQuotient T hP
+  let : Group.IsNilpotent (G ⧸ pResidual 2 G) := (isPGroup_quotient_pResidual 2).isNilpotent
+  let : Group.IsSolvable G := (Group.isSolvable_iff_subgroup_quotient (pResidual 2 G)).mpr
+    ⟨inferInstance, inferInstance⟩
+  apply hs
+  exact (Group.isSolvable_iff_subgroup_quotient (minimalParabolicCore T hP)).mpr
+    ⟨minimalParabolic_core_solvable T hP, inferInstance⟩
+
+/-- The star residual in the nonsolvable branch is nonabelian. -/
+theorem minimalParabolic_nonsolvable_star_residual_nonabelian (T : Sylow 2 H)
+    (hP : IsMinimalParabolicOver T ⊤) (hs : ¬ Group.IsSolvable H) :
+    ¬ IsMulCommutative (pResidual 2 (minimalParabolicStarQuotient T hP)) := by
+  intro ha
+  let := ha
+  exact minimalParabolic_nonsolvable_star_residual T hP hs inferInstance
+
+/-- The nonabelian chief subgroup is generated by its actual ordinary components. -/
+theorem minimalParabolic_nonsolvable_star_layer (T : Sylow 2 H)
+    (hP : IsMinimalParabolicOver T ⊤) (hs : ¬ Group.IsSolvable H) :
+    Theory.GroupTheory.componentLayer (pResidual 2 (minimalParabolicStarQuotient T hP)) = ⊤ :=
+  (minimalParabolic_star_residual_chief T hP).componentLayer_eq_top
+    (minimalParabolic_nonsolvable_star_residual_nonabelian T hP hs)
+
+private theorem nonsolvable_residual {G : Type*} [Group G] [Finite G]
+    (hs : ¬ Group.IsSolvable G) : ¬ Group.IsSolvable (pResidual 2 G) := by
+  intro hr
+  let := hr
+  let : Group.IsNilpotent (G ⧸ pResidual 2 G) := (isPGroup_quotient_pResidual 2).isNilpotent
+  exact hs ((Group.isSolvable_iff_subgroup_quotient (pResidual 2 G)).mpr
+    ⟨inferInstance, inferInstance⟩)
+
+/-- The original normal-subgroup dichotomy in the literal two-core quotient. -/
+theorem minimalParabolic_quotient_normal_dichotomy (T : Sylow 2 H)
+    (hP : IsMinimalParabolicOver T ⊤) (N : Subgroup (H ⧸ pCore 2 H)) [N.Normal] :
+    N ≤ minimalParabolicCoreImage T hP ∨ pResidual 2 (H ⧸ pCore 2 H) ≤ N := by
+  let q := QuotientGroup.mk' (pCore 2 H)
+  have hq := QuotientGroup.mk'_surjective (pCore 2 H)
+  obtain hn | hn := minimalParabolic_normal_subgroup_residual_dichotomy T hP (N.comap q)
+  · left
+    have hh := map_mono (f := q) hn
+    rwa [map_comap_eq_self_of_surjective hq] at hh
+  · right
+    rw [← map_pResidual_quotient 2 (pCore 2 H)]
+    exact map_le_iff_le_comap.mpr hn
+
+private theorem nonsolvable_quotient_twoCore (hs : ¬ Group.IsSolvable H) :
+    ¬ Group.IsSolvable (H ⧸ pCore 2 H) := by
+  intro hq
+  let : Group.IsNilpotent (pCore 2 H) := (pCore_isPGroup (p := 2) (G := H)).isNilpotent
+  exact hs ((Group.isSolvable_iff_subgroup_quotient (pCore 2 H)).mpr ⟨inferInstance, hq⟩)
+
+/-- The odd core image equals the Fitting subgroup in the nonsolvable branch. -/
+theorem minimalParabolic_nonsolvable_coreImage_eq_fitting (T : Sylow 2 H)
+    (hP : IsMinimalParabolicOver T ⊤) (hs : ¬ Group.IsSolvable H) :
+    minimalParabolicCoreImage T hP = fittingSubgroup (H ⧸ pCore 2 H) := by
+  let J := minimalParabolicCore T hP
+  let q := QuotientGroup.mk' (pCore 2 H)
+  let D := minimalParabolicCoreImage T hP
+  let : D.Normal := (inferInstance : J.Normal).map q (QuotientGroup.mk'_surjective _)
+  have hDF : D ≤ fittingSubgroup (H ⧸ pCore 2 H) :=
+    le_sSup ⟨inferInstance, minimalParabolic_coreImage_nilpotent T hP⟩
+  refine le_antisymm hDF ?_
+  obtain hf | hf := minimalParabolic_quotient_normal_dichotomy T hP
+    (fittingSubgroup (H ⧸ pCore 2 H))
+  · exact hf
+  · exact False.elim (nonsolvable_residual (nonsolvable_quotient_twoCore hs)
+      (Group.isSolvable_of_isSolvable_injective (inclusion_injective hf)))
+
+/-- The original core equals the solvable radical in the nonsolvable branch. -/
+theorem minimalParabolic_nonsolvable_core_eq_radical (T : Sylow 2 H)
+    (hP : IsMinimalParabolicOver T ⊤) (hs : ¬ Group.IsSolvable H) :
+    minimalParabolicCore T hP = solvableRadical H := by
+  refine le_antisymm (le_solvableRadical _ inferInstance
+    (minimalParabolic_core_solvable T hP)) ?_
+  obtain hr | hr := minimalParabolic_normal_subgroup_residual_dichotomy T hP
+    (solvableRadical H)
+  · exact hr
+  · exact False.elim (nonsolvable_residual hs
+      (Group.isSolvable_of_isSolvable_injective (inclusion_injective hr)))
+
+/-- The Fitting identity and alternatives (i)/(ii) of B.6.8(3),
+with `O₂,F`, `O₂,F*`, and `O₂,E,₂` expressed by literal quotient preimages. -/
+theorem minimalParabolic_nonsolvable_fitting_alternatives (T : Sylow 2 H)
+    (hP : IsMinimalParabolicOver T ⊤) (hs : ¬ Group.IsSolvable H) :
+    let q := QuotientGroup.mk' (pCore 2 H)
+    minimalParabolicCore T hP = (fittingSubgroup (H ⧸ pCore 2 H)).comap q ∧
+      (minimalParabolicCore T hP =
+        (Theory.GroupTheory.generalizedFitting (H ⧸ pCore 2 H)).comap q ∨
+      (minimalParabolicCore T hP = solvableRadical H ∧
+        IsPGroup 2 ((H ⧸ pCore 2 H) ⧸ Theory.GroupTheory.componentLayer (H ⧸ pCore 2 H)))) := by
+  let G := H ⧸ pCore 2 H
+  let q := QuotientGroup.mk' (pCore 2 H)
+  have hF : minimalParabolicCore T hP = (fittingSubgroup G).comap q := by
+    rw [← minimalParabolic_nonsolvable_coreImage_eq_fitting T hP hs,
+      comap_map_eq, QuotientGroup.ker_mk',
+      sup_eq_left.mpr (minimalParabolicTwoCore_le_core T hP)]
+  refine ⟨hF, ?_⟩
+  obtain he | he := minimalParabolic_quotient_normal_dichotomy T hP
+    (Theory.GroupTheory.componentLayer G)
+  · left
+    rw [hF]
+    congr 1
+    symm
+    exact sup_eq_left.mpr (he.trans (minimalParabolic_nonsolvable_coreImage_eq_fitting T hP hs).le)
+  · exact Or.inr ⟨minimalParabolic_nonsolvable_core_eq_radical T hP hs,
+      (pResidual_le_iff_isPGroup_quotient 2 _).mp he⟩
+
+end CFSG.Quasithin.ChapterB
+end
+end

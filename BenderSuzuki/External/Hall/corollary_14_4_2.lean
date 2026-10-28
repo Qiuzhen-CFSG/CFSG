@@ -2,7 +2,7 @@ module
 
 public import BenderSuzuki.External.Hall.Basic
 public import BenderSuzuki.External.Hall.theorem_14_4_1
-import FeitThompson.Frattini.Core
+public import Theory.Frattini.PGroup
 
 /-!
 # Hall Corollary 14.4.2
@@ -66,7 +66,7 @@ public theorem hallTransferModulus_proper_of_residual_lt
     exact ⟨hG₀_normal.conj_mem x hx.1 n,
       H₁.mul_mem (H₁.mul_mem hn hx.2) (H₁.inv_mem hn)⟩
   let R : Subgroup H₁ := hallPResidual p H₁
-  letI : R.Normal := hallPResidual_normal p H₁
+  let : R.Normal := hallPResidual_normal p H₁
   let q : H₁ →* H₁ ⧸ R := QuotientGroup.mk' R
   let ι : H →* H₁ := H.subtype.codRestrict H₁ (fun x => hH_le_H₁ x.2)
   let φ : H →* H₁ ⧸ R := q.comp ι
@@ -78,12 +78,12 @@ public theorem hallTransferModulus_proper_of_residual_lt
       exact ⟨ι x, x.2, rfl⟩
     · rintro ⟨x, hx, rfl⟩
       exact ⟨⟨(x : G), hx⟩, rfl⟩
-  letI : A.Normal := by
+  let : A.Normal := by
     rw [hA_eq]
     exact QuotientGroup.map_normal R (H.subgroupOf H₁)
   have hquot_p : IsPGroup p (H₁ ⧸ R) := by
     simpa [R] using hallPResidual_quotient_isPGroup (G := H₁) p
-  letI : Fact (IsPGroup p A) := ⟨hquot_p.to_subgroup A⟩
+  let : Fact (IsPGroup p A) := ⟨hquot_p.to_subgroup A⟩
   have hres_map :
       (hallPResidual p H₁).map H₁.subtype =
         (hallPResidual p H).map H.subtype :=
@@ -104,7 +104,7 @@ public theorem hallTransferModulus_proper_of_residual_lt
     have hmem : φ ⟨x, hxH⟩ ∈ A := ⟨⟨x, hxH⟩, rfl⟩
     rw [hbot] at hmem
     exact hφx_ne (by simpa using hmem)
-  letI : Group.IsNilpotent (H₁ ⧸ R) := hquot_p.isNilpotent
+  let : Group.IsNilpotent (H₁ ⧸ R) := hquot_p.isNilpotent
   let C : Subgroup (H₁ ⧸ R) := ⁅A, (⊤ : Subgroup (H₁ ⧸ R))⁆
   have hC_lt : C < A :=
     hall_normal_commutator_lt_of_nilpotent A hA_ne_bot

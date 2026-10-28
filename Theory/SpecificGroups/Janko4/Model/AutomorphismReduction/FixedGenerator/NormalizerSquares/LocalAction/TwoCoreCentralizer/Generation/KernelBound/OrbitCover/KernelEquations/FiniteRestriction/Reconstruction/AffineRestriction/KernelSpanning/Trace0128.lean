@@ -1,0 +1,735 @@
+module
+
+public import Theory.SpecificGroups.Janko4.Model.AutomorphismReduction.FixedGenerator.NormalizerSquares.LocalAction.TwoCoreCentralizer.Generation.KernelBound.OrbitCover.KernelEquations.FiniteRestriction.Reconstruction.AffineRestriction.KernelSpanning.Rows
+public import Theory.SpecificGroups.Janko4.Model.AutomorphismReduction.FixedGenerator.NormalizerSquares.LocalAction.TwoCoreCentralizer.Generation.KernelBound.OrbitCover.KernelEquations.FiniteRestriction.Reconstruction.AffineRestriction.KernelSpanning.Core
+
+/-!
+# Elimination identities and predecessor bounds
+
+Finite witness from the saved full Gaussian elimination. Every identity
+is checked in Lean; see KernelSpanning/source/README.md.
+-/
+
+@[expose] public section
+namespace Janko4.OuterReduction.FixedGenerator.NormalizerSquares.TwoCoreCentralizerData.Generation.KernelBound.OrbitCoverCoordinates.Reconstruction.AffineCertificate.KernelSpanning
+namespace Trace0128
+open LinearMembership GeneratorCertificates Binary
+
+private def Step (i : ℕ) : Prop := ∃ ps : List ℕ,
+  (∀ j ∈ ps, j < i) ∧ row i = base i ^^^ xorList (ps.map row)
+
+private def parents0 : List ℕ := decodeParents 55 2567239154981461003166172705153532064725116947031726187372544770347766953376189040224166872596898244874552867359997039431879359789753101323820512381309180335096954073678563809427233681464778970908081556338157608961
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check0 :
+    (∀ j ∈ parents0, j < 128) ∧
+    row 128 = base 128 ^^^ xorList (parents0.map row) := by decide +kernel
+
+private theorem certified0 : Step 128 := ⟨parents0, check0⟩
+
+private def parents1 : List ℕ := decodeParents 47 119313517019469936562994922041917902787389765638283236270234843704424227606692535847773934388097927392287443616329309597584911043719676347383630781803214431573573884344808303832915969
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check1 :
+    (∀ j ∈ parents1, j < 129) ∧
+    row 129 = base 129 ^^^ xorList (parents1.map row) := by decide +kernel
+
+private theorem certified1 : Step 129 := ⟨parents1, check1⟩
+
+private def parents2 : List ℕ := decodeParents 47 126574536099178242379491581155911750170582001781295086446785239959269659669312118270192076504683066177793594062170408090482800404671120605872512830296040781610217593572822520835399681
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check2 :
+    (∀ j ∈ parents2, j < 130) ∧
+    row 130 = base 130 ^^^ xorList (parents2.map row) := by decide +kernel
+
+private theorem certified2 : Step 130 := ⟨parents2, check2⟩
+
+private def parents3 : List ℕ := decodeParents 40 53636909680984442252511572463186908626814264224380294760676972779763251171016585371201135740248899080719438292358251837780751460483624382675880089405685760
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check3 :
+    (∀ j ∈ parents3, j < 131) ∧
+    row 131 = base 131 ^^^ xorList (parents3.map row) := by decide +kernel
+
+private theorem certified3 : Step 131 := ⟨parents3, check3⟩
+
+private def parents4 : List ℕ := decodeParents 53 41076716132117770302686650327401983208578350775954287510198207403906294713708877314174892900832568672830650466621022038256422716518559796516245524896055957151396711905153459443980590150011254361207185932290
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check4 :
+    (∀ j ∈ parents4, j < 132) ∧
+    row 132 = base 132 ^^^ xorList (parents4.map row) := by decide +kernel
+
+private theorem certified4 : Step 132 := ⟨parents4, check4⟩
+
+private def parents5 : List ℕ := decodeParents 47 135912845703953410942581010391595148298990894941879614891216424341390309626987065287345650035166489525300892827238429311458754957603873639481107647497540451310891087458949062362980353
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check5 :
+    (∀ j ∈ parents5, j < 133) ∧
+    row 133 = base 133 ^^^ xorList (parents5.map row) := by decide +kernel
+
+private theorem certified5 : Step 133 := ⟨parents5, check5⟩
+
+private def parents6 : List ℕ := decodeParents 42 3683925064522529272353413861157005320946339050518146500568194440257753648270802692809083421869176016140587666068308386899146117174649925522488474995933333006843905
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check6 :
+    (∀ j ∈ parents6, j < 134) ∧
+    row 134 = base 134 ^^^ xorList (parents6.map row) := by decide +kernel
+
+private theorem certified6 : Step 134 := ⟨parents6, check6⟩
+
+private def parents7 : List ℕ := decodeParents 48 1138896807457157989537602604574097675893167076115500193981372261278602334070185205031285011978309086136522728021082560413556769632323263670781329515225568894681299828361200160943705686023
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check7 :
+    (∀ j ∈ parents7, j < 135) ∧
+    row 135 = base 135 ^^^ xorList (parents7.map row) := by decide +kernel
+
+private theorem certified7 : Step 135 := ⟨parents7, check7⟩
+
+private def parents8 : List ℕ := decodeParents 52 5167407763541040080059430777850326308864887676698854087259936413414357316435369928408356340694487703393691974990778168169772109253414098737267690143804170198870753051749650036057556888415746108210282497
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check8 :
+    (∀ j ∈ parents8, j < 136) ∧
+    row 136 = base 136 ^^^ xorList (parents8.map row) := by decide +kernel
+
+private theorem certified8 : Step 136 := ⟨parents8, check8⟩
+
+private def parents9 : List ℕ := decodeParents 59 12888674826845618741417772014418090163962700295763027206243086835482735713932617718592205512715682679501147350805404947158800745812241804788007979445690714179643408477102476763310106104978081695782186056733336060011850851426549767
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check9 :
+    (∀ j ∈ parents9, j < 137) ∧
+    row 137 = base 137 ^^^ xorList (parents9.map row) := by decide +kernel
+
+private theorem certified9 : Step 137 := ⟨parents9, check9⟩
+
+private def parents10 : List ℕ := decodeParents 48 1164395580754317516983438409440108110746063589194131891468156297114121076534886601437764346565794203942010167052456569985858328267296711241026055388902265978047895458077850968533892087814
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check10 :
+    (∀ j ∈ parents10, j < 138) ∧
+    row 138 = base 138 ^^^ xorList (parents10.map row) := by decide +kernel
+
+private theorem certified10 : Step 138 := ⟨parents10, check10⟩
+
+private def parents11 : List ℕ := decodeParents 59 13078214332681723677857809473474447055980391845541040746543693433624475508746589931217468332984877930127309777260106451056053922168362294913828273039694248654621404150714040662891745422822871708068037442583167175962090296173445120
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check11 :
+    (∀ j ∈ parents11, j < 139) ∧
+    row 139 = base 139 ^^^ xorList (parents11.map row) := by decide +kernel
+
+private theorem certified11 : Step 139 := ⟨parents11, check11⟩
+
+private def parents12 : List ℕ := decodeParents 48 1181391996271466015588267957643318102102628739842112890000195843451530118388138051826987338439140997499241263247301141427606481864100310267512779327764686843564693519820836218196151263239
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check12 :
+    (∀ j ∈ parents12, j < 140) ∧
+    row 140 = base 140 ^^^ xorList (parents12.map row) := by decide +kernel
+
+private theorem certified12 : Step 140 := ⟨parents12, check12⟩
+
+private def parents13 : List ℕ := decodeParents 46 17477432997475942354455249289844568129900600906015797795829399247821048191573863419351800219708996736950369996681532233935144688731936135039719659314076610677811086124505404317702
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check13 :
+    (∀ j ∈ parents13, j < 141) ∧
+    row 141 = base 141 ^^^ xorList (parents13.map row) := by decide +kernel
+
+private theorem certified13 : Step 141 := ⟨parents13, check13⟩
+
+private def parents14 : List ℕ := decodeParents 53 44212805239401891216372848494044431842065166746618275807727186196464985183820113161700517308289743624613819652626612660047177276650211402619748172278259095783934723088356927747246495719157964879822671855623
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check14 :
+    (∀ j ∈ parents14, j < 142) ∧
+    row 142 = base 142 ^^^ xorList (parents14.map row) := by decide +kernel
+
+private theorem certified14 : Step 142 := ⟨parents14, check14⟩
+
+private def parents15 : List ℕ := decodeParents 50 79282222937558406753782930724688356221829774132344766739672288549993884119583042207875568722370764467925580998431361677672212624500650139318309007983370759232077091615124894504709502883134963719
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check15 :
+    (∀ j ∈ parents15, j < 143) ∧
+    row 143 = base 143 ^^^ xorList (parents15.map row) := by decide +kernel
+
+private theorem certified15 : Step 143 := ⟨parents15, check15⟩
+
+private def parents16 : List ℕ := decodeParents 51 663494076966590742761219228623317113815791814517150881911997606651801797543222252216873772057234796871083414860367963228728431305715605373623117146789216549271349620127751518363693563593559092805632
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check16 :
+    (∀ j ∈ parents16, j < 144) ∧
+    row 144 = base 144 ^^^ xorList (parents16.map row) := by decide +kernel
+
+private theorem certified16 : Step 144 := ⟨parents16, check16⟩
+
+private def parents17 : List ℕ := decodeParents 46 18110722526303694961673959888877451726109157781327625908166166938751697009741169208789219023374490313836320618879992187361763574650648048419188442374225645114714553420856028110854
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check17 :
+    (∀ j ∈ parents17, j < 145) ∧
+    row 145 = base 145 ^^^ xorList (parents17.map row) := by decide +kernel
+
+private theorem certified17 : Step 145 := ⟨parents17, check17⟩
+
+private def parents18 : List ℕ := decodeParents 64 506973945752566109635663634056404005770631743557126459363286946674549280628527401249918117519369698215866376152927926068900652428789583691838508167027182801243211199502396924102320150427539256281049276135699703242367590080647158055553056924808265735
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check18 :
+    (∀ j ∈ parents18, j < 146) ∧
+    row 146 = base 146 ^^^ xorList (parents18.map row) := by decide +kernel
+
+private theorem certified18 : Step 146 := ⟨parents18, check18⟩
+
+private def parents19 : List ℕ := decodeParents 62 7606619787505970674916480967926973017521166762561176540074002216435682629544170934283735674216345660247242264284402786417290461449272531146333199771058756197319663329930843946291326649157654732041516698485995243414053583867017629259882561537
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check19 :
+    (∀ j ∈ parents19, j < 147) ∧
+    row 147 = base 147 ^^^ xorList (parents19.map row) := by decide +kernel
+
+private theorem certified19 : Step 147 := ⟨parents19, check19⟩
+
+private def parents20 : List ℕ := decodeParents 42 4049520171585710776056264204635819534972531592426629166566677948249027401698331793120873680237112529848657207051185700829990312055144874089665916837176635002216450
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check20 :
+    (∀ j ∈ parents20, j < 148) ∧
+    row 148 = base 148 ^^^ xorList (parents20.map row) := by decide +kernel
+
+private theorem certified20 : Step 148 := ⟨parents20, check20⟩
+
+private def parents21 : List ℕ := decodeParents 50 82134026818351180128918496036776499376288151114415777664043589809266713923902404186663987916557499799098276481512748401939988146120713985396379764174957931032470266084156349585274091933639131142
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check21 :
+    (∀ j ∈ parents21, j < 149) ∧
+    row 149 = base 149 ^^^ xorList (parents21.map row) := by decide +kernel
+
+private theorem certified21 : Step 149 := ⟨parents21, check21⟩
+
+private def parents22 : List ℕ := decodeParents 57 206178531823457589502470683759088341342288330666214630463597459322625597424157834707140360185276981156746724390225229838232871667676373458804550025453000188611159683484120048624487459144015154082080363459421134444025643014
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check22 :
+    (∀ j ∈ parents22, j < 150) ∧
+    row 150 = base 150 ^^^ xorList (parents22.map row) := by decide +kernel
+
+private theorem certified22 : Step 150 := ⟨parents22, check22⟩
+
+private def parents23 : List ℕ := decodeParents 63 62313637661978606205531532451011274179859471652396052205477967731647210496090767266404096736066686374949874459026908771844690912074186498023514677121437113399757761883873275764111960866668671590461923185508654896516603127538774295796784744652806
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check23 :
+    (∀ j ∈ parents23, j < 151) ∧
+    row 151 = base 151 ^^^ xorList (parents23.map row) := by decide +kernel
+
+private theorem certified23 : Step 151 := ⟨parents23, check23⟩
+
+private def parents24 : List ℕ := decodeParents 58 1746837630681574641336830715859845181971975156714846374434379287095590699021478487901381578936051759389558795057397401847926346039403366006289892332230229996091861537851929887468266684099613017542768601304877378699905762123777
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check24 :
+    (∀ j ∈ parents24, j < 152) ∧
+    row 152 = base 152 ^^^ xorList (parents24.map row) := by decide +kernel
+
+private theorem certified24 : Step 152 := ⟨parents24, check24⟩
+
+private def parents25 : List ℕ := decodeParents 60 118005211387208491137966269699902499278096755042965309729096924083493031730357062060406811056533181054504702210034120233594115130659773042700003783683790515514154532725083658331940866170567746356735219882122583657713472613063512342529
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check25 :
+    (∀ j ∈ parents25, j < 153) ∧
+    row 153 = base 153 ^^^ xorList (parents25.map row) := by decide +kernel
+
+private theorem certified25 : Step 153 := ⟨parents25, check25⟩
+
+private def parents26 : List ℕ := decodeParents 57 207590711398396037961910363945499004098559097850389699460431278620884050411128228189595931145668459174751466516000563500938520092997764602651144003655573935941644119398247778441286224723008181876208506169229485327767306241
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check26 :
+    (∀ j ∈ parents26, j < 154) ∧
+    row 154 = base 154 ^^^ xorList (parents26.map row) := by decide +kernel
+
+private theorem certified26 : Step 154 := ⟨parents26, check26⟩
+
+private def parents27 : List ℕ := decodeParents 63 64874259442808330940689442540306456018266251105352775001514610198116111273999427042571917991565025724367692857019137310749161058392856546489469667368062429901265199591485696846473563581072556742138198431498788402092767006806284917674977200701441
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check27 :
+    (∀ j ∈ parents27, j < 155) ∧
+    row 155 = base 155 ^^^ xorList (parents27.map row) := by decide +kernel
+
+private theorem certified27 : Step 155 := ⟨parents27, check27⟩
+
+private def parents28 : List ℕ := decodeParents 54 382740274144108649288370308925319711258387147798452766421159812850390698792164692174310027000844736515210975159689954152019972864696214694418031131039920146311728028049449085343478570043825541497385030525124615
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check28 :
+    (∀ j ∈ parents28, j < 156) ∧
+    row 156 = base 156 ^^^ xorList (parents28.map row) := by decide +kernel
+
+private theorem certified28 : Step 156 := ⟨parents28, check28⟩
+
+private def parents29 : List ℕ := decodeParents 65 4468200461641941900845150937962197698190078871234347486265134058503306851677344118234161967344769170182312234301466112684361192531394693397995067991973398874019364423705818101115623407477322156838373915037599490962180573183336919293193121287144260763649
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check29 :
+    (∀ j ∈ parents29, j < 157) ∧
+    row 157 = base 157 ^^^ xorList (parents29.map row) := by decide +kernel
+
+private theorem certified29 : Step 157 := ⟨parents29, check29⟩
+
+private def parents30 : List ℕ := decodeParents 66 36134278372979427682844449203298346375282058992201760904598966949448232128892697886548176323756713171059496130612363351560101560201124553603997722003271562786951329422922818454132844443884768941108052545093422949494533701856790813139497116996698349917757441
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check30 :
+    (∀ j ∈ parents30, j < 158) ∧
+    row 158 = base 158 ^^^ xorList (parents30.map row) := by decide +kernel
+
+private theorem certified30 : Step 158 := ⟨parents30, check30⟩
+
+private def parents31 : List ℕ := decodeParents 54 393015858669056117179081716979188916613138642576571181450034919032954796429840926937149387660167104655265643587644030385463551844568829789282072860819429696453156316097944890180083267115680925096396266722607111
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check31 :
+    (∀ j ∈ parents31, j < 159) ∧
+    row 159 = base 159 ^^^ xorList (parents31.map row) := by decide +kernel
+
+private theorem certified31 : Step 159 := ⟨parents31, check31⟩
+
+private def parents32 : List ℕ := decodeParents 63 65728234166780440098038027624647853791720541018542978923266505776198210319821517107385262263258587219030458795105934144884743461402149554364162547009329049393782323241024235609996266728740821183413587613410053375551519704843192813599656115175431
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check32 :
+    (∀ j ∈ parents32, j < 160) ∧
+    row 160 = base 160 ^^^ xorList (parents32.map row) := by decide +kernel
+
+private theorem certified32 : Step 160 := ⟨parents32, check32⟩
+
+private def parents33 : List ℕ := decodeParents 66 36369117402592856040606597257357977910946432331264929488287368456538730129440625509498816844182994636371806421237895377250127375028108511586175820853087767246812098355584846479533769808428359459840309568512724938164667180923672432368402191830221617721507847
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check33 :
+    (∀ j ∈ parents33, j < 161) ∧
+    row 161 = base 161 ^^^ xorList (parents33.map row) := by decide +kernel
+
+private theorem certified33 : Step 161 := ⟨parents33, check33⟩
+
+private def parents34 : List ℕ := decodeParents 58 1850956203049039667867514928141964264434380799154327548999990030356328422110966329523673163431984025851840054298931337996057598508304336406743541779478287771399615219553284828277415215626216426414271562432766979425084987465729
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check34 :
+    (∀ j ∈ parents34, j < 162) ∧
+    row 162 = base 162 ^^^ xorList (parents34.map row) := by decide +kernel
+
+private theorem certified34 : Step 162 := ⟨parents34, check34⟩
+
+private def parents35 : List ℕ := decodeParents 66 37776834089300095220989505530262585896708999875388569453168914400326685665956771191756901763754183204226477132578045953032217006943097788447354726545866721296648990398516209676681604557389901741146867521029671376025254460013645104737519617735309444788518919
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check35 :
+    (∀ j ∈ parents35, j < 163) ∧
+    row 163 = base 163 ^^^ xorList (parents35.map row) := by decide +kernel
+
+private theorem certified35 : Step 163 := ⟨parents35, check35⟩
+
+private def parents36 : List ℕ := decodeParents 64 559421027299330727718601946325500565717392299051072054236882691659291904221586378806230887055486318494069966932487992192429973749313471723920339346764810570778357561964612168583309519581720538585740539169405516446519316205860129752411125211600060421
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check36 :
+    (∀ j ∈ parents36, j < 164) ∧
+    row 164 = base 164 ^^^ xorList (parents36.map row) := by decide +kernel
+
+private theorem certified36 : Step 164 := ⟨parents36, check36⟩
+
+private def parents37 : List ℕ := decodeParents 63 69568958373542909102091045069722470654579651133632656621504384451448685753548848782604811835356169917784520409042901395507059154552601721893279426711827790996089863179721822005696751056477011754009087807078665330986492392264424499507352314101760
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check37 :
+    (∀ j ∈ parents37, j < 165) ∧
+    row 165 = base 165 ^^^ xorList (parents37.map row) := by decide +kernel
+
+private theorem certified37 : Step 165 := ⟨parents37, check37⟩
+
+private def parents38 : List ℕ := decodeParents 61 1049379596629078546635875479329477641883136799380163194499601131631932466304233599161691171144338141017624082087779483861716242859835901215413469994524804609673234237939040838343092801889261277235333191259564724075036422532778278728499207
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check38 :
+    (∀ j ∈ parents38, j < 166) ∧
+    row 166 = base 166 ^^^ xorList (parents38.map row) := by decide +kernel
+
+private theorem certified38 : Step 166 := ⟨parents38, check38⟩
+
+private def parents39 : List ℕ := decodeParents 65 4754627961934773910219121770836327873604010886966749606363289047554341556709067628382275145496476596557834795627474986873454182748537867122523183954977997070818083541853702598078908434335909227821014062078362993389766023126587398350206015891513226035207
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check39 :
+    (∀ j ∈ parents39, j < 167) ∧
+    row 167 = base 167 ^^^ xorList (parents39.map row) := by decide +kernel
+
+private theorem certified39 : Step 167 := ⟨parents39, check39⟩
+
+private def parents40 : List ℕ := decodeParents 55 3324801476571432148117837660525159732144576793120257435544980348765548495871053763548377353813196517378670287574975949023547314135566385460229084039978475839184572514870048799838628554662163238098389583500337496065
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check40 :
+    (∀ j ∈ parents40, j < 168) ∧
+    row 168 = base 168 ^^^ xorList (parents40.map row) := by decide +kernel
+
+private theorem certified40 : Step 168 := ⟨parents40, check40⟩
+
+private def parents41 : List ℕ := decodeParents 71 1411032449095004757838990123864342405244138670355582925810951487522545832117459997781794293881654976181013368240332558159424531541482523451894071434926494493241417503038182234348448154759195407786916163872599406057778349507058064435712613517403521821548003682481725488809172993
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check41 :
+    (∀ j ∈ parents41, j < 169) ∧
+    row 169 = base 169 ^^^ xorList (parents41.map row) := by decide +kernel
+
+private theorem certified41 : Step 169 := ⟨parents41, check41⟩
+
+private def parents42 : List ℕ := decodeParents 69 21412972214148708793949470767239598952257113704820381887500859161310949347986948114512816761700551030529284706317447930131119594129660163757858733491943758861912434309254135391113913252030265117557731493314017117960989087200281145633042338035007132557200168593754439687
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check42 :
+    (∀ j ∈ parents42, j < 170) ∧
+    row 170 = base 170 ^^^ xorList (parents42.map row) := by decide +kernel
+
+private theorem certified42 : Step 170 := ⟨parents42, check42⟩
+
+private def parents43 : List ℕ := decodeParents 71 1437004465995515517131160881375915680433231608946337100213121164013298366479117934909352672277367727182968824695484190663400185073454105905290279155019162691977280878999552247816943767473082968249033126537601270552885025418576795221736428987271282633982382257485590450155831302
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check43 :
+    (∀ j ∈ parents43, j < 171) ∧
+    row 171 = base 171 ^^^ xorList (parents43.map row) := by decide +kernel
+
+private theorem certified43 : Step 171 := ⟨parents43, check43⟩
+
+private def parents44 : List ℕ := decodeParents 68 2613895896259505315194284677156365847665882566400703152783586000138786717061652393920619607832176641269076567703860428803110281580079393401187885389034019738829707101569629749642249711299074775525334845578128557991775451948015235999742037342480143490248827339800583
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check44 :
+    (∀ j ∈ parents44, j < 172) ∧
+    row 172 = base 172 ^^^ xorList (parents44.map row) := by decide +kernel
+
+private theorem certified44 : Step 172 := ⟨parents44, check44⟩
+
+private def parents45 : List ℕ := decodeParents 69 21413035186000543166213867748608098551268466130090574543603643112419065148527803058550645883873335595083645627568806325986362864379537671705744430095083823529607865760651101389990508626290863955016300441668269071513064882923517559191524426880192788467839125729556037633
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check45 :
+    (∀ j ∈ parents45, j < 173) ∧
+    row 173 = base 173 ^^^ xorList (parents45.map row) := by decide +kernel
+
+private theorem certified45 : Step 173 := ⟨parents45, check45⟩
+
+private def parents46 : List ℕ := decodeParents 66 39653684682069498317608825649956243180274006776115545754182705747688959572692680666637803583113766601639667964230304823610069595495472203441444640995625509277807439031643780191476514915731489551814929233160953046244079287213410652062254733336749825144700929
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check46 :
+    (∀ j ∈ parents46, j < 174) ∧
+    row 174 = base 174 ^^^ xorList (parents46.map row) := by decide +kernel
+
+private theorem certified46 : Step 174 := ⟨parents46, check46⟩
+
+private def parents47 : List ℕ := decodeParents 68 2739843440257373990664231951699075004424247198120423955365827933372691174811079024590227014997688079199970100159525969373661637027523446879258634361667100053395308543993316724485122241285041216703985965174479399621330246700578435707808573047301850269175546122354694
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check47 :
+    (∀ j ∈ parents47, j < 175) ∧
+    row 175 = base 175 ^^^ xorList (parents47.map row) := by decide +kernel
+
+private theorem certified47 : Step 175 := ⟨parents47, check47⟩
+
+private def parents48 : List ℕ := decodeParents 69 22444813205068773944594003813550052115015532601351470376354382559098927049194533471096366845681380177101416859428490912826416092449351268488571955094491844308478827706159315839114072333364621150730678510939428090567507230071587419388548442119345894676736748598060924929
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check48 :
+    (∀ j ∈ parents48, j < 176) ∧
+    row 176 = base 176 ^^^ xorList (parents48.map row) := by decide +kernel
+
+private theorem certified48 : Step 176 := ⟨parents48, check48⟩
+
+private def parents49 : List ℕ := decodeParents 69 22444813216601023422896367471790957263406553208673669315145987886777641220709103297216980658953527430041371048668550506804221839792789407573643540840073780020390577379816133570023599894505344567833984264125589452184865638624297677341079378717603655685247456551257530370
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check49 :
+    (∀ j ∈ parents49, j < 177) ∧
+    row 177 = base 177 ^^^ xorList (parents49.map row) := by decide +kernel
+
+private theorem certified49 : Step 177 := ⟨parents49, check49⟩
+
+private def parents50 : List ℕ := decodeParents 69 21799859426999697971976081166774938157576361560526541535853815102511108697432911146352144418184201154636647361254577898093284903488988995315715468957665032154293976671172469508322565153921958439435774702692113014046829113124411005562603598812204785356112421765074960391
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check50 :
+    (∀ j ∈ parents50, j < 178) ∧
+    row 178 = base 178 ^^^ xorList (parents50.map row) := by decide +kernel
+
+private theorem certified50 : Step 178 := ⟨parents50, check50⟩
+
+private def parents51 : List ℕ := decodeParents 71 1437000239510398470245780282894673262257436774672443331297863119694780374266122580963128164944205741997472752695325229873190660225328611682531735482059299064419544939636235442567490773426989742665533948098498298981835298483550591863845466769530298244712335446795301141497298951
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check51 :
+    (∀ j ∈ parents51, j < 179) ∧
+    row 179 = base 179 ^^^ xorList (parents51.map row) := by decide +kernel
+
+private theorem certified51 : Step 179 := ⟨parents51, check51⟩
+
+private def parents52 : List ℕ := decodeParents 71 1462966972304668492983295377073890584948881508825260211559768244259292566017277070075022293240766344093640989284688766760764951041349211105004057363415075916421931296482376496419793909854167043084847987866160984309470815794084087903566015815520405069155279042160093010505818113
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check52 :
+    (∀ j ∈ parents52, j < 180) ∧
+    row 180 = base 180 ^^^ xorList (parents52.map row) := by decide +kernel
+
+private theorem certified52 : Step 180 := ⟨parents52, check52⟩
+
+private def parents53 : List ℕ := decodeParents 72 12339166551117100491175175202887386606080201992023998054701696951929829464790801554504160866542746549609489864515028802804041589234835487182008394416293623032554074480667903444052121981077755785976519770331619994637002162976291667962145674399817052885401209581580113208016937959425
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check53 :
+    (∀ j ∈ parents53, j < 181) ∧
+    row 181 = base 181 ^^^ xorList (parents53.map row) := by decide +kernel
+
+private theorem certified53 : Step 181 := ⟨parents53, check53⟩
+
+private def parents54 : List ℕ := decodeParents 65 4697367631763501721949057403383703740043513477432279144602208052782947805665931847424326263470113060481894050747361910686584470256660509092986081288156090490865582908740474930492451060840727859299244682948107093932084238933550817048947301325360225894400
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check54 :
+    (∀ j ∈ parents54, j < 182) ∧
+    row 182 = base 182 ^^^ xorList (parents54.map row) := by decide +kernel
+
+private theorem certified54 : Step 182 := ⟨parents54, check54⟩
+
+private def parents55 : List ℕ := decodeParents 75 7095435703308532506842855820246751831811800510974275946589333724323131727521189638846093215007387019046761199271674944192571803842703042713613569756897593902438390014617190106402294120958871523498673036289072959743189663085255818888195753146882853061978471625697549170434457381842014879932417
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check55 :
+    (∀ j ∈ parents55, j < 183) ∧
+    row 183 = base 183 ^^^ xorList (parents55.map row) := by decide +kernel
+
+private theorem certified55 : Step 183 := ⟨parents55, check55⟩
+
+private def parents56 : List ℕ := decodeParents 58 1908811779262102219780029956843145970821144909502795318243157971772780862910652776471448692284933416567659696249327098096362232373861903338935535022465858861467760733620256175291125765607686608529180180282457921140864996925441
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check56 :
+    (∀ j ∈ parents56, j < 184) ∧
+    row 184 = base 184 ^^^ xorList (parents56.map row) := by decide +kernel
+
+private theorem certified56 : Step 184 := ⟨parents56, check56⟩
+
+private def parents57 : List ℕ := decodeParents 86 79986062904609491513234077412594276428311882977724176125811938474491885331693090956807810584628790922839541635010312539631640247631570671539360131881278948865158092600698264575192089196950857584373482375099230584186098556626789020382983702349221631451272566091152651363813613666204953199168700740979316790699969267658497931086057717766
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check57 :
+    (∀ j ∈ parents57, j < 185) ∧
+    row 185 = base 185 ^^^ xorList (parents57.map row) := by decide +kernel
+
+private theorem certified57 : Step 185 := ⟨parents57, check57⟩
+
+private def parents58 : List ℕ := decodeParents 77 481399882943794631515857864428216878671013307611341791528457114292130482762034339768806260882574368946634959854768250225605767731003766493658244379496912080679856958290313551617044791855979657075945927262829597550122398226782557470936005425996246688879630842236280829976039754625024785112266205872135
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check58 :
+    (∀ j ∈ parents58, j < 186) ∧
+    row 186 = base 186 ^^^ xorList (parents58.map row) := by decide +kernel
+
+private theorem certified58 : Step 186 := ⟨parents58, check58⟩
+
+private def parents59 : List ℕ := decodeParents 63 78958981501269539824139234896381476904214643324095737398772472122645901527248902928826599494112814878760276861112193337398726535838224177579804866592919899511325355047170749843810332580128177023430955746269719877633953462425148268414042577592327
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check59 :
+    (∀ j ∈ parents59, j < 187) ∧
+    row 187 = base 187 ^^^ xorList (parents59.map row) := by decide +kernel
+
+private theorem certified59 : Step 187 := ⟨parents59, check59⟩
+
+private def parents60 : List ℕ := decodeParents 81 2144463857893092875332799113164307086463528756838886787812067082568707144111753084174539614346306794904894817916003886029583217636941421149205276883243580202092396236490917058226833507987760953133726848456928437816721082110245156702186001804563573727216481345303747490818417400335487999699399101583175715752935161857
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check60 :
+    (∀ j ∈ parents60, j < 188) ∧
+    row 188 = base 188 ^^^ xorList (parents60.map row) := by decide +kernel
+
+private theorem certified60 : Step 188 := ⟨parents60, check60⟩
+
+private def parents61 : List ℕ := decodeParents 75 7251384526732285429311748383468571330965021058778306042006766512886422466837411221101886938588311435557612926772082280475743079041266716214697805266255687627769136652170151131881154225208941908411702738029174463598357320416189762794045841942111744159071053943148262412277094351117593083904007
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check61 :
+    (∀ j ∈ parents61, j < 189) ∧
+    row 189 = base 189 ^^^ xorList (parents61.map row) := by decide +kernel
+
+private theorem certified61 : Step 189 := ⟨parents61, check61⟩
+
+private def parents62 : List ℕ := decodeParents 72 13119311092325562933614271328416510758113155639943987870217276214318985024946016135225287788847276758594719472982022109179226241708994418196428843442188553397988256449149512797692879651348696638119785963800560954694591606112318237415705007934923851112606864632515285869184306700289
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check62 :
+    (∀ j ∈ parents62, j < 190) ∧
+    row 190 = base 190 ^^^ xorList (parents62.map row) := by decide +kernel
+
+private theorem certified62 : Step 190 := ⟨parents62, check62⟩
+
+private def parents63 : List ℕ := decodeParents 78 4072216723817628824923753225950863824723066932365219345708933701680038108573661868534945826712396365460914879301229259497063688569173011254137479417807808498880965945806159411769198022475920498758121331051446610021422784185689437142172936632487152521397025471037244409029045169770133592840244507829133313
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+private theorem check63 :
+    (∀ j ∈ parents63, j < 191) ∧
+    row 191 = base 191 ^^^ xorList (parents63.map row) := by decide +kernel
+
+private theorem certified63 : Step 191 := ⟨parents63, check63⟩
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+theorem steps (k : Fin 64) : ∃ ps : List ℕ,
+    (∀ j ∈ ps, j < 128 + k.val) ∧
+    row (128 + k.val) = base (128 + k.val) ^^^ xorList (ps.map row) := by
+  change Step (128 + k.val)
+  fin_cases k
+  · exact certified0
+  · exact certified1
+  · exact certified2
+  · exact certified3
+  · exact certified4
+  · exact certified5
+  · exact certified6
+  · exact certified7
+  · exact certified8
+  · exact certified9
+  · exact certified10
+  · exact certified11
+  · exact certified12
+  · exact certified13
+  · exact certified14
+  · exact certified15
+  · exact certified16
+  · exact certified17
+  · exact certified18
+  · exact certified19
+  · exact certified20
+  · exact certified21
+  · exact certified22
+  · exact certified23
+  · exact certified24
+  · exact certified25
+  · exact certified26
+  · exact certified27
+  · exact certified28
+  · exact certified29
+  · exact certified30
+  · exact certified31
+  · exact certified32
+  · exact certified33
+  · exact certified34
+  · exact certified35
+  · exact certified36
+  · exact certified37
+  · exact certified38
+  · exact certified39
+  · exact certified40
+  · exact certified41
+  · exact certified42
+  · exact certified43
+  · exact certified44
+  · exact certified45
+  · exact certified46
+  · exact certified47
+  · exact certified48
+  · exact certified49
+  · exact certified50
+  · exact certified51
+  · exact certified52
+  · exact certified53
+  · exact certified54
+  · exact certified55
+  · exact certified56
+  · exact certified57
+  · exact certified58
+  · exact certified59
+  · exact certified60
+  · exact certified61
+  · exact certified62
+  · exact certified63
+
+end Trace0128
+
+end Janko4.OuterReduction.FixedGenerator.NormalizerSquares.TwoCoreCentralizerData.Generation.KernelBound.OrbitCoverCoordinates.Reconstruction.AffineCertificate.KernelSpanning

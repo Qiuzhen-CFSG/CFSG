@@ -1,8 +1,9 @@
 module
 
 public import FeitThompson.PCore.PCore
-import BaerSuzuki.FinalTheorem
+import BenderSuzuki.SE.PStabilityReduction
 import Mathlib.Tactic
+
 
 open scoped commutatorElement
 
@@ -25,11 +26,12 @@ which is immaterial since the quantifier ranges over all of `G`.)
 
 The repository already contains the source-faithful Alperin--Lyons form of
 Baer--Suzuki,
-`BenderSuzuki.gorenstein_3_8_2_conjugacy_class_le_pCore`.  The wrapper
-`BaerSuzuki.baer_suzuki` adapts it to exactly this theorem's pair-generation
-hypothesis, so `lemma6_1` is a direct application.  The Engel definitions and
-proved helper lemmas below are retained as independent public infrastructure;
-the former registered Baer bridge has been deleted.
+`BenderSuzuki.gorenstein_3_8_2_conjugacy_class_le_pCore`.  The adaptation to
+exactly this theorem's pair-generation hypothesis is inlined in `lemma6_1`;
+the former separate `BaerSuzuki` wrapper module has been removed because it had
+no other consumers.  The Engel definitions and proved helper lemmas below are
+retained as independent public infrastructure; the former registered Baer
+bridge has been deleted.
 
 We also extract, as `baer_contrapositive`, the exact contrapositive shape used in the proof
 of Lemma 6.3 ([6], L1694–L1701): if `C ⊴ G` and `⟨xC, (x^w)C⟩` is a `p`-group for every
@@ -188,7 +190,15 @@ public theorem lemma6_1 {p : ℕ} [Fact p.Prime] {G : Type*} [Group G] [Finite G
     (g : G) (hg : IsPGroup p (Subgroup.zpowers g))
     (hall : ∀ x : G, IsPGroup p (Subgroup.closure {g, x * g * x⁻¹} : Subgroup G)) :
     g ∈ pCore p G := by
-  exact BaerSuzuki.baer_suzuki g hg (fun x => by simpa using hall x)
+  have hg_p : IsPElement (p := p) g := by
+    rcases IsPGroup.iff_card.mp hg with ⟨n, hn⟩
+    rw [Nat.card_zpowers] at hn
+    exact ⟨n, hn⟩
+  refine BenderSuzuki.gorenstein_3_8_2_conjugacy_class_le_pCore hg_p ?_ g ?_
+  · intro y hy
+    rcases hy with ⟨x, rfl⟩
+    exact hall x
+  · exact ⟨1, by simp⟩
 
 /-! ## The contrapositive in the shape used by Lemma 6.3 -/
 
@@ -233,9 +243,5 @@ public theorem baer_contrapositive {p : ℕ} [Fact p.Prime] {G : Type*} [Group G
     rw [hEq]
     exact hall w
   exact lemma6_1 (p := p) (G := G ⧸ C) (g := QuotientGroup.mk' C x) hg hall'
-
--- Axiom audit: both declarations are sorry-free.
-#print axioms lemma6_1
-#print axioms baer_contrapositive
 
 end Glauberman

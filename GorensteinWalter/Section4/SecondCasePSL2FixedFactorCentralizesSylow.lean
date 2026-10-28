@@ -8,6 +8,7 @@ public import GorensteinWalter.QuotientCenterAutomorphism
 import Mathlib.GroupTheory.SpecificGroups.KleinFour
 import Mathlib.Tactic
 
+
 /-!
 # The fixed factor centralizes the component Sylow
 
@@ -474,9 +475,7 @@ public theorem secondCase_psl2_fixed_factor_centralizes_componentSylow
     psl2_odd_hasDihedralSylowTwo_model K hK Pmodel
   have hPmodel : (Pmodel : Subgroup (PSL2 K)) =
       (P : Subgroup Q).map e.some.toMonoidHom := by
-    simpa [Pmodel] using
-      (Sylow.coe_mapSurjective (f := e.some.toMonoidHom)
-        e.some.surjective P)
+    simp [Pmodel]
   let eP0 : P ≃* (P : Subgroup Q).map e.some.toMonoidHom :=
     e.some.subgroupMap (P : Subgroup Q)
   let eP : P ≃* (Pmodel : Subgroup (PSL2 K)) :=

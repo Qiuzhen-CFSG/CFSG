@@ -8,6 +8,8 @@ public import FeitThompson.BGsection3.theorem_3_6
 public import FeitThompson.BGsection9.corollary_9_2
 import Theory.Representation.ElementaryAbelianAction
 import Mathlib.Algebra.Field.ULift
+open Representation
+
 
 /-!
 # Huppert IV.6.2
@@ -262,7 +264,7 @@ private theorem hkt_pCore_le_sylow
 private theorem hkt_card_normalizer_quotient_lt_of_ne_bot
     {Q : Type u} [Group Q] [Finite Q] {U : Subgroup Q} (hU_ne_bot : U ≠ ⊥) :
     let N : Subgroup Q := Subgroup.normalizer (U : Set Q)
-    letI : (U.subgroupOf N).Normal := hkt_subgroupOf_normalizer_normal U
+    let : (U.subgroupOf N).Normal := hkt_subgroupOf_normalizer_normal U
     Nat.card (N ⧸ U.subgroupOf N) < Nat.card Q := by
   classical
   intro N
@@ -283,7 +285,7 @@ private theorem hkt_dvd_card_normalizer_quotient_of_lt_sylow
     {Q : Type u} [Group Q] [Finite Q] {q : ℕ} [Fact q.Prime]
     (S : Sylow q Q) {U : Subgroup Q} (hUS : U < (S : Subgroup Q)) :
     let N : Subgroup Q := Subgroup.normalizer (U : Set Q)
-    letI : (U.subgroupOf N).Normal := hkt_subgroupOf_normalizer_normal U
+    let : (U.subgroupOf N).Normal := hkt_subgroupOf_normalizer_normal U
     q ∣ Nat.card (N ⧸ U.subgroupOf N) := by
   classical
   intro N
@@ -1238,7 +1240,7 @@ private theorem hkt_iv62_f_normalizer_quotient_hasNormalPComplement
       Nat.card U < Nat.card (P : Subgroup (Subgroup.normalizer (U : Set Q)))) :
     let N : Subgroup Q := Subgroup.normalizer (U : Set Q)
     let UN : Subgroup N := U.subgroupOf N
-    letI : UN.Normal := hkt_subgroupOf_normalizer_normal U
+    let : UN.Normal := hkt_subgroupOf_normalizer_normal U
     HasNormalPComplement q (N ⧸ UN) := by
   classical
   let N : Subgroup Q := Subgroup.normalizer (U : Set Q)
@@ -1936,7 +1938,7 @@ private theorem hkt_generated_coprime_action_trivial_from_complement
       exact Subgroup.commutator_le_left (H₁ := AH) (H₂ := K)
     have hright : ⁅AH, K⁆ ≤ K :=
       Subgroup.commutator_le_right (H₁ := AH) (H₂ := K)
-    apply eq_bot_iff.mpr
+    apply _root_.eq_bot_iff.mpr
     intro y hy
     have hyinf : y ∈ AH ⊓ K := ⟨hleft hy, hright hy⟩
     simpa [hinf_bot] using hyinf
@@ -3434,7 +3436,7 @@ private theorem hkt_commutator_eq_bot_of_coprime_double_commutator_eq_bot
     have hx_double := hcommAction2_map_le hx_commAction2
     rwa [hdouble] at hx_double
   exact le_antisymm hle (show (⊥ : Subgroup Q) ≤ ⁅W, R⁆ from bot_le)
-private theorem hkt_actsTrivially_of_isPGroup_on_cyclic_prime_order
+private theorem hkt_isTrivialAction_of_isPGroup_on_cyclic_prime_order
     {A G : Type*} [Group A] [Group G] [Finite G] [MulDistribMulAction A G]
     {p : ℕ} (hp : Nat.Prime p) (hA : IsPGroup p A) (hG_cyclic : IsCyclic G)
     (hG_card : Nat.card G = p) :
@@ -3566,7 +3568,7 @@ private theorem hkt_iv62_q_preterminal_layer_card_eq_two_dimensional
       have hB_cyclic : IsCyclic B := isCyclic_of_prime_card hBcard_q
       have : Subgroup.Normalizes A B := ⟨A_normalizes_B⟩
       have htriv : ActsTrivially (A := A) (G := B) :=
-        hkt_actsTrivially_of_isPGroup_on_cyclic_prime_order
+        hkt_isTrivialAction_of_isPGroup_on_cyclic_prime_order
           (A := A) (G := B) (p := q) (Fact.out : Nat.Prime q)
           hA_p hB_cyclic hBcard_q
       have hcomm : ⁅A, B⁆ = ⊥ :=
@@ -3654,7 +3656,7 @@ private theorem hkt_iv62_r_coprime_order_nonscalar_element_exists
     (M : Σ coord : Additive (L.2.1) ≃+ (Fin 2 → ZMod q),
       { rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q)) //
         rho.ker = pCore q Q ∧
-          (letI : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
+          (let : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
             ∀ g : Q, ∀ b : L.2.1,
               coord (Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b)) =
                 rho g (coord (Additive.ofMul b))) })
@@ -3707,7 +3709,7 @@ private theorem hkt_iv62_r_quadratic_extension_choice_exists
     (M : Σ coord : Additive (L.2.1) ≃+ (Fin 2 → ZMod q),
       { rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q)) //
         rho.ker = pCore q Q ∧
-          (letI : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
+          (let : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
             ∀ g : Q, ∀ b : L.2.1,
               coord (Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b)) =
                 rho g (coord (Additive.ofMul b))) })
@@ -3724,7 +3726,7 @@ private theorem hkt_iv62_r_quadratic_extension_choice_exists
     Nonempty (Σ F : Type u,
       Σ field_F : Field F,
         ({ _finite_F : Finite F // Nat.card F = q ^ 2 } ×
-          (letI : Field F := field_F;
+          (let : Field F := field_F;
             { zmodToF : ZMod q →+* F // Function.Injective zmodToF }))) := by
   classical
   have _ := hq2
@@ -3752,7 +3754,7 @@ private theorem hkt_iv62_r_quadratic_splitting_field_exists
     (M : Σ coord : Additive (L.2.1) ≃+ (Fin 2 → ZMod q),
       { rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q)) //
         rho.ker = pCore q Q ∧
-          (letI : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
+          (let : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
             ∀ g : Q, ∀ b : L.2.1,
               coord (Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b)) =
                 rho g (coord (Additive.ofMul b))) })
@@ -3769,7 +3771,7 @@ private theorem hkt_iv62_r_quadratic_splitting_field_exists
     Nonempty (Σ F : Type u,
       Σ field_F : Field F,
         ({ _finite_F : Finite F // Nat.card F = q ^ 2 } ×
-          (letI : Field F := field_F;
+          (let : Field F := field_F;
             { zmodToF : ZMod q →+* F // Function.Injective zmodToF }))) := by
   classical
   obtain ⟨K0⟩ := hkt_iv62_r_quadratic_extension_choice_exists
@@ -3814,7 +3816,7 @@ private theorem hkt_iv62_r_cyclic_generator_rhoF_ne_one
     (M : Σ coord : Additive (L.2.1) ≃+ (Fin 2 → ZMod q),
       { rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q)) //
         rho.ker = pCore q Q ∧
-          (letI : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
+          (let : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
             ∀ g : Q, ∀ b : L.2.1,
               coord (Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b)) =
                 rho g (coord (Additive.ofMul b))) })
@@ -3831,7 +3833,7 @@ private theorem hkt_iv62_r_cyclic_generator_rhoF_ne_one
     (K : Σ F : Type u,
       Σ field_F : Field F,
         ({ _finite_F : Finite F // Nat.card F = q ^ 2 } ×
-          (letI : Field F := field_F;
+          (let : Field F := field_F;
             { zmodToF : ZMod q →+* F // Function.Injective zmodToF })))
     (rhoF : (let : Field K.1 := K.2.1;
       Q →* ((Fin 2 → K.1) ≃ₗ[K.1] (Fin 2 → K.1))))
@@ -3890,7 +3892,7 @@ private theorem hkt_iv62_r_cyclic_generator_rhoF_order_dvd_card
     (M : Σ coord : Additive (L.2.1) ≃+ (Fin 2 → ZMod q),
       { rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q)) //
         rho.ker = pCore q Q ∧
-          (letI : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
+          (let : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
             ∀ g : Q, ∀ b : L.2.1,
               coord (Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b)) =
                 rho g (coord (Additive.ofMul b))) })
@@ -3907,7 +3909,7 @@ private theorem hkt_iv62_r_cyclic_generator_rhoF_order_dvd_card
     (K : Σ F : Type u,
       Σ field_F : Field F,
         ({ _finite_F : Finite F // Nat.card F = q ^ 2 } ×
-          (letI : Field F := field_F;
+          (let : Field F := field_F;
             { zmodToF : ZMod q →+* F // Function.Injective zmodToF })))
     (rhoF : (let : Field K.1 := K.2.1;
       Q →* ((Fin 2 → K.1) ≃ₗ[K.1] (Fin 2 → K.1))))
@@ -3956,7 +3958,7 @@ private theorem hkt_iv62_r_cyclic_generator_rhoF_order_coprime
     (M : Σ coord : Additive (L.2.1) ≃+ (Fin 2 → ZMod q),
       { rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q)) //
         rho.ker = pCore q Q ∧
-          (letI : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
+          (let : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
             ∀ g : Q, ∀ b : L.2.1,
               coord (Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b)) =
                 rho g (coord (Additive.ofMul b))) })
@@ -3973,7 +3975,7 @@ private theorem hkt_iv62_r_cyclic_generator_rhoF_order_coprime
     (K : Σ F : Type u,
       Σ field_F : Field F,
         ({ _finite_F : Finite F // Nat.card F = q ^ 2 } ×
-          (letI : Field F := field_F;
+          (let : Field F := field_F;
             { zmodToF : ZMod q →+* F // Function.Injective zmodToF })))
     (rhoF : (let : Field K.1 := K.2.1;
       Q →* ((Fin 2 → K.1) ≃ₗ[K.1] (Fin 2 → K.1))))
@@ -4013,7 +4015,7 @@ private theorem hkt_iv62_r_cyclic_generator_rhoF_order_ge_two
     (M : Σ coord : Additive (L.2.1) ≃+ (Fin 2 → ZMod q),
       { rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q)) //
         rho.ker = pCore q Q ∧
-          (letI : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
+          (let : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
             ∀ g : Q, ∀ b : L.2.1,
               coord (Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b)) =
                 rho g (coord (Additive.ofMul b))) })
@@ -4030,7 +4032,7 @@ private theorem hkt_iv62_r_cyclic_generator_rhoF_order_ge_two
     (K : Σ F : Type u,
       Σ field_F : Field F,
         ({ _finite_F : Finite F // Nat.card F = q ^ 2 } ×
-          (letI : Field F := field_F;
+          (let : Field F := field_F;
             { zmodToF : ZMod q →+* F // Function.Injective zmodToF })))
     (rhoF : (let : Field K.1 := K.2.1;
       Q →* ((Fin 2 → K.1) ≃ₗ[K.1] (Fin 2 → K.1))))
@@ -4390,7 +4392,7 @@ private theorem hkt_iv62_r_cyclic_generator_rhoF_primitiveRoot_of_order_dvd_q_sq
     (M : Σ coord : Additive (L.2.1) ≃+ (Fin 2 → ZMod q),
       { rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q)) //
         rho.ker = pCore q Q ∧
-          (letI : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
+          (let : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
             ∀ g : Q, ∀ b : L.2.1,
               coord (Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b)) =
                 rho g (coord (Additive.ofMul b))) })
@@ -4407,7 +4409,7 @@ private theorem hkt_iv62_r_cyclic_generator_rhoF_primitiveRoot_of_order_dvd_q_sq
     (K : Σ F : Type u,
       Σ field_F : Field F,
         ({ _finite_F : Finite F // Nat.card F = q ^ 2 } ×
-          (letI : Field F := field_F;
+          (let : Field F := field_F;
             { zmodToF : ZMod q →+* F // Function.Injective zmodToF })))
     (rhoF : (let : Field K.1 := K.2.1;
       Q →* ((Fin 2 → K.1) ≃ₗ[K.1] (Fin 2 → K.1))))
@@ -4455,7 +4457,7 @@ private theorem hkt_iv62_r_cyclic_generator_rhoF_internal_eigenspace_decompositi
     (M : Σ coord : Additive (L.2.1) ≃+ (Fin 2 → ZMod q),
       { rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q)) //
         rho.ker = pCore q Q ∧
-          (letI : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
+          (let : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
             ∀ g : Q, ∀ b : L.2.1,
               coord (Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b)) =
                 rho g (coord (Additive.ofMul b))) })
@@ -4472,7 +4474,7 @@ private theorem hkt_iv62_r_cyclic_generator_rhoF_internal_eigenspace_decompositi
     (K : Σ F : Type u,
       Σ field_F : Field F,
         ({ _finite_F : Finite F // Nat.card F = q ^ 2 } ×
-          (letI : Field F := field_F;
+          (let : Field F := field_F;
             { zmodToF : ZMod q →+* F // Function.Injective zmodToF })))
     (rhoF : (let : Field K.1 := K.2.1;
       Q →* ((Fin 2 → K.1) ≃ₗ[K.1] (Fin 2 → K.1))))
@@ -4523,7 +4525,7 @@ private theorem hkt_iv62_r_cyclic_generator_rhoF_order_dvd_q_sq_sub_one_source
     (M : Σ coord : Additive (L.2.1) ≃+ (Fin 2 → ZMod q),
       { rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q)) //
         rho.ker = pCore q Q ∧
-          (letI : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
+          (let : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
             ∀ g : Q, ∀ b : L.2.1,
               coord (Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b)) =
                 rho g (coord (Additive.ofMul b))) })
@@ -4540,7 +4542,7 @@ private theorem hkt_iv62_r_cyclic_generator_rhoF_order_dvd_q_sq_sub_one_source
     (K : Σ F : Type u,
       Σ field_F : Field F,
         ({ _finite_F : Finite F // Nat.card F = q ^ 2 } ×
-          (letI : Field F := field_F;
+          (let : Field F := field_F;
             { zmodToF : ZMod q →+* F // Function.Injective zmodToF })))
     (rhoF : (let : Field K.1 := K.2.1;
       Q →* ((Fin 2 → K.1) ≃ₗ[K.1] (Fin 2 → K.1))))
@@ -4585,7 +4587,7 @@ private theorem hkt_iv62_r_cyclic_generator_rhoF_primitiveRoot_source
     (M : Σ coord : Additive (L.2.1) ≃+ (Fin 2 → ZMod q),
       { rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q)) //
         rho.ker = pCore q Q ∧
-          (letI : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
+          (let : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
             ∀ g : Q, ∀ b : L.2.1,
               coord (Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b)) =
                 rho g (coord (Additive.ofMul b))) })
@@ -4602,7 +4604,7 @@ private theorem hkt_iv62_r_cyclic_generator_rhoF_primitiveRoot_source
     (K : Σ F : Type u,
       Σ field_F : Field F,
         ({ _finite_F : Finite F // Nat.card F = q ^ 2 } ×
-          (letI : Field F := field_F;
+          (let : Field F := field_F;
             { zmodToF : ZMod q →+* F // Function.Injective zmodToF })))
     (rhoF : (let : Field K.1 := K.2.1;
       Q →* ((Fin 2 → K.1) ≃ₗ[K.1] (Fin 2 → K.1))))
@@ -4645,7 +4647,7 @@ private theorem hkt_iv62_r_generator_eigenlines_from_internal_source
     (M : Σ coord : Additive (L.2.1) ≃+ (Fin 2 → ZMod q),
       { rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q)) //
         rho.ker = pCore q Q ∧
-          (letI : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
+          (let : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
             ∀ g : Q, ∀ b : L.2.1,
               coord (Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b)) =
                 rho g (coord (Additive.ofMul b))) })
@@ -4662,7 +4664,7 @@ private theorem hkt_iv62_r_generator_eigenlines_from_internal_source
     (K : Σ F : Type u,
       Σ field_F : Field F,
         ({ _finite_F : Finite F // Nat.card F = q ^ 2 } ×
-          (letI : Field F := field_F;
+          (let : Field F := field_F;
             { zmodToF : ZMod q →+* F // Function.Injective zmodToF })))
     (rhoF : (let : Field K.1 := K.2.1;
       Q →* ((Fin 2 → K.1) ≃ₗ[K.1] (Fin 2 → K.1))))
@@ -4689,12 +4691,12 @@ private theorem hkt_iv62_r_generator_eigenlines_from_internal_source
         Module.End.eigenspace (rhoF (generator.1 : Q)).toLinearMap (ε ^ (i.1 : ℤ))) :
     ∃ eigenvalue_gen : Fin 2 → K.1,
     ∃ eigenvector : Fin 2 → (Fin 2 → K.1),
-      (letI : Field K.1 := K.2.1
+      (let : Field K.1 := K.2.1
        ∀ i : Fin 2, eigenvector i ≠ 0) ∧
       eigenvector (0 : Fin 2) ≠ eigenvector (1 : Fin 2) ∧
-      (letI : Field K.1 := K.2.1
+      (let : Field K.1 := K.2.1
        LinearIndependent K.1 eigenvector) ∧
-      (letI : Field K.1 := K.2.1
+      (let : Field K.1 := K.2.1
        ∀ i : Fin 2,
         rhoF (generator.1 : Q) (eigenvector i) =
           eigenvalue_gen i • eigenvector i) := by
@@ -4717,13 +4719,15 @@ private theorem hkt_iv62_r_generator_eigenlines_from_internal_source
     Fintype.equivFinOfCardEq hcard
   let B2 : Module.Basis (Fin 2) K.1 (Fin 2 → K.1) := B.reindex e
   refine ⟨fun i => ε ^ (((e.symm i).1.1 : ℤ)), B2, ?_, ?_, B2.linearIndependent, ?_⟩
-  · intro i
+  · dsimp only
+    intro i
     exact LinearIndependent.ne_zero i B2.linearIndependent
   · intro hsame
     have hidx : (0 : Fin 2) = 1 :=
       LinearIndependent.injective B2.linearIndependent hsame
     exact (by decide : (0 : Fin 2) ≠ 1) hidx
-  · intro i
+  · dsimp only
+    intro i
     have hmem : B2 i ∈ A ((e.symm i).1) := by
       change (B.reindex e) i ∈ A ((e.symm i).1)
       rw [Module.Basis.reindex_apply]
@@ -4747,7 +4751,7 @@ private theorem hkt_iv62_r_cyclic_generator_eigenline_relation
     (M : Σ coord : Additive (L.2.1) ≃+ (Fin 2 → ZMod q),
       { rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q)) //
         rho.ker = pCore q Q ∧
-          (letI : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
+          (let : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
             ∀ g : Q, ∀ b : L.2.1,
               coord (Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b)) =
                 rho g (coord (Additive.ofMul b))) })
@@ -4764,7 +4768,7 @@ private theorem hkt_iv62_r_cyclic_generator_eigenline_relation
     (K : Σ F : Type u,
       Σ field_F : Field F,
         ({ _finite_F : Finite F // Nat.card F = q ^ 2 } ×
-          (letI : Field F := field_F;
+          (let : Field F := field_F;
             { zmodToF : ZMod q →+* F // Function.Injective zmodToF })))
     (rhoF : (let : Field K.1 := K.2.1;
       Q →* ((Fin 2 → K.1) ≃ₗ[K.1] (Fin 2 → K.1))))
@@ -4791,7 +4795,7 @@ private theorem hkt_iv62_r_cyclic_generator_eigenline_relation
       ∀ i : Fin 2,
         rhoF (generator.1 : Q) (eigenvector i) =
           eigenvalue_gen i • eigenvector i) :
-    (letI : Field K.1 := K.2.1;
+    (let : Field K.1 := K.2.1;
       (∀ i : Fin 2, eigenvector i ≠ 0) ∧
         ∀ i : Fin 2, ∀ c : C.1,
           rhoF (c.1 : Q) (eigenvector i) =
@@ -4842,7 +4846,7 @@ private theorem hkt_iv62_r_coprime_action_generator_eigenlines_source
     (M : Σ coord : Additive (L.2.1) ≃+ (Fin 2 → ZMod q),
       { rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q)) //
         rho.ker = pCore q Q ∧
-          (letI : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
+          (let : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
             ∀ g : Q, ∀ b : L.2.1,
               coord (Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b)) =
                 rho g (coord (Additive.ofMul b))) })
@@ -4859,7 +4863,7 @@ private theorem hkt_iv62_r_coprime_action_generator_eigenlines_source
     (K : Σ F : Type u,
       Σ field_F : Field F,
         ({ _finite_F : Finite F // Nat.card F = q ^ 2 } ×
-          (letI : Field F := field_F;
+          (let : Field F := field_F;
             { zmodToF : ZMod q →+* F // Function.Injective zmodToF })))
     (rhoF : (let : Field K.1 := K.2.1;
       Q →* ((Fin 2 → K.1) ≃ₗ[K.1] (Fin 2 → K.1))))
@@ -4878,12 +4882,12 @@ private theorem hkt_iv62_r_coprime_action_generator_eigenlines_source
     (generator_spans : ∀ c : C.1, ∃ n : ℕ, (generator.1 : Q) ^ n = (c.1 : Q)) :
     ∃ eigenvalue_gen : Fin 2 → K.1,
     ∃ eigenvector : Fin 2 → (Fin 2 → K.1),
-      (letI : Field K.1 := K.2.1
+      (let : Field K.1 := K.2.1
        ∀ i : Fin 2, eigenvector i ≠ 0) ∧
       eigenvector (0 : Fin 2) ≠ eigenvector (1 : Fin 2) ∧
-      (letI : Field K.1 := K.2.1
+      (let : Field K.1 := K.2.1
        LinearIndependent K.1 eigenvector) ∧
-      (letI : Field K.1 := K.2.1
+      (let : Field K.1 := K.2.1
        ∀ i : Fin 2,
         rhoF (generator.1 : Q) (eigenvector i) =
           eigenvalue_gen i • eigenvector i) := by
@@ -5067,7 +5071,7 @@ private theorem hkt_iv62_r_eigenspaces_from_lifted_action
     (M : Σ coord : Additive (L.2.1) ≃+ (Fin 2 → ZMod q),
       { rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q)) //
         rho.ker = pCore q Q ∧
-          (letI : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
+          (let : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
             ∀ g : Q, ∀ b : L.2.1,
               coord (Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b)) =
                 rho g (coord (Additive.ofMul b))) })
@@ -5084,7 +5088,7 @@ private theorem hkt_iv62_r_eigenspaces_from_lifted_action
     (K : Σ F : Type u,
       Σ field_F : Field F,
         ({ _finite_F : Finite F // Nat.card F = q ^ 2 } ×
-          (letI : Field F := field_F;
+          (let : Field F := field_F;
             { zmodToF : ZMod q →+* F // Function.Injective zmodToF })))
     (rhoF : (let : Field K.1 := K.2.1;
       Q →* ((Fin 2 → K.1) ≃ₗ[K.1] (Fin 2 → K.1))))
@@ -5107,9 +5111,9 @@ private theorem hkt_iv62_r_eigenspaces_from_lifted_action
           rhoF g (fun i => K.2.2.2.1 (v i)) =
             fun i => K.2.2.2.1 ((M.2.1 g v) i)) ∧
           eigenvector (0 : Fin 2) ≠ eigenvector (1 : Fin 2) ∧
-            (letI : Field K.1 := K.2.1;
+            (let : Field K.1 := K.2.1;
               LinearIndependent K.1 eigenvector) ∧
-              (letI : Field K.1 := K.2.1;
+              (let : Field K.1 := K.2.1;
                 (∀ i : Fin 2, eigenvector i ≠ 0) ∧
                   ∀ i : Fin 2, ∀ c : C.1,
                     rhoF (c.1 : Q) (eigenvector i) =
@@ -5162,7 +5166,7 @@ private theorem hkt_iv62_r_eigenspaces_exist_over_quadratic_split
     (M : Σ coord : Additive (L.2.1) ≃+ (Fin 2 → ZMod q),
       { rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q)) //
         rho.ker = pCore q Q ∧
-          (letI : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
+          (let : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
             ∀ g : Q, ∀ b : L.2.1,
               coord (Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b)) =
                 rho g (coord (Additive.ofMul b))) })
@@ -5179,7 +5183,7 @@ private theorem hkt_iv62_r_eigenspaces_exist_over_quadratic_split
     (K : Σ F : Type u,
       Σ field_F : Field F,
         ({ _finite_F : Finite F // Nat.card F = q ^ 2 } ×
-          (letI : Field F := field_F;
+          (let : Field F := field_F;
             { zmodToF : ZMod q →+* F // Function.Injective zmodToF }))) :
     Nonempty (Σ rhoF : (let : Field K.1 := K.2.1;
       Q →* ((Fin 2 → K.1) ≃ₗ[K.1] (Fin 2 → K.1))),
@@ -5189,7 +5193,7 @@ private theorem hkt_iv62_r_eigenspaces_exist_over_quadratic_split
             rhoF g (fun i => K.2.2.2.1 (v i)) =
               fun i => K.2.2.2.1 ((M.2.1 g v) i)) ∧
             eigenvector (0 : Fin 2) ≠ eigenvector (1 : Fin 2) ∧
-              (letI : Field K.1 := K.2.1;
+              (let : Field K.1 := K.2.1;
                 LinearIndependent K.1 eigenvector) ∧
                 (let : Field K.1 := K.2.1; (∀ i : Fin 2, eigenvector i ≠ 0) ∧ ∀ i : Fin 2, ∀ c : C.1, rhoF (c.1 : Q) (eigenvector i) = eigenvalue i c • eigenvector i) }) := by
   classical
@@ -5267,7 +5271,7 @@ private theorem hkt_iv62_r_sylow_scalar_eigenvalue_eq_one
     (M : Σ coord : Additive (L.2.1) ≃+ (Fin 2 → ZMod q),
       { rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q)) //
         rho.ker = pCore q Q ∧
-          (letI : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
+          (let : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
             ∀ g : Q, ∀ b : L.2.1,
               coord (Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b)) =
                 rho g (coord (Additive.ofMul b))) })
@@ -5284,7 +5288,7 @@ private theorem hkt_iv62_r_sylow_scalar_eigenvalue_eq_one
     (K : Σ F : Type u,
       Σ field_F : Field F,
         ({ _finite_F : Finite F // Nat.card F = q ^ 2 } ×
-          (letI : Field F := field_F;
+          (let : Field F := field_F;
             { zmodToF : ZMod q →+* F // Function.Injective zmodToF })))
     (B0 : Σ rhoF : (let : Field K.1 := K.2.1;
       Q →* ((Fin 2 → K.1) ≃ₗ[K.1] (Fin 2 → K.1))),
@@ -5294,9 +5298,9 @@ private theorem hkt_iv62_r_sylow_scalar_eigenvalue_eq_one
             rhoF g (fun i => K.2.2.2.1 (v i)) =
               fun i => K.2.2.2.1 ((M.2.1 g v) i)) ∧
             eigenvector (0 : Fin 2) ≠ eigenvector (1 : Fin 2) ∧
-              (letI : Field K.1 := K.2.1;
+              (let : Field K.1 := K.2.1;
                 LinearIndependent K.1 eigenvector) ∧
-                (letI : Field K.1 := K.2.1; (∀ i : Fin 2, eigenvector i ≠ 0) ∧ ∀ i : Fin 2, ∀ c : C.1, rhoF (c.1 : Q) (eigenvector i) = eigenvalue i c • eigenvector i) })
+                (let : Field K.1 := K.2.1; (∀ i : Fin 2, eigenvector i ≠ 0) ∧ ∀ i : Fin 2, ∀ c : C.1, rhoF (c.1 : Q) (eigenvector i) = eigenvalue i c • eigenvector i) })
     (a : L.1) (i : Fin 2) :
     letI : Field K.1 := K.2.1
     ∀ {μ : K.1}, μ ≠ 0 →
@@ -5446,7 +5450,7 @@ private theorem hkt_iv62_r_rhoF_nonscalar_of_compatible
     (M : Σ coord : Additive (L.2.1) ≃+ (Fin 2 → ZMod q),
       { rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q)) //
         rho.ker = pCore q Q ∧
-          (letI : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
+          (let : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
             ∀ g : Q, ∀ b : L.2.1,
               coord (Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b)) =
                 rho g (coord (Additive.ofMul b))) })
@@ -5463,7 +5467,7 @@ private theorem hkt_iv62_r_rhoF_nonscalar_of_compatible
     (K : Σ F : Type u,
       Σ field_F : Field F,
         ({ _finite_F : Finite F // Nat.card F = q ^ 2 } ×
-          (letI : Field F := field_F;
+          (let : Field F := field_F;
             { zmodToF : ZMod q →+* F // Function.Injective zmodToF })))
     (B0 : Σ rhoF : (let : Field K.1 := K.2.1;
       Q →* ((Fin 2 → K.1) ≃ₗ[K.1] (Fin 2 → K.1))),
@@ -5473,9 +5477,9 @@ private theorem hkt_iv62_r_rhoF_nonscalar_of_compatible
             rhoF g (fun i => K.2.2.2.1 (v i)) =
               fun i => K.2.2.2.1 ((M.2.1 g v) i)) ∧
             eigenvector (0 : Fin 2) ≠ eigenvector (1 : Fin 2) ∧
-              (letI : Field K.1 := K.2.1;
+              (let : Field K.1 := K.2.1;
                 LinearIndependent K.1 eigenvector) ∧
-                (letI : Field K.1 := K.2.1; (∀ i : Fin 2, eigenvector i ≠ 0) ∧ ∀ i : Fin 2, ∀ c : C.1, rhoF (c.1 : Q) (eigenvector i) = eigenvalue i c • eigenvector i) })
+                (let : Field K.1 := K.2.1; (∀ i : Fin 2, eigenvector i ≠ 0) ∧ ∀ i : Fin 2, ∀ c : C.1, rhoF (c.1 : Q) (eigenvector i) = eigenvalue i c • eigenvector i) })
     (c : C.1)
     (hc : ∀ ν : ZMod q,
       (M.2.1 (c.1 : Q)).toLinearMap ≠ ν • (1 : Module.End (ZMod q) (Fin 2 → ZMod q))) :
@@ -5530,7 +5534,7 @@ private theorem hkt_iv62_r_distinct_eigenvalues_of_rhoF_nonscalar
     (M : Σ coord : Additive (L.2.1) ≃+ (Fin 2 → ZMod q),
       { rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q)) //
         rho.ker = pCore q Q ∧
-          (letI : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
+          (let : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
             ∀ g : Q, ∀ b : L.2.1,
               coord (Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b)) =
                 rho g (coord (Additive.ofMul b))) })
@@ -5547,7 +5551,7 @@ private theorem hkt_iv62_r_distinct_eigenvalues_of_rhoF_nonscalar
     (K : Σ F : Type u,
       Σ field_F : Field F,
         ({ _finite_F : Finite F // Nat.card F = q ^ 2 } ×
-          (letI : Field F := field_F;
+          (let : Field F := field_F;
             { zmodToF : ZMod q →+* F // Function.Injective zmodToF })))
     (B0 : Σ rhoF : (let : Field K.1 := K.2.1;
       Q →* ((Fin 2 → K.1) ≃ₗ[K.1] (Fin 2 → K.1))),
@@ -5557,9 +5561,9 @@ private theorem hkt_iv62_r_distinct_eigenvalues_of_rhoF_nonscalar
             rhoF g (fun i => K.2.2.2.1 (v i)) =
               fun i => K.2.2.2.1 ((M.2.1 g v) i)) ∧
             eigenvector (0 : Fin 2) ≠ eigenvector (1 : Fin 2) ∧
-              (letI : Field K.1 := K.2.1;
+              (let : Field K.1 := K.2.1;
                 LinearIndependent K.1 eigenvector) ∧
-                (letI : Field K.1 := K.2.1; (∀ i : Fin 2, eigenvector i ≠ 0) ∧ ∀ i : Fin 2, ∀ c : C.1, rhoF (c.1 : Q) (eigenvector i) = eigenvalue i c • eigenvector i) })
+                (let : Field K.1 := K.2.1; (∀ i : Fin 2, eigenvector i ≠ 0) ∧ ∀ i : Fin 2, ∀ c : C.1, rhoF (c.1 : Q) (eigenvector i) = eigenvalue i c • eigenvector i) })
     (c : C.1)
     (hnonscalar :
       letI : Field K.1 := K.2.1
@@ -5598,7 +5602,7 @@ private theorem hkt_iv62_r_A_eigenline_permutation_pointwise_source
     (M : Σ coord : Additive (L.2.1) ≃+ (Fin 2 → ZMod q),
       { rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q)) //
         rho.ker = pCore q Q ∧
-          (letI : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
+          (let : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
             ∀ g : Q, ∀ b : L.2.1,
               coord (Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b)) =
                 rho g (coord (Additive.ofMul b))) })
@@ -5615,7 +5619,7 @@ private theorem hkt_iv62_r_A_eigenline_permutation_pointwise_source
     (K : Σ F : Type u,
       Σ field_F : Field F,
         ({ _finite_F : Finite F // Nat.card F = q ^ 2 } ×
-          (letI : Field F := field_F;
+          (let : Field F := field_F;
             { zmodToF : ZMod q →+* F // Function.Injective zmodToF })))
     (B0 : Σ rhoF : (let : Field K.1 := K.2.1;
       Q →* ((Fin 2 → K.1) ≃ₗ[K.1] (Fin 2 → K.1))),
@@ -5625,9 +5629,9 @@ private theorem hkt_iv62_r_A_eigenline_permutation_pointwise_source
             rhoF g (fun i => K.2.2.2.1 (v i)) =
               fun i => K.2.2.2.1 ((M.2.1 g v) i)) ∧
             eigenvector (0 : Fin 2) ≠ eigenvector (1 : Fin 2) ∧
-              (letI : Field K.1 := K.2.1;
+              (let : Field K.1 := K.2.1;
                 LinearIndependent K.1 eigenvector) ∧
-                (letI : Field K.1 := K.2.1; (∀ i : Fin 2, eigenvector i ≠ 0) ∧ ∀ i : Fin 2, ∀ c : C.1, rhoF (c.1 : Q) (eigenvector i) = eigenvalue i c • eigenvector i) }) :
+                (let : Field K.1 := K.2.1; (∀ i : Fin 2, eigenvector i ≠ 0) ∧ ∀ i : Fin 2, ∀ c : C.1, rhoF (c.1 : Q) (eigenvector i) = eigenvalue i c • eigenvector i) }) :
     ∃ linePermFun : L.1 → Fin 2 → Fin 2,
       letI : Field K.1 := K.2.1
       ∀ a : L.1, ∀ i : Fin 2,
@@ -5779,7 +5783,7 @@ private theorem hkt_iv62_r_eigenline_scalar_multiple_index_eq
     (M : Σ coord : Additive (L.2.1) ≃+ (Fin 2 → ZMod q),
       { rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q)) //
         rho.ker = pCore q Q ∧
-          (letI : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
+          (let : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
             ∀ g : Q, ∀ b : L.2.1,
               coord (Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b)) =
                 rho g (coord (Additive.ofMul b))) })
@@ -5796,7 +5800,7 @@ private theorem hkt_iv62_r_eigenline_scalar_multiple_index_eq
     (K : Σ F : Type u,
       Σ field_F : Field F,
         ({ _finite_F : Finite F // Nat.card F = q ^ 2 } ×
-          (letI : Field F := field_F;
+          (let : Field F := field_F;
             { zmodToF : ZMod q →+* F // Function.Injective zmodToF })))
     (B0 : Σ rhoF : (let : Field K.1 := K.2.1;
       Q →* ((Fin 2 → K.1) ≃ₗ[K.1] (Fin 2 → K.1))),
@@ -5806,9 +5810,9 @@ private theorem hkt_iv62_r_eigenline_scalar_multiple_index_eq
             rhoF g (fun i => K.2.2.2.1 (v i)) =
               fun i => K.2.2.2.1 ((M.2.1 g v) i)) ∧
             eigenvector (0 : Fin 2) ≠ eigenvector (1 : Fin 2) ∧
-              (letI : Field K.1 := K.2.1;
+              (let : Field K.1 := K.2.1;
                 LinearIndependent K.1 eigenvector) ∧
-                (letI : Field K.1 := K.2.1; (∀ i : Fin 2, eigenvector i ≠ 0) ∧ ∀ i : Fin 2, ∀ c : C.1, rhoF (c.1 : Q) (eigenvector i) = eigenvalue i c • eigenvector i) }) :
+                (let : Field K.1 := K.2.1; (∀ i : Fin 2, eigenvector i ≠ 0) ∧ ∀ i : Fin 2, ∀ c : C.1, rhoF (c.1 : Q) (eigenvector i) = eigenvalue i c • eigenvector i) }) :
     letI : Field K.1 := K.2.1
     ∀ {i j : Fin 2} {μ ν : K.1}, μ ≠ 0 →
       μ • B0.2.2.1 i = ν • B0.2.2.1 j → i = j := by
@@ -5834,7 +5838,7 @@ private theorem hkt_iv62_r_A_eigenline_permutation_action_source
     (M : Σ coord : Additive (L.2.1) ≃+ (Fin 2 → ZMod q),
       { rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q)) //
         rho.ker = pCore q Q ∧
-          (letI : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
+          (let : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
             ∀ g : Q, ∀ b : L.2.1,
               coord (Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b)) =
                 rho g (coord (Additive.ofMul b))) })
@@ -5851,7 +5855,7 @@ private theorem hkt_iv62_r_A_eigenline_permutation_action_source
     (K : Σ F : Type u,
       Σ field_F : Field F,
         ({ _finite_F : Finite F // Nat.card F = q ^ 2 } ×
-          (letI : Field F := field_F;
+          (let : Field F := field_F;
             { zmodToF : ZMod q →+* F // Function.Injective zmodToF })))
     (B0 : Σ rhoF : (let : Field K.1 := K.2.1;
       Q →* ((Fin 2 → K.1) ≃ₗ[K.1] (Fin 2 → K.1))),
@@ -5861,9 +5865,9 @@ private theorem hkt_iv62_r_A_eigenline_permutation_action_source
             rhoF g (fun i => K.2.2.2.1 (v i)) =
               fun i => K.2.2.2.1 ((M.2.1 g v) i)) ∧
             eigenvector (0 : Fin 2) ≠ eigenvector (1 : Fin 2) ∧
-              (letI : Field K.1 := K.2.1;
+              (let : Field K.1 := K.2.1;
                 LinearIndependent K.1 eigenvector) ∧
-                (letI : Field K.1 := K.2.1; (∀ i : Fin 2, eigenvector i ≠ 0) ∧ ∀ i : Fin 2, ∀ c : C.1, rhoF (c.1 : Q) (eigenvector i) = eigenvalue i c • eigenvector i) }) :
+                (let : Field K.1 := K.2.1; (∀ i : Fin 2, eigenvector i ≠ 0) ∧ ∀ i : Fin 2, ∀ c : C.1, rhoF (c.1 : Q) (eigenvector i) = eigenvalue i c • eigenvector i) }) :
     ∃ linePermFun : L.1 → Fin 2 → Fin 2,
       (∀ i : Fin 2, linePermFun 1 i = i) ∧
         (∀ a b : L.1, ∀ i : Fin 2,
@@ -5951,7 +5955,7 @@ private theorem hkt_iv62_r_trivial_eigenline_perm_forces_basis_fixed_source
     (M : Σ coord : Additive (L.2.1) ≃+ (Fin 2 → ZMod q),
       { rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q)) //
         rho.ker = pCore q Q ∧
-          (letI : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
+          (let : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
             ∀ g : Q, ∀ b : L.2.1,
               coord (Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b)) =
                 rho g (coord (Additive.ofMul b))) })
@@ -5968,7 +5972,7 @@ private theorem hkt_iv62_r_trivial_eigenline_perm_forces_basis_fixed_source
     (K : Σ F : Type u,
       Σ field_F : Field F,
         ({ _finite_F : Finite F // Nat.card F = q ^ 2 } ×
-          (letI : Field F := field_F;
+          (let : Field F := field_F;
             { zmodToF : ZMod q →+* F // Function.Injective zmodToF })))
     (B0 : Σ rhoF : (let : Field K.1 := K.2.1;
       Q →* ((Fin 2 → K.1) ≃ₗ[K.1] (Fin 2 → K.1))),
@@ -5978,9 +5982,9 @@ private theorem hkt_iv62_r_trivial_eigenline_perm_forces_basis_fixed_source
             rhoF g (fun i => K.2.2.2.1 (v i)) =
               fun i => K.2.2.2.1 ((M.2.1 g v) i)) ∧
             eigenvector (0 : Fin 2) ≠ eigenvector (1 : Fin 2) ∧
-              (letI : Field K.1 := K.2.1;
+              (let : Field K.1 := K.2.1;
                 LinearIndependent K.1 eigenvector) ∧
-                (letI : Field K.1 := K.2.1; (∀ i : Fin 2, eigenvector i ≠ 0) ∧ ∀ i : Fin 2, ∀ c : C.1, rhoF (c.1 : Q) (eigenvector i) = eigenvalue i c • eigenvector i) })
+                (let : Field K.1 := K.2.1; (∀ i : Fin 2, eigenvector i ≠ 0) ∧ ∀ i : Fin 2, ∀ c : C.1, rhoF (c.1 : Q) (eigenvector i) = eigenvalue i c • eigenvector i) })
     (linePerm : L.1 →* Equiv.Perm (Fin 2))
     (hlinePerm_preserves_eigenlines :
       letI : Field K.1 := K.2.1
@@ -6030,7 +6034,7 @@ private theorem hkt_iv62_r_trivial_eigenline_perm_forces_rhoF_trivial_source
     (M : Σ coord : Additive (L.2.1) ≃+ (Fin 2 → ZMod q),
       { rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q)) //
         rho.ker = pCore q Q ∧
-          (letI : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
+          (let : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
             ∀ g : Q, ∀ b : L.2.1,
               coord (Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b)) =
                 rho g (coord (Additive.ofMul b))) })
@@ -6047,7 +6051,7 @@ private theorem hkt_iv62_r_trivial_eigenline_perm_forces_rhoF_trivial_source
     (K : Σ F : Type u,
       Σ field_F : Field F,
         ({ _finite_F : Finite F // Nat.card F = q ^ 2 } ×
-          (letI : Field F := field_F;
+          (let : Field F := field_F;
             { zmodToF : ZMod q →+* F // Function.Injective zmodToF })))
     (B0 : Σ rhoF : (let : Field K.1 := K.2.1;
       Q →* ((Fin 2 → K.1) ≃ₗ[K.1] (Fin 2 → K.1))),
@@ -6057,9 +6061,9 @@ private theorem hkt_iv62_r_trivial_eigenline_perm_forces_rhoF_trivial_source
             rhoF g (fun i => K.2.2.2.1 (v i)) =
               fun i => K.2.2.2.1 ((M.2.1 g v) i)) ∧
             eigenvector (0 : Fin 2) ≠ eigenvector (1 : Fin 2) ∧
-              (letI : Field K.1 := K.2.1;
+              (let : Field K.1 := K.2.1;
                 LinearIndependent K.1 eigenvector) ∧
-                (letI : Field K.1 := K.2.1; (∀ i : Fin 2, eigenvector i ≠ 0) ∧ ∀ i : Fin 2, ∀ c : C.1, rhoF (c.1 : Q) (eigenvector i) = eigenvalue i c • eigenvector i) })
+                (let : Field K.1 := K.2.1; (∀ i : Fin 2, eigenvector i ≠ 0) ∧ ∀ i : Fin 2, ∀ c : C.1, rhoF (c.1 : Q) (eigenvector i) = eigenvalue i c • eigenvector i) })
     (linePerm : L.1 →* Equiv.Perm (Fin 2))
     (hlinePerm_preserves_eigenlines :
       letI : Field K.1 := K.2.1
@@ -6096,7 +6100,7 @@ private theorem hkt_iv62_r_trivial_eigenline_perm_forces_rho_trivial_source
     (M : Σ coord : Additive (L.2.1) ≃+ (Fin 2 → ZMod q),
       { rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q)) //
         rho.ker = pCore q Q ∧
-          (letI : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
+          (let : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
             ∀ g : Q, ∀ b : L.2.1,
               coord (Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b)) =
                 rho g (coord (Additive.ofMul b))) })
@@ -6113,7 +6117,7 @@ private theorem hkt_iv62_r_trivial_eigenline_perm_forces_rho_trivial_source
     (K : Σ F : Type u,
       Σ field_F : Field F,
         ({ _finite_F : Finite F // Nat.card F = q ^ 2 } ×
-          (letI : Field F := field_F;
+          (let : Field F := field_F;
             { zmodToF : ZMod q →+* F // Function.Injective zmodToF })))
     (B0 : Σ rhoF : (let : Field K.1 := K.2.1;
       Q →* ((Fin 2 → K.1) ≃ₗ[K.1] (Fin 2 → K.1))),
@@ -6123,9 +6127,9 @@ private theorem hkt_iv62_r_trivial_eigenline_perm_forces_rho_trivial_source
             rhoF g (fun i => K.2.2.2.1 (v i)) =
               fun i => K.2.2.2.1 ((M.2.1 g v) i)) ∧
             eigenvector (0 : Fin 2) ≠ eigenvector (1 : Fin 2) ∧
-              (letI : Field K.1 := K.2.1;
+              (let : Field K.1 := K.2.1;
                 LinearIndependent K.1 eigenvector) ∧
-                (letI : Field K.1 := K.2.1; (∀ i : Fin 2, eigenvector i ≠ 0) ∧ ∀ i : Fin 2, ∀ c : C.1, rhoF (c.1 : Q) (eigenvector i) = eigenvalue i c • eigenvector i) })
+                (let : Field K.1 := K.2.1; (∀ i : Fin 2, eigenvector i ≠ 0) ∧ ∀ i : Fin 2, ∀ c : C.1, rhoF (c.1 : Q) (eigenvector i) = eigenvalue i c • eigenvector i) })
     (linePerm : L.1 →* Equiv.Perm (Fin 2))
     (hlinePerm_preserves_eigenlines :
       letI : Field K.1 := K.2.1
@@ -6169,7 +6173,7 @@ private theorem hkt_iv62_r_trivial_eigenline_perm_forces_centralization_source
     (M : Σ coord : Additive (L.2.1) ≃+ (Fin 2 → ZMod q),
       { rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q)) //
         rho.ker = pCore q Q ∧
-          (letI : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
+          (let : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
             ∀ g : Q, ∀ b : L.2.1,
               coord (Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b)) =
                 rho g (coord (Additive.ofMul b))) })
@@ -6186,7 +6190,7 @@ private theorem hkt_iv62_r_trivial_eigenline_perm_forces_centralization_source
     (K : Σ F : Type u,
       Σ field_F : Field F,
         ({ _finite_F : Finite F // Nat.card F = q ^ 2 } ×
-          (letI : Field F := field_F;
+          (let : Field F := field_F;
             { zmodToF : ZMod q →+* F // Function.Injective zmodToF })))
     (B0 : Σ rhoF : (let : Field K.1 := K.2.1;
       Q →* ((Fin 2 → K.1) ≃ₗ[K.1] (Fin 2 → K.1))),
@@ -6196,9 +6200,9 @@ private theorem hkt_iv62_r_trivial_eigenline_perm_forces_centralization_source
             rhoF g (fun i => K.2.2.2.1 (v i)) =
               fun i => K.2.2.2.1 ((M.2.1 g v) i)) ∧
             eigenvector (0 : Fin 2) ≠ eigenvector (1 : Fin 2) ∧
-              (letI : Field K.1 := K.2.1;
+              (let : Field K.1 := K.2.1;
                 LinearIndependent K.1 eigenvector) ∧
-                (letI : Field K.1 := K.2.1; (∀ i : Fin 2, eigenvector i ≠ 0) ∧ ∀ i : Fin 2, ∀ c : C.1, rhoF (c.1 : Q) (eigenvector i) = eigenvalue i c • eigenvector i) })
+                (let : Field K.1 := K.2.1; (∀ i : Fin 2, eigenvector i ≠ 0) ∧ ∀ i : Fin 2, ∀ c : C.1, rhoF (c.1 : Q) (eigenvector i) = eigenvalue i c • eigenvector i) })
     (linePerm : L.1 →* Equiv.Perm (Fin 2))
     (hlinePerm_preserves_eigenlines :
       letI : Field K.1 := K.2.1
@@ -6248,7 +6252,7 @@ private theorem hkt_iv62_r_A_eigenline_permutation_seed
     (M : Σ coord : Additive (L.2.1) ≃+ (Fin 2 → ZMod q),
       { rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q)) //
         rho.ker = pCore q Q ∧
-          (letI : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
+          (let : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
             ∀ g : Q, ∀ b : L.2.1,
               coord (Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b)) =
                 rho g (coord (Additive.ofMul b))) })
@@ -6265,7 +6269,7 @@ private theorem hkt_iv62_r_A_eigenline_permutation_seed
     (K : Σ F : Type u,
       Σ field_F : Field F,
         ({ _finite_F : Finite F // Nat.card F = q ^ 2 } ×
-          (letI : Field F := field_F;
+          (let : Field F := field_F;
             { zmodToF : ZMod q →+* F // Function.Injective zmodToF })))
     (B0 : Σ rhoF : (let : Field K.1 := K.2.1;
       Q →* ((Fin 2 → K.1) ≃ₗ[K.1] (Fin 2 → K.1))),
@@ -6275,9 +6279,9 @@ private theorem hkt_iv62_r_A_eigenline_permutation_seed
             rhoF g (fun i => K.2.2.2.1 (v i)) =
               fun i => K.2.2.2.1 ((M.2.1 g v) i)) ∧
             eigenvector (0 : Fin 2) ≠ eigenvector (1 : Fin 2) ∧
-              (letI : Field K.1 := K.2.1;
+              (let : Field K.1 := K.2.1;
                 LinearIndependent K.1 eigenvector) ∧
-                (letI : Field K.1 := K.2.1; (∀ i : Fin 2, eigenvector i ≠ 0) ∧ ∀ i : Fin 2, ∀ c : C.1, rhoF (c.1 : Q) (eigenvector i) = eigenvalue i c • eigenvector i) }) :
+                (let : Field K.1 := K.2.1; (∀ i : Fin 2, eigenvector i ≠ 0) ∧ ∀ i : Fin 2, ∀ c : C.1, rhoF (c.1 : Q) (eigenvector i) = eigenvalue i c • eigenvector i) }) :
     Nonempty { linePerm : L.1 →* Equiv.Perm (Fin 2) // linePerm = 1 → L.1 ≤ Subgroup.centralizer (L.2.1 : Set Q) } := by
   classical
   let : Field K.1 := K.2.1
@@ -6333,7 +6337,7 @@ private theorem hkt_iv62_r_trivial_line_action_forces_scalar_centralization
     (M : Σ coord : Additive (L.2.1) ≃+ (Fin 2 → ZMod q),
       { rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q)) //
         rho.ker = pCore q Q ∧
-          (letI : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
+          (let : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
             ∀ g : Q, ∀ b : L.2.1,
               coord (Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b)) =
                 rho g (coord (Additive.ofMul b))) })
@@ -6377,7 +6381,7 @@ private theorem hkt_iv62_r_line_permutation_nontrivial_of_diagonalization
     (M : Σ coord : Additive (L.2.1) ≃+ (Fin 2 → ZMod q),
       { rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q)) //
         rho.ker = pCore q Q ∧
-          (letI : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
+          (let : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
             ∀ g : Q, ∀ b : L.2.1,
               coord (Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b)) =
                 rho g (coord (Additive.ofMul b))) })
@@ -6459,7 +6463,7 @@ private theorem hkt_iv62_terminal_conjugation_linear_action_exists
     (coord : Additive (L.2.1) ≃+ (Fin 2 → ZMod q)) :
     ∃ rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q)),
       rho.ker = pCore q Q ∧
-        (letI : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
+        (let : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
           ∀ g : Q, ∀ b : L.2.1,
             coord (Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b)) =
               rho g (coord (Additive.ofMul b))) := by
@@ -6475,7 +6479,7 @@ private theorem hkt_iv62_terminal_conjugation_linear_action_exists
     coord.toLinearEquiv (fun c x => by
       simpa using (ZMod.map_smul coord.toAddMonoidHom c x))
   let rep : Representation (ZMod q) Q (Additive (L.2.1)) :=
-    Theory.Representation.ofElementaryAbelianAction (A := Q) (G := L.2.1) (p := q)
+    Representation.ofElementaryAbelianAction (A := Q) (G := L.2.1) (p := q)
   have rep_apply (g : Q) (b : L.2.1) :
       rep g (Additive.ofMul b) =
         Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b) := by
@@ -6560,7 +6564,8 @@ private theorem hkt_iv62_terminal_conjugation_linear_action_exists
       have hrho_fix : rho g v = v := by
         simpa [rho, repAut, coordLin, x] using congrArg coordLin hrep_fix
       simpa using congrFun hrho_fix i
-  · intro g b
+  · dsimp only
+    intro g b
     have hrep_apply := rep_apply g b
     simpa [rho, repAut, coordLin] using congrArg coord hrep_apply.symm
 
@@ -6583,7 +6588,7 @@ private theorem hkt_iv62_terminal_linear_model_exists
     Nonempty (Σ coord : Additive (L.2.1) ≃+ (Fin 2 → ZMod q),
       { rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q)) //
         rho.ker = pCore q Q ∧
-          (letI : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
+          (let : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
             ∀ g : Q, ∀ b : L.2.1,
               coord (Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b)) =
                 rho g (coord (Additive.ofMul b))) }) := by
@@ -6615,7 +6620,7 @@ private theorem hkt_iv62_gl2_terminal_model_contradiction
     (M : Σ coord : Additive (L.2.1) ≃+ (Fin 2 → ZMod q),
       { rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q)) //
         rho.ker = pCore q Q ∧
-          (letI : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
+          (let : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
             ∀ g : Q, ∀ b : L.2.1,
               coord (Additive.ofMul ((MulAut.conjNormal (H := L.2.1) g) b)) =
                 rho g (coord (Additive.ofMul b))) })
@@ -6693,7 +6698,7 @@ private theorem hkt_iv62_terminal_linear_contradiction
         (coord : Additive (L.2.1) ≃+ (Fin 2 → ZMod q))
         (rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q))),
         rho.ker = pCore q Q →
-          (letI : (L.2.1).Normal := hBnorm
+          (let : (L.2.1).Normal := hBnorm
             ∀ g : Q, ∀ b : (L.2.1),
               coord (Additive.ofMul ((MulAut.conjNormal (H := (L.2.1)) g) b)) =
                 rho g (coord (Additive.ofMul b))) →
@@ -7557,7 +7562,7 @@ private theorem hkt_iv62_r_cyclic_nonscalar_actor_extracted
             (coord : Additive B ≃+ (Fin 2 → ZMod q))
             (rho : Q →* ((Fin 2 → ZMod q) ≃ₗ[ZMod q] (Fin 2 → ZMod q))),
             rho.ker = pCore q Q →
-            (letI : B.Normal := hBnorm
+            (let : B.Normal := hBnorm
               ∀ g : Q, ∀ b : B,
                 coord (Additive.ofMul ((MulAut.conjNormal (H := B) g) b)) =
                   rho g (coord (Additive.ofMul b))) →
@@ -9539,7 +9544,7 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
                 hK2bar_p hK2bar_coprime
             exact hK2bar_ne_bot hK2bar_bot
           let ρ : Representation (ZMod r) Abar (Additive step_f_Kbar) :=
-            Theory.Representation.ofElementaryAbelianAction
+            Representation.ofElementaryAbelianAction
               (A := Abar) (G := step_f_Kbar) (p := r)
           have hρ_faithful : Function.Injective ρ := by
             have hAbar_Kbar_coprime :
@@ -9550,7 +9555,7 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
             have hAbar_inf_Kbar : Abar ⊓ step_f_Kbar = ⊥ :=
               (Subgroup.disjoint_of_coprime_natCard hAbar_Kbar_coprime).eq_bot
             apply (MonoidHom.ker_eq_bot_iff ρ).1
-            rw [Theory.Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup]
+            rw [Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup]
             apply le_antisymm
             · intro a haFix
               have ha_cent : (a : (Q ⧸ pCore q Q)) ∈
@@ -9670,7 +9675,7 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
                 rcases Subgroup.mem_map.mp hkNamb with ⟨n, hnN, hnk⟩
                 have hn_eq : n = k := Subtype.ext hnk
                 simpa [← hn_eq] using hnN
-            let ρ0 := Theory.Representation.ofElementaryAbelianAction
+            let ρ0 := Representation.ofElementaryAbelianAction
               (A := Abar) (G := step_f_Kbar) (p := r)
             refine
               { toNontrivial := inferInstance
@@ -9686,7 +9691,7 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
                   simpa [N, Submodule.mem_toAddSubgroup, AddSubgroup.mem_toSubgroup'] using hx
                 have hx'' := Srep.apply_mem_toSubmodule a hx'
                 simpa [ρ, ρ0,
-                  Theory.Representation.ofElementaryAbelianAction_apply_ofMul] using hx''
+                  Representation.ofElementaryAbelianAction_apply_ofMul] using hx''
               refine { invariant := ?_ }
               intro a x
               constructor

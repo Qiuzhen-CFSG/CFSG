@@ -22,7 +22,6 @@ universe u
 
 open BenderGlauberman
 open BenderSuzuki.External
-open Theory.Character
 
 attribute [local instance] Fintype.ofFinite
 attribute [local instance] Classical.propDecidable

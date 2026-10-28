@@ -7,6 +7,7 @@ namespace GorensteinWalter
 
 set_option maxRecDepth 1000000 in
 set_option maxHeartbeats 2000000 in
+-- Exhaustive evaluation over the concrete permutation certificate needs this heartbeat budget.
 public theorem a7_cube_eq_one_of_pow_nine :
     ∀ x : ASevenCertificateGroup, x ^ 9 = 1 → x ^ 3 = 1 := by
   intro x hx
@@ -24,6 +25,7 @@ public theorem a7_cube_eq_one_of_pow_nine :
     (Equiv.Perm.le_card_support_of_mem_cycleType hn).trans
       ((x : Equiv.Perm (Fin 7)).support.card_le_univ.trans_eq (by simp))
   have hnlt : 1 < n := Equiv.Perm.one_lt_of_mem_cycleType hn
-  interval_cases n <;> norm_num at hndvd <;> omega
+  interval_cases n <;> norm_num at hndvd
+  all_goals omega
 
 end GorensteinWalter

@@ -1,0 +1,83 @@
+module
+
+public import Mathlib.GroupTheory.PresentedGroup
+
+/-!
+# A finite presentation candidate for G₂(5)
+
+This module defines a two-generator presented group from 22 explicit words.
+The words were computed by GAP from the ATLAS degree-3906 permutation pair.
+Their mathematical meaning is just the displayed presentation: this module
+makes no identification or order claim on the strength of that computation.
+
+Two separate certificates can use the same words: a proof identifying this
+presented group with the split-octonion automorphism group, and a proof that
+another pair satisfies the words. The universal property then gives a
+homomorphism to that pair's generated subgroup.
+
+Source: R. A. Wilson et al., ATLAS of Finite Group Representations,
+https://brauer.maths.qmul.ac.uk/Atlas/exc/G25/ . The unmodified input files,
+computed relators, reproducible GAP script and hashes are in
+`AtlasPresentationSource/`.
+-/
+
+namespace G2Five.AtlasPresentation
+
+/-- Literal relator words: lowercase letters denote generators and uppercase
+letters their inverses; `a` is indexed by `false`, `b` by `true`. -/
+@[expose] public def word : Fin 22 → String
+  | 0 => "aa"
+  | 1 => "bbb"
+  | 2 => "ababababababab"
+  | 3 => "baBabaBabaBabaBabaBabaBabaBabaBabaBabaBabaBabaBabaBabaBabaBa"
+  | 4 => "baBabaBabaBabaBababaBabaBabaBababaBabaBababaBabaBabaBababaBababaBaBabaBabaBabaBaBabaBabaBabaBaBabaBabaBaBabaBabaBaBababaBaba"
+  | 5 => "ababaBababaBabaBaBabaBaBabaBababaBababaBaBababaBababaBabaBaBabaBaBababaBaBabaBaBabaBababaBababaBabaBaBabaBaBabaBababaBababaBaBababaBababaBabaBaBabaBaBabaBababaBababaBaBababaBababaBabaBaBabaBaBababaBaBabaBaBabaB"
+  | 6 => "abaBababaBababaBabaBabaBabaBaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBabaBabaBababaBabaBabaBababaBaBabaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBabaBabaBababaBabaBabaBabaBabaBaBabaBaBababaBabaBababaB"
+  | 7 => "ababaBaBabaBaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBabaBabaBababaBabaBabaBabaBabaBaBababaBababaBababaBabaBabaBababaBabaBabaBabaBabaBabaBaBabaBabaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBababaBababaBaBabaBabaBaBababaBabaB"
+  | 8 => "baBabaBabaBabaBaBabaBabaBaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBabaBabaBababaBabaBabaBabaBabaBaBabaBaBababaBababaBaBababaBababaBabaBaBabaBaBababaBaBabaBabaBaBabaBaBababaBabaBabaBabaBaBabaBabaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBababaBabaBababaBa"
+  | 9 => "ababaBabaBabaBababaBabaBababaBabaBabaBababaBaBabaBaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBabaBabaBababaBabaBabaBabaBabaBaBabaBabaBaBabaBabaBaBababaBabaBabaBababaBaBabaBabaBaBabaBabaBaBabaBabaBaBabaBaBabaBaBabaBabaBaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBabaBabaBababaBabaBabaBabaBabaBaBabaBaBababaBababaBabaB"
+  | 10 => "abaBabaBabaBaBababaBabaBaBabaBababaBaBabaBaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBabaBaBababaBaBabaBabaBabaBabaBaBabaBababaBabaBabaBababaBababaBababaBabaBababaBabaBababaBabaBabaBabaBababaBabaBabaBabaBabaBabaBaBabaBabaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBababaBaBababaBaBababaBababaBababaBababaBabaBababaBababaBababaBaBab"
+  | 11 => "ababaBabaBabaBababaBababaBababaBabaBababaBabaBababaBabaBababaBabaBabaBabaBaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBabaBabaBababaBabaBabaBabaBaBababaBababaBabaBabaBabaBababaBaBabaBaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBabaBabaBababaBabaBabaBabaBabaBaBababaBabaBaBabaBabaBaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBabaBaBababaBaBabaBabaBabaBabaBaBabaB"
+  | 12 => "abaBabaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBababaBabaBababaBaBabaBababaBabaBaBabaBaBabaBababaBabaBabaBabaBaBabaBabaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBabaBaBabaBababaBabaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBababaBabaBababaBaBabaBababaBabaBaBabaBaBabaBababaBabaBabaBabaBaBabaBabaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBabaBaBabaBab"
+  | 13 => "ababaBabaBabaBabaBabaBabaBaBabaBabaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBabaBaBabaBababaBabaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBababaBababaBaBabaBabaBabaBaBabaBabaBaBabaBabaBaBabaBaBabaBaBababaBabaBabaBabaBabaBaBabaBabaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBabaBaBabaBababaBabaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBababaBababaBaBabaBabaBabaBabaBaBabaBaBababaBabaBabaB"
+  | 14 => "aBabaBabaBabaBabaBaBabaBabaBaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBabaBabaBababaBabaBabaBabaBabaBababaBaBabaBababaBaBabaBabaBabaBabaBabaBaBabaBabaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBababaBaBababaBaBabaBabaBabaBabaBaBababaBabaBabaBababaBaBabaBabaBababaBababaBababaBababaBabaBababaBababaBababaBaBababaBabaBabaBaBababaBabaBaBabaBababaBaBabaBaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBabaBabaBababaBabaBabaBabaBaBabaB"
+  | 15 => "aBabaBabaBababaBabaBababaBaBabaBabaBabaBaBabaBaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBabaBabaBababaBabaBaBabaBababaBaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBabaBabaBababaBabaBabaBabaBabaBaBababaBabaBaBabaBabaBaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBabaBabaBababaBabaBabaBabaBabaBaBababaBabaBaBabaBabaBaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBabaBabaBababaBabaBabaBabaBabaBaBababaBababaBababaBababaBaBab"
+  | 16 => "abaBabaBaBabaBabaBaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBabaBabaBababaBabaBabaBabaBabaBaBababaBaBabaBababaBaBabaBabaBababaBabaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBabaBabaBababaBabaBabaBabaBabaBababaBaBababaBaBababaBaBabaBababaBaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBabaBabaBababaBabaBabaBabaBabaBaBababaBabaBaBababaBabaBabaBabaBabaBaBabaBabaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBababaBabaBabaBabaBaBabaBabaBaBab"
+  | 17 => "aBababaBabaBaBababaBabaBabaBaBabaBababaBababaBaBabaBabaBababaBabaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBabaBabaBababaBabaBabaBabaBaBabaBababaBababaBabaBaBabaBaBababaBabaBabaBaBababaBabaBabaBaBababaBaBabaBaBabaBaBabaBabaBaBabaBaBabaBaBabaBaBababaBaBababaBaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBabaBabaBababaBabaBabaBabaBabaBaBabaBabaBaBabaBabaBaBabaBaBababaBabaBabaBabaBaBabaBabaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBababaBababaBaBabaBabaBaBababaBabaB"
+  | 18 => "BababaBabaBabaBaBababaBabaBababaBaBababaBaBabaBababaBabaBababaBababaBaBabaBabaBabaBababaBabaBababaBaBabaBabaBabaBaBabaBaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBabaBabaBababaBaBababaBababaBabaBaBabaBababaBaBabaBabaBabaBabaBabaBaBabaBabaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBababaBabaBababaBabaBababaBabaBaBabaBababaBaBabaBabaBabaBabaBabaBaBabaBabaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBababaBabaBababaBabaBaBababaBabaBabaBabaBabaBaBabaBabaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBababaBabaBababaBa"
+  | 19 => "BababaBaBababaBabaBababaBaBababaBaBabaBababaBabaBababaBababaBaBabaBabaBabaBababaBabaBababaBaBabaBabaBabaBaBabaBaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBabaBabaBababaBaBababaBabaBabaBabaBabaBabaBabaBaBabaBabaBaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBabaBabaBababaBabaBabaBabaBabaBaBababaBabaBaBababaBabaBabaBabaBabaBaBabaBabaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBababaBabaBabaBabaBaBabaBaBababaBababaBabaBabaBabaBabaBaBabaBabaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBababaBabaBabaBabaBaBabaBababaBa"
+  | 20 => "abaBaBababaBababaBaBabaBabaBababaBaBabaBabaBabaBabaBaBabaBabaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBababaBabaBababaBabaBaBabaBabaBaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBabaBabaBababaBabaBabaBabaBabaBababaBaBabaBababaBaBabaBabaBababaBabaBabaBabaBaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBabaBabaBababaBabaBabaBabaBabaBaBababaBabaBaBabaBabaBaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBabaBabaBababaBabaBabaBabaBabaBaBababaBabaBaBababaBabaBabaBabaBabaBaBabaBabaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBababaBababaBaBab"
+  | _ => "abaBaBababaBabaBabaBabaBabaBaBabaBabaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBababaBabaBababaBabaBaBabaBabaBaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBabaBabaBababaBabaBabaBabaBabaBaBababaBabaBaBabaBabaBaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBabaBabaBababaBabaBabaBabaBabaBaBabaBabaBaBabaBaBabaBabaBaBababaBabaBaBababaBabaBabaBaBababaBaBabaBaBabaBaBabaBabaBaBabaBaBabaBaBabaBaBabaBabaBabaBabaBaBabaBabaBaBababaBabaBababaBaBabaBabaBabaBabaBabaBababaBaBabaBabaBaBabaBabaBababaBabaBabaBabaBabaBaBabaBabaBabaBabaBaBababaBabaBabaBaBababaBaBabaBaBabaBaBabaBabaBaBabaBaBabaBaBabaBaBabaBabaBabaB"
+
+/-- Interpret the literal words in the free group on the two named generators. -/
+@[expose] public def relator (i : Fin 22) : FreeGroup Bool :=
+  FreeGroup.mk ((word i).toList.map fun c =>
+    if c = 'a' then (false, true) else
+    if c = 'A' then (false, false) else
+    if c = 'b' then (true, true) else (true, false))
+
+/-- The abstract presented group; no recognition result is built into its carrier. -/
+@[expose] public def Model := PresentedGroup (Set.range relator)
+  deriving Group
+
+@[expose] public def generator (b : Bool) : Model := PresentedGroup.of b
+
+/-- The universal homomorphism, once the 22 relations have been proved. -/
+@[expose] public def hom {G : Type*} [Group G] (g : Bool → G)
+    (h : ∀ i, FreeGroup.lift g (relator i) = 1) : Model →* G :=
+  PresentedGroup.toGroup (fun _ ⟨i, hi⟩ => hi ▸ h i)
+
+@[simp] public theorem hom_generator {G : Type*} [Group G] (g : Bool → G)
+    (h : ∀ i, FreeGroup.lift g (relator i) = 1) (b : Bool) :
+    hom g h (generator b) = g b := PresentedGroup.toGroup.of _
+
+public theorem closure_generators :
+    Subgroup.closure ({generator false, generator true} : Set Model) = ⊤ := by
+  have hp : ({generator false, generator true} : Set Model) = Set.range generator := by
+    ext x
+    simp only [Set.mem_insert_iff, Set.mem_singleton_iff, Set.mem_range, Bool.exists_bool]
+    exact or_congr eq_comm eq_comm
+  rw [hp]
+  exact PresentedGroup.closure_range_of _
+
+end G2Five.AtlasPresentation

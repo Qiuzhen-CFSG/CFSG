@@ -66,7 +66,7 @@ private theorem hypothesisA1_Q_subgroupOf_index_eq_card_D
     exact hypothesisA1_Q_subgroupOf_sup_top hA1
   have hinf : QH ⊓ DH = ⊥ := by
     exact le_antisymm (hypothesisA1_Q_subgroupOf_disjoint hA1).le_bot bot_le
-  letI : QH.Normal := hA1.Q_normal_in_H
+  let : QH.Normal := hA1.Q_normal_in_H
   calc
     (Q.subgroupOf (MulAction.stabilizer G α)).index =
         QH.relIndex (⊤ : Subgroup (MulAction.stabilizer G α)) := by
@@ -134,7 +134,7 @@ public theorem hypothesisA1_Q_regular_on_complement
             D.subgroupOf (MulAction.stabilizer G α) := by
       rw [hypothesisA1_Q_subgroupOf_sup_top hA1]
       exact Subgroup.mem_top _
-    letI : (Q.subgroupOf (MulAction.stabilizer G α)).Normal :=
+    let : (Q.subgroupOf (MulAction.stabilizer G α)).Normal :=
       hA1.Q_normal_in_H
     rw [Subgroup.mem_sup_of_normal_left] at hmem_sup
     rcases hmem_sup with ⟨q, hqQ, d, hdD, hqd⟩
@@ -183,8 +183,8 @@ private theorem hypothesisA1_Q_index_odd
   have hΩ_card : Nat.card Ω = Nat.card Q + 1 :=
     hypothesisA1_card_space_eq_card_Q_add_one hA1 hβ_ne hD
   have hH_index : (MulAction.stabilizer G α).index = Nat.card Ω := by
-    letI : MulAction.IsMultiplyPretransitive G Ω 2 := hA1.two_transitive
-    haveI : MulAction.IsPretransitive G Ω :=
+    let : MulAction.IsMultiplyPretransitive G Ω 2 := hA1.two_transitive
+    have : MulAction.IsPretransitive G Ω :=
       MulAction.isPretransitive_of_is_two_pretransitive
     exact MulAction.index_stabilizer_of_transitive (G := G) (x := α)
   have hQ_relIndex :
@@ -225,7 +225,7 @@ public theorem proposition_1_c
     (hA1 : HypothesisA1 G Ω H D Q t) :
     ∃ S : Sylow 2 G, (S : Subgroup G) ≤ Q := by
   classical
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   obtain ⟨α, hH⟩ := hA1.point_stabilizer
   subst H
   let β : Ω := t⁻¹ • α

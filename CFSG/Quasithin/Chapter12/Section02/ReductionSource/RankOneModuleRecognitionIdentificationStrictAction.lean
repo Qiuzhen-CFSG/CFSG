@@ -1,0 +1,120 @@
+module
+public import CFSG.Quasithin.Chapter12.Section02.ReductionSource.RankOneModuleRecognitionIdentificationStrict
+public import CFSG.Quasithin.Chapter6.SourceReduction.RankOneModuleRecognitionIdentificationStrictOrbit
+
+/-!
+# The strict rank-two obstruction on the whole reduced layer
+
+The actual layer [R₂(LT),L] supplies an order-two dotted image. Its
+nonidentity element has a two-dimensional moved space of type a₂,
+while the stabilizer of that space is not transitive on its nonzero
+vectors. The generated layer quotient K/O₂(K) is identified with its
+literal dotted image. These are the inputs used against the G.11
+alternatives, with the complete reduced layer and quotient markings
+retained.
+
+Source: Aschbacher--Smith, 6.2.15(3), 6.2.16(3)--(6) and 12.2.2(3d).
+The crossing geometry and final strict contradiction remain with
+qt-d-1222-recognition-strict-elimination. The earlier LocalAnalysis
+premise is discharged by qt-d-1222-rankone-recognition-identification.
+-/
+
+public noncomputable section
+open Subgroup Theory.GroupTheory
+open scoped IsMulCommutative
+namespace CFSG.Quasithin.Chapter12.Section02.RankOneModule
+open Chapter6.Source Chapter6.Source.RankOneRecognition
+universe u
+variable {G : Type u} [Group G] [Finite G]
+  {T : Sylow 2 G} {L : Subgroup G} {n : ℕ} {z : G}
+
+theorem strict_reduced_rank_two_obstruction
+    (h611 : Hypothesis611 KnownSimple.IsKnownSimple T L
+      (normalizer (L : Set G)) (wholeReduced T L) n)
+    (hnatural : Conclusion6127 (T : Subgroup G) L
+      (normalizer (L : Set G)) (wholeReduced T L) n)
+    (A : LocalAnalysis (T : Subgroup G) L (normalizer (L : Set G)) (wholeReduced T L) z)
+    (hz : z ∈ ZS (T : Subgroup G) L (wholeReduced T L)) (horder : orderOf z = 2)
+    (hstrict : ZS (T : Subgroup G) L (wholeReduced T L) <
+      sourceClosure (T : Subgroup G) L (wholeReduced T L) z ⊓ commutatorLayer T L) :
+    ∃ he : IsElementaryAbelian 2 (StrictVectorQuotient (T : Subgroup G) L (wholeReduced T L) z),
+      letI := he
+      ∃ B : LinearMap.BilinForm (ZMod 2)
+        (Additive (StrictVectorQuotient (T : Subgroup G) L (wholeReduced T L) z)),
+        B.IsAlt ∧ B.Nondegenerate ∧
+        4 ≤ Module.finrank (ZMod 2)
+          (Additive (StrictVectorQuotient (T : Subgroup G) L (wholeReduced T L) z)) ∧
+        Function.Injective (strictRepresentation (T : Subgroup G) L (wholeReduced T L) z) ∧
+        (∀ a x y, B (strictRepresentation (T : Subgroup G) L (wholeReduced T L) z a x)
+          (strictRepresentation (T : Subgroup G) L (wholeReduced T L) z a y) = B x y) ∧
+        Nat.card (strictLayerImage (T : Subgroup G) L (wholeReduced T L) z) = 2 ∧
+        ¬ Representation.RankTwo.StabilizerTransitive
+          (strictRepresentation (T : Subgroup G) L (wholeReduced T L) z)
+          (strictCentralPlane (T : Subgroup G) L (wholeReduced T L) z) ∧
+        ∀ a ∈ strictLayerImage (T : Subgroup G) L (wholeReduced T L) z, a ≠ 1 →
+          a ^ 2 = 1 ∧
+          Representation.RankTwo.movedSpace
+            (strictRepresentation (T : Subgroup G) L (wholeReduced T L) z) a =
+              strictCentralPlane (T : Subgroup G) L (wholeReduced T L) z ∧
+          Module.finrank (ZMod 2) (Representation.RankTwo.movedSpace
+            (strictRepresentation (T : Subgroup G) L (wholeReduced T L) z) a) = 2 ∧
+          ∀ x, B x (strictRepresentation (T : Subgroup G) L (wholeReduced T L) z a x) = 0 := by
+  obtain ⟨he, B, hBa, hBn, hd, hpres, hmark⟩ :=
+    A.strict_symplectic_layer_action h611 hnatural hz horder hstrict
+  let := he
+  exact ⟨he, B, hBa, hBn, hd, strictRepresentation_injective _ _ _ _, hpres,
+    A.strict_layer_actor_image_card h611 hnatural hz horder hstrict,
+    A.strict_plane_not_stabilizerTransitive h611 hnatural hz horder hstrict, hmark⟩
+
+/-- The K-star to K-dot isomorphism preserves the actual quotient images. -/
+theorem strict_reduced_layerClosure_quotient
+    (h611 : Hypothesis611 KnownSimple.IsKnownSimple T L
+      (normalizer (L : Set G)) (wholeReduced T L) n)
+    (hnatural : Conclusion6127 (T : Subgroup G) L
+      (normalizer (L : Set G)) (wholeReduced T L) n)
+    (A : LocalAnalysis (T : Subgroup G) L (normalizer (L : Set G)) (wholeReduced T L) z)
+    (hz : z ∈ ZS (T : Subgroup G) L (wholeReduced T L)) (horder : orderOf z = 2)
+    (hstrict : ZS (T : Subgroup G) L (wholeReduced T L) <
+      sourceClosure (T : Subgroup G) L (wholeReduced T L) z ⊓ commutatorLayer T L) :
+    let K := equalityLayerClosure L (wholeReduced T L) z
+    let q := QuotientGroup.mk'
+      (strictQuotientAction (T : Subgroup G) L (wholeReduced T L) z).ker
+    ∃ e : K ⧸ pCore 2 K ≃* K.map q,
+      ∀ k : K, (e (QuotientGroup.mk' _ k) : StrictActor (T : Subgroup G) L (wholeReduced T L) z) =
+        q (k : centralizer ({z} : Set G)) :=
+  ⟨A.strict_layerClosure_equiv_image h611 hnatural hz horder hstrict,
+    A.strict_layerClosure_equiv_image_mk h611 hnatural hz horder hstrict⟩
+
+/-- The literal dotted actor has no normal two-subgroup, and the source
+line is generated by any nonzero point whose orbit spans the central quotient. -/
+theorem strict_reduced_source_point
+    (h611 : Hypothesis611 KnownSimple.IsKnownSimple T L
+      (normalizer (L : Set G)) (wholeReduced T L) n)
+    (hnatural : Conclusion6127 (T : Subgroup G) L
+      (normalizer (L : Set G)) (wholeReduced T L) n)
+    (A : LocalAnalysis (T : Subgroup G) L (normalizer (L : Set G)) (wholeReduced T L) z)
+    (hz : z ∈ ZS (T : Subgroup G) L (wholeReduced T L)) (horder : orderOf z = 2)
+    (hTH : (T : Subgroup G) ≤ centralizer ({z} : Set G))
+    (hstrict : ZS (T : Subgroup G) L (wholeReduced T L) <
+      sourceClosure (T : Subgroup G) L (wholeReduced T L) z ⊓ commutatorLayer T L)
+    [IsElementaryAbelian 2 (StrictVectorQuotient (T : Subgroup G) L (wholeReduced T L) z)] :
+    pCore 2 (StrictActor (T : Subgroup G) L (wholeReduced T L) z) = ⊥ ∧
+    ∃ v : Additive (StrictVectorQuotient (T : Subgroup G) L (wholeReduced T L) z),
+      v ≠ 0 ∧ v ∈ strictSourceLine (T : Subgroup G) L (wholeReduced T L) z ∧
+      Submodule.span (ZMod 2) {w | ∃ a : StrictActor (T : Subgroup G) L (wholeReduced T L) z,
+        strictRepresentation (T : Subgroup G) L (wholeReduced T L) z a v = w} = ⊤ ∧
+      ∀ h : centralizer ({z} : Set G), (h : G) ∈ (T : Subgroup G) →
+        strictRepresentation (T : Subgroup G) L (wholeReduced T L) z
+          (QuotientGroup.mk' (strictQuotientAction (T : Subgroup G) L (wholeReduced T L) z).ker h) v = v := by
+  have hdim := A.strictSourceLine_finrank h611 hnatural hz horder hstrict
+  have hne : strictSourceLine (T : Subgroup G) L (wholeReduced T L) z ≠ ⊥ := by
+    intro he
+    rw [he, finrank_bot] at hdim
+    omega
+  obtain ⟨v, hv, hv0⟩ := (strictSourceLine (T : Subgroup G) L (wholeReduced T L) z).ne_bot_iff.mp hne
+  exact ⟨A.strict_actor_twoCore_eq_bot h611 hnatural hz horder hTH hstrict,
+    v, hv0, hv, A.strictSourcePoint_orbit_span h611 hnatural hz horder hstrict v hv hv0,
+    fun h hh => A.strict_sourceLine_fixed_of_mem h611 hnatural hz horder hstrict h
+      (h611.sylow_le hh) v hv⟩
+
+end CFSG.Quasithin.Chapter12.Section02.RankOneModule

@@ -24,6 +24,7 @@ public import GorensteinWalter.KleinFourInjectiveMap
 public import Mathlib.GroupTheory.SpecificGroups.Alternating.KleinFour
 import Mathlib.Tactic
 
+
 /-!
 # A normal complement from Dickson's PSL₂ subgroup classification
 
@@ -88,15 +89,11 @@ public theorem secondCase_linear_psl2_normalComplement_or_kleinFour
     have hpone : 1 < p := (Fact.out : Nat.Prime p).one_lt
     simpa [hPcard] using hpone
   let N : Subgroup H := Subgroup.normalizer (P : Set H)
-  have hbotComp : (⊥ : Subgroup H).IsComplement' (⊤ : Subgroup H) := by
-    apply Subgroup.isComplement'_of_card_mul_and_disjoint
-    · simp
-    · exact disjoint_bot_left
   have hNC_of_top : N = ⊤ →
       SecondCaseLinearNormalComplementData H P (Nat.card K) := by
     intro hNtop
     refine ⟨⊥, Subgroup.normal_bot, ?_, by simp⟩
-    simpa [N, hNtop] using hbotComp
+    simp [N, hNtop]
   rcases Glauberman.Dickson.huppert_II_8_27_dickson_psl2_subgroup_classification
       hKcard H with hElem | hCyc | hDih | hA4 | hS4 | hA5 |
       hSemi | hPSL | hPGL
@@ -193,7 +190,7 @@ public theorem secondCase_linear_psl2_normalComplement_or_kleinFour
       exact isCyclic_normalizer_conjugate (P : Subgroup H) g hNcyc
     have hbase := secondCase_linear_semidirect_psl2_normal_complement
       (F := K) (r := r) (p := p) hKcard hpne H N₀ C₀ P'
-      hNnormal hNelem hNcard_dvd hCcyc hdisj hjoin hP'leC
+      hNnormal hNelem hNcard_dvd hCcyc hjoin hP'leC
       hP'card hP'ne hNcyc'
     rcases hbase with ⟨hbaseN, hbaseEq, hbaseInf, hbaseSup, hbaseCard⟩
     have hcomp' : N₀.IsComplement'
@@ -208,7 +205,6 @@ public theorem secondCase_linear_psl2_normalComplement_or_kleinFour
         (P : Subgroup H) := by
       dsimp [P']
       rw [Subgroup.map_map]
-      congr 1
       ext z
       simp [MulAut.conj_apply, mul_assoc]
     have hback := normalComplement_conj P' N₀ g⁻¹ hbaseN hcomp'

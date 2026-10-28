@@ -1,7 +1,7 @@
 module
 
 public import FeitThompson.PFsection12.Basic
-import FeitThompson.GroupAction.MinimalNormal
+import Theory.GroupAction.MinimalNormal
 import FeitThompson.PFsection5.RealVirtualParity
 import FeitThompson.PFsection6.PFsection6_5_a
 import FeitThompson.PFsection7.PFsection7_3
@@ -16,6 +16,7 @@ import FeitThompson.PFsection8.SourceTypePBridge
 import FeitThompson.PFsection9.PFsection9_1
 import Mathlib.GroupTheory.Schreier
 import Mathlib.RingTheory.ZMod.UnitsCyclic
+
 
 /-!
 # Peterfalvi, Section 12: Theorem (12.9)
@@ -40,7 +41,7 @@ public theorem not_isCyclic_sylow_of_not_isCyclic_sylow
     (hQnoncyc : ¬ IsCyclic (Q : Subgroup R)) :
     ¬ IsCyclic (P : Subgroup R) := by
   classical
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   intro hPcyc
   let e : (P : Subgroup R) ≃* (Q : Subgroup R) := Sylow.equiv P Q
   exact hQnoncyc (e.isCyclic.mp hPcyc)
@@ -61,7 +62,7 @@ public theorem quotientHasNoncyclicSylow_of_quotient_mulEquiv
     (hPnoncyc : ¬ IsCyclic (P : Subgroup Q)) :
     quotientHasNoncyclicSylow p K M := by
   classical
-  haveI : (K.subgroupOf M).Normal := hN
+  have : (K.subgroupOf M).Normal := hN
   let Pbar : Sylow p (M ⧸ K.subgroupOf M) :=
     P.mapSurjective (f := e.symm.toMonoidHom) e.symm.surjective
   have hPbarNoncyc :
@@ -123,7 +124,7 @@ public theorem exists_quotientHasNoncyclicSylow_of_typeFData_not_frobenius
         IsCyclic (P : Subgroup U) := by
     intro p P
     by_contra hPnoncyc
-    haveI : Fact p.val.Prime := ⟨p.property⟩
+    have : Fact p.val.Prime := ⟨p.property⟩
     exact hnone
       ⟨p.val, p.property,
         quotientHasNoncyclicSylow_of_typeFData_noncyclic_sylow
@@ -174,7 +175,7 @@ public theorem exists_hypothesis_12_8_data_of_minimal_badPrimeForHypothesis12
   classical
   have hbadFull : badPrimeForHypothesis12 G p := hbad
   rcases hbad with ⟨hp, M, MF, hM, hMF, hTypeI, hquot⟩
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   let pp : Nat.Primes := ⟨p, hp⟩
   let P : Sylow pp.val M := Classical.choice (Sylow.nonempty (p := pp.val) (G := M))
   let P0 : Subgroup G := section10AmbientSylowSubgroup M P
@@ -233,11 +234,11 @@ public theorem theorem_12_9_prime_not_mem_subgroupPrimeSet_of_quotient_noncyclic
     (hnoncyc : quotientHasNoncyclicSylow p K M) :
     (⟨p, hp⟩ : Nat.Primes) ∉ subgroupPrimeSet K := by
   classical
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hHall : IsHallSubgroup (subgroupPrimeSet K) (K.subgroupOf M) :=
     section16MFSubgroup_subgroupOf_isHall hMF
   rcases hnoncyc with ⟨_hKM, hN, Q, hQnoncyc⟩
-  haveI : (K.subgroupOf M).Normal := hN
+  have : (K.subgroupOf M).Normal := hN
   have hQnontr : Nontrivial (Q : Subgroup (M ⧸ K.subgroupOf M)) :=
     Nontrivial.of_not_isCyclic hQnoncyc
   have hp_dvd_Q : p ∣ Nat.card (Q : Subgroup (M ⧸ K.subgroupOf M)) := by
@@ -267,9 +268,9 @@ public theorem theorem_12_9_quotient_sylow_generatorRank_eq_two
         IsMulCommutative (Pbar : Subgroup (M ⧸ K.subgroupOf M)) ∧
           generatorRank (Pbar : Subgroup (M ⧸ K.subgroupOf M)) = 2 := by
   classical
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   rcases hquotRank with ⟨hKM, hN, hRankQ⟩
-  haveI : (K.subgroupOf M).Normal := hN
+  have : (K.subgroupOf M).Normal := hN
   rcases hnoncyc with ⟨_hKMnc, _hNnc, Q, hQnoncyc⟩
   refine ⟨hKM, hN, ?_⟩
   intro Pbar
@@ -296,7 +297,7 @@ public theorem theorem_12_9_sylow_inf_mf_eq_bot
     (P : Sylow p M) :
     K.subgroupOf M ⊓ (P : Subgroup M) = ⊥ := by
   classical
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hnot : (⟨p, hp⟩ : Nat.Primes) ∉ subgroupPrimeSet K :=
     theorem_12_9_prime_not_mem_subgroupPrimeSet_of_quotient_noncyclic
       M K p hp hMF hnoncyc
@@ -339,7 +340,7 @@ public theorem theorem_12_9_rank_two_of_mulEquiv
   have hgroup_le : groupRank R ≤ 2 :=
     (groupRank_le_generatorRank_of_commutative_pgroup (p := p) hRp hcommR).trans hgen_le
   have hgroup_ge : 2 ≤ groupRank R := by
-    haveI : Fact (IsPGroup p R) := ⟨hRp⟩
+    have : Fact (IsPGroup p R) := ⟨hRp⟩
     exact hgen_ge.trans (generatorRank_le_groupRank_of_commutative_pgroup (p := p) R)
   exact ⟨hcommR, le_antisymm hgroup_le hgroup_ge⟩
 
@@ -377,7 +378,7 @@ private theorem theorem_12_9_hasAbelianSylowRankAtMostTwo_of_mulEquiv
     section16HasAbelianSylowRankAtMostTwo R := by
   classical
   intro p P
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let f : R →* S := e.toMonoidHom
   let Q : Sylow p.val S := P.mapSurjective (f := f) e.surjective
   have hQ := hS p Q
@@ -425,7 +426,7 @@ public theorem theorem_12_9_quotient_sylow_rank_of_typeI_source
       _hU1comm, _hU1norm, _hcent, _hU0le, _hexp, _hfrob⟩
   have hKnorm : (K.subgroupOf M).Normal :=
     section16MFSubgroup_subgroupOf_normal hMF
-  haveI : (K.subgroupOf M).Normal := hKnorm
+  have : (K.subgroupOf M).Normal := hKnorm
   have hcompLocal : (K.subgroupOf M).IsComplement' (U.subgroupOf M) :=
     section12ComplementIn_left_normal_isComplement' hcomp hKnorm
   let eQuot : M ⧸ K.subgroupOf M ≃* U.subgroupOf M :=
@@ -453,12 +454,12 @@ public theorem theorem_12_9_p0_rank_two_of_quotient_rank
     (hP0 : section12SylowSubgroupIn ⟨p, hp⟩ P0 M) :
     IsMulCommutative P0 ∧ groupRank P0 = 2 := by
   classical
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   rcases hP0 with ⟨P, rfl⟩
   rcases theorem_12_9_quotient_sylow_generatorRank_eq_two
       M K p hp hquotRank hnoncyc with
     ⟨hKM, hN, hquot⟩
-  haveI : (K.subgroupOf M).Normal := hN
+  have : (K.subgroupOf M).Normal := hN
   let q : M →* M ⧸ K.subgroupOf M := QuotientGroup.mk' (K.subgroupOf M)
   let Pbar : Sylow p (M ⧸ K.subgroupOf M) :=
     P.mapSurjective (f := q) (QuotientGroup.mk'_surjective (K.subgroupOf M))
@@ -507,13 +508,13 @@ public theorem theorem_12_9_exists_maximal_msChoice_containing_p0
         Section8.msChoice L LF Ls ∧ P0 ≤ Ls := by
   classical
   let pp : Nat.Primes := ⟨p, hp⟩
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hP0ne : P0 ≠ ⊥ := by
     intro hbot
     have hcyc : IsCyclic P0 := by
       rw [hbot]
       infer_instance
-    letI : IsCyclic P0 := hcyc
+    let : IsCyclic P0 := hcyc
     have hle : groupRank P0 ≤ 1 := groupRank_le_one_of_isCyclic P0
     omega
   rcases IsPGroup.exists_le_sylow (G := G) (p := p) hP0p with ⟨Q, hP0Q⟩
@@ -586,9 +587,9 @@ public theorem theorem_12_9_omega_one_noncyclic
     IsElementaryAbelian p (section12OmegaOneSubgroup ⟨p, hp⟩ P0) ∧
       ¬ IsCyclic (section12OmegaOneSubgroup ⟨p, hp⟩ P0) := by
   classical
-  haveI : Fact p.Prime := ⟨hp⟩
-  letI : IsMulCommutative P0 := hP0comm
-  letI : Fact (IsPGroup p P0) := ⟨hP0p⟩
+  have : Fact p.Prime := ⟨hp⟩
+  let : IsMulCommutative P0 := hP0comm
+  let : Fact (IsPGroup p P0) := ⟨hP0p⟩
   have hgen : generatorRank P0 = 2 := by
     apply le_antisymm
     · exact
@@ -600,7 +601,7 @@ public theorem theorem_12_9_omega_one_noncyclic
     IsElementaryAbelian.omega₁_of_isMulCommutative P0
   let P1 : Subgroup G := section12OmegaOneSubgroup ⟨p, hp⟩ P0
   have hP1Elem : IsElementaryAbelian p P1 := by
-    letI : IsElementaryAbelian p (omega₁ (G := P0) (p := p)) := hOmegaElem
+    let : IsElementaryAbelian p (omega₁ (G := P0) (p := p)) := hOmegaElem
     exact section11_isElementaryAbelian_map
       (G := P0) (p := p) (A := omega₁ (G := P0) (p := p)) P0.subtype
   have hP1card : Nat.card P1 = p ^ 2 := by
@@ -612,7 +613,7 @@ public theorem theorem_12_9_omega_one_noncyclic
       _ = p ^ generatorRank P0 :=
         omega₁_card_eq_pow_generatorRank_of_commutative_pgroup (p := p) P0
       _ = p ^ 2 := by rw [hgen]
-  letI : IsElementaryAbelian p P1 := hP1Elem
+  let : IsElementaryAbelian p P1 := hP1Elem
   have hgenP1 : 2 ≤ generatorRank P1 :=
     section12_generatorRank_at_least_two_of_elementaryAbelian_card_p_sq hP1card
   exact ⟨hP1Elem, section12_not_isCyclic_of_two_le_generatorRank hgenP1⟩
@@ -630,17 +631,17 @@ public theorem theorem_12_9_exists_centralizer_witness
     (hK' : K' = ambientDerivedSubgroup K) :
     ∃ x : G, x ∈ P1 ∧ x ≠ 1 ∧ ¬ elementCentralizerIn K x ≤ K' := by
   classical
-  haveI : Fact p.Prime := ⟨hp⟩
-  letI : IsElementaryAbelian p P1 := hP1Elem
-  letI : CommGroup P1 := IsMulCommutative.instCommGroup
-  letI : Fact (IsPGroup p P1) := ⟨IsElementaryAbelian.isPGroup p P1⟩
+  have : Fact p.Prime := ⟨hp⟩
+  let : IsElementaryAbelian p P1 := hP1Elem
+  let : CommGroup P1 := IsMulCommutative.instCommGroup
+  let : Fact (IsPGroup p P1) := ⟨IsElementaryAbelian.isPGroup p P1⟩
   have hKleM : K ≤ M := section16MFSubgroup_le hMF
   have hMnormK : M ≤ Subgroup.normalizer (K : Set G) :=
     (Subgroup.normal_subgroupOf_iff_le_normalizer hKleM).1
       (section16MFSubgroup_subgroupOf_normal hMF)
   have hP1normK : P1 ≤ Subgroup.normalizer (K : Set G) :=
     hP1M.trans hMnormK
-  letI : Subgroup.Normalizes P1 K := ⟨hP1normK⟩
+  let : Subgroup.Normalizes P1 K := ⟨hP1normK⟩
   have hfix_top :
       (⨆ (a : P1) (_ : a ≠ 1),
         fixedPointSubgroup (↥(Subgroup.zpowers a)) ↥K) = ⊤ := by
@@ -695,7 +696,7 @@ public theorem theorem_12_9_exists_centralizer_witness
         exact hfixed_map_le a ha_ne
   have hDlt : ambientDerivedSubgroup K < K := by
     let : Group.IsSolvable K := hKsolv
-    haveI : Nontrivial K := (Subgroup.nontrivial_iff_ne_bot (H := K)).2 hKne
+    have : Nontrivial K := (Subgroup.nontrivial_iff_ne_bot (H := K)).2 hKne
     have hcomm_lt : derivedSubgroup K < (⊤ : Subgroup K) := by
       simpa [derivedSubgroup, derivedSeries_one, _root_.commutator_def] using
         Group.IsSolvable.commutator_lt_top_of_nontrivial (G := K)
@@ -723,7 +724,7 @@ public theorem theorem_12_9_exists_conjugate_le_typeF_complement
     ∃ g : M, P0.conjBy (g : G) ≤ U := by
   classical
   let pp : Nat.Primes := ⟨p, hp⟩
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hKnorm : (K.subgroupOf M).Normal :=
     section16MFSubgroup_subgroupOf_normal hMF
   have hcompLocal : (K.subgroupOf M).IsComplement' (U.subgroupOf M) :=
@@ -764,7 +765,7 @@ public theorem theorem_12_9_exists_conjugate_le_typeF_complement
       rw [← hcard]
       exact hqP0sub
     exact hP0pi q hqP0
-  letI : MulDistribMulAction Unit M := {
+  let : MulDistribMulAction Unit M := {
     smul := fun _ x => x
     one_smul := fun _ => rfl
     mul_smul := fun _ _ _ => rfl
@@ -774,7 +775,7 @@ public theorem theorem_12_9_exists_conjugate_le_typeF_complement
     refine ⟨?_⟩
     intro _ x
     simp [P0sub]
-  have hsolvM : IsSolvable M :=
+  have hsolvM : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.mpr hM.1)
   obtain ⟨H, hHHall, _hHInv, hP0subH⟩ :=
     exists_isHallSubgroup_isInvariant_of_isPiSubgroup
@@ -1002,7 +1003,7 @@ private theorem theorem_12_9_centralizer_not_le_choice
         (Subgroup.centralizer ({x} : Set G)) = {M}) :
     ¬ elementCentralizerIn (⊤ : Subgroup G) x ≤ L := by
   classical
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   intro hcentL
   have hLcont :
       L ∈ section9MaximalSubgroupsContaining
@@ -1024,7 +1025,7 @@ private theorem theorem_12_9_centralizer_not_le_choice
   have hxK : x ∈ K := by
     simpa [hKsigma] using hxSigmaM
   let P1 : Subgroup G := section12OmegaOneSubgroup ⟨p, hp⟩ P0
-  letI : IsElementaryAbelian p P1 := by
+  let : IsElementaryAbelian p P1 := by
     simpa [P1] using hP1Elem
   have hxpowP1 : (⟨x, by simpa [P1] using hxP1⟩ : P1) ^ p = 1 :=
     Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
@@ -1055,7 +1056,7 @@ public theorem theorem_12_9_source_data_of_hypothesis_12_8
     theorem_12_9_p0_rank_two M K K' P0 p h128'
   rcases h128' with
     ⟨hp, _hbad, _hmin, hM, hMF, hTypeI, hMs, hK', hnoncyc, hP0⟩
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   rcases hP0 with ⟨P, hP0eq⟩
   have hP0M : P0 ≤ M := by
     rw [← hP0eq]
@@ -1081,8 +1082,8 @@ public theorem theorem_12_9_source_data_of_hypothesis_12_8
       M K p hp hMF hnoncyc
   have hcop : Nat.Coprime p (Nat.card K) :=
     prime_coprime_card_of_not_mem_subgroupPrimeSet hp hpK
-  have hKsolv : IsSolvable K := by
-    letI : Group.IsNilpotent K := hMF.1.2.2.1
+  have hKsolv : Group.IsSolvable K := by
+    let : Group.IsNilpotent K := hMF.1.2.2.1
     exact IsNilpotent.to_isSolvable
   have hKne : K ≠ ⊥ := by
     rcases hTypeI with ⟨_U, _U1, _U0, hF, _hAlt⟩

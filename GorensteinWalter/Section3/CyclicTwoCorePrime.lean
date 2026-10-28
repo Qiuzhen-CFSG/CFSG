@@ -11,6 +11,7 @@ import all BenderGlauberman.Defs
 import BenderGlauberman.FinalTheorem
 import all BenderGlauberman.Lemma19
 
+
 noncomputable section
 
 open scoped commutatorElement
@@ -35,7 +36,7 @@ private theorem commutator_double_eq_self_of_coprime_solvable
     {G : Type u} [Group G] [Finite G]
     (P K : Subgroup G) (hPK : P ≤ Subgroup.normalizer (K : Set G))
     (hcop : Nat.Coprime (Nat.card P) (Nat.card K))
-    (hsolv : IsSolvable K) :
+    (hsolv : Group.IsSolvable K) :
     ⁅⁅K, P⁆, P⁆ = ⁅K, P⁆ := by
   classical
   let : Subgroup.Normalizes P K := ⟨hPK⟩
@@ -104,7 +105,7 @@ private theorem exists_primeCore_not_centralized
   have hS0normU : c.S0 ≤ Subgroup.normalizer (c.U : Set G) :=
     (c.S0_le_S.trans (centralizerSetup_S_le_H c)).trans
       (le_normalizer_of_isNormalIn (centralizerSetup_U_isNormalIn_H c))
-  have hUsolv : IsSolvable c.U := by
+  have hUsolv : Group.IsSolvable c.U := by
     exact odd_order_theorem c.U (Nat.coprime_two_left.mp hUodd)
   have hdouble : ⁅⁅c.U, c.S0⁆, c.S0⁆ = ⁅c.U, c.S0⁆ :=
     commutator_double_eq_self_of_coprime_solvable
@@ -113,7 +114,7 @@ private theorem exists_primeCore_not_centralized
       ¬ c.S0 ≤ Subgroup.centralizer
         (qCoreOf c.U q.1.1 : Set G) := by
     by_contra hall
-    push_neg at hall
+    push Not at hall
     have hcentFU : c.S0 ≤ Subgroup.centralizer (c.FU : Set G) := by
       change c.S0 ≤ Subgroup.centralizer (fittingSubgroupOf c.U : Set G)
       rw [fittingSubgroupOf_eq_iSup_qCoreOf c.U]

@@ -13,6 +13,8 @@ namespace GorensteinWalter
 
 universe u
 
+-- `hK0leM` remains explicit for compatibility with existing named applications.
+set_option linter.unusedVariables false in
 /-- A quotient image of cardinality three forces an ambient order-three
 element in the corresponding subgroup. -/
 public theorem secondCase_a7_k0_exists_order_three

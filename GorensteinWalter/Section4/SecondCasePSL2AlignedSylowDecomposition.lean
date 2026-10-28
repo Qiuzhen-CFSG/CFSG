@@ -9,6 +9,7 @@ public import GorensteinWalter.Section2.Lemma27Infra
 public import GorensteinWalter.Section2.Lemma27IndexTwo
 import Mathlib.Tactic
 
+
 /-!
 # The aligned-Sylow decomposition in the PSL₂ branch
 
@@ -1067,7 +1068,7 @@ public theorem secondCase_psl2_alignedSylow_decomposition
         (G := Subgroup.center d.E)
         (Nat.coprime_two_left.mpr d.center_odd) hzsqc
     have hz_one : z = 1 := congrArg Subtype.val hzc_one
-    simpa [hz_one]
+    simp [hz_one]
   -- join `X = K ⊔ B` via Fact 1.5(ii) and normality of `K` in `X`
   have hKnormal : IsNormalIn K X :=
     (fact_1_5_iii_inverted_subgroup_abelian_normal (X := X) (s := sG)

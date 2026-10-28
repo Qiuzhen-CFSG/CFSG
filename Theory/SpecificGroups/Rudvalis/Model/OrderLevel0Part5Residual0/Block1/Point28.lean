@@ -1,0 +1,1039 @@
+module
+
+public import Theory.SpecificGroups.Rudvalis.Model.OrderLevel0Part5Residual0.Words
+import Mathlib.Tactic.FinCases
+
+/-!
+# Rudvalis part-5 residual 28
+
+The prescribed transition is verified on all 4060 points by 203 twenty-point
+kernel checks, then transferred by `point28_ofSlices`. Source:
+`OrderLevel0Data` and `Part5Residual.target`; extracted from the certificate
+produced by `OrderCertificate/GenerateLevel0Part5Residual0.py`.
+-/
+
+namespace Rudvalis.OrderCertificate.ForwardReduction.Part5Residual.Residual0Checks
+set_option maxRecDepth 30000
+set_option Elab.async false
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice0 : slice 0 left28 right28 factor28 0 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice1 : slice 0 left28 right28 factor28 1 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice2 : slice 0 left28 right28 factor28 2 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice3 : slice 0 left28 right28 factor28 3 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice4 : slice 0 left28 right28 factor28 4 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice5 : slice 0 left28 right28 factor28 5 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice6 : slice 0 left28 right28 factor28 6 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice7 : slice 0 left28 right28 factor28 7 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice8 : slice 0 left28 right28 factor28 8 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice9 : slice 0 left28 right28 factor28 9 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice10 : slice 0 left28 right28 factor28 10 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice11 : slice 0 left28 right28 factor28 11 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice12 : slice 0 left28 right28 factor28 12 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice13 : slice 0 left28 right28 factor28 13 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice14 : slice 0 left28 right28 factor28 14 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice15 : slice 0 left28 right28 factor28 15 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice16 : slice 0 left28 right28 factor28 16 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice17 : slice 0 left28 right28 factor28 17 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice18 : slice 0 left28 right28 factor28 18 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice19 : slice 0 left28 right28 factor28 19 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice20 : slice 0 left28 right28 factor28 20 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice21 : slice 0 left28 right28 factor28 21 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice22 : slice 0 left28 right28 factor28 22 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice23 : slice 0 left28 right28 factor28 23 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice24 : slice 0 left28 right28 factor28 24 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice25 : slice 0 left28 right28 factor28 25 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice26 : slice 0 left28 right28 factor28 26 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice27 : slice 0 left28 right28 factor28 27 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice28 : slice 0 left28 right28 factor28 28 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice29 : slice 0 left28 right28 factor28 29 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice30 : slice 0 left28 right28 factor28 30 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice31 : slice 0 left28 right28 factor28 31 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice32 : slice 0 left28 right28 factor28 32 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice33 : slice 0 left28 right28 factor28 33 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice34 : slice 0 left28 right28 factor28 34 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice35 : slice 0 left28 right28 factor28 35 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice36 : slice 0 left28 right28 factor28 36 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice37 : slice 0 left28 right28 factor28 37 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice38 : slice 0 left28 right28 factor28 38 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice39 : slice 0 left28 right28 factor28 39 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice40 : slice 0 left28 right28 factor28 40 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice41 : slice 0 left28 right28 factor28 41 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice42 : slice 0 left28 right28 factor28 42 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice43 : slice 0 left28 right28 factor28 43 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice44 : slice 0 left28 right28 factor28 44 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice45 : slice 0 left28 right28 factor28 45 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice46 : slice 0 left28 right28 factor28 46 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice47 : slice 0 left28 right28 factor28 47 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice48 : slice 0 left28 right28 factor28 48 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice49 : slice 0 left28 right28 factor28 49 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice50 : slice 0 left28 right28 factor28 50 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice51 : slice 0 left28 right28 factor28 51 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice52 : slice 0 left28 right28 factor28 52 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice53 : slice 0 left28 right28 factor28 53 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice54 : slice 0 left28 right28 factor28 54 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice55 : slice 0 left28 right28 factor28 55 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice56 : slice 0 left28 right28 factor28 56 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice57 : slice 0 left28 right28 factor28 57 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice58 : slice 0 left28 right28 factor28 58 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice59 : slice 0 left28 right28 factor28 59 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice60 : slice 0 left28 right28 factor28 60 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice61 : slice 0 left28 right28 factor28 61 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice62 : slice 0 left28 right28 factor28 62 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice63 : slice 0 left28 right28 factor28 63 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice64 : slice 0 left28 right28 factor28 64 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice65 : slice 0 left28 right28 factor28 65 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice66 : slice 0 left28 right28 factor28 66 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice67 : slice 0 left28 right28 factor28 67 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice68 : slice 0 left28 right28 factor28 68 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice69 : slice 0 left28 right28 factor28 69 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice70 : slice 0 left28 right28 factor28 70 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice71 : slice 0 left28 right28 factor28 71 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice72 : slice 0 left28 right28 factor28 72 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice73 : slice 0 left28 right28 factor28 73 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice74 : slice 0 left28 right28 factor28 74 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice75 : slice 0 left28 right28 factor28 75 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice76 : slice 0 left28 right28 factor28 76 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice77 : slice 0 left28 right28 factor28 77 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice78 : slice 0 left28 right28 factor28 78 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice79 : slice 0 left28 right28 factor28 79 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice80 : slice 0 left28 right28 factor28 80 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice81 : slice 0 left28 right28 factor28 81 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice82 : slice 0 left28 right28 factor28 82 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice83 : slice 0 left28 right28 factor28 83 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice84 : slice 0 left28 right28 factor28 84 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice85 : slice 0 left28 right28 factor28 85 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice86 : slice 0 left28 right28 factor28 86 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice87 : slice 0 left28 right28 factor28 87 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice88 : slice 0 left28 right28 factor28 88 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice89 : slice 0 left28 right28 factor28 89 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice90 : slice 0 left28 right28 factor28 90 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice91 : slice 0 left28 right28 factor28 91 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice92 : slice 0 left28 right28 factor28 92 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice93 : slice 0 left28 right28 factor28 93 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice94 : slice 0 left28 right28 factor28 94 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice95 : slice 0 left28 right28 factor28 95 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice96 : slice 0 left28 right28 factor28 96 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice97 : slice 0 left28 right28 factor28 97 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice98 : slice 0 left28 right28 factor28 98 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice99 : slice 0 left28 right28 factor28 99 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice100 : slice 0 left28 right28 factor28 100 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice101 : slice 0 left28 right28 factor28 101 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice102 : slice 0 left28 right28 factor28 102 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice103 : slice 0 left28 right28 factor28 103 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice104 : slice 0 left28 right28 factor28 104 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice105 : slice 0 left28 right28 factor28 105 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice106 : slice 0 left28 right28 factor28 106 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice107 : slice 0 left28 right28 factor28 107 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice108 : slice 0 left28 right28 factor28 108 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice109 : slice 0 left28 right28 factor28 109 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice110 : slice 0 left28 right28 factor28 110 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice111 : slice 0 left28 right28 factor28 111 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice112 : slice 0 left28 right28 factor28 112 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice113 : slice 0 left28 right28 factor28 113 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice114 : slice 0 left28 right28 factor28 114 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice115 : slice 0 left28 right28 factor28 115 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice116 : slice 0 left28 right28 factor28 116 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice117 : slice 0 left28 right28 factor28 117 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice118 : slice 0 left28 right28 factor28 118 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice119 : slice 0 left28 right28 factor28 119 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice120 : slice 0 left28 right28 factor28 120 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice121 : slice 0 left28 right28 factor28 121 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice122 : slice 0 left28 right28 factor28 122 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice123 : slice 0 left28 right28 factor28 123 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice124 : slice 0 left28 right28 factor28 124 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice125 : slice 0 left28 right28 factor28 125 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice126 : slice 0 left28 right28 factor28 126 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice127 : slice 0 left28 right28 factor28 127 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice128 : slice 0 left28 right28 factor28 128 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice129 : slice 0 left28 right28 factor28 129 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice130 : slice 0 left28 right28 factor28 130 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice131 : slice 0 left28 right28 factor28 131 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice132 : slice 0 left28 right28 factor28 132 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice133 : slice 0 left28 right28 factor28 133 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice134 : slice 0 left28 right28 factor28 134 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice135 : slice 0 left28 right28 factor28 135 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice136 : slice 0 left28 right28 factor28 136 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice137 : slice 0 left28 right28 factor28 137 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice138 : slice 0 left28 right28 factor28 138 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice139 : slice 0 left28 right28 factor28 139 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice140 : slice 0 left28 right28 factor28 140 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice141 : slice 0 left28 right28 factor28 141 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice142 : slice 0 left28 right28 factor28 142 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice143 : slice 0 left28 right28 factor28 143 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice144 : slice 0 left28 right28 factor28 144 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice145 : slice 0 left28 right28 factor28 145 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice146 : slice 0 left28 right28 factor28 146 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice147 : slice 0 left28 right28 factor28 147 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice148 : slice 0 left28 right28 factor28 148 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice149 : slice 0 left28 right28 factor28 149 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice150 : slice 0 left28 right28 factor28 150 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice151 : slice 0 left28 right28 factor28 151 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice152 : slice 0 left28 right28 factor28 152 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice153 : slice 0 left28 right28 factor28 153 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice154 : slice 0 left28 right28 factor28 154 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice155 : slice 0 left28 right28 factor28 155 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice156 : slice 0 left28 right28 factor28 156 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice157 : slice 0 left28 right28 factor28 157 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice158 : slice 0 left28 right28 factor28 158 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice159 : slice 0 left28 right28 factor28 159 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice160 : slice 0 left28 right28 factor28 160 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice161 : slice 0 left28 right28 factor28 161 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice162 : slice 0 left28 right28 factor28 162 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice163 : slice 0 left28 right28 factor28 163 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice164 : slice 0 left28 right28 factor28 164 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice165 : slice 0 left28 right28 factor28 165 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice166 : slice 0 left28 right28 factor28 166 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice167 : slice 0 left28 right28 factor28 167 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice168 : slice 0 left28 right28 factor28 168 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice169 : slice 0 left28 right28 factor28 169 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice170 : slice 0 left28 right28 factor28 170 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice171 : slice 0 left28 right28 factor28 171 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice172 : slice 0 left28 right28 factor28 172 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice173 : slice 0 left28 right28 factor28 173 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice174 : slice 0 left28 right28 factor28 174 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice175 : slice 0 left28 right28 factor28 175 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice176 : slice 0 left28 right28 factor28 176 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice177 : slice 0 left28 right28 factor28 177 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice178 : slice 0 left28 right28 factor28 178 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice179 : slice 0 left28 right28 factor28 179 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice180 : slice 0 left28 right28 factor28 180 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice181 : slice 0 left28 right28 factor28 181 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice182 : slice 0 left28 right28 factor28 182 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice183 : slice 0 left28 right28 factor28 183 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice184 : slice 0 left28 right28 factor28 184 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice185 : slice 0 left28 right28 factor28 185 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice186 : slice 0 left28 right28 factor28 186 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice187 : slice 0 left28 right28 factor28 187 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice188 : slice 0 left28 right28 factor28 188 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice189 : slice 0 left28 right28 factor28 189 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice190 : slice 0 left28 right28 factor28 190 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice191 : slice 0 left28 right28 factor28 191 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice192 : slice 0 left28 right28 factor28 192 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice193 : slice 0 left28 right28 factor28 193 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice194 : slice 0 left28 right28 factor28 194 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice195 : slice 0 left28 right28 factor28 195 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice196 : slice 0 left28 right28 factor28 196 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice197 : slice 0 left28 right28 factor28 197 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice198 : slice 0 left28 right28 factor28 198 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice199 : slice 0 left28 right28 factor28 199 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice200 : slice 0 left28 right28 factor28 200 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice201 : slice 0 left28 right28 factor28 201 = true := by
+  decide +kernel
+
+set_option maxHeartbeats 1600000 in
+private theorem point28slice202 : slice 0 left28 right28 factor28 202 = true := by
+  decide +kernel
+
+public theorem point28 : residualCheck 28 := by
+  apply point28_ofSlices
+  intro c
+  fin_cases c
+  · exact point28slice0
+  · exact point28slice1
+  · exact point28slice2
+  · exact point28slice3
+  · exact point28slice4
+  · exact point28slice5
+  · exact point28slice6
+  · exact point28slice7
+  · exact point28slice8
+  · exact point28slice9
+  · exact point28slice10
+  · exact point28slice11
+  · exact point28slice12
+  · exact point28slice13
+  · exact point28slice14
+  · exact point28slice15
+  · exact point28slice16
+  · exact point28slice17
+  · exact point28slice18
+  · exact point28slice19
+  · exact point28slice20
+  · exact point28slice21
+  · exact point28slice22
+  · exact point28slice23
+  · exact point28slice24
+  · exact point28slice25
+  · exact point28slice26
+  · exact point28slice27
+  · exact point28slice28
+  · exact point28slice29
+  · exact point28slice30
+  · exact point28slice31
+  · exact point28slice32
+  · exact point28slice33
+  · exact point28slice34
+  · exact point28slice35
+  · exact point28slice36
+  · exact point28slice37
+  · exact point28slice38
+  · exact point28slice39
+  · exact point28slice40
+  · exact point28slice41
+  · exact point28slice42
+  · exact point28slice43
+  · exact point28slice44
+  · exact point28slice45
+  · exact point28slice46
+  · exact point28slice47
+  · exact point28slice48
+  · exact point28slice49
+  · exact point28slice50
+  · exact point28slice51
+  · exact point28slice52
+  · exact point28slice53
+  · exact point28slice54
+  · exact point28slice55
+  · exact point28slice56
+  · exact point28slice57
+  · exact point28slice58
+  · exact point28slice59
+  · exact point28slice60
+  · exact point28slice61
+  · exact point28slice62
+  · exact point28slice63
+  · exact point28slice64
+  · exact point28slice65
+  · exact point28slice66
+  · exact point28slice67
+  · exact point28slice68
+  · exact point28slice69
+  · exact point28slice70
+  · exact point28slice71
+  · exact point28slice72
+  · exact point28slice73
+  · exact point28slice74
+  · exact point28slice75
+  · exact point28slice76
+  · exact point28slice77
+  · exact point28slice78
+  · exact point28slice79
+  · exact point28slice80
+  · exact point28slice81
+  · exact point28slice82
+  · exact point28slice83
+  · exact point28slice84
+  · exact point28slice85
+  · exact point28slice86
+  · exact point28slice87
+  · exact point28slice88
+  · exact point28slice89
+  · exact point28slice90
+  · exact point28slice91
+  · exact point28slice92
+  · exact point28slice93
+  · exact point28slice94
+  · exact point28slice95
+  · exact point28slice96
+  · exact point28slice97
+  · exact point28slice98
+  · exact point28slice99
+  · exact point28slice100
+  · exact point28slice101
+  · exact point28slice102
+  · exact point28slice103
+  · exact point28slice104
+  · exact point28slice105
+  · exact point28slice106
+  · exact point28slice107
+  · exact point28slice108
+  · exact point28slice109
+  · exact point28slice110
+  · exact point28slice111
+  · exact point28slice112
+  · exact point28slice113
+  · exact point28slice114
+  · exact point28slice115
+  · exact point28slice116
+  · exact point28slice117
+  · exact point28slice118
+  · exact point28slice119
+  · exact point28slice120
+  · exact point28slice121
+  · exact point28slice122
+  · exact point28slice123
+  · exact point28slice124
+  · exact point28slice125
+  · exact point28slice126
+  · exact point28slice127
+  · exact point28slice128
+  · exact point28slice129
+  · exact point28slice130
+  · exact point28slice131
+  · exact point28slice132
+  · exact point28slice133
+  · exact point28slice134
+  · exact point28slice135
+  · exact point28slice136
+  · exact point28slice137
+  · exact point28slice138
+  · exact point28slice139
+  · exact point28slice140
+  · exact point28slice141
+  · exact point28slice142
+  · exact point28slice143
+  · exact point28slice144
+  · exact point28slice145
+  · exact point28slice146
+  · exact point28slice147
+  · exact point28slice148
+  · exact point28slice149
+  · exact point28slice150
+  · exact point28slice151
+  · exact point28slice152
+  · exact point28slice153
+  · exact point28slice154
+  · exact point28slice155
+  · exact point28slice156
+  · exact point28slice157
+  · exact point28slice158
+  · exact point28slice159
+  · exact point28slice160
+  · exact point28slice161
+  · exact point28slice162
+  · exact point28slice163
+  · exact point28slice164
+  · exact point28slice165
+  · exact point28slice166
+  · exact point28slice167
+  · exact point28slice168
+  · exact point28slice169
+  · exact point28slice170
+  · exact point28slice171
+  · exact point28slice172
+  · exact point28slice173
+  · exact point28slice174
+  · exact point28slice175
+  · exact point28slice176
+  · exact point28slice177
+  · exact point28slice178
+  · exact point28slice179
+  · exact point28slice180
+  · exact point28slice181
+  · exact point28slice182
+  · exact point28slice183
+  · exact point28slice184
+  · exact point28slice185
+  · exact point28slice186
+  · exact point28slice187
+  · exact point28slice188
+  · exact point28slice189
+  · exact point28slice190
+  · exact point28slice191
+  · exact point28slice192
+  · exact point28slice193
+  · exact point28slice194
+  · exact point28slice195
+  · exact point28slice196
+  · exact point28slice197
+  · exact point28slice198
+  · exact point28slice199
+  · exact point28slice200
+  · exact point28slice201
+  · exact point28slice202
+
+end Rudvalis.OrderCertificate.ForwardReduction.Part5Residual.Residual0Checks

@@ -5,6 +5,7 @@ public import Glauberman.MinimalNormalPSubgroupIsElementaryAbelian
 public import Mathlib.GroupTheory.GroupAction.ConjAct
 public import Mathlib.GroupTheory.QuotientGroup.Basic
 
+
 /-!
 # Faithful irreducible conjugation on a minimal normal p-subgroup
 -/
@@ -145,7 +146,7 @@ public theorem exists_minimalNormal_pSubgroup_faithful_irreducible_action
     {p : ℕ} [Fact p.Prime] {Q : Type u} [Group Q] [Finite Q]
     (H : Subgroup Q) [H.Normal] [IsMinimalNormal H]
     (hHne : H ≠ ⊥) (hHp : IsPGroup p H) :
-    letI : IsElementaryAbelian p H :=
+    let : IsElementaryAbelian p H :=
       minimalNormal_pSubgroup_isElementaryAbelian H hHne hHp
     ∃ ρ : Q ⧸ Subgroup.centralizer (H : Set Q) →*
         MulAut (Multiplicative (Additive H)),

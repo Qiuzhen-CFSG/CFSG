@@ -1,9 +1,10 @@
 module
 
 public import BenderSuzuki.PFAppendixI.Basic
-public import FeitThompson.BGsection2.EndFieldRep
+public import Theory.Representation.EndFieldRep
 public import Mathlib.RingTheory.SimpleModule.Rank
 public import Mathlib.GroupTheory.SpecificGroups.Cyclic.Basic
+
 /-!
 # Peterfalvi Appendix I, Proposition 2
 -/
@@ -13,7 +14,7 @@ namespace PFAppendixI
 
 
 open Representation
-open Theory.Representation
+open Representation
 open scoped IsMulCommutative
 
 set_option backward.isDefEq.respectTransparency false in
@@ -37,24 +38,24 @@ public theorem peterfalvi_appendixI_proposition_2_a
           ∀ (k : F) (x : Additive E), k • x = k.1 x := by
   classical
   let rho := AppendixIRepresentationOfT (p := p) (E := E) T
-  letI : FiniteDimensional (ZMod p) (Additive E) := Module.Finite.of_finite
-  letI : Field (AppendixIEndT (p := p) (E := E) T) := endField_field rho
-  letI : Finite (AppendixIEndT (p := p) (E := E) T) := endField_finite rho
-  letI : Module (AppendixIEndT (p := p) (E := E) T) (Additive E) :=
+  let : FiniteDimensional (ZMod p) (Additive E) := Module.Finite.of_finite
+  let : Field (AppendixIEndT (p := p) (E := E) T) := endField_field rho
+  let : Finite (AppendixIEndT (p := p) (E := E) T) := endField_finite rho
+  let : Module (AppendixIEndT (p := p) (E := E) T) (Additive E) :=
     endFieldModule rho
   let F := AppendixIFpT (p := p) (E := E) T
   have hFfield : IsField F := Finite.isField_of_domain F
   let fieldInst : Field F := hFfield.toField
   refine ⟨fieldInst, ?_⟩
-  letI : Field F := fieldInst
+  let : Field F := fieldInst
   let moduleInst : Module F (Additive E) :=
     Module.compHom (Additive E) F.val.toRingHom
   refine ⟨moduleInst, ?_⟩
-  letI : Module F (Additive E) := moduleInst
+  let : Module F (Additive E) := moduleInst
   have hsimple : IsSimpleModule F (Additive E) := by
     rw [isSimpleModule_iff]
     refine { toNontrivial := ?_, eq_bot_or_eq_top := ?_ }
-    · letI : Nontrivial (Additive E) :=
+    · let : Nontrivial (Additive E) :=
         Subrepresentation.irreducible_module_nontrivial rho
       exact inferInstance
     · intro W
@@ -66,7 +67,7 @@ public theorem peterfalvi_appendixI_proposition_2_a
             have haction :
                 rho tau x = AppendixITActionEnd (p := p) (E := E) T tau x := by
               rw [AppendixITActionEnd_apply]
-              exact Theory.Representation.ofElementaryAbelianAction_apply_ofMul
+              exact Representation.ofElementaryAbelianAction_apply_ofMul
                 (A := T) (G := E) (p := p) tau x
             rw [haction]
             exact W.smul_mem
@@ -858,5 +859,4 @@ public theorem peterfalvi_appendixI_proposition_2_b
         Q0 q0_add u_add s hs S hclosure hconjT)
 end PFAppendixI
 end BenderSuzuki
-
 

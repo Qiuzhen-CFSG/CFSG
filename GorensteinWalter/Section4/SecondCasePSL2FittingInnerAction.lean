@@ -14,6 +14,7 @@ import GorensteinWalter.Section2.FStarCommute
 import GorensteinWalter.FiniteFieldFixedSubfieldSquare
 import Mathlib.Tactic
 
+
 noncomputable section
 namespace GorensteinWalter
 open Matrix
@@ -253,7 +254,7 @@ public theorem secondCase_psl2_fitting_innerAction_of_actionData
           X ≤ Subgroup.centralizer ({tQ} : Set Q) → X ≤ torus.T := by
       intro X hXcyc htX hXcent
       exact cyclic_subgroup_containing_involution_le_reflected_torus
-        (G := Q) htQ torus.T sQ torus.T_cyclic torus.T_contains_t
+        (G := Q) htQ torus.T sQ torus.T_contains_t
         hsQI hsQnot hsQinv hCq hXcyc hXcent htX
     refine ⟨hUleC.trans hAcont, ?_⟩
     intro a ha x hx
@@ -555,7 +556,7 @@ public theorem secondCase_psl2_fitting_innerAction_of_actionData
             simpa [sS, MulAut.conj_apply] using hg⟩
         have hXleS : X ≤ S :=
           cyclic_subgroup_containing_involution_le_reflected_torus
-            hsI S wS hScyc hsS
+            hsI S wS hsS
             (by constructor
                 · intro h1
                   apply hwSnot
@@ -666,7 +667,7 @@ public theorem secondCase_psl2_fitting_innerAction_of_actionData
             simpa [MulAut.conj_apply] using hg⟩
         have hXleN : X ≤ SN :=
           cyclic_subgroup_containing_involution_le_reflected_torus
-            hsNI SN wN hNcyc hsN
+            hsNI SN wN hsN
             (by constructor
                 · intro h1
                   apply hwNnot

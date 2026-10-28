@@ -2,12 +2,13 @@ module
 
 public import GorensteinWalter.Section4.SecondCaseFittingFixedNormalizer
 public import FeitThompson.GroupAction.CentralizerCondition
-public import FeitThompson.SubgroupConj
+public import Theory.GroupTheory.SubgroupConjugation
 public import FeitThompson.ChiefFactors.Proposition12
 public import FeitThompson.FinalTheorem
 public import GorensteinWalter.Section2.Lemma27Infra
 public import GorensteinWalter.Section1
 import Mathlib.Tactic
+
 
 /-!
 # Two-subgroups centralizing the fitting intersection
@@ -132,7 +133,7 @@ public theorem secondCase_twoSubgroup_centralizes_U_of_centralizes_fitting_inter
   have hFUnormalSub : (c.FU.subgroupOf c.U).Normal :=
     Subgroup.normal_subgroupOf_of_le_normalizer
       (H := c.U) (N := c.FU) (le_normalizer_of_isNormalIn hFUnormalU)
-  have hUsolv : IsSolvable c.U := odd_order_theorem c.U hUodd
+  have hUsolv : Group.IsSolvable c.U := odd_order_theorem c.U hUodd
   have hself : c.U ⊓ Subgroup.centralizer (c.FU : Set G) ≤ c.FU := by
     change c.U ⊓ Subgroup.centralizer
         (((fittingSubgroup c.U).map c.U.subtype : Subgroup G) : Set G) ≤

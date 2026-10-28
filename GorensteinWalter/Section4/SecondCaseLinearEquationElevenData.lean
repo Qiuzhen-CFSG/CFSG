@@ -514,7 +514,8 @@ public theorem secondCase_linearEquation11_orbit_card_of_unique_torus_family
         exact hdiv.symm
       rw [hcard, hindex, hGcard, hUN]
       have hkpos : 0 < k := by
-        simpa [← hUcard] using (Nat.card_pos (α := U))
+        rw [← hUcard]
+        exact Nat.card_pos
       rw [Nat.div_eq_of_eq_mul_right (by omega)]
       simp [Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm]
     have hfamT0 : Nat.card {X : Subgroup G // ∃ g : G,
@@ -731,6 +732,3 @@ public theorem secondCase_linearEquation11_E_orbit_card_lower_of_component
     _ ≤ Nat.card EOrbit := hle
     _ = Nat.card {R : Subgroup G // ∃ e : d.E,
       R = P0.map (MulAut.conj (e : G)).toMonoidHom} := rfl
-
-#print axioms secondCase_linearEquation11_orbit_card_of_unique_torus_family
-#print axioms secondCase_linearEquation11_E_orbit_card_lower_of_component

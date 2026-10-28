@@ -5,6 +5,7 @@ public import GorensteinWalter.Section4.SecondCaseA7K0OrderThree
 public import GorensteinWalter.Section4.SecondCaseFittingInvolutionDecomposition
 import Mathlib.Tactic
 
+
 /-!
 # The missing nontriviality transfer for the `A₇` inverted subgroup
 

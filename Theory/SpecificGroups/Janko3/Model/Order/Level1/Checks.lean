@@ -1,0 +1,223 @@
+module
+
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check000
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check001
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check002
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check003
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check004
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check005
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check006
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check007
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check008
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check009
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check010
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check011
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check012
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check013
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check014
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check015
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check016
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check017
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check018
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check019
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check020
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check021
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check022
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check023
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check024
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check025
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check026
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check027
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check028
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check029
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check030
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check031
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check032
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check033
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check034
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check035
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check036
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check037
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check038
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check039
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check040
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check041
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check042
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check043
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check044
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check045
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check046
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check047
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check048
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check049
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check050
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check051
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check052
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check053
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check054
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check055
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check056
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check057
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check058
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check059
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check060
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check061
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check062
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check063
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check064
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check065
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check066
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check067
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check068
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check069
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check070
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check071
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check072
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check073
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check074
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check075
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check076
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check077
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check078
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check079
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check080
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check081
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check082
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check083
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check084
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check085
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check086
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check087
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check088
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check089
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check090
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check091
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check092
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check093
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check094
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check095
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check096
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check097
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check098
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check099
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check100
+public import Theory.SpecificGroups.Janko3.Model.Order.Level1.Check101
+
+import Mathlib.Tactic.FinCases
+
+/-! Assembly of the independently kernel-checked transition batches. -/
+
+namespace Sporadic.Janko3.OrderCertificate.Level1
+private theorem checkedBatches (b : Fin 102) : stepBatch b := by
+  fin_cases b
+  · exact checked0
+  · exact checked1
+  · exact checked2
+  · exact checked3
+  · exact checked4
+  · exact checked5
+  · exact checked6
+  · exact checked7
+  · exact checked8
+  · exact checked9
+  · exact checked10
+  · exact checked11
+  · exact checked12
+  · exact checked13
+  · exact checked14
+  · exact checked15
+  · exact checked16
+  · exact checked17
+  · exact checked18
+  · exact checked19
+  · exact checked20
+  · exact checked21
+  · exact checked22
+  · exact checked23
+  · exact checked24
+  · exact checked25
+  · exact checked26
+  · exact checked27
+  · exact checked28
+  · exact checked29
+  · exact checked30
+  · exact checked31
+  · exact checked32
+  · exact checked33
+  · exact checked34
+  · exact checked35
+  · exact checked36
+  · exact checked37
+  · exact checked38
+  · exact checked39
+  · exact checked40
+  · exact checked41
+  · exact checked42
+  · exact checked43
+  · exact checked44
+  · exact checked45
+  · exact checked46
+  · exact checked47
+  · exact checked48
+  · exact checked49
+  · exact checked50
+  · exact checked51
+  · exact checked52
+  · exact checked53
+  · exact checked54
+  · exact checked55
+  · exact checked56
+  · exact checked57
+  · exact checked58
+  · exact checked59
+  · exact checked60
+  · exact checked61
+  · exact checked62
+  · exact checked63
+  · exact checked64
+  · exact checked65
+  · exact checked66
+  · exact checked67
+  · exact checked68
+  · exact checked69
+  · exact checked70
+  · exact checked71
+  · exact checked72
+  · exact checked73
+  · exact checked74
+  · exact checked75
+  · exact checked76
+  · exact checked77
+  · exact checked78
+  · exact checked79
+  · exact checked80
+  · exact checked81
+  · exact checked82
+  · exact checked83
+  · exact checked84
+  · exact checked85
+  · exact checked86
+  · exact checked87
+  · exact checked88
+  · exact checked89
+  · exact checked90
+  · exact checked91
+  · exact checked92
+  · exact checked93
+  · exact checked94
+  · exact checked95
+  · exact checked96
+  · exact checked97
+  · exact checked98
+  · exact checked99
+  · exact checked100
+  · exact checked101
+
+/-- Every forward transition of the published level-1 transversal is certified. -/
+public theorem forwardSteps (i : Fin 2) (r : Fin 510) :
+    let j := i.castLE (by decide : 2 ≤ 4)
+    L1Gen j * L1Rep r =
+      L1Rep (L1Act j r) * Theory.GroupTheory.evalWord L2Gen (L1Factor j r) :=
+  forward_of_batches checkedBatches i r
+
+end Sporadic.Janko3.OrderCertificate.Level1

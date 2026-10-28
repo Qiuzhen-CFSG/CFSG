@@ -8,6 +8,7 @@ import BenderSuzuki.PFchapter1section1.lemma_a
 import BenderSuzuki.SE.Proposition84Base
 import FeitThompson.FinalTheorem
 
+
 /-!
 # Section 10, Lemma 10.3
 
@@ -55,7 +56,7 @@ normalizer action. -/
 public instance lemma103NZeroStar_normal
     {X : Type u} [Group X] (M P : Subgroup X) :
     (lemma103NZeroStar M P).Normal := by
-  letI : MulAction (lemma103NStar P) (lemma103OmegaP M P) :=
+  let : MulAction (lemma103NStar P) (lemma103OmegaP M P) :=
     lemma103NormalizerAction M P
   change (pointStabilizerCore (lemma103NStar P) (lemma103OmegaP M P)).Normal
   exact pointStabilizerCore_normal
@@ -71,7 +72,7 @@ public abbrev lemma103NBar
     MulAction (lemma103NBar M P) (lemma103OmegaP M P) := by
   letI : MulAction (lemma103NStar P) (lemma103OmegaP M P) :=
     lemma103NormalizerAction M P
-  letI :
+  let :
       (pointStabilizerCore (lemma103NStar P) (lemma103OmegaP M P)).Normal :=
     pointStabilizerCore_normal
   exact pointStabilizerCoreQuotientAction
@@ -81,9 +82,9 @@ public theorem lemma103QuotientAction_faithful
     {X : Type u} [Group X] (M P : Subgroup X) :
     @FaithfulSMul (lemma103NBar M P) (lemma103OmegaP M P)
       (lemma103QuotientAction M P).toSMul := by
-  letI : MulAction (lemma103NStar P) (lemma103OmegaP M P) :=
+  let : MulAction (lemma103NStar P) (lemma103OmegaP M P) :=
     lemma103NormalizerAction M P
-  letI :
+  let :
       (pointStabilizerCore (lemma103NStar P) (lemma103OmegaP M P)).Normal :=
     pointStabilizerCore_normal
   exact faithfulSMul_pointStabilizerCoreQuotientAction
@@ -136,7 +137,7 @@ public theorem lemma103_pointStabilizerCore_le_pairStabilizer
     (hPD : P ≤ M ⊓ rightConjugate M t) :
     (lemma103NZeroStar M P).map (lemma103NStar P).subtype ≤
       M ⊓ rightConjugate M t := by
-  letI : MulAction (lemma103NStar P) (lemma103OmegaP M P) :=
+  let : MulAction (lemma103NStar P) (lemma103OmegaP M P) :=
     lemma103NormalizerAction M P
   let alpha : lemma103OmegaP M P :=
     ⟨QuotientGroup.mk 1,
@@ -287,22 +288,6 @@ public theorem Lemma101Conclusion.involution_eq_u_of_centralized
       (by simpa [D] using hkI) hcomm
   simpa [hkone, rightConjugateElem] using huk.symm
 
-private theorem lemma103_isMulCommutative_of_forall_sq_one
-    {A : Type*} [Group A] (hA : ∀ x : A, x ^ 2 = 1) :
-    IsMulCommutative A := by
-  refine IsMulCommutative.mk <| Std.Commutative.mk ?_
-  intro a b
-  have hinv : ∀ x : A, x⁻¹ = x := by
-    intro x
-    have hx : x * x = 1 := by simpa [pow_two] using hA x
-    calc
-      x⁻¹ = x⁻¹ * 1 := by simp
-      _ = x⁻¹ * (x * x) := by rw [hx]
-      _ = x := by simp
-  calc
-    a * b = (a * b)⁻¹ := (hinv (a * b)).symm
-    _ = b⁻¹ * a⁻¹ := by simp
-    _ = b * a := by rw [hinv a, hinv b]
 
 /-- A strongly embedded subgroup containing exactly one involution forces the
 ambient finite group to have 2-rank at most one. -/
@@ -349,8 +334,8 @@ public theorem not_twoRankAtLeastTwo_of_unique_involution_in_stronglyEmbedded
     apply Subgroup.mem_map.mpr
     refine ⟨(a : G), a.property, ?_⟩
     simpa [f, MulAut.conj_apply, rightConjugateElem] using hag
-  letI : IsMulCommutative E' :=
-    lemma103_isMulCommutative_of_forall_sq_one hE'sq
+  let : IsMulCommutative E' :=
+    isMulCommutative_of_forall_sq_one hE'sq
   have hE'M : E' ≤ M := by
     intro x hxE
     let xE : E' := ⟨x, hxE⟩
@@ -550,7 +535,7 @@ private theorem lemma103_quotient_action_twoPretransitive
       lemma103QuotientAction M d.choice.P
     MulAction.IsMultiplyPretransitive
       (lemma103NBar M d.choice.P) (lemma103OmegaP M d.choice.P) 2 := by
-  letI : MulAction (lemma103NStar d.choice.P)
+  let : MulAction (lemma103NStar d.choice.P)
       (lemma103OmegaP M d.choice.P) :=
     lemma103NormalizerAction M d.choice.P
   have htwoN := d.normalizer_action_twoPretransitive ht htM htwo
@@ -644,7 +629,7 @@ public theorem lemma_10_3
   let P : Subgroup X := d.choice.P
   let N : Subgroup X := lemma103NStar P
   let Omega : Type u := lemma103OmegaP M P
-  letI : Finite Omega := by
+  let : Finite Omega := by
     dsimp [Omega, lemma103OmegaP]
     infer_instance
   have hPD : P ≤ M ⊓ rightConjugate M t := by
@@ -667,22 +652,22 @@ public theorem lemma_10_3
   have huStar : IsInvolution uStar :=
     IsInvolution.subtype d83.u_involution huN
 
-  letI : MulAction N Omega := lemma103NormalizerAction M P
+  let : MulAction N Omega := lemma103NormalizerAction M P
   have htwoN : MulAction.IsMultiplyPretransitive N Omega 2 := by
     simpa [P, N, Omega] using
       d.normalizer_action_twoPretransitive ht htM htwo
 
   let hcoreNormal : (pointStabilizerCore N Omega).Normal :=
     pointStabilizerCore_normal
-  letI : (pointStabilizerCore N Omega).Normal := hcoreNormal
+  let : (pointStabilizerCore N Omega).Normal := hcoreNormal
   have hcoreOdd : Odd (Nat.card (pointStabilizerCore N Omega)) := by
     simpa [P, N, Omega, lemma103NZeroStar] using
       d.actionKernel_odd hM ht htM
   let Nbar := N ⧸ pointStabilizerCore N Omega
-  letI : MulAction Nbar Omega := pointStabilizerCoreQuotientAction
+  let : MulAction Nbar Omega := pointStabilizerCoreQuotientAction
   have hfaithful : FaithfulSMul Nbar Omega :=
     faithfulSMul_pointStabilizerCoreQuotientAction
-  letI : FaithfulSMul Nbar Omega := hfaithful
+  let : FaithfulSMul Nbar Omega := hfaithful
   have htwoBar : MulAction.IsMultiplyPretransitive Nbar Omega 2 := by
     simpa [Nbar, N, Omega] using
       pointStabilizerCoreQuotientAction_twoPretransitive htwoN
@@ -748,10 +733,10 @@ public theorem lemma_10_3
   have hoddCoreNe : pPrimeCore 2 Nbar ≠ ⊥ :=
     pPrimeCore_two_ne_bot_of_factorization
       htransBar huBar alpha huAlpha hcoreFactor
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hoddCoreOdd : Odd (Nat.card (pPrimeCore 2 Nbar)) :=
     Nat.coprime_two_left.mp (pPrimeCore_coprime_card (G := Nbar) (p := 2))
-  have hoddCoreSolv : IsSolvable (pPrimeCore 2 Nbar) :=
+  have hoddCoreSolv : Group.IsSolvable (pPrimeCore 2 Nbar) :=
     odd_order_theorem (pPrimeCore 2 Nbar) hoddCoreOdd
   obtain ⟨Qbar, q, hQnormal, hqPrime, hQelem, hQne,
       hQtrans, hQregular⟩ :=
@@ -767,8 +752,8 @@ public theorem lemma_10_3
   have hQodd : Odd (Nat.card Qbar) :=
     elementaryAbelian_card_odd_of_not_twoRank_of_three_le
       hRank hqPrime hQelem hQcard
-  letI : Fact q.Prime := ⟨hqPrime⟩
-  letI : IsElementaryAbelian q Qbar := hQelem
+  let : Fact q.Prime := ⟨hqPrime⟩
+  let : IsElementaryAbelian q Qbar := hQelem
   have hQcomm : IsMulCommutative Qbar := inferInstance
   have hfactor : Qbar ⊔ Subgroup.centralizer ({uBar} : Set Nbar) = ⊤ :=
     regular_normal_sup_centralizer_eq_top Qbar hQnormal hQcomm

@@ -9,6 +9,7 @@ public import GorensteinWalter.Section3.CyclicTwoCorePrime
 public import GorensteinWalter.Section3.CyclicTwoCoreSylow
 public import GorensteinWalter.Section3.KleinFourTransitive
 
+
 noncomputable section
 
 open scoped Pointwise
@@ -87,7 +88,7 @@ public theorem element_le_U_of_odd_order
         rfl⟩
     have hdiv : orderOf (q xH) ∣ orderOf xH := orderOf_map_dvd q xH
     have horder : orderOf xH = orderOf x := by
-      simpa [xH] using (Subgroup.orderOf_mk (⟨x, hxH⟩ : H))
+      simp [xH]
     have h2dvd' : 2 ∣ orderOf x := h2dvd.trans (hdiv.trans (by rw [horder]))
     exact (Nat.Prime.coprime_iff_not_dvd Nat.prime_two).mp hodd h2dvd'
   have hq1 : q xH = 1 := by
@@ -592,7 +593,7 @@ public noncomputable def firstCase_P2_sylow
     (Q : Sylow od.p ↥od.d.bg.B) :
     Sylow od.p (centralizerIn od.d.bg.U od.d.bg.t2) := by
   letI : Fintype G := Fintype.ofFinite G
-  letI : Fact od.p.Prime := ⟨od.p_prime⟩
+  let : Fact od.p.Prime := ⟨od.p_prime⟩
   exact centralizerIn_sylow_of_B_of_inverted od.d.bg hU od.d.bg.t2_mem_S od.p
     (BenderGlauberman.U_coprime_two od.d.bg |>.coprime_dvd_right
       (Subgroup.card_dvd_of_le (qCoreOf_le od.d.bg.U od.p)))
@@ -667,7 +668,7 @@ public noncomputable def firstCase_P1_sylow
     (hU : od.d.bg.U = fittingSubgroupOf od.d.bg.U ⊔ od.d.bg.B)
     (Q : Sylow od.p ↥od.d.bg.B) :
     Sylow od.p (centralizerIn od.d.bg.U od.d.bg.t1) := by
-  letI : Fact od.p.Prime := ⟨od.p_prime⟩
+  let : Fact od.p.Prime := ⟨od.p_prime⟩
   exact centralizerIn_sylow_of_pCore od.d.bg hU od.d.bg.t1_mem_S od.p
     (firstCase_t1_centralizes_primeCore_in_FU c od) Q
 

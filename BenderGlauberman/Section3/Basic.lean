@@ -3,6 +3,7 @@ module
 public import BenderGlauberman.Section2.Basic
 public import BenderGlauberman.ClassFunctionProduct
 
+
 /-!
 # Bender--Glauberman: Section 3 — shared infrastructure
 
@@ -22,9 +23,8 @@ open scoped Pointwise
 namespace BenderGlauberman
 
 open GorensteinWalter
-open Theory.Character
 
--- Local instances matching `Theory.Character`'s subgroup-sum convention; see
+-- Local instances matching `Character`'s subgroup-sum convention; see
 -- `BenderGlauberman/ClassFunction.lean`.
 attribute [local instance] Fintype.ofFinite
 attribute [local instance] Classical.propDecidable
@@ -361,7 +361,7 @@ public lemma S0_mem_SPrime_or_r0_mul (c : Hyp11 G) {g : G} (hg : g ∈ (c.S0 : S
       intro h
       exact hgSP (Subgroup.mem_subgroupOf.mp h)
     have hab : a * b ∈ (SPrime c).subgroupOf (c.S0 : Subgroup G) :=
-      hiff.mpr (by simpa [hr0, hb])
+      hiff.mpr (by simp [hr0, hb])
     exact (Subgroup.mem_subgroupOf.mp hab)
 
 /-- `X = S'·U` has index `2` in `H0 = U·S0` (the two cosets are `X` and
@@ -1096,8 +1096,8 @@ public theorem exists_lambdaHom_extending_lam (c : Hyp11 G) (h12 : Hyp12 c)
   let e : H ≃* ↥(SPrime c) :=
     Subgroup.subgroupOfEquivOfLe (H := SPrime c) (K := c.S0) (SPrime_le_S0 c)
   let lamH : H →* ℂˣ := lam.comp e
-  have hsurj : Function.Surjective (MonoidHom.restrictHom H ℂˣ) :=
-    MonoidHom.restrict_surjective (G := ↥(c.S0 : Subgroup G)) (M := ℂ) H
+  have hsurj : Function.Surjective (MonoidHom.domRestrictHom H ℂˣ) :=
+    MonoidHom.domRestrict_surjective (G := ↥(c.S0 : Subgroup G)) (M := ℂ) H
   rcases hsurj lamH with ⟨φ, hφ⟩
   let l : LambdaHom c.H0 c.U := ⟨s0Char c h12 φ, s0Char_mem c h12 φ⟩
   refine ⟨l, ?_⟩
@@ -1158,7 +1158,7 @@ public lemma extensionChar_lambda_mul (c : Hyp11 G) (hSC : Section3Hyp c)
 
 /-- A `Λ`-character is constant on the `r0`-conjugacy within `X`: its value at
 `r0·x·r0⁻¹` equals its value at `x` (since `ℂˣ` is commutative). -/
-public lemma lambdaHom_conj_eq (c : Hyp11 G) (hSC : Section3Hyp c) (h12 : Hyp12 c)
+public lemma lambdaHom_conj_eq (c : Hyp11 G) (hSC : Section3Hyp c)
     (l : LambdaHom c.H0 c.U)
     {x : ↥(extensionSubgroup c)} :
     l.1 ⟨(S0_generator c) * (x : G) * (S0_generator c)⁻¹,
@@ -1178,7 +1178,7 @@ public lemma lambdaHom_conj_eq (c : Hyp11 G) (hSC : Section3Hyp c) (h12 : Hyp12 
     _ = l.1 b := by
           rw [map_mul, map_mul, map_inv]
           change ((l.1 a : ℂˣ) * (l.1 b : ℂˣ) * (l.1 a : ℂˣ)⁻¹) = (l.1 b : ℂˣ)
-          simp [mul_assoc, mul_comm, mul_left_comm]
+          simp [mul_assoc, mul_comm]
 
 /-- `λ₂` takes the value `-1` at the generator `r0 = t1·t2`. -/
 public theorem lambdaTwo_val_r0_eq_neg_one (c : Hyp11 G) (h12 : Hyp12 c) :
@@ -1377,7 +1377,7 @@ public lemma extensionChar_ind_lambda_mul (c : Hyp11 G) (hSC : Section3Hyp c)
     rw [hmain1, hmain2, LambdaChar]
     rw [← h1, ← h2]
     simp only [LambdaChar] at h1 h2 ⊢
-    rw [← lambdaHom_conj_eq c hSC h12 l (x := xX)]
+    rw [← lambdaHom_conj_eq c hSC l (x := xX)]
     simp only [xX] at ⊢
     ring_nf
   · have h0₁ : (extensionChar_ind c hSC α 1) x = 0 :=

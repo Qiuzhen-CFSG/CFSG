@@ -5,6 +5,7 @@ public import GorensteinWalter.Section4.SecondCaseLinearPNormalizer
 public import GorensteinWalter.Section4.SecondCaseLinearEquationElevenAlignedConjugator
 import Mathlib.Tactic
 
+
 /-!
 # The concrete aligned conjugator for equation (11)
 

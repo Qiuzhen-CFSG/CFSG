@@ -6,6 +6,7 @@ namespace BenderSuzuki.External
 namespace XI1115ThetaEquationExtraction
 
 set_option maxHeartbeats 800000 in
+-- The symbolic field normalization needs additional simplifier heartbeats.
 /-- Field-algebra translation of XI.11.13(b) from Huppert's coordinates to
 the aligned Type-A coordinates used in `theorem_11_15`. -/
 public theorem aligned_generic_coordinate_core
@@ -135,6 +136,7 @@ public theorem aligned_generic_coordinate_core
   exact hcore
 
 set_option maxHeartbeats 800000 in
+-- The Bruhat-coordinate extraction needs additional simplifier heartbeats.
 /-- Group-facing contract for the preceding field core.  The `hcoord` fields
 are exactly the output of the Bruhat-coordinate and structure-family helpers
 after the aligned normalization `g = pair 1 1`. -/
@@ -192,6 +194,7 @@ public def AlignedGenericAlphaData
            (epsilon * a⁻¹) * theta (epsilon * a⁻¹)))
 
 set_option maxHeartbeats 800000 in
+-- The orbit-family extraction needs additional simplifier heartbeats.
 /-- A non-circular group-facing form of the generic XI.11.13(b) data.  The
 orbit cover is an explicit input, and the conclusion records only the raw
 Bruhat parameters used by `aligned_generic_alpha_of_bruhat_data`. -/
@@ -345,6 +348,7 @@ public theorem aligned_generic_bruhat_data_of_family
     · simp [q, lambda]
 
 set_option maxHeartbeats 800000 in
+-- Combining the extracted coordinate records needs additional elaboration heartbeats.
 /-- The checked orbit-family extraction followed by the field-algebra
 translation, with all intermediate Bruhat scalars hidden. -/
 public theorem aligned_generic_alpha_data_of_family
@@ -384,6 +388,7 @@ public theorem aligned_generic_alpha_data_of_family
   exact ⟨lambda, nu, hlambda, hnu, hformula.1, hnorm, hformula.2⟩
 
 set_option maxHeartbeats 800000 in
+-- The paired generic-input calculation needs additional simplifier heartbeats.
 /-- The two generic XI.11.13 inputs used by XI.11.14 are admissible whenever
 the field element `a` is nonzero and nonunit.  This layer deliberately leaves
 the XI.11.10 product equation to its caller. -/
@@ -433,6 +438,7 @@ public theorem aligned_xi1114_two_generic_inputs
   · exact hgeneric 1 n⁻¹ (by simp) hZ₂ (by simpa using hB₂)
 
 set_option maxHeartbeats 800000 in
+-- The expanded scalar identity needs additional normalization heartbeats.
 /-- The scalar content of XI.11.10(6) after expanding the two aligned
 XI.11.13(b) formulas.  The first two hypotheses are the two coordinates of
 `t⁻¹ • alpha (pair 1 n⁻¹) =
@@ -498,6 +504,7 @@ public theorem aligned_product_coordinate_equation_core
       rw [add_assoc, CharTwo.add_self_eq_zero, add_zero]
 
 set_option maxHeartbeats 800000 in
+-- Normalizing the coordinate equation needs additional field-simplifier heartbeats.
 /-- Rewrites XI.11.14 equation (6) into the normalized coordinate equation
 consumed by the factor calculation. -/
 public theorem aligned_normalized_coordinate_equation
@@ -575,6 +582,7 @@ public theorem twisted_norm_symm_injective
 
 
 set_option maxHeartbeats 800000 in
+-- The group-to-coordinate calculation needs additional simplifier heartbeats.
 /-- The aligned specialization of XI.11.10(6).  This packages the short
 group calculation that produces the `hproduct` input of
 `aligned_theta_coordinate_data_of_generic_product`. -/
@@ -682,6 +690,7 @@ public theorem aligned_generic_product_identity_of_alpha_laws
     _ = alpha (pair 1 (1 + n⁻¹)) * pair 1 0 := hfunctional
 
 set_option maxHeartbeats 800000 in
+-- Combining the generic product data needs additional elaboration heartbeats.
 /-- Two generic XI.11.13(b) records, together with the one XI.11.10(6)
 product identity, give all scalar equations used by XI.11.14. -/
 public theorem aligned_theta_coordinate_data_of_generic_product

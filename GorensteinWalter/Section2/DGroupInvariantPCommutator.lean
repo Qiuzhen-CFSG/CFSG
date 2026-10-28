@@ -2,8 +2,9 @@ module
 
 public import GorensteinWalter.Section2.DGroupInvariantCommutatorOddCore
 public import GorensteinWalter.Section2.CommutatorOddCoreTail
-import FeitThompson.SubgroupConj
+import Theory.GroupTheory.SubgroupConjugation
 import Mathlib.Tactic
+
 
 namespace GorensteinWalter
 

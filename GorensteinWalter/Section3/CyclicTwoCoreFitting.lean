@@ -13,6 +13,7 @@ public import FeitThompson.PCore.PCore
 public import FeitThompson.PCore.PPrimeCore
 public import FeitThompson.ChiefFactors.Proposition12
 
+
 noncomputable section
 
 open scoped Pointwise

@@ -38,31 +38,31 @@ public theorem perfect_subnormal_image_le_normal_odd_index
   let Ebar : Subgroup (H ⧸ O) := E.map q
   have hEbarperf : Group.IsPerfect Ebar := by
     dsimp [Ebar]
-    letI : Group.IsPerfect E := hEperf
+    let : Group.IsPerfect E := hEperf
     exact Group.IsPerfect.map q
   have hEbarne : Ebar ≠ ⊥ := by
     intro hbot
     have hEleO : E ≤ O := by
       have hker : E ≤ q.ker := (Subgroup.map_eq_bot_iff E).mp hbot
       simpa [q, QuotientGroup.ker_mk'] using hker
-    letI : Group.IsSolvable O := hOsolv
-    haveI : Group.IsSolvable (E.subgroupOf O) := inferInstance
-    have hEsolv : IsSolvable E :=
+    let : Group.IsSolvable O := hOsolv
+    have : Group.IsSolvable (E.subgroupOf O) := inferInstance
+    have hEsolv : Group.IsSolvable E :=
       Group.isSolvable_of_surjective
         (f := (Subgroup.subgroupOfEquivOfLe hEleO).toMonoidHom)
         (Subgroup.subgroupOfEquivOfLe hEleO).surjective
-    letI : Nontrivial E := (Subgroup.nontrivial_iff_ne_bot E).2 hEne
-    letI : Group.IsPerfect E := hEperf
+    let : Nontrivial E := (Subgroup.nontrivial_iff_ne_bot E).2 hEne
+    let : Group.IsPerfect E := hEperf
     exact Group.IsPerfect.not_isSolvable E hEsolv
   have hEbarsn : Ebar.IsSubnormal := by
     dsimp [Ebar]
     exact hEsn.map (QuotientGroup.mk'_surjective O)
-  letI : L.Normal := hLnormal
+  let : L.Normal := hLnormal
   let pi : (H ⧸ O) →* (H ⧸ O) ⧸ L := QuotientGroup.mk' L
   let I : Subgroup ((H ⧸ O) ⧸ L) := Ebar.map pi
   have hIperf : Group.IsPerfect I := by
     dsimp [I]
-    letI : Group.IsPerfect Ebar := hEbarperf
+    let : Group.IsPerfect Ebar := hEbarperf
     exact Group.IsPerfect.map pi
   have hQodd : Odd (Nat.card ((H ⧸ O) ⧸ L)) := by
     simpa only [Subgroup.index_eq_card] using hLindex
@@ -70,10 +70,10 @@ public theorem perfect_subnormal_image_le_normal_odd_index
     odd_order_theorem ((H ⧸ O) ⧸ L) hQodd
   have hIbot : I = ⊥ := by
     by_contra hIne
-    letI : Group.IsSolvable ((H ⧸ O) ⧸ L) := hQsolv
+    let : Group.IsSolvable ((H ⧸ O) ⧸ L) := hQsolv
     have hIsolv : Group.IsSolvable I := inferInstance
-    letI : Nontrivial I := (Subgroup.nontrivial_iff_ne_bot I).2 hIne
-    letI : Group.IsPerfect I := hIperf
+    let : Nontrivial I := (Subgroup.nontrivial_iff_ne_bot I).2 hIne
+    let : Group.IsPerfect I := hIperf
     exact Group.IsPerfect.not_isSolvable I hIsolv
   have hEbarL : Ebar ≤ L := by
     have hker : Ebar ≤ pi.ker := (Subgroup.map_eq_bot_iff Ebar).mp hIbot

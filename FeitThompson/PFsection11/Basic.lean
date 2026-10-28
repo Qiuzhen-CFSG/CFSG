@@ -2,6 +2,7 @@ module
 
 public import FeitThompson.PFsection10.Basic
 
+
 /-!
 # Peterfalvi, Section 11: basic notation
 
@@ -37,7 +38,7 @@ universe u
     section10NormalIn H0 M ∧
     Nat.Prime p ∧
     (∃ hH0H : (H0.subgroupOf H).Normal,
-      letI : (H0.subgroupOf H).Normal := hH0H
+      let : (H0.subgroupOf H).Normal := hH0H
       Nontrivial (H ⧸ H0.subgroupOf H) ∧
         IsElementaryAbelian p (H ⧸ H0.subgroupOf H)) ∧
     IsChiefFactor (H0.subgroupOf M) (H.subgroupOf M) ∧
@@ -140,7 +141,7 @@ gives `|S(HC)| = (u - 1) / q`.
       X - (n : ℂ) • τ₁ ζ +
         (a : ℂ) • (Finset.sum S1τ (fun psi => psi)) ∧
     Section5.orthogonalToFinset S1τ X ∧
-    Theory.Character.IsVirtualCharacter X ∧
+    IsVirtualCharacter X ∧
     (a = 0 ∨ a = 1 ∨ a = 2) ∧
     ((a = 0 ∨ a = 2) → X = ωij - ωi0)
 
@@ -162,7 +163,7 @@ virtuality, then uses the `(11.8.1)` arithmetic to obtain `a ≤ 2`.
       X - (n : ℂ) • τ₁ ζ +
         (a : ℂ) • (Finset.sum S1τ (fun psi => psi)) ∧
     Section5.orthogonalToFinset S1τ X ∧
-    Theory.Character.IsVirtualCharacter X ∧
+    IsVirtualCharacter X ∧
     a ≤ 2 ∧
     ((a = 0 ∨ a = 2) → X = ωij - ωi0)
 

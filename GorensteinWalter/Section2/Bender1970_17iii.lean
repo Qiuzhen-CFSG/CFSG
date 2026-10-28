@@ -9,6 +9,7 @@ public import GorensteinWalter.Section2.Bender1970_18
 public import GorensteinWalter.Section2.Bender1970_16
 import Mathlib.GroupTheory.IsPerfect
 
+
 /-!
 # Bender (1970), Statement 1.7(iii)
 
@@ -83,13 +84,10 @@ private theorem centralizer_qCoreOf_A_le_A
     Subgroup.centralizer ((qCoreOf A p : Subgroup G) : Set G) ≤ A := by
   let S : Subgroup G := generalizedFittingSubgroupOf A
   have hSF : S ≤ S := le_rfl
-  have hSsub : (S.subgroupOf S).IsSubnormal := by
-    simpa [Subgroup.subgroupOf_self] using
-      (Subgroup.IsSubnormal.top : (⊤ : Subgroup (↥S)).IsSubnormal)
   have hCS : generalizedFittingSubgroupOf A ⊓ Subgroup.centralizer (S : Set G) ≤ S :=
     inf_le_left
   have hcentS : Subgroup.centralizer ((qCoreOf S p : Subgroup G) : Set G) ≤ A :=
-    centralizer_qCoreOf_S_le_A hsimple A S hA hSF hSsub hCS hp hpF
+    centralizer_qCoreOf_S_le_A hsimple A S hA hSF hCS hp hpF
   exact (Subgroup.centralizer_le
     (show (qCoreOf S p : Set G) ⊆ (qCoreOf A p : Set G) from
       qCoreOf_generalizedFitting_le_qCoreOf A p hp)).trans hcentS
@@ -120,9 +118,9 @@ private theorem center_qCoreOf_fitting_le_selfCentralizingSubnormal
     {G : Type u} [Group G] [Finite G]
     (A S : Subgroup G)
     (hSF : S ≤ generalizedFittingSubgroupOf A)
-    (hSsub : (S.subgroupOf (generalizedFittingSubgroupOf A)).IsSubnormal)
+    (_hSsub : (S.subgroupOf (generalizedFittingSubgroupOf A)).IsSubnormal)
     (hCS : generalizedFittingSubgroupOf A ⊓ Subgroup.centralizer (S : Set G) ≤ S)
-    (p : ℕ) (hp : p.Prime) (hpF : p ∈ primesOfOrder (fittingSubgroupOf A)) :
+    (p : ℕ) (hp : p.Prime) (_hpF : p ∈ primesOfOrder (fittingSubgroupOf A)) :
     (Subgroup.center (↥(qCoreOf (fittingSubgroupOf A) p))).map
       (qCoreOf (fittingSubgroupOf A) p).subtype ≤ S := by
   let F : Subgroup G := fittingSubgroupOf A
@@ -278,7 +276,7 @@ private theorem mem_primesOfOrder_fitting_of_mem_primesOfOrder_fitting_pair
     (hSF : S ≤ generalizedFittingSubgroupOf A)
     (hSsub : (S.subgroupOf (generalizedFittingSubgroupOf A)).IsSubnormal)
     (hCS : generalizedFittingSubgroupOf A ⊓ Subgroup.centralizer (S : Set G) ≤ S)
-    {B : Subgroup G} (hSB : S ≤ B) (hB : IsCoatom B)
+    {B : Subgroup G} (hSB : S ≤ B) (_hB : IsCoatom B)
     {Sbar : Subgroup G}
     (hSbarA : Sbar ≤ A) (hSbarF : Sbar ≤ generalizedFittingSubgroupOf B)
     (hSbarSub : (Sbar.subgroupOf (generalizedFittingSubgroupOf B)).IsSubnormal)
@@ -317,7 +315,7 @@ private theorem mem_primesOfOrder_fitting_of_mem_primesOfOrder_fitting_pair
 private theorem mem_primesOfOrder_fitting_of_mem_primesOfOrder_fitting_pair_symm
     {G : Type u} [Group G] [Finite G]
     (hsimple : IsSimpleGroup G)
-    (A : Subgroup G) (hA : IsCoatom A)
+    (A : Subgroup G) (_hA : IsCoatom A)
     (S : Subgroup G)
     (hSF : S ≤ generalizedFittingSubgroupOf A)
     (hSsub : (S.subgroupOf (generalizedFittingSubgroupOf A)).IsSubnormal)
@@ -560,8 +558,7 @@ private theorem componentLayer_top_map_eq_componentLayerOf
     change sSup {E : Subgroup (↥B) | IsComponentOf E (⊤ : Subgroup (↥B))} ≤
       Subgroup.comap B.subtype (componentLayerOf B)
     refine sSup_le ?_
-    intro E hE
-    intro y hy
+    intro E hE y hy
     rw [Subgroup.mem_comap]
     exact le_sSup (s := {E' : Subgroup G | IsComponentOf E' B})
       (a := E.map B.subtype)
@@ -571,8 +568,7 @@ private theorem componentLayer_top_map_eq_componentLayerOf
       Subgroup.map B.subtype
         (sSup {E : Subgroup (↥B) | IsComponentOf E (⊤ : Subgroup (↥B))})
     refine sSup_le ?_
-    intro E hE
-    intro y hy
+    intro E hE y hy
     exact Subgroup.mem_map.mpr
       ⟨⟨y, hE.1 hy⟩,
         Subgroup.mem_sSup_of_mem
@@ -731,7 +727,7 @@ private theorem normalizer_pResidualOf_generalizedFitting_eq
     {G : Type u} [Group G] [Finite G]
     (hsimple : IsSimpleGroup G)
     (A : Subgroup G) (hA : IsCoatom A)
-    (p : ℕ) (hp : p.Prime)
+    (p : ℕ) (_hp : p.Prime)
     (hne : pResidualOf (generalizedFittingSubgroupOf A) p ≠ ⊥) :
     Subgroup.normalizer ((pResidualOf (generalizedFittingSubgroupOf A) p : Set G)) = A := by
   let R : Subgroup G := pResidualOf (generalizedFittingSubgroupOf A) p

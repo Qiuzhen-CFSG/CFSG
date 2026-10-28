@@ -214,7 +214,7 @@ public theorem mem_commutator_zpowers_of_mem_peterfalviKSet
   have hkpow : (k ^ 2) ^ (m + 1) = k := by
     calc
       (k ^ 2) ^ (m + 1) = k ^ (2 * (m + 1)) := by rw [pow_mul]
-      _ = k ^ ((2 * m + 1) + 1) := by congr 1 <;> omega
+      _ = k ^ ((2 * m + 1) + 1) := by congr 1
       _ = k ^ (orderOf k + 1) := by rw [hm]
       _ = k := by rw [pow_add, pow_orderOf_eq_one]; simp
   rw [← hkpow]
@@ -266,7 +266,7 @@ public theorem theorem4bProposition63Subgroup_eq_involutionCore
   let L0 : Subgroup X := (involutionCore L).map L.subtype
   have hsq_mem_L0 {x : X} (hxL : x ∈ L) (hxSq : x ^ 2 = 1) : x ∈ L0 := by
     by_cases hxOne : x = 1
-    · simpa [hxOne] using L0.one_mem
+    · simp [hxOne]
     · let xL : L := ⟨x, hxL⟩
       have hxLInv : IsInvolution xL := by
         refine ⟨?_, ?_⟩
@@ -441,7 +441,7 @@ public theorem inf_rightConjugate_outside_inside_centralizer_card_eq
   change
     Nat.card (D ⊓ Subgroup.centralizer ({t} : Set X) : Subgroup X) =
       Nat.card (D ⊓ Subgroup.centralizer ({z} : Set X) : Subgroup X)
-  letI : MulAction D X :=
+  let : MulAction D X :=
     { smul := fun d x => (d : X) * x * (d : X)⁻¹
       one_smul := by
         intro x
@@ -594,7 +594,7 @@ public theorem inf_rightConjugate_outside_inside_centralizer_card_eq
       _ = Nat.card (MulAction.orbit D t) *
           Nat.card (D ⊓ Subgroup.centralizer ({z} : Set X) : Subgroup X) := by
             rw [hcardOrbits]
-  letI : Nonempty (MulAction.orbit D t) :=
+  let : Nonempty (MulAction.orbit D t) :=
     ⟨⟨t, MulAction.mem_orbit_self t⟩⟩
   have hOrbitPos : 0 < Nat.card (MulAction.orbit D t) := Nat.card_pos
   exact Nat.mul_left_cancel hOrbitPos hmul

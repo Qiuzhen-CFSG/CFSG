@@ -3,6 +3,7 @@ module
 public import Glauberman.Theorem3_1
 public import Mathlib.GroupTheory.Nilpotent
 
+
 /-!
 # Glauberman, "A Characteristic Subgroup of a p-Stable Group" — §4, Theorem 4.1 and Corollary 4.1
 

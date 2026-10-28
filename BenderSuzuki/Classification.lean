@@ -5,7 +5,7 @@ public import BenderSuzuki.Converse.StronglyEmbedded
 
 namespace BenderSuzuki
 
-open PFAppendixIII MatrixGroups
+open PFAppendixIII _root_.BenderSuzuki.MatrixGroups
 
 universe u v
 
@@ -64,7 +64,7 @@ private theorem exists_stronglyEmbedded_psl2Model (n : ℕ) (hn : 2 ≤ n) :
 ovoid, carried across `szModel_eq_suzukiMatrixGroup`. -/
 private theorem exists_stronglyEmbedded_szModel (n : ℕ) (hn : 1 ≤ n) :
     ∃ M : Subgroup (SzModel n), _root_.IsStronglyEmbedded M := by
-  haveI : NeZero n := ⟨by omega⟩
+  have : NeZero n := ⟨by omega⟩
   have e : (SzModel n) ≃* (SuzukiMatrixGroup n) :=
     MulEquiv.subgroupCongr (szModel_eq_suzukiMatrixGroup n)
   exact ⟨(Converse.szHstab n).map (e.symm : _ →* _),
@@ -74,7 +74,7 @@ private theorem exists_stronglyEmbedded_szModel (n : ℕ) (hn : 1 ≤ n) :
 carried across `projectiveSpecialUnitary_equiv_psu3Model`. -/
 private theorem exists_stronglyEmbedded_psu3Model (n : ℕ) (hn : 2 ≤ n) :
     ∃ M : Subgroup (PSU3Model n), _root_.IsStronglyEmbedded M := by
-  haveI : NeZero n := ⟨by omega⟩
+  have : NeZero n := ⟨by omega⟩
   obtain ⟨e⟩ := projectiveSpecialUnitary_equiv_psu3Model (Converse.uform n) n hn rfl
     (Converse.card_UField n (by omega)) (Converse.card_fixed_UField n (by omega))
   obtain ⟨M, hM⟩ := Converse.stronglyEmbedded_PSU3 n hn

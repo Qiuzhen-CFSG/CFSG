@@ -1,7 +1,8 @@
 module
 
 public import BenderSuzuki.SE.Section10Lemma105
-import FeitThompson.GroupAction.CoprimeHall
+import Theory.GroupAction.CoprimeHall
+
 
 /-!
 # Section 10, Lemma 10.6
@@ -169,7 +170,7 @@ public theorem lemma106_hall_complement_action
       S.Normal ∧
       commutatorAction (A := A) (G := G) = S := by
   classical
-  letI : Group.IsSolvable G := hsolv
+  let : Group.IsSolvable G := hsolv
   obtain ⟨S, hHallS, hSinv⟩ :=
     exists_isHallSubgroup_isInvariant (G := G) (A := A) hsolv hcop
       {p | p ∉ pi}
@@ -215,7 +216,7 @@ public theorem lemma106_hall_complement_action
     have hCfixSmap :
         (fixedPointSubgroup A S).map S.subtype =
           S ⊓ fixedPointSubgroup A G := by
-      simpa using fixedPointSubgroup_map_subtype_eq_inf S
+      simpa using fixedPoints_subgroup_map_subtype_eq_inf S
     have hInf : S ⊓ fixedPointSubgroup A G = ⊥ := by
       rw [hCfix, ← hcompSC.disjoint.eq_bot]
     apply (Subgroup.map_subtype_inj (H := S)).mp
@@ -226,7 +227,7 @@ public theorem lemma106_hall_complement_action
       _ = (⊥ : Subgroup S).map S.subtype := by simp
   have hcopS : Nat.Coprime (Nat.card A) (Nat.card S) :=
     Nat.Coprime.of_dvd_right (Subgroup.card_subgroup_dvd_card S) hcop
-  letI : IsInvariant A G S := hSinv
+  let : IsInvariant A G S := hSinv
   have hsupS :
       fixedPointSubgroup A S ⊔ commutatorAction (A := A) (G := S) = ⊤ :=
     fixedPointSubgroup_sup_commutatorAction_eq_top_of_solvable_coprime
@@ -409,7 +410,7 @@ public theorem lemma106_eq_commutator_of_coprime_fixedPointFree
     (hcop : Nat.Coprime (Nat.card P) (Nat.card R))
     (hcentral : subgroupCentralizerIn R P = ⊥) :
     R = ⁅R, P⁆ := by
-  letI : Subgroup.Normalizes P R := ⟨hPnormR⟩
+  let : Subgroup.Normalizes P R := ⟨hPnormR⟩
   let Cfix : Subgroup R := fixedPointSubgroup P R
   let Ccomm : Subgroup R := commutatorAction (A := P) (G := R)
   have hfix : Cfix = ⊥ := by

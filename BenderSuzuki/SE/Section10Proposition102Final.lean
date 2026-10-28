@@ -100,7 +100,7 @@ public theorem proposition_10_2
       (W ⊓ (M ⊓ rightConjugate M t)) t) :
     let D : Subgroup X := M ⊓ rightConjugate M t
     let E : Subgroup X := W ⊓ D
-    let V : Subgroup X := peterfalviV D t
+    let _V : Subgroup X := peterfalviV D t
     Nonempty (Proposition102Conclusion M W D E t d) := by
   classical
   let D : Subgroup X := M ⊓ rightConjugate M t
@@ -117,11 +117,11 @@ public theorem proposition_10_2
   have hED : E ≤ D := inf_le_right
   have hA : Proposition102PartAConclusion M W D E V t d := by
     simpa [D, E, V] using proposition102_part_a
-      (D := D) hW (by simpa [D] using (inf_le_left : D ≤ M)) d d106
+      (D := D) hW (by simp [D]) d d106
         ht hDodd hDnorm
   have hLocal : Proposition102HallLocalData D E t := by
     simpa [D, E, V] using proposition102_part_b_hall_D
-      (D := D) hW (by simpa [D] using (inf_le_left : D ≤ M)) d d106 hA
+      (D := D) hW (by simp [D]) d d106 hA
   have hHall : IsHallSubgroup (subgroupPrimeSet H) H := by
     simpa [D, E, V, H] using proposition102_part_b_hall_X
       hM ht htM d83 hW d d106 hA h42

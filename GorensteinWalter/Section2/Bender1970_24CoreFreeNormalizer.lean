@@ -9,6 +9,7 @@ import GorensteinWalter.Section2.NormalizerLeNormalizerCentralizer
 import FeitThompson.PCore.Nilpotent
 import FeitThompson.BGsection9.theorem_9_1
 
+
 /-!
 # Bender §2.4: the Fitting normalizer in the core-free branch
 

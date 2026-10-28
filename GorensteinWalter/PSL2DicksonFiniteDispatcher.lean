@@ -5,6 +5,7 @@ public import GorensteinWalter.KleinFourExceptionTransport
 public import GorensteinWalter.KleinFourCentralizerTransport
 import Mathlib.Tactic
 
+
 noncomputable section
 
 namespace GorensteinWalter
@@ -28,9 +29,9 @@ public theorem psl2_no_kleinFour_of_dickson_finite_cases
     (hDihedralOdd : ∀ z : ℕ,
       Nonempty (M ≃* DihedralGroup z) → Odd z) :
     False ∨
-      (∃ m t : ℕ, True) ∨
-      (∃ m : ℕ, True) ∨
-      (∃ m : ℕ, True) := by
+      (∃ _m _t : ℕ, True) ∨
+      (∃ _m : ℕ, True) ∨
+      (∃ _m : ℕ, True) := by
   let A0 : Subgroup M := A.subgroupOf M
   let V0 : Subgroup M := V.subgroupOf M
   have hA0cyc : IsCyclic A0 := isCyclic_subgroupOf hAM hAcyc
